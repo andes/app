@@ -75,6 +75,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
                         let params = {
                             idAgenda: this.agendaAReasignar.id,
+                            idOrganizacion: this.agendaAReasignar.organizacion._id,
                             idBloque: bloque.id,
                             idTurno: turno.id,
                             duracion: true,
@@ -300,14 +301,5 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
 
         this.paneles = [... this.paneles];
     }
-
-    // cancelar() {
-    //     this.cancelaSuspenderTurno.emit(true);
-    //     this.turnoAReasignar = null;
-    // }
-
-    // cerrar() {
-    //     // this.saveSuspenderTurno.emit(this.agenda);
-    // }
 
 }

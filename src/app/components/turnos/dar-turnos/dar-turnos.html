@@ -43,7 +43,8 @@
                     </div>
                     <!--Calendario-->
                     <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT"
-                        [opcionesCalendario]="ocultarFinesDeSemana" [_solicitudPrestacion]="_solicitudPrestacion" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+                        [opcionesCalendario]="ocultarFinesDeSemana" [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion"
+                        (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
                 </plex-box>
             </div>
             <!--Lateral-->
@@ -295,6 +296,12 @@
 
                                     </div>
                                     <hr>
+                                    <!--Otros datos-->
+                                    <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
+                                        name="turnoTipoPrestacion" [required]="true"></plex-select>
+                                    <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+
                                 </ng-container>
                             </fieldset>
                         </plex-tab>

@@ -202,7 +202,8 @@ export class PrestacionesService {
                             evolucion: registro.valor.evolucion ? registro.valor.evolucion : '',
                             idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                             idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
-                            origen: registro.valor.origen ? registro.valor.origen : null
+                            origen: registro.valor.origen ? registro.valor.origen : null,
+                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null
                         }]
                     };
                     registroSalida.push(dato);
@@ -218,6 +219,7 @@ export class PrestacionesService {
                         idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                         idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
                         origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
+                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);

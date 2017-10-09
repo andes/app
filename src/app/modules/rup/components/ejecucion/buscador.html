@@ -1,6 +1,6 @@
-<plex-button label="Hallazgos" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
-<plex-button label="Procedimientos" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
-<plex-button label="Planes" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
+<plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
+<plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
+<plex-button label="PLANES" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
 
 <div *ngIf="!showPlanes">
     <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
@@ -58,10 +58,10 @@
     </div>
 </div>
 
-<div *ngIf="!showFrecuentes">
+<div *ngIf="arrayFrecuentes">
     <ul class="conceptos list-unstyled">
-        <ng-container *ngFor="let item of masFrecuentesFiltradas">
-            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <ng-container *ngFor="let item of arrayFrecuentes">
+            <li *ngIf="tipoBusqueda === 'procedimientos' || (tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación'))" draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini">
                     <div class="type {{tipoBusqueda}}">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
