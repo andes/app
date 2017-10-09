@@ -41,14 +41,21 @@
                     <!--<header>Agenda Original</header>-->
                     <div class="row">
                         <div class="col-12">
-                            <span><b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}} - {{agenda.horaFin | date: 'HH:mm'}}</span>
+                            <span>
+                                <b>Fecha:</b> {{agenda.horaInicio | date: 'dd/MM/yyyy'}} - {{agenda.horaInicio | date: 'HH:mm'}}
+                                - {{agenda.horaFin | date: 'HH:mm'}}</span>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <b>Profesional: </b><span *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}} - </span>
-                            <br /><b>Tipos Prestaciones: </b><span *ngFor="let prestacion of agenda.tipoPrestaciones">{{prestacion.nombre}} - </span>
-                            <br /><b>Espacio Físico: </b><span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
+                            <b>Profesional: </b>
+                            <span *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}} - </span>
+                            <br />
+                            <b>Tipos Prestaciones: </b>
+                            <span *ngFor="let prestacion of agenda.tipoPrestaciones">{{prestacion.nombre}} - </span>
+                            <br />
+                            <b>Espacio Físico: </b>
+                            <span>{{agenda.espacioFisico?agenda.espacioFisico.nombre:''}}</span>
                         </div>
                     </div>
                     <div class="row">
@@ -88,9 +95,9 @@
     <footer>
         <div class="row">
             <div class="col text-right">
-                <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button icon="mdi mdi-content-copy" label="Clonar Agenda" type="success" (click)="clonar()" title="Clonar">
+                <plex-button type="success" label="Clonar Agenda" (click)="clonar()">
                 </plex-button>
             </div>
         </div>

@@ -168,26 +168,32 @@
                             <small *ngIf="turno?.estado === 'disponible'">Disponible</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</small>
                             <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="!turno?.paciente?.id && turno?.estado === 'suspendido'">Turno suspendido (sin paciente)</small>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success">Asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger">No asistió</div>
-                            <div *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia">
-                                <i class="text-success mdi mdi-emoticon-happy"></i>
-                            </div>
                         </td>
                         <td>
                             <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
                                 title="Ya reasignado" titlePosition="left">
                                 <i class="mdi mdi-account-check"></i>
                             </small>
+                            <small *ngIf="turno?.paciente?.id && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge badge-success float-right"
+                                title="Asistió" titlePosition="left">
+                                <i class="mdi mdi-account-check"></i>
+                            </small>
+                            <small *ngIf="turno?.paciente?.id && turno.asistencia === 'noAsistio' && turno.estado !== 'suspendido'" class="badge badge-danger float-right"
+                                title="No asistió" titlePosition="left">
+                                <i class="mdi mdi-account-remove"></i>
+                            </small>
+                            <small *ngIf="turno?.paciente?.id && turno.confirmedAt" title="Confirmó asistencia" class="float-right">
+                                <i class="text-success mdi mdi-emoticon-happy"></i>
+                            </small>
                             <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente" class="badge badge-danger float-right"
                                 title="Aun no reasignado" titlePosition="left">
                                 <i class="mdi mdi-account-alert"></i>
                             </small>
-                            <small *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
-                                <popover-audit placement="left" [data]="turno"></popover-audit>
-                            </small>
                             <small *ngIf="turno?.nota" class="badge badge-warning float-right" title="{{turno.nota}}" titlePosition="left">
                                 <i class="text-warning warning mdi mdi-message"></i>
+                            </small>
+                            <small *ngIf="turno?.estado !== 'disponible' && turno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
+                                <popover-audit placement="left" [data]="turno"></popover-audit>
                             </small>
                         </td>
                     </tr>
