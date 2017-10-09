@@ -99,6 +99,7 @@
                                 <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos'">
                                     <!--Header agenda-->
                                     <div class="pt-3 text-center">
+                                        <div>Agenda seleccionada</div>
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
                                         <!-- <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span> -->
                                         <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
@@ -120,7 +121,7 @@
                                         <div *ngFor="let bloque of bloques; let indiceBq = index">
                                             <div *ngIf="tieneTurnos(bloque)">
                                                 <div *ngIf="bloque.descripcion">
-                                                    <span>{{bloque.descripcion}}</span>
+                                                    <span>Bloque: {{bloque.descripcion}}</span>
                                                     <!--<span class="h5 badge badge-pill badge-default"> {{bloque.duracionTurno}} '</span>-->
                                                 </div>
                                                 <!--Tipos de turnos-->
@@ -246,34 +247,55 @@
                                     <h5 class="pt-3 text-center">Confirme los datos del turno</h5>
                                     <!--Header-->
                                     <div class="alert alert-default">
-                                        <label>Turno</label>
-                                        <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio |
-                                            date: 'HH:mm'}}
-                                        </div>
-                                        <div *ngIf="turno.tipoPrestacion">
-                                            <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
-                                        <div *ngIf="agenda.profesionales">
-                                            <label>Profesional</label>
-                                            <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional | profesional}}
+                                        <div class="row">
+                                            <div class="col">
+                                                <label>Turno</label>
+                                                <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio
+                                                    | date: 'HH:mm'}}
+                                                </div>
+                                                <label>Paciente</label>
+                                                <div *ngIf="paciente">{{this.paciente | paciente}}</div>
+                                                <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div>
+                                                <div *ngIf="paciente.documento === ''">Sin documento (temporal)</div>
+                                            </div>
+                                            <div class="col">
+                                                <div *ngIf="turno.tipoPrestacion">
+                                                    <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
+                                                <div *ngIf="agenda.profesionales">
+                                                    <label>Profesional</label>
+                                                    <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional | profesional}}
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <label>Paciente</label>
-                                        <div *ngIf="paciente">{{this.paciente | paciente}}</div>
-                                        <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div>
-                                        <div *ngIf="paciente.documento === ''">Sin documento (temporal)</div>
-                                        <div *ngIf="permitirTurnoDoble">
-                                            <label>Turno doble: </label>
-                                            <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
-                                            <br>
+                                        <div class="row">
+                                            <div class="col">
+                                                <div *ngIf="permitirTurnoDoble">
+                                                    <label>Turno doble: </label>
+                                                    <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <!--Otros datos-->
+                                                <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
+                                                    name="turnoTipoPrestacion"></plex-select>
+                                                <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                                                <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <footer *ngIf="estadoT === 'confirmacion'" class="row">
+                                            <div class="col acciones-dar-turno">
+                                                <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+                                                <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
+                                                <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
+                                            </div>
+                                        </footer>
+
                                     </div>
-                                    <!--Otros datos-->
-                                    <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
-                                        name="turnoTipoPrestacion" [required]="true"></plex-select>
-                                    <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
-                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
-                                    <!-- <div class="text-right mt-3">
-                                    </div> -->
+                                    <hr>
                                 </ng-container>
                             </fieldset>
                         </plex-tab>
@@ -309,11 +331,6 @@
 
     <footer *ngIf="autorizado && showDarTurnos">
         <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
-        <div *ngIf="estadoT === 'confirmacion'" class="float-right">
-            <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
-            <plex-button *ngIf="mostrarCalendario" label="No se asigna Turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
-            <plex-button label="Confirmar Turno" type="success" (click)="darTurno($event)"></plex-button>
-        </div>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
 </form>
