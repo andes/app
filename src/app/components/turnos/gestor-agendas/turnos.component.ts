@@ -40,7 +40,7 @@ export class TurnosComponent implements OnInit {
             this.agenda.bloques[i].turnos.forEach((turno) => {
                 // Si el turno está disponible pero ya paso la hora
                 if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
-                    // this.arrayDelDia[i]--;
+                    this.arrayDelDia[i]--;
                 } else {
                     if (turno.estado === 'asignado') {
                         this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
