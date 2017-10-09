@@ -185,7 +185,8 @@ import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elemen
 import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
-
+import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
+import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -233,6 +234,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
     { component: AutocitadoComponent, key: 'AutocitadoComponent' },
+    { component: ObesidadComponent, key: 'ObesidadComponent'},
+    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent'}
 
 ];
 
@@ -262,12 +265,15 @@ const RUP_COMPONENTS = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    AutocitadoComponent
+    AutocitadoComponent,
+    ObesidadComponent,
+    HipertensionArterialComponent
 ];
 
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
+
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -288,7 +294,9 @@ export let RUPRegistry = {
     'TensionSistolicaComponent': TensionSistolicaComponent,
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
-    'AutocitadoComponent': AutocitadoComponent
+    'AutocitadoComponent': AutocitadoComponent,
+    'ObesidadComponent': ObesidadComponent,
+    'HipertensionArterialComponent' : HipertensionArterialComponent,
 
 };
 

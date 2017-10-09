@@ -8,6 +8,8 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { AgendaService } from '../../../services/turnos/agenda.service';
+import { IAgenda } from '../../../interfaces/turnos/IAgenda';
+import { ITurno } from '../../../interfaces/turnos/ITurno';
 @Component({
     selector: 'turnos-paciente',
     templateUrl: 'turnos-paciente.html',
@@ -16,11 +18,15 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    agenda: IAgenda;
+    showLiberarTurno: boolean;
 
     _paciente: IPaciente;
     _operacion: string;
     tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente = [];
+    turnosSeleccionados: any[] = [];
+
 
     @Input('operacion')
     set operacion(value: string) {
@@ -77,14 +83,29 @@ export class TurnosPacienteComponent implements OnInit {
                         tipoToast = 'warning';
                         break;
                     case 'liberarTurno':
-                        mensaje = 'Se anuló el turno del paciente';
-                        tipoToast = 'danger';
                         break;
                 }
-                this.plex.toast(tipoToast, mensaje);
+                if (mensaje !== '') {
+                    this.plex.toast(tipoToast, mensaje);
+                }
             });
         });
 
     }
 
+    liberarTurno(turno) {
+        this.turnosSeleccionados = [turno];
+        this.serviceAgenda.getById(turno.agenda_id).subscribe(resultado => {
+            this.agenda = resultado;
+            this.showLiberarTurno = true;
+        });
+    }
+
+    cancelaLiberarTurno() {
+        this.showLiberarTurno = false;
+    }
+    saveLiberarTurno(agenda: any) {
+        this.eventosTurno(this.turnosSeleccionados[0], 'liberarTurno');
+        this.showLiberarTurno = false;
+    }
 }

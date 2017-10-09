@@ -7,132 +7,76 @@ import { RUPComponent } from './../core/rup.component';
 })
 export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnInit {
 
+    public mensaje = '';
+    private pesoConceptId = '27113001';
+    private tallaConceptId = '14456009';
+
     ngOnInit() {
-        // if (this.elementoRUP) {
-        //     this.elementoRUP.requeridos.forEach((element, i) => {
-        //         this.conceptObserverService.observe(this.registro.registros[i]).subscribe((data) => {
-        //             if (this.registro.registros[i] !== data.valor) {
-        //                 this.registro.valor = data.valor;
-        //                 this.emitChange(false);
-        //             }
-        //         });
-
-        //         datoRecuperado = this.findValues(this.valoresPrestacionEjecucion, element.key);
-        //         if (datoRecuperado && datoRecuperado.length > 0) {
-        //             this.data[this.elementoRUP.key][element.key] =
-        //                 ((typeof datoRecuperado[0] === 'string') ? datoRecuperado[0] : datoRecuperado[0][Object.keys(datoRecuperado[0])[0]]);
-        //             this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
-        //             this.calculoIMC();
-        //         } else {
-        //             this.servicioPrestacion.getByPacienteKey(this.paciente.id, element.key).subscribe(resultado => {
-        //                 this.data[this.elementoRUP.key][element.key] = resultado;
-        //                 this.datosIngreso[element.key] = this.data[this.elementoRUP.key][element.key];
-        //                 this.calculoIMC();
-        //             });
-
-        //         }
-        //     });
-        // }
-        // this.calculoIMC();
-    }
-
-
-    findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
-        return this.findValuesHelper(obj, key, []);
-    }
-
-    findValuesHelper(obj, key, list) {
-        let i;
-        let children;
-        if (!obj) {
-            return list;
+        if (this.elementoRUP) {
+            this.calculoIMC();
         }
-        if (obj instanceof Array) {
-            for (i in obj) {
-                if (obj[i]) {
-                    list = list.concat(this.findValuesHelper(obj[i], key, []));
-                }
-            }
-            return list;
-        }
-        if (obj[key]) {
-            list.push(obj[key]);
-        }
-
-        if ((typeof obj === 'object') && (obj !== null)) {
-            children = Object.keys(obj);
-            if (children.length > 0) {
-                for (i = 0; i < children.length; i++) {
-                    list = list.concat(this.findValuesHelper(obj[children[i]], key, []));
-                }
-            }
-        }
-        return list;
     }
 
     calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
-        // // calcula el imc y/o devuelve alertas al usuario.
-        // let peso = null;
-        // let talla = null;
-        // let imc = null;
-        // let key;
-        // let prestacionPeso = false;
-        // let prestacionTalla = false;
-        // let arrayDePeso: any;
-        // let arrayDeTalla: any;
-        // // Aca va el valor del peso si es que esta en ejecucion..
-        // arrayDePeso = this.findValues(this.data[this.elementoRUP.key], 'peso');
-        // if (arrayDePeso.length > 0) {
-        //     peso = arrayDePeso[0];
-        //     prestacionPeso = true;
-        // }
-        // // Aca va el valor de la talla si es que esta en ejecucion..
-        // arrayDeTalla = this.findValues(this.data[this.elementoRUP.key], 'talla');
-        // if (arrayDeTalla.length > 0) {
-        //     talla = arrayDeTalla[0];
-        //     prestacionTalla = true;
-        // }
+        // calcula el imc y/o devuelve alertas al usuario.
+        let peso = null;
+        let talla = null;
+        let imc = null;
+        let key;
+        let prestacionPeso = false;
+        let prestacionTalla = false;
+        let arrayDePeso: any;
+        let arrayDeTalla: any;
 
-        // // Si encuentro las prestaciones que necesito. peso-talla
-        // if (prestacionPeso && prestacionTalla) {
-        //     // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
-        //     switch (true) {
-        //         // Tengo ambos valores calculo y muestro el IMC
-        //         case (peso != null && talla != null):
-        //             talla = talla / 100; // Paso a metros;
-        //             imc = peso / Math.pow(talla, 2);
-        //             this.mensaje.texto = '';
-        //             this.data[this.elementoRUP.key]['imc'] = Number(imc.toFixed(2));
-        //             window.setTimeout(() => {
-        //                 this.evtData.emit(this.data);
-        //             });
-        //             break;
-        //         // Mostramos el  Alerta de talla
-        //         case (peso != null && talla == null):
-        //             this.mensaje.texto = 'Falta completar el campo talla';
-        //             break;
-        //         // Mostramos alerta de peso.
-        //         case (talla != null && peso == null):
-        //             this.mensaje.texto = 'Falta completar el campo peso';
-        //             break;
-        //         // Se muestra alerta de talla y de peso
-        //         default:
-        //             this.mensaje.texto = 'Falta completar el campo talla y el campo peso';
-        //             break;
-        //     }
-        // } else {
-        //     switch (true) {
-        //         case (prestacionTalla && !prestacionPeso):
-        //             this.mensaje.texto = 'Completar el campo peso';
-        //             break;
-        //         case (prestacionPeso && !prestacionTalla):
-        //             this.mensaje.texto = 'Completar el campo talla';
-        //             break;
-        //         default:
-        //             this.mensaje.texto = 'Completar los campos talla y peso';
-        //             break;
-        //     }
-        // }
+        // busquemos los valores requeridos para la formula en la prestación actual
+        if (this.registro.registros && this.registro.registros.length > 0) {
+            let registroPeso = this.registro.registros.find(r => r.concepto.conceptId === this.pesoConceptId);
+            if (registroPeso && registroPeso.valor) {
+                peso = registroPeso.valor;
+            } else {
+                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.pesoConceptId).subscribe(resultado => {
+                    if (resultado) {
+                        peso = resultado[0].valor;
+                    }
+                });
+            }
+
+            let registroTalla = this.registro.registros.find(r => r.concepto.conceptId === this.tallaConceptId);
+            if (registroTalla && registroTalla.valor) {
+                talla = registroTalla.valor;
+            } else {
+                this.prestacionesService.getByPacienteKey(this.prestacion.paciente.id, this.tallaConceptId).subscribe(resultado => {
+                    if (resultado) {
+                        talla = resultado[0].valor;
+                    }
+                });
+            }
+        }
+
+        // Si encuentro las prestaciones que necesito. peso-talla
+        if (peso && talla) {
+            talla = talla / 100; // Paso a metros;
+            imc = peso / Math.pow(talla, 2);
+            this.mensaje = '';
+            this.registro.valor = Number(imc.toFixed(2));
+            this.emitChange(false);
+        } else {
+            // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
+            switch (true) {
+                // Mostramos el  Alerta de talla
+                case (peso != null && talla == null):
+                    this.mensaje = 'Falta completar el campo talla';
+                    break;
+                // Mostramos alerta de peso.
+                case (talla != null && peso == null):
+                    this.mensaje = 'Falta completar el campo peso';
+                    break;
+                // Se muestra alerta de talla y de peso
+                default:
+                    this.mensaje = 'Falta completar el campo talla y el campo peso';
+                    break;
+            }
+        }
     }
 
 }

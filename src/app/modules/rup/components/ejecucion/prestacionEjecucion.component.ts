@@ -68,6 +68,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public registroATransformar: IPrestacionRegistro;
 
+    public masFrecuentes: any[] = [];
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -282,6 +284,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
+        this.recuperaLosMasFrecuentes(snomedConcept);
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -322,40 +325,50 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(snomedConcept, registroDestino = null) {
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
+        // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
+        if (registros.length > 0) {
+            this.showVincular = true;
+        }
         // nos fijamos si el concepto ya aparece en los registros
-        let existe = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+        let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
 
         if (this.transformarProblema && this.registroATransformar) {
             if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
-                this.plex.toast('warning', 'El elemento seleccionado debe ser un hallazgo');
+                this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
                 return false;
             }
-            // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
-            if (registros.length > 0) {
-                this.showVincular = true;
-            }
-            if (existe) {
-                // TODO ver que se hace si el concepto ya esta cargado
+
+            if (registoExiste) {
+                this.plex.confirm('El concepto seleccionado ya se ha registrado en la consulta ¿Desea continuar con la transformación?', 'Transformar Problema').then(validar => {
+                    if (validar) {
+                        // Si el concepto ya esta registrado en la consulta los vinculamos
+
+                        registoExiste.valor['idRegistroTransformado'] = this.registroATransformar.id;
+                        registoExiste.valor['origen'] = 'transformación';
+                        registoExiste.relacionadoCon = [this.registroATransformar];
+                        this.transformarProblema = false;
+                        this.registroATransformar.valor.estado = 'transformado';
+                        this.registroATransformar.valor['idRegistroGenerado'] = registoExiste.id;
+                        return registoExiste;
+                    }
+                });
             } else {
                 this.registroATransformar.valor.estado = 'transformado';
                 let valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
                 let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
                 nuevoRegistro.relacionadoCon = [this.registroATransformar];
                 this.transformarProblema = false;
+                this.registroATransformar.valor.estado = 'transformado';
+                this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
+                return nuevoRegistro;
             }
 
         } else {
-            this.colapsarPrestaciones();
-
-            // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
-            if (registros.length > 0) {
-                this.showVincular = true;
-            }
-            if (existe) {
+            if (registoExiste) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
-
+            this.colapsarPrestaciones();
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
             if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
@@ -364,20 +377,31 @@ export class PrestacionEjecucionComponent implements OnInit {
                             // TODO:: vamos a comprobar si se trata de hallazgo cronico o activo
                             if (dato.evoluciones[0].estado === 'activo') {
                                 let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                this.cargarNuevoRegistro(snomedConcept, valor);
+                                let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
                             } else {
-                                this.cargarNuevoRegistro(snomedConcept);
+                                let resultado = this.cargarNuevoRegistro(snomedConcept);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
                             }
                         } else {
-                            this.cargarNuevoRegistro(snomedConcept);
+                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                            if (registroDestino) {
+                                registroDestino.relacionadoCon = [resultado];
+                            }
                         }
                     });
 
             } else {
-                this.cargarNuevoRegistro(snomedConcept);
+                let resultado = this.cargarNuevoRegistro(snomedConcept);
+                if (registroDestino) {
+                    registroDestino.relacionadoCon = [resultado];
+                }
             }
         }
-
     }
 
     /**
@@ -606,8 +630,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.prestacion.ejecucion.registros) {
             this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
-                this.itemsRegistros[element.id].collapse = true;
+                if (this.itemsRegistros[element.id]) {
+                    this.itemsRegistros[element.id].collapse = true;
+                }
             });
         }
+    }
+    recuperaLosMasFrecuentes(concepto) {
+        this.masFrecuentes = [];
+        let elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        elementoRUP.frecuentes.forEach(element => {
+            this.masFrecuentes.push(element);
+        });
     }
 }

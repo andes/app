@@ -197,13 +197,13 @@
                                         <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
 
                                             <plex-button *ngIf="turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion)"
-                                                label="Iniciar Prestación" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
+                                                label="INICIAR PRESTACION" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion)"
-                                                label="Ver registros" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
+                                                label="VER REGISTROS" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion)"
-                                                label="Ver resumen" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
+                                                label="VER RESUMEN" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
 
                                         </ng-container>
                                     </td>
@@ -259,11 +259,11 @@
                                 </td>
                                 <td>
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)"
-                                        label="Ver registros" type="primary btn-sm">
+                                        label="VER REGISTROS" type="primary btn-sm">
                                     </plex-button>
 
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" (click)="routeTo('validacion', prestacion.id)"
-                                        label="Ver resumen" type="primary btn-sm">
+                                        label="VER RESUMEN" type="primary btn-sm">
                                     </plex-button>
                                 </td>
                             </tr>
@@ -278,5 +278,5 @@
 
 <!--Footer-->
 <footer>
-    <plex-button icon="account" label="Registrar prestación fuera de agenda" type="success" class="float-right" (click)="crearPrestacion()"></plex-button>
+    <plex-button  label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
 </footer>

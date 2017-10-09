@@ -43,7 +43,8 @@
                     </div>
                     <!--Calendario-->
                     <app-calendario *ngIf="mostrarCalendario" [agendas]="agendas" [fecha]="opciones.fecha" [agenda]="agenda" [estado]="estadoT"
-                        [opcionesCalendario]="ocultarFinesDeSemana" [_solicitudPrestacion]="_solicitudPrestacion" (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
+                        [opcionesCalendario]="ocultarFinesDeSemana" [mostrarNoDisponibles]="mostrarNoDisponibles" [_solicitudPrestacion]="_solicitudPrestacion"
+                        (agendaChanged)="seleccionarAgenda($event)"></app-calendario>
                 </plex-box>
             </div>
             <!--Lateral-->
