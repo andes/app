@@ -2,7 +2,7 @@
     padding-top: 1em;
     font-size: 1.4em;
     color: #AAAAAA;
-    font-weight: 100;
+    font-weight: 400;
     text-transform: uppercase;
 }
 
@@ -35,4 +35,9 @@
 .badge-pendiente {
     border-color: #AAAAAA;
     color: #AAAAAA;
+}
+.menu-huds {
+    .btn {
+        width: 24.5%;
+    }
 }

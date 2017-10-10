@@ -119,7 +119,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             });
         } else {
-            this.plex.toast('warning', 'Debe seleccionar un diagnostico principal');
+            this.plex.toast('warning', 'Debe seleccionar un diagnóstico principal');
         }
     }
 
