@@ -1,254 +1,244 @@
 <section *ngIf="showRevisionAgenda">
-    <div class="row">
-        <div class="col-4">
-            <plex-box>
-                <header>
-                    <div class="clearfix" *ngIf="modoCompleto">
-                        <div class="page-title float-left">Revisión de Agendas</div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
-                            'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
-                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}
-                            </div>
+        <div class="row">
+            <div class="col-4">
+                <plex-box>
+                    <header>
+                        <div class="clearfix" *ngIf="modoCompleto">
+                            <div class="page-title float-left">Revisión de Agendas</div>
                         </div>
-                    </div>
-                </header>
-                <table *ngFor="let bloque of agenda.bloques" class="table table-striped">
-                    <thead *ngIf="bloque.descripcion">
-                        <tr>
-                            <th colspan="4">{{bloque.descripcion}}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
-                            <td (click)="seleccionarTurno(turno, bloque)">
-                                <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
-                                <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
-                            </td>
-                            <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
-                                <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
-                            </td>
-                            <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
-                                <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }} </span>
-                                <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }} </span>
-                                <small *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento !== ''">
-                                    <span *ngIf="turno.paciente.documento !== ''">| DNI: {{ turno.paciente.documento | number }}</span>
-                                </small>
-                                <small *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento === ''">
-                                    <span>| Sin documento (temporal)</span>
-                                </small>
-                                <small>
-                                    <span *ngIf="turno.paciente && turno.paciente.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta!=''">
-                                        | Nro Carpeta
-                                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
-                                            {{ carpeta.nroCarpeta }}
-                                            <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
-                                        </span>
-                                    </span>
-                                </small>
-                                <span *ngIf="turno && turno.estado === 'disponible'">Sin asignar</span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
-                                <span *ngIf="turno && turno.nota">
-                                    <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia === 'asistio' && turno?.diagnosticoPrincipal?.codificacion == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && (turno?.diagnosticoPrincipal?.codificacion != null || (turno?.asistencia && turno?.asistencia !== 'asistio'))">| Codificada</span>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-                <table class="table table-striped">
-                    <thead *ngIf="agenda.sobreturnos.length > 0">
-                        <tr>
-                            <th colspan="4">Sobreturnos
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- SOBRETURNOS -->
-                        <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
-                            <td (click)="seleccionarTurno(sobreturno, -1)">
-                                <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
-                                <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
-                            </td>
-                            <td (click)="seleccionarTurno(agenda.sobreturnos[i], bloque)">
-                                <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
-                            </td>
-                            <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
-                                <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
-                                <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
-                                <small>
-                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">| DNI: {{ sobreturno.paciente.documento | number }}</span>
-                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''" class="text-danger">| DNI: Sin documento (temporal)</span>
-                                </small>
-                                <small>
-                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.carpetaEfectores && sobreturno.paciente.carpetaEfectores.length > 0 && sobreturno.paciente.carpetaEfectores[0].nroCarpeta!=''">
-                                        | Nro Carpeta
-                                        <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                                            {{carpeta.nroCarpeta}}
-                                            <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
-                                        </span>
-                                    </span>
-                                </small>
-                                <!-- <span *ngIf="sobreturno && turno.estado === 'disponible'">Sin asignar</span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span> -->
-                                <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
-                                <span *ngIf="sobreturno && sobreturno.nota">
-                                    <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnosticoPrincipal?.codificacion == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnosticoPrincipal?.codificacion != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
-
-                            </td>
-                        </tr>
-                    </tbody>
-                    <!-- /SOBRETURNOS -->
-                </table>
-                <!-- <div class="row">
-                    <div class="col">
-                        <plex-button *ngIf="enableAsistenciaCerrada" label="Cerrar Asistencia" icon="account-check" type="primary" (click)="cerrarAsistencia()"></plex-button>
-                    </div>
-                    <div class="col">
-                        <plex-button *ngIf="enableCodificada" label="Cerrar Codificacion" icon="checkbox-marked-outline" type="primary" (click)="cerrarCodificacion()"></plex-button>
-                    </div>
-                    <br>
-                </div> -->
-            </plex-box>
-        </div>
-        <div class="col-8" *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
-            <plex-box>
-                <!--REGISTRO DE ASISTENCIA-->
-                <header>
-                    <div class="clearfix">
-                        <div class="page-title">REGISTROS DEL TURNO</div>
-                    </div>
-                </header>
-                <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
-                    <div class="col" *ngIf="paciente?.id">
-                        <small>
-                            <span *ngIf="paciente.documento !== ''"> DNI {{ paciente.documento | number }}</span>
-                            <span *ngIf="paciente.documento !== ''" class="text-danger"> Sin documento (temporal)</span>
-                        </small>
-                        <div *ngIf="paciente?.id"> {{paciente | paciente}}</div>
-                    </div>
-                    <div class="col" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
-                        <small>
-                            <span> No existe un paciente asociado</span>
-                        </small>
-                    </div>
-                    <div class="col" *ngIf="!pacientesSearch">
-                        <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6" *ngIf="turnoSeleccionado.paciente?.id">
-                        <small>
-                            <span *ngIf="turnoSeleccionado.paciente.documento !== ''"> DNI {{ turnoSeleccionado.paciente.documento | number}}</span>
-                            <span *ngIf="turnoSeleccionado.paciente.documento === ''"> Sin documento (temporal)</span>
-                        </small>
-                        <div *ngIf="turnoSeleccionado.paciente?.id"> {{ turnoSeleccionado.paciente | paciente }}</div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col" *ngIf="pacientesSearch">
-                        <div class="panel panel-default">
-                            <div class="clear"></div>
-                            <pacientesSearch [modoCompleto]="true" (selected)="onReturn($event)"></pacientesSearch>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
-                    <div class="col-6">
-                        <br>
-                        <label>Prestación: </label>
-                        <plex-select [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
-                        </plex-select>
-                    </div>
-                </div>
-                <br>
-                <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
-                    <div class="row">
-                        <div class="col">
-                            <!--ASISTENCIA-->
-                            <h5>Asistencia</h5>
-                            <hr>
-                            <div *ngFor="let estado of estadosAsistencia; let i=index">
-                                <td (click)="seleccionarAsistencia(estado)">
-                                    <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
-                                    <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
-                                </td>
-                                <td (click)="asistenciaSeleccionada(estado)">
-                                    <strong>{{ estado.nombre }}</strong>
-                                </td>
-                            </div>
-                            <!--/ ASISTENCIA-->
-                        </div>
-                    </div>
-                    <br>
-                    <!-- TODO: Botho...hace tu gracia -->
-                    <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
-                        <!--CODIFICACION-->
-                        <h5>Codificación</h5>
-                        <hr>
-                        <h6>
-                            <strong>Diagnóstico o Motivo de Consulta</strong>
-                        </h6>
-                        <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.ilegible' name="ilegible" label="El diagnóstico es ilegible"
-                            (click)="marcarIlegible()"></plex-bool>
-                        <div class="row" *ngIf="!turnoSeleccionado.diagnosticoPrincipal.ilegible">
-                            <div class="col-8">
-                                <plex-select [(ngModel)]="nuevoCodigo" name="searchCodigo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
-                                    placeholder="Seleccione un ćodigo CIE10" (change)="agregarDiagnostico()"></plex-select>
-                            </div>
-                            <!-- <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary"></plex-button> -->
-                        </div>
-                        <div class="list-group">
-                            <div *ngFor="let diagnostico of diagnosticos; let i = index; " class="list-group-item">
-                                <div class="row">
-                                    <div class="col-6">
-                                        {{diagnostico.codificacion.sinonimo}}
-                                    </div>
-                                    <div class="col-2">
-                                        <span *ngIf="i==0" class="badge-success">Principal</span>
-                                    </div>
-                                    <div class="col-2">
-                                        <div *ngIf="i==0">
-                                            <plex-bool [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
-                                        </div>
-                                    </div>
-                                    <div class="col-2">
-                                        <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
-                                    </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+                                'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                                <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}
                                 </div>
                             </div>
                         </div>
-                        <!--/ CODIFICACION-->
-                    </div>
-                    <br>
-
-                    <div class="row">
-                        <div class="col text-right">
-                            <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
-                            <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>
+                    </header>
+                    <table *ngFor="let bloque of agenda.bloques" class="table table-striped">
+                        <thead *ngIf="bloque.descripcion">
+                            <tr>
+                                <th colspan="4">{{bloque.descripcion}}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
+                                <td (click)="seleccionarTurno(turno, bloque)">
+                                    <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                                </td>
+                                <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
+                                    <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                </td>
+                                <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
+                                    <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }} </span>
+                                    <small *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento !== ''">
+                                        <span *ngIf="turno.paciente.documento !== ''">| DNI: {{ turno.paciente.documento | number }}</span>
+                                    </small>
+                                    <small *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento === ''">
+                                        <span>| Sin documento (temporal)</span>
+                                    </small>
+                                    <small>
+                                        <span *ngIf="turno.paciente && turno.paciente.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta!=''">
+                                            | Nro Carpeta
+                                            <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
+                                                {{ carpeta.nroCarpeta }}
+                                                <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
+                                            </span>
+                                        </span>
+                                    </small>
+                                    <span *ngIf="turno && turno.estado === 'disponible'">Sin asignar</span>
+                                    <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                    <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
+                                    <span *ngIf="turno && turno.nota">
+                                        <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                    </span>
+                                    <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia === 'asistio' && turno?.diagnosticoPrincipal?.codificacion == null">| Asistencia Verificada</span>
+                                    <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && (turno?.diagnosticoPrincipal?.codificacion != null || (turno?.asistencia && turno?.asistencia !== 'asistio'))">| Codificada</span>
+    
+                                </td>
+                            </tr>
+    
+                        </tbody>
+                    </table>
+                    <table class="table table-striped">
+                        <thead *ngIf="agenda.sobreturnos.length > 0">
+                            <tr>
+                                <th colspan="4">Sobreturnos
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- SOBRETURNOS -->
+                            <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
+                                <td (click)="seleccionarTurno(sobreturno, -1)">
+                                    <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                                </td>
+                                <td (click)="seleccionarTurno(agenda.sobreturnos[i], bloque)">
+                                    <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
+                                </td>
+                                <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
+                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
+                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
+                                    <small>
+                                        <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">| DNI: {{ sobreturno.paciente.documento | number }}</span>
+                                        <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''" class="text-danger">| DNI: Sin documento (temporal)</span>
+                                    </small>
+                                    <small>
+                                        <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.carpetaEfectores && sobreturno.paciente.carpetaEfectores.length > 0 && sobreturno.paciente.carpetaEfectores[0].nroCarpeta!=''">
+                                            | Nro Carpeta
+                                            <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
+                                                {{carpeta.nroCarpeta}}
+                                                <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
+                                            </span>
+                                        </span>
+                                    </small>
+                                    <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
+                                    <span *ngIf="sobreturno && sobreturno.nota">
+                                        <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                    </span>
+                                    <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnosticoPrincipal?.codificacion == null">| Asistencia Verificada</span>
+                                    <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnosticoPrincipal?.codificacion != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
+    
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!-- /SOBRETURNOS -->
+                    </table>
+                </plex-box>
+            </div>
+            <div class="col-8" *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
+                <plex-box>
+                    <!--REGISTRO DE ASISTENCIA-->
+                    <header>
+                        <div class="clearfix">
+                            <div class="page-title">REGISTROS DEL TURNO</div>
+                        </div>
+                    </header>
+                    <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
+                        <div class="col" *ngIf="paciente?.id">
+                            <small>
+                                <span>Documento: {{paciente.documento}}</span>
+                                <span *ngIf="paciente.documento !== ''"> DNI {{ paciente.documento | number }}</span>
+                                <span *ngIf="paciente.documento === ''" class="text-danger"> Sin documento (temporal)</span>
+                            </small>
+                            <div *ngIf="paciente?.id"> {{paciente | paciente}}</div>
+                        </div>
+                        <div class="col" *ngIf="!paciente?.id && !turnoSeleccionado.paciente">
+                            <small>
+                                <span> No existe un paciente asociado</span>
+                            </small>
+                        </div>
+                        <div class="col" *ngIf="!pacientesSearch">
+                            <plex-button type="primary" icon="mdi mdi-calendar-multiple" label="Buscar Paciente" (click)="buscarPaciente()"></plex-button>
                         </div>
                     </div>
-                </div>
-
-            </plex-box>
+                    <div class="row">
+                        <div class="col-6" *ngIf="turnoSeleccionado.paciente?.id">
+                            <small>
+                                <span *ngIf="turnoSeleccionado.paciente.documento !== ''"> DNI {{ turnoSeleccionado.paciente.documento | number}}</span>
+                                <span *ngIf="turnoSeleccionado.paciente.documento === ''"> Sin documento (temporal)</span>
+                            </small>
+                            <div *ngIf="turnoSeleccionado.paciente?.id"> {{ turnoSeleccionado.paciente | paciente }}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" *ngIf="pacientesSearch">
+                            <div class="panel panel-default">
+                                <div class="clear"></div>
+                                <pacientesSearch [modoCompleto]="true" (selected)="onReturn($event)"></pacientesSearch>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="!turnoSeleccionado.tipoPrestacion && bloqueSeleccionado && paciente?.id">
+                        <div class="col-6">
+                            <br>
+                            <label>Prestación: </label>
+                            <plex-select [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <br>
+                    <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
+                        <div class="row">
+                            <div class="col">
+                                <!--ASISTENCIA-->
+                                <h5>Asistencia</h5>
+                                <hr>
+                                <div *ngFor="let estado of estadosAsistencia; let i=index">
+                                    <td (click)="seleccionarAsistencia(estado)">
+                                        <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
+                                        <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
+                                    </td>
+                                    <td (click)="asistenciaSeleccionada(estado)">
+                                        <strong>{{ estado.nombre }}</strong>
+                                    </td>
+                                </div>
+                                <!--/ ASISTENCIA-->
+                            </div>
+                        </div>
+                        <br>
+                        <!-- TODO: Botho...hace tu gracia -->
+                        <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
+                            <!--CODIFICACION-->
+                            <h5>Codificación</h5>
+                            <hr>
+                            <h6>
+                                <strong>Diagnóstico o Motivo de Consulta</strong>
+                            </h6>
+                            <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticoPrincipal.ilegible' name="ilegible" label="El diagnóstico es ilegible"
+                                (click)="marcarIlegible()"></plex-bool>
+                            <div class="row" *ngIf="!turnoSeleccionado.diagnosticoPrincipal.ilegible">
+                                <div class="col-8">
+                                    <plex-select [(ngModel)]="nuevoCodigo" name="searchCodigo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
+                                        placeholder="Seleccione un ćodigo CIE10" (change)="agregarDiagnostico()"></plex-select>
+                                </div>
+                                <!-- <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary"></plex-button> -->
+                            </div>
+                            <div class="list-group">
+                                <div *ngFor="let diagnostico of diagnosticos; let i = index; " class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            {{diagnostico.codificacion.sinonimo}}
+                                        </div>
+                                        <div class="col-2">
+                                            <span *ngIf="i==0" class="badge-success">Principal</span>
+                                        </div>
+                                        <div class="col-2">
+                                            <div *ngIf="i==0">
+                                                <plex-bool [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/ CODIFICACION-->
+                        </div>
+                        <br>
+    
+                        <div class="row">
+                            <div class="col text-right">
+                                <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
+                                <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>
+                            </div>
+                        </div>
+                    </div>
+    
+                </plex-box>
+            </div>
         </div>
-    </div>
-</section>
-<footer *ngIf="modoCompleto">
-    <div class="row">
-        <div class="col text-right">
-            <plex-button type="default" label="Volver" (click)="volver()">
-            </plex-button>
+    </section>
+    <footer *ngIf="modoCompleto">
+        <div class="row">
+            <div class="col text-right">
+                <plex-button type="default" label="Volver" (click)="volver()">
+                </plex-button>
+            </div>
         </div>
-    </div>
-</footer>
+    </footer>
+    
