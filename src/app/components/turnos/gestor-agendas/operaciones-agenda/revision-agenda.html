@@ -33,7 +33,6 @@
                             </td>
                             <td (click)="seleccionarTurno(bloque.turnos[i], bloque)">
                                 <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }} </span>
-                                <span *ngIf="turno.paciente && turno.paciente.id">{{ turno.paciente | paciente }} </span>
                                 <small *ngIf="turno.paciente && turno.paciente.id && turno.paciente.documento !== ''">
                                     <span *ngIf="turno.paciente.documento !== ''">| DNI: {{ turno.paciente.documento | number }}</span>
                                 </small>
@@ -96,8 +95,6 @@
                                         </span>
                                     </span>
                                 </small>
-                                <!-- <span *ngIf="sobreturno && turno.estado === 'disponible'">Sin asignar</span>
-                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span> -->
                                 <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                                 <span *ngIf="sobreturno && sobreturno.nota">
                                     <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
@@ -110,15 +107,6 @@
                     </tbody>
                     <!-- /SOBRETURNOS -->
                 </table>
-                <!-- <div class="row">
-                    <div class="col">
-                        <plex-button *ngIf="enableAsistenciaCerrada" label="Cerrar Asistencia" icon="account-check" type="primary" (click)="cerrarAsistencia()"></plex-button>
-                    </div>
-                    <div class="col">
-                        <plex-button *ngIf="enableCodificada" label="Cerrar Codificacion" icon="checkbox-marked-outline" type="primary" (click)="cerrarCodificacion()"></plex-button>
-                    </div>
-                    <br>
-                </div> -->
             </plex-box>
         </div>
         <div class="col-8" *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
@@ -132,8 +120,9 @@
                 <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
                     <div class="col" *ngIf="paciente?.id">
                         <small>
+                            <span>Documento: {{paciente.documento}}</span>
                             <span *ngIf="paciente.documento !== ''"> DNI {{ paciente.documento | number }}</span>
-                            <span *ngIf="paciente.documento !== ''" class="text-danger"> Sin documento (temporal)</span>
+                            <span *ngIf="paciente.documento === ''" class="text-danger"> Sin documento (temporal)</span>
                         </small>
                         <div *ngIf="paciente?.id"> {{paciente | paciente}}</div>
                     </div>
