@@ -1,3 +1,4 @@
+import { SnomedService } from './../../../../services/term/snomed.service';
 import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -32,9 +33,12 @@ export class PrestacionValidacionComponent implements OnInit {
     solicitudTurno;
     public diagnosticoReadonly = false;
 
+    // array con los mapeos de snomed a cie10
+    public codigosCie10 = {};
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
-        private servicioPaciente: PacienteService,
+        private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router, private route: ActivatedRoute) {
     }
 
@@ -73,15 +77,25 @@ export class PrestacionValidacionComponent implements OnInit {
             // [jgabriel] ¿Hace falta esto?
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
+                this.prestacion.ejecucion.registros.forEach(registro => {
+                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                    }
+                    if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
+                        // TODO:: BUSCAR CODIGO CIE10 POR CONCEPTO
+                        let parametros = {
+                            conceptId: registro.concepto.conceptId,
+                            paciente: this.paciente,
+                            secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                        };
+                        this.codigosCie10[registro.id] = {};
+                        this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                            this.codigosCie10[registro.id] = codigo;
+                        });
+
+                    }
+                });
             });
-
-            this.prestacion.ejecucion.registros.forEach(registro => {
-                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
-                }
-
-            });
-
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
         });
@@ -185,6 +199,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
         });
     }
+
     diagnosticoPrestacion(i) {
         let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         if (actual) {
