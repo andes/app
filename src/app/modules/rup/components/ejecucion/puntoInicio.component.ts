@@ -269,7 +269,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', prestacion.id]);
                 }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
+                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
