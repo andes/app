@@ -70,6 +70,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public masFrecuentes: any[] = [];
 
+
+    // Defaults de Tabs panel derecho
+    public panelIndex = 0;
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -528,7 +532,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     volver() {
-        this.router.navigate(['rup']);
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al Punto de Inicio?').then(confirmado => {
+            if (confirmado) {
+                this.router.navigate(['rup']);
+            } else {
+                return;
+            }
+        });
     }
 
     onConceptoDrop(e: any) {
@@ -575,7 +585,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
                     if (registro.id !== registroActual.relacionadoCon[0].id) {
-
                         return registro;
                     }
                 } else {
