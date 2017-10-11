@@ -139,6 +139,7 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
+    // TODO: Determinar si es crónico con SNOMED
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[0].esCronico);
