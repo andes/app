@@ -20,7 +20,8 @@ import { Cie10Service } from './../../../../services/term/cie10.service';
 
 @Component({
     selector: 'revision-agenda',
-    templateUrl: 'revision-agenda.html'
+    templateUrl: 'revision-agenda.html',
+    styleUrls: ['.././turnos.scss']
 })
 
 export class RevisionAgendaComponent implements OnInit {
@@ -75,6 +76,7 @@ export class RevisionAgendaComponent implements OnInit {
     private estadoAsistenciaCerrada;
     private estadoCodificado;
     public estadosAgendaArray = enumToArray(EstadosAgenda);
+    public mostrarHeaderCompleto = false;
 
 
     constructor(public plex: Plex,
