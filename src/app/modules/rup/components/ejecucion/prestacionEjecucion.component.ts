@@ -521,7 +521,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     volver() {
-        this.plex.confirm('Se van a perder los cambios no guardados', '<i class="mdi mdi-alert"></i> ¿Volver al Punto de Inicio?').then(confirmado => {
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al Punto de Inicio?').then(confirmado => {
             if (confirmado) {
                 this.router.navigate(['rup']);
             } else {
