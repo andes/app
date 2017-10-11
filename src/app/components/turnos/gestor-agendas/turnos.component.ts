@@ -170,6 +170,10 @@ export class TurnosComponent implements OnInit {
         return this.agenda.estado !== 'suspendida';
     }
 
+    agendaNoCerrada() {
+        return this.agenda.estado !== 'asistenciaCerrada' && this.agenda.estado !== 'codificada';
+    }
+
     tienenPacientes() {
         return this.turnosSeleccionados.filter((turno) => {
             return (turno.paciente && turno.paciente.id);
@@ -253,27 +257,27 @@ export class TurnosComponent implements OnInit {
 
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
+            darAsistencia: this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
-            sacarAsistencia: (this.tienenAsistencia()) && this.tienenPacientes(),
+            sacarAsistencia: this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes(),
             // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
-            suspenderTurno: this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
+            suspenderTurno: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-            liberarTurno: (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
+            liberarTurno: this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
             // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
             reasignarTurno: false,
             // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
-            listaDeEspera: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
+            listaDeEspera: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
             // Enviar SMS
             // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
-            nota: this.turnosSeleccionados.length > 0,
+            nota: this.agendaNoCerrada() && this.turnosSeleccionados.length > 0,
             // Se verifica si el siguiente turno se encuentra disponible
-            turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
+            turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
             && this.todosConEstado('asignado') && this.siguienteDisponible(),
             // Se puede quitar turno doble sólo si está en ese estado
-            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble'),
+            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble'),
             // Se puede editar carpeta si el turno tiene paciente
-            editarCarpeta: this.turnosSeleccionados.length === 1 && this.tienenPacientes()
+            editarCarpeta: this.agendaNoCerrada() && this.turnosSeleccionados.length === 1 && this.tienenPacientes()
         };
     }
 

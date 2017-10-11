@@ -83,8 +83,8 @@ export class PuntoInicioComponent implements OnInit {
         Observable.forkJoin(
             // Agendas
             this.servicioAgenda.get({
-                fechaDesde: this.fecha,
-                fechaHasta: this.fecha,
+                fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
+                fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada'],
                 tieneTurnosAsignados: true
