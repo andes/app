@@ -327,6 +327,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+        let valor;
+        let resultado;
+
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
@@ -335,7 +338,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-
         if (this.transformarProblema && this.registroATransformar) {
             if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
@@ -356,7 +358,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             } else {
                 this.registroATransformar.valor.estado = 'transformado';
-                let valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
+                valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
                 let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
                 nuevoRegistro.relacionadoCon = [this.registroATransformar];
                 this.transformarProblema = false;
@@ -375,11 +377,23 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
+                            // viene desde la huds
+                                let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
+                                if (!existeEjecucion) {
+                                    valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                    if (registroDestino) {
+                                        registroDestino.relacionadoCon = [resultado];
+                                    }
+                                } else {
+                                    this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                                    return false;
+                                }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
-                                let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                 if (registroDestino) {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
@@ -388,13 +402,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 if (dato.evoluciones[0].estado === 'activo') {
                                     this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
                                         if (confirmar) {
-                                            let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                            let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                            valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                            resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                             if (registroDestino) {
                                                 registroDestino.relacionadoCon = [resultado];
                                             }
                                         } else {
-                                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                                            resultado = this.cargarNuevoRegistro(snomedConcept);
                                             if (registroDestino) {
                                                 registroDestino.relacionadoCon = [resultado];
                                             }
@@ -403,7 +417,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                             }
                         } else {
-                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                            resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (registroDestino) {
                                 registroDestino.relacionadoCon = [resultado];
                             }
@@ -411,7 +425,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     });
 
             } else {
-                let resultado = this.cargarNuevoRegistro(snomedConcept);
+                resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
                     registroDestino.relacionadoCon = [resultado];
                 }
@@ -427,7 +441,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            this.ejecutarConcepto(resultadoHuds.data.concepto);
+            let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
+            let existeEjecucion = this.prestacion.ejecucion.registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen));
+            if (!existeEjecucion) {
+                let valor = { idRegistroOrigen: idRegistroOrigen };
+                let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                // TODO revisar registro de destino
+                // if (registroDestino) {
+                //     registroDestino.relacionadoCon = [resultado];
+                // }
+            } else {
+                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                return false;
+            }
+            // this.ejecutarConcepto(resultadoHuds.data.concepto, true);
         }
     }
 
