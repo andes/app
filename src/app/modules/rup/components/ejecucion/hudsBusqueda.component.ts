@@ -73,7 +73,7 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
-            // this.listarProblemasCronicos();
+            this.listarProblemasCronicos();
             // this.listarHallazgos();
             this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
@@ -121,12 +121,14 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
+    // Trae los hallazgos
     listarHallazgos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgos = hallazgos;
         });
     }
 
+    // Trae los problemas activos NO activos
     listarHallazgosNoActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
 
@@ -139,16 +141,26 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // TODO: Determinar si es crónico con SNOMED
+    // Trae los problemas crónicos (por SNOMED refsetId)
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[0].esCronico);
+            // Buscamos si es crónico 
+            this.hallazgosCronicos = hallazgos.filter((hallazgo) => {
+                if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
+                    return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
+                }
+            });
         });
     }
 
+    // Trae los problemas activos NO crónicos
     listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo');
+            this.problemasActivos = hallazgos.filter((hallazgo) => {
+                if (hallazgo.evoluciones[0].estado === 'activo') {
+                    return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
+                }
+            });
         });
     }
 

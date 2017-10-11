@@ -49,7 +49,8 @@
                                     </div>
                                     <br>
                                     <small *ngIf="hallazgo.evoluciones">
-                                        ultima evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
+                                        última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
+                                        <br> estado: {{ hallazgo.evoluciones[0].estado }}
                                     </small>
                                     <br>
                                     <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
