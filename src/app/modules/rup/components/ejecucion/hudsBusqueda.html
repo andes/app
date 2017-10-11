@@ -32,7 +32,7 @@
 
         <!-- Vista: Hallazgos -->
         <ng-container *ngIf="vista === 'hallazgos'">
-            <div class="vista-titulo">Problemas crónicos</div>
+            <div class="vista-titulo">Hallazgos crónicos</div>
 
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
@@ -49,7 +49,8 @@
                                     </div>
                                     <br>
                                     <small *ngIf="hallazgo.evoluciones">
-                                        ultima evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
+                                        última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
+                                        <br> estado: {{ hallazgo.evoluciones[0].estado }}
                                     </small>
                                     <br>
                                     <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
@@ -68,8 +69,7 @@
                 </ng-container>
             </ul>
             <div *ngIf="hallazgosCronicos.length === 0">No hay problemas crónicos</div>
-            <hr>
-            <div class="vista-titulo">Problemas activos</div>
+            <div class="vista-titulo">Hallazgos activos</div>
             <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let i = index">
                     <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
@@ -101,7 +101,7 @@
                 </ng-container>
             </ul>
             <div *ngIf="problemasActivos.length === 0">No hay problemas activos</div>
-            <div class="vista-titulo">Otros Problemas</div>
+            <div class="vista-titulo">Otros Hallazgos</div>
             <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let i = index">
                     <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"

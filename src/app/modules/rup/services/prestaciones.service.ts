@@ -11,7 +11,7 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     public refsetsIds = {
-        cronico: '900000000000498555'
+        cronico: '1641000013105'
     };
 
     constructor(private server: Server, public auth: Auth) { }
