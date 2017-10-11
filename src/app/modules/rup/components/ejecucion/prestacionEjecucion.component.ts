@@ -322,7 +322,10 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} registroVincular Registro al cual vamos a vincular el nuevo
      * @memberof PrestacionEjecucionComponent
      */
-    ejecutarConcepto(snomedConcept, registroDestino = null) {
+    ejecutarConcepto(snomedConcept, huds = false, registroDestino = null) {
+        let valor;
+        let resultado;
+
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
@@ -331,7 +334,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
-
         if (this.transformarProblema && this.registroATransformar) {
             if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
@@ -352,7 +354,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             } else {
                 this.registroATransformar.valor.estado = 'transformado';
-                let valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
+                valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
                 let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
                 nuevoRegistro.relacionadoCon = [this.registroATransformar];
                 this.transformarProblema = false;
@@ -371,26 +373,34 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
+                            // viene desde la huds
+                            if (huds) {
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
+                            }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
-                            if (cronico) {
-                                let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                            if (cronico && !huds) {
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                 if (registroDestino) {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
                             } else {
                                 // verificamos si no es cronico pero esta activo
-                                if (dato.evoluciones[0].estado === 'activo') {
+                                if (dato.evoluciones[0].estado === 'activo' && !huds) {
                                     this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
                                         if (confirmar) {
-                                            let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                            let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                            valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                            resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                             if (registroDestino) {
                                                 registroDestino.relacionadoCon = [resultado];
                                             }
                                         } else {
-                                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                                            resultado = this.cargarNuevoRegistro(snomedConcept);
                                             if (registroDestino) {
                                                 registroDestino.relacionadoCon = [resultado];
                                             }
@@ -399,7 +409,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                             }
                         } else {
-                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                            resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (registroDestino) {
                                 registroDestino.relacionadoCon = [resultado];
                             }
@@ -407,7 +417,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     });
 
             } else {
-                let resultado = this.cargarNuevoRegistro(snomedConcept);
+                resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
                     registroDestino.relacionadoCon = [resultado];
                 }
@@ -423,7 +433,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
-            this.ejecutarConcepto(resultadoHuds.data.concepto);
+            this.ejecutarConcepto(resultadoHuds.data.concepto, true);
         }
     }
 
@@ -442,7 +452,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (nuevoHallazgo.dragData) {
             nuevoHallazgo = nuevoHallazgo.dragData;
         }
-        this.ejecutarConcepto(nuevoHallazgo, this.registroATransformar);
+        this.ejecutarConcepto(nuevoHallazgo, false, this.registroATransformar);
 
     }
 
