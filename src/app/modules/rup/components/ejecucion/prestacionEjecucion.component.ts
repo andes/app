@@ -527,7 +527,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             } else {
                 return;
             }
-        })
+        });
     }
 
     onConceptoDrop(e: any) {

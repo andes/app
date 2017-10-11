@@ -6,10 +6,6 @@
 <div class="row">
     <div class="col">
         <div class="menu-huds">
-            <!-- <plex-button type="danger btn-sm m-0" label="DESTACADOS" (click)="actualizarVista('destacados')">
-            </plex-button> -->
-            <!-- <plex-button type="warning btn-sm m-0" label="PROBLEMAS" (click)="actualizarVista('problemas')">
-            </plex-button> -->
             <plex-button type="success btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
             </plex-button>
             <plex-button type="primary btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
@@ -33,85 +29,6 @@
 </div>
 <div class="row">
     <div class="col">
-        <!-- Vista: Destacados -->
-        <!-- <ng-container *ngIf="vista === 'destacados'">
-            <div class="vista-titulo">Problemas crónicos</div>
-
-            <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
-                <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini">
-                            <div class="type problemas">
-                                <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
-                            </div>
-                            <div class="rup-content">
-                                <div class="header">
-                                    <div class="title">
-                                        {{ hallazgo.concepto.term }}
-                                    </div>
-                                    <br>
-                                    <small *ngIf="hallazgo.evoluciones">
-                                        ultima evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
-                                    </small>
-                                    <br>
-                                    <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
-                                        Crónico
-                                    </span>
-
-                                    <div class="actions">
-                                        <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)">
-                                            <i class="mdi mdi-plus-box-outline"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ng-container>
-            </ul>
-
-            <div class="vista-titulo">Destacados</div>
-            <div>No se encontraron registros</div>
-        </ng-container> -->
-
-        <!-- Vista: Problemas -->
-        <!-- <ng-container *ngIf="vista === 'problemas'">
-            <div class="vista-titulo">Problemas activos</div>
-            <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
-                <ng-container *ngFor="let problema of problemasActivos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini">
-                            <div class="type problemas">
-                                <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
-                            </div>
-                            <div class="rup-content">
-                                <div class="header">
-                                    <div class="title">
-                                        {{ problema.concepto.term }}
-                                    </div>
-                                    <br>
-                                    <small *ngIf="problema.evoluciones">
-                                        última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}
-                                        <br> estado: {{ problema.evoluciones[0].estado }}
-                                    </small>
-                                    <br>
-                                    <div class="actions">
-                                        <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
-                                            <i class="mdi mdi-plus-box-outline"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ng-container>
-            </ul>
-
-
-            <div *ngIf="!problemasActivos">No se encontraron registros</div>
-        </ng-container> -->
 
         <!-- Vista: Hallazgos -->
         <ng-container *ngIf="vista === 'hallazgos'">
