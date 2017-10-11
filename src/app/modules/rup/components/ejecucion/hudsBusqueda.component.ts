@@ -29,7 +29,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Vista actual
      */
-    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'destacados';
+    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'hallazgos';
     /**
      * Listado de prestaciones validadas
      */
