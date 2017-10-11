@@ -337,12 +337,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
                 return false;
             }
-
             if (registoExiste) {
                 this.plex.confirm('El concepto seleccionado ya se ha registrado en la consulta ¿Desea continuar con la transformación?', 'Transformar Problema').then(validar => {
                     if (validar) {
                         // Si el concepto ya esta registrado en la consulta los vinculamos
-
                         registoExiste.valor['idRegistroTransformado'] = this.registroATransformar.id;
                         registoExiste.valor['origen'] = 'transformación';
                         registoExiste.relacionadoCon = [this.registroATransformar];
@@ -362,7 +360,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
                 return nuevoRegistro;
             }
-
         } else {
             if (registoExiste) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
@@ -370,21 +367,35 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
             this.colapsarPrestaciones();
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno') {
+            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situacion') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
-                            // TODO:: vamos a comprobar si se trata de hallazgo cronico o activo
-                            if (dato.evoluciones[0].estado === 'activo') {
+                            // buscamos si es cronico
+                            let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
+                            if (cronico) {
                                 let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
                                 let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                 if (registroDestino) {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
                             } else {
-                                let resultado = this.cargarNuevoRegistro(snomedConcept);
-                                if (registroDestino) {
-                                    registroDestino.relacionadoCon = [resultado];
+                                // verificamos si no es cronico pero esta activo
+                                if (dato.evoluciones[0].estado === 'activo') {
+                                    this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
+                                        if (confirmar) {
+                                            let valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                            let resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                            if (registroDestino) {
+                                                registroDestino.relacionadoCon = [resultado];
+                                            }
+                                        } else {
+                                            let resultado = this.cargarNuevoRegistro(snomedConcept);
+                                            if (registroDestino) {
+                                                registroDestino.relacionadoCon = [resultado];
+                                            }
+                                        }
+                                    });
                                 }
                             }
                         } else {
