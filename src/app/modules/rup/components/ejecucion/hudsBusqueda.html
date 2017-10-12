@@ -36,8 +36,7 @@
 
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
@@ -72,8 +71,7 @@
             <div class="vista-titulo">Hallazgos activos</div>
             <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
@@ -90,6 +88,9 @@
                                     </small>
                                     <br>
                                     <div class="actions">
+                                        <a href="javascript: void(0)" (click)="devolverRegistrosHuds(problema)">
+                                            <i class="mdi mdi-eye"></i>
+                                        </a>
                                         <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
                                             <i class="mdi mdi-plus-box-outline"></i>
                                         </a>
@@ -104,8 +105,7 @@
             <div class="vista-titulo">Otros Hallazgos</div>
             <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
