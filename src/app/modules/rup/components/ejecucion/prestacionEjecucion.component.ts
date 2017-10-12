@@ -288,7 +288,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-        this.recuperaLosMasFrecuentes(snomedConcept);
+
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -302,6 +302,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         nuevoRegistro['_id'] = nuevoRegistro.id;
@@ -378,17 +379,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     .subscribe(dato => {
                         if (dato) {
                             // viene desde la huds
-                                let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
-                                if (!existeEjecucion) {
-                                    valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                    if (registroDestino) {
-                                        registroDestino.relacionadoCon = [resultado];
-                                    }
-                                } else {
-                                    this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-                                    return false;
+                            let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
+                            if (!existeEjecucion) {
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
                                 }
+                            } else {
+                                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                                return false;
+                            }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
@@ -683,9 +684,12 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
         }
     }
-    recuperaLosMasFrecuentes(concepto) {
+
+    recuperaLosMasFrecuentes(concepto, elementoRUP = null) {
         this.masFrecuentes = [];
-        let elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        if (!elementoRUP) {
+            elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        }
         elementoRUP.frecuentes.forEach(element => {
             this.masFrecuentes.push(element);
         });
