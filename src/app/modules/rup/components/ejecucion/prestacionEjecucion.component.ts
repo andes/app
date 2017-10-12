@@ -333,7 +333,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(snomedConcept, registroDestino = null) {
         let valor;
         let resultado;
-
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
@@ -573,23 +572,26 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onConceptoDrop(e: any) {
-
-        if (e.dragData.tipo) {
-            switch (e.dragData.tipo) {
-                case 'prestacion':
-                    this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
-                    break;
-                case 'hallazgo':
-                case 'trastorno':
-                    this.ejecutarConcepto(e.dragData.data.concepto);
-                    break;
-                default:
-                    this.ejecutarConcepto(e.dragData);
-                    break;
-            }
-
+        if (e.dragData.huds) {
+            this.ejecutarConceptoHuds(e.dragData);
         } else {
-            this.ejecutarConcepto(e.dragData);
+            if (e.dragData.tipo) {
+                switch (e.dragData.tipo) {
+                    case 'prestacion':
+                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
+                        break;
+                    case 'hallazgo':
+                    case 'trastorno':
+                        this.ejecutarConcepto(e.dragData.data.concepto);
+                        break;
+                    default:
+                        this.ejecutarConcepto(e.dragData);
+                        break;
+                }
+
+            } else {
+                this.ejecutarConcepto(e.dragData);
+            }
         }
     }
 
