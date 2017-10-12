@@ -643,4 +643,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.masFrecuentes.push(element);
         });
     }
+
+
+    agregarListadoHuds(registro) {
+        this.registrosHuds = registro;
+    }
+
+
 }

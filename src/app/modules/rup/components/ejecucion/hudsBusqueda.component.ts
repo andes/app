@@ -115,6 +115,47 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
 
+    devolverRegistrosHuds(registro, tipo) {
+
+        let index;
+        if (tipo === 'hallazgo') {
+            index = this.registrosHuds.findIndex(r => {
+                return (r.tipo === 'hallazgo' && r.data.concepto.id === registro.concepto.id);
+            });
+
+            switch (registro.concepto.semanticTag) {
+                case 'hallazgo':
+                case 'trastorno':
+                    registro.class = 'problemas';
+                    break;
+            }
+        } else if (tipo === 'prestacion') {
+            index = this.registrosHuds.findIndex(r => {
+                return (r.tipo === 'prestacion' && r.data.id === registro.id);
+            });
+
+            registro.class = 'prestacion';
+        }
+
+        let elemento = {
+            tipo: tipo,
+            data: registro
+        };
+
+        // si no existe lo agregamos
+        if (index === -1) {
+            this.registrosHuds.push(elemento);
+        } else {
+            // si existe lo quitamos
+            this.registrosHuds.splice(index, 1);
+        }
+
+
+        this.evtHuds.emit(this.registrosHuds);
+
+        console.log(elemento);
+    }
+
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
