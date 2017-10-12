@@ -381,17 +381,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     .subscribe(dato => {
                         if (dato) {
                             // viene desde la huds
-                                let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
-                                if (!existeEjecucion) {
-                                    valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                    if (registroDestino) {
-                                        registroDestino.relacionadoCon = [resultado];
-                                    }
-                                } else {
-                                    this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-                                    return false;
+                            let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
+                            if (!existeEjecucion) {
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
                                 }
+                            } else {
+                                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                                return false;
+                            }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
@@ -697,7 +697,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     agregarListadoHuds(registro) {
         this.registrosHuds = registro;
-        console.log(this.registrosHuds);
     }
 
 }
