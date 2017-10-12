@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="!showUpdate">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -31,7 +31,7 @@
         </div>
     </div>
 </section>
-<footer>
+<footer *ngIf="!showUpdate">
     <div class="text-right">
         <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
         </plex-button>
@@ -40,3 +40,5 @@
 
     </div>
 </footer>
+
+<usuarioUpdate *ngIf="showUpdate" [seleccion]="userModel" (data)='afterCreateUpdate(user)'></usuarioUpdate>
