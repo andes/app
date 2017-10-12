@@ -699,7 +699,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     agregarListadoHuds(registro) {
         this.registrosHuds = registro;
-        console.log(this.registrosHuds);
     }
+
 
 }
