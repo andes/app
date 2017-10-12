@@ -3,12 +3,27 @@
 .rup-card {
     width: 100%;
     display: flex;
-    border: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc;
     margin-bottom: 10px;
 }
 
 .rup-card.mini {
-    margin-bottom: -1px;
+    margin-bottom: 0;
+}
+
+.text-problemas {
+    color: $problemas;
+}
+.border-problemas {
+    border-color: $problemas $problemas $problemas;
+}
+.text-planes {
+    color: $planes;
+}
+.border-planes {
+    border-color: $planes $planes $planes;
 }
 
 .rup-card .type {
