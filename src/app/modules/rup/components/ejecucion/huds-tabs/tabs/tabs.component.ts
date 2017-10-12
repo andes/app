@@ -8,7 +8,7 @@ import { TabComponent } from './tab.component';
   styleUrls: ['tabs.scss'],
   template: `
     <div class="container-tabs">
-      <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }">
+      <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
           <a href="javascript:void(0)" *ngIf="options.trim">
@@ -45,7 +45,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
   ngOnInit(): void {
     this.options.dragScroll = (this.options.dragScroll) ? this.options.dragScroll : false;
-    this.options.trim = (this.options.trim &&  parseInt(this.options.trim, 10) > 0) ? parseInt(this.options.trim, 10) : false;
+    this.options.fixFirstOnScroll = (this.options.fixFirstOnScroll) ? this.options.fixFirstOnScroll : false;
+    this.options.trim = (this.options.trim && parseInt(this.options.trim, 10) > 0) ? parseInt(this.options.trim, 10) : false;
   }
 
   // contentChildren are set
@@ -105,5 +106,19 @@ export class TabsComponent implements OnInit, AfterContentInit {
       // activamos el tab que el usuario ha clickeado
       tab.active = true;
     }
+  }
+
+  onScrollTabs(event) {
+    if (event.srcElement.scrollLeft > 0) {
+      this.renderer.setElementClass(event.target, 'fixed', true);
+    } else if (event.srcElement.scrollLeft === 0) {
+    this.renderer.setElementClass(event.target, 'fixed', false);
+
+    }
+    console.log(event.srcElement.scrollLeft);
+    /*
+    let tabs = this.element.nativeElement.querySelector('.nav-tabs');
+    console.log(tabs);
+    */
   }
 }

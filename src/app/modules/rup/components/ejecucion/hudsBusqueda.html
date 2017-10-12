@@ -6,9 +6,9 @@
 <div class="row">
     <div class="col">
         <div class="menu-huds">
-            <plex-button type=" btn-problemas btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
+            <plex-button type="problemas btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
             </plex-button>
-            <plex-button type=" btn-planes btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
+            <plex-button type="planes btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
             </plex-button>
         </div>
         <div class="btn-group botones-temporales d-xl-none" role="group">
@@ -37,13 +37,13 @@
             <div class="vista-titulo">Hallazgos crónicos</div>
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo}"
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo)" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
                                         {{ hallazgo.concepto.term }}
@@ -60,7 +60,6 @@
                                     <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
                                         Crónico
                                     </span>
-
                                 </div>
                             </div>
                             <div class="float-right" style="padding: 5px">
@@ -78,13 +77,13 @@
             <div class="vista-titulo">Hallazgos activos</div>
             <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema)" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeActivo === iActivo}">
                                         {{ problema.concepto.term }}
@@ -115,13 +114,13 @@
             <div class="vista-titulo">Otros Hallazgos</div>
             <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema}"
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema)" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeOtros === iOtros}">
                                         {{ problema.concepto.term }}
@@ -158,7 +157,7 @@
                         <div class="type planes">
                             <!-- Vacío -->
                         </div>
-                        <div class="rup-content hover" (click)="devolverRegistrosHuds(prestacion)" (mouseenter)="eyePrestacion = iPrestacion" (mouseleave)="eyePrestacion = -1">
+                        <div class="rup-content hover" (click)="devolverRegistrosHuds(prestacion, 'prestacion')" (mouseenter)="eyePrestacion = iPrestacion" (mouseleave)="eyePrestacion = -1">
                             <div class="header">
                                 <div class="title" [ngClass]="{'text-planes': eyePrestacion === iPrestacion}">
                                     <span>{{ prestacion.solicitud.tipoPrestacion.term }}

@@ -45,7 +45,7 @@
                         </p>
                     </div>
 
-                    <tabs [options]="{dragScroll: false, trim: 30}">
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}">
                         <tab [tabTitle]="'Registros de esta consulta'">
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
@@ -189,11 +189,16 @@
                             </div>
                         </tab>
                         <ng-container *ngIf="registrosHuds">
-                            <tab *ngFor="let registro of registrosHuds; let i = index" [tabTitle]="registro.concepto.term" [class]="registro.class">
-                                <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
-                                    [prestacion]="prestacion" [registro]="registro" [soloValores]="true">
-                                </rup>
-                            </tab>
+                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
+                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
+                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    </rup>
+                                </tab>
+
+                                <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
+                                    {{registro.data.solicitud.tipoPrestacion.term}}
+                                </tab>
+                            </ng-container>
                         </ng-container>
                     </tabs>
 
@@ -218,18 +223,6 @@
                         </plex-tab>
                     </plex-tabs>
                 </plex-box>
-
-
-
-                <!-- Panel de Búsqueda -->
-                <!-- <plex-box>
-                            <header>
-                                <div class="page-title">Buscar</div>
-                            </header> -->
-                <!-- <div class="mt-3"> -->
-                <!-- [buscador.component.ts] -->
-                <!-- </div> -->
-                <!-- </plex-box> -->
             </div>
 
         </div>
