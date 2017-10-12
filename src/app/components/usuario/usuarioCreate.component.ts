@@ -48,7 +48,7 @@ export class UsuarioCreateComponent {
                     this.userModel.nombre = res.givenName;
                     this.userModel.apellido = res.sn;
                     this.userModel.usuario = res.uid;
-                    this.userModel.organizaciones = this.auth.organizaciones;
+                    this.userModel.organizaciones = [];
                     this.showUpdate = true;
                 }, err => {
                     this.plex.toast('warning', err, 'Error', 5);

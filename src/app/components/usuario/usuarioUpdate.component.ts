@@ -69,9 +69,19 @@ export class UsuarioUpdateComponent implements OnInit {
         });
     }
 
+    /**
+     * Obtiene las organizaciones del usuario y luego hace un "join" con las
+     * organizaciones del administrador(usuario logueado) para llenar el combo de nuevas organizaciones
+     *
+     * @memberof UsuarioUpdateComponent
+     */
     getOrganizaciones() {
+        // obtenemos las organizaciones del usuario
         this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.userModel.organizaciones.findIndex(elem => elem._id === item._id) >= 0);
+
         if (this.organizacionesUsuario.length > 0) {
+            // si el user seleccionado tiene organizaciones, hacemos un "join" con las del administrador
+            // y el resultado se asigna al combo de posibles nuevas organizaciones
             this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
             this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
         } else {
@@ -79,6 +89,7 @@ export class UsuarioUpdateComponent implements OnInit {
         }
         this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
         this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
+        this.loadPermisos();
     }
 
 
@@ -90,7 +101,6 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizaciones = this.seleccion.organizaciones;
         this.getOrganizaciones();
-        this.loadPermisos();
     }
 
     onOrgChange() {
@@ -137,7 +147,7 @@ export class UsuarioUpdateComponent implements OnInit {
                 let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
                 this.userModel.organizaciones.splice(index, 1);
                 this.getOrganizaciones();
-                this.loadPermisos();
+
             }
         });
     }
