@@ -204,8 +204,9 @@
                     <div class="col-6">
                         <br>
                         <label>Prestación: </label>
-                        <plex-select [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
+                        <plex-select *ngIf="!turnoTipoPrestacion" [(ngModel)]="turnoTipoPrestacion" name="tipoPrestacionTurno" [data]="bloqueSeleccionado.tipoPrestaciones">
                         </plex-select>
+                        <div *ngIf="turnoTipoPrestacion">{{turnoTipoPrestacion.nombre}}</div>
                     </div>
                 </div>
                 <br>
