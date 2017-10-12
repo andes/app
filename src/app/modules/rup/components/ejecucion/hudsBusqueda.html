@@ -54,7 +54,7 @@
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico}">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
@@ -78,7 +78,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="float-right" style="padding: 5px">
+                            <div class="float-right p-1">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
@@ -95,7 +95,7 @@
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
                     <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo}">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
@@ -115,7 +115,7 @@
                                     <br>
                                 </div>
                             </div>
-                            <div class="float-right" style="padding: 5px">
+                            <div class="float-right p-1">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
@@ -132,7 +132,7 @@
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
                     <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros}">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
