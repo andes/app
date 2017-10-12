@@ -1,0 +1,76 @@
+@import '../../../variables';
+.container-tabs {
+    .nav.nav-tabs {
+        overflow: auto;
+        li {
+            background: #ccc;
+            border-top: 2px solid white;
+            border-right: 1px solid #bbb;
+            transition: background 500ms;
+            min-width: 170px;
+            width: auto;
+            white-space: normal;
+            &:hover {
+                background: #ddd;
+            }
+            a {
+                padding: 10px;
+                text-decoration: none;
+                color: black;
+                display: inline-block;
+                width: 100%;
+                height: 100%;
+                text-transform: capitalize;
+            }
+            &.active {
+                background: white;
+                border-top-color: black;
+                border-left-color: transparent;
+            }
+            &.problemas a,
+            &.trastornos a,
+            &.hallazgos a,
+            &.procedimientos a,
+            &.planes a,
+            &.prestacion a {
+                color: white;
+            }
+            &.problemas {
+                background-color: $problemas;
+                border-color: #cc9344;
+            }
+            &.trastornos {
+                background-color: $trastorno;
+            }
+            &.hallazgos {
+                background-color: $hallazgos;
+            }
+            &.procedimientos {
+                background-color: $procedimientos;
+            }
+            &.planes,
+            &.prestacion,
+            {
+                border-color: $planes;
+                background-color: $planes;
+            }
+        }
+        &.draggable {
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 0px;
+                background: transparent;
+            }
+        }
+        &.fixed {
+            padding-left: 170px;
+            li:first-child {
+                margin-left: -170px;
+                width: 170px;
+                position: fixed;
+                -webkit-box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
+                box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
+            }
+        }
+    }
+}
