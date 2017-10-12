@@ -177,6 +177,16 @@ a.desvincular:hover {
 
 /* colores botones / acciones */
 
+.page-title {
+    font-weight: 300;
+}
+
+.menu-buscador {
+    .btn {
+        width: 32.7%;
+    }
+}
+
 .btn-problemas {
     color: white;
     background-color: $problemas;
