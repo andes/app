@@ -10,9 +10,6 @@ export class PrestacionesService {
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
-    public refsetsIds = {
-        cronico: '1641000013105'
-    };
 
     constructor(private server: Server, public auth: Auth) { }
 
