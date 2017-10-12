@@ -29,7 +29,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Vista actual
      */
-    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'hallazgos';
+    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'destacados';
     /**
      * Listado de prestaciones validadas
      */
@@ -56,23 +56,10 @@ export class HudsBusquedaComponent implements OnInit {
     public hallazgosNoActivos: any = [];
 
     /**
-     * Listado de todos los registros de la HUDS seleccionados
-     */
-    public registrosHuds: any = [];
-
-
-    /**
      * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-
-
-    /*
-     * Devuelve el array de registros seleccionados para visualizar
-     * de la HUDS
-     */
-    @Output() evtHuds: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private servicioPrestacion: PrestacionesService,
         public plex: Plex, public auth: Auth) {
@@ -86,7 +73,7 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
-            this.listarProblemasCronicos();
+            // this.listarProblemasCronicos();
             // this.listarHallazgos();
             this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
@@ -129,8 +116,6 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     devolverRegistrosHuds(registro, tipo) {
-        debugger;
-
 
         let index;
         if (tipo === 'hallazgo') {
@@ -177,14 +162,12 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los hallazgos
     listarHallazgos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgos = hallazgos;
         });
     }
 
-    // Trae los problemas activos NO activos
     listarHallazgosNoActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
 
@@ -197,26 +180,15 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los problemas crónicos (por SNOMED refsetId)
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            // Buscamos si es crónico 
-            this.hallazgosCronicos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
-                    return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
-                }
-            });
+            this.hallazgosCronicos = hallazgos.filter(h => h.evoluciones[0].esCronico);
         });
     }
 
-    // Trae los problemas activos NO crónicos
     listarProblemasActivos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.evoluciones[0].estado === 'activo') {
-                    return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
-                }
-            });
+            this.problemasActivos = hallazgos.filter(h => h.evoluciones[0].estado === 'activo');
         });
     }
 

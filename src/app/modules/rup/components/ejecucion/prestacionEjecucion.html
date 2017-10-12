@@ -6,9 +6,14 @@
     <!-- Sección principal -->
     <section class="plex-layout prestacionEjecucion" *ngIf="!showCambioPaciente && prestacion && showPrestacion">
         <div class="row">
+            <!-- Panel HUDS -->
+            <div class="col-4" *ngIf="prestacion">
+                <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
+                    (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+            </div>
 
-            <!-- Panel Principal -->
-            <div class="col-8">
+            <!-- Panel Central -->
+            <div class="col-5">
                 <plex-box>
                     <header>
                         <div class="row">
@@ -27,14 +32,16 @@
                     <div [hidden]="!showDatosSolicitud">
                         <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3>
                         <p>
-                            <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
-                            <br>
-                            <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                            <br>
-                            <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
+                            Solicitada por el profesional: {{prestacion.solicitud.profesional.nombre}} {{prestacion.solicitud.profesional.apellido}}
+                        </p>
+                        <p>
+                            Organizacion: {{prestacion.solicitud.organizacion.nombre}}
+                        </p>
+                        <p>
+                            Fecha : {{prestacion.solicitud.fecha | date}}
                         </p>
                         <p *ngIf="prestacion.solicitud.prestacionOrigen">
-                            Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
+                            Prestacion de origen: {{prestacion.solicitud.prestacionOrigen}}
                         </p>
                     </div>
 
@@ -97,10 +104,10 @@
                                                 <!-- ... Body -->
                                                 <div class="rup-body " [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar" *ngIf="paciente">
                                                     <!-- <div *ngIf="errores[i]">
-                                                            <span class="badge badge-danger">
-                                                                    {{errores[i]}}
-                                                                </span>
-                                                        </div> -->
+                                                <span class="badge badge-danger">
+                                                        {{errores[i]}}
+                                                    </span>
+                                            </div> -->
                                                     <!-- RUP Loader  (change)="prestacionChanged()"-->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
                                                         [paciente]="paciente" [registro]="registro">
@@ -184,14 +191,12 @@
                                             </a>
                                         </div>
                                     </div>
-                                </div>
-
-                            </div>
                         </tab>
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
-                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
+                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
@@ -203,29 +208,30 @@
                     </tabs>
 
                 </plex-box>
-            </div>
+                </div>
 
-            <!-- Panel Buscador SNOMED + HUDS -->
-            <div class="col-4" *ngIf="prestacion">
+                <!-- Panel Buscador SNOMED + HUDS -->
+                <div class="col-4" *ngIf="prestacion">
 
-                <plex-box>
-                    <plex-tabs [activeIndex]="panelIndex">
-                        <plex-tab label="Buscador" (click)="panelIndex = 0">
-                            <!-- SNOMED [buscador.component.ts] -->
-                            <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP"
-                                (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
+                    <plex-box>
+                        <plex-tabs [activeIndex]="panelIndex">
+                            <plex-tab label="Buscador" (click)="panelIndex = 0">
+                                <!-- SNOMED [buscador.component.ts] -->
+                                <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP"
+                                    (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                                    (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
 
-                        </plex-tab>
-                        <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
-                            <!-- HUDS [hudsBusqueda.component.ts] -->
-                            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
-                                (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
-                        </plex-tab>
-                    </plex-tabs>
-                </plex-box>
-            </div>
+                            </plex-tab>
+                            <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
+                                <!-- HUDS [hudsBusqueda.component.ts] -->
+                                <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)"
+                                    (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
+                            </plex-tab>
+                        </plex-tabs>
+                    </plex-box>
+                </div>
 
-        </div>
+                </div>
     </section>
 
     <!-- Footer -->
@@ -257,7 +263,6 @@
                     class="float-right"></plex-button>
             </div>
         </div>
-
     </footer>
 </form>
 <!-- Búsqueda de pacientes -->

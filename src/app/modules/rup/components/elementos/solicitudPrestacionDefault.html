@@ -1,5 +1,4 @@
 <ng-container *ngIf="!soloValores">
-
     <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.motivo" name="motivo"></plex-text>
     <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.indicaciones" name="indicaciones"></plex-text>
     <plex-select [(ngModel)]="registro.valor.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
