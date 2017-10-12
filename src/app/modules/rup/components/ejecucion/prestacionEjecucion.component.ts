@@ -570,8 +570,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    onConceptoDrop(e: any, huds = true) {
-        if (huds) {
+    onConceptoDrop(e: any) {
+        if (e.dragData.huds) {
             this.ejecutarConceptoHuds(e.dragData);
         } else {
             if (e.dragData.tipo) {
