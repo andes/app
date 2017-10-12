@@ -70,9 +70,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public masFrecuentes: any[] = [];
 
-
     // Defaults de Tabs panel derecho
     public panelIndex = 0;
+
+    // Array de registros de la HUDS a agregar en tabs
+    public registrosHuds: any[] = [];
+
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -694,4 +697,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.masFrecuentes.push(element);
         });
     }
+
+
+    agregarListadoHuds(registro) {
+        this.registrosHuds = registro;
+        console.log(this.registrosHuds);
+    }
+
 }
