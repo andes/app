@@ -332,7 +332,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     ejecutarConcepto(snomedConcept, registroDestino = null) {
         let valor;
         let resultado;
-
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
         // si tenemos mas de un registro en en el array de memoria mostramos el button de vincular.
@@ -381,17 +380,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     .subscribe(dato => {
                         if (dato) {
                             // viene desde la huds
-                                let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
-                                if (!existeEjecucion) {
-                                    valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                    resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                    if (registroDestino) {
-                                        registroDestino.relacionadoCon = [resultado];
-                                    }
-                                } else {
-                                    this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-                                    return false;
+                            let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
+                            if (!existeEjecucion) {
+                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
                                 }
+                            } else {
+                                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+                                return false;
+                            }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
@@ -572,23 +571,26 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     onConceptoDrop(e: any) {
-
-        if (e.dragData.tipo) {
-            switch (e.dragData.tipo) {
-                case 'prestacion':
-                    this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
-                    break;
-                case 'hallazgo':
-                case 'trastorno':
-                    this.ejecutarConcepto(e.dragData.data.concepto);
-                    break;
-                default:
-                    this.ejecutarConcepto(e.dragData);
-                    break;
-            }
-
+        if (e.dragData.huds) {
+            this.ejecutarConceptoHuds(e.dragData);
         } else {
-            this.ejecutarConcepto(e.dragData);
+            if (e.dragData.tipo) {
+                switch (e.dragData.tipo) {
+                    case 'prestacion':
+                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
+                        break;
+                    case 'hallazgo':
+                    case 'trastorno':
+                        this.ejecutarConcepto(e.dragData.data.concepto);
+                        break;
+                    default:
+                        this.ejecutarConcepto(e.dragData);
+                        break;
+                }
+
+            } else {
+                this.ejecutarConcepto(e.dragData);
+            }
         }
     }
 
@@ -697,7 +699,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     agregarListadoHuds(registro) {
         this.registrosHuds = registro;
-        console.log(this.registrosHuds);
     }
+
 
 }
