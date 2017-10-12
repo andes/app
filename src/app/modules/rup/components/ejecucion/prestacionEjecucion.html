@@ -68,7 +68,7 @@
                                                     </div>
 
                                                     <div class="actions">
-                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(!itemsRegistros[registro.id].collapse, registro.id)">
+                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)">
                                                             <i class="mdi mdi-chevron-down"></i>
                                                         </a>
                                                         <span *ngIf="!(registro?.valor && registro?.valor.estado && registro.valor?.estado == 'transformado')">
