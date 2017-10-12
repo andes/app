@@ -11,19 +11,34 @@
             <plex-button type="planes btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
             </plex-button>
         </div>
-        <div class="btn-group botones-temporales d-xl-none" role="group">
-            <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
-            </plex-button>
-            <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
-            </plex-button>
-            <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="bottom" icon="human-male-female">
-            </plex-button>
-            <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
-            </plex-button>
-            <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
-            </plex-button>
-            <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="bottom" icon="human-male-female">
-            </plex-button>
+        </header>
+        <div class="row">
+            <div class="col">
+                <div class="btn-group" role="group">
+                    <plex-button type="danger btn-sm" label="DESTACADOS" (click)="actualizarVista('destacados')">
+                    </plex-button>
+                    <plex-button type="warning btn-sm" label="PROBLEMAS" (click)="actualizarVista('problemas')">
+                    </plex-button>
+                    <plex-button type="success btn-sm" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
+                    </plex-button>
+                    <plex-button type="primary btn-sm" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
+                    </plex-button>
+                </div>
+                <div class="btn-group botones-temporales" role="group">
+                    <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
+                    </plex-button>
+                    <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
+                    </plex-button>
+                    <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="bottom" icon="human-male-female">
+                    </plex-button>
+                    <plex-button type="default btn-sm" title="Alergias" titlePosition="bottom" icon="bug">
+                    </plex-button>
+                    <plex-button type="default btn-sm" title="Medicación" titlePosition="bottom" icon="pill">
+                    </plex-button>
+                    <plex-button type="default btn-sm" title="Antecedentes familiares" titlePosition="left" icon="human-male-female">
+                    </plex-button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -139,12 +154,9 @@
                                         </span>
                                     </small>
                                 </div>
-                            </div>
-                        </div>
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="hallazgosNoActivos.length === 0">No hay otros problemas</div>
         </ng-container>
 
 
@@ -177,6 +189,5 @@
                     </div>
                 </ng-container>
             </div>
-        </ng-container>
-    </div>
-</div>
+            </div>
+            </plex-box>

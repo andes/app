@@ -1,15 +1,8 @@
-<header>
-    <div class="page-title">Buscar</div>
-</header>
-<div class="menu-buscador">
-    <plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
-    <plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
-    <plex-button label="PLANES" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
-
-</div>
+<plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
+<plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
+<plex-button label="PLANES" (click)="busquedaPlanes()" type=" btn-sm btn-planes"></plex-button>
 
 <div *ngIf="!showPlanes">
-    <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
     <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
         (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)"></snomed-buscar>
 </div>
@@ -18,16 +11,20 @@
 
     <form>
         <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
-            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscar {{tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda}} ..."></plex-text>
+            <plex-text [(ngModel)]="searchPlanes" name="searchPlanes" (change)="buscar()" placeholder="Buscador {{tipoBusqueda}} ..."></plex-text>
         </div>
     </form>
+
+
 
     <div *ngIf="searchPlanes && listaPlanes && listaPlanes.length === 0 && !loading">
         No se han encontrado resultados
     </div>
 
-    <!-- Cargando... -->
     <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+
+
+
 
     <div>
         <ul class="conceptos list-unstyled" *ngIf="listaPlanes">
@@ -49,8 +46,8 @@
 
                                 <div class="actions">
                                     <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
-                                        <i class="mdi mdi-plus-box-outline"></i>
-                                    </a>
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
                                 </div>
                             </div>
                         </div>
@@ -64,8 +61,7 @@
 <div *ngIf="arrayFrecuentes">
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
-            <li *ngIf="tipoBusqueda === 'procedimientos' || (tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación'))"
-                draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <li *ngIf="tipoBusqueda === 'procedimientos' || (tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación'))" draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini">
                     <div class="type {{tipoBusqueda}}">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
@@ -77,8 +73,8 @@
                             </div>
                             <div class="actions">
                                 <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
-                                    <i class="mdi mdi-plus-box-outline"></i>
-                                </a>
+                                <i class="mdi mdi-plus-box-outline"></i>
+                            </a>
                             </div>
                         </div>
                     </div>

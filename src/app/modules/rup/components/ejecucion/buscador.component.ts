@@ -5,7 +5,6 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 @Component({
     selector: 'rup-buscador',
     templateUrl: 'buscador.html',
-    styleUrls: ['buscador.scss']
 
 })
 
@@ -76,12 +75,6 @@ export class BuscadorComponent implements OnInit {
 
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
-
-
-
-        this.tipoBusqueda = tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda;
-        console.log('tipoBusqueda', this.tipoBusqueda);
-
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {
 
@@ -113,7 +106,6 @@ export class BuscadorComponent implements OnInit {
         this.tipoBusqueda = 'planes';
         this.showPlanes = true;
         this._tipoDeBusqueda.emit(this.tipoBusqueda);
-        console.log('tipoBusqueda', this.tipoBusqueda);
     }
 
     // Emito el concepto seleccionado
@@ -125,7 +117,7 @@ export class BuscadorComponent implements OnInit {
     // Lo trae del buscador de SNOMED
     ejecutarConcepto(concepto) {
         this.evtData.emit(concepto);
-        // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
+       // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed

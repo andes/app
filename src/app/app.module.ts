@@ -32,7 +32,6 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
-import { DragScrollModule } from 'angular2-drag-scroll';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -189,9 +188,6 @@ import { AutocitadoComponent } from './modules/rup/components/elementos/autocita
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 
-import { TabsComponent} from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
-import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
-
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -322,8 +318,7 @@ for (let key in RUPRegistry) {
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        DragScrollModule
+        })
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -366,8 +361,6 @@ for (let key in RUPRegistry) {
         BuscadorComponent,
         // RUP
         ...RUPComponentsArray,
-        TabsComponent,
-        TabComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

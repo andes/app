@@ -43,7 +43,9 @@ export class TurnosPacienteComponent implements OnInit {
             let datosTurno = { pacienteId: this._paciente.id };
 
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos;
+                this.turnosPaciente = turnos.sort((a, b) => {
+                    return (a.horaInicio.getDate() > b.horaInicio.getDate() ? 1 : (b.horaInicio.getDate() > a.horaInicio.getDate() ? -1 : 0));
+                });
             });
         }
     }
