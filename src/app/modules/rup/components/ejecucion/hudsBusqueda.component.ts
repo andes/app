@@ -56,10 +56,23 @@ export class HudsBusquedaComponent implements OnInit {
     public hallazgosNoActivos: any = [];
 
     /**
+     * Listado de todos los registros de la HUDS seleccionados
+     */
+    public registrosHuds: any = [];
+
+
+    /**
      * Devuelve un elemento seleccionado que puede ser
      * una prestacion o un ?????
      */
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+
+
+    /*
+     * Devuelve el array de registros seleccionados para visualizar
+     * de la HUDS
+     */
+    @Output() evtHuds: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private servicioPrestacion: PrestacionesService,
         public plex: Plex, public auth: Auth) {
@@ -114,6 +127,27 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+
+    devolverRegistrosHuds(registro) {
+        switch (registro.concepto.semanticTag) {
+            case 'hallazgo':
+            case 'trastorno':
+                registro.class = 'problemas';
+                break;
+        }
+
+        const index = this.registrosHuds.findIndex(r => r.concepto.id === registro.concepto.id);
+        // si no existe lo agregamos
+        if (index === -1) {
+            this.registrosHuds.push(registro);
+        } else {
+            // si existe lo quitamos
+            this.registrosHuds.splice(index, 1);
+        }
+
+
+        this.evtHuds.emit(this.registrosHuds);
+    }
 
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
