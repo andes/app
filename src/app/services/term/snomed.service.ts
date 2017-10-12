@@ -35,7 +35,11 @@ export class SnomedService {
     }
 
     getProductos(params: any): Observable<any[]> {
-         return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
+        return this.server.get(this.snomedURL + '/producto', { params: params, showError: true });
+    }
+
+    getCie10(params: any): Observable<any> {
+        return this.server.get(this.snomedURL + '/map', { params: params, showError: true });
     }
 
     /*

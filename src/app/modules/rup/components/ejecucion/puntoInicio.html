@@ -197,13 +197,13 @@
                                         <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
 
                                             <plex-button *ngIf="turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion)"
-                                                label="INICIAR PRESTACION" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
+                                                label="Iniciar Prestación" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion)"
-                                                label="VER REGISTROS" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
+                                                label="Ver Registros" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion)"
-                                                label="VER RESUMEN" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
+                                                label="Ver Resúmen" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
 
                                         </ng-container>
                                     </td>
@@ -222,16 +222,13 @@
                             <tr *ngFor="let prestacion of fueraDeAgenda" class="hover">
                                 <td>
                                     <strong *ngIf="prestacion">{{ prestacion.solicitud.fecha | date: 'HH:mm' }}</strong>
-                                    <br />
-
+                                    <br>
                                     <span class="badge " [ngClass]="{'badge-success': prestacion.estados[prestacion.estados.length - 1].tipo === 'validada',
                                                 'badge-warning': prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'}">
                                         {{prestacion.estados[prestacion.estados.length - 1].tipo}}
                                     </span>
                                 </td>
                                 <td>
-
-
                                     <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente }} </span>
                                     <small>
                                         <span *ngIf="prestacion && prestacion.paciente">
@@ -278,5 +275,5 @@
 
 <!--Footer-->
 <footer>
-    <plex-button  label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
+    <plex-button label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
 </footer>
