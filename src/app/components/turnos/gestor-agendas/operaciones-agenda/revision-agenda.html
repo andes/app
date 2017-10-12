@@ -169,7 +169,6 @@
                 <div class="row" *ngIf="turnoSeleccionado && turnoSeleccionado.estado == 'disponible'">
                     <div class="col" *ngIf="paciente?.id">
                         <small>
-                                <span>Documento: {{paciente.documento}}</span>
                                 <span *ngIf="paciente.documento !== ''"> DNI {{ paciente.documento | number }}</span>
                                 <span *ngIf="paciente.documento === ''" class="text-danger"> Sin documento (temporal)</span>
                             </small>
@@ -197,7 +196,7 @@
                     <div class="col" *ngIf="pacientesSearch">
                         <div class="panel panel-default">
                             <div class="clear"></div>
-                            <pacientesSearch [modoCompleto]="true" (selected)="onReturn($event)"></pacientesSearch>
+                            <pacientesSearch [modoCompleto]="false" (selected)="onReturn($event)"></pacientesSearch>
                         </div>
                     </div>
                 </div>
