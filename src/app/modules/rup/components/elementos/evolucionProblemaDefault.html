@@ -2,8 +2,9 @@
     <div class="row">
         <div class="col-12">
             <span class="badge-info  float-right">
-                    Originado con la transformación de: <strong>{{ hallazgoOrigen.nombre }}</strong>
-                </span>
+                Originado con la transformación de:
+                <strong>{{ hallazgoOrigen.nombre }}</strong>
+            </span>
         </div>
     </div>
 </ng-container>
@@ -28,21 +29,21 @@
             <div class="col">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-5 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-5 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-5 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
+                        (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-5 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
+                        [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Evolución" multiline=true autoFocus=1 [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
+                <plex-text label="Evolución" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
             </div>
         </div>
 
     </div>
-
-
 
     <!--Listado de evoluciones-->
     <ng-container *ngIf="evoluciones && evoluciones.length > 0">
@@ -65,7 +66,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 text-center"> Profesional: {{unaEvolucion.profesional }} <br>{{unaEvolucion.evolucion }}
+            <div class="col-12 text-center"> Profesional: {{unaEvolucion.profesional }}
+                <br>{{unaEvolucion.evolucion }}
             </div>
         </div>
     </ng-container>
@@ -73,47 +75,58 @@
 
 </div>
 
-<div *ngIf="soloValores">
-    <!--<pre>
-        {{registro | json}}
-    </pre>-->
-    <ng-container *ngIf="registro?.evoluciones">
-        <div class="vista-titulo">{{ registro.concepto.term }}</div>
-    </ng-container>
-
+<ng-container *ngIf="soloValores">
     <div class="row">
-        <div class="col">
-            <b>Inicio aproximado: </b>
-            <ng-container *ngIf="!registro?.evoluciones">
-                {{registro.valor.fechaInicio | fromNow}}
-            </ng-container>
 
-            <ng-container *ngIf="registro?.evoluciones">
-                {{registro.evoluciones[0].fechaInicio | fromNow}}
-            </ng-container>
+        <div class="col-4">
+            <!-- <ng-container *ngIf="registro?.evoluciones">
+            {{ registro.concepto.term }}
+        </ng-container> -->
+            <b>{{ registro.nombre[0].toUpperCase() + registro.nombre.slice(1) }}</b>
+            <br>
+            <small>
+                <b>Inicio aproximado: </b>
+                <ng-container *ngIf="!registro?.evoluciones">
+                    {{ registro.valor.fechaInicio | fromNow }}
+                </ng-container>
+
+                <ng-container *ngIf="registro?.evoluciones">
+                    {{ registro.evoluciones[0].fechaInicio | fromNow }}
+                </ng-container>
+            </small>
+        </div>
+
+        <div class="col-4">
+            <small class="badge badge-info">{{ registro.concepto.semanticTag }}</small>
+            <small class="badge" [ngClass]="{
+                'badge-danger': registro.valor.estado === 'activo', 
+                'badge-warning': registro.valor.estado === 'inactivo', 
+                'badge-success': registro.valor.estado === 'resuelto', 
+                'badge-info': registro.valor.estado === 'transformado' 
+            }">
+                {{ registro.valor.estado }}
+            </small>
+            <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
+                Diagnóstico principal
+            </small>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <b>Estado actual: </b> {{ registro.valor.estado }}
-        </div>
-    </div>
-    <div class="row">
+    <div class="row hidden-xl">
         <div class="col">
             <ng-container *ngIf="!registro?.evoluciones">
-                <b>Evolución: </b> {{ registro.valor.evolucion}}
+                <b>Evolución: </b> {{ registro.valor.evolucion }}
             </ng-container>
 
             <ng-container *ngIf="registro?.evoluciones">
                 <div *ngFor="let evolucion of registro.evoluciones" class="row">
                     <div class="col">
-                        <hr />
+                        <hr>
                         <b>Fecha: </b> {{evolucion.fechaCarga | fromNow }}
-                        <br />
+                        <br>
                         <b>Estado: </b> {{evolucion.estado}}
-                        <br />
+                        <br>
                         <b>Profesional: </b> {{evolucion.profesional }}
-                        <br />
+                        <br>
                         <b>Evolución: </b> {{ evolucion.evolucion}}
 
                     </div>
@@ -122,4 +135,4 @@
         </div>
     </div>
 
-</div>
+</ng-container>

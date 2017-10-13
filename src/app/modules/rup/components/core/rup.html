@@ -4,7 +4,8 @@
 <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div *ngFor="let item of elementoRUP.requeridos; let i = index" class="row">
         <div class="col">
-            <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+            <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                [soloValores]="soloValores" (change)="emitChange()">
             </rup>
         </div>
     </div>
