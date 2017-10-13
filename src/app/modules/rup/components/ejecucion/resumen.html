@@ -19,8 +19,9 @@
                     <div>
                         <span class="badge badge-info  mdi mdi-link pull-right"></span>
                     </div>
-                    <small> Solicitado el <strong>{{ prestacion.solicitud.fecha | date: 'dd/MM/yyyy' }}</strong>
-                        <span > por {{ prestacion.solicitud.profesional | profesional }}</span>
+                    <small> Solicitado el
+                        <strong>{{ prestacion.solicitud.fecha | date: 'dd/MM/yyyy' }}</strong>
+                        <span> por {{ prestacion.solicitud.profesional | profesional }}</span>
                         <!--<span *ngIf="!prestacion.ejecucion?.profesionales[0]?.nombreCompleto">(sin profesionales asignados)</span>-->
                     </small>
                     <small *ngIf="prestacion.solicitud.motivoSolicitud">{{ prestacion.solicitud.motivoSolicitud }}</small>
@@ -57,25 +58,27 @@
             <ul class="list-group" *ngIf="listaProblemas">
                 <li class="list-group-item justify-content-between list-group-item-action" *ngFor="let problema of listaProblemas">
                     <span>
-                        <!--<strong>{{problema.tipoProblema.nombre}} </strong>  |                                   TODO: Cambio de interfaz anterior-->
-                        <strong>{{problema.tipoProblema.term}} </strong>  |
-                            <small>Iniciado <strong>{{problema.fechaInicio | fromNow}}</strong> por
-                                   el profesional <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
-                            </small>
-                        </span>
+                        <!--<strong>{{problema.tipoProblema.nombre}} </strong>  |
+                        TODO: Cambio de interfaz anterior-->
+                        <strong>{{problema.tipoProblema.term}} </strong> |
+                        <small>Iniciado
+                            <strong>{{problema.fechaInicio | fromNow}}</strong> por el profesional
+                            <strong>{{problema.evoluciones[problema.evoluciones.length - 1].profesional.nombreCompleto}}</strong>
+                        </small>
+                    </span>
 
 
 
                     <div class="list-inline" *ngIf="problema.evoluciones && problema.evoluciones.length > 0">
                         <span class="badge badge-success d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'activo'">
-                                Activo
-                            </span>
+                            Activo
+                        </span>
                         <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'inactivo'">
-                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                            </span>
+                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                        </span>
                         <span class="badge badge-danger d-inline" *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia == 'resuelto'">
-                                {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
-                            </span>
+                            {{problema.evoluciones[problema.evoluciones.length - 1].vigencia}}
+                        </span>
                         <!--
                             <span *ngIf="problema.evoluciones[problema.evoluciones.length - 1].vigencia != 'resuelto'"
                                     class="badge badge-warning d-inline">{{problema.evoluciones[problema.evoluciones.length - 1].duracion}}
@@ -130,11 +133,14 @@
             <plex-button title="Volver" icon="mdi mdi-arrow-left-bold" label="volver" (click)="volver('/rup')" type="danger"></plex-button>
         </div>
         <div class="col text-right">
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar" type="success" (click)="iniciarPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'pendiente'" title="Iniciar prestación" label="Iniciar"
+                type="success" (click)="iniciarPrestacion(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen" type="success" (click)="verResumen(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'validada'" title="Ver resumen" label="Ver resumen"
+                type="success" (click)="verResumen(prestacion.id)">
             </plex-button>
-            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros" type="success" (click)="verPrestacion(prestacion.id)">
+            <plex-button *ngIf="prestacion.estados[prestacion.estados.length-1].tipo == 'ejecucion'" title="Ver prestación" label="Ir a registros"
+                type="success" (click)="verPrestacion(prestacion.id)">
             </plex-button>
         </div>
     </div>
