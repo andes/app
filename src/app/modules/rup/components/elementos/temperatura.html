@@ -1,9 +1,8 @@
-<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45" [(ngModel)]="registro.valor" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45"  (change)="emitChange()">
+<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 35 y 45" [(ngModel)]="registro.valor" name="temperatura" label="Temperatura" suffix=" °C " min="35" max="45" (change)="emitChange()">
 </plex-float>
 
-<p *ngIf="soloValores">
-    <label>Temperatura</label>
-    <br /> {{registro.valor}} °C
+<p *ngIf="soloValores" class="readonly">
+    <span>Temperatura</span> {{registro.valor}} °C
 </p>
 
 <p *ngIf="mensaje.texto">

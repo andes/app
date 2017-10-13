@@ -45,7 +45,7 @@
                         </p>
                     </div>
 
-                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}">
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}" [hidden]="showDatosSolicitud">
                         <tab [tabTitle]="'Registros de esta consulta'">
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
