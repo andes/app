@@ -20,7 +20,8 @@ import { Cie10Service } from './../../../../services/term/cie10.service';
 
 @Component({
     selector: 'revision-agenda',
-    templateUrl: 'revision-agenda.html'
+    templateUrl: 'revision-agenda.html',
+    styleUrls: ['.././turnos.scss']
 })
 
 export class RevisionAgendaComponent implements OnInit {
@@ -62,7 +63,7 @@ export class RevisionAgendaComponent implements OnInit {
     codigoPrincipal = [];
     paciente: IPaciente;
     cambioTelefono = false;
-    turnoTipoPrestacion: any = {};
+    turnoTipoPrestacion: any = null;
     pacientesSearch = false;
     telefono: String = '';
     diagnosticos = [];
@@ -75,6 +76,7 @@ export class RevisionAgendaComponent implements OnInit {
     private estadoAsistenciaCerrada;
     private estadoCodificado;
     public estadosAgendaArray = enumToArray(EstadosAgenda);
+    public mostrarHeaderCompleto = false;
 
 
     constructor(public plex: Plex,
@@ -137,13 +139,14 @@ export class RevisionAgendaComponent implements OnInit {
     seleccionarTurno(turno, bloque) {
         this.diagnosticos = [];
         this.paciente = null;
+        this.bloqueSeleccionado = bloque;
+        this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
 
         } else {
             this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
-            this.bloqueSeleccionado = bloque;
             this.pacientesSearch = false;
             if (turno.diagnosticoPrincipal && turno.diagnosticoPrincipal.codificacion) {
                 this.diagnosticos.push(turno.diagnosticoPrincipal);
@@ -199,11 +202,10 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
-        this.diagnosticos.splice(index, 1);
-        this.diagnosticos = [...this.diagnosticos];
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
+        this.diagnosticos.splice(index, 1);
     }
 
     marcarIlegible() {
@@ -256,8 +258,8 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio' )) ||
-                !t.asistencia)
+                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio')) ||
+                    !t.asistencia)
             );
         });
 
@@ -296,9 +298,6 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
             this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
             this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
-        } else {
-            delete this.turnoSeleccionado.diagnosticoPrincipal;
-            this.turnoSeleccionado.diagnosticoSecundario = [];
         }
         if (this.bloqueSeleccionado === -1) {
             datosTurno = {

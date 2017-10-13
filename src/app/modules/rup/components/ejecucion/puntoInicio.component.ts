@@ -264,16 +264,12 @@ export class PuntoInicioComponent implements OnInit {
     }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
-        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
-            if (confirmacion) {
-                this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
-                }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
-                });
-            } else {
-                return false;
-            }
+        this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+            this.plex.alert('Prestación creada.').then(() => {
+                this.router.navigate(['/rup/ejecucion', prestacion.id]);
+            });
+        }, (err) => {
+            this.plex.toast('danger', 'ERROR: No fue posible crear la prestación');
         });
     }
 

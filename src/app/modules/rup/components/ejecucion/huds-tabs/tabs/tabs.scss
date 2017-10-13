@@ -31,7 +31,8 @@
             &.trastornos a,
             &.hallazgos a,
             &.procedimientos a,
-            &.planes a {
+            &.planes a,
+            &.prestacion a {
                 color: white;
             }
             &.problemas {
@@ -47,20 +48,28 @@
             &.procedimientos {
                 background-color: $procedimientos;
             }
-            &.planes {
+            &.planes,
+            &.prestacion,
+            {
+                border-color: $planes;
                 background-color: $planes;
             }
         }
         &.draggable {
-            /*
-            -webkit-box-shadow: inset 25px 0px 25px -25px rgba(0, 0, 0, 0.45), inset -25px 0px 25px -25px rgba(0, 0, 0, 0.45);
-            -moz-box-shadow: inset 25px 0px 25px -25px rgba(0, 0, 0, 0.45), inset -25px 0px 25px -25px rgba(0, 0, 0, 0.45);
-            box-shadow: inset 25px 0px 25px -25px rgba(0, 0, 0, 0.45), inset -25px 0px 25px -25px rgba(0, 0, 0, 0.45);
-            */
             overflow: auto;
             &::-webkit-scrollbar {
                 width: 0px;
                 background: transparent;
+            }
+        }
+        &.fixed {
+            padding-left: 170px;
+            li:first-child {
+                margin-left: -170px;
+                width: 170px;
+                position: fixed;
+                -webkit-box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
+                box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
             }
         }
     }
