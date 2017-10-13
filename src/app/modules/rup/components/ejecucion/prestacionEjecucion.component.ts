@@ -178,6 +178,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     moverRegistro(posicionNueva: number, registro: any) {
+        if (registro.dragData) {
+            registro = registro.dragData;
+        }
         // buscamos posicion actual
         let posicionActual = this.prestacion.ejecucion.registros.findIndex(r => (registro.id === r.id));
 
@@ -190,24 +193,23 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        // si proviene del drag and drop
+        let registros = this.prestacion.ejecucion.registros;
+        // Controlar si lo que llega como parámetro es un registro o es un concepto
+        // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
             registroOrigen = registroOrigen.dragData;
-        }
-        registroOrigen.relacionadoCon = [registroDestino];
-        let registros = this.prestacion.ejecucion.registros;
-        // si no existe lo agrego
-        let existe = registros.find(r => (registroOrigen.id && registroOrigen.id === r.id) || (r.concepto.conceptId === registroOrigen.conceptId));
-        if (!existe) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
+        } else {
+            if (registroOrigen) {
+                registroOrigen.relacionadoCon = [registroDestino];
+                // buscamos en la posicion que se encuentra el registro de orgien y destino
+                let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
+                let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
+
+                registros.splice(indexOrigen, 1);
+                registros.splice(indexDestino + 1, 0, registroOrigen);
+            }
         }
-        // buscamos en la posicion que se encuentra el registro de orgien y destino
-        let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
-        let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
-        // movemos
-        let _registro = registros[indexOrigen];
-        registros.splice(indexOrigen, 1);
-        registros.splice(indexDestino + 1, 0, _registro);
 
     }
 
@@ -291,7 +293,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-
+        // this.recuperaLosMasFrecuentes(snomedConcept);
         // si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -308,6 +310,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
         // verificamos si es un plan. Si es plan seteamos esSolicitud en true.
         if (esSolicitud) {
@@ -317,7 +320,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-        this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         return nuevoRegistro;
     }
 
@@ -380,18 +382,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
-                            // viene desde la huds
-                            let existeEjecucion = registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === dato.evoluciones[0].idRegistro));
-                            if (!existeEjecucion) {
-                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
-                                resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                if (registroDestino) {
-                                    registroDestino.relacionadoCon = [resultado];
-                                }
-                            } else {
-                                this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
-                                return false;
-                            }
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
@@ -590,7 +580,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             } else {
-                this.ejecutarConcepto(e.dragData);
+                window.setTimeout(() => {
+                    this.ejecutarConcepto(e.dragData);
+                });
             }
         }
     }
@@ -675,8 +667,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
-    cambiaValorCollapse(valor: boolean, indice) {
-        this.itemsRegistros[indice].collapse = valor;
+
+    cambiaValorCollapse(indice) {
+        if (this.itemsRegistros[indice]) {
+            this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
+        }
     }
 
     colapsarPrestaciones() {
