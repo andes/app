@@ -92,7 +92,7 @@ export class PuntoInicioComponent implements OnInit {
             // Prestaciones
             this.servicioPrestacion.get({
                 fechaDesde: this.fecha,
-                fechaHasta: this.fecha,
+                fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
                 // this.auth.getPermissions('rup:tipoPrestacion:?')
