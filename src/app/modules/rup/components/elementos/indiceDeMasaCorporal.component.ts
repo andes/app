@@ -11,6 +11,9 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     private pesoConceptId = '27113001';
     private tallaConceptId = '14456009';
 
+    // utilizado para el form, asi nos permite dejar el input como disabled
+    public valorImc: Number;
+
     ngOnInit() {
         if (this.elementoRUP) {
             this.calculoIMC();
@@ -59,6 +62,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             imc = peso / Math.pow(talla, 2);
             this.mensaje = '';
             this.registro.valor = Number(imc.toFixed(2));
+            this.valorImc = this.registro.valor;
             this.emitChange(false);
         } else {
             // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc

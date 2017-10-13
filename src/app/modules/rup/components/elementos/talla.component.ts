@@ -17,13 +17,14 @@ export class TallaComponent extends RUPComponent implements OnInit {
                 this.emitChange(false);
             }
         });
+
         if (this.registro.valor) {
-            this.mensaje = this.getMensajes();
+            // this.mensaje = this.getMensajes();
         }
     }
 
-
-     getMensajes() {
+    /*
+    getMensajes() {
 
         // Calculo Edad en Meses
         let edadEnMeses: any = null; let fechaNac: any;
@@ -302,7 +303,8 @@ export class TallaComponent extends RUPComponent implements OnInit {
         }
         return mensaje;
 
-     }
+    }
+    */
 
 }
 

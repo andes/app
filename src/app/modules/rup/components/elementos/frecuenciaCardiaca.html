@@ -1,9 +1,8 @@
 <plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 30 y 100" [(ngModel)]="registro.valor" name="frecuenciaCardiaca" label="Frecuencia cardíaca" suffix="PPM" min="30" max="100" (change)="emitChange()">
 </plex-int>
 
-<p *ngIf="soloValores">
-    <label>Frecuencia cardíaca</label>
-    <br /> {{registro.valor}} PPM
+<p *ngIf="soloValores" class="readonly">
+    <span>Frecuencia cardíaca</span> {{registro.valor}} PPM
 </p>
 
 <!-- <p *ngIf="mensaje.texto">
