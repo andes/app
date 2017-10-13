@@ -6,9 +6,9 @@
 <div class="row">
     <div class="col">
         <div class="menu-huds">
-            <plex-button type="success btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
+            <plex-button type="problemas btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
             </plex-button>
-            <plex-button type="primary btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
+            <plex-button type="planes btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
             </plex-button>
         </div>
         <div class="btn-group botones-temporales d-xl-none" role="group">
@@ -32,20 +32,25 @@
 
         <!-- Vista: Hallazgos -->
         <ng-container *ngIf="vista === 'hallazgos'">
-            <div class="vista-titulo">Hallazgos crónicos</div>
 
+            <!-- HALLAZGOS CRÓNICOS ONLY -->
+            <div class="vista-titulo">Hallazgos crónicos</div>
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
-                <ng-container *ngFor="let hallazgo of hallazgosCronicos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini">
+                <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
+                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                                 <div class="header">
-                                    <div class="title">
+                                    <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
                                         {{ hallazgo.concepto.term }}
                                     </div>
+                                    <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas">
+                                        <i class="mdi mdi-eye"></i>
+                                    </span>
                                     <br>
                                     <small *ngIf="hallazgo.evoluciones">
                                         última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
@@ -55,66 +60,74 @@
                                     <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
                                         Crónico
                                     </span>
-
-                                    <div class="actions">
-                                        <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)">
-                                            <i class="mdi mdi-plus-box-outline"></i>
-                                        </a>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="float-right p-1">
+                                <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
+                                    <i class="mdi mdi-plus-box-outline"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
                 </ng-container>
             </ul>
             <div *ngIf="hallazgosCronicos.length === 0">No hay problemas crónicos</div>
+
+            <!-- HALLAZGOS ACTIVOS ONLY -->
             <div class="vista-titulo">Hallazgos activos</div>
             <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
-                <ng-container *ngFor="let problema of problemasActivos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini">
+                <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
                                 <div class="header">
-                                    <div class="title">
+                                    <div class="title" [ngClass]="{'text-problemas': eyeActivo === iActivo}">
                                         {{ problema.concepto.term }}
                                     </div>
+                                    <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas">
+                                        <i class="mdi mdi-eye"></i>
+                                    </span>
                                     <br>
                                     <small *ngIf="problema.evoluciones">
-                                        última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}
+                                        última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}
                                         <br> estado: {{ problema.evoluciones[0].estado }}
                                     </small>
                                     <br>
-                                    <div class="actions">
-                                        <a href="javascript: void(0)" (click)="devolverRegistrosHuds(problema)">
-                                            <i class="mdi mdi-eye"></i>
-                                        </a>
-                                        <a href="javascript: void(0)" (click)="devolverHallazgo(problema)">
-                                            <i class="mdi mdi-plus-box-outline"></i>
-                                        </a>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="float-right p-1">
+                                <a href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="left">
+                                    <i class="mdi mdi-plus-box-outline"></i>
+                                </a>
                             </div>
                         </div>
                     </li>
                 </ng-container>
             </ul>
             <div *ngIf="problemasActivos.length === 0">No hay problemas activos</div>
+
+            <!-- OTROS HALLAZGOS -->
             <div class="vista-titulo">Otros Hallazgos</div>
             <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
-                <ng-container *ngFor="let problema of hallazgosNoActivos; let i = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini">
+                <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros || (eyeOtros === iOtros && estaEnTabs(problema))}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content">
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
                                 <div class="header">
-                                    <div class="title">
+                                    <div class="title" [ngClass]="{'text-problemas': eyeOtros === iOtros}">
                                         {{ problema.concepto.term }}
                                     </div>
+                                    <span *ngIf="iOtros === eyeOtros" class="float-right text-problemas">
+                                        <i class="mdi mdi-eye"></i>
+                                    </span>
                                     <br>
                                     <small *ngIf="problema.evoluciones">
                                         última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}
@@ -124,7 +137,6 @@
                                             Transformado en: {{ problema.transformado?.concepto.term }}
                                         </span>
                                     </small>
-                                    <br>
                                 </div>
                             </div>
                         </div>
@@ -140,29 +152,25 @@
             <div class="vista-titulo">Prestaciones</div>
 
             <div *ngIf="prestaciones" class="list-group">
-                <ng-container *ngFor="let prestacion of prestaciones; let i = index">
-                    <div class="rup-card mini">
+                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
+                    <div class="rup-card mini" [ngClass]="{'border-planes': eyePrestacion === iPrestacion}">
                         <div class="type planes">
+                            <!-- Vacío -->
                         </div>
-                        <div class="rup-content">
+                        <div class="rup-content hover" (click)="devolverRegistrosHuds(prestacion, 'prestacion')" (mouseenter)="eyePrestacion = iPrestacion" (mouseleave)="eyePrestacion = -1">
                             <div class="header">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <small> {{ prestacion.estados[prestacion.estados.length -1].createdAt | fecha }}</small>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="badge badge-{{prestacion.estados[prestacion.estados.length -1].tipo}} float-right">{{prestacion.estados[prestacion.estados.length -1].tipo}} </span>
-                                    </div>
+                                <div class="title" [ngClass]="{'text-planes': eyePrestacion === iPrestacion}">
+                                    <span>{{ prestacion.solicitud.tipoPrestacion.term }}
+                                        <small class="m-l-2"> ({{ prestacion.estados[prestacion.estados.length - 1].createdAt | fecha }})</small>
+                                    </span>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="title">
-                                            {{ prestacion.solicitud.tipoPrestacion.term }}
-                                        </div>
-                                    </div>
-                                </div>
+                                <span *ngIf="iPrestacion === eyePrestacion" class="float-right text-planes m-r-2">
+                                    <i class="mdi mdi-eye"></i>
+                                </span>
+                                <br>
+                                <span class="badge badge-{{prestacion.estados[prestacion.estados.length - 1].tipo}}">{{prestacion.estados[prestacion.estados.length - 1].tipo}} </span>
+                                <small>Profesional: {{ prestacion.estados[prestacion.estados.length - 1].createdBy.nombreCompleto}}</small>
                             </div>
-                            <small>Profesional: {{ prestacion.estados[prestacion.estados.length -1].createdBy.nombreCompleto}}</small>
                         </div>
                     </div>
                 </ng-container>

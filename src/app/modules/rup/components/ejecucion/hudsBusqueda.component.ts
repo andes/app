@@ -128,25 +128,45 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
 
-    devolverRegistrosHuds(registro) {
-        switch (registro.concepto.semanticTag) {
-            case 'hallazgo':
-            case 'trastorno':
-                registro.class = 'problemas';
-                break;
+    devolverRegistrosHuds(registro, tipo) {
+        debugger;
+
+
+        let index;
+        if (tipo === 'hallazgo') {
+            index = this.registrosHuds.findIndex(r => {
+                return (r.tipo === 'hallazgo' && r.data.concepto.id === registro.concepto.id);
+            });
+
+            switch (registro.concepto.semanticTag) {
+                case 'hallazgo':
+                case 'trastorno':
+                    registro.class = 'problemas';
+                    break;
+            }
+        } else if (tipo === 'prestacion') {
+            index = this.registrosHuds.findIndex(r => {
+                return (r.tipo === 'prestacion' && r.data.id === registro.id);
+            });
+
+            registro.class = 'prestacion';
         }
 
-        const index = this.registrosHuds.findIndex(r => r.concepto.id === registro.concepto.id);
+        let elemento = {
+            tipo: tipo,
+            data: registro
+        };
+
         // si no existe lo agregamos
         if (index === -1) {
-            this.registrosHuds.push(registro);
+            this.registrosHuds.push(elemento);
         } else {
             // si existe lo quitamos
             this.registrosHuds.splice(index, 1);
         }
 
-
         this.evtHuds.emit(this.registrosHuds);
+
     }
 
     listarPrestaciones() {
@@ -206,5 +226,12 @@ export class HudsBusquedaComponent implements OnInit {
         } else {
             return '';
         }
+    }
+
+    estaEnTabs(hallazgo) {
+        if (hallazgo && hallazgo.concepto && hallazgo.concepto.conceptId) {
+            return this.registrosHuds.find(h => h.concepto ? h.concepto.conceptId === hallazgo.concepto.conceptId : false);
+        }
+        return false;
     }
 }
