@@ -165,10 +165,8 @@ export class HudsBusquedaComponent implements OnInit {
             this.registrosHuds.splice(index, 1);
         }
 
-
         this.evtHuds.emit(this.registrosHuds);
 
-        console.log(elemento);
     }
 
     listarPrestaciones() {
@@ -228,5 +226,12 @@ export class HudsBusquedaComponent implements OnInit {
         } else {
             return '';
         }
+    }
+
+    estaEnTabs(hallazgo) {
+        if (hallazgo && hallazgo.concepto && hallazgo.concepto.conceptId) {
+            return this.registrosHuds.find(h => h.concepto ? h.concepto.conceptId === hallazgo.concepto.conceptId : false);
+        }
+        return false;
     }
 }

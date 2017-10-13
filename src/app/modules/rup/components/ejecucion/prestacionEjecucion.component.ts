@@ -307,6 +307,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
@@ -683,9 +684,12 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
         }
     }
-    recuperaLosMasFrecuentes(concepto) {
+
+    recuperaLosMasFrecuentes(concepto, elementoRUP = null) {
         this.masFrecuentes = [];
-        let elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        if (!elementoRUP) {
+            elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
+        }
         elementoRUP.frecuentes.forEach(element => {
             this.masFrecuentes.push(element);
         });
