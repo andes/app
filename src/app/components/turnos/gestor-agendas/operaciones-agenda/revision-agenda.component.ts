@@ -202,10 +202,11 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
+        this.diagnosticos.splice(index, 1);
+        this.diagnosticos = [...this.diagnosticos];
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
-        this.diagnosticos.splice(index, 1);
     }
 
     marcarIlegible() {
@@ -298,6 +299,9 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
             this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
             this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
+        } else {
+            delete this.turnoSeleccionado.diagnosticoPrincipal;
+            this.turnoSeleccionado.diagnosticoSecundario = [];
         }
         if (this.bloqueSeleccionado === -1) {
             datosTurno = {
