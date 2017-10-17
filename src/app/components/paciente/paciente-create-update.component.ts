@@ -351,11 +351,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
             } else {
                 if (this.seleccion.direccion[0].ubicacion) {
                     if (this.seleccion.direccion[0].ubicacion.provincia !== null) {
-                        (this.seleccion.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true: this.viveProvNeuquen = false;
+                        (this.seleccion.direccion[0].ubicacion.provincia.nombre === 'Neuquén') ? this.viveProvNeuquen = true : this.viveProvNeuquen = false;
                         this.loadLocalidades(this.seleccion.direccion[0].ubicacion.provincia);
                     }
                     if (this.seleccion.direccion[0].ubicacion.localidad !== null) {
-                        (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true: this.viveEnNeuquen = false;
+                        (this.seleccion.direccion[0].ubicacion.localidad.nombre === 'Neuquén') ? this.viveEnNeuquen = true : this.viveEnNeuquen = false;
                         this.loadBarrios(this.seleccion.direccion[0].ubicacion.localidad);
                     }
                 }
