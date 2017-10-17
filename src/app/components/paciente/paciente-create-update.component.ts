@@ -717,8 +717,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return cond;
     }
     preSave(valid) {
-        this.disableGuardar = true;
         if (valid.formValid) {
+            this.disableGuardar = true;
             this.verificaPacienteRepetido().then((resultado) => {
                 if (!resultado) {
                     this.save(valid);
