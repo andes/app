@@ -1,7 +1,7 @@
 <ng-container *ngIf="hallazgoOrigen">
     <div class="row">
         <div class="col-12">
-            <span class="badge-info  float-right">
+            <span class="badge-info float-right">
                 Originado con la transformación de:
                 <strong>{{ hallazgoOrigen.nombre }}</strong>
             </span>
@@ -71,28 +71,18 @@
             </div>
         </div>
     </ng-container>
-
-
 </div>
 
+<!-- Hallazgos -->
 <ng-container *ngIf="soloValores">
     <div class="row">
 
         <div class="col-4">
-            <!-- <ng-container *ngIf="registro?.evoluciones">
-            {{ registro.concepto.term }}
-        </ng-container> -->
             <b>{{ registro.nombre[0].toUpperCase() + registro.nombre.slice(1) }}</b>
             <br>
-            <small>
-                <b>Inicio aproximado: </b>
-                <ng-container *ngIf="!registro?.evoluciones">
-                    {{ registro.valor.fechaInicio | fromNow }}
-                </ng-container>
-
-                <ng-container *ngIf="registro?.evoluciones">
-                    {{ registro.evoluciones[0].fechaInicio | fromNow }}
-                </ng-container>
+            <small class="text-secondary">Inicio aproximado:
+                <ng-container *ngIf="!registro?.evoluciones">{{ registro.valor.fechaInicio | fromNow }}</ng-container>
+                <ng-container *ngIf="registro?.evoluciones">{{ registro.evoluciones[0].fechaInicio | fromNow }}</ng-container>
             </small>
         </div>
 
@@ -106,32 +96,41 @@
             }">
                 {{ registro.valor.estado }}
             </small>
-            <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
-                Diagnóstico principal
-            </small>
+            <ng-container *ngIf="(registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag ==='situación' || registro.concepto.semanticTag === 'trastorno')">
+                <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && registro.esDiagnosticoPrincipal">
+                    Diagnóstico principal
+                </small>
+                <plex-bool *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'" [readonly]="false" [(ngModel)]="registro.esDiagnosticoPrincipal"
+                    type="slide" label="Diagnostico principal" name="Diagnóstico principal" (diagnosticoPrincipalEmit)="diagnosticoPrestacion(registro.id)"></plex-bool>
+                <plex-bool *ngIf="codigosCie10 && codigosCie10[registro.id] && codigosCie10[registro.id].c2" [(ngModel)]="registro.esPrimeraVez"
+                    type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
+            </ng-container>
         </div>
     </div>
-    <div class="row hidden-xl">
+    <div class="row">
         <div class="col">
             <ng-container *ngIf="!registro?.evoluciones">
-                <b>Evolución: </b> {{ registro.valor.evolucion }}
+                <small class="text-secondary">Evolución: {{ registro.valor.evolucion }}</small>
             </ng-container>
 
-            <ng-container *ngIf="registro?.evoluciones">
-                <div *ngFor="let evolucion of registro.evoluciones" class="row">
-                    <div class="col">
-                        <hr>
-                        <b>Fecha: </b> {{evolucion.fechaCarga | fromNow }}
-                        <br>
-                        <b>Estado: </b> {{evolucion.estado}}
-                        <br>
-                        <b>Profesional: </b> {{evolucion.profesional }}
-                        <br>
-                        <b>Evolución: </b> {{ evolucion.evolucion}}
+            <div class="d-xl-none">
 
+                <ng-container *ngIf="registro?.evoluciones">
+                    <div *ngFor="let evolucion of registro.evoluciones" class="row">
+                        <div class="col">
+                            <hr>
+                            <b>Fecha: </b> {{evolucion.fechaCarga | fromNow }}
+                            <br>
+                            <b>Estado: </b> {{evolucion.estado}}
+                            <br>
+                            <b>Profesional: </b> {{evolucion.profesional }}
+                            <br>
+                            <b>Evolución: </b> {{ evolucion.evolucion}}
+
+                        </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
         </div>
     </div>
 

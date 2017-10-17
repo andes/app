@@ -13,7 +13,8 @@
                     <header>
                         <div class="row">
                             <div class="col-9 page-title">
-                                {{prestacion.solicitud.tipoPrestacion.term}}
+                                {{prestacion.solicitud.tipoPrestacion.term}} -
+                                <span>{{prestacion.solicitud.fecha | date: 'E/MM/yyyy'}}</span>
                             </div>
                             <div class="col-3 float-right text-right">
                                 <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
@@ -191,7 +192,8 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
-                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
+                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 

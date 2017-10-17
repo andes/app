@@ -19,6 +19,8 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public indice = 0;
     public evoluciones;
 
+    public diagnosticoPrestacionEmit: any = new EventEmitter<any>();
+
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
@@ -154,5 +156,9 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     }
                 });
         }
+    }
+
+    diagnosticoPrestacion(id: any) {
+        this.diagnosticoPrestacionEmit(id);
     }
 }

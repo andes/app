@@ -13,38 +13,18 @@
             </div>
         </header>
         <div class="row">
-            <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
-                <div class="col-12">
+            <div class="col-9">
+                <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
                     <div class="rup-card">
-                        <div class="type {{elemento.concepto.semanticTag}}">
+                        <div class="type {{ elemento.esSolicitud ? 'planes' : elemento.concepto.semanticTag }}">
                         </div>
                         <div class="rup-content">
-                            <div class="header">
-                                <div class="row">
-                                    <div class="col-12">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="rup-body">
                                 <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                     [registro]="elemento" [soloValores]="true">
                                 </rup>
                             </div>
-                            <div class="rup-footer">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div *ngIf="elemento.relacionadoCon && elemento.relacionadoCon.length > 0">
-                                            <strong>Relacionado con:</strong>
-                                            <ng-container>
-                                                {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1) }}
-                                            </ng-container>
-                                        </div>
-                                        <hr>
-                                        <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-                                            <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
-                                        </div>
-                                    </div>
-                                </div>
+                            <!-- <div class="rup-footer">
                                 <div class="row" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                     <div class="col-6">
                                         <div *ngIf="!diagnosticoReadonly">
@@ -56,12 +36,27 @@
                                         <plex-bool *ngIf="codigosCie10[elemento.id].c2" [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
                                     </div>
                                 </div>
-
-                            </div>
+                            </div> -->
                         </div>
                     </div>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
+            <div class="col-3">
+                <!-- ÁRBOL -->
+                <ng-container *ngFor="let rama of prestacion.ejecucion.registros; let iRama = index">
+                    <ul class="list-group">
+                        <li class="list-group-item pl-0 pt-0 pb-0 mb-0">
+                            <div>
+                                <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
+                                <span>{{rama.nombre}}</span>
+                            </div>
+                            <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
+                                [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
+                            </rup> -->
+                        </li>
+                    </ul>
+                </ng-container>
+            </div>
         </div>
     </plex-box>
 </section>
