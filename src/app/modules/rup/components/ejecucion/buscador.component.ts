@@ -5,6 +5,7 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 @Component({
     selector: 'rup-buscador',
     templateUrl: 'buscador.html',
+    styleUrls: ['buscador.scss']
 
 })
 
@@ -21,8 +22,7 @@ export class BuscadorComponent implements OnInit {
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
     // emito el tipo de busqueda para que lo reciba el buscador SNOMED.
     @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
-    // Parametro que recibo por el input de planes.
-    public searchPlanes: String = '';
+
     // Lista de planes.
     public listaPlanes: any[] = [];
     // concepto snomed seleccionado del buscador a ejecutar
@@ -33,7 +33,7 @@ export class BuscadorComponent implements OnInit {
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
     public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
-    public showPlanes = false;
+    // public showPlanes = false;
     public ejecucion: any[] = [];
 
     // array de los mas frecuentes..
@@ -60,21 +60,12 @@ export class BuscadorComponent implements OnInit {
         this._onDragEnd.emit(e);
     }
 
-    // Buscador de planes
-    buscar() {
-        if (this.searchPlanes !== null) {
-            this.loading = true;
-            this.servicioTipoPrestacion.get({ term: this.searchPlanes }).subscribe(tiposPrestacion => {
-                this.listaPlanes = tiposPrestacion;
-                this.loading = false;
-            });
-        } else {
-            this.listaPlanes = [];
-        }
-    }
-
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
+
+        this.tipoBusqueda = tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda;
+        console.log('tipoBusqueda', this.tipoBusqueda);
+
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {
 
@@ -88,6 +79,9 @@ export class BuscadorComponent implements OnInit {
                 case 'procedimiento':
                     semanticTag = 'procedimientos';
                     break;
+                case 'planes':
+                    semanticTag = 'procedimientos';
+                    break;
             }
 
             if (semanticTag === tipoBusqueda) {
@@ -95,17 +89,8 @@ export class BuscadorComponent implements OnInit {
             }
         });
 
-        this.showPlanes = false; // Oculta el buscador de planes
         this.tipoBusqueda = tipoBusqueda;
         this._tipoDeBusqueda.emit(tipoBusqueda);
-    }
-
-    // Muestra el buscador de planes
-    busquedaPlanes() {
-        this.masFrecuentesFiltradas = [];
-        this.tipoBusqueda = 'planes';
-        this.showPlanes = true;
-        this._tipoDeBusqueda.emit(this.tipoBusqueda);
     }
 
     // Emito el concepto seleccionado
@@ -117,7 +102,7 @@ export class BuscadorComponent implements OnInit {
     // Lo trae del buscador de SNOMED
     ejecutarConcepto(concepto) {
         this.evtData.emit(concepto);
-       // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
+        // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed

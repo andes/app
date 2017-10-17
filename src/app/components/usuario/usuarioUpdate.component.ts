@@ -89,7 +89,6 @@ export class UsuarioUpdateComponent implements OnInit {
         }
         this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
         this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
-        this.loadPermisos();
     }
 
 
@@ -101,6 +100,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.userModel.apellido = this.seleccion.apellido;
         this.userModel.organizaciones = this.seleccion.organizaciones;
         this.getOrganizaciones();
+        this.loadPermisos();
     }
 
     onOrgChange() {

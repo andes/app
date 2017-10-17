@@ -1,11 +1,13 @@
 <ng-container *ngIf="!soloValores">
     <label for="observaciones">
-         Observación
+        Observación
     </label>
     <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución" (change)="emitChange()"></textarea>
 </ng-container>
 
-<p *ngIf="soloValores">
-    <label>Observaciones</label>
-    <br /> {{registro.valor}}
+<p *ngIf="soloValores" class="readonly">
+    <span>Observaciones</span>
+    <ng-container>
+        {{registro.valor}}
+    </ng-container>
 </p>
