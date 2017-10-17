@@ -1,5 +1,5 @@
 <div *ngIf="!soloValores">
-    <plex-select [(ngModel)]="registro.valor.prestacionSeleccion" name="nombrePrestacion" label="Prestación a Solicictar" [data]="tiposPrestacion" labelField="term">
+    <plex-select [(ngModel)]="registro.valor.prestacionSolicitada" name="nombrePrestacion" label="Prestación a Solicictar" [data]="tiposPrestacion" labelField="term">
     </plex-select>
     <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="registro.valor.motivo"></plex-text>
     <plex-text label="Indicaciones" multiline=true autoFocus=1 [(ngModel)]="registro.valor.indicaciones"></plex-text>
@@ -8,7 +8,7 @@
 <div *ngIf="soloValores">
     <p>
         <label><b>prestación solicitada</b></label>
-        <br /> {{registro.valor.prestacionSeleccion.fsn}}
+        <br /> {{registro.valor.prestacionSolicitada.term}}
     </p>
     <p>
         <label><b>Motivo</b></label>
