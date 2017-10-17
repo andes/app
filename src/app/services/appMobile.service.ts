@@ -11,16 +11,31 @@ export class AppMobileService {
 
     constructor(private server: Server) { }
 
+    /**
+     * Activa una cuenta app mobile para un paciete
+     * @param {objectid} idPaciente
+     * @param {object} contacto Email y telefono del paciente
+     */
+
     create(idPaciente: String, contacto: any): Observable<any> {
         return this.server.post(this.mobileUrl + 'create' + '/' + idPaciente, contacto);
     }
 
+    /**
+     * Chequea que un paciente tenga una cuenta mobile
+     * @param {objectId} idPaciente
+     */
     check(idPaciente: String): Observable<any> {
         return this.server.get(this.mobileUrl + 'check' + '/' + idPaciente, {});
     }
 
-    update(params): Observable<any> {
-        return this.server.post(this.mobileUrl + 'reenviar-codigo', { email: params });
+    /**
+     * Reenvía el código de verificación a un paciente
+     * @param {objectId} idPaciente
+     */
+
+    reenviar(idPaciente): Observable<any> {
+        return this.server.post(this.mobileUrl + 'v2/reenviar-codigo', { id: idPaciente });
     }
 
 }
