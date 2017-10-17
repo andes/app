@@ -137,7 +137,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
                 // Si el registro actual tiene registros vinvulados los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id = idRegistroRel); });
+                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                 }
 
             });
