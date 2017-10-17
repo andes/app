@@ -130,7 +130,6 @@ export class ActivarAppComponent implements OnInit, OnChanges {
 
             if (!this.checkPass) {
                 this.appMobile.reenviar(this.paciente.id).subscribe((resultado) => {
-                    console.log(resultado);
                     if (resultado.status === 'OK') {
                         this.plex.alert('El código de activación ha sido reenviado.');
                     }
