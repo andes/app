@@ -228,10 +228,33 @@ export class HudsBusquedaComponent implements OnInit {
         }
     }
 
-    estaEnTabs(hallazgo) {
-        if (hallazgo && hallazgo.concepto && hallazgo.concepto.conceptId) {
-            return this.registrosHuds.find(h => h.concepto ? h.concepto.conceptId === hallazgo.concepto.conceptId : false);
+    /**
+     * Determina si un hallazgo ya fué cargado en los tabs de la HUDS
+     * Para agregarle una clase activa en el listado de hallazgos.
+     *
+     * @param {any} registro Registro a verificar si esta cargado o no en la HUDS
+     * @param {any} tipo hallzago | prestacion
+     * @returns boolean
+     * @memberof HudsBusquedaComponent
+     */
+    estaEnTabs(registro, tipo) {
+        console.log(this.registrosHuds);
+        console.log(registro);
+
+        if (!this.registrosHuds.length) {
+            return false;
         }
+
+        for (let i = 0; i < this.registrosHuds.length; i++) {
+            const _registro = this.registrosHuds[i].data;
+
+            if (tipo === 'hallazgo' && _registro.concepto.conceptId === registro.concepto.conceptId) {
+                return true;
+            } else if (tipo === 'prestacion' && _registro.id === registro.id) {
+                return true;
+            }
+        }
+
         return false;
     }
 }
