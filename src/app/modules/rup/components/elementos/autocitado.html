@@ -1,21 +1,12 @@
 <div *ngIf="!soloValores">
-    <plex-select [(ngModel)]="registro.valor.prestacionSolicitada" name="nombrePrestacion" label="Prestación a Solicictar" [data]="tiposPrestacion" labelField="term">
+    <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.motivo"></plex-text>
+    <plex-select [(ngModel)]="registro.valor.prestacionSolicitada" name="nombrePrestacion" label="Prestación a Solicictar" [data]="tiposPrestacion"
+        labelField="term">
     </plex-select>
-    <plex-text label="Motivo" multiline=true autoFocus=1 [(ngModel)]="registro.valor.motivo"></plex-text>
-    <plex-text label="Indicaciones" multiline=true autoFocus=1 [(ngModel)]="registro.valor.indicaciones"></plex-text>
+    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.indicaciones"></plex-text>
 </div>
-
 <div *ngIf="soloValores">
-    <p>
-        <label><b>prestación solicitada</b></label>
-        <br /> {{registro.valor.prestacionSolicitada.term}}
-    </p>
-    <p>
-        <label><b>Motivo</b></label>
-        <br /> {{registro.valor.motivo}}
-    </p>
-    <p>
-        <label><b>Indicaciones</b></label>
-        <br /> {{registro.valor.indicaciones}}
-    </p>
+    <div *ngIf="registro.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+        <plex-button label="Asignar turno" type="primary" (click)="darTurno(registro.prestacionSolicitud)"></plex-button>
+    </div>
 </div>

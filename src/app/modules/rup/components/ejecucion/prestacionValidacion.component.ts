@@ -77,6 +77,7 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
@@ -122,8 +123,18 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
+
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
-        if (existeDiagnostico) {
+        let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
+
+        if (!existeDiagnostico) {
+            this.plex.toast('info', 'Debe seleccionar un diagnóstico principal');
+            return false;
+        }
+        if (diagnosticoRepetido) {
+            this.plex.toast('info', 'Debe seleccionar sólo un diagnóstico principal');
+            return false;
+        }
             this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
                 if (!validar) {
                     return false;
@@ -152,9 +163,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     });
                 }
             });
-        } else {
-            this.plex.toast('warning', 'Debe seleccionar un diagnóstico principal');
-        }
+ 
     }
 
     romperValidacion() {
@@ -234,11 +243,15 @@ export class PrestacionValidacionComponent implements OnInit {
         }
     }
 
-    diagnosticoPrestacion(i) {
-        let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
-        if (actual) {
-            actual.esDiagnosticoPrincipal = false;
-        }
+    diagnosticoPrestacion(elem) {
+
+        elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
+
+        // let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal = (p.id === elem.id));
+        // if (actual) {
+        //     actual.esDiagnosticoPrincipal = false;
+        // }
+
     }
 }
 
