@@ -1,11 +1,14 @@
 @import 'node_modules/@andes/plex/src/lib/css/variables';
 // Variables
-$problemas: #f0ad4e;
+$problemas: #f1930d;
 $trastorno: #d9534f;
 $hallazgos: #d9534f;
 $procedimientos: #92278E;
 $planes: #0070ba;
-$lista-problemas: "hallazgo", "trastorno", "situacion";
+$lista-problemas: "hallazgo",
+"trastorno",
+"situacion";
 $selector: ();
-$lista-procedimientos: "procedimiento", "entidad";
+$lista-procedimientos: "procedimiento",
+"entidad";
 $selector2: ();

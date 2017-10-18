@@ -11,11 +11,11 @@ import { TabComponent } from './tab.component';
       <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
-          <a href="javascript:void(0)" *ngIf="options.trim">
+          <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
             {{ (tab.tabTitle.length > options.trim) ? (tab.tabTitle | slice:0:options.trim) + '..' : (tab.tabTitle) }}
           </a>
 
-          <a href="javascript:void(0)" *ngIf="!options.trim">
+          <a href="javascript:void(0)" *ngIf="!options.trim" title="{{tab.tabTitle}}">
             {{tab.tabTitle}}
           </a>
         </li>
