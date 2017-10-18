@@ -10,11 +10,16 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
     public tiposPrestacion: any = [];
     public prestacionSeleccion;
 
+    public darTurnoEmit = new EventEmitter<any>();
 
     ngOnInit() {
         this.registro.valor = (this.registro.valor) ? this.registro.valor : {};
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
         });
+    }
+
+    darTurno(prestacionSolicitud) {
+        this.darTurnoEmit.emit(prestacionSolicitud);
     }
 }
