@@ -57,7 +57,7 @@
             <div class="col-2 text-120">
                 <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
             </div>
-            <div class="col text-center">
+            <div class="col">
                 <span class="text-120">
                     {{unaEvolucion.fechaCarga | fecha }}
                 </span>
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-12 text-center"> Profesional: {{unaEvolucion.profesional }}
+            <div class="col-12"> Profesional: {{unaEvolucion.profesional }}
                 <br>{{unaEvolucion.evolucion }}
             </div>
         </div>
@@ -100,34 +100,32 @@
                     }">
                         {{ registro.valor.estado }}
                     </small>
+                    <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
+                        Diagnóstico principal
+                    </small>
                 </div>
             </div>
         </div>
     </div>
     <div class="row">
-        <div class="col">
-            <!-- <ng-container *ngIf="!registro?.evoluciones">
-                <small class="text-secondary">Evolución: {{ registro.valor.evolucion }}</small>
-            </ng-container> -->
-
-            <div class="d-xl-none">
-
-                <ng-container *ngIf="registro?.evoluciones">
-                    <div *ngFor="let evolucion of registro.evoluciones" class="row">
-                        <div class="col">
-                            <hr>
-                            <b>Fecha: </b> {{evolucion.fechaCarga | fromNow }}
-                            <br>
-                            <b>Estado: </b> {{evolucion.estado}}
-                            <br>
-                            <b>Profesional: </b> {{evolucion.profesional }}
-                            <br>
-                            <b>Evolución: </b> {{ evolucion.evolucion}}
-
-                        </div>
+        <div class="col pt-1">
+            <ng-container *ngIf="registro?.evoluciones">
+                <b>Evolución: </b>
+                <div *ngFor="let evolucion of registro.evoluciones" class="row ml-1">
+                    <div class="col-xl-12">
+                        <b>Fecha: </b> {{ evolucion.fechaCarga | fromNow }}
                     </div>
-                </ng-container>
-            </div>
+                    <div class="col-xl-12">
+                        <b>Estado: </b> {{ evolucion.estado }}
+                    </div>
+                    <div class="col-xl-12">
+                        <b>Profesional: </b> {{evolucion.profesional }}
+                    </div>
+                    <div class="col-xl-12 pb-1">
+                        <b>Evolución: </b> {{ evolucion.evolucion }}
+                    </div>
+                </div>
+            </ng-container>
         </div>
     </div>
 

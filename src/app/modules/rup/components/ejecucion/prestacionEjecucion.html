@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-9 page-title">
                                 {{prestacion.solicitud.tipoPrestacion.term}} -
-                                <span>{{prestacion.solicitud.fecha | date: 'E/MM/yyyy'}}</span>
+                                <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                             </div>
                             <div class="col-3 float-right text-right">
                                 <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
