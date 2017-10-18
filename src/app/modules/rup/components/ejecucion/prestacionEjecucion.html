@@ -46,7 +46,7 @@
                         </p>
                     </div>
 
-                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}">
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}" [hidden]="showDatosSolicitud">
                         <tab [tabTitle]="'Registros de esta consulta'">
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
@@ -75,7 +75,7 @@
                                                     </div>
 
                                                     <div class="actions">
-                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(!itemsRegistros[registro.id].collapse, registro.id)">
+                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)">
                                                             <i class="mdi mdi-chevron-down"></i>
                                                         </a>
                                                         <span *ngIf="!(registro?.valor && registro?.valor.estado && registro.valor?.estado == 'transformado')">

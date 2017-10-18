@@ -20,9 +20,66 @@
                         </div>
                         <div class="rup-content">
                             <div class="rup-body">
-                                <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                    [registro]="elemento" [soloValores]="true">
-                                </rup>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <b *ngIf="elemento?.nombre">
+                                            {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                        </b>
+                                        <br>
+                                        <small class="text-secondary" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion | slice:0:40 }}...</small>
+                                    </div>
+                                    <div class="col-8">
+                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                            [registro]="elemento" [soloValores]="true">
+                                        </rup>
+                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                            <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
+                                                Diagnóstico principal
+                                            </small>
+                                            <!-- title="Diagnóstico principal" titlePosition="right" -->
+                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
+                                                <!-- <plex-bool class="text-sm"  [readonly]="false" [(ngModel)]="elemento.esDiagnosticoPrincipal"
+                                                    type="slide" name="Diagnóstico principal"></plex-bool> -->
+                                                <div (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                        'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
+                                                        'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
+                                                    }"></div>
+                                                <small>Diagnóstico principal</small>
+                                            </ng-container>
+
+                                            <!--  title="Es primera vez" titlePosition="right" -->
+                                            <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
+                                                <plex-bool class="text-sm" [(ngModel)]="elemento.esPrimeraVez" type="slide" name="primeraVez">
+                                                </plex-bool>
+                                                <small>Es primera vez</small>
+                                            </ng-container>
+                                        </ng-container>
+                                    </div>
+                                    <div class="col-1 m-0 p-0 text-center">
+                                        <div class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline" (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12" *ngIf="elemento.icon === 'down'">
+                                        <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
+                                            <b>Evolución: </b>{{ elemento.valor.evolucion }}
+                                        </div>
+                                        <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
+                                            <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
+                                        </div>
+                                        <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
+                                            <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
+                                        </div>
+                                        <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
+                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                            + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                        </div>
+                                        <div *ngIf="elemento?.evoluciones" class="text-secondary">Inicio aproximado:
+                                            <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
+                                            <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- <div class="rup-footer">
                                 <div class="row" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
@@ -48,7 +105,7 @@
                         <li class="list-group-item pl-0 pt-0 pb-0 mb-0">
                             <div>
                                 <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                <span>{{rama.nombre}}</span>
+                                <span>{{ rama.nombre }}</span>
                             </div>
                             <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
                                 [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
