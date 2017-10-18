@@ -32,6 +32,9 @@
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                             [registro]="elemento" [soloValores]="true">
                                         </rup>
+                                        <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                            <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
+                                        </div>
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                             <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
                                                 Diagnóstico principal
