@@ -238,9 +238,6 @@ export class HudsBusquedaComponent implements OnInit {
      * @memberof HudsBusquedaComponent
      */
     estaEnTabs(registro, tipo) {
-        console.log(this.registrosHuds);
-        console.log(registro);
-
         if (!this.registrosHuds.length) {
             return false;
         }

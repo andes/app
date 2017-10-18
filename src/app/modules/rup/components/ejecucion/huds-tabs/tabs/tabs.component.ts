@@ -115,10 +115,9 @@ export class TabsComponent implements OnInit, AfterContentInit {
     this.renderer.setElementClass(event.target, 'fixed', false);
 
     }
-    console.log(event.srcElement.scrollLeft);
+
     /*
     let tabs = this.element.nativeElement.querySelector('.nav-tabs');
-    console.log(tabs);
     */
   }
 }
