@@ -5,7 +5,8 @@
     <div class="row" [ngClass]="{'d-flex justify-content-end': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP" class="col{{!soloValores ? '-' + item.style.columns : ''}}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" 
+                     [registro]="registro.registros[i]"
                     [soloValores]="soloValores" (change)="emitChange()">
                 </rup>
             </div>

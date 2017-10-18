@@ -1,3 +1,4 @@
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
@@ -413,49 +414,59 @@ export class PrestacionesService {
         return this.post(prestacion);
     }
 
-    validarPrestacion(prestacion, planes): Observable<any> {
+    validarPrestacion(prestacion, planes, conceptosTurneables): Observable<any> {
         let planesCrear = [];
-
         if (planes.length) {
+
             planes.forEach(plan => {
+                // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
+                // que prestacion quiere solicitar debo hacer ese cambio
+                let conceptoSolicitud = plan.concepto;
+                if (plan.valor && plan.valor.prestacionSolicitada) {
+                    conceptoSolicitud = plan.valor.prestacionSolicitada;
+                }
 
-                // creamos objeto de prestacion
-                let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, plan.concepto, 'validacion');
+                // Controlemos que se trata de una prestación turneable.
+                // Solo creamos prestaciones pendiente para conceptos turneables
+                let existeConcepto = conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                if (existeConcepto) {
+                    // creamos objeto de prestacion
+                    let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                    // asignamos la prestacion de origen
+                    nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
-                // asignamos la prestacion de origen
-                nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+                    // agregamos los registros en la solicitud
+                    nuevaPrestacion.solicitud.registros.push(plan);
 
-                // agregamos los registros en la solicitud
-                nuevaPrestacion.solicitud.registros.push(plan);
-
-                planesCrear.push(nuevaPrestacion);
-
-                // this.servicioPrestacion.post(nuevaPrestacion).subscribe((data) => {
-                //     // jfgabriel // ESTO ES UN RECONTRA-PARCHE !!! SOLO A LOS EFECTOS DE MOSTRAR LA FUNCIONALIDAD
-                //     this.solicitudTurno = data;
-                // });
+                    planesCrear.push(nuevaPrestacion);
+                }
             });
+
+            // hacemos el patch y luego creamos los planes
+            let dto: any = {
+                op: 'estadoPush',
+                estado: { tipo: 'validada' },
+                ...(planesCrear.length) && { planes: planesCrear },
+                registros: prestacion.ejecucion.registros
+            };
+
+            return this.patch(prestacion.id, dto);
+
+
+        } else {
+            // hacemos el patch y luego creamos los planes
+            let dto: any = {
+                op: 'estadoPush',
+                estado: { tipo: 'validada' },
+                registros: prestacion.ejecucion.registros
+            };
+
+            return this.patch(prestacion.id, dto);
         }
 
 
 
-        // hacemos el patch y luego creamos los planes
-        let dto: any = {
-            op: 'estadoPush',
-            estado: { tipo: 'validada' },
-            ...(planesCrear.length) && { planes: planesCrear },
-            registros: prestacion.ejecucion.registros
-        };
 
-        return this.patch(prestacion.id, dto);
 
-        // // Creamos las prestaciones en pendiente
-        // // TODO: ESTO DEBERÍA HACERLO LA API?!?!??
-        // this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-        //     this.prestacion = prestacion;
-
-        //     // buscamos los planes dentro de los registros
-
-        // });
     }
 }

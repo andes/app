@@ -2,7 +2,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
@@ -13,7 +13,9 @@ import { RUPRegistry } from '../../../../app.module';
 
 @Component({
     selector: 'rup',
-    template: '', // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
+    styleUrls: ['rup.scss'],
+    encapsulation: ViewEncapsulation.None,
+    template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
 export class RUPComponent implements OnInit {
     // Propiedades

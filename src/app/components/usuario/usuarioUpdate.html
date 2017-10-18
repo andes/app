@@ -6,24 +6,23 @@
                     <div class="page-title">Gestión de Usuarios</div>
                 </header>
                 <span *ngIf="!hidePermisos">
-                <div class="row">
-                    <div class="col-9">
-                        <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
-                            [required]="true" (change)="onOrgChange()">
-                        </plex-select>
+                    <div class="row">
+                        <div class="col-9">
+                            <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario" [required]="true" (change)="onOrgChange()">
+                            </plex-select>
+                        </div>
+                        <div class="col" *ngIf="showAgregarEfector">
+                            <plex-button type="info btn-sm" label="Agregar Efector" (click)="newEfector()"></plex-button>
+                        </div>
                     </div>
-                    <div class="col" *ngIf="showAgregarEfector">
-                        <plex-button type="info btn-sm" label="Agregar Efector" (click)="newEfector()"></plex-button>
-                    </div>
-                </div>
-                <div class="row">&nbsp;</div>
-                <div *ngFor="let permiso of permisos$ | async ">
-                    <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
-                </div>
-                <div *ngIf="btnEliminar">
                     <div class="row">&nbsp;</div>
-                    <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
-                </div>
+                    <div *ngFor="let permiso of permisos$ | async ">
+                        <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                    </div>
+                    <div *ngIf="btnEliminar">
+                        <div class="row">&nbsp;</div>
+                        <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                    </div>
                 </span>
                 <div *ngIf="hidePermisos">
                     <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones" [required]="true">
@@ -43,7 +42,8 @@
                         <img class="foto " src="{{userModel.foto}} ">
                     </div>
                     <div class="col-12 " *ngIf="userModel.apellido && userModel.nombre ">
-                        <h3><strong>{{userModel.apellido}}</strong>
+                        <h3>
+                            <strong>{{userModel.apellido}}</strong>
                             <small> {{userModel.nombre}}</small>
                         </h3>
                     </div>

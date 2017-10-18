@@ -140,7 +140,12 @@ export class RevisionAgendaComponent implements OnInit {
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
-        this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
+        if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
+            this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
+        } else { // para el caso de sobreturno, que no tiene bloques.
+            this.turnoTipoPrestacion = turno.tipoPrestacion;
+        }
+
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
 
@@ -303,18 +308,20 @@ export class RevisionAgendaComponent implements OnInit {
             delete this.turnoSeleccionado.diagnosticoPrincipal;
             this.turnoSeleccionado.diagnosticoSecundario = [];
         }
-        if (this.bloqueSeleccionado === -1) {
-            datosTurno = {
-                idAgenda: this.agenda.id,
-                idTurno: this.turnoSeleccionado.id,
-                idBloque: -1,
-                turno: this.turnoSeleccionado
-            };
-        } else {
+        // Aca chequeamos si es o no sobreturno
+        if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
             datosTurno = {
                 idAgenda: this.agenda.id,
                 idTurno: this.turnoSeleccionado.id,
                 idBloque: this.bloqueSeleccionado.id,
+                turno: this.turnoSeleccionado
+            };
+        } else {
+            // Caso de sobreturno.
+            datosTurno = {
+                idAgenda: this.agenda.id,
+                idTurno: this.turnoSeleccionado.id,
+                idBloque: -1,
                 turno: this.turnoSeleccionado
             };
         }
