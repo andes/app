@@ -23,7 +23,7 @@
             <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
             (change)="validarTodo()">
         </plex-select> -->
-            <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange()"></plex-text>
+            <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange($event)"></plex-text>
         </div>
 
         <div class="col-4">

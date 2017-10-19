@@ -17,13 +17,17 @@ import { LogPacienteService } from '../../../services/logPaciente.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
-    private _paciente: IPaciente;
+
+    /**
+     * [TODO] _paciente: Agregado para que compile con AOT
+     * Revisar en el HTML porque no usa 'paciente' en vez de '_paciente'.
+     */
+    public _paciente: IPaciente;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;
         this.inasistencias = 0;
         this.anulaciones = 0;
-        // this._paciente = value;
         this.pacienteSeleccionado = value;
         this._paciente = value;
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(

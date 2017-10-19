@@ -301,13 +301,33 @@ export let RUPRegistry = {
     'AutocitadoComponent': AutocitadoComponent,
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent' : HipertensionArterialComponent,
-
 };
 
-let RUPComponentsArray = [];
-for (let key in RUPRegistry) {
-    RUPComponentsArray.push(RUPRegistry[key]);
-}
+let RUPComponentsArray = [
+    PesoComponent,
+    EvolucionProblemaDefaultComponent,
+    IndiceDeMasaCorporalComponent,
+    NuevaEvolucionProblemaComponent,
+    ObservacionesComponent,
+    SaturacionOxigenoComponent,
+    SignosVitalesComponent,
+    SolicitudPrestacionDefaultComponent,
+    TallaComponent,
+    TemperaturaComponent,
+    TensionArterialComponent,
+    TensionDiastolicaComponent,
+    TensionSistolicaComponent,
+    FrecuenciaCardiacaComponent,
+    FrecuenciaRespiratoriaComponent,
+    AutocitadoComponent,
+    ObesidadComponent,
+    HipertensionArterialComponent,
+];
+
+// let RUPComponentsArray = [];
+// for (let key in RUPRegistry) {
+//     RUPComponentsArray.push(RUPRegistry[key]);
+// }
 
 // Main module
 @NgModule({

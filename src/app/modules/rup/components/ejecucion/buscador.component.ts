@@ -44,6 +44,11 @@ export class BuscadorComponent implements OnInit {
 
     public loading = false;
 
+    /**
+     * [TODO] searchPlanes: Agregado para que compile con AOT
+     */
+    public searchPlanes = null;
+
     constructor(public servicioTipoPrestacion: TipoPrestacionService) {
     }
 
