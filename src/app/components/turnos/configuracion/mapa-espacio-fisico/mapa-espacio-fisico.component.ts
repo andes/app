@@ -35,8 +35,8 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     private _end: any;
     private _unit: any;
 
-    private headers = [];
-    private matrix: any;
+    public headers = [];
+    public matrix: any;
     private agendaCache: IAgenda = null;
 
     idInfoAgenda = '';

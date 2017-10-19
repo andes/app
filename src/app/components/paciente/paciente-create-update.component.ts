@@ -211,7 +211,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
     };
 
     // PARA LA APP MOBILE
-    private showMobile = false;
+    /**
+     * [TODO] showMobile: Agregado para que compile con AOT
+     * Cambio de private a public
+     */
+    public showMobile = false;
 
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
         private paisService: PaisService,

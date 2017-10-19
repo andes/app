@@ -19,6 +19,7 @@ export class IPrestacionRegistro {
     registros: IPrestacionRegistro[];
     // Indica los id de otros registros dentro array 'registros' de la prestación
     relacionadoCon: any[];
+    esDiagnosticoPrincipal: Boolean;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();

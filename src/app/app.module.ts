@@ -282,31 +282,52 @@ import { routing, appRoutingProviders } from './app.routing';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
-export let RUPRegistry = {
-    'PesoComponent': PesoComponent,
-    'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
-    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
-    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
-    'ObservacionesComponent': ObservacionesComponent,
-    'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
-    'SignosVitalesComponent': SignosVitalesComponent,
-    'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
-    'TallaComponent': TallaComponent,
-    'TemperaturaComponent': TemperaturaComponent,
-    'TensionArterialComponent': TensionArterialComponent,
-    'TensionDiastolicaComponent': TensionDiastolicaComponent,
-    'TensionSistolicaComponent': TensionSistolicaComponent,
-    'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
-    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
-    'AutocitadoComponent': AutocitadoComponent,
-    'ObesidadComponent': ObesidadComponent,
-    'HipertensionArterialComponent' : HipertensionArterialComponent,
+// export let RUPRegistry = {
+//     'PesoComponent': PesoComponent,
+//     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
+//     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+//     'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
+//     'ObservacionesComponent': ObservacionesComponent,
+//     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
+//     'SignosVitalesComponent': SignosVitalesComponent,
+//     'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
+//     'TallaComponent': TallaComponent,
+//     'TemperaturaComponent': TemperaturaComponent,
+//     'TensionArterialComponent': TensionArterialComponent,
+//     'TensionDiastolicaComponent': TensionDiastolicaComponent,
+//     'TensionSistolicaComponent': TensionSistolicaComponent,
+//     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
+//     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
+//     'AutocitadoComponent': AutocitadoComponent,
+//     'ObesidadComponent': ObesidadComponent,
+//     'HipertensionArterialComponent' : HipertensionArterialComponent,
+// };
 
-};
+let RUPComponentsArray = [
+    PesoComponent,
+    EvolucionProblemaDefaultComponent,
+    IndiceDeMasaCorporalComponent,
+    NuevaEvolucionProblemaComponent,
+    ObservacionesComponent,
+    SaturacionOxigenoComponent,
+    SignosVitalesComponent,
+    SolicitudPrestacionDefaultComponent,
+    TallaComponent,
+    TemperaturaComponent,
+    TensionArterialComponent,
+    TensionDiastolicaComponent,
+    TensionSistolicaComponent,
+    FrecuenciaCardiacaComponent,
+    FrecuenciaRespiratoriaComponent,
+    AutocitadoComponent,
+    ObesidadComponent,
+    HipertensionArterialComponent,
+];
 
-let RUPComponentsArray = [];
-for (let key in RUPRegistry) {
-    RUPComponentsArray.push(RUPRegistry[key]);
+export let RUPRegistry = {};
+
+for (let key in RUPComponentsArray) {
+    RUPRegistry[RUPComponentsArray[key].name] = RUPComponentsArray[key];
 }
 
 // Main module
