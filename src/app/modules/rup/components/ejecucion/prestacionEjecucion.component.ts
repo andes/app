@@ -715,9 +715,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registrosHuds = registro;
     }
 
+    // Controla antes de vincular que no esten vinculados
     controlVinculacion(registroOrigen, registroDestino) {
         let control;
-        // this.recorreArbol(registroDestino , registroOrigen);
+        if (this.recorreArbol(registroDestino, registroOrigen)) {
+            return true;
+        }
         if (registroOrigen.relacionadoCon && registroOrigen.relacionadoCon.length > 0) {
             control = registroOrigen.relacionadoCon.find(registro => registro.id === registroDestino.id);
         }
@@ -730,6 +733,22 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
     }
-
+    // Busca recursivamente en los relacionadoCon de los registros
+    recorreArbol(registroDestino, registroOrigen) {
+        if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
+            for (let registro of registroDestino.relacionadoCon) {
+                if (registro.id === registroOrigen.id) {
+                    return true;
+                }
+                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                    return this.recorreArbol(registro, registroOrigen);
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
 
 }
