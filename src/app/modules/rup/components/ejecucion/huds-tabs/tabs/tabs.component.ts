@@ -61,22 +61,6 @@ export class TabsComponent implements OnInit, AfterContentInit {
             this.selectTab(this.tabs.first);
         }
 
-
-        /*
-        if (this.tabs) {
-    
-          this.tabs.changes.subscribe((changes: any) => {
-            setTimeout(() => {
-              // never triggered
-              if (this.tabs.length === 1) {
-                this.tabs.first.active = true;
-              }
-            });
-          });
-        }
-        */
-
-
         // creamos el los tabs draggables en forma dinámica
         if (this.options.dragScroll) {
 

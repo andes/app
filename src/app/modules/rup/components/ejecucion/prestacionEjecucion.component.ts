@@ -320,7 +320,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        debugger;
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -451,7 +450,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
             let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
-                return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen)
+                return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
