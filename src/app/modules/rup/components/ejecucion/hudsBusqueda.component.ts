@@ -129,9 +129,6 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     devolverRegistrosHuds(registro, tipo) {
-        debugger;
-
-
         let index;
         if (tipo === 'hallazgo') {
             index = this.registrosHuds.findIndex(r => {
@@ -245,7 +242,7 @@ export class HudsBusquedaComponent implements OnInit {
         for (let i = 0; i < this.registrosHuds.length; i++) {
             const _registro = this.registrosHuds[i].data;
 
-            if (tipo === 'hallazgo' && _registro.concepto.conceptId === registro.concepto.conceptId) {
+            if (tipo === 'hallazgo' && _registro.concepto && _registro.concepto.conceptId === registro.concepto.conceptId) {
                 return true;
             } else if (tipo === 'prestacion' && _registro.id === registro.id) {
                 return true;

@@ -10,9 +10,28 @@
                         <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                     </div>
+                    <div class="col-3 float-right text-right">
+                        <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
+                            (click)="mostrarDatosSolicitud(true)"></plex-button>
+                        <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                    </div>
                 </div>
             </div>
         </header>
+        <!-- div de la info de la solicitud -->
+        <div [hidden]="!showDatosSolicitud">
+            <!-- <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3> -->
+            <p>
+                <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
+                <br>
+                <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                <br>
+                <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
+            </p>
+            <p *ngIf="prestacion.solicitud.prestacionOrigen">
+                Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
+            </p>
+        </div>
         <div class="row">
             <div class="col-9">
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
@@ -57,9 +76,13 @@
 
                                             <!--  title="Es primera vez" titlePosition="right" -->
                                             <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
-                                                <plex-bool class="text-sm" [(ngModel)]="elemento.esPrimeraVez" type="slide" name="primeraVez">
-                                                </plex-bool>
-                                                <small>Es primera vez</small>
+                                                <small title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="pt-3">
+                                                    <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                        'mdi-toggle-switch': elemento.esPrimeraVez,
+                                                        'mdi-toggle-switch-off': !elemento.esPrimeraVez
+                                                    }">
+                                                    </span>
+                                                </small>
                                             </ng-container>
                                         </ng-container>
                                     </div>
@@ -89,19 +112,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="rup-footer">
-                                <div class="row" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                    <div class="col-6">
-                                        <div *ngIf="!diagnosticoReadonly">
-                                            <plex-bool [readonly]="diagnosticoReadonly" [(ngModel)]="elemento.esDiagnosticoPrincipal" type="slide" label="Diagnostico principal"
-                                                name="Diagnóstico principal" (click)="diagnosticoPrestacion(i)"></plex-bool>
-                                        </div>
-                                    </div>
-                                    <div class="col-6" *ngIf="codigosCie10 && codigosCie10[elemento.id]">
-                                        <plex-bool *ngIf="codigosCie10[elemento.id].c2" [(ngModel)]="elemento.esPrimeraVez" type="slide" label="Es primera vez" name="primeraVez"></plex-bool>
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                     </div>
                 </ng-container>
@@ -112,17 +122,23 @@
                     <header>
                         <div class="clearfix">
                             <div *ngIf="prestacion?.ejecucion?.registros">
-                                <div class="page-title">Árbol de relaciones
+                                <div class="page-title">Relaciones
                                 </div>
                             </div>
                         </div>
                     </header>
                     <ng-container *ngFor="let rama of prestacion.ejecucion.registros; let iRama = index">
                         <ul class="list-group">
-                            <li [ngClass]="{'ml-3': !rama.esDiagnosticoPrincipal}" class="list-group-item pl-0 pt-0 pb-0 mb-0">
+                            <li [ngClass]="{'ml-0': !rama.esDiagnosticoPrincipal}" class="list-group-item pl-0 pt-0 pb-0 mb-0">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                    <small [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}">{{ rama.nombre }}</small>
+                                    <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
+                                    <small>{{ rama.nombre }}
+
+                                        <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
+                                            Diagnóstico principal
+                                        </small>
+                                    </small>
                                 </div>
                                 <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
                                 [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
