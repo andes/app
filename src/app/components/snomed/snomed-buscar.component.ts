@@ -203,7 +203,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         case 'planes':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento', 'entidad observable']
+                            semanticTag: ['procedimiento']
                         });
                         break;
                     case 'productos':
