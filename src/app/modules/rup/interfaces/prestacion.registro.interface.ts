@@ -20,6 +20,8 @@ export class IPrestacionRegistro {
     // Indica los id de otros registros dentro array 'registros' de la prestación
     relacionadoCon: any[];
     esDiagnosticoPrincipal: Boolean;
+    // Indica si este registro es valido (no vacio)
+    valido: Boolean;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
