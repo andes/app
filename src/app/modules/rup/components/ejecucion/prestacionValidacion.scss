@@ -3,8 +3,8 @@
 .rup-card {
     width: 100%;
     display: flex;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
+    border-top: 2px solid #ccc; // margin-bottom: 10px;
+    border-right: 1px solid #ccc; // margin-bottom: 10px;
 }
 
 .rup-card .type {
@@ -64,21 +64,23 @@
 }
 
 @each $item in $lista-problemas {
-    $selector: $selector, unquote('.#{$item}');
+    $selector: $selector,
+    unquote('.#{$item}');
 }
 
 #{$selector} {
     background-color: $problemas;
-  }
-  
-  @each $item in $lista-procedimientos {
-      $selector2: $selector2, unquote('.#{$item}');
-  }
-  
-  #{$selector2} {
-      background-color: $procedimientos;
-    }
+}
 
-  .plan {
+@each $item in $lista-procedimientos {
+    $selector2: $selector2,
+    unquote('.#{$item}');
+}
+
+#{$selector2} {
+    background-color: $procedimientos;
+}
+
+.plan {
     background-color: $planes;
- }
+}

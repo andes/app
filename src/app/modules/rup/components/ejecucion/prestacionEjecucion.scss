@@ -3,10 +3,8 @@
 .rup-card {
     width: 100%;
     display: flex;
-    border-top: 1px solid #ccc;
-    border-bottom: 1px solid #ccc;
-    border-right: 1px solid #ccc;
-    margin-bottom: 10px;
+    border-top: 1px solid #ccc; // border-bottom: 1px solid #ccc;
+    border-right: 1px solid #ccc; // margin-bottom: 10px;
 }
 
 .rup-card.mini {
@@ -16,12 +14,15 @@
 .text-problemas {
     color: $problemas;
 }
+
 .border-problemas {
     border-color: $problemas $problemas $problemas;
 }
+
 .text-planes {
     color: $planes;
 }
+
 .border-planes {
     border-color: $planes $planes $planes;
 }
@@ -443,21 +444,23 @@ fieldset[disabled] .btn-procedimientos.active {
 }
 
 @each $item in $lista-problemas {
-    $selector: $selector, unquote('.#{$item}');
+    $selector: $selector,
+    unquote('.#{$item}');
 }
 
 #{$selector} {
     background-color: $problemas;
-  }
- 
-  @each $item in $lista-procedimientos {
-      $selector2: $selector2, unquote('.#{$item}');
-  }
-  
-  #{$selector2} {
-      background-color: $procedimientos;
-    }
+}
 
-  .plan {
+@each $item in $lista-procedimientos {
+    $selector2: $selector2,
+    unquote('.#{$item}');
+}
+
+#{$selector2} {
+    background-color: $procedimientos;
+}
+
+.plan {
     background-color: $planes;
- }
+}
