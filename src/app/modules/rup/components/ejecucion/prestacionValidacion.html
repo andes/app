@@ -27,7 +27,7 @@
                                             {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
                                         </b>
                                         <br>
-                                        <small class="text-secondary" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion | slice:0:40 }}...</small>
+                                        <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                     </div>
                                     <div class="col-8">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
@@ -122,7 +122,7 @@
                             <li [ngClass]="{'ml-3': !rama.esDiagnosticoPrincipal}" class="list-group-item pl-0 pt-0 pb-0 mb-0">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                    <span>{{ rama.nombre }}</span>
+                                    <small [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}">{{ rama.nombre }}</small>
                                 </div>
                                 <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
                                 [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
