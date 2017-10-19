@@ -200,6 +200,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             semanticTag: ['procedimiento', 'entidad observable']
                         });
                         break;
+                        case 'planes':
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['procedimiento']
+                        });
+                        break;
                     case 'productos':
                         apiMethod = this.SNOMED.get({
                             search: search,

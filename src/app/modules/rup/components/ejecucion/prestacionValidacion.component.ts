@@ -170,7 +170,9 @@ export class PrestacionValidacionComponent implements OnInit {
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                         });
-                        this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                        if (prestacion.solicitadas) {
+                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                        }
                         this.diagnosticoReadonly = true;
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
