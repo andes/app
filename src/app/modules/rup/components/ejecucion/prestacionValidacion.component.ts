@@ -78,6 +78,14 @@ export class PrestacionValidacionComponent implements OnInit {
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
 
+            // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
+            let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
+            if (indexDiagnosticoPrincipal > -1) {
+                let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
+                this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
+                this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
+            }
+
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
@@ -132,7 +140,7 @@ export class PrestacionValidacionComponent implements OnInit {
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'Debe seleccionar sólo un diagnóstico principal');
+            this.plex.toast('info', 'No puede seleccionar más de un diagnóstico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -146,21 +154,27 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
+                        // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
+                        let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
+                        if (indexDiagnosticoPrincipal > -1) {
+                            let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
+                            this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
+                            this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
+                        }
+
                         this.prestacion.ejecucion.registros.forEach(registro => {
                             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                             }
                         });
-
-                        if (prestacion.solicitadas) {
-                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
-                        }
-
-                        this.diagnosticoReadonly = true;
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                         });
-                        this.plex.toast('success', 'La prestación se valido correctamente');
+                        if (prestacion.solicitadas) {
+                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                        }
+                        this.diagnosticoReadonly = true;
+                        this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                     });
@@ -248,6 +262,8 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     diagnosticoPrestacion(elem) {
+
+        this.prestacion.ejecucion.registros.map(reg => reg.esDiagnosticoPrincipal = false);
 
         elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
 

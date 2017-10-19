@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-9 page-title">
                                 {{prestacion.solicitud.tipoPrestacion.term}} -
-                                <span>{{prestacion.solicitud.fecha | date: 'E/MM/yyyy'}}</span>
+                                <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                             </div>
                             <div class="col-3 float-right text-right">
                                 <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
@@ -45,7 +45,7 @@
                     </div>
 
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}" [hidden]="showDatosSolicitud">
-                        <tab [tabTitle]="'Registros de esta consulta'">
+                        <tab [tabTitle]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
                                 <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
@@ -249,4 +249,9 @@
     </footer>
 </form>
 <!-- Búsqueda de pacientes -->
+<<<<<<< HEAD
 <pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false" [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>
+=======
+<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false"
+    [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>
+>>>>>>> develop

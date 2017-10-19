@@ -3,15 +3,15 @@
     .nav.nav-tabs {
         overflow: auto;
         li {
-            background: #ccc;
-            border-top: 2px solid white;
-            border-right: 1px solid #bbb;
+            background: #fff;
+            border-top: 2px solid #ddd;
+            border-right: 1px solid #ddd;
             transition: background 500ms;
             min-width: 170px;
             width: auto;
             white-space: normal;
             &:hover {
-                background: #ddd;
+                background: #fefefe;
             }
             a {
                 padding: 10px;
@@ -36,8 +36,13 @@
                 color: white;
             }
             &.problemas {
-                background-color: $problemas;
+                background-color: rgba(240, 173, 78, 0.9);
+                /*background-color: $problemas;*/
                 border-color: #cc9344;
+            }
+            &.problemas:hover,
+            &.problemas.active {
+                background-color: rgba(240, 173, 78, 1);
             }
             &.trastornos {
                 background-color: $trastorno;
@@ -51,8 +56,16 @@
             &.planes,
             &.prestacion,
             {
-                border-color: $planes;
-                background-color: $planes;
+                border-color: #055e98;
+                /*background-color: $planes;*/
+                background-color: rgba(0, 112, 186, 0.9);
+            }
+            &.planes:hover,
+            &.prestacion:hover,
+            &.planes.active,
+            &.prestacion.active,
+            {
+                background-color: rgba(0, 112, 186, 1);
             }
         }
         &.draggable {

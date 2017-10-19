@@ -37,9 +37,8 @@
             <div class="vista-titulo">Hallazgos crónicos</div>
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico || (eyeOtros === iOtros && estaEnTabs(problema))}">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeCronico === iCronico || estaEnTabs(hallazgo, 'hallazgo')}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
@@ -77,9 +76,9 @@
             <div class="vista-titulo">Hallazgos activos</div>
             <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo || (eyeOtros === iOtros && estaEnTabs(problema))}">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
@@ -114,9 +113,8 @@
             <div class="vista-titulo">Otros Hallazgos</div>
             <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
-                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
-                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros || (eyeOtros === iOtros && estaEnTabs(problema))}">
+                    <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="rup-card mini" [ngClass]="{'border-problemas': eyeOtros === iOtros || estaEnTabs(problema, 'hallazgo')}">
                             <div class="type problemas">
                                 <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
@@ -153,7 +151,7 @@
 
             <div *ngIf="prestaciones" class="list-group">
                 <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
-                    <div class="rup-card mini" [ngClass]="{'border-planes': eyePrestacion === iPrestacion}">
+                    <div class="rup-card mini" [ngClass]="{'border-planes': eyePrestacion === iPrestacion || estaEnTabs(prestacion, 'prestacion')}">
                         <div class="type planes">
                             <!-- Vacío -->
                         </div>
