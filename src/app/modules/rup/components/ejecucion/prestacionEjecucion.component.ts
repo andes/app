@@ -192,12 +192,23 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
+
+
     vincularRegistros(registroOrigen: any, registroDestino: any) {
         let registros = this.prestacion.ejecucion.registros;
-        // Controlar si lo que llega como parámetro es un registro o es un concepto
+
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
             registroOrigen = registroOrigen.dragData;
+        }
+        // Verificamos si ya esta vinculado no dejar que se vinculen de nuevo
+        let control = this.controlVinculacion(registroOrigen, registroDestino);
+        if (control) {
+            this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
+            return false;
+        }
+        // Controlar si lo que llega como parámetro es un registro o es un concepto
+        if (!registroOrigen.concepto) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
         } else {
             if (registroOrigen) {
@@ -607,6 +618,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
+            let control = this.controlVinculacion(registroActual, registro);
+            console.log(control);
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
                     if (registro.id !== registroActual.relacionadoCon[0].id) {
@@ -690,14 +703,32 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!elementoRUP) {
             elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
         }
-        elementoRUP.frecuentes.forEach(element => {
-            this.masFrecuentes.push(element);
-        });
+        if (elementoRUP && elementoRUP.frecuentes) {
+            elementoRUP.frecuentes.forEach(element => {
+                this.masFrecuentes.push(element);
+            });
+        }
     }
 
 
     agregarListadoHuds(registro) {
         this.registrosHuds = registro;
+    }
+
+    controlVinculacion(registroOrigen, registroDestino) {
+        let control;
+        // this.recorreArbol(registroDestino , registroOrigen);
+        if (registroOrigen.relacionadoCon && registroOrigen.relacionadoCon.length > 0) {
+            control = registroOrigen.relacionadoCon.find(registro => registro.id === registroDestino.id);
+        }
+        if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
+            control = registroDestino.relacionadoCon.find(registro => registro.id === registroOrigen.id);
+        }
+        if (control) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 
