@@ -5,8 +5,3 @@
     </plex-select>
     <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.indicaciones"></plex-text>
 </div>
-<div *ngIf="soloValores">
-    <div *ngIf="registro.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-        <plex-button label="Asignar turno" type="primary" (click)="darTurno(registro.prestacionSolicitud)"></plex-button>
-    </div>
-</div>
