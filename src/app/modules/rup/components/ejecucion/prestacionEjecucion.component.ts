@@ -76,6 +76,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // Array de registros de la HUDS a agregar en tabs
     public registrosHuds: any[] = [];
 
+    public prestacionValida = true;
+    public mostrarMensajes = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -194,10 +196,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
         let registros = this.prestacion.ejecucion.registros;
-        // Controlar si lo que llega como parámetro es un registro o es un concepto
+
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
             registroOrigen = registroOrigen.dragData;
+        }
+        // Controlar si lo que llega como parámetro es un registro o es un concepto
+        if (!registroOrigen.concepto) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
         } else {
             if (registroOrigen) {
@@ -302,11 +307,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        // tambien verificamos si es un autocitado por su conceptId.. Ver si se puede hacer de otra manera.
-        if (this.tipoBusqueda === 'planes' || snomedConcept.conceptId === '281036007') {
+        if (this.tipoBusqueda === 'planes') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        debugger;
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -488,6 +493,29 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     /* fin ordenamiento de los elementos */
 
+
+    /**
+     * Validamos si los registros de la consulta tienen valores almacenados
+     *
+     * @memberof PrestacionEjecucionComponent
+     */
+    private controlValido(registro) {
+        if (registro.registros.length <= 0) {
+            registro.valido = (registro.valor) ? true : false;
+        } else {
+            let total = registro.registros.length;
+            let contadorValiddos = 0;
+            registro.registros.forEach(r => {
+                let res = this.controlValido(r);
+                if (res) {
+                    contadorValiddos++;
+                }
+            });
+            registro.valido = (contadorValiddos === total) ? true : false;
+        }
+        return registro.valido;
+    }
+
     /**
      * Validamos si se puede guardar o no la prestacion
      *
@@ -499,7 +527,17 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
+        } else {
+            this.prestacion.ejecucion.registros.forEach(r => {
+                if (!this.controlValido(r)) {
+                    this.prestacionValida = false;
+                    this.mostrarMensajes = true;
+                    resultado = false;
+                }
+            });
         }
+
+
         // this.registros.forEach((r,RUPComponentsArray i) => {
         //     // for (let i = 0; i < this.registros.length; i++) {
         //     // let r = this.registros[i];

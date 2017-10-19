@@ -135,35 +135,39 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', 'Debe seleccionar sólo un diagnóstico principal');
             return false;
         }
-            this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
-                if (!validar) {
-                    return false;
-                } else {
-                    this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                        // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
-                        let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+                this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+                    // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
+                    let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
-                        this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
-                            this.prestacion = prestacion;
+                    this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
+                        this.prestacion = prestacion;
 
-                            this.prestacion.ejecucion.registros.forEach(registro => {
-                                if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                                    registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
-                                }
-                            });
-                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
-                            this.diagnosticoReadonly = true;
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
-                            this.plex.toast('success', 'La prestación se valido correctamente');
-                        }, (err) => {
-                            this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                        this.prestacion.ejecucion.registros.forEach(registro => {
+                            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
+                            }
                         });
+
+                        if (prestacion.solicitadas) {
+                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                        }
+
+                        this.diagnosticoReadonly = true;
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+                        this.plex.toast('success', 'La prestación se valido correctamente');
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                     });
-                }
-            });
- 
+                });
+            }
+        });
+
     }
 
     romperValidacion() {
