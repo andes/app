@@ -42,6 +42,9 @@ export class PrestacionValidacionComponent implements OnInit {
     public prestacionesAgendas = [];
     public asignarTurno = {};
 
+    // Datos de solicitud "padre"
+    public showDatosSolicitud = false;
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
@@ -262,16 +265,17 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     diagnosticoPrestacion(elem) {
-
         this.prestacion.ejecucion.registros.map(reg => reg.esDiagnosticoPrincipal = false);
-
         elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
+    }
 
-        // let actual = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal = (p.id === elem.id));
-        // if (actual) {
-        //     actual.esDiagnosticoPrincipal = false;
-        // }
+    primeraVez(elem) {
+        this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
+        elem.esPrimeraVez = !elem.esPrimeraVez;
+    }
 
+    mostrarDatosSolicitud(bool) {
+        this.showDatosSolicitud = bool;
     }
 }
 

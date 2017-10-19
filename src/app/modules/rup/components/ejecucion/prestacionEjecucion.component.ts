@@ -328,7 +328,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        debugger;
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -454,10 +453,13 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
+
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
             let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
-            let existeEjecucion = this.prestacion.ejecucion.registros.find(registro => (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen));
+            let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
+                return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
+            });
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
@@ -553,23 +555,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             });
         }
-
-
-        // this.registros.forEach((r,RUPComponentsArray i) => {
-        //     // for (let i = 0; i < this.registros.length; i++) {
-        //     // let r = this.registros[i];
-        //     this.errores[i] = null;
-        //     // verificamos si existe algun valor a devolver en data
-        //     if (typeof this.data[r.elementoRUP.key] === 'undefined') {
-        //         this.errores[i] = 'Debe completar con algún valor';
-        //         resultado = false;
-        //     } else {
-        //         if (!this.data[r.elementoRUP.key][r.concepto.conceptId]) {
-        //             this.errores[i] = 'Debe completar con algún valor';
-        //             resultado = false;
-        //         }
-        //     }
-        // });
 
         return resultado;
     }

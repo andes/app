@@ -91,6 +91,9 @@
         <div class="col-8">
             <div class="row no-gutters">
                 <div class="col">
+                    <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
+                        Diagnóstico principal
+                    </small>
                     <small class="badge badge-info">{{ registro.concepto.semanticTag }}</small>
                     <small class="badge" [ngClass]="{
                         'badge-danger': registro.valor.estado === 'activo', 
@@ -99,9 +102,6 @@
                         'badge-info': registro.valor.estado === 'transformado' 
                     }">
                         {{ registro.valor.estado }}
-                    </small>
-                    <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
-                        Diagnóstico principal
                     </small>
                 </div>
             </div>
