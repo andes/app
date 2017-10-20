@@ -103,6 +103,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
+
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
@@ -444,14 +445,17 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param resultadoHuds conpecto de la HUDS puede ser un hallazgo o una prestación
      */
     ejecutarConceptoHuds(resultadoHuds) {
-        if (resultadoHuds.tipo === 'prestacion') {
 
+        if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
             let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
+
             let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
+
+
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
@@ -634,6 +638,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargaItems(registroActual, indice) {
+
         // Paso el concepto desde el que se clikeo y filtro para no mostrar su autovinculacion.
         let registros = this.prestacion.ejecucion.registros;
         this.itemsRegistros[registroActual.id].items = [];
@@ -696,6 +701,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
     }
+
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
@@ -727,9 +733,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
+    agregarListadoHuds(registrosHuds) {
+        this.registrosHuds = registrosHuds;
 
-    agregarListadoHuds(registro) {
-        this.registrosHuds = registro;
+
+
     }
 
 
