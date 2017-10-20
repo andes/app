@@ -96,7 +96,7 @@
                 <ng-container *ngFor="let agenda of agendasSimilares; let indiceAgenda = index">
                     <!-- !hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno) -->
 
-                    <div *ngIf="hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno)" class="col-6">
+                    <div *ngIf="hayTurnosDisponibles(agenda)" class="col-6">
                         <div class="card">
                             <div class="card-block">
                                 <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm'
@@ -136,7 +136,7 @@
                             </div>
                         </div>
                     </div>
-                    <div *ngIf="!hayTurnosDisponibles(agenda, turnoSeleccionado.tipoTurno) && indiceAgenda === 0" class="col-6">
+                    <!-- <div *ngIf="!hayTurnosDisponibles(agenda) && indiceAgenda === 0" class="col-6">
                         <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio | date: 'HH:mm' }} a
                             {{ agenda.horaFin | date: 'HH:mm' }} hs</h5>
                         <ul class="list-group">
@@ -144,7 +144,7 @@
                                 No quedan turnos disponibles en esta Agenda
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </ng-container>
             </div>
 

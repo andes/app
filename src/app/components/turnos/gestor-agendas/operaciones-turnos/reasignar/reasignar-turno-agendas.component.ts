@@ -98,7 +98,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
         this.delDiaDisponibles = 0;
         let turnoAnterior = null;
-
         if (this.agendasSimilares) {
             this.agendasSimilares.forEach(agenda => {
                 agenda.bloques.forEach((bloque, indexBloque) => {
@@ -252,15 +251,29 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
-    hayTurnosDisponibles(agenda: IAgenda, tipoTurno: String) {
-        for (let i = 0; i < agenda.bloques.length; i++) {
-            for (let j = 0; j < agenda.bloques[i].turnos.length; j++) {
-                if (agenda.bloques[i].turnos[j].estado === 'disponible' || (agenda.bloques[i].turnos[j].tipoTurno === 'programado') || (agenda.bloques[i].turnos[j].tipoTurno === 'delDia' && this.getFecha(agenda.horaInicio) === this.getFecha(this.hoy))) {
-                    return true;
+    hayTurnosDisponibles(agenda: IAgenda) {
+        let resultado = false;
+        let i = 0, j = 0;
+
+        while (i < agenda.bloques.length && !resultado) {
+            while (j < agenda.bloques[i].turnos.length && !resultado) {
+                if (agenda.bloques[i].turnos[j].estado === 'disponible') {
+                    if (this.getFecha(agenda.bloques[i].turnos[j].horaInicio) > this.getFecha(this.hoy) && agenda.turnosRestantesProgramados > 0) {
+                        resultado = true;
+                    } else {
+                        if (this.getFecha(agenda.bloques[i].turnos[j].horaInicio) === this.getFecha(this.hoy)
+                            && this.getHora(agenda.bloques[i].turnos[j].horaInicio) > this.getHora(this.hoy)
+                            && agenda.turnosRestantesDelDia > 0) {
+                            resultado = true;
+                        }
+                    }
                 }
+                j++;
             }
+            i++;
         }
-        return false;
+
+        return resultado;
     }
 
     tieneTurnos(bloque: IBloque): boolean {
