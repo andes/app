@@ -129,9 +129,6 @@ export class HudsBusquedaComponent implements OnInit {
 
 
     devolverRegistrosHuds(registro, tipo) {
-        debugger;
-
-
         let index;
         if (tipo === 'hallazgo') {
             index = this.registrosHuds.findIndex(r => {
@@ -198,7 +195,7 @@ export class HudsBusquedaComponent implements OnInit {
     // Trae los problemas crónicos (por SNOMED refsetId)
     listarProblemasCronicos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            // Buscamos si es crónico 
+            // Buscamos si es crónico
             this.hallazgosCronicos = hallazgos.filter((hallazgo) => {
                 if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
                     return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
@@ -245,7 +242,7 @@ export class HudsBusquedaComponent implements OnInit {
         for (let i = 0; i < this.registrosHuds.length; i++) {
             const _registro = this.registrosHuds[i].data;
 
-            if (tipo === 'hallazgo' && _registro.concepto.conceptId === registro.concepto.conceptId) {
+            if (tipo === 'hallazgo' && _registro.concepto && _registro.concepto.conceptId === registro.concepto.conceptId) {
                 return true;
             } else if (tipo === 'prestacion' && _registro.id === registro.id) {
                 return true;
