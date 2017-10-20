@@ -87,13 +87,13 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     actualizar() {
 
-        if (this.agendaDestino.agenda && this.turnoSeleccionado && this.turnoSeleccionado.reasignado && this.turnoSeleccionado.reasignado.siguiente) {
-            let indiceBloque = this.agendaDestino.agenda.bloques.findIndex(x => x.id === this.agendaDestino.bloque.id);
-            this.agendaDestino.bloque = this.agendaDestino.agenda.bloques[indiceBloque];
+        // if (this.agendaDestino.agenda && this.turnoSeleccionado && this.turnoSeleccionado.reasignado && this.turnoSeleccionado.reasignado.siguiente) {
+        //     let indiceBloque = this.agendaDestino.agenda.bloques.findIndex(x => x.id === this.agendaDestino.bloque.id);
+        //     this.agendaDestino.bloque = this.agendaDestino.agenda.bloques[indiceBloque];
 
-            let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === this.agendaDestino.turno.id);
-            this.turnoReasignado = this.agendaDestino.agenda.bloques[indiceBloque].turnos[indiceTurno];
-        }
+        //     let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === this.agendaDestino.turno.id);
+        //     this.turnoReasignado = this.agendaDestino.agenda.bloques[indiceBloque].turnos[indiceTurno];
+        // }
 
 
         this.delDiaDisponibles = 0;
