@@ -83,7 +83,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.agendasSimilares = [];
-        // this.actualizar();
     }
 
     actualizar() {
@@ -95,6 +94,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === this.agendaDestino.turno.id);
             this.turnoReasignado = this.agendaDestino.agenda.bloques[indiceBloque].turnos[indiceTurno];
         }
+
 
         this.delDiaDisponibles = 0;
         let turnoAnterior = null;
@@ -220,12 +220,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     turno: turnoReasignado
                 };
 
-                // this.agendaAReasignar = resultado;
                 // Se guardan los datos del turno "nuevo" en el turno "viejo/suspendido" (PUT)
                 this.serviceTurno.put(datosTurnoReasignado).subscribe(agenda => {
                     this.agendaDestino.agenda = resultado;
                     this.agendaDestino.turno = turno;
-                    // this.turnoReasignado = turnoReasignado;
                     this.plex.toast('success', 'El turno se reasignó correctamente');
 
                     // Enviar SMS sólo en Producción
@@ -254,16 +252,17 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     hayTurnosDisponibles(agenda: IAgenda) {
         let resultado = false;
         let i = 0, j = 0;
-
+        // Por el momento hasta implementar los turnos de llaves y gestión solamente se verifica que la agenda tenga
+        // turnos restantes programados o del dia.
         while (i < agenda.bloques.length && !resultado) {
             while (j < agenda.bloques[i].turnos.length && !resultado) {
                 if (agenda.bloques[i].turnos[j].estado === 'disponible') {
-                    if (this.getFecha(agenda.bloques[i].turnos[j].horaInicio) > this.getFecha(this.hoy) && agenda.turnosRestantesProgramados > 0) {
+                    if (agenda.bloques[i].turnos[j].horaInicio > this.hoy && agenda.bloques[i].restantesProgramados > 0) {
                         resultado = true;
                     } else {
-                        if (this.getFecha(agenda.bloques[i].turnos[j].horaInicio) === this.getFecha(this.hoy)
-                            && this.getHora(agenda.bloques[i].turnos[j].horaInicio) > this.getHora(this.hoy)
-                            && agenda.turnosRestantesDelDia > 0) {
+                        if (moment(agenda.bloques[i].turnos[j].horaInicio).isSame(this.hoy, 'day')
+                            && moment(agenda.bloques[i].turnos[j].horaInicio).isAfter(this.hoy, 'hour')
+                            && (agenda.bloques[i].restantesDelDia > 0 || agenda.bloques[i].restantesProgramados > 0)) {
                             resultado = true;
                         }
                     }

@@ -128,6 +128,7 @@ export class ReasignarTurnoComponent implements OnInit {
         this.datosAgenda = params;
 
         this.serviceAgenda.findCandidatas(params).subscribe((agendas) => {
+            console.log(agendas);
             this.agendasSimilares = agendas;
         });
     }
