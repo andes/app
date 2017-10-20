@@ -19,7 +19,7 @@
 
             <div *ngIf="turno.tipoPrestacion.term" class="accordion-dashboard">
 
-                <div *ngIf="turnosPaciente.length > 0" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
+                <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                     <!-- Panel -->
                     <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
                     <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
@@ -30,13 +30,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col" *ngIf="turno.horaInicio">
+                        <div class="col" *ngIf="turno && turno.horaInicio">
                             <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy' }}</span>
                             <span *ngIf="turno.horaInicio"><i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
                         </div>
                     </div>
 
-                    <div class="row" *ngIf="turno.profesionales.length > 0">
+                    <div class="row" *ngIf="turno && turno.profesionales">
                         <div class="col">
                             <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre'] }}
                         </div>
