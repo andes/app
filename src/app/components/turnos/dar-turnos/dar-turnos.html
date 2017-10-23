@@ -118,7 +118,7 @@
                                     <!-- Tiene turnos disponibles -->
                                     <ng-container *ngIf="estadoT === 'seleccionada'">
                                         <!--Lista de turnos, bloque por bloque-->
-                                        <div *ngFor="let bloque of bloques; let indiceBq = index">
+                                        <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
                                             <div *ngIf="tieneTurnos(bloque)">
                                                 <div *ngIf="bloque.descripcion">
                                                     <span>Bloque: {{bloque.descripcion}}</span>
@@ -146,18 +146,18 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>{{countBloques[indiceBq].delDia}}</td>
-                                                            <td>{{countBloques[indiceBq].programado}}</td>
+                                                            <td>{{countBloques[indiceBloque].delDia}}</td>
+                                                            <td>{{countBloques[indiceBloque].programado}}</td>
                                                             <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor"></ng-container>
                                                             <ng-template #llaveComunValor>
-                                                                <td>{{countBloques[indiceBq].gestion}}</td>
+                                                                <td>{{countBloques[indiceBloque].gestion}}</td>
                                                             </ng-template>
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td>
-                                                                    <b>{{countBloques[indiceBq].gestion}}</b>
+                                                                    <b>{{countBloques[indiceBloque].gestion}}</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <td>{{countBloques[indiceBq].profesional}}</td>
+                                                            <td>{{countBloques[indiceBloque].profesional}}</td>
 
                                                         </tr>
                                                     </tbody>
