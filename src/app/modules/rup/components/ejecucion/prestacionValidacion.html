@@ -135,7 +135,7 @@
                             </div>
                         </div>
                     </header>
-                    <ng-container *ngFor="let rama of relaciones; let iRama = index">
+                    <ng-container *ngFor="let rama of prestacion.ejecucion.registros; let iRama = index">
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal,

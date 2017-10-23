@@ -182,6 +182,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+
                         });
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
@@ -212,6 +213,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 // Vamos a cambiar el estado de la prestación a ejecucion
                 this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                     this.prestacion = prestacion;
+
+                    // actualizamos las prestaciones de la HUDS
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+
+                    });
 
                     this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                 }, (err) => {
@@ -288,30 +294,24 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
 
+    // Actualiza ambas columnas de registros según las relaciones
     armarRelaciones() {
-        this.relaciones = this.prestacion.ejecucion.registros;
-        // this.relaciones.map((reg) => {
-        //     return reg.tieneRelacion = reg.relacionadoCon.find(rel => rel === this.relaciones[0].id);
-        // });
 
         let relacionesOrdenadas = [];
-        this.relaciones.forEach((rel, i) => {
+        this.prestacion.ejecucion.registros.forEach((rel, i) => {
             if (this.relacionadoConPadre(rel.id).length > 0) {
-                // console.log('rel', this.relacionadoConPadre(rel.id));
                 relacionesOrdenadas.push(rel);
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
                     relacionesOrdenadas.push(relP);
                 });
             }
-
         });
 
-        this.relaciones = relacionesOrdenadas;
-
+        this.prestacion.ejecucion.registros = relacionesOrdenadas;
     }
 
     relacionadoConPadre(id) {
-        return this.relaciones.filter(rel => rel.relacionadoCon[0] === id);
+        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
     }
 
 }
