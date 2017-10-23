@@ -57,17 +57,14 @@
             <div class="col-2 text-120">
                 <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
             </div>
-            <div class="col">
-                <span class="text-120">
-                    {{unaEvolucion.fechaCarga | fecha }}
-                </span>
-            </div>
             <div class="col-2 text-120">
                 <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
             </div>
         </div>
         <div class="row">
-            <div class="col-12"> Profesional: {{unaEvolucion.profesional }}
+            <div class="col-12">
+                {{unaEvolucion.fechaCarga | fecha }}
+                <br> Profesional: {{unaEvolucion.profesional }}
                 <br>{{unaEvolucion.evolucion }}
             </div>
         </div>

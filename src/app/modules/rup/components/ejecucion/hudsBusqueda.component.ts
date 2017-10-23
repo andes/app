@@ -142,6 +142,18 @@ export class HudsBusquedaComponent implements OnInit {
                     break;
             }
         } else if (tipo === 'prestacion') {
+
+            // Se populan las relaciones usando el _id
+            if (registro.ejecucion.registros) {
+                registro.ejecucion.registros.forEach(reg => {
+                    if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                        reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                            return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                        });
+                    }
+                });
+            }
+
             index = this.registrosHuds.findIndex(r => {
                 return (r.tipo === 'prestacion' && r.data.id === registro.id);
             });
