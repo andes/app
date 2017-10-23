@@ -21,23 +21,14 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAgendasComponent implements OnInit {
-    turnoReasignado: any = {};
 
+    @Input() agendasSimilares: any;
+    @Input() agendaAReasignar: any;
+
+    turnoReasignado: any = {};
     // Para cálculos de disponibilidad de turnos programados y del día
     hoy: Date;
     delDiaDisponibles: number;
-
-    // private _agendasSimilares: any;
-    @Input() agendasSimilares: any;
-    // set agendasSimilares(value: any) {
-    //     this._agendasSimilares = value;
-    // }
-    // get agendasSimilares(): any {
-    //     return this._agendasSimilares;
-    // }
-
-    @Input() agendaAReasignar: any;
-
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
 
