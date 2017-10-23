@@ -1,4 +1,4 @@
-    import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, Input, EventEmitter, Output, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
@@ -33,8 +33,10 @@ export class ListarTurnosComponent implements OnInit {
                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
                             return (data.organizacion.id === this.auth.organizacion.id);
                         });
-                        this.turnosAsignados[t].paciente = paciente;
-                        this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
+                        if (this.turnosAsignados[t] && this.turnosAsignados[t].paciente) {
+                            this.turnosAsignados[t].paciente = paciente;
+                            this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
+                        }
                     }
                 });
             }

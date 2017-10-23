@@ -53,19 +53,19 @@
                         </tr>
                         <tr>
                             <th>Hora Turno</th>
-                            <th>Nro DNI</th>
+                            <th>DNI | Nro. Carpeta</th>
                             <th>Obra Social</th>
                             <th>Apellidos y Nombres</th>
-                            <th>Residencia Habitual</th>
+                            <th>Nro. Carpeta</th>
                             <th>Sexo</th>
-                            <th>Edad</th>
+                            <!-- <th>Edad</th> -->
                             <th>Diagnóstico
-                                <br>Motivo de consulta</th>
+                                <!-- <br>Motivo de consulta</th>
                             <th>Primera Vez</th>
                             <th>Ulterior</th>
-                            <th>C2</th>
-                            <th>Resolución en el efector</th>
-                            <th>15. Otros</th>
+                            <th>C2</th> -->
+                                <th>Resolución en el efector</th>
+                                <th>Otros</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,13 +78,13 @@
                             <!--documento, carpetaPaciente-->
                             <td>
                                 <span *ngIf="turno?.paciente?.id">
-                                    <small>DNI
+                                    <small>
                                         <span *ngIf="turno.paciente.documento !== ''">{{ turno.paciente.documento | number }}</span>
                                         <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
                                     </small>
                                 </span>
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0]?.nroCarpeta">
-                                    <small> | Nro Carpeta </small>
+                                    <small> | </small>
                                     <small *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
                                     <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
@@ -101,20 +101,20 @@
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
-                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.direccion?.length > 0 && turno?.paciente?.direccion[0]?.valor">
-                                    {{turno.paciente.direccion[0].valor}}
+                                <small *ngIf="turno?.paciente?.carpetaEfectores">
+                                    {{turno.paciente.carpetaEfectores[0]?.nroCarpeta}}
                                 </small>
                             </td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
                             </td>
-                            <td>
-                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente | edad }}</small>
-                            </td>
+                            <!-- <td>
+                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente.edad | edad }}</small>
+                            </td> -->
+                            <td style="width:250px"></td>
+                            <!-- <td></td>
                             <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td></td> -->
                             <td>
                                 <div *ngIf="turno?.paciente?.id" class="badge">SI</div>
                                 <div *ngIf="turno?.paciente?.id" class="badge">NO</div>
