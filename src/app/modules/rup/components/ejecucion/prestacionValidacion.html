@@ -105,7 +105,8 @@
                                             <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                             + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                         </div>
-                                        <div *ngIf="elemento?.evoluciones" class="text-secondary">Inicio aproximado:
+                                        <div class="text-secondary">
+                                            <b>Inicio aproximado: </b>
                                             <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
                                             <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
                                         </div>

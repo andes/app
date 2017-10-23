@@ -108,7 +108,9 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.paciente = paciente;
                 this.prestacion.ejecucion.registros.forEach(registro => {
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
+                        registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                            return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                        });
                     }
                     if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
                         let parametros = {

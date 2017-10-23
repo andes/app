@@ -247,12 +247,12 @@
                                                                         </ng-container>
                                                                     </ng-container>
                                                                 </div>
-                                                                <div class="col-1 m-0 p-0 text-center">
+                                                                <!-- <div class="col-1 m-0 p-0 text-center">
                                                                     <div class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline" (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'"></div>
-                                                                </div>
+                                                                </div> -->
                                                             </div>
                                                             <div class="row">
-                                                                <div class="col-12" *ngIf="elemento.icon === 'down'">
+                                                                <div class="col-12">
                                                                     <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
                                                                         <b>Evolución: </b>{{ elemento.valor.evolucion }}
                                                                     </div>
@@ -264,11 +264,13 @@
                                                                         <b>Indicaciones: </b> {{ elemento.valor.indicaciones
                                                                         || '(ninguna)' }}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
+                                                                    <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
                                                                         <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                                                         + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.evoluciones" class="text-secondary">Inicio aproximado:
+                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"
+                                                                        class="text-secondary">
+                                                                        <b>Inicio aproximado: </b>
                                                                         <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
                                                                         <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow
                                                                             }}
