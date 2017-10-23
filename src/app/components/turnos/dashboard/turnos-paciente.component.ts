@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import * as moment from 'moment';
 
 // Interfaces
 import { IPaciente } from './../../../interfaces/IPaciente';
@@ -41,9 +42,14 @@ export class TurnosPacienteComponent implements OnInit {
         this._paciente = value;
         if (value) {
             let datosTurno = { pacienteId: this._paciente.id };
-
+            // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos;
+                this.turnosPaciente = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+                });
             });
         }
     }
