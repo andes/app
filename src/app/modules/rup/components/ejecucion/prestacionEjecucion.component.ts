@@ -779,6 +779,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.recorreArbol(registroDestino, registroOrigen)) {
             return true;
         }
+        if (registroOrigen === registroDestino) {
+            return true;
+        }
         if (registroOrigen.relacionadoCon && registroOrigen.relacionadoCon.length > 0) {
             control = registroOrigen.relacionadoCon.find(registro => registro.id === registroDestino.id);
         }
