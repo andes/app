@@ -41,16 +41,7 @@ export class TurnosPacienteComponent implements OnInit {
     set paciente(value: IPaciente) {
         this._paciente = value;
         if (value) {
-            let datosTurno = { pacienteId: this._paciente.id };
-            // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
-                });
-                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
-                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
-                });
-            });
+            this.getTurnosPaciente(this._paciente);
         }
     }
     get paciente(): IPaciente {
@@ -61,6 +52,19 @@ export class TurnosPacienteComponent implements OnInit {
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
+    }
+
+    getTurnosPaciente(paciente) {
+        let datosTurno = { pacienteId: paciente.id };
+        // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
+        this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+            this.turnosPaciente = turnos.filter(t => {
+                return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+            });
+            this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+            });
+        });
     }
 
     eventosTurno(turno, operacion) {
@@ -88,8 +92,6 @@ export class TurnosPacienteComponent implements OnInit {
                         mensaje = 'Se registro la inasistencia del paciente';
                         tipoToast = 'warning';
                         break;
-                    case 'liberarTurno':
-                        break;
                 }
                 if (mensaje !== '') {
                     this.plex.toast(tipoToast, mensaje);
@@ -102,7 +104,7 @@ export class TurnosPacienteComponent implements OnInit {
     liberarTurno(turno) {
         this.turnosSeleccionados = [turno];
         this.serviceAgenda.getById(turno.agenda_id).subscribe(resultado => {
-            this.agenda = resultado;
+            this.agenda = resultado; // obtiene la agenda para enviarla al componente liberar-turno
             this.showLiberarTurno = true;
         });
     }
@@ -111,7 +113,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
     saveLiberarTurno(agenda: any) {
-        this.eventosTurno(this.turnosSeleccionados[0], 'liberarTurno');
+        this.getTurnosPaciente(this._paciente.id);
         this.showLiberarTurno = false;
     }
 }
