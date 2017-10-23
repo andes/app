@@ -4,13 +4,13 @@
 <section *ngIf="!showDarTurnos && prestacion && paciente">
     <plex-box>
         <header>
-            <div class="clearfix">
-                <div *ngIf="prestacion?.solicitud">
+            <div class="row">
+                <div class="col-9" *ngIf="prestacion?.solicitud">
                     <div class="page-title">Resumen
                         <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                     </div>
-                    <div class="col-3 float-right text-right">
+                    <div class="float-right mr-2">
                         <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                             (click)="mostrarDatosSolicitud(true)"></plex-button>
                         <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
@@ -18,24 +18,25 @@
                 </div>
             </div>
         </header>
-        <!-- div de la info de la solicitud -->
-        <div [hidden]="!showDatosSolicitud">
-            <!-- <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3> -->
-            <p>
-                <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
-                <br>
-                <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                <br>
-                <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
-            </p>
-            <p *ngIf="prestacion.solicitud.prestacionOrigen">
-                Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
-            </p>
-        </div>
-        <div class="row">
+        <div class="row no-gutters">
             <div class="col-9">
+                <!-- div de la info de la solicitud -->
+                <div [hidden]="!showDatosSolicitud">
+                    <!-- <h3> {{prestacion.solicitud.tipoPrestacion.term}} </h3> -->
+                    <p>
+                        <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
+                        <br>
+                        <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                        <br>
+                        <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
+                    </p>
+                    <p *ngIf="prestacion.solicitud.prestacionOrigen">
+                        Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
+                    </p>
+                </div>
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
-                    <div class="rup-card" [ngClass]="{'ml-3 pr-3': !elemento.esDiagnosticoPrincipal}">
+                    <!-- [ngClass]="{'ml-3 pr-3': !elemento.esDiagnosticoPrincipal}" -->
+                    <div class="rup-card">
                         <div class="type {{ elemento.esSolicitud ? 'planes' : elemento.concepto.semanticTag }}">
                         </div>
                         <div class="rup-content">
@@ -86,14 +87,24 @@
                                             </ng-container>
                                         </ng-container>
                                     </div>
-                                    <div class="col-1 m-0 p-0 text-center">
-                                        <div class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline" (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'"></div>
+                                    <div class="col-1 m-0 pr-3 text-right">
+                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.motivo || elemento?.valor?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio"
+                                            class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
+                                            (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12" *ngIf="elemento.icon === 'down'">
-                                        <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
-                                            <b>Evolución: </b>{{ elemento.valor.evolucion }}
+                                        <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
+                                            <div class="col-6">
+                                                <b>Evolución </b>
+                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
+                                                    | date: 'EEE dd/MM/yyyy' }}</ng-container>
+                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
+                                                <br> {{ elemento.valor.evolucion }}
+                                            </div>
+                                            <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                            </div>
                                         </div>
                                         <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
                                             <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
@@ -105,11 +116,6 @@
                                             <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                             + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                         </div>
-                                        <div class="text-secondary">
-                                            <b>Inicio aproximado: </b>
-                                            <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
-                                            <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -119,23 +125,26 @@
             </div>
             <div class="col-3">
                 <!-- ÁRBOL -->
-                <plex-box>
+                <plex-box class="relaciones w-25">
                     <header>
                         <div class="clearfix">
-                            <div *ngIf="prestacion?.ejecucion?.registros">
-                                <div class="page-title">Relaciones
+                            <div *ngIf="relaciones">
+                                <div class="page-title">
+                                    Relaciones
                                 </div>
                             </div>
                         </div>
                     </header>
                     <ng-container *ngFor="let rama of prestacion.ejecucion.registros; let iRama = index">
                         <ul class="list-group">
-                            <li [ngClass]="{'ml-0': !rama.esDiagnosticoPrincipal}" class="list-group-item pl-0 pt-0 pb-0 mb-0">
+                            <li [ngClass]="{
+                                'ml-0': !rama.esDiagnosticoPrincipal,
+                                'ml-2': rama.relacionadoCon[0] && relacionadoConPadre(rama.relacionadoCon[0].id)
+                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
-
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
                                             Diagnóstico principal
                                         </small>

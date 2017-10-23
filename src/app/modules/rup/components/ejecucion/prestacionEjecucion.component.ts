@@ -104,6 +104,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
+                        // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
+
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
@@ -115,7 +117,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.armarRelaciones();
                             this.mostrarDatosEnEjecucion();
+
                         }
                     }, (err) => {
                         if (err) {
@@ -153,6 +157,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             });
+
         }
     }
 
@@ -747,11 +752,27 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     agregarListadoHuds(registrosHuds) {
         this.registrosHuds = registrosHuds;
-
-
-
     }
 
+    // Actualiza ambas columnas de registros según las relaciones
+    armarRelaciones() {
+
+        let relacionesOrdenadas = [];
+        this.prestacion.ejecucion.registros.forEach((rel, i) => {
+            if (this.relacionadoConPadre(rel.id).length > 0) {
+                relacionesOrdenadas.push(rel);
+                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
+                    relacionesOrdenadas.push(relP);
+                });
+            }
+        });
+
+        this.prestacion.ejecucion.registros = relacionesOrdenadas;
+    }
+
+    relacionadoConPadre(id) {
+        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+    }
     // Controla antes de vincular que no esten vinculados
     controlVinculacion(registroOrigen, registroDestino) {
         let control;
@@ -770,6 +791,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
     }
+  
     // Busca recursivamente en los relacionadoCon de los registros
     recorreArbol(registroDestino, registroOrigen) {
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {

@@ -45,6 +45,9 @@ export class PrestacionValidacionComponent implements OnInit {
     // Datos de solicitud "padre"
     public showDatosSolicitud = false;
 
+    // Array para armar árbol de relaciones
+    public relaciones: any[];
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
@@ -80,6 +83,11 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+
+            this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
+
+            // usa this.prestacion.ejecucion.registros
+            this.armarRelaciones();
 
             // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
             let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
@@ -174,6 +182,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+
                         });
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
@@ -204,6 +213,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 // Vamos a cambiar el estado de la prestación a ejecucion
                 this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                     this.prestacion = prestacion;
+
+                    // actualizamos las prestaciones de la HUDS
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+
+                    });
 
                     this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                 }, (err) => {
@@ -279,5 +293,26 @@ export class PrestacionValidacionComponent implements OnInit {
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
+
+    // Actualiza ambas columnas de registros según las relaciones
+    armarRelaciones() {
+
+        let relacionesOrdenadas = [];
+        this.prestacion.ejecucion.registros.forEach((rel, i) => {
+            if (this.relacionadoConPadre(rel.id).length > 0) {
+                relacionesOrdenadas.push(rel);
+                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
+                    relacionesOrdenadas.push(relP);
+                });
+            }
+        });
+
+        this.prestacion.ejecucion.registros = relacionesOrdenadas;
+    }
+
+    relacionadoConPadre(id) {
+        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+    }
+
 }
 
