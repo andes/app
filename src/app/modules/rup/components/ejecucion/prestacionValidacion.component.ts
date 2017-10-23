@@ -45,6 +45,9 @@ export class PrestacionValidacionComponent implements OnInit {
     // Datos de solicitud "padre"
     public showDatosSolicitud = false;
 
+    // Array para armar árbol de relaciones
+    public relaciones: any[];
+
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
@@ -80,6 +83,11 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+
+            this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
+
+            // usa this.prestacion.ejecucion.registros
+            this.armarRelaciones();
 
             // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
             let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
@@ -279,5 +287,32 @@ export class PrestacionValidacionComponent implements OnInit {
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
+
+    armarRelaciones() {
+        this.relaciones = this.prestacion.ejecucion.registros;
+        // this.relaciones.map((reg) => {
+        //     return reg.tieneRelacion = reg.relacionadoCon.find(rel => rel === this.relaciones[0].id);
+        // });
+
+        let relacionesOrdenadas = [];
+        this.relaciones.forEach((rel, i) => {
+            if (this.relacionadoConPadre(rel.id).length > 0) {
+                // console.log('rel', this.relacionadoConPadre(rel.id));
+                relacionesOrdenadas.push(rel);
+                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
+                    relacionesOrdenadas.push(relP);
+                });
+            }
+
+        });
+
+        this.relaciones = relacionesOrdenadas;
+
+    }
+
+    relacionadoConPadre(id) {
+        return this.relaciones.filter(rel => rel.relacionadoCon[0] === id);
+    }
+
 }
 

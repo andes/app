@@ -104,6 +104,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
+                        this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
+
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);

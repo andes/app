@@ -3,8 +3,7 @@
 .rup-card {
     width: 100%;
     display: flex;
-    border-top: 2px solid #ccc;
-    margin-bottom: 10px;
+    border-top: 2px solid #ccc; // margin-bottom: 10px;
     border-right: 1px solid #ccc; // margin-bottom: 10px;
 }
 
@@ -62,6 +61,10 @@
 
 .procedimientos {
     background-color: $procedimientos;
+}
+
+.relaciones {
+    position: fixed;
 }
 
 @each $item in $lista-problemas {
