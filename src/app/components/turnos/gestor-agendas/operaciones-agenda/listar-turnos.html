@@ -11,16 +11,11 @@
                                 date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
                                 'HH:mm'}} hs ({{ agenda.estado }})
                             </div>
-                            <!-- <div class="row"> -->
                             <div class="col">
                                 <label>Tipos de prestación</label>
                                 <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                             </div>
-                            <!-- <div class="col-4">
-                                    
-                                </div> -->
-                            <!-- </div>
-                                    <div class="row"> -->
+
                             <div class="col">
                                 <label>Profesionales</label>
                                 <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
@@ -29,9 +24,7 @@
                                 </ng-container>
                             </div>
                         </div>
-                        <!-- <div class="col-4">
-                            </div> -->
-                        <!-- </div> -->
+
                         <div class="row">
                             <div class="col">
                                 <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
@@ -55,11 +48,8 @@
                             <th>DNI | Nro. Carpeta</th>
                             <th>Obra Social</th>
                             <th>Apellidos y Nombres</th>
-                            <!-- <th>Nro. Carpeta</th> -->
                             <th>Sexo</th>
-                            <!-- <th>Edad</th> -->
                             <th>Diagnóstico</th>
-                            <!-- <br>Motivo de consulta</th> -->
                             <th>Primera Vez</th>
                             <th>Ulterior</th>
                             <th>C2</th>
@@ -91,25 +81,12 @@
                             <td></td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                <!-- <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">
-                                <small>
-                                    <span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
-                                </small>
-                                <span *ngIf="turno && turno.estado === 'disponible'"></span> -->
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
-                            <!-- <td>
-                                <small *ngIf="turno?.paciente?.carpetaEfectores">
-                                    {{turno.paciente.carpetaEfectores[0]?.nroCarpeta}}
-                                </small>
-                            </td> -->
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
                             </td>
-                            <!-- <td>
-                                <small *ngIf="turno?.paciente?.id">{{ turno.paciente.edad | edad }}</small>
-                            </td> -->
                             <td style="width:250px"></td>
                             <td></td>
                             <td></td>
