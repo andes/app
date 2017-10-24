@@ -207,7 +207,7 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos el paciente en los turnos fuera de agenda
             if (this.fueraDeAgenda) {
                 let _turnos = this.fueraDeAgenda.filter(p => {
-                    return (p.tipoPrestacion && p.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
+                    return (p.solicitud.tipoPrestacion && p.solicitud.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
                 });
 
                 this.fueraDeAgenda = _turnos;
