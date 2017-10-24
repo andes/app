@@ -1,4 +1,67 @@
-@import '../variables';
+@import '../core/rup';
+.text-problemas {
+    color: $problemas;
+}
+
+// .border-hallazgo {
+//     border-color: $problemas;
+// }
+.text-planes {
+    color: $planes;
+}
+
+.border-planes {
+    border-color: $planes $planes $planes;
+}
+
+.borde-prestaciones input,
+.borde-prestaciones input:focus {
+    border-color: $dark-blue;
+}
+
+.borde-prestaciones input,
+.borde-prestaciones input:focus {
+    border-color: $dark-blue;
+    background-color: $dark-blue;
+    color: white;
+}
+
+// .prestaciones {
+//     background-color: $dark-blue;
+// }
+.borde-planes input,
+.borde-planes input:focus {
+    border-color: $planes;
+    background-color: $planes !important;
+    background-color: $planes;
+    color: white;
+}
+
+// .planes {
+//     background-color: $planes;
+// }
+.borde-problemas input,
+.borde-problemas input:focus {
+    border-color: $problemas;
+    background-color: $problemas !important;
+    background-color: $problemas;
+    color: white;
+}
+
+// .problemas {
+//     background-color: $problemas;
+// }
+.borde-procedimientos input,
+.borde-procedimientos input:focus {
+    border-color: $procedimientos;
+    background-color: $procedimientos !important;
+    background-color: $procedimientos;
+    color: white;
+}
+
+// .procedimientos {
+//     background-color: $procedimientos;
+// }
 .vista-titulo {
     padding-top: 1em;
     font-size: 1.4em;
