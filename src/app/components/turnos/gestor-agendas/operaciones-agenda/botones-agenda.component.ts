@@ -210,9 +210,11 @@ export class BotonesAgendaComponent implements OnInit {
     hayTurnosSuspendidos() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
-                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
-                        return true;
+                if (this.agendasSeleccionadas[x].bloques[y].turnos) {
+                    for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
+                        if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
+                            return true;
+                        }
                     }
                 }
             }
