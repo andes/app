@@ -304,6 +304,8 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
                     relacionesOrdenadas.push(relP);
                 });
+            } else {
+                relacionesOrdenadas.push(rel);
             }
         });
 
