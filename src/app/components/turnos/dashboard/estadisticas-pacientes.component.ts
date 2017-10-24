@@ -17,7 +17,7 @@ import { LogPacienteService } from '../../../services/logPaciente.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
-    private _paciente: IPaciente;
+    public _paciente: IPaciente;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;

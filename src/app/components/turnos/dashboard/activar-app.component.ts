@@ -43,7 +43,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     public email: String = '';
     public message: String = '';
     public hideButton = false;
-    private hideButtonResend = true;
+    public hideButtonResend = true;
 
     // Inicialización
     constructor(

@@ -39,7 +39,7 @@ export class PanelAgendaComponent implements OnInit {
 
     public alertas: any[] = [];
 
-    private espaciosList = [];
+    public espaciosList = [];
 
     constructor(
         public plex: Plex,
