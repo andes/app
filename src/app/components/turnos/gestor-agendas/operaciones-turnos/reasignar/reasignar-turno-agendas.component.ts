@@ -21,23 +21,14 @@ import * as moment from 'moment';
 })
 
 export class ReasignarTurnoAgendasComponent implements OnInit {
-    turnoReasignado: any = {};
 
+    @Input() agendasSimilares: any;
+    @Input() agendaAReasignar: any;
+
+    turnoReasignado: any = {};
     // Para cálculos de disponibilidad de turnos programados y del día
     hoy: Date;
     delDiaDisponibles: number;
-
-    // private _agendasSimilares: any;
-    @Input() agendasSimilares: any;
-    // set agendasSimilares(value: any) {
-    //     this._agendasSimilares = value;
-    // }
-    // get agendasSimilares(): any {
-    //     return this._agendasSimilares;
-    // }
-
-    @Input() agendaAReasignar: any;
-
     // Agenda destino, elegida entre las candidatas (agendasSimilares)
     agendaSeleccionada: any;
 
@@ -83,22 +74,21 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         this.hoy = new Date();
         this.autorizado = this.auth.getPermissions('turnos:reasignarTurnos:?').length > 0;
         this.agendasSimilares = [];
-        // this.actualizar();
     }
 
     actualizar() {
 
-        if (this.agendaDestino.agenda && this.turnoSeleccionado && this.turnoSeleccionado.reasignado && this.turnoSeleccionado.reasignado.siguiente) {
-            let indiceBloque = this.agendaDestino.agenda.bloques.findIndex(x => x.id === this.agendaDestino.bloque.id);
-            this.agendaDestino.bloque = this.agendaDestino.agenda.bloques[indiceBloque];
+        // if (this.agendaDestino.agenda && this.turnoSeleccionado && this.turnoSeleccionado.reasignado && this.turnoSeleccionado.reasignado.siguiente) {
+        //     let indiceBloque = this.agendaDestino.agenda.bloques.findIndex(x => x.id === this.agendaDestino.bloque.id);
+        //     this.agendaDestino.bloque = this.agendaDestino.agenda.bloques[indiceBloque];
 
-            let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === this.agendaDestino.turno.id);
-            this.turnoReasignado = this.agendaDestino.agenda.bloques[indiceBloque].turnos[indiceTurno];
-        }
+        //     let indiceTurno = this.agendaDestino.bloque.turnos.findIndex(x => x.id === this.agendaDestino.turno.id);
+        //     this.turnoReasignado = this.agendaDestino.agenda.bloques[indiceBloque].turnos[indiceTurno];
+        // }
+
 
         this.delDiaDisponibles = 0;
         let turnoAnterior = null;
-
         if (this.agendasSimilares) {
             this.agendasSimilares.forEach(agenda => {
                 agenda.bloques.forEach((bloque, indexBloque) => {
@@ -221,12 +211,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     turno: turnoReasignado
                 };
 
-                // this.agendaAReasignar = resultado;
                 // Se guardan los datos del turno "nuevo" en el turno "viejo/suspendido" (PUT)
                 this.serviceTurno.put(datosTurnoReasignado).subscribe(agenda => {
                     this.agendaDestino.agenda = resultado;
                     this.agendaDestino.turno = turno;
-                    // this.turnoReasignado = turnoReasignado;
                     this.plex.toast('success', 'El turno se reasignó correctamente');
 
                     // Enviar SMS sólo en Producción
@@ -252,15 +240,30 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     }
 
-    hayTurnosDisponibles(agenda: IAgenda, tipoTurno: String) {
-        for (let i = 0; i < agenda.bloques.length; i++) {
-            for (let j = 0; j < agenda.bloques[i].turnos.length; j++) {
-                if (agenda.bloques[i].turnos[j].estado === 'disponible' || (agenda.bloques[i].turnos[j].tipoTurno === 'programado') || (agenda.bloques[i].turnos[j].tipoTurno === 'delDia' && this.getFecha(agenda.horaInicio) === this.getFecha(this.hoy))) {
-                    return true;
+    hayTurnosDisponibles(agenda: IAgenda) {
+        let resultado = false;
+        let i = 0, j = 0;
+        // Por el momento hasta implementar los turnos de llaves y gestión solamente se verifica que la agenda tenga
+        // turnos restantes programados o del dia.
+        while (i < agenda.bloques.length && !resultado) {
+            while (j < agenda.bloques[i].turnos.length && !resultado) {
+                if (agenda.bloques[i].turnos[j].estado === 'disponible') {
+                    if (agenda.bloques[i].turnos[j].horaInicio > this.hoy && agenda.bloques[i].restantesProgramados > 0) {
+                        resultado = true;
+                    } else {
+                        if (moment(agenda.bloques[i].turnos[j].horaInicio).isSame(this.hoy, 'day')
+                            && moment(agenda.bloques[i].turnos[j].horaInicio).isAfter(this.hoy, 'hour')
+                            && (agenda.bloques[i].restantesDelDia > 0 || agenda.bloques[i].restantesProgramados > 0)) {
+                            resultado = true;
+                        }
+                    }
                 }
+                j++;
             }
+            i++;
         }
-        return false;
+
+        return resultado;
     }
 
     tieneTurnos(bloque: IBloque): boolean {
