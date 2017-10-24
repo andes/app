@@ -136,6 +136,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
 
+
         });
     }
 
@@ -300,12 +301,22 @@ export class PrestacionValidacionComponent implements OnInit {
         let relacionesOrdenadas = [];
         this.prestacion.ejecucion.registros.forEach((rel, i) => {
             if (this.relacionadoConPadre(rel.id).length > 0) {
-                // relacionesOrdenadas.push(rel);
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-                    relacionesOrdenadas.push(relP);
+                    // Se agregan los registros padre
+                    // if (rel.id !== relP.id) {
+                    // }
+                    // Se agregan los registros hijo
+                    if (relacionesOrdenadas.find(r => r === rel)) {
+                        relacionesOrdenadas.push(relP);
+                    } else {
+                        relacionesOrdenadas.push(rel);
+                    }
                 });
             } else {
-                relacionesOrdenadas.push(rel);
+                if (!relacionesOrdenadas.find(r => r === rel)) {
+                    relacionesOrdenadas.push(rel);
+                }
+
             }
         });
 

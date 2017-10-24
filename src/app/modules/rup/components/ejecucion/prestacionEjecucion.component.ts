@@ -117,8 +117,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-                            this.armarRelaciones();
                             this.mostrarDatosEnEjecucion();
+                            this.armarRelaciones();
 
                         }
                     }, (err) => {
@@ -760,8 +760,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         let relacionesOrdenadas = [];
         this.prestacion.ejecucion.registros.forEach((rel, i) => {
             if (this.relacionadoConPadre(rel.id).length > 0) {
-                // relacionesOrdenadas.push(rel);
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
+                    // Se agregan los registros padre
+                    if (rel.id !== relP.id) {
+                        relacionesOrdenadas.push(rel);
+                    }
+                    // Se agregan los registros hijo
                     relacionesOrdenadas.push(relP);
                 });
             } else {
