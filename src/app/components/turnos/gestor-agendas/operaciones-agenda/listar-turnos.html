@@ -91,11 +91,11 @@
                             <td></td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
-                                <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">
+                                <!-- <br *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">
                                 <small>
                                     <span *ngIf="bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
                                 </small>
-                                <span *ngIf="turno && turno.estado === 'disponible'"></span>
+                                <span *ngIf="turno && turno.estado === 'disponible'"></span> -->
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
