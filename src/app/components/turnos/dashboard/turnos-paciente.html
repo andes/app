@@ -2,8 +2,10 @@
     <legend>{{ tituloOperacion }}</legend>
     <header>
         <div class="row">
-            <div class="col">
-                <h5> Turnos próximos del paciente: <span class="text-info">{{ paciente | paciente }}</span> </h5>
+            <div *ngIf="paciente.nombre" class="col">
+                <h5> Turnos próximos del paciente:
+                    <span class="text-info">{{ paciente | paciente }}</span>
+                </h5>
             </div>
         </div>
     </header>
@@ -33,7 +35,8 @@
                     <div class="row">
                         <div class="col" *ngIf="turno && turno.horaInicio">
                             <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy' }}</span>
-                            <span *ngIf="turno.horaInicio"><i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
+                            <span *ngIf="turno.horaInicio">
+                                <i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
                         </div>
                     </div>
 
