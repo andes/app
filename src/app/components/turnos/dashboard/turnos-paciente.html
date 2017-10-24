@@ -3,7 +3,7 @@
     <header>
         <div class="row">
             <div class="col">
-                <h5> Turnos del paciente: <span class="text-info">{{ paciente | paciente }}</span> </h5>
+                <h5> Turnos próximos del paciente: <span class="text-info">{{ paciente | paciente }}</span> </h5>
             </div>
         </div>
     </header>
@@ -23,6 +23,7 @@
                     <!-- Panel -->
                     <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
                     <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                    <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                     <h5>{{ turno.tipoPrestacion.term }}</h5>
                     <div class="row" *ngIf="turno.organizacion">
                         <div class="col">
@@ -54,11 +55,11 @@
                             <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                         </div>
                     </div>
-                    <div class="row" *ngIf=" turno.estado === 'suspendido'">
+                    <!--<div class="row" *ngIf=" turno.estado === 'suspendido'">
                         <div class="col text-center ">
                             <h4> <span class="text-danger">Suspendido</span> </h4>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <!-- fin Panel -->
             </div>

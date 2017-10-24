@@ -82,7 +82,13 @@ export class TurnosPacienteComponent implements OnInit {
 
             let datosTurno = { pacienteId: this._paciente.id };
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos;
+                this.turnosPaciente = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+                });
+                // this.turnosPaciente = turnos;
                 switch (operacion) {
                     case 'darAsistencia':
                         mensaje = 'Se registro la asistencia del paciente';
