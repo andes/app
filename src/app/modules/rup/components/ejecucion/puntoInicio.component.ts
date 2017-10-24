@@ -183,12 +183,6 @@ export class PuntoInicioComponent implements OnInit {
                     return (profesional.id === this.auth.profesional.id);
                 }));
             });
-        } else {
-            this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
-                    return (profesional.id !== this.auth.profesional.id);
-                }));
-            });
         }
 
         // por tipo de prestación

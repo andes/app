@@ -221,9 +221,9 @@
                                             <div *ngIf="sobreturno && sobreturno.prestacion && sobreturno?.prestacion?.estados">
                                                 <br />
                                                 <span class="badge " [ngClass]="{'badge-success': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada',
-                                                            'badge-warning': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
-                                                            {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo}}
-                                                        </span>
+                                                    'badge-warning': sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
+                                                    {{sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo}}
+                                                </span>
                                                 <br />
                                             </div>
                                         </td>
