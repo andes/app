@@ -9,10 +9,11 @@
                     <div class="page-title">Resumen
                         <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
-                    </div>
-                    <div class="float-right mr-2">
-                        <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
-                        <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+
+                        <div class="float-right mr-2">
+                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
+                            <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                        </div>
                     </div>
                 </div>
             </div>
