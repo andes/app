@@ -300,7 +300,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let relacionesOrdenadas = [];
         this.prestacion.ejecucion.registros.forEach((rel, i) => {
             if (this.relacionadoConPadre(rel.id).length > 0) {
-                relacionesOrdenadas.push(rel);
+                // relacionesOrdenadas.push(rel);
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
                     relacionesOrdenadas.push(relP);
                 });
