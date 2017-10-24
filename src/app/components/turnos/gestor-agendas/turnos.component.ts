@@ -37,24 +37,26 @@ export class TurnosComponent implements OnInit {
                 let bloque = this.agenda.bloques[i];
                 this.arrayDelDia[i] = bloque.restantesDelDia + bloque.restantesProgramados;
             }
-            this.agenda.bloques[i].turnos.forEach((turno) => {
-                // Si el turno está disponible pero ya paso la hora
-                if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
-                    this.arrayDelDia[i]--;
-                } else {
-                    if (turno.estado === 'asignado') {
-                        this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-                            if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
-                                let carpetaEfector = null;
-                                carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                                    return (data.organizacion.id === this.auth.organizacion.id);
-                                });
-                                turno.paciente.carpetaEfectores = carpetaEfector;
-                            }
-                        });
+            if (this.agenda.bloques[i].turnos) {
+                this.agenda.bloques[i].turnos.forEach((turno) => {
+                    // Si el turno está disponible pero ya paso la hora
+                    if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
+                        this.arrayDelDia[i]--;
+                    } else {
+                        if (turno.estado === 'asignado') {
+                            this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                                if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
+                                    let carpetaEfector = null;
+                                    carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+                                        return (data.organizacion.id === this.auth.organizacion.id);
+                                    });
+                                    turno.paciente.carpetaEfectores = carpetaEfector;
+                                }
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
         this.actualizarBotones();

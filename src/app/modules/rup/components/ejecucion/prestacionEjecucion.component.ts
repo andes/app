@@ -764,6 +764,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
                     relacionesOrdenadas.push(relP);
                 });
+            } else {
+                relacionesOrdenadas.push(rel);
             }
         });
 
@@ -794,7 +796,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
     }
-  
+
     // Busca recursivamente en los relacionadoCon de los registros
     recorreArbol(registroDestino, registroOrigen) {
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
