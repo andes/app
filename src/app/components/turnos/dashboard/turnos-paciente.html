@@ -67,7 +67,7 @@
     </div>
 
     <div *ngIf="showLiberarTurno">
-        <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)"
+        <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event, paciente)"
             (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
         </liberar-turno>
     </div>

@@ -39,8 +39,8 @@ export class TurnosPacienteComponent implements OnInit {
 
     @Input('paciente')
     set paciente(value: IPaciente) {
-        this._paciente = value;
         if (value) {
+            this._paciente = value;
             this.getTurnosPaciente(this._paciente);
         }
     }
@@ -118,8 +118,9 @@ export class TurnosPacienteComponent implements OnInit {
     cancelaLiberarTurno() {
         this.showLiberarTurno = false;
     }
-    saveLiberarTurno(agenda: any) {
-        this.getTurnosPaciente(this._paciente.id);
+
+    saveLiberarTurno(agenda: any, pac) {
+        this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
 }
