@@ -93,6 +93,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
+        this.showActivarApp = false;
         this.showDashboard = true;
         this.showDarTurnos = false;
         if (paciente) {
