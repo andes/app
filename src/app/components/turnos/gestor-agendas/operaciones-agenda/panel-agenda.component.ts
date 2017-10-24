@@ -39,7 +39,11 @@ export class PanelAgendaComponent implements OnInit {
 
     public alertas: any[] = [];
 
-    private espaciosList = [];
+    /**
+     * [TODO] espaciosList: Agregado para que compile con AOT
+     * Cambio de private a public
+     */
+    public espaciosList = [];
 
     constructor(
         public plex: Plex,
