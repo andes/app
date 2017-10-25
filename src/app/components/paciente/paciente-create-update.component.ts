@@ -211,7 +211,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     };
 
     // PARA LA APP MOBILE
-    private showMobile = false;
+    public showMobile = false;
 
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
         private paisService: PaisService,

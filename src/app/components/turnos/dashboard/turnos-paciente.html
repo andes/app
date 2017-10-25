@@ -2,8 +2,10 @@
     <legend>{{ tituloOperacion }}</legend>
     <header>
         <div class="row">
-            <div class="col">
-                <h5> Turnos del paciente: <span class="text-info">{{ paciente | paciente }}</span> </h5>
+            <div *ngIf="paciente.nombre" class="col">
+                <h5> Turnos próximos del paciente:
+                    <span class="text-info">{{ paciente | paciente }}</span>
+                </h5>
             </div>
         </div>
     </header>
@@ -23,6 +25,7 @@
                     <!-- Panel -->
                     <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
                     <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                    <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                     <h5>{{ turno.tipoPrestacion.term }}</h5>
                     <div class="row" *ngIf="turno.organizacion">
                         <div class="col">
@@ -32,7 +35,8 @@
                     <div class="row">
                         <div class="col" *ngIf="turno && turno.horaInicio">
                             <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy' }}</span>
-                            <span *ngIf="turno.horaInicio"><i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
+                            <span *ngIf="turno.horaInicio">
+                                <i class="mdi mdi-timer"></i> {{ turno.horaInicio | date: 'HH:mm' }} hs.</span>
                         </div>
                     </div>
 
@@ -54,11 +58,11 @@
                             <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                         </div>
                     </div>
-                    <div class="row" *ngIf=" turno.estado === 'suspendido'">
+                    <!--<div class="row" *ngIf=" turno.estado === 'suspendido'">
                         <div class="col text-center ">
                             <h4> <span class="text-danger">Suspendido</span> </h4>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <!-- fin Panel -->
             </div>
@@ -66,7 +70,7 @@
     </div>
 
     <div *ngIf="showLiberarTurno">
-        <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event)"
+        <liberar-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveLiberarTurno)="saveLiberarTurno($event, paciente)"
             (cancelaLiberarTurno)="cancelaLiberarTurno($event)">
         </liberar-turno>
     </div>

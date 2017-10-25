@@ -27,9 +27,9 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     get resultadoCreateUpdate(): any {
         return this.resultado;
     }
-    @Output() sinResultados: EventEmitter < any > = new EventEmitter < any > ();
-    @Output() operacion: EventEmitter < any > = new EventEmitter < any > ();
-    @Output() createUpdate: EventEmitter < any > = new EventEmitter < any > ();
+    @Output() sinResultados: EventEmitter<any> = new EventEmitter<any>();
+    @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
+    @Output() createUpdate: EventEmitter<any> = new EventEmitter<any>();
 
     pacienteSeleccionado = null;
 
@@ -55,9 +55,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     public seleccionarPaciente(paciente: any) {
         super.seleccionarPaciente(paciente);
-        if (this.esEscaneado) {
-            this.sinResultados.emit(false);
-        }
+        this.sinResultados.emit(false);
     }
 
     public buscar() {
