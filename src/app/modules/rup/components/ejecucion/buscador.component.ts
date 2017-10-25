@@ -64,7 +64,6 @@ export class BuscadorComponent implements OnInit {
     filtroBuscadorSnomed(tipoBusqueda) {
 
         this.tipoBusqueda = tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda;
-        console.log('tipoBusqueda', this.tipoBusqueda);
 
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {
