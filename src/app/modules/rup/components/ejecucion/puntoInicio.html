@@ -129,8 +129,6 @@
                         </thead>
                         <tbody>
                             <ng-container *ngFor="let turno of bloque.turnos; let i=index">
-
-
                                 <tr *ngIf="turno" class="hover">
                                     <td>
                                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -157,9 +155,12 @@
                                         <br *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
                                         <small>
                                             <br />
-                                            <span class="text-muted" *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                                {{turno.tipoPrestacion.nombre}}
+                                            <span class="text-muted" *ngIf="turno.paciente?.id && turno.tipoPrestacion"> <!-- && agendaSeleccionada.tipoPrestaciones.length > 1-->
+                                                <b>{{turno.tipoPrestacion.nombre}}</b>
                                             </span>
+                                            <ng-container *ngIf="turno?.prestacion?.solicitud?.profesional">
+                                                - {{turno.prestacion.solicitud.profesional | profesional}}
+                                            </ng-container>
                                         </small>
 
 
@@ -231,29 +232,33 @@
                                             <span *ngIf="sobreturno.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
 
                                             <small>
-                                                        <span *ngIf="sobreturno.paciente?.id">
-                                                            <br>
-                                                            <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento | number}}</span>
-                                                            <span *ngIf="sobreturno.paciente.documento === ''"> Sin documento (temporal)</span>
-                                                        </span>
-                                                    </small>
+                                                <span *ngIf="sobreturno.paciente?.id">
+                                                    <br>
+                                                    <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento | number}}</span>
+                                                    <span *ngIf="sobreturno.paciente.documento === ''"> Sin documento (temporal)</span>
+                                                </span>
+                                            </small>
                                             <br *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
                                             <small>
-                                                        <br />
-                                                        <span class="text-muted" *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                                            {{sobreturno.tipoPrestacion.nombre}}
-                                                        </span>
-                                                    </small>
+                                                <br />
+                                                <span class="text-muted" *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion"> <!--  && agendaSeleccionada.tipoPrestaciones.length > 1 -->
+                                                    <b>{{sobreturno.tipoPrestacion.nombre}}</b>
+                                                </span>
+                                                <ng-container *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
+                                                    - {{sobreturno.prestacion.solicitud.profesional | profesional}}
+                                                </ng-container>
+                                                
+                                            </small>
                                             <span class="badge badge-danger" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                                             <span *ngIf="sobreturno && sobreturno.nota">
-                                                        <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                                    </span>
+                                                <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                            </span>
 
                                             <div *ngIf="sobreturno && sobreturno.confirmatedAt">
                                                 <br />
                                                 <span class="badge badge-default" title="{{sobreturno.confirmatedAt | date: 'medium'}}">
-                                                            Confirmado
-                                                        </span>
+                                                    Confirmado
+                                                </span>
                                             </div>
                                         </td>
                                         <td>
@@ -312,7 +317,16 @@
                                         </span>
                                     </small>
                                     <br />
-                                    <small class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                    <small class="text-muted">
+                                        <b>
+                                            {{prestacion.solicitud.tipoPrestacion.term}}
+                                        </b>
+
+                                        <ng-container *ngIf="prestacion?.solicitud?.profesional">
+                                            - {{prestacion.solicitud.profesional | profesional}}
+                                        </ng-container>
+                                    </small>
+
                                 </td>
                                 <td>
                                     <!-- <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
