@@ -300,32 +300,14 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let relacionesOrdenadas = [];
         this.prestacion.ejecucion.registros.forEach((rel, i) => {
-            if (this.relacionadoConPadre(rel.id).length > 0) {
-                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-                    // Se agregan los registros padre
-                    // if (rel.id !== relP.id) {
-                    // }
-                    // Se agregan los registros hijo
-                    if (relacionesOrdenadas.find(r => r === rel)) {
-                        relacionesOrdenadas.push(relP);
-                    } else {
-                        relacionesOrdenadas.push(rel);
-                    }
-                });
-            } else {
-                if (!relacionesOrdenadas.find(r => r === rel)) {
-                    relacionesOrdenadas.push(rel);
-                }
 
+            if (this.prestacion.ejecucion.registros.find(r => r.relacionadoCon[0]) !== rel.id) {
+                relacionesOrdenadas.push(rel);
             }
+
         });
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
     }
-
-    relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
-    }
-
 }
 

@@ -9,6 +9,7 @@
                     <div class="page-title">Resumen
                         <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
+                        {{ prestacion.id }}
                     </div>
                     <div class="float-right mr-2">
                         <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
@@ -100,7 +101,7 @@
                                                 <b>Evolución </b>
                                                 <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
                                                     | date: 'EEE dd/MM/yyyy' }}</ng-container>
-                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
+                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
                                                 <br> {{ elemento.valor.evolucion }}
                                             </div>
                                             <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
