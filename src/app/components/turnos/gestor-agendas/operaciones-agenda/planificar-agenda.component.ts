@@ -676,7 +676,9 @@ export class PlanificarAgendaComponent implements OnInit {
 
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
+            let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
+            query.organizacion = efector.id;
         };
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
