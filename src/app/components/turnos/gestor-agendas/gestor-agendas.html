@@ -75,10 +75,10 @@
                             <th class="text-right estado">Estado</th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda)}">
+                            <tr *ngFor="let agenda of agendas; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(this.agenda) >= 0}">
                                 <td (click)="verAgenda(agenda, true, $event)">
-                                    <i *ngIf="estaSeleccionada(agenda)" class="mdi mdi-checkbox-marked"></i>
-                                    <i *ngIf="!estaSeleccionada(agenda)" class="mdi mdi-checkbox-blank-outline"></i>
+                                    <i *ngIf="estaSeleccionada(agenda) >= 0" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!(estaSeleccionada(agenda) >= 0)" class="mdi mdi-checkbox-blank-outline"></i>
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}

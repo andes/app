@@ -421,10 +421,9 @@ export class GestorAgendasComponent implements OnInit {
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
             } else {
-                let index;
-                if (this.estaSeleccionada(agenda)) {
+                let index = this.estaSeleccionada(agenda);
+                if (index >= 0) {
                     agenda.agendaSeleccionadaColor = 'success';
-                    index = this.agendasSeleccionadas.indexOf(agenda);
                     this.agendasSeleccionadas.splice(index, 1);
                     this.agendasSeleccionadas = [...this.agendasSeleccionadas];
                 } else {
@@ -466,7 +465,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     estaSeleccionada(agenda: any) {
-        return this.agendasSeleccionadas.find(x => x.id === agenda._id);
+        return this.agendasSeleccionadas.findIndex(x => x.id === agenda._id);
     }
 
     setColorEstadoAgenda(agenda) {
@@ -499,9 +498,9 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit(estado) {
-
         // Se suspende una agenda completa
         // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
+        debugger;
         if (estado === 'suspendida') {
             this.showTurnos = false;
             this.showEditarAgenda = false;
