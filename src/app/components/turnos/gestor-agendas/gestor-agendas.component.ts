@@ -328,13 +328,13 @@ export class GestorAgendasComponent implements OnInit {
         this.editaAgenda = agenda;
 
         if (this.editaAgenda.estado === 'planificacion') {
-            this.showGestorAgendas = false;
             this.showEditarAgenda = true;
+            this.showGestorAgendas = false;
             this.showEditarAgendaPanel = false;
         } else {
             this.showGestorAgendas = true;
-            this.showEditarAgenda = false;
             this.showEditarAgendaPanel = true;
+            this.showEditarAgenda = false;
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
@@ -412,6 +412,10 @@ export class GestorAgendasComponent implements OnInit {
             agenda = ag;
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
+            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' ) {
+                this.plex.info('danger', '', 'No puedes editar la agenda selecionada.', 3000);
+                return;
+            }
 
             if (!multiple) {
                 this.agendasSeleccionadas = [];
