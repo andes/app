@@ -412,7 +412,7 @@ export class GestorAgendasComponent implements OnInit {
             agenda = ag;
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
-            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' ) {
+            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion' ) {
                 this.plex.info('danger', '', 'No puedes editar la agenda selecionada.', 3000);
                 return;
             }
@@ -500,7 +500,6 @@ export class GestorAgendasComponent implements OnInit {
     actualizarEstadoEmit(estado) {
         // Se suspende una agenda completa
         // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
-        debugger;
         if (estado === 'suspendida') {
             this.showTurnos = false;
             this.showEditarAgenda = false;

@@ -90,7 +90,6 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Actualiza estado de las Agendas seleccionadas
     actualizarEstado(estado) {
-        debugger;
         switch (estado) {
             case 'publicada':
                 this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
