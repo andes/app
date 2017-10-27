@@ -389,7 +389,6 @@ export class GestorAgendasComponent implements OnInit {
                 organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                debugger;
                 if (this.modelo.espacioFisico) {
                     listaEspaciosFisicos = resultado ? this.modelo.espacioFisico.concat(resultado) : this.modelo.espacioFisico;
                 } else {
