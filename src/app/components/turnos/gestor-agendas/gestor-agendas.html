@@ -50,7 +50,7 @@
                             <div class="col-4">
                                 <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico"
                                     (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
-                                    labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio.descripcion + ')'"
+                                    labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
                                     ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>

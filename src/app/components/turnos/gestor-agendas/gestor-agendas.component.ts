@@ -370,7 +370,7 @@ export class GestorAgendasComponent implements OnInit {
         if (event.query) {
             let query = {
                 edificio: event.query,
-                // organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
                 event.callback(listaEdificios);
@@ -386,7 +386,7 @@ export class GestorAgendasComponent implements OnInit {
         if (event.query) {
             let query = {
                 nombre: event.query,
-                // organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.modelo.espacioFisico) {
