@@ -19,9 +19,9 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
 
-            <li *ngIf="tipoBusqueda === 'procedimientos' && (item.semanticTag === 'procedimientos' || item.semanticTag === 'entidad observable') || tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación') || tipoBusqueda === 'planes' && (item.semanticTag === 'procedimientos')"
+            <li *ngIf="tipoBusqueda === 'procedimientos' && (item.semanticTag === 'procedimiento' || item.semanticTag === 'entidad observable') || tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación') || tipoBusqueda === 'planes' && (item.semanticTag === 'procedimientos')"
                 draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                <div class="rup-card mini {{tipoBusqueda}}">
+                <div class="rup-card mini {{item.semanticTag}}">
                     <div class="type">
 
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>

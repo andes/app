@@ -1,0 +1,5 @@
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor" [(ngModel)]="registro.valor" name="riesgoCardiovascular" label="Riesgo cardiovascular" suffix="%" (change)="emitChange()" required="true">
+</plex-float>
+<p *ngIf="soloValores" class="readonly">
+    <span>Riesgo cardiovascular</span> {{registro.valor}} %
+</p>
