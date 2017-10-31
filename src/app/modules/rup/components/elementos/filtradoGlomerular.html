@@ -1,0 +1,5 @@
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor" [(ngModel)]="registro.valor" name="filtradoGlomerular" label="Filtrado Glomerular" suffix="ml/min" (change)="emitChange()" required="true">
+</plex-float>
+<p *ngIf="soloValores" class="readonly">
+    <span>Filtrado Glomerular</span> {{registro.valor}} ml/min
+</p>

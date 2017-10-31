@@ -188,8 +188,10 @@ import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elem
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
+import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
+import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 
-import { TabsComponent} from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
+import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 
 // Llaves
@@ -238,8 +240,10 @@ export const RUP_ELEMENTS: any[] = [
     { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
     { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
     { component: AutocitadoComponent, key: 'AutocitadoComponent' },
-    { component: ObesidadComponent, key: 'ObesidadComponent'},
-    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent'}
+    { component: ObesidadComponent, key: 'ObesidadComponent' },
+    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
+    { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
+    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' }
 
 ];
 
@@ -271,7 +275,9 @@ const RUP_COMPONENTS = [
     TensionSistolicaComponent,
     AutocitadoComponent,
     ObesidadComponent,
-    HipertensionArterialComponent
+    HipertensionArterialComponent,
+    FiltradoGlomerularComponent,
+    RiesgoCardiovascularComponent
 ];
 
 // Locales
@@ -300,7 +306,9 @@ export let RUPRegistry = {
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
     'ObesidadComponent': ObesidadComponent,
-    'HipertensionArterialComponent' : HipertensionArterialComponent,
+    'HipertensionArterialComponent': HipertensionArterialComponent,
+    'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
+    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent
 
 };
 
@@ -323,6 +331,8 @@ let RUPComponentsArray = [
     AutocitadoComponent,
     ObesidadComponent,
     HipertensionArterialComponent,
+    FiltradoGlomerularComponent,
+    RiesgoCardiovascularComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
