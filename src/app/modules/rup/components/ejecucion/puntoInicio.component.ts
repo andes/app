@@ -10,6 +10,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 
 @Component({
@@ -47,6 +48,7 @@ export class PuntoInicioComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
+        public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -101,7 +103,6 @@ export class PuntoInicioComponent implements OnInit {
             this.agendas = data[0];
             this.prestaciones = data[1];
 
-
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -116,6 +117,18 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
+                            // TODO:: buscamos los datos de los pacientes en agendas No se si es correcto q por cada paciente consulte la api
+                            // if (turno.estado === 'asignado' && (!turno.paciente.carpetaEfectores || turno.paciente.carpetaEfectores.length <= 0)) {
+                            //     this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                            //         if (paciente && (paciente.id)) {
+                            //             let carpetaEfector = null;
+                            //             carpetaEfector = paciente.carpetaEfectores.filter((carpeta) => {
+                            //                 return (carpeta.organizacion.id === this.auth.organizacion.id);
+                            //             });
+                            //             turno.paciente.carpetaEfectores = [carpetaEfector];
+                            //         }
+                            //     });
+                            // }
                         });
                     });
 

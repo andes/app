@@ -107,7 +107,7 @@
                     <div class="row">
                         <div class="col-12">
                             <ng-container>
-                                {{ agendaSeleccionada.horaInicio | date: 'EEE' | uppercase }} {{ agendaSeleccionada.horaInicio | date: 'dd/MM/yyyy'}}, {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
+                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }} {{ agendaSeleccionada.horaInicio | date: 'dd/MM/yyyy'}}, {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
                                 <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
 
                                 <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
@@ -118,7 +118,7 @@
                     </div>
 
                     <!--SobreTurnos-->
-                    <table *ngFor="let bloque of agendaSeleccionada.bloques | sortBloques" class="table table-striped">
+                    <table *ngFor="let bloque of agendaSeleccionada.bloques" class="table table-striped">
                         <thead *ngIf="bloque.descripcion">
                             <tr>
                                 <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}} hs
@@ -129,8 +129,6 @@
                         </thead>
                         <tbody>
                             <ng-container *ngFor="let turno of bloque.turnos; let i=index">
-
-
                                 <tr *ngIf="turno" class="hover">
                                     <td>
                                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -146,20 +144,25 @@
                                     </td>
                                     <td>
                                         <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>
-
                                         <small>
                                             <span *ngIf="turno.paciente?.id">
                                                 <br>
                                                 <span *ngIf="turno.paciente.documento !== ''"> DNI {{turno.paciente.documento | number}}</span>
                                                 <span *ngIf="turno.paciente.documento === ''"> Sin documento (temporal)</span>
                                             </span>
+                                            <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
+                                                | Nro Carpeta
+                                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{ carpeta.nroCarpeta }}</span>
+                                            </span>
                                         </small>
                                         <br *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
                                         <small>
-                                            <br />
                                             <span class="text-muted" *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                                {{turno.tipoPrestacion.nombre}}
+                                                {{turno.tipoPrestacion.nombre}} 
                                             </span>
+                                            <ng-container class="text-muted" *ngIf="turno?.prestacion?.solicitud?.profesional">
+                                               <br> Prof.: {{turno.prestacion.solicitud.profesional | profesional}}
+                                            </ng-container>
                                         </small>
 
 
@@ -231,29 +234,37 @@
                                             <span *ngIf="sobreturno.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
 
                                             <small>
-                                                        <span *ngIf="sobreturno.paciente?.id">
-                                                            <br>
-                                                            <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento | number}}</span>
-                                                            <span *ngIf="sobreturno.paciente.documento === ''"> Sin documento (temporal)</span>
-                                                        </span>
-                                                    </small>
-                                            <br *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                            <small>
-                                                        <br />
-                                                        <span class="text-muted" *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
-                                                            {{sobreturno.tipoPrestacion.nombre}}
-                                                        </span>
-                                                    </small>
+                                                <span *ngIf="sobreturno.paciente?.id">
+                                                    <br>
+                                                    <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento | number}}</span>
+                                                    <span *ngIf="sobreturno.paciente.documento === ''"> Sin documento (temporal)</span>
+                                                </span>
+                                                <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                                                    | Nro Carpeta
+                                                    <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
+                                                        {{carpeta.nroCarpeta}}
+                                                    </span>
+                                                </span>
+                                            </small>
+                                            <br *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion">
+
+                                            <span class="text-muted" *ngIf="sobreturno.paciente?.id && sobreturno.tipoPrestacion">
+                                                    <small> {{sobreturno.tipoPrestacion.nombre}} </small>
+                                                </span>
+                                            <ng-container class="text-muted" *ngIf="sobreturno?.prestacion?.solicitud?.profesional">
+                                                <br> <small> Prof.: {{sobreturno.prestacion.solicitud.profesional | profesional}}</small>
+                                            </ng-container>
+
                                             <span class="badge badge-danger" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                                             <span *ngIf="sobreturno && sobreturno.nota">
-                                                        <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                                                    </span>
+                                                <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                            </span>
 
                                             <div *ngIf="sobreturno && sobreturno.confirmatedAt">
                                                 <br />
                                                 <span class="badge badge-default" title="{{sobreturno.confirmatedAt | date: 'medium'}}">
-                                                            Confirmado
-                                                        </span>
+                                                    Confirmado
+                                                </span>
                                             </div>
                                         </td>
                                         <td>
@@ -313,6 +324,9 @@
                                     </small>
                                     <br />
                                     <small class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                    <ng-container *ngIf="prestacion?.solicitud?.profesional">
+                                        <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
+                                    </ng-container>
                                 </td>
                                 <td>
                                     <!-- <div *ngIf="turno && turno.paciente && turno.asistencia === 'asistio' && turno.estado !== 'suspendido'" class="badge-success">Asistió</div>
