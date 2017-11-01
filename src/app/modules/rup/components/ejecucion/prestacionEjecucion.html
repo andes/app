@@ -38,9 +38,8 @@
                             Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
                         </p>
                     </div>
-
-                    <div droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area"
-                        [hidden]="!isDraggingConcepto">
+                    <div *ngIf="!transformarProblema" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)"
+                        class="droppable drop-area" [hidden]="!isDraggingConcepto">
                         <p>
                             Arrastre aquí para vincularlos a esta consulta
                         </p>
