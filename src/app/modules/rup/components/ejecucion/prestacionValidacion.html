@@ -102,29 +102,28 @@
                                                 <b>Evolución </b>
                                                 <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
                                                     | date: 'EEE dd/MM/yyyy' }}</ng-container>
-                                                <<<<<<< HEAD <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
-                =======
-                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
-                >>>>>>> 1b7d7df71c297538e89d9480f1d5b2d0f51a7c0f
-                <br> {{ elemento.valor.evolucion }}
-                </div>
-                <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                </div>
-                </div>
-                <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
-                    <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
-                </div>
-                <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
-                    <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
-                </div>
-                <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
-                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
-                </div>
+                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
+
+                                                <br> {{ elemento.valor.evolucion }}
+                                            </div>
+                                            <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                            </div>
+                                        </div>
+                                        <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
+                                            <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
+                                        </div>
+                                        <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
+                                            <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
+                                        </div>
+                                        <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
+                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                            + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </ng-container>
             </div>
             <div class="col-3">
@@ -153,17 +152,7 @@
                                             Diagnóstico principal
                                         </small>
                                     </small>
-                                    <!-- <br> ID: {{ rama.id }}
-                                    <br>
-                                    <span *ngIf="rama?.relacionadoCon[0]">
-                                        REL ID: {{ rama.relacionadoCon[0].id | json }} ({{ rama.relacionadoCon[0].concepto.fsn | json }})
-                                        <br> REL???: {{ relacionadoConPadre(rama.relacionadoCon[0].id) | json }}
-                                    </span>
-                                    <br> -->
                                 </div>
-                                <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
-                                [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
-                            </rup> -->
                             </li>
                         </ul>
                     </ng-container>
