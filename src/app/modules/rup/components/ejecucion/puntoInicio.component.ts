@@ -156,7 +156,7 @@ export class PuntoInicioComponent implements OnInit {
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
             this.prestacionesOriginales = JSON.parse(JSON.stringify(this.fueraDeAgenda));
-            // this.mostrarTurnoPendiente(this.fueraDeAgenda);
+            this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
 
@@ -331,47 +331,47 @@ export class PuntoInicioComponent implements OnInit {
     }
 
 
+    // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
+    comprobarPrestacionesPendientes(unaPrestacion) {
+        if (unaPrestacion.id && unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
+            let registropendiente = unaPrestacion.ejecucion.registros.filter(registro => registro.esSolicitud && registro.valor && registro.valor.autocitado);
+            if (registropendiente && registropendiente.length > 0) {
+                this.servicioPrestacion.get({ idPrestacionOrigen: unaPrestacion.id }).subscribe(prestacionesPaciente => {
+                    prestacionesPaciente.forEach(elemento => {
+                        if (elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+                            && !elemento.solicitud.turno) {
+                            unaPrestacion.turnosPedientes = true;
+                        }
+                    });
+                });
+            }
+        }
+    }
+
+
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
-        // let _prestaciones = prestaciones.filter(p => {
-        //     // filtramos todas las prestaciones que:
-        //     // 1) esten validadas
-        //     // 2) que sean planes y sean autocitados
-        //     let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
-        //         registro.valor.solicitudPrestacion.autocitado
-        //     );
-        //     if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
-        //     ) {
-        //         return p;
-        //     };
-        // });
-        // if (Array.isArray(_prestaciones)) {
-        //     _prestaciones.forEach(unaPrestacion => {
-        //         if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
-        //             this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
-        //                 prestacionesPaciente.forEach(elemento => {
-        //                     if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
-        //                         && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-        //                         && !elemento.solicitud.turno) {
-        //                         unaPrestacion.turnosPedientes = true;
-        //                     }
-        //                 });
-        //             });
-        //         }
-        //     });
-        // } else { // TODO revisar si entra alguna vez al else
-        //     if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
-        //         this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
-        //             prestacionesPaciente.forEach(elemento => {
-        //                 if (elemento.solicitud.prestacionOrigen === prestaciones.id
-        //                     && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-        //                     && !elemento.solicitud.turno) {
-        //                     prestaciones.turnosPedientes = true;
-        //                 }
-        //             });
-        //         });
-        //     }
-        // }
+        if (prestaciones) {
+            if (Array.isArray(prestaciones)) {
+                let _prestaciones = prestaciones.filter(p => {
+                    // filtramos todas las prestaciones que:
+                    // 1) esten validadas
+                    // 2) que sean planes y sean autocitados
+                    let registropendiente = p.ejecucion.registros.filter(registro => registro.esSolicitud && registro.valor &&
+                        registro.valor.autocitado
+                    );
+                    if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
+                    ) {
+                        return p;
+                    };
+                });
+                _prestaciones.forEach(unaPrestacion => {
+                    this.comprobarPrestacionesPendientes(unaPrestacion);
+                });
+            } else { // ingresa cuando lo llamo con una prestacion
+                this.comprobarPrestacionesPendientes(prestaciones);
+            }
+        }
         return prestaciones;
     }
 }

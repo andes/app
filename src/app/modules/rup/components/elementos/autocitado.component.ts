@@ -14,6 +14,10 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
         this.registro.valor = (this.registro.valor) ? this.registro.valor : {};
+        this.registro.valor['autocitado'] = true;
+
+        // vamos a buscar los tipos de prestaciones en las agendas donde este incluido el profesional
+
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
         });
