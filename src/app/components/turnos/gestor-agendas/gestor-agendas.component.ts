@@ -159,11 +159,9 @@ export class GestorAgendasComponent implements OnInit {
             let fechaDesde = moment(value).startOf('day');
             let fechaHasta = moment(value).endOf('day');
             if (fechaDesde.isValid() || fechaHasta.isValid()) {
-                this.parametros = {
-                    fechaDesde: fechaDesde.isValid() ? this.fechaDesde : moment().format(),
-                    fechaHasta: fechaHasta.isValid() ? this.fechaHasta : moment().format(),
-                    organizacion: this.auth.organizacion._id
-                };
+                this.parametros['fechaDesde'] = fechaDesde.isValid() ? this.fechaDesde : moment().format();
+                this.parametros['fechaHasta'] = fechaHasta.isValid() ? this.fechaHasta : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
             }
         }
         if (tipo === 'prestaciones') {
