@@ -769,25 +769,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Actualiza ambas columnas de registros según las relaciones
     armarRelaciones(registros) {
-        // let relacionesOrdenadas = [];
-        // this.prestacion.ejecucion.registros.forEach((rel, i) => {
-        //     if (this.relacionadoConPadre(rel.id).length > 0) {
-        //         this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-        //             if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //                 relacionesOrdenadas.push(rel);
-        //             } else {
-        //                 // relacionesOrdenadas.push(rel);
-        //             }
-        //         });
-        //     } else {
-        //         if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //             // "hijos"
-        //             relacionesOrdenadas.push(rel);
-        //         }
-        //     }
-        // });
-
-        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
 
         registros = this.prestacion.ejecucion.registros;
 

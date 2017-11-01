@@ -48,6 +48,7 @@
                             <th>DNI | Nro. Carpeta</th>
                             <th>Obra Social</th>
                             <th>Apellidos y Nombres</th>
+                            <th>Fecha Nacimiento</th>
                             <th>Sexo</th>
                             <th>Diagnóstico</th>
                             <th>Primera Vez</th>
@@ -83,6 +84,9 @@
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
+                            </td>
+                            <td>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.edad">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
                             </td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
