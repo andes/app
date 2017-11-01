@@ -323,6 +323,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             });
 
             this.modelo.solicitud.registros = {
+                nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,
                 valor: {
                     solicitudPrestacion: this.registros.solicitudPrestacion
