@@ -780,7 +780,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     relacionadoConPadre(id) {
         return this.prestacion.ejecucion.registros.filter(x => {
             if (x.relacionadoCon && x.relacionadoCon.length) {
-                console.log('x.relacionadoCon[0].id', x.relacionadoCon);
                 return x.relacionadoCon[0].id !== '';
             }
 
