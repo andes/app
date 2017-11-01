@@ -69,17 +69,17 @@ export class BuscadorComponent implements OnInit {
         this.masFrecuentes.forEach(element => {
 
             let semanticTag: String;
-            switch (element.semanticTag) {
+            switch (tipoBusqueda) {
                 case 'trastorno':
                 case 'hallazgo':
                 case 'problema':
-                    semanticTag = 'problemas';
+                    semanticTag = 'hallazgo';
                     break;
                 case 'procedimiento':
-                    semanticTag = 'procedimientos';
+                    semanticTag = 'procedimiento';
                     break;
                 case 'planes':
-                    semanticTag = 'procedimientos';
+                    semanticTag = 'planes';
                     break;
             }
 
