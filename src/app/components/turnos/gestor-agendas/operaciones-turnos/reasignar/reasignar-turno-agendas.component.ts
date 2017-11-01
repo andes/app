@@ -69,7 +69,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     autorizado: any;
     countBloques = [];
 
-    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public serviceTurno: TurnoService) { }
+    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService,
+        public serviceTurno: TurnoService, public smsService: SmsService) { }
 
     ngOnInit() {
         this.hoy = new Date();
@@ -224,7 +225,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                         let tm = moment(turno.horaInicio).format('HH:mm');
                         let mensaje = 'AVISO: Se reasignó su turno al ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
                         this.plex.toast('info', 'Se informó al paciente mediante un SMS');
-                        // this.enviarSMS(pacienteSave, mensaje);
+                        this.enviarSMS(this.turnoSeleccionado.paciente, mensaje);
                         // this.actualizarCarpetaPaciente(turno.paciente);
                     } else {
                         this.plex.toast('info', 'INFO: SMS no enviado');
@@ -239,6 +240,31 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             });
         });
 
+    }
+
+    // esta funcion se repite en suspender turno
+    // TODO: aplicar buenas practicas de programacion
+    enviarSMS(paciente: any, mensaje) {
+        let smsParams = {
+            telefono: paciente.telefono,
+            mensaje: mensaje,
+        };
+        this.smsService.enviarSms(smsParams).subscribe(sms => {
+            let resultado = sms;
+
+            // "if 0 errores"
+            if (resultado === '0') {
+                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+            } else {
+                this.plex.toast('danger', 'ERROR: SMS no enviado');
+            }
+        },
+            err => {
+                if (err) {
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
+
+                }
+            });
     }
 
     hayTurnosDisponibles(agenda: IAgenda) {
