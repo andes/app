@@ -318,7 +318,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     }
                 });
             } else {
-                if (registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
+                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
                     relacionesOrdenadas.push(cosa);
                 }
             }
@@ -327,7 +327,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
 
-        console.log(relacionesOrdenadas.map(x => 'cosa: ' + x.id + ' | relación: ' + x.relacionadoCon[0]));
+        // console.log(relacionesOrdenadas.map(x => 'cosa: ' + x.id + ' | relación: ' + x.relacionadoCon[0]));
 
 
         // let relacionesOrdenadas = [];

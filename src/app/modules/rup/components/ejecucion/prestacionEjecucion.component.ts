@@ -156,7 +156,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             });
-            this.armarRelaciones();
+            this.armarRelaciones(this.prestacion.ejecucion.registros);
 
         }
     }
@@ -178,9 +178,19 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
+
         if (this.prestacion.ejecucion.registros[posicionNueva]) {
             if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
-                this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = null;
+                let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
+                // Primer letra con mayúsculas
+                prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
+                this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
+                    if (confirm) {
+                        this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
+                        return true;
+                    }
+                    return false;
+                });
             }
         }
     }
@@ -726,6 +736,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
+    colapsarTodos() {
+
+    }
+
     colapsarPrestaciones() {
         if (this.prestacion.ejecucion.registros) {
             this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
@@ -754,23 +768,49 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     // Actualiza ambas columnas de registros según las relaciones
-    armarRelaciones() {
+    armarRelaciones(registros) {
+        // let relacionesOrdenadas = [];
+        // this.prestacion.ejecucion.registros.forEach((rel, i) => {
+        //     if (this.relacionadoConPadre(rel.id).length > 0) {
+        //         this.relacionadoConPadre(rel.id).forEach((relP, i) => {
+        //             if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
+        //                 relacionesOrdenadas.push(rel);
+        //             } else {
+        //                 // relacionesOrdenadas.push(rel);
+        //             }
+        //         });
+        //     } else {
+        //         if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
+        //             // "hijos"
+        //             relacionesOrdenadas.push(rel);
+        //         }
+        //     }
+        // });
+
+        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
+
+        registros = this.prestacion.ejecucion.registros;
+
         let relacionesOrdenadas = [];
-        this.prestacion.ejecucion.registros.forEach((rel, i) => {
-            if (this.relacionadoConPadre(rel.id).length > 0) {
-                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-                    if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-                        relacionesOrdenadas.push(rel);
-                    } else {
-                        // relacionesOrdenadas.push(rel);
+
+        registros.forEach((cosa, index) => {
+            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
+
+            if (esPadre.length > 0) {
+                if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
+                    relacionesOrdenadas.push(cosa);
+                }
+                esPadre.forEach(hijo => {
+                    if (relacionesOrdenadas.filter(x => x === hijo).length === 0) {
+                        relacionesOrdenadas.push(hijo);
                     }
                 });
             } else {
-                if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-                    // "hijos"
-                    relacionesOrdenadas.push(rel);
+                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
+                    relacionesOrdenadas.push(cosa);
                 }
             }
+
         });
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
@@ -779,8 +819,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     relacionadoConPadre(id) {
         return this.prestacion.ejecucion.registros.filter(x => {
-            if (x.relacionadoCon && x.relacionadoCon.length) {
-                console.log('x.relacionadoCon[0].id', x.relacionadoCon);
+            if (x.relacionadoCon.length > 0) {
                 return x.relacionadoCon[0].id !== '';
             }
 
