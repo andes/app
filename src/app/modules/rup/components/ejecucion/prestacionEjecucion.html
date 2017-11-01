@@ -46,6 +46,11 @@
                     </div>
 
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}" [hidden]="showDatosSolicitud">
+                        <!-- <div class="float-right">
+                            <a href="javascript:void(0);" (click)="colapsarTodos()" class="btn btn-sm btn-primary">
+                                <i class="mdi mdi-chevron-down"></i>
+                            </a>
+                        </div> -->
                         <tab [tabTitle]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
@@ -93,7 +98,7 @@
                                                             <i class="mdi mdi-chevron-down"></i>
                                                         </a>
 
-                                                        <ng-container *ngIf="prestacion.ejecucion.registros && prestacion.ejecucion.registros.length > 1 && !registro.relacionadoCon.length">
+                                                        <ng-container *ngIf="prestacion?.ejecucion?.registros?.length > 1">
                                                             <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)"
                                                                 [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
                                                         </ng-container>
