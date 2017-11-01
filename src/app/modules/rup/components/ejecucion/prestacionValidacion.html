@@ -126,7 +126,7 @@
             </div>
             <div class="col-3">
                 <!-- ÁRBOL -->
-                <plex-box class="relaciones w-25">
+                <plex-box class="...relaciones w-25">
                     <header>
                         <div class="clearfix">
                             <div *ngIf="prestacion.ejecucion.registros">
@@ -150,6 +150,13 @@
                                             Diagnóstico principal
                                         </small>
                                     </small>
+                                    <!-- <br> ID: {{ rama.id }}
+                                    <br>
+                                    <span *ngIf="rama?.relacionadoCon[0]">
+                                        REL ID: {{ rama.relacionadoCon[0].id | json }} ({{ rama.relacionadoCon[0].concepto.fsn | json }})
+                                        <br> REL???: {{ relacionadoConPadre(rama.relacionadoCon[0].id) | json }}
+                                    </span>
+                                    <br> -->
                                 </div>
                                 <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(rama.concepto, rama.esSolicitud)" [prestacion]="prestacion"
                                 [registro]="rama" [soloValores]="true" [params]="{arbol: true}">
