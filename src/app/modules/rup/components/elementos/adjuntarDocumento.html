@@ -1,0 +1,5 @@
+<div>
+    <plex-button *ngIf="!waiting" type="primary" label="Desde AppMobile" title="Desde AppMobile" (click)="fromMobile()">
+    </plex-button>
+    <plex-loader *ngIf="waiting" type="ball-pulse-sync"></plex-loader>
+</div>

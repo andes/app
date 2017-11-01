@@ -10,6 +10,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RUPRegistry } from '../../../../app.module';
+import { AdjuntosService } from '../../services/adjuntos.service';
 
 @Component({
     selector: 'rup',
@@ -66,6 +67,7 @@ export class RUPComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         public auth: Auth,
         public serviceProfesional: ProfesionalService,
+        public adjuntosService: AdjuntosService
     ) { }
 
     ngOnInit() {
