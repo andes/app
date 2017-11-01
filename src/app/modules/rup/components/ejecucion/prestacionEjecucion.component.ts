@@ -118,7 +118,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             this.mostrarDatosEnEjecucion();
-                            this.armarRelaciones();
 
                         }
                     }, (err) => {
@@ -157,6 +156,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             });
+            this.armarRelaciones();
 
         }
     }
@@ -755,28 +755,35 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Actualiza ambas columnas de registros según las relaciones
     armarRelaciones() {
-
         let relacionesOrdenadas = [];
         this.prestacion.ejecucion.registros.forEach((rel, i) => {
             if (this.relacionadoConPadre(rel.id).length > 0) {
                 this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-                    // Se agregan los registros padre
-                    if (rel.id !== relP.id) {
+                    if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
                         relacionesOrdenadas.push(rel);
+                    } else {
+                        // relacionesOrdenadas.push(rel);
                     }
-                    // Se agregan los registros hijo
-                    relacionesOrdenadas.push(relP);
                 });
             } else {
-                relacionesOrdenadas.push(rel);
+                if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
+                    // "hijos"
+                    relacionesOrdenadas.push(rel);
+                }
             }
         });
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
+
     }
 
     relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+        return this.prestacion.ejecucion.registros.filter(x => {
+            if (x.relacionadoCon && x.relacionadoCon.length) {
+                return x.relacionadoCon[0].id !== '';
+            }
+
+        });
     }
     // Controla antes de vincular que no esten vinculados
     controlVinculacion(registroOrigen, registroDestino) {
