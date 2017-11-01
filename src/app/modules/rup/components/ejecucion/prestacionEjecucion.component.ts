@@ -658,7 +658,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
             let control = this.controlVinculacion(registroActual, registro);
-            console.log(control);
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
                     if (registro.id !== registroActual.relacionadoCon[0].id) {

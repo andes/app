@@ -10,6 +10,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 
 @Component({
@@ -47,6 +48,7 @@ export class PuntoInicioComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
+        public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -102,12 +104,6 @@ export class PuntoInicioComponent implements OnInit {
             this.prestaciones = data[1];
 
             if (this.agendas.length) {
-                this.agendaSeleccionada = this.agendas[0];
-            }
-
-            if (this.agendas.length) {
-                // this.agendaSeleccionada = this.agendas[0];
-
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
                     agenda['cantidadTurnos'] = 0;
@@ -121,16 +117,41 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
+                            // TODO:: buscamos los datos de los pacientes en agendas No se si es correcto q por cada paciente consulte la api
+                            // if (turno.estado === 'asignado' && (!turno.paciente.carpetaEfectores || turno.paciente.carpetaEfectores.length <= 0)) {
+                            //     this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                            //         if (paciente && (paciente.id)) {
+                            //             let carpetaEfector = null;
+                            //             carpetaEfector = paciente.carpetaEfectores.filter((carpeta) => {
+                            //                 return (carpeta.organizacion.id === this.auth.organizacion.id);
+                            //             });
+                            //             turno.paciente.carpetaEfectores = [carpetaEfector];
+                            //         }
+                            //     });
+                            // }
                         });
                     });
+
+                    // busquemos si hy sobreturnos para vincularlos con la prestacion correspondiente
+                    if (agenda.sobreturnos) {
+                        agenda.sobreturnos.forEach(sobreturno => {
+                            let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                                return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
+                            });
+                            // asignamos la prestacion al turno
+                            sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                        });
+                    }
                 });
 
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
 
-            // buscamos las que estan fuera de agenda para poder listarlas
-            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno));
+            // buscamos las que estan fuera de agenda para poder listarlas:
+            // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
+            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
+                (p.createdAt >= moment(this.fecha).startOf('day').toDate() && p.createdAt <= moment(this.fecha).endOf('day').toDate())));
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -138,6 +159,10 @@ export class PuntoInicioComponent implements OnInit {
             // this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
+
+            if (this.agendas.length) {
+                this.agendaSeleccionada = this.agendas[0];
+            }
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
             if (this.agendaSeleccionada) {
@@ -159,7 +184,7 @@ export class PuntoInicioComponent implements OnInit {
      */
     filtrar() {
         // filtrar solo por las prestaciones que el profesional tenga disponibles
-
+        this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
         // this.agendas = this.agendasOriginales;
         this.fueraDeAgenda = this.prestacionesOriginales;
@@ -169,12 +194,6 @@ export class PuntoInicioComponent implements OnInit {
             this.agendas = this.agendas.filter(agenda => {
                 return (agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
-                }));
-            });
-        } else {
-            this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
-                    return (profesional.id !== this.auth.profesional.id);
                 }));
             });
         }
@@ -201,7 +220,7 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos el paciente en los turnos fuera de agenda
             if (this.fueraDeAgenda) {
                 let _turnos = this.fueraDeAgenda.filter(p => {
-                    return (p.tipoPrestacion && p.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
+                    return (p.solicitud.tipoPrestacion && p.solicitud.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
                 });
 
                 this.fueraDeAgenda = _turnos;

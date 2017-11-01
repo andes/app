@@ -9,12 +9,12 @@
                     <div class="page-title">Resumen
                         <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
-                        {{ prestacion.id }}
-                    </div>
-                    <div class="float-right mr-2">
-                        <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
-                            (click)="mostrarDatosSolicitud(true)"></plex-button>
-                        <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+
+                        <div class="float-right mr-2">
+                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
+                                (click)="mostrarDatosSolicitud(true)"></plex-button>
+                            <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -36,10 +36,11 @@
                     </p>
                 </div>
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
+
                     <!-- [ngClass]="{'ml-3 pr-3': !elemento.esDiagnosticoPrincipal}" -->
-                    <div class="rup-card">
-                        <div class="type {{ elemento.esSolicitud ? 'planes' : elemento.concepto.semanticTag }}">
-                        </div>
+                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'plan' : '' }}">
+                        <div class="type"></div>
+
                         <div class="rup-content">
                             <div class="rup-body">
                                 <div class="row">
@@ -101,7 +102,7 @@
                                                 <b>Evolución </b>
                                                 <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
                                                     | date: 'EEE dd/MM/yyyy' }}</ng-container>
-                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
+                                                <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}</ng-container>
                                                 <br> {{ elemento.valor.evolucion }}
                                             </div>
                                             <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
@@ -143,7 +144,7 @@
                                 'ml-2': rama.relacionadoCon[0] && relacionadoConPadre(rama.relacionadoCon[0].id)
                             }" class="list-group-item pl-0 pt-0 pb-0 mb-0">
                                 <div>
-                                    <span class="type {{ rama.esSolicitud ? 'planes' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
+                                    <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">

@@ -8,7 +8,7 @@
                         <!--Botones / Acciones-->
                         <div class="clearfix">
                             <div class="page-title float-left">Gestor de Agendas</div>
-                            <botones-agenda *ngIf="agendasSeleccionadas.length > 0 && agendas.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
+                            <botones-agenda *ngIf="agendasSeleccionadas?.length > 0 && agendas?.length" class="float-right" [agendasSeleccionadas]="agendasSeleccionadas"
                                 (clonarEmit)="clonar()" (agregarNotaAgendaEmit)="agregarNotaAgenda()" (agregarSobreturnoEmit)="agregarSobreturno()"
                                 (editarAgendaEmit)="editarAgenda($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
                                 (listarTurnosEmit)="listarTurnos($event)" (revisionAgendaEmit)="revisionAgenda($event)" (reasignarTurnosEmit)="reasignarTurnos($event)"
@@ -18,23 +18,23 @@
 
                         <!--Filtros-->
                         <div class="row">
-                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-6' : 'col-3'}}">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
                                 <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
-                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-6' : 'col-3'}}">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-8' : 'col-4'}}">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-8' : 'col-4'}}">
                                 <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
                                     name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
-                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas.length === 1 ? 'col-4' : 'col-2'}} text-right">
+                            <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-4' : 'col-2'}} text-right">
                                 <label>
                                     <!--Spacer-->&nbsp;</label>
                                 <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
@@ -50,7 +50,7 @@
                             <div class="col-4">
                                 <plex-select [(ngModel)]="modelo.espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico"
                                     (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
-                                    labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio.descripcion + ')'"
+                                    labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
                                     ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
@@ -63,11 +63,11 @@
                     </header>
 
                     <!--Resultados-->
-                    <div *ngIf="!agendas.length" class="alert alert-default">
+                    <div *ngIf="!agendas?.length" class="alert alert-default">
                         <i class="mdi mdi-emoticon-sad"></i> No hay agendas que coincidan con los filtros de búsqueda
                     </div>
 
-                    <table *ngIf="agendas.length" class="table table-striped table-sm">
+                    <table *ngIf="agendas?.length" class="table table-striped table-sm">
                         <thead>
                             <th></th>
                             <th>Fecha y Hora</th>
@@ -82,10 +82,9 @@
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)">
                                     <div class="datos-agenda">{{agenda.horaInicio | date: 'EEE' | uppercase }} {{agenda.horaInicio | date: 'dd/MM/yyyy'}}
-                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date:
-                                        'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs -
-                                        <i class="mdi mdi-timelapse" title="Duración"></i> {{ duracionAgenda(agenda.horaInicio,
-                                        agenda.horaFin) }}
+                                        <i class="mdi mdi-clock" title="Horario inicio/fin"></i> {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                        -
+                                        <i class="mdi mdi-timelapse" title="Duración"></i> {{ duracionAgenda(agenda.horaInicio, agenda.horaFin) }}
                                         <span *ngIf="agenda.nota">
                                             <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
                                         </span>
@@ -123,12 +122,12 @@
             </div>
 
             <!-- Panel derecho -->
-            <div *ngIf="agendasSeleccionadas.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas.length === 1, 'col-4': !showEditarAgendaPanel}">
+            <div *ngIf="agendasSeleccionadas?.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas?.length === 1, 'col-4': !showEditarAgendaPanel}">
                 <plex-box>
-                    <div *ngIf="showTurnos && agendasSeleccionadas.length == 1" type="info">
+                    <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)" (recargarAgendas)="loadAgendas($event)"></turnos>
                     </div>
-                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length === 1" type="info">
+                    <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
                         <panel-agenda [editaAgendaPanel]="agendasSeleccionadas[0]" (showVistaTurnosEmit)="showVistaTurnos($event)" (actualizarEstadoEmit)="actualizarEstadoEmit($event)"
                             (editarEsapcioFisicoEmit)="true" #guardarAgendaPanel></panel-agenda>
                     </div>
@@ -157,7 +156,7 @@
     <footer *ngIf="showGestorAgendas">
         <plex-button type="primary" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
         <plex-button *ngIf="btnDarTurnos" type="primary" label="Dar Turnos" (click)="darTurnos()"></plex-button>
-        <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas.length === 1">
+        <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
             <plex-button type="danger" label="Cancelar" (click)="guardarAgendaPanel.cancelar()"></plex-button>
             <plex-button type="success" label="Guardar" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>
         </div>
@@ -167,7 +166,7 @@
     <clonar-agenda *ngIf="showClonar" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></clonar-agenda>
     <planificar-agenda *ngIf="showEditarAgenda" [editaAgenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
     <planificar-agenda *ngIf="showInsertarAgenda" (volverAlGestor)="volverAlGestor($event)"></planificar-agenda>
-    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
+    <revision-agenda *ngIf="showRevisionAgenda && agendasSeleccionadas?.length == 1" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></revision-agenda>
 
     <!-- Operaciones de Turnos -->
     <sobreturno *ngIf="showAgregarSobreturno" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></sobreturno>
