@@ -24,7 +24,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     @Input() agendasSimilares: any;
     @Input() agendaAReasignar: any;
-    @Input() sms: boolean;
+    @Input() smsStatus: boolean;
 
     turnoReasignado: any = {};
     // Para cálculos de disponibilidad de turnos programados y del día
@@ -219,7 +219,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     this.plex.toast('success', 'El turno se reasignó correctamente');
 
                     // Enviar SMS sólo en Producción
-                    if (environment.production === true && this.sms) {
+                    if (environment.production === true && this.smsStatus) {
                         let dia = moment(turno.horaInicio).format('DD/MM/YYYY');
                         let tm = moment(turno.horaInicio).format('HH:mm');
                         let mensaje = 'AVISO: Se reasignó su turno al ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
@@ -227,7 +227,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                         // this.enviarSMS(pacienteSave, mensaje);
                         // this.actualizarCarpetaPaciente(turno.paciente);
                     } else {
-                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                        this.plex.toast('info', 'INFO: SMS no enviado');
                     }
                     this.turnoReasignadoEmit.emit({
                         turno: turnoReasignado,

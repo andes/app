@@ -35,10 +35,10 @@
                             </div>
                             <div class="col">
                                 <span *ngIf="smsActivo" class="badge badge-success">
-                                    Activado
+                                    Activo
                                 </span>
                                 <span *ngIf="!smsActivo" class="badge-danger">
-                                    Desactivado
+                                    Inactivo
                                 </span>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
             <div class="col-8">
                 <plex-box>
                     <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" [agendaAReasignar]="agendaAReasignar"
-                        [datosAgenda]="datosAgenda" [agendaDestino]="agendaDestino" [sms]="smsActivo" (turnoReasignadoEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+                        [datosAgenda]="datosAgenda" [agendaDestino]="agendaDestino" [smsStatus]="smsActivo" (turnoReasignadoEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
                 </plex-box>
             </div>
         </div>
