@@ -20,6 +20,7 @@
     }
     &.hallazgo,
     &.trastorno,
+    &.entidad.observable,
     &.situacion {
         &:hover,
         &.active {
@@ -29,6 +30,7 @@
             background: $problemas;
         }
     }
+    &.entidad.observable,
     &.procedimiento {
         &:hover,
         &.active {
@@ -38,12 +40,11 @@
             background: $procedimientos;
         }
     }
-    &.procedimiento.plan {
+    &.planes {
         &:hover,
         &.active {
             border: 2px solid $planes;
-        }
-        // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
+        } // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
         // y precisamente para poder cargar los estilos se saca desde el semanticTag
         .type {
             background: $planes;

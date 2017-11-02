@@ -27,6 +27,7 @@ export class ReasignarTurnoComponent implements OnInit {
     showReasignarTurno: boolean;
     agendasSimilares: IAgenda[];
     agendaDestino: any = {};
+    smsActivo = false;
 
     private _agendaAReasignar: any;
 

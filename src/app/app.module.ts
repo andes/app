@@ -168,6 +168,7 @@ import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.com
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -243,7 +244,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: ObesidadComponent, key: 'ObesidadComponent' },
     { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
     { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
-    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' }
+    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
+    { component: VistaHudsComponent, key: 'VistaHudsComponent' }
 
 ];
 
@@ -277,7 +279,8 @@ const RUP_COMPONENTS = [
     ObesidadComponent,
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    VistaHudsComponent
 ];
 
 // Locales
@@ -393,6 +396,7 @@ let RUPComponentsArray = [
         HeaderPacienteComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
+        VistaHudsComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,

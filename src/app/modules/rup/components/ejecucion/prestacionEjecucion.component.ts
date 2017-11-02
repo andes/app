@@ -118,7 +118,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             this.mostrarDatosEnEjecucion();
-                            this.armarRelaciones();
 
                         }
                     }, (err) => {
@@ -157,6 +156,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             });
+            this.armarRelaciones(this.prestacion.ejecucion.registros);
 
         }
     }
@@ -178,9 +178,19 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
+
         if (this.prestacion.ejecucion.registros[posicionNueva]) {
             if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
-                this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = null;
+                let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
+                // Primer letra con mayúsculas
+                prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
+                this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
+                    if (confirm) {
+                        this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
+                        return true;
+                    }
+                    return false;
+                });
             }
         }
     }
@@ -726,6 +736,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
+    colapsarTodos() {
+
+    }
+
     colapsarPrestaciones() {
         if (this.prestacion.ejecucion.registros) {
             this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
@@ -754,29 +768,43 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     // Actualiza ambas columnas de registros según las relaciones
-    armarRelaciones() {
+    armarRelaciones(registros) {
+
+        registros = this.prestacion.ejecucion.registros;
 
         let relacionesOrdenadas = [];
-        this.prestacion.ejecucion.registros.forEach((rel, i) => {
-            if (this.relacionadoConPadre(rel.id).length > 0) {
-                this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-                    // Se agregan los registros padre
-                    if (rel.id !== relP.id) {
-                        relacionesOrdenadas.push(rel);
+
+        registros.forEach((cosa, index) => {
+            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
+
+            if (esPadre.length > 0) {
+                if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
+                    relacionesOrdenadas.push(cosa);
+                }
+                esPadre.forEach(hijo => {
+                    if (relacionesOrdenadas.filter(x => x === hijo).length === 0) {
+                        relacionesOrdenadas.push(hijo);
                     }
-                    // Se agregan los registros hijo
-                    relacionesOrdenadas.push(relP);
                 });
             } else {
-                relacionesOrdenadas.push(rel);
+                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
+                    relacionesOrdenadas.push(cosa);
+                }
             }
+
         });
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
+
     }
 
     relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+        return this.prestacion.ejecucion.registros.filter(x => {
+            if (x.relacionadoCon.length > 0) {
+                return x.relacionadoCon[0].id !== '';
+            }
+
+        });
     }
     // Controla antes de vincular que no esten vinculados
     controlVinculacion(registroOrigen, registroDestino) {
