@@ -20,7 +20,7 @@ export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
             this.mensaje = this.getMensajes();
         }
     }
-        getMensajes() {
+    getMensajes() {
         let saturacionOxigeno = this.registro.valor;
         let edadEnMeses;
 
@@ -43,11 +43,11 @@ export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
 
         if (saturacionOxigeno) {
             // agregar validaciones aca en base al paciente y el tipo de prestacion
+            if (saturacionOxigeno <= 89) {
+                mensaje.texto = 'Hipoxemia Severa';
+            }
             if (saturacionOxigeno >= 90 && saturacionOxigeno <= 94) {
                 mensaje.texto = 'Hipoxemia';
-            }
-            if (saturacionOxigeno <= 94) {
-                mensaje.texto = 'Hipoxemia Severa';
             }
         }
         return mensaje;
