@@ -1,3 +1,4 @@
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -243,7 +244,8 @@ export const RUP_ELEMENTS: any[] = [
     { component: ObesidadComponent, key: 'ObesidadComponent' },
     { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
     { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
-    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' }
+    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
+    { component: VistaHudsComponent, key: 'VistaHudsComponent' }
 
 ];
 
@@ -277,7 +279,8 @@ const RUP_COMPONENTS = [
     ObesidadComponent,
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    VistaHudsComponent
 ];
 
 // Locales
@@ -393,6 +396,7 @@ let RUPComponentsArray = [
         HeaderPacienteComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
+        VistaHudsComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
