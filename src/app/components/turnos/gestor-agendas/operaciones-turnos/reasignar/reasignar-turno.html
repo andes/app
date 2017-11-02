@@ -97,6 +97,8 @@
                                                 <br>
                                                 <span *ngIf="turno?.tipoTurno">Tipo de turno: {{ turno.tipoTurno ? tiposDeTurnos[turno.tipoTurno].nombre
                                                     : 'sin-tipo' }}</span>
+                                                <br>
+                                                <span [ngClass]="{'text-danger':true}" *ngIf="bloque.turnos[i+1].estado=='turnoDoble'">Turno Doble</span>
                                             </small>
 
                                             <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">
