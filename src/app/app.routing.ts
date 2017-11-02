@@ -1,4 +1,3 @@
-import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 /*
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
@@ -52,6 +51,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components/ejecucio
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
