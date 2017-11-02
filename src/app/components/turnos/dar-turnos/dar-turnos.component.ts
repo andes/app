@@ -78,7 +78,7 @@ export class DarTurnosComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
-    @Output() volverAlGestor = new EventEmitter<boolean>();
+    @Output() volverAlGestor = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
     private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
@@ -950,6 +950,7 @@ export class DarTurnosComponent implements OnInit {
 
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                         this.estadoT = 'noSeleccionada';
+                        let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
                         this.agenda = null;
                         this.actualizar('sinFiltro');
                         this.plex.toast('info', 'El turno se asignó correctamente');
@@ -993,6 +994,7 @@ export class DarTurnosComponent implements OnInit {
                             this.cancelarDarTurno.emit(true);
                             return false;
                         } else {
+                            this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
                             this.buscarPaciente();
                         }
 
