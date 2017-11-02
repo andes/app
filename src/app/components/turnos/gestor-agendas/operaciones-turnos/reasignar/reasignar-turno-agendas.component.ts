@@ -139,6 +139,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
 
         let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
+        let turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
         let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
         this.agendaSeleccionada = this.agendasSimilares[indiceAgenda];
         let tipoTurno;
@@ -190,7 +191,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             this.serviceTurno.save(datosTurnoNuevo).subscribe(resultado => {
 
                 let turnoReasignado = this.turnoSeleccionado;
-
                 let siguiente = {
                     idAgenda: this.agendaSeleccionada._id,
                     idBloque: this.agendaSeleccionada.bloques[indiceBloque]._id,
@@ -229,6 +229,18 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                         // this.actualizarCarpetaPaciente(turno.paciente);
                     } else {
                         this.plex.toast('info', 'INFO: SMS no enviado');
+                    }
+                    if (this.esTurnoDoble(turnoReasignado)) {
+                            let patch: any = {
+                                op: 'darTurnoDoble',
+                                turnos: [turnoSiguiente]
+                            };
+                            // Patchea el turno doble
+                            this.serviceAgenda.patchMultiple(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
+                                if (agendaActualizada) {
+                                    this.plex.toast('info', 'Se reasignó un turno doble');
+                                }
+                            });
                     }
                     this.turnoReasignadoEmit.emit({
                         turno: turnoReasignado,
@@ -293,6 +305,18 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return resultado;
     }
 
+    siguienteDisponible(bloque, turno, indiceTurno) {
+        if (((indiceTurno < bloque.turnos.length - 1) && (bloque.turnos[indiceTurno + 1].estado !== 'disponible')) || (indiceTurno === (bloque.turnos.length - 1))) {
+            return false;
+        }
+        if (bloque.citarPorBloque) {
+            if (String(bloque.turnos[indiceTurno].horaInicio) !== String(bloque.turnos[indiceTurno + 1].horaInicio)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= (new Date())) != null;
@@ -319,5 +343,18 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         return moment(fecha).format('DD/MM/YYYY');
     }
 
+
+    esTurnoDoble(turno) {
+        let bloqueTurno = this.agendaAReasignar.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
+        let index;
+        if (bloqueTurno) {
+            index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });
+            if ((index === -1) || ((index < bloqueTurno.turnos.length - 1) && (bloqueTurno.turnos[index + 1].estado !== 'turnoDoble')) || (index === (bloqueTurno.turnos.length - 1))) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    }
 
 }
