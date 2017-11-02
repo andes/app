@@ -38,7 +38,7 @@
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini hallazgo" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(hallazgo, 'hallazgo')}">
                             <div class="type">
-                                <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" (mouseenter)="eyeCronico = iCronico"
                                 (mouseleave)="eyeCronico = -1">
@@ -60,7 +60,7 @@
                                     </span>
                                 </div>
                             </div>
-                            <div class="float-right p-1">
+                            <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
@@ -80,7 +80,7 @@
 
                         <div class="rup-card mini hallazgo" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}">
                             <div class="type">
-                                <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
                                 <div class="header">
@@ -98,7 +98,7 @@
                                     <br>
                                 </div>
                             </div>
-                            <div class="float-right p-1">
+                            <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
@@ -117,7 +117,7 @@
                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                         <div class="rup-card mini hallazgo" [ngClass]="{'active': eyeOtros === iOtros || estaEnTabs(problema, 'hallazgo')}">
                             <div class="type">
-                                <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
                                 <div class="header">

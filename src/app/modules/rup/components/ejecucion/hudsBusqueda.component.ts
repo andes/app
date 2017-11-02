@@ -21,7 +21,10 @@ export class HudsBusquedaComponent implements OnInit {
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
-
+     /**
+     * Variable por parametro para mostrar o no todo lo relacionado a emitir conceptos
+     */
+    @Input() emitirConceptos = true;
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
@@ -59,7 +62,6 @@ export class HudsBusquedaComponent implements OnInit {
      * Listado de todos los registros de la HUDS seleccionados
      */
     public registrosHuds: any = [];
-
 
     /**
      * Devuelve un elemento seleccionado que puede ser
