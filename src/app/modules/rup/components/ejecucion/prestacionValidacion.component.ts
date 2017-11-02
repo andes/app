@@ -255,9 +255,13 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
-
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            { return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId); }
+            {
+                if (conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId)) {
+                    let idRegistro = ps.solicitud.registros[0].id;
+                    this.asignarTurno[idRegistro] = {};
+                }
+            }
         });
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
             // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
@@ -269,11 +273,14 @@ export class PrestacionValidacionComponent implements OnInit {
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));
+
                 if (agendas) {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
+                        let idRegistro = element.solicitud.registros[0].id;
+                        this.asignarTurno[idRegistro] = {};
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
-                            this.asignarTurno[element.solicitud.tipoPrestacion.conceptId] = true;
+                            this.asignarTurno[idRegistro] = element;
                         }
                     });
                 }
