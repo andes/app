@@ -1,4 +1,3 @@
-
 /*
 @jgabriel | 04-03-2017
 
@@ -249,7 +248,6 @@ export const RUP_ELEMENTS: any[] = [
     { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
     { component: VistaHudsComponent, key: 'VistaHudsComponent' },
     { component: HudsBusquedaPacienteComponent, key: 'HudsBusquedaPacienteComponent' }
-    
 
 ];
 

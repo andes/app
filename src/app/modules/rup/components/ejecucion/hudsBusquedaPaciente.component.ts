@@ -13,7 +13,6 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
-
     public paciente: IPaciente;
 
     public showHuds = false;
@@ -30,6 +29,5 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     onPacienteCancel() {
         this.router.navigate(['rup']);
     }
-
 
 }
