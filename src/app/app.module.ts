@@ -1,3 +1,4 @@
+
 /*
 @jgabriel | 04-03-2017
 
@@ -169,6 +170,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -245,7 +247,9 @@ export const RUP_ELEMENTS: any[] = [
     { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
     { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
     { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
-    { component: VistaHudsComponent, key: 'VistaHudsComponent' }
+    { component: VistaHudsComponent, key: 'VistaHudsComponent' },
+    { component: HudsBusquedaPacienteComponent, key: 'HudsBusquedaPacienteComponent' }
+    
 
 ];
 
@@ -280,7 +284,8 @@ const RUP_COMPONENTS = [
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
     RiesgoCardiovascularComponent,
-    VistaHudsComponent
+    VistaHudsComponent,
+    HudsBusquedaPacienteComponent
 ];
 
 // Locales
@@ -397,6 +402,7 @@ let RUPComponentsArray = [
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,

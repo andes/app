@@ -198,7 +198,7 @@
 
                                             <plex-button (click)="routeTo('vista', turno.paciente.id)" label="VER HUDS" type="primary btn-sm">
                                             </plex-button>
-                                           
+
 
                                             <plex-button *ngIf="turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion)"
                                                 label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, bloque.tipoPrestaciones[0], turno.id)"></plex-button>
@@ -373,5 +373,21 @@
 
 <!--Footer-->
 <footer>
-    <plex-button label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
+    <div class="row">
+        <div class="col-6">
+
+        </div>
+        <div class="col-6">
+            <div class="row">
+                <div class="col-6">
+                    <plex-button label="VER LA HUDS DE UN PACIENTE" type="primary" class="float-right" (click)="verHuds()"></plex-button>
+                </div>
+                <div class="col-6">
+                    <plex-button label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </footer>
