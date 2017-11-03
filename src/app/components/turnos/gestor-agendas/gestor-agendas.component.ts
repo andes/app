@@ -285,8 +285,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = true;
     }
 
-    // vuelve al gestor luego de alguna operación
-    // en el caso de sobreturno emite la agendaModificada, para refrescar la agenda automáticamente.
+    // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
     volverAlGestor(agendModificada) {
         if (agendModificada.id) { // vuelve de dar sobreturno
             this.verAgenda(this.agendasSeleccionadas[0], false, null);
