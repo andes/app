@@ -1,4 +1,4 @@
-import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer, SimpleChanges, AfterContentInit, OnInit, Input } from '@angular/core';
+import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, SimpleChanges, AfterContentInit, OnInit, Input } from '@angular/core';
 import { DragScroll } from 'angular2-drag-scroll';
 
 import { TabComponent } from './tab.component';
@@ -35,7 +35,7 @@ export class TabsComponent implements OnInit, AfterContentInit {
     constructor(
         private cdr: ChangeDetectorRef,
         private element: ElementRef,
-        private renderer: Renderer) {
+        private renderer: Renderer2) {
     }
 
     /*
@@ -94,9 +94,9 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
     onScrollTabs(event) {
         if (event.srcElement.scrollLeft > 0) {
-            this.renderer.setElementClass(event.target, 'fixed', true);
+            this.renderer.addClass(event.target, 'fixed');
         } else if (event.srcElement.scrollLeft === 0) {
-            this.renderer.setElementClass(event.target, 'fixed', false);
+            this.renderer.addClass(event.target, 'fixed');
 
         }
 

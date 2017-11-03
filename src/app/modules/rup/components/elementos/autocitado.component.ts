@@ -19,8 +19,8 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
             this.tiposPrestacion = data;
             if (!this.registro.valor) {
                 this.registro.valor = {};
-                this.registro.valor['autocitado'] = true;
-                this.registro.valor['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
+                this.registro.valor['solicitudPrestacion']['autocitado'] = true;
+                this.registro.valor['solicitudPrestacion']['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
             }
         });
     }
