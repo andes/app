@@ -46,9 +46,6 @@
                                     <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
                                         {{ hallazgo.concepto.term }}
                                     </div>
-                                    <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas">
-                                        <i class="mdi mdi-eye"></i>
-                                    </span>
                                     <br>
                                     <small *ngIf="hallazgo.evoluciones">
                                         última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
@@ -60,6 +57,9 @@
                                     </span>
                                 </div>
                             </div>
+                            <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
+                                    <i class="mdi mdi-eye"></i>
+                                </span>
                             <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
@@ -87,9 +87,6 @@
                                     <div class="title" [ngClass]="{'text-problemas': eyeActivo === iActivo}">
                                         {{ problema.concepto.term }}
                                     </div>
-                                    <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas">
-                                        <i class="mdi mdi-eye"></i>
-                                    </span>
                                     <br>
                                     <small *ngIf="problema.evoluciones">
                                         última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}
@@ -98,6 +95,9 @@
                                     <br>
                                 </div>
                             </div>
+                            <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas p-1">
+                                <i class="mdi mdi-eye"></i>
+                            </span>
                             <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>

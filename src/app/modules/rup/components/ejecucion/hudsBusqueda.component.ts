@@ -21,9 +21,9 @@ export class HudsBusquedaComponent implements OnInit {
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
-     /**
-     * Variable por parametro para mostrar o no todo lo relacionado a emitir conceptos
-     */
+    /**
+    * Variable por parametro para mostrar o no todo lo relacionado a emitir conceptos
+    */
     @Input() emitirConceptos = true;
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
@@ -144,14 +144,15 @@ export class HudsBusquedaComponent implements OnInit {
                     break;
             }
         } else if (tipo === 'prestacion') {
-
             // Se populan las relaciones usando el _id
             if (registro.ejecucion.registros) {
                 registro.ejecucion.registros.forEach(reg => {
                     if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                        reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                            return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
-                        });
+                        if (typeof reg.relacionadoCon[0] === 'string') {
+                            reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            });
+                        }
                     }
                 });
             }

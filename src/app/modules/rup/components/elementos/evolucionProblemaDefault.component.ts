@@ -44,7 +44,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     if (this.registro.valor.origen === 'transformación') {
                         this.origenTransformacion(this.registro.valor.idRegistroTransformado);
                     }
-                    this.prestacionesService.getUnHallazgoPacienteXOrigen(this.prestacion.paciente.id, this.registro.valor.idRegistroOrigen)
+                    this.prestacionesService.getUnHallazgoPacienteXOrigen(this.paciente.id, this.registro.valor.idRegistroOrigen)
                         .subscribe(hallazgo => {
                             if (hallazgo) {
                                 this.hallazgoHudsCompleto = hallazgo;
