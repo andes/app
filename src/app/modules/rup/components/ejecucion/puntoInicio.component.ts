@@ -281,6 +281,12 @@ export class PuntoInicioComponent implements OnInit {
     crearPrestacion() {
         this.router.navigate(['/rup/crear']);
     }
+     /**
+     * Navega para ver seleccionar un paciente y ver la huds
+     */
+    verHuds() {
+        this.router.navigate(['/rup/buscaHuds']);
+    }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {

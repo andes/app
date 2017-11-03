@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewEncapsulation, Input } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ObjectID } from 'bson';
 import { Plex } from '@andes/plex';
@@ -18,7 +18,7 @@ export class VistaHudsComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
 
-    public paciente: IPaciente;
+    @Input() paciente: IPaciente;
 
     // Defaults de Tabs panel derecho
     public panelIndex = 0;
@@ -31,20 +31,22 @@ export class VistaHudsComponent implements OnInit {
         private router: Router, private route: ActivatedRoute,
         private servicioPaciente: PacienteService) { }
 
-     /**
-     *Inicializamos con el id del paciente
-     * Cargamos los problemas del paciente
-     *
-     */
+    /**
+    *Inicializamos con el id del paciente
+    * Cargamos los problemas del paciente
+    *
+    */
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            let id = params['id'];
-            // Carga la información completa del paciente
-            this.servicioPaciente.getById(
-                id).subscribe(paciente => {
-                this.paciente = paciente;
+        if (!this.paciente) {
+            this.route.params.subscribe(params => {
+                let id = params['id'];
+                // Carga la información completa del paciente
+                this.servicioPaciente.getById(
+                    id).subscribe(paciente => {
+                        this.paciente = paciente;
+                    });
             });
-        });
+        }
     }
 
     agregarListadoHuds(registrosHuds) {
