@@ -159,7 +159,6 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     seleccionarTurno(turno, bloque) {
-        
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
@@ -168,10 +167,8 @@ export class RevisionAgendaComponent implements OnInit {
         } else { // para el caso de sobreturno, que no tiene bloques.
             this.turnoTipoPrestacion = turno.tipoPrestacion;
         }
-        
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
-            
         } else {
             this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
@@ -183,7 +180,6 @@ export class RevisionAgendaComponent implements OnInit {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnosticoSecundario);
             }
         }
-        console.log('turnoSeleccionado ', this.turnoSeleccionado);
     }
 
     seleccionarAsistencia(asistencia, i) {
