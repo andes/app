@@ -121,7 +121,7 @@
                                                 <small>
                                                     <span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
                                                 </small>
-                                                <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                                <span [ngClass]="{'text-danger': bloque.turnos[i+1].estado === 'turnoDoble'}" *ngIf="bloque.turnos[i+1] && bloque.turnos[i+1].estado === 'turnoDoble'">Turno Doble</span>
                                                 <span *ngIf="turno && turno.nota">
                                                     <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                                 </span>
