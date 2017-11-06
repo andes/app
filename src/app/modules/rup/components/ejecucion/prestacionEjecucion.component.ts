@@ -22,6 +22,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
+    frecuentesProfesionalService: any;
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -596,6 +597,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
+
         let params: any = {
             op: 'registros',
             registros: registros
@@ -607,6 +609,11 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
+
+            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, params).subscribe(resultado => {
+
+            });
+
         });
     }
 
