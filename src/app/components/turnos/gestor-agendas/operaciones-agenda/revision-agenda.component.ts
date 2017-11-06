@@ -173,11 +173,8 @@ export class RevisionAgendaComponent implements OnInit {
             this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
-            if (turno.diagnosticoPrincipal && turno.diagnosticoPrincipal.codificacion) {
-                this.diagnosticos.push(turno.diagnosticoPrincipal);
-            }
-            if (turno.diagnosticoSecundario && turno.diagnosticoSecundario.length) {
-                this.diagnosticos = this.diagnosticos.concat(turno.diagnosticoSecundario);
+            if (turno.diagnosticos && turno.diagnosticos.length) {
+                this.diagnosticos = this.diagnosticos.concat(turno.diagnosticos);
             }
         }
     }
@@ -190,9 +187,9 @@ export class RevisionAgendaComponent implements OnInit {
 
     asistenciaSeleccionada(asistencia) {
         if (asistencia.id === 'asistio') {
-            if (!this.turnoSeleccionado.diagnosticoPrincipal) {
-                this.turnoSeleccionado.diagnosticoPrincipal = {
-                    codificacion: null,
+            if (this.turnoSeleccionado.diagnosticos && !(this.turnoSeleccionado.diagnosticos[0])) {
+                this.turnoSeleccionado.diagnosticos[0] = {
+                    codificacionAuditoria: null,
                     ilegible: false
                 };
             }
@@ -215,12 +212,22 @@ export class RevisionAgendaComponent implements OnInit {
             event.callback([]);
         }
     }
-
+    /**
+     * El auditor agrega nuevos diagnósticos al turno en el momento de revisión
+     * la codificaciónProfesional en estos casos debe ser siempre NULL
+     *
+     * @memberof RevisionAgendaComponent
+     */
     agregarDiagnostico() {
-        let nuevoDiagnostico = { codificacion: null, ilegible: false };
+        let nuevoDiagnostico = {
+            codificacionProfesional: null, // solamente obtenida de RUP o SIPS y definida por el profesional
+            codificacionAuditoria: null,  // corresponde a la codificación establecida la instancia de revisión de agendas
+            primeraVez: false,
+            ilegible: false
+        };
         if (this.nuevoCodigo) {
-            nuevoDiagnostico.codificacion = this.nuevoCodigo;
-            delete nuevoDiagnostico.codificacion.$order;
+            nuevoDiagnostico.codificacionAuditoria = this.nuevoCodigo;
+            delete nuevoDiagnostico.codificacionAuditoria.$order;
             this.diagnosticos.push(nuevoDiagnostico);
             this.nuevoCodigo = {};
         }
@@ -235,10 +242,9 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     marcarIlegible() {
-        this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
-        this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+        this.turnoSeleccionado.diagnosticos[0].codificacionAuditoria = null;
+        this.turnoSeleccionado.diagnosticos[0].primeraVez = false;
         this.diagnosticos = [];
-        this.turnoSeleccionado.diagnosticoSecundario = [];
     }
 
     cerrarAsistencia() {
@@ -284,7 +290,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio')) ||
+                ((t.asistencia && !t.diagnosticos[0] || (t.diagnosticos[0] && !t.diagnosticos[0].codificacionAuditoria && !t.diagnosticos[0].ilegible && t.asistencia === 'asistio')) ||
                     !t.asistencia)
             );
         });
@@ -322,11 +328,7 @@ export class RevisionAgendaComponent implements OnInit {
         // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
         let datosTurno = {};
         if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
-            this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
-            this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
-        } else {
-            delete this.turnoSeleccionado.diagnosticoPrincipal;
-            this.turnoSeleccionado.diagnosticoSecundario = [];
+            this.turnoSeleccionado.diagnosticos = this.diagnosticos;
         }
         // Aca chequeamos si es o no sobreturno
         if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
