@@ -43,4 +43,12 @@ export class AdjuntosService {
     get (params) {
         return this.server.get(this.prestacionesUrl, { params });
     }
+
+
+    /**
+     * Borra una solicitud de ajuntar archivo
+     */
+    delete (id) {
+        return this.server.delete(this.prestacionesUrl + '/' + id);
+    }
 }
