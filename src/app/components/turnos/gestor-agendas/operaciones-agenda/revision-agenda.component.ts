@@ -186,14 +186,14 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     asistenciaSeleccionada(asistencia) {
-        if (asistencia.id === 'asistio') {
-            if (this.turnoSeleccionado.diagnosticos && !(this.turnoSeleccionado.diagnosticos[0])) {
-                this.turnoSeleccionado.diagnosticos[0] = {
-                    codificacionAuditoria: null,
-                    ilegible: false
-                };
-            }
-        }
+        // if (asistencia.id === 'asistio') {
+        // if (this.turnoSeleccionado.diagnosticos && !(this.turnoSeleccionado.diagnosticos[0])) {
+        // this.turnoSeleccionado.diagnosticos[0] = {
+        //     codificacionAuditoria: null,
+        //     ilegible: false
+        // };
+        // }
+        // }
         return (this.turnoSeleccionado.asistencia === asistencia.id);
     }
 
@@ -327,7 +327,7 @@ export class RevisionAgendaComponent implements OnInit {
         };
         // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
         let datosTurno = {};
-        if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
+        if (this.diagnosticos && this.diagnosticos.length > 0) {
             this.turnoSeleccionado.diagnosticos = this.diagnosticos;
         }
         // Aca chequeamos si es o no sobreturno

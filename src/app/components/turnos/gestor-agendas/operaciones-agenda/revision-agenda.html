@@ -97,14 +97,15 @@
                                         </span>
                                     </span>
                                 </small>
-                                <span *ngIf="turno && turno.estado === 'disponible'">Sin asignar</span>
+                                <span *ngIf="turno && turno.estado === 'disponible'">Disponible</span>
                                 <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
                                 <span [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
                                 <span *ngIf="turno && turno.nota">
                                     <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia === 'asistio' && turno?.diagnosticos[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && (turno?.diagnosticos[0]?.codificacionAuditoria != null || (turno?.asistencia && turno?.asistencia !== 'asistio'))">| Codificada</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.diagnosticos[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnosticos[0]?.codificacionAuditoria == null && turno?.diagnosticos[0]?.codificacionProfesional != null">| Registrado por Profesional</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnosticos[0]?.codificacionAuditoria != null ">| Auditado</span>
 
                             </td>
                         </tr>
@@ -252,7 +253,7 @@
                             <div *ngFor="let diagnostico of diagnosticos; let i = index; " class="list-group-item">
                                 <div class="row">
                                     <div class="col-6">
-                                        {{diagnostico.codificacionAuditoria.sinonimo}}
+                                        {{diagnostico.codificacionAuditoria?.sinonimo}}
                                     </div>
                                     <div class="col-2">
                                         <span *ngIf="i==0" class="badge-success">Principal</span>
