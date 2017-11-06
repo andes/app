@@ -46,8 +46,8 @@
                                         </b>
                                         <br>
                                         <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
-                                        <div *ngIf="elemento?.valor?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                            <b> {{ elemento.valor.prestacionSolicitada.term || '(ninguna)' }} </b>
+                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
+                                            <b> {{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }} </b>
                                         </div>
                                     </div>
                                     <div class="col-8">
@@ -58,15 +58,17 @@
                                                Ya tiene un turno asignado
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
-                                            <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
-                                            <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
-                                              No hay turnos disponibles  
+                                                <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
+                                                <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
+                                                No hay turnos disponibles  
+                                                </span>
                                             </span>
+                                            <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
+                                                <span class="small text-secondary">
+                                                  No hay turnos disponibles  
+                                                </span>
                                             </span>
                                         </div>
-
-
-
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                             <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
                                                 Diagnóstico principal
@@ -98,7 +100,7 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-1 m-0 pr-3 text-right">
-                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.motivo || elemento?.valor?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
+                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
                                             (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
                                     </div>
                                 </div>
@@ -115,11 +117,11 @@
                                             <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                             </div>
                                         </div>
-                                        <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
-                                            <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
+                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
+                                            <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
                                         </div>
-                                        <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
-                                            <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
+                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
+                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
                                         </div>
                                         <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
                                             <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
