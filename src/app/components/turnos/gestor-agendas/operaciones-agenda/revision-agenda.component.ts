@@ -58,10 +58,10 @@ export class RevisionAgendaComponent implements OnInit {
         //     this.turnos = this.agenda.bloques[i].turnos;
         // }
         this.estadoAsistenciaCerrada = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Asistencia Cerrada';
+            return e.nombre === 'Pendiente Auditoria';
         });
         this.estadoCodificado = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Codificada';
+            return e.nombre === 'Auditada';
         });
         this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoAsistenciaCerrada.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
         this.enableCodificada = (this._agenda.estado === this.estadoAsistenciaCerrada.id);
