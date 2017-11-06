@@ -58,10 +58,15 @@
                                                Ya tiene un turno asignado
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
-                                            <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
-                                            <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
-                                              No hay turnos disponibles  
+                                                <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
+                                                <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
+                                                No hay turnos disponibles  
+                                                </span>
                                             </span>
+                                            <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
+                                                <span class="small text-secondary">
+                                                  No hay turnos disponibles  
+                                                </span>
                                             </span>
                                         </div>
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">

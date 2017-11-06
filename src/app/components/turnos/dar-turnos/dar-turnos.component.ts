@@ -393,7 +393,7 @@ export class DarTurnosComponent implements OnInit {
      */
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
-            this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.registros[0].concepto;
+            this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
         }
 
