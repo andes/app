@@ -72,8 +72,17 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
             this.dragScroll.attach({ disabled: false, scrollbarHidden: true, yDisabled: true, xDisabled: false } as any);
         }
-
+        // se fija si tenemos agregamos uno nuevo y lo pone activo.
+        if (this.tabs) {
+            this.tabs.changes.subscribe((changes: any) => {
+                setTimeout(() => {
+                    let tab = changes._results[changes._results.length - 1];
+                    this.selectTab(tab);
+                });
+            });
+        }
     }
+
 
     /**
      * Activar un tab de la lista
@@ -81,8 +90,7 @@ export class TabsComponent implements OnInit, AfterContentInit {
      * @param {TabComponent} tab Tab a activar
      * @memberof TabsComponent
      */
-    selectTab(tab: TabComponent) {
-
+    public selectTab(tab: TabComponent) {
         if (tab) {
             // desactivamos todos los tabs
             this.tabs.toArray().forEach(t => t.active = false);
