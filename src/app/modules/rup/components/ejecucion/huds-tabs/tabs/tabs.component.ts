@@ -1,4 +1,4 @@
-import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer, SimpleChanges, AfterContentInit, OnInit, Input } from '@angular/core';
+import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer, SimpleChanges, AfterContentInit, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DragScroll } from 'angular2-drag-scroll';
 
 import { TabComponent } from './tab.component';
@@ -11,7 +11,9 @@ import { TabComponent } from './tab.component';
       <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
-          <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
+        <button (click)="cerrarTab(tab)">cerrar</button>
+          
+        <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
             {{ (tab.tabTitle.length > options.trim) ? (tab.tabTitle | slice:0:options.trim) + '...' : (tab.tabTitle) }} {{i > 0 && !hayMismoNombre(tab.tabTitle) ? '(' + i + ')' : ''}}
           </a>
 
@@ -31,6 +33,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
     public dragScroll: DragScroll;
 
     @Input() options: any = {};
+
+    @Output() _tab: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -115,5 +119,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
     hayMismoNombre(tabTitle) {
         return this.tabs.toArray().filter(t => t.tabTitle === tabTitle).length > 0;
+    }
+    cerrarTab(tab) {
+        this._tab.emit(tab);
     }
 }
