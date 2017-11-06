@@ -1,5 +1,4 @@
 import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, SimpleChanges, AfterContentInit, OnInit, Input } from '@angular/core';
-import { DragScroll } from 'angular2-drag-scroll';
 
 import { TabComponent } from './tab.component';
 
@@ -8,7 +7,7 @@ import { TabComponent } from './tab.component';
     styleUrls: ['tabs.scss'],
     template: `
     <div class="container-tabs">
-      <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }" (scroll)="onScrollTabs($event)">
+      <ul class="nav nav-tabs" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
           <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
@@ -26,9 +25,6 @@ import { TabComponent } from './tab.component';
 })
 export class TabsComponent implements OnInit, AfterContentInit {
 
-    public dragScrollDom: any;
-    public dragScrollRef: ElementRef;
-    public dragScroll: DragScroll;
 
     @Input() options: any = {};
 
@@ -44,8 +40,9 @@ export class TabsComponent implements OnInit, AfterContentInit {
     @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
 
     ngOnInit(): void {
-        this.options.dragScroll = (this.options.dragScroll) ? this.options.dragScroll : false;
+        // fijamos el primer elemento cuando realizamos scroll
         this.options.fixFirstOnScroll = (this.options.fixFirstOnScroll) ? this.options.fixFirstOnScroll : false;
+        // hacemos un trim del texto a incluir dentro del tab
         this.options.trim = (this.options.trim && parseInt(this.options.trim, 10) > 0) ? parseInt(this.options.trim, 10) : false;
     }
 
@@ -60,19 +57,6 @@ export class TabsComponent implements OnInit, AfterContentInit {
             // this.selectTab(this.tabs[0]);
             this.selectTab(this.tabs.first);
         }
-
-        // creamos el los tabs draggables en forma dinámica
-        if (this.options.dragScroll) {
-
-            // attach to .nav-tabs element
-            this.dragScrollDom = this.element.nativeElement.querySelector('.nav-tabs');
-            this.dragScrollRef = new ElementRef(this.dragScrollDom);
-
-            this.dragScroll = new DragScroll(this.dragScrollRef, this.renderer);
-
-            this.dragScroll.attach({ disabled: false, scrollbarHidden: true, yDisabled: true, xDisabled: false } as any);
-        }
-
     }
 
     /**
@@ -100,9 +84,6 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
         }
 
-        /*
-        let tabs = this.element.nativeElement.querySelector('.nav-tabs');
-        */
     }
 
     hayMismoNombre(tabTitle) {
