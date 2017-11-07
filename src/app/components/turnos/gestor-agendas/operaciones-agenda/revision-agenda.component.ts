@@ -31,32 +31,7 @@ export class RevisionAgendaComponent implements OnInit {
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
-        let turnos;
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            turnos = this.agenda.bloques[i].turnos;
-            let turnosAsignados = (this.agenda.bloques[i].turnos).filter((turno) => {
-                return (turno.paciente && turno.paciente.id) && (turno.estado === 'asignado' || turno.estado === 'suspendido');
-            });
-            for (let t = 0; t < turnosAsignados.length; t++) {
-                // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.carpetaEfectores) {
-                        let carpetaEfector = null;
-                        carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                            return (data.organizacion.id === this.auth.organizacion.id);
-                        });
-                        if (turnosAsignados[t] && turnosAsignados[t].paciente) {
-                            turnosAsignados[t].paciente = paciente;
-                            turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
-                        }
-                    }
-                });
-            }
-        }
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-        // for (let i = 0; i < this.agenda.bloques.length; i++) {
-        //     this.turnos = this.agenda.bloques[i].turnos;
-        // }
         this.estadoAsistenciaCerrada = this.estadosAgendaArray.find(e => {
             return e.nombre === 'Pendiente Auditoria';
         });
@@ -75,7 +50,7 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    enableEdicionAsistencia: boolean;
+    enableEdicionAsistencia: Boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
     sobreturnos = [];
@@ -160,6 +135,7 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     seleccionarTurno(turno, bloque) {
+        this.enableEdicionAsistencia = true;
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
@@ -217,8 +193,7 @@ export class RevisionAgendaComponent implements OnInit {
         let nuevoDiagnostico = {
             codificacionProfesional: null, // solamente obtenida de RUP o SIPS y definida por el profesional
             codificacionAuditoria: null,  // corresponde a la codificación establecida la instancia de revisión de agendas
-            primeraVez: false,
-            ilegible: false
+            primeraVez: false
         };
         if (this.nuevoCodigo) {
             nuevoDiagnostico.codificacionAuditoria = this.nuevoCodigo;
@@ -284,7 +259,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria && !t.diagnostico.codificaciones[0].ilegible && t.asistencia === 'asistio')) ||
+                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria && !t.diagnostico.ilegible && t.asistencia === 'asistio')) ||
                     !t.asistencia)
             );
         });
