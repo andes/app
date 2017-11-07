@@ -157,6 +157,11 @@
                     </tbody>
                     <!-- /SOBRETURNOS -->
                 </table>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-button type="primary" label="Agregar Sobreturno" (click)="agregarSobreturno()"></plex-button>
+                    </div>
+                </div>
             </plex-box>
         </div>
         <div class="col-8" *ngIf="turnoSeleccionado && turnoSeleccionado.estado !== 'suspendido' && turnoSeleccionado.estado !== 'turnoDoble'">
@@ -293,3 +298,4 @@
         </div>
     </div>
 </footer>
+<sobreturno *ngIf="showAgregarSobreturno" [agenda]="agenda" [revision]="true" (volverRevision)="volverRevision($event)"></sobreturno>
