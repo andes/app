@@ -77,6 +77,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     enableEdicionAsistencia: boolean;
     showRevisionAgenda: Boolean = true;
+    showAgregarSobreturno: Boolean = false;
     turnosAsignados = [];
     sobreturnos = [];
     horaInicio: any;
@@ -363,9 +364,32 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
+    agregarSobreturno(){
+        this.showAgregarSobreturno = true;
+        this.showRevisionAgenda = false;
+        this.modoCompleto = false;
+    }
+
+    refresh() {
+        this.serviceAgenda.getById(this._agenda.id).subscribe(agenda => {
+            this._agenda = agenda;
+
+        }, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
     volver() {
         this.volverAlGestor.emit(true);
+    }
 
+    volverRevision() {
+        this.showAgregarSobreturno = false;
+        this.showRevisionAgenda = true;
+        this.modoCompleto = true;
+        this.refresh();
     }
 
 }

@@ -271,7 +271,8 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
+        return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria');
+        // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
