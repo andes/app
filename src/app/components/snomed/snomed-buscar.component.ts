@@ -191,7 +191,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'problemas':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno']
+                            semanticTag: ['hallazgo', 'trastorno', 'situación']
                         });
                         break;
                     case 'procedimientos':
