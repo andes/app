@@ -28,7 +28,7 @@ export class AgregarSobreturnoComponent implements OnInit {
         return this._agenda;
     }
 
-    @Output() volverAlGestor = new EventEmitter<IAgenda>();
+    @Output() volverAlGestor = new EventEmitter<boolean>();
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
@@ -182,7 +182,7 @@ export class AgregarSobreturnoComponent implements OnInit {
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
-                this.volverAlGestor.emit(resultado);
+                this.volverAlGestor.emit(true);
             });
         } else {
             this.plex.alert('Debe completar los datos requeridos');
@@ -207,6 +207,6 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     cancelar() {
-        this.volverAlGestor.emit();
+        this.volverAlGestor.emit(true);
     }
 }
