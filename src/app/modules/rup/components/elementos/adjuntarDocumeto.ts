@@ -103,7 +103,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     fromMobile () {
         let paciente = this.paciente.id;
         let prestacion = this.prestacion.id;
-        let registro = this.registro;
+        let registro = this.registro.id;
         this.loading = true;
         this.adjuntosService.post({paciente, prestacion, registro}).subscribe((data) => {
             this.adjunto = data;
@@ -122,7 +122,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             if (data.length > 0) {
                 this.waiting = false;
                 this.adjunto = data[0];
-                let docs = this.adjunto.registro.valor.documentos;
+                let docs = this.adjunto.valor.documentos;
                 docs.forEach((item) => {
                     if (item.ext === 'pdf') {
                         item.plain64 = item.plain64.replace('image/*', 'application/pdf');
@@ -140,9 +140,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                     });
 
                 });
-                this.adjuntosService.delete(this.adjunto._id).subscribe(() => {
-
-                });
+                this.adjuntosService.delete(this.adjunto._id).subscribe(() => {});
                 // let file: string = this.registro.valor[0].file as string;
                 // file = file.replace('image/*', 'application/octet-stream');
                 // window.open(file);
@@ -158,6 +156,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     cancelar () {
         clearTimeout(this.timeout);
         this.waiting = false;
+        this.adjuntosService.delete(this.adjunto._id).subscribe(() => {});
     }
 
 }

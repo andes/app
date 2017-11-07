@@ -8,7 +8,7 @@ import { IPrestacion } from '../interfaces/prestacion.interface';
 @Injectable()
 export class AdjuntosService {
 
-    private prestacionesUrl = '/modules/rup/prestaciones-adjuntar';  // URL to web api
+    private prestacionesUrl = '/modules/mobileApp/prestaciones-adjuntar';  // URL to web api
 
     constructor(private server: Server, public auth: Auth) { }
 
@@ -22,15 +22,6 @@ export class AdjuntosService {
      * @memberof AdjuntosService
      */
     post(params: any, options: any = {}): Observable<IPrestacion[]> {
-        // if (typeof options.showError === 'undefined') {
-        //     options.showError = true;
-        // }
-        // let opt;
-        // opt = {
-        //     params: params,
-        //     options
-        // };
-
         return this.server.post(this.prestacionesUrl, params);
     }
 
