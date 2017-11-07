@@ -847,10 +847,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
     // recibe el tab que se clikeo y lo saca del array..
     cerrartab($event) {
-        for (let registroHuds of this.registrosHuds) {
-            if ($event.class === registroHuds.data.class && registroHuds.data.concepto.term === $event.tabTitle) {
-                this.registrosHuds.splice(registroHuds, 1);
-            }
-        }
+        this.registrosHuds.splice($event, 1);
     }
 }

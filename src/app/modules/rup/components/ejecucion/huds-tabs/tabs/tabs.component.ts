@@ -11,7 +11,8 @@ import { TabComponent } from './tab.component';
       <ul class="nav nav-tabs" [ngClass]="{ 'draggable': options.dragScroll === true }" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
-        <button (click)="cerrarTab(tab)">cerrar</button>
+
+        <button class="btn btn-danger btn-sm float-right"(click)="cerrarTab(tab)" *ngIf="options?.canClose && options.canClose === true && i !== 0">X</button>
           
         <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
             {{ (tab.tabTitle.length > options.trim) ? (tab.tabTitle | slice:0:options.trim) + '...' : (tab.tabTitle) }} {{i > 0 && !hayMismoNombre(tab.tabTitle) ? '(' + i + ')' : ''}}
@@ -51,11 +52,13 @@ export class TabsComponent implements OnInit, AfterContentInit {
         this.options.dragScroll = (this.options.dragScroll) ? this.options.dragScroll : false;
         this.options.fixFirstOnScroll = (this.options.fixFirstOnScroll) ? this.options.fixFirstOnScroll : false;
         this.options.trim = (this.options.trim && parseInt(this.options.trim, 10) > 0) ? parseInt(this.options.trim, 10) : false;
+        this.options.canClose = (this.options.canClose) ? this.options.canClose : false;
+        // console.log(this.tabs.first);
     }
 
     // contentChildren are set
     ngAfterContentInit() {
-
+        console.log(this.tabs.first);
         // get all active tabs
         let activeTabs = this.tabs.filter((tab) => tab.active);
 
