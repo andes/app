@@ -220,14 +220,20 @@
                             <!--ASISTENCIA-->
                             <h5>Asistencia</h5>
                             <hr>
-                            <div *ngFor="let estado of estadosAsistencia; let i=index">
-                                <td (click)="seleccionarAsistencia(estado)">
-                                    <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
-                                    <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
-                                </td>
-                                <td (click)="asistenciaSeleccionada(estado)">
-                                    <strong>{{ estado.nombre }}</strong>
-                                </td>
+                            <div *ngIf="enableEdicionAsistencia">
+                                <div *ngFor="let estado of estadosAsistencia; let i=index">
+                                    <td (click)="seleccionarAsistencia(estado)">
+                                        <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
+                                        <i *ngIf="!asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-blank-outline"></i>
+                                    </td>
+                                    <td (click)="asistenciaSeleccionada(estado)">
+                                        <strong>{{ estado.nombre }}</strong>
+                                    </td>
+                                </div>
+                            </div>
+                            <!-- Si el turno viene codificado por profesional, no se permite editar la asistencia -->
+                            <div *ngIf="!enableEdicionAsistencia" class="badge badge-success">
+                                asistió
                             </div>
                             <!--/ ASISTENCIA-->
                         </div>

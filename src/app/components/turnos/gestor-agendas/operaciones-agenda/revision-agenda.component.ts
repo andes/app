@@ -75,6 +75,7 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+    enableEdicionAsistencia: boolean;
     showRevisionAgenda: Boolean = true;
     turnosAsignados = [];
     sobreturnos = [];
@@ -170,11 +171,13 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
         } else {
-            this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
             if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
+
+                // Verificamos si existe alguna codificación de profesional.
+                this.enableEdicionAsistencia = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? false : true;
             }
         }
     }
