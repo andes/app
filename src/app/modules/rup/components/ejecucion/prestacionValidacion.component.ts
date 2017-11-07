@@ -102,7 +102,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: id }).subscribe(prestacionSolicitud => {
+                    this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
                         this.cargaPlan(prestacionSolicitud, conceptosTurneables);
                     });
                 });
@@ -184,7 +184,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-
                         });
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
@@ -256,13 +255,14 @@ export class PrestacionValidacionComponent implements OnInit {
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            {
-                if (conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId)) {
-                    let idRegistro = ps.solicitud.registros[0].id;
-                    this.asignarTurno[idRegistro] = {};
-                }
-            }
+            return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+        prestacionesSolicitadas.forEach(ps => {
+
+            let idRegistro = ps.solicitud.registros[0].id;
+            this.asignarTurno[idRegistro] = {};
+        });
+
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
             // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
             this.servicioAgenda.get({

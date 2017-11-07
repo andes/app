@@ -270,12 +270,8 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoRevisar() {
-        return true; // TODO: descomentar
-        // let today = new Date();
-        // today.setHours(0, 0, 0, 0);
-        // return this.agendasSeleccionadas.filter((agenda) => {
-        //     return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
-        // }).length > 0;
+        let agenda = this.agendasSeleccionadas[0];
+        return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
