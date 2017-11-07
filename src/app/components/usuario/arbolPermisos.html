@@ -3,7 +3,7 @@
         <div plex-accordion-title>
             {{item.title}}
             <span *ngIf="allModule">(todos)</span>
-            <plex-bool class="float-right" (change)="expand($event)" [(ngModel)]="allModule" type="slide"> </plex-bool>
+            <plex-bool *ngIf="!item.avoidAll" class="float-right" (change)="expand($event)" [(ngModel)]="allModule" type="slide"> </plex-bool>
         </div>
         <div *ngFor="let child of item.child; let indiceChild = index">
             <arbolPermisos [item]="child" [parentPermission]="makePermission()" [userPermissions]="userPermissions"></arbolPermisos>
@@ -17,7 +17,7 @@
     <div *ngIf="item.type !== 'boolean'">
         <h5>
             {{item.title}}
-            <plex-bool [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
+            <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
         </h5>
         <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)" placeholder="Selecciones los elementos con permios"
             (change)="selectChange()" name="plexSelect"></plex-select>
