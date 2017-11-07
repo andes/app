@@ -1,4 +1,4 @@
-import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, SimpleChanges, AfterContentInit, OnInit, Input } from '@angular/core';
+import { Component, ContentChildren, QueryList, ChangeDetectorRef, ElementRef, Renderer2, SimpleChanges, AfterContentInit, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 import { TabComponent } from './tab.component';
 
@@ -10,7 +10,10 @@ import { TabComponent } from './tab.component';
       <ul class="nav nav-tabs" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
 
-          <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
+
+        <button class="btn btn-danger btn-sm float-right"(click)="cerrarTab(tab)" *ngIf="options?.canClose && options.canClose === true && i !== 0">X</button>
+          
+        <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
             {{ (tab.tabTitle.length > options.trim) ? (tab.tabTitle | slice:0:options.trim) + '...' : (tab.tabTitle) }} {{i > 0 && !hayMismoNombre(tab.tabTitle) ? '(' + i + ')' : ''}}
           </a>
 
@@ -28,6 +31,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
     @Input() options: any = {};
 
+    @Output() _tab: EventEmitter<any> = new EventEmitter<any>();
+
     constructor(
         private cdr: ChangeDetectorRef,
         private element: ElementRef,
@@ -44,11 +49,13 @@ export class TabsComponent implements OnInit, AfterContentInit {
         this.options.fixFirstOnScroll = (this.options.fixFirstOnScroll) ? this.options.fixFirstOnScroll : false;
         // hacemos un trim del texto a incluir dentro del tab
         this.options.trim = (this.options.trim && parseInt(this.options.trim, 10) > 0) ? parseInt(this.options.trim, 10) : false;
+        this.options.canClose = (this.options.canClose) ? this.options.canClose : false;
+        // console.log(this.tabs.first);
     }
 
     // contentChildren are set
     ngAfterContentInit() {
-
+        console.log(this.tabs.first);
         // get all active tabs
         let activeTabs = this.tabs.filter((tab) => tab.active);
 
@@ -59,14 +66,14 @@ export class TabsComponent implements OnInit, AfterContentInit {
         }
     }
 
+
     /**
      * Activar un tab de la lista
      *
      * @param {TabComponent} tab Tab a activar
      * @memberof TabsComponent
      */
-    selectTab(tab: TabComponent) {
-
+    public selectTab(tab: TabComponent) {
         if (tab) {
             // desactivamos todos los tabs
             this.tabs.toArray().forEach(t => t.active = false);
@@ -88,5 +95,8 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
     hayMismoNombre(tabTitle) {
         return this.tabs.toArray().filter(t => t.tabTitle === tabTitle).length > 0;
+    }
+    cerrarTab(tab) {
+        this._tab.emit(tab);
     }
 }
