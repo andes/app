@@ -274,7 +274,7 @@ export class RevisionAgendaComponent implements OnInit {
                 'estado': this.estadoCodificado.id
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Codificación Cerrada');
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
                 this.enableAsistenciaCerrada = false;
                 this.enableCodificada = false;
             });
