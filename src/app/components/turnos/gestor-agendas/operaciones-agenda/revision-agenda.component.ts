@@ -173,8 +173,8 @@ export class RevisionAgendaComponent implements OnInit {
             this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
-            if (turno.diagnosticos && turno.diagnosticos.length) {
-                this.diagnosticos = this.diagnosticos.concat(turno.diagnosticos);
+            if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
+                this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
             }
         }
     }
@@ -242,8 +242,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     marcarIlegible() {
-        this.turnoSeleccionado.diagnosticos[0].codificacionAuditoria = null;
-        this.turnoSeleccionado.diagnosticos[0].primeraVez = false;
+        this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
+        this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
         this.diagnosticos = [];
     }
 
@@ -290,7 +290,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnosticos[0] || (t.diagnosticos[0] && !t.diagnosticos[0].codificacionAuditoria && !t.diagnosticos[0].ilegible && t.asistencia === 'asistio')) ||
+                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria && !t.diagnostico.codificaciones[0].ilegible && t.asistencia === 'asistio')) ||
                     !t.asistencia)
             );
         });
@@ -328,7 +328,7 @@ export class RevisionAgendaComponent implements OnInit {
         // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
         let datosTurno = {};
         if (this.diagnosticos && this.diagnosticos.length > 0) {
-            this.turnoSeleccionado.diagnosticos = this.diagnosticos;
+            this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;
         }
         // Aca chequeamos si es o no sobreturno
         if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
