@@ -50,7 +50,9 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    enableEdicionAsistencia: Boolean;
+    showReparo = false;
+    repararDiagnistico: Boolean;
+    existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
     sobreturnos = [];
@@ -58,6 +60,7 @@ export class RevisionAgendaComponent implements OnInit {
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
     nuevoCodigo: any;
+    reparo: any;
     codigoPrincipal = [];
     paciente: IPaciente;
     cambioTelefono = false;
@@ -135,7 +138,7 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     seleccionarTurno(turno, bloque) {
-        this.enableEdicionAsistencia = true;
+        this.existeCodificacionProfesional = false;
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
@@ -153,7 +156,7 @@ export class RevisionAgendaComponent implements OnInit {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
 
                 // Verificamos si existe alguna codificación de profesional.
-                this.enableEdicionAsistencia = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? false : true;
+                this.existeCodificacionProfesional = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? true : false;
             }
         }
     }
@@ -211,6 +214,14 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
+        }
+    }
+
+    reparoDiagnostico(index) {
+        if (this.reparo) {
+            delete this.reparo.$order;
+            this.diagnosticos[index].codificacionAuditoria = this.reparo;
+            this.showReparo = false;
         }
     }
 
@@ -351,6 +362,10 @@ export class RevisionAgendaComponent implements OnInit {
 
     volver() {
         this.volverAlGestor.emit(true);
+    }
+
+    mostrarReparo() {
+        this.showReparo = !this.showReparo;
     }
 
     volverRevision() {

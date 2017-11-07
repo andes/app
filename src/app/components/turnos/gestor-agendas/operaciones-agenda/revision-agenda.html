@@ -103,7 +103,7 @@
                                 <span *ngIf="turno && turno.nota">
                                     <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional == null">| Asistencia Verificada</span>
                                 <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional != null">| Registrado por Profesional</span>
                                 <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null ">| Auditado</span>
 
@@ -218,14 +218,14 @@
                         <div *ngIf="turnoTipoPrestacion">{{turnoTipoPrestacion.nombre}}</div>
                     </div>
                 </div>
-                <br>
                 <div *ngIf="turnoSeleccionado && (turnoSeleccionado.paciente?.id || paciente?.id) && !pacientesSearch">
                     <div class="row">
                         <div class="col">
                             <!--ASISTENCIA-->
-                            <h5>Asistencia</h5>
-                            <hr>
-                            <div *ngIf="enableEdicionAsistencia">
+                            <div *ngIf="!existeCodificacionProfesional">
+                                <br>
+                                <h5>Asistencia</h5>
+                                <hr>
                                 <div *ngFor="let estado of estadosAsistencia; let i=index">
                                     <td (click)="seleccionarAsistencia(estado)">
                                         <i *ngIf="asistenciaSeleccionada(estado)" class="mdi mdi-checkbox-marked"></i>
@@ -236,30 +236,28 @@
                                     </td>
                                 </div>
                             </div>
-                            <!-- Si el turno viene codificado por profesional, no se permite editar la asistencia -->
-                            <div *ngIf="!enableEdicionAsistencia" class="badge badge-success">
-                                asistió
-                            </div>
                             <!--/ ASISTENCIA-->
                         </div>
                     </div>
                     <br>
                     <!-- TODO: Botho...hace tu gracia -->
-                    <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
-                        <!--CODIFICACION-->
-                        <h5>Codificación</h5>
-                        <hr>
-                        <h6>
-                            <strong>Diagnóstico o Motivo de Consulta</strong>
-                        </h6>
+                    <!--CODIFICACION-->
+                    <h5>Codificación</h5>
+                    <hr>
+                    <h6>
+                        <strong>Diagnóstico o Motivo de Consulta</strong>
+                    </h6>
+                    <!-- Turno no codificado por profesional -->
+                    <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio' && !existeCodificacionProfesional">
                         <plex-bool [(ngModel)]='turnoSeleccionado.diagnostico.ilegible' name="ilegible" label="El diagnóstico es ilegible" (click)="marcarIlegible()"></plex-bool>
                         <div class="row" *ngIf="!turnoSeleccionado.diagnostico.ilegible">
                             <div class="col-8">
                                 <plex-select [(ngModel)]="nuevoCodigo" name="searchCodigo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
                                     placeholder="Seleccione un ćodigo CIE10" (change)="agregarDiagnostico()"></plex-select>
                             </div>
-                            <!-- <plex-button title="Agregar diagnóstico" icon="mdi mdi-plus" type="primary"></plex-button> -->
                         </div>
+
+                        <!-- Si el turno no fue codificado por profesional se permite cargar una lista de codificaciones -->
                         <div class="list-group">
                             <div *ngFor="let diagnostico of diagnosticos; let i = index; " class="list-group-item">
                                 <div class="row">
@@ -280,8 +278,41 @@
                                 </div>
                             </div>
                         </div>
-                        <!--/ CODIFICACION-->
+
                     </div>
+                    <!-- /Turno no codificado por profesional -->
+                    <!-- Turno codificado por profesional -->
+                    <div *ngIf="turnoSeleccionado && existeCodificacionProfesional">
+                        <ul class="list-group">
+                            <li *ngFor="let diagnostico of diagnosticos; let i = index; " class="list-group-item">
+                                <div class="row">
+                                    <div *ngIf="diagnostico.codificacionAuditoria == null" class="col-6">
+                                        {{diagnostico.codificacionProfesional.sinonimo}}
+                                    </div>
+                                    <div *ngIf="diagnostico.codificacionAuditoria != null" class="col-6">
+                                        {{diagnostico.codificacionAuditoria.sinonimo}}
+                                    </div>
+                                    <div class="col-2">
+                                        <span *ngIf="i==0" class="badge-success">Principal</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <span *ngIf="i==0 && diagnostico.primeraVez" class="badge-success">Primera vez</span>
+                                    </div>
+                                    <div class="col-2">
+                                        <plex-button icon="pencil" label="Reparo" type="danger" (click)="mostrarReparo()"></plex-button>
+                                    </div>
+                                </div>
+                                <div *ngIf="showReparo" class="row">
+                                    <div class="col-8">
+                                        <plex-select [(ngModel)]="reparo" name="searchCodigo" label="Reparo:" (getData)="buscarCodificacion($event)" placeholder="Seleccione un ćodigo CIE10"
+                                            (change)="reparoDiagnostico(i)"></plex-select>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /Turno no codificado por profesional -->
+                    <!--/ CODIFICACION-->
                     <br>
 
                     <div class="row">
