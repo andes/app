@@ -103,9 +103,9 @@
                                 <span *ngIf="turno && turno.nota">
                                     <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.diagnosticos[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnosticos[0]?.codificacionAuditoria == null && turno?.diagnosticos[0]?.codificacionProfesional != null">| Registrado por Profesional</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnosticos[0]?.codificacionAuditoria != null ">| Auditado</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional != null">| Registrado por Profesional</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null ">| Auditado</span>
 
                             </td>
                         </tr>
@@ -149,8 +149,8 @@
                                 <span *ngIf="sobreturno && sobreturno.nota">
                                     <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnosticos[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnosticos[0]?.codificacionAuditoria != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
 
                             </td>
                         </tr>
@@ -246,8 +246,8 @@
                         <h6>
                             <strong>Diagnóstico o Motivo de Consulta</strong>
                         </h6>
-                        <plex-bool [(ngModel)]='turnoSeleccionado.diagnosticos[0].ilegible' name="ilegible" label="El diagnóstico es ilegible" (click)="marcarIlegible()"></plex-bool>
-                        <div class="row" *ngIf="!turnoSeleccionado.diagnosticos[0].ilegible">
+                        <plex-bool [(ngModel)]='turnoSeleccionado.diagnostico.ilegible' name="ilegible" label="El diagnóstico es ilegible" (click)="marcarIlegible()"></plex-bool>
+                        <div class="row" *ngIf="!turnoSeleccionado.diagnostico.ilegible">
                             <div class="col-8">
                                 <plex-select [(ngModel)]="nuevoCodigo" name="searchCodigo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
                                     placeholder="Seleccione un ćodigo CIE10" (change)="agregarDiagnostico()"></plex-select>
