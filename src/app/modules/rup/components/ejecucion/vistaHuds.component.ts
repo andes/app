@@ -55,5 +55,9 @@ export class VistaHudsComponent implements OnInit {
     volver() {
         this.router.navigate(['rup']);
     }
+     // recibe el tab que se clikeo y lo saca del array..
+     cerrartab($event) {
+        this.registrosHuds.splice($event, 1);
+    }
 
 }
