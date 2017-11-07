@@ -55,7 +55,6 @@ export class TabsComponent implements OnInit, AfterContentInit {
 
     // contentChildren are set
     ngAfterContentInit() {
-        console.log(this.tabs.first);
         // get all active tabs
         let activeTabs = this.tabs.filter((tab) => tab.active);
 
@@ -63,6 +62,16 @@ export class TabsComponent implements OnInit, AfterContentInit {
         if (activeTabs.length === 0) {
             // this.selectTab(this.tabs[0]);
             this.selectTab(this.tabs.first);
+        }
+
+        // se fija si tenemos agregamos uno nuevo y lo pone activo.
+        if (this.tabs) {
+            this.tabs.changes.subscribe((changes: any) => {
+                setTimeout(() => {
+                    let tab = changes._results[changes._results.length - 1];
+                    this.selectTab(tab);
+                });
+            });
         }
     }
 
