@@ -845,5 +845,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
     }
-
+    // recibe el tab que se clikeo y lo saca del array..
+    cerrartab($event) {
+        this.registrosHuds.splice($event, 1);
+    }
 }
