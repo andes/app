@@ -34,20 +34,20 @@ export class RevisionAgendaComponent implements OnInit {
         let turnos;
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             turnos = this.agenda.bloques[i].turnos;
-            this.turnosAsignados = (this.agenda.bloques[i].turnos).filter((turno) => {
+            let turnosAsignados = (this.agenda.bloques[i].turnos).filter((turno) => {
                 return (turno.paciente && turno.paciente.id) && (turno.estado === 'asignado' || turno.estado === 'suspendido');
             });
-            for (let t = 0; t < this.turnosAsignados.length; t++) {
+            for (let t = 0; t < turnosAsignados.length; t++) {
                 // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
+                this.servicePaciente.getById(turnosAsignados[t].paciente.id).subscribe((paciente) => {
                     if (paciente && paciente.carpetaEfectores) {
                         let carpetaEfector = null;
                         carpetaEfector = paciente.carpetaEfectores.filter((data) => {
                             return (data.organizacion.id === this.auth.organizacion.id);
                         });
-                        if (this.turnosAsignados[t] && this.turnosAsignados[t].paciente) {
-                            this.turnosAsignados[t].paciente = paciente;
-                            this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
+                        if (turnosAsignados[t] && turnosAsignados[t].paciente) {
+                            turnosAsignados[t].paciente = paciente;
+                            turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
                         }
                     }
                 });
@@ -78,7 +78,6 @@ export class RevisionAgendaComponent implements OnInit {
     enableEdicionAsistencia: boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
-    turnosAsignados = [];
     sobreturnos = [];
     horaInicio: any;
     turnoSeleccionado: any = null;
@@ -190,14 +189,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     asistenciaSeleccionada(asistencia) {
-        // if (asistencia.id === 'asistio') {
-        // if (this.turnoSeleccionado.diagnosticos && !(this.turnoSeleccionado.diagnosticos[0])) {
-        // this.turnoSeleccionado.diagnosticos[0] = {
-        //     codificacionAuditoria: null,
-        //     ilegible: false
-        // };
-        // }
-        // }
         return (this.turnoSeleccionado.asistencia === asistencia.id);
     }
 
@@ -239,7 +230,6 @@ export class RevisionAgendaComponent implements OnInit {
 
     borrarDiagnostico(index) {
         this.diagnosticos.splice(index, 1);
-        this.diagnosticos = [...this.diagnosticos];
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
@@ -329,9 +319,8 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
         };
-        // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
         let datosTurno = {};
-        if (this.diagnosticos && this.diagnosticos.length > 0) {
+        if (this.diagnosticos) {
             this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;
         }
         // Aca chequeamos si es o no sobreturno
@@ -364,7 +353,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
-    agregarSobreturno(){
+    agregarSobreturno() {
         this.showAgregarSobreturno = true;
         this.showRevisionAgenda = false;
         this.modoCompleto = false;
