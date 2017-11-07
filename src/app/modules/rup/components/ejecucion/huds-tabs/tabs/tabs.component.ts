@@ -62,16 +62,16 @@ export class TabsComponent implements OnInit, AfterContentInit {
         }
 
         // creamos el los tabs draggables en forma dinámica
-        if (this.options.dragScroll) {
+        // if (this.options.dragScroll) {
 
-            // attach to .nav-tabs element
-            this.dragScrollDom = this.element.nativeElement.querySelector('.nav-tabs');
-            this.dragScrollRef = new ElementRef(this.dragScrollDom);
+        //     // attach to .nav-tabs element
+        //     this.dragScrollDom = this.element.nativeElement.querySelector('.nav-tabs');
+        //     this.dragScrollRef = new ElementRef(this.dragScrollDom);
 
-            this.dragScroll = new DragScroll(this.dragScrollRef, this.renderer);
+        //     this.dragScroll = new DragScroll(this.dragScrollRef, this.renderer);
 
-            this.dragScroll.attach({ disabled: false, scrollbarHidden: true, yDisabled: true, xDisabled: false } as any);
-        }
+        //     this.dragScroll.attach({ disabled: false, scrollbarHidden: true, yDisabled: true, xDisabled: false } as any);
+        // }
 
     }
 

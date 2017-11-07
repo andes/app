@@ -1,3 +1,4 @@
+import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -89,7 +90,8 @@ export class PuntoInicioComponent implements OnInit {
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada'],
-                tieneTurnosAsignados: true
+                tieneTurnosAsignados: true,
+                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
             // Prestaciones
             this.servicioPrestacion.get({
@@ -147,11 +149,13 @@ export class PuntoInicioComponent implements OnInit {
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
-
+            let usu = this.auth.usuario;
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() && p.createdAt <= moment(this.fecha).endOf('day').toDate())));
+                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
+                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -281,9 +285,9 @@ export class PuntoInicioComponent implements OnInit {
     crearPrestacion() {
         this.router.navigate(['/rup/crear']);
     }
-     /**
-     * Navega para ver seleccionar un paciente y ver la huds
-     */
+    /**
+    * Navega para ver seleccionar un paciente y ver la huds
+    */
     verHuds() {
         this.router.navigate(['/rup/buscaHuds']);
     }
@@ -320,10 +324,17 @@ export class PuntoInicioComponent implements OnInit {
         return total;
     }
 
-    tienePermisos(tipoPrestacion) {
+    tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
+        // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
+        // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
+        if (prestacion) {
+            if (prestacion.estados[prestacion.estados.length - 1].createdBy.username != this.auth.usuario.username) {
+                return null;
+            }
+        }
         return existe;
     }
 
