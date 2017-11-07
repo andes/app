@@ -204,7 +204,11 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
-        this.diagnosticos.splice(index, 1);
+        if (this.diagnosticos[index].codificacionProfesional === null) {
+            this.diagnosticos.splice(index, 1);
+        } else {
+            this.diagnosticos[index].codificacionAuditoria = null;
+        }
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
