@@ -10,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -51,6 +52,7 @@ export class PrestacionValidacionComponent implements OnInit {
     temp: any = [];
 
     constructor(private servicioPrestacion: PrestacionesService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
@@ -71,8 +73,6 @@ export class PrestacionValidacionComponent implements OnInit {
             this.inicializar(id);
 
         });
-
-
     }
 
     redirect(pagina: string) {
@@ -189,6 +189,49 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
                         }
                         this.diagnosticoReadonly = true;
+
+                        // TODOOOO
+                        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+                        let registrosFrecuentes = [];
+                        registros.forEach(x => {
+                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                            registrosFrecuentes.push({
+                                concepto: x.concepto,
+                                frecuencia: x.frecuencia
+                            });
+                        });
+
+                        // Frecuentes de este profesional
+                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                            console.log('resultado', resultado);
+
+                            if (resultado && resultado[0] && resultado[0].frecuentes) {
+                                registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
+                                registrosFrecuentes.forEach(x => {
+                                    x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                                    registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                                    registrosFrecuentes.unshift(x);
+                                });
+                            }
+
+                            let frecuentesProfesional = {
+                                profesional: {
+                                    id: this.auth.profesional.id,
+                                    nombre: this.auth.profesional.nombre,
+                                    apellido: this.auth.profesional.apellido,
+                                    documento: this.auth.profesional.documento
+                                },
+                                frecuentes: registrosFrecuentes
+                            }
+
+                            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
+                                console.log(frecuentes);
+                                this.plex.toast('success', 'Toast para ver que pase por acá');
+
+                            });
+
+                        });
+
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible validar la prestación');

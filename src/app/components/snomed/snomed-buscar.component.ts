@@ -1,10 +1,11 @@
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
 import { Observable } from 'rxjs/Rx';
+import { FrecuentesProfesionalService } from './../../modules/rup/services/frecuentesProfesional.service';
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'snomed-buscar',
@@ -21,6 +22,7 @@ import { Observable } from 'rxjs/Rx';
 })
 
 export class SnomedBuscarComponent implements OnInit, OnChanges {
+    resultadosAux: any[] = [];
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
@@ -77,8 +79,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // inyectamos servicio de snomed, plex y tambien ElementRef
     // ElementRef lo utilizo para tener informacion del
     // html del codigo de este componente en el DOM
-    constructor(private SNOMED: SnomedService, private plex: Plex,
-        myElement: ElementRef, public servicioTipoPrestacion: TipoPrestacionService) {
+    constructor(private SNOMED: SnomedService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
+        private auth: Auth,
+        private plex: Plex,
+        myElement: ElementRef,
+        public servicioTipoPrestacion: TipoPrestacionService) {
         this.elementRef = myElement;
     }
 
@@ -160,7 +166,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             window.clearTimeout(this.timeoutHandle);
         }
 
-        if (this.searchTerm) {
+        if (this.searchTerm && this.searchTerm !== '') {
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);
@@ -178,11 +184,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
-                this.timeoutHandle = null;
+                // this.timeoutHandle = null;
                 this.loading = true;
                 this.resultados = [];
-
-                // alert(this.tipoBusqueda + " / " + search);
 
                 // buscamos
                 let apiMethod;
@@ -200,7 +204,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             semanticTag: ['procedimiento', 'entidad observable']
                         });
                         break;
-                        case 'planes':
+                    case 'planes':
                         apiMethod = this.SNOMED.get({
                             search: search,
                             semanticTag: ['procedimiento']
@@ -219,22 +223,39 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         });
                         break;
                     default:
-                        apiMethod = this.SNOMED.get(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'situacion']
+                        });
                         break;
                 }
+
                 let idTimeOut = this.timeoutHandle;
+
                 apiMethod.subscribe(resultados => {
+
                     if (idTimeOut === this.timeoutHandle) {
                         this.loading = false;
                         this.resultados = resultados;
-                    }
 
-                    // if (this.tipoBusqueda === 'procedimientos') {
-                    //     // Filtrar de los resultado las prestaciones turneables
-                    //     this.resultados = this.resultados.filter(concepto => {
-                    //         return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
-                    //     });
-                    // }
+                        let frecuentes = [];
+
+                        // Frecuentes de este profesional
+                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                            console.log(resultado);
+
+                            if (resultado && resultado[0] && resultado[0].frecuentes) {
+                                frecuentes = resultado[0].frecuentes.map(x => {
+                                    if (x.frecuencia != null && x.frecuencia >= 1 && this.resultados.find(c => c.conceptId === x.concepto.conceptId)) {
+                                        this.resultados.splice(this.resultados.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                                        this.resultados.unshift(x.concepto);
+                                    }
+                                });
+                            }
+
+                        });
+
+                    }
 
                 }, err => {
                     this.loading = false;
@@ -246,6 +267,17 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             this.resultados = [];
             this._tengoResultado.emit(false);
         }
+    }
+
+    filtroBuscadorSnomed(filtro: any[]) {
+        if (this.resultados.length >= this.resultadosAux.length) {
+            this.resultadosAux = this.resultados;
+        } else {
+            this.resultados = this.resultadosAux;
+        }
+
+        this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
+
     }
 
     /**
