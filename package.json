@@ -36,7 +36,6 @@
         "@angular/platform-browser-dynamic": "^4.3.1",
         "@angular/platform-server": "^4.3.1",
         "@angular/router": "^4.3.1",
-        "angular2-drag-scroll": "^1.4.0",
         "angular2-google-maps": "^0.17.0",
         "bowser": "^1.7.1",
         "bson": "^1.0.4",

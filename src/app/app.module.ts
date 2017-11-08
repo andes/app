@@ -32,7 +32,6 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
-import { DragScrollModule } from 'angular2-drag-scroll';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -171,7 +170,8 @@ import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.com
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
-
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -248,7 +248,9 @@ export const RUP_ELEMENTS: any[] = [
     { component: ObesidadComponent, key: 'ObesidadComponent' },
     { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
     { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
-    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' }
+    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
+    { component: VistaHudsComponent, key: 'VistaHudsComponent' },
+    { component: HudsBusquedaPacienteComponent, key: 'HudsBusquedaPacienteComponent' }
 
 ];
 
@@ -282,7 +284,9 @@ const RUP_COMPONENTS = [
     ObesidadComponent,
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    VistaHudsComponent,
+    HudsBusquedaPacienteComponent
 ];
 
 // Locales
@@ -356,8 +360,7 @@ let RUPComponentsArray = [
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        DragScrollModule
+        })
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -398,6 +401,8 @@ let RUPComponentsArray = [
         HeaderPacienteComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
+        VistaHudsComponent,
+        HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,

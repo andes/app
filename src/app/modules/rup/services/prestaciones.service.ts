@@ -422,8 +422,8 @@ export class PrestacionesService {
                 // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
                 // que prestacion quiere solicitar debo hacer ese cambio
                 let conceptoSolicitud = plan.concepto;
-                if (plan.valor && plan.valor.prestacionSolicitada) {
-                    conceptoSolicitud = plan.valor.prestacionSolicitada;
+                if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
+                    conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
                 }
 
                 // Controlemos que se trata de una prestación turneable.

@@ -1,0 +1,140 @@
+<!-- Header de paciente -->
+<header *ngIf="paciente">
+    <header-paciente [cambiarPaciente]="false" [paciente]="paciente"></header-paciente>
+</header>
+<form class="plex-layout" #form="ngForm">
+    <!-- Sección principal -->
+    <section class="plex-layout prestacionEjecucion" *ngIf="paciente">
+        <div class="row">
+            <!-- Panel Principal -->
+            <div class="col-8">
+                <plex-box>
+                    <header>
+                        <div class="page-title">
+                           HUDS
+                        </div>
+                    </header>
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true, canClose: true, tabFixed: false}" (_tab)="cerrartab($event)">
+                        <ng-container *ngIf="registrosHuds">
+                            <ng-container *ngFor="let registro of registrosHuds; let i = index">
+                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
+                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
+                                        [prestacion]="" [registro]="registro.data" [soloValores]="true">
+                                    </rup>
+                                </tab>
+
+                                <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
+                                    <h4>{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <b>Fecha: </b>
+                                            <br> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}
+                                        </div>
+                                        <div class="col-12">
+                                            <b>Solicitada por el profesional: </b>
+                                            <br> {{ registro.data.solicitud.profesional | profesional }}
+                                        </div>
+                                        <div class="col-12">
+                                            <b>Desde la Organización: </b>
+                                            <br> {{ registro.data.solicitud.organizacion.nombre }}
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <hr>
+                                            <h4>Registros de la consulta:</h4>
+                                            <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
+
+                                                <div class="rup-card {{elemento.concepto.semanticTag}} {{ elemento.esSolicitud ? 'plan' : elemento.concepto.semanticTag }}">
+                                                    <div class="type">
+                                                    </div>
+                                                    <div class="rup-content">
+                                                        <div class="rup-body">
+                                                            <div class="row">
+                                                                <div class="col-3">
+                                                                    <b *ngIf="elemento?.nombre">
+                                                                        {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                                                    </b>
+                                                                    <br>
+                                                                    <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
+                                                                </div>
+                                                                <div class="col-8">
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                                                        [registro]="elemento" [soloValores]="true">
+                                                                    </rup>
+                                                                    <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                                                        <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
+                                                                    </div>
+                                                                    <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                                                        <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
+                                                                            <small *ngIf="elemento.esPrimeraVez" class="badge badge-info">Es primera vez</small>
+                                                                        </ng-container>
+                                                                    </ng-container>
+                                                                </div>
+
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
+                                                                        <b>Evolución: </b>{{ elemento.valor.evolucion }}
+                                                                    </div>
+                                                                    <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
+                                                                        <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)'
+                                                                        }}
+                                                                    </div>
+                                                                    <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
+                                                                        <b>Indicaciones: </b> {{ elemento.valor.indicaciones
+                                                                        || '(ninguna)' }}
+                                                                    </div>
+                                                                    <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
+                                                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                                                        + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                                    </div>
+                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"
+                                                                        class="text-secondary">
+                                                                        <b>Inicio aproximado: </b>
+                                                                        <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
+                                                                        <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow
+                                                                            }}
+                                                                        </ng-container>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+
+                                </tab>
+                            </ng-container>
+                        </ng-container>
+                    </tabs>
+                </plex-box>
+            </div>
+            <!-- HUDS -->
+            <div class="col-4" *ngIf="paciente">
+                <plex-box>
+                    <!-- HUDS [hudsBusqueda.component.ts] -->
+                    <rup-hudsBusqueda (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                </plex-box>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+
+        <div class="row">
+            <div class="col">
+                <plex-button label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
+                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
+                <!-- class="float-right"></plex-button> -->
+            </div>
+        </div>
+
+    </footer>
+</form>
