@@ -14,7 +14,7 @@
                            HUDS
                         </div>
                     </header>
-                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}">
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true, canClose: true, tabFixed: false}" (_tab)="cerrartab($event)">
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
