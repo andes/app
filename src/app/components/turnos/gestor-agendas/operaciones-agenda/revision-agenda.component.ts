@@ -25,6 +25,7 @@ import { Cie10Service } from './../../../../services/term/cie10.service';
 })
 
 export class RevisionAgendaComponent implements OnInit {
+    indiceReparo: any;
     @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
     // Parámetros
@@ -149,6 +150,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
+            this.showReparo = false;
         } else {
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
@@ -217,13 +219,6 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
-    reparoDiagnostico(index) {
-        if (this.reparo) {
-            delete this.reparo.$order;
-            this.diagnosticos[index].codificacionAuditoria = this.reparo;
-            this.showReparo = false;
-        }
-    }
 
     marcarIlegible() {
         this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
@@ -297,9 +292,9 @@ export class RevisionAgendaComponent implements OnInit {
 
     }
 
-    cancelar() {
-        this.turnoSeleccionado = null;
-    }
+    // cancelar() {
+    //     this.turnoSeleccionado = null;
+    // }
 
     onSave() {
         // Se guarda el turno seleccionado
@@ -333,10 +328,10 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                this.plex.toast('success', 'Información', 'El turno fue actualizado');
+                this.plex.toast('success', 'Información', 'El turno fue actualizado', 1);
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
-                this.turnoSeleccionado = null;
+                // this.turnoSeleccionado = null;
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');
@@ -364,8 +359,17 @@ export class RevisionAgendaComponent implements OnInit {
         this.volverAlGestor.emit(true);
     }
 
-    mostrarReparo() {
-        this.showReparo = !this.showReparo;
+    mostrarReparo(index) {
+        this.indiceReparo = index;
+        this.showReparo = true;
+    }
+
+    repararDiagnostico() {
+        if (this.reparo) {
+            delete this.reparo.$order;
+            this.diagnosticos[this.indiceReparo].codificacionAuditoria = this.reparo;
+            this.showReparo = false;
+        }
     }
 
     volverRevision() {
