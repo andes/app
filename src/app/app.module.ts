@@ -32,7 +32,6 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
-import { DragScrollModule } from 'angular2-drag-scroll';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -96,6 +95,9 @@ import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditor
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
+
+// RUP
+import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -195,6 +197,7 @@ import { RiesgoCardiovascularComponent } from './modules/rup/components/elemento
 
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -357,8 +360,7 @@ let RUPComponentsArray = [
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        DragScrollModule
+        })
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -453,7 +455,8 @@ let RUPComponentsArray = [
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        FrecuentesProfesionalService
 
     ]
 })

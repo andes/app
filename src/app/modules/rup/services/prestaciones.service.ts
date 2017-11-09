@@ -12,7 +12,11 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     public refsetsIds = {
-        cronico: '1641000013105'
+        cronico: '1641000013105',
+        programable: '1661000013109',
+        Antecedentes_Familiares: '1621000013103',
+        Antecedentes_Personales_procedimientos: '1911000013100',
+        Antecedentes_Personales_hallazgos: '1901000013103'
     };
 
     constructor(private server: Server, public auth: Auth) { }
@@ -422,8 +426,8 @@ export class PrestacionesService {
                 // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
                 // que prestacion quiere solicitar debo hacer ese cambio
                 let conceptoSolicitud = plan.concepto;
-                if (plan.valor && plan.valor.prestacionSolicitada) {
-                    conceptoSolicitud = plan.valor.prestacionSolicitada;
+                if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
+                    conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
                 }
 
                 // Controlemos que se trata de una prestación turneable.

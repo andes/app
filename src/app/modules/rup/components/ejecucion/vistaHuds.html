@@ -11,15 +11,14 @@
                 <plex-box>
                     <header>
                         <div class="page-title">
-                           HUDS
+                            HUDS
                         </div>
                     </header>
-                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}">
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true, canClose: true, tabFixed: false}" (_tab)="cerrartab($event)">
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
-                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [prestacion]="" [registro]="registro.data" [soloValores]="true">
+                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
@@ -59,10 +58,9 @@
                                                                     <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                                                 </div>
                                                                 <div class="col-8">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                                                        [registro]="elemento" [soloValores]="true">
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
                                                                     </rup>
-                                                                    <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
+                                                                    <div *ngIf="elemento.esSolicitud && prestacion?.estados[prestacion?.estados.length-1].tipo === 'validada'">
                                                                         <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
                                                                     </div>
                                                                     <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
@@ -79,23 +77,18 @@
                                                                         <b>Evolución: </b>{{ elemento.valor.evolucion }}
                                                                     </div>
                                                                     <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
-                                                                        <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)'
-                                                                        }}
+                                                                        <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
                                                                     </div>
                                                                     <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
-                                                                        <b>Indicaciones: </b> {{ elemento.valor.indicaciones
-                                                                        || '(ninguna)' }}
+                                                                        <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
                                                                     </div>
                                                                     <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
-                                                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                                                        + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                                     </div>
-                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"
-                                                                        class="text-secondary">
+                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')" class="text-secondary">
                                                                         <b>Inicio aproximado: </b>
                                                                         <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
-                                                                        <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow
-                                                                            }}
+                                                                        <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}
                                                                         </ng-container>
                                                                     </div>
                                                                 </div>
