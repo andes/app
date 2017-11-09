@@ -1,21 +1,28 @@
 <form *ngIf="!hideSearchInput">
     <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
-        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar {{tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda}} ..."></plex-text>
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar {{tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda}} ..."></plex-text>
     </div>
 </form>
+
+<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
 <div *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
     No se han encontrado resultados
 </div>
-
-<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+<div class="menu-buscador">
+    <b>Filtros</b>
+    <br>
+    <plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed(['hallazgo', 'trastorno', 'situacion'])" type=" btn-sm btn-problemas"></plex-button>
+    <plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" type=" btn-sm btn-procedimientos"></plex-button>
+    <plex-button label="PLANES" (click)="filtroBuscadorSnomed(['procedimiento'])" type=" btn-sm btn-planes"></plex-button>
+</div>
 
 <ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-
-            <div class="rup-card mini {{item.semanticTag}}">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
                 <div *ngIf="_dragScope" class=" type">
                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                 </div>
@@ -23,9 +30,8 @@
                 <div class="rup-content">
                     <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
                         <div class="title">
-                            {{item.term}}
+                            {{ item.term }}
                         </div>
-
                         <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
                             <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                 <i class="mdi mdi-plus-box-outline"></i>

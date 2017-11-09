@@ -1,12 +1,14 @@
+<!-- Apunta a components/snomed/snomed-buscar.component.ts -->
+<snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
+    (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)"></snomed-buscar>
+
+<!-- <h5>Filtros</h5>
 <div class="menu-buscador">
     <plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
     <plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
     <plex-button label="PLANES" (click)="filtroBuscadorSnomed('planes')" type=" btn-sm btn-planes"></plex-button>
-</div>
+</div> -->
 
-
-<!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)"></snomed-buscar>
 
 <!-- <div *ngIf="listaPlanes && listaPlanes.length === 0 && !loading">
     No se han encontrado resultados
@@ -21,9 +23,8 @@
 
             <li *ngIf="tipoBusqueda === 'procedimientos' && (item.semanticTag === 'procedimiento' || item.semanticTag === 'entidad observable') || tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación') || tipoBusqueda === 'planes' && (item.semanticTag === 'procedimientos')"
                 draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                <div class="rup-card mini {{item.semanticTag}}">
+                <div class="rup-card mini">
                     <div class="type">
-
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                     </div>
                     <div class="rup-content">

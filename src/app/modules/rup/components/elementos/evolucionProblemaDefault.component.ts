@@ -18,6 +18,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public unaEvolucion;
     public indice = 0;
     public evoluciones;
+    public referentSet = [];
 
     public diagnosticoPrestacionEmit: any = new EventEmitter<any>();
 
@@ -33,6 +34,20 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
+
+        // buscamos si el hallazgo pertenece a algún referentSet
+        if (this.registro.concepto && this.registro.concepto.refsetIds) {
+            this.registro.concepto.refsetIds.forEach(refSet => {
+                Object.keys(this.prestacionesService.refsetsIds).forEach(k => {
+                    if (this.prestacionesService.refsetsIds[k] === refSet) {
+                        let referencia = k.replace(/_/g, ' ');
+                        this.referentSet.push(referencia);
+                    }
+                });
+            });
+        }
+
+
         if (!this.registro.valor) {
             this.registro.valor = { estado: 'activo' };
         } else {
@@ -44,7 +59,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     if (this.registro.valor.origen === 'transformación') {
                         this.origenTransformacion(this.registro.valor.idRegistroTransformado);
                     }
-                    this.prestacionesService.getUnHallazgoPacienteXOrigen(this.prestacion.paciente.id, this.registro.valor.idRegistroOrigen)
+                    this.prestacionesService.getUnHallazgoPacienteXOrigen(this.paciente.id, this.registro.valor.idRegistroOrigen)
                         .subscribe(hallazgo => {
                             if (hallazgo) {
                                 this.hallazgoHudsCompleto = hallazgo;

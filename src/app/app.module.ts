@@ -32,7 +32,6 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { ChartsModule } from 'ng2-charts';
-import { DragScrollModule } from 'angular2-drag-scroll';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -96,6 +95,9 @@ import { AuditoriaPrestacionPacienteService } from './services/auditoria/auditor
 import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
+
+// RUP
+import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -170,6 +172,8 @@ import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.com
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -196,6 +200,7 @@ import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/a
 
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -246,7 +251,9 @@ export const RUP_ELEMENTS: any[] = [
     { component: ObesidadComponent, key: 'ObesidadComponent' },
     { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent' },
     { component: FiltradoGlomerularComponent, key: 'FiltradoGlomerularComponent' },
-    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' }
+    { component: RiesgoCardiovascularComponent, key: 'RiesgoCardiovascularComponent' },
+    { component: VistaHudsComponent, key: 'VistaHudsComponent' },
+    { component: HudsBusquedaPacienteComponent, key: 'HudsBusquedaPacienteComponent' }
 
 ];
 
@@ -280,7 +287,9 @@ const RUP_COMPONENTS = [
     ObesidadComponent,
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    VistaHudsComponent,
+    HudsBusquedaPacienteComponent
 ];
 
 // Locales
@@ -357,8 +366,7 @@ let RUPComponentsArray = [
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        DragScrollModule
+        })
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -399,6 +407,8 @@ let RUPComponentsArray = [
         HeaderPacienteComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
+        VistaHudsComponent,
+        HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
@@ -452,7 +462,8 @@ let RUPComponentsArray = [
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        FrecuentesProfesionalService
 
     ]
 })

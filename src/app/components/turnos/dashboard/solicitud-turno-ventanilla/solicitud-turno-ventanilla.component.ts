@@ -317,12 +317,15 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;
             delete this.modelo.solicitud.tipoPrestacion.$order;
+            if (this.registros.solicitudPrestacion.profesionales) {
+                this.registros.solicitudPrestacion.profesionales.filter(profesional => {
+                    return delete profesional.$order;
+                });
+            }
 
-            this.registros.solicitudPrestacion.profesionales.filter(profesional => {
-                return delete profesional.$order;
-            });
 
             this.modelo.solicitud.registros = {
+                nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,
                 valor: {
                     solicitudPrestacion: this.registros.solicitudPrestacion

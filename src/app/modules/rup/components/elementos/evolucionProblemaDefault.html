@@ -8,6 +8,15 @@
         </div>
     </div>
 </ng-container>
+<ng-container *ngIf="!soloValores && referentSet.length > 0">
+    <div class="row">
+        <div class="col-12">
+            <span *ngFor="let rf of referentSet" class="badge badge-danger">
+               {{rf}}
+            </span>
+        </div>
+    </div>
+</ng-container>
 <div *ngIf="!soloValores">
     <div *ngIf="elementoRUP && registro">
         <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones">
@@ -29,10 +38,8 @@
             <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
-                        (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
-                        [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
@@ -88,6 +95,11 @@
         <div class="col-8">
             <div class="row no-gutters">
                 <div class="col">
+                    <ng-container *ngIf="referentSet.length > 0">
+                        <small *ngFor="let rf of referentSet" class="badge badge-danger">
+                                    {{rf}}
+                                 </small>
+                    </ng-container>
                     <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">
                         Diagnóstico principal
                     </small>

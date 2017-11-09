@@ -32,7 +32,7 @@ export class BuscadorComponent implements OnInit {
     public data: any[] = [];
 
     // Variable a pasar al buscador de Snomed.. Indica el tipo de busqueda
-    public tipoBusqueda = 'problemas'; // Por defecto trae los problemas
+    public tipoBusqueda = ''; // Por defecto trae TODO
     // public showPlanes = false;
     public ejecucion: any[] = [];
 
@@ -63,23 +63,27 @@ export class BuscadorComponent implements OnInit {
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     filtroBuscadorSnomed(tipoBusqueda) {
 
-        this.tipoBusqueda = tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda;
+        this.tipoBusqueda = !tipoBusqueda ? 'todos' : tipoBusqueda;
 
         this.masFrecuentesFiltradas = [];
         this.masFrecuentes.forEach(element => {
 
             let semanticTag: String;
-            switch (element.semanticTag) {
+            switch (tipoBusqueda) {
                 case 'trastorno':
                 case 'hallazgo':
                 case 'problema':
-                    semanticTag = 'problemas';
+                    semanticTag = 'hallazgo';
                     break;
                 case 'procedimiento':
-                    semanticTag = 'procedimientos';
+                    semanticTag = 'procedimiento';
                     break;
                 case 'planes':
-                    semanticTag = 'procedimientos';
+                    semanticTag = 'planes';
+                    break;
+                case 'todos':
+                    // '"hallazgo" "trastorno" "situacion" "entidad observable" "procedimiento"'
+                    semanticTag = 'todos';
                     break;
             }
 
@@ -89,6 +93,8 @@ export class BuscadorComponent implements OnInit {
         });
 
         this.tipoBusqueda = tipoBusqueda;
+
+        // <rup-buscador> en prestacionEjecucion.html
         this._tipoDeBusqueda.emit(tipoBusqueda);
     }
 

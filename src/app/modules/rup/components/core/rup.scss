@@ -20,7 +20,8 @@
     }
     &.hallazgo,
     &.trastorno,
-    &.situacion {
+    &.entidad.observable,
+    &.situación {
         &:hover,
         &.active {
             border: 2px solid $problemas;
@@ -39,8 +40,7 @@
             background: $procedimientos;
         }
     }
-    &.entidad.observable.plan,
-    &.procedimiento.plan {
+    &.planes {
         &:hover,
         &.active {
             border: 2px solid $planes;

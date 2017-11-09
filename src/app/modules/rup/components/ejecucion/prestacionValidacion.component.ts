@@ -10,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -51,6 +52,7 @@ export class PrestacionValidacionComponent implements OnInit {
     temp: any = [];
 
     constructor(private servicioPrestacion: PrestacionesService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
@@ -71,8 +73,6 @@ export class PrestacionValidacionComponent implements OnInit {
             this.inicializar(id);
 
         });
-
-
     }
 
     redirect(pagina: string) {
@@ -102,7 +102,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: id }).subscribe(prestacionSolicitud => {
+                    this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
                         this.cargaPlan(prestacionSolicitud, conceptosTurneables);
                     });
                 });
@@ -184,12 +184,54 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-
                         });
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
                         }
                         this.diagnosticoReadonly = true;
+
+                        // TODOOOO
+                        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+                        let registrosFrecuentes = [];
+                        registros.forEach(x => {
+                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                            registrosFrecuentes.push({
+                                concepto: x.concepto,
+                                frecuencia: x.frecuencia
+                            });
+                        });
+
+                        // Frecuentes de este profesional
+                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                            console.log('resultado', resultado);
+
+                            if (resultado && resultado[0] && resultado[0].frecuentes) {
+                                registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
+                                registrosFrecuentes.forEach(x => {
+                                    x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                                    registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                                    registrosFrecuentes.unshift(x);
+                                });
+                            }
+
+                            let frecuentesProfesional = {
+                                profesional: {
+                                    id: this.auth.profesional.id,
+                                    nombre: this.auth.profesional.nombre,
+                                    apellido: this.auth.profesional.apellido,
+                                    documento: this.auth.profesional.documento
+                                },
+                                frecuentes: registrosFrecuentes
+                            }
+
+                            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
+                                console.log(frecuentes);
+                                this.plex.toast('success', 'Toast para ver que pase por acá');
+
+                            });
+
+                        });
+
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -255,10 +297,15 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
-
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            { return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId); }
+            return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+        prestacionesSolicitadas.forEach(ps => {
+
+            let idRegistro = ps.solicitud.registros[0].id;
+            this.asignarTurno[idRegistro] = {};
+        });
+
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
             // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
             this.servicioAgenda.get({
@@ -269,11 +316,14 @@ export class PrestacionValidacionComponent implements OnInit {
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));
+
                 if (agendas) {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
+                        let idRegistro = element.solicitud.registros[0].id;
+                        this.asignarTurno[idRegistro] = {};
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
-                            this.asignarTurno[element.solicitud.tipoPrestacion.conceptId] = true;
+                            this.asignarTurno[idRegistro] = element;
                         }
                     });
                 }
