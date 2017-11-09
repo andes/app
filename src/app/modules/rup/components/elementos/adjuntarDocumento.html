@@ -1,5 +1,5 @@
 <div>
-    <input type="file" accept="image/*" (change)="changeListener($event)" style="display:none;" #upload>
+    <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
     <div *ngIf="!waiting && !soloValores">
         <plex-button type="primary" label="Cargar documentos" title="Cargar documentos" (click)="upload.click()"></plex-button>
         o
