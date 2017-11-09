@@ -22,6 +22,7 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 })
 
 export class SnomedBuscarComponent implements OnInit, OnChanges {
+
     resultadosAux: any[] = [];
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
@@ -75,6 +76,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
     */
+    public contadorSemanticTags = {
+        hallazgo: 0,
+        trastorno: 0,
+        procedimiento: 0,
+        entidadObservable: 0,
+        situacion: 0
+    };
 
     // inyectamos servicio de snomed, plex y tambien ElementRef
     // ElementRef lo utilizo para tener informacion del
@@ -238,6 +246,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.loading = false;
                         this.resultados = resultados;
 
+                        this.contadorSemantigTags();
+
                         let frecuentes = [];
 
                         // Frecuentes de este profesional
@@ -269,7 +279,23 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
     }
 
-    filtroBuscadorSnomed(filtro: any[]) {
+    contadorSemantigTags(): any {
+        this.contadorSemanticTags = {
+            hallazgo: 0,
+            trastorno: 0,
+            procedimiento: 0,
+            entidadObservable: 0,
+            situacion: 0
+        };
+        let tag;
+        this.resultados.forEach(x => {
+            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
+            this.contadorSemanticTags[String(tag)]++;
+        });
+
+    }
+
+    filtroBuscadorSnomed(filtro: any[], tipo = null) {
         if (this.resultados.length >= this.resultadosAux.length) {
             this.resultadosAux = this.resultados;
         } else {
@@ -277,7 +303,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
-
+        this.tipoBusqueda = tipo ? tipo : '';
     }
 
     /**
