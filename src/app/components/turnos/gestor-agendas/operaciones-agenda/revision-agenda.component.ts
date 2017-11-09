@@ -156,7 +156,6 @@ export class RevisionAgendaComponent implements OnInit {
             this.pacientesSearch = false;
             if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
-
                 // Verificamos si existe alguna codificación de profesional.
                 this.existeCodificacionProfesional = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? true : false;
             }
@@ -219,8 +218,13 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
+    aprobar(index) {
+        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
+    }
+
 
     marcarIlegible() {
+        console.log('MARCADO ILEGIBLE');
         this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
         this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
         this.diagnosticos = [];
@@ -292,9 +296,9 @@ export class RevisionAgendaComponent implements OnInit {
 
     }
 
-    // cancelar() {
-    //     this.turnoSeleccionado = null;
-    // }
+    cancelar() {
+        this.turnoSeleccionado = null;
+    }
 
     onSave() {
         // Se guarda el turno seleccionado

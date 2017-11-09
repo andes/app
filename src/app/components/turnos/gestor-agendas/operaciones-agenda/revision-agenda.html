@@ -246,7 +246,7 @@
                         <hr>
                         <!-- Turno no codificado por profesional -->
                         <div>
-                            <div class="row" *ngIf="!existeCodificacionProfesional && !showReparo">
+                            <div class="row" *ngIf="!existeCodificacionProfesional">
                                 <div class="col-4">
                                     <br>
                                     <plex-bool [(ngModel)]='turnoSeleccionado.diagnostico.ilegible' name="ilegible" label="Diagnóstico ilegible" (click)="marcarIlegible()"></plex-bool>
@@ -258,13 +258,24 @@
                                 </div>
                                 <hr>
                             </div>
-                            <div *ngIf="diagnosticos.length>0 && !turnoSeleccionado.diagnostico.ilegible ">
+                            <div *ngIf="diagnosticos.length>0 && !turnoSeleccionado.diagnostico.ilegible && !showReparo ">
 
                                 <!-- Si el turno no fue codificado por profesional se permite cargar una lista de codificaciones -->
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
-
+                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null">
+                                                <plex-button icon="mdi mdi-check" title="Aprobar" (click)="aprobar(i)"></plex-button>
+                                            </td>
+                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == diagnostico.codificacionProfesional">
+                                                <span class="badge-success">Aprobado</span>
+                                            </td>
+                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria != null && diagnostico.codificacionAuditoria != diagnostico.codificacionProfesional">
+                                                <span class="badge-success">Reparado</span>
+                                            </td>
+                                            <td *ngIf="existeCodificacionProfesional">
+                                                <plex-button icon="mdi mdi-pencil" title="Reparar" (click)="mostrarReparo(i)"> </plex-button>
+                                            </td>
                                             <td *ngIf="diagnostico.codificacionAuditoria == null && diagnostico.codificacionProfesional != null">
                                                 {{diagnostico.codificacionProfesional.sinonimo}}
                                             </td>
@@ -274,20 +285,14 @@
                                             <td *ngIf="i==0">
                                                 <span class="badge-success">Principal</span>
                                             </td>
+                                            <td *ngIf="!existeCodificacionProfesional">
+                                                <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
+                                            </td>
                                             <td *ngIf="i==0 && !existeCodificacionProfesional">
                                                 <plex-bool [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
                                             </td>
                                             <td *ngIf="i==0 && existeCodificacionProfesional">
                                                 <span *ngIf="i==0 && diagnostico.primeraVez" class="badge-success">Primera vez</span>
-                                            </td>
-                                            <td *ngIf="existeCodificacionProfesional">
-                                                <plex-bool name="aprobado" label="Aprobado"></plex-bool>
-                                            </td>
-                                            <td *ngIf="existeCodificacionProfesional">
-                                                <plex-button icon="mdi mdi-pencil" title="Reparar"> </plex-button>
-                                            </td>
-                                            <td *ngIf="!existeCodificacionProfesional">
-                                                <plex-button icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
                                             </td>
                                         </tr>
                                     </tbody>
