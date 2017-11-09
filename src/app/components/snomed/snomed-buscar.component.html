@@ -1,21 +1,47 @@
 <form *ngIf="!hideSearchInput">
-    <div class="buscador {{tipoBusqueda ? 'borde-' + tipoBusqueda : ''}}">
+    <div class="buscador">
         <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar {{tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda}} ..."></plex-text>
     </div>
 </form>
 
-<plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-<div *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
-    No se han encontrado resultados
-</div>
 <div class="menu-buscador">
-    <b>Filtros</b>
-    <br>
-    <plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed(['hallazgo', 'trastorno', 'situacion'])" type=" btn-sm btn-problemas"></plex-button>
-    <plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" type=" btn-sm btn-procedimientos"></plex-button>
-    <plex-button label="PLANES" (click)="filtroBuscadorSnomed(['procedimiento'])" type=" btn-sm btn-planes"></plex-button>
+    <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
+    <div class="filtros d-flex">
+        <b>Filtros</b>
+        <small class="ml-3" *ngIf="searchTerm && resultados && resultados.length === 0 && !loading">
+            No se han encontrado resultados
+        </small>
+    </div>
+    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
+        <div class="col m-0 p-0">
+            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{}">
+                HALLAZGOS
+                <small *ngIf="(contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']) > 0" class="badge badge-hallazgos ml-1 float-right">
+                    {{ contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']}}</small>
+            </button>
+        </div>
+        <div class="col m-0 p-0">
+            <button (click)="filtroBuscadorSnomed(['trastorno'])" [ngClass]="{}">
+                TRASTORNOS
+                <small *ngIf="contadorSemanticTags['trastorno'] > 0" class="badge badge-trastornos ml-1 float-right"> {{ contadorSemanticTags['trastorno'] }}</small>
+            </button>
+        </div>
+        <div class="col m-0 p-0">
+            <button (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" class="procedimientos">
+                PROCEDIMIENTOS
+                <small *ngIf="(contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']) > 0" class="badge badge-procedimientos ml-1 float-right">
+                    {{ contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']}}</small>
+            </button>
+        </div>
+        <div class="col m-0 p-0">
+            <button (click)="filtroBuscadorSnomed(['procedimiento'], 'planes')" class="planes">
+                PLANES
+                <small *ngIf="contadorSemanticTags['procedimiento'] > 0" class="badge badge-planes ml-1 float-right"> {{ contadorSemanticTags['procedimiento'] }}</small>
+            </button>
+        </div>
+    </div>
 </div>
 
 <ul class="conceptos list-unstyled">
@@ -28,13 +54,14 @@
                 </div>
 
                 <div class="rup-content">
-                    <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
-                        <div class="title">
+                    <div class="header row m-0 pl-0" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
+                        <div class="title col-6">
                             {{ item.term }}
                         </div>
-                        <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
+                        <div class="col pr-1" [ngClass]="{'float-right text-right': _dragScope, 'd-flex': tipoBusqueda === 'equipamientos'}">
+                            <small class="badge badge-{{ (tipoBusqueda === 'planes' ? 'planes' : item.semanticTag + 's') }} text-default">{{ item.semanticTag }}</small>
                             <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
-                                <i class="mdi mdi-plus-box-outline"></i>
+                                <i class="mdi mdi-plus-box"></i>
                             </a>
                         </div>
                     </div>
