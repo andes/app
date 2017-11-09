@@ -26,8 +26,8 @@
                     <!--Header completo-->
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
-                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
+                            'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
                             hs
                         </div>
                     </div>
@@ -219,7 +219,9 @@
                         <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <span *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }} </span>
+                        <small *ngIf="sobreturno?.paciente?.id" [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{ sobreturno.paciente | paciente }}
+                            <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
+                        </small>
                         <small>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento !== ''">
                                 <br> DNI {{sobreturno.paciente.documento | number}}</span>
@@ -234,26 +236,43 @@
                         </small>
                         <br *ngIf="sobreturno?.paciente?.id">
                         <small>
-                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.tipoPrestacion">{{sobreturno.tipoPrestacion.nombre}}</span>
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.tipoPrestacion && agenda.tipoPrestaciones.length > 1">{{sobreturno.tipoPrestacion.nombre}}</span>
                         </small>
 
                         <span *ngIf="sobreturno && sobreturno.estado === 'disponible'">Disponible</span>
                         <span [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</span>
                     </td>
-                    <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
+                    <td>
+                        <small *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge badge-success float-right"
+                            title="Asistió" titlePosition="left">
+                            <i class="mdi mdi-account-check"></i>
+                        </small>
+                        <small *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'" class="badge badge-danger float-right"
+                            title="No asistió" titlePosition="left">
+                            <i class="mdi mdi-account-remove"></i>
+                        </small>
+                        <small *ngIf="sobreturno?.nota" class="badge badge-warning float-right" title="{{sobreturno.nota}}" titlePosition="left">
+                            <i class="text-warning warning mdi mdi-message"></i>
+                        </small>
+                        <small *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
+                            <popover-audit placement="left" [data]="sobreturno"></popover-audit>
+                        </small>
+
+                    </td>
+                    <!-- <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
                         <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
                         <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
                         <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'sinDatos' && sobreturno.estado !== 'suspendido'" class="badge-danger">Sin Datos</div>
 
-                    </td>
-                    <td>
+                    </td> -->
+                    <!-- <td>
                         <small *ngIf="sobreturno && sobreturno.nota" class="badge badge-warning">
                             <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
                         </small>
                         <popover-audit *ngIf="sobreturno && sobreturno.estado !== 'disponible' && sobreturno.estado !== 'turnoDoble'" placement="left"
                             [data]="sobreturno">
                         </popover-audit>
-                    </td>
+                    </td> -->
                 </tr>
             </tbody>
         </table>
