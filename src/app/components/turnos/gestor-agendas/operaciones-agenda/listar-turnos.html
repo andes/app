@@ -48,6 +48,7 @@
                             <th>DNI | Nro. Carpeta</th>
                             <th>Obra Social</th>
                             <th>Apellidos y Nombres</th>
+                            <th>Fecha Nacimiento</th>
                             <th>Sexo</th>
                             <th>Diagnóstico</th>
                             <th>Primera Vez</th>
@@ -85,6 +86,9 @@
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.edad">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                            </td>
+                            <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
                             </td>
                             <td style="width:250px"></td>
@@ -94,6 +98,59 @@
                             <td>
                                 <div *ngIf="turno?.paciente?.id" class="badge">SI</div>
                                 <div *ngIf="turno?.paciente?.id" class="badge">NO</div>
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!--Listado de sobreturnos-->
+                <!--Turnos-->
+                <table *ngIf="agenda.sobreturnos.length > 0" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th colspan="14">&raquo; Sobreturnos
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index">
+                            <td>
+                                <small>
+                                    <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
+                                </small>
+                            </td>
+                            <!--documento, carpetaPaciente-->
+                            <td>
+                                <span *ngIf="sobreturno?.paciente?.id">
+                                    <small>
+                                        <span *ngIf="sobreturno.paciente.documento !== ''">{{ sobreturno.paciente.documento | number }}</span>
+                                        <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
+                                    </small>
+                                </span>
+                                <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0 && sobreturno.paciente.carpetaEfectores[0]?.nroCarpeta">
+                                    <small> | </small>
+                                    <small *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
+                                    <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
+                                </span>
+                            </td>
+                            <td></td>
+                            <td>
+                                <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
+                                <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
+                            </td>
+                            <td>
+                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.edad">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                            </td>
+                            <td>
+                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{ sobreturno.paciente | sexo }}</small>
+                            </td>
+                            <td style="width:250px"></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td>
+                                <div *ngIf="sobreturno?.paciente?.id" class="badge">SI</div>
+                                <div *ngIf="sobreturno?.paciente?.id" class="badge">NO</div>
                             </td>
                             <td></td>
                         </tr>

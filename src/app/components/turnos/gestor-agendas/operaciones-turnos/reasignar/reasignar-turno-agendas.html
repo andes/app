@@ -110,19 +110,25 @@
                                                 <span>{{bloque.descripcion}}</span>
                                             </div>
                                             <ng-container *ngIf="turno.horaInicio && (getFecha(hoy) === getFecha(agenda.horaInicio) && getHora(turno.horaInicio) > getHora(hoy)) || (getFecha(hoy) !== getFecha(agenda.horaInicio))">
-                                                <div class="reasignar" *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                                                <div class="reasignar" *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque && !esTurnoDoble(turnoSeleccionado)">
                                                     <div *ngIf="turno.estado === 'disponible'" class="text-center p-2 mb-1 hover outline-dashed-default" [appHover]="'text-info outline-info'"
                                                         (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
-                                                <div *ngIf="bloque.pacienteSimultaneos">
+                                                <div *ngIf="esTurnoDoble(turnoSeleccionado)">
+                                                    <div *ngIf="turno.estado === 'disponible' && siguienteDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
+                                                        [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
+                                                        {{turno.horaInicio | date: 'HH:mm'}}
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="bloque.pacienteSimultaneos && !esTurnoDoble(turnoSeleccionado)">
                                                     <div *ngIf="turno.estado === 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
                                                         [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}
                                                     </div>
                                                 </div>
-                                                <div *ngIf="bloque.citarPorBloque">
+                                                <div *ngIf="bloque.citarPorBloque  && !esTurnoDoble(turnoSeleccionado)">
                                                     <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, indiceTurno)" class="text-center p-2 mb-1 hover outline-dashed-default"
                                                         [appHover]="'text-info outline-info'" (click)="seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda)">
                                                         {{turno.horaInicio | date: 'HH:mm'}}

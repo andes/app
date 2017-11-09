@@ -102,7 +102,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
                 this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: id }).subscribe(prestacionSolicitud => {
+                    this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
                         this.cargaPlan(prestacionSolicitud, conceptosTurneables);
                     });
                 });
@@ -184,7 +184,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-
                         });
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
@@ -298,10 +297,15 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
-
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            { return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId); }
+            return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+        prestacionesSolicitadas.forEach(ps => {
+
+            let idRegistro = ps.solicitud.registros[0].id;
+            this.asignarTurno[idRegistro] = {};
+        });
+
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
             // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
             this.servicioAgenda.get({
@@ -312,11 +316,14 @@ export class PrestacionValidacionComponent implements OnInit {
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));
+
                 if (agendas) {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
+                        let idRegistro = element.solicitud.registros[0].id;
+                        this.asignarTurno[idRegistro] = {};
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
-                            this.asignarTurno[element.solicitud.tipoPrestacion.conceptId] = true;
+                            this.asignarTurno[idRegistro] = element;
                         }
                     });
                 }

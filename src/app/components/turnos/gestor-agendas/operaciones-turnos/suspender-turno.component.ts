@@ -54,24 +54,24 @@ export class SuspenderTurnoComponent implements OnInit {
         }];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
         // this.turnos.forEach((turno) => {
         //     this.seleccionarTurno(turno);
         // });
     }
 
-    // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
 
-    // seleccionarTurno(turno) {
-    //     let indice = this.seleccionadosSMS.indexOf(turno);
-    //     if (indice === -1) {
-    //         if (turno.paciente && turno.paciente.id) {
-    //             this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
-    //         }
-    //     } else {
-    //         this.seleccionadosSMS.splice(indice, 1);
-    //         this.seleccionadosSMS = [...this.seleccionadosSMS];
-    //     }
-    // }
+    seleccionarTurno(turno) {
+        let indice = this.seleccionadosSMS.indexOf(turno);
+        if (indice === -1) {
+            if (turno.paciente && turno.paciente.id) {
+                this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+            }
+        } else {
+            this.seleccionadosSMS.splice(indice, 1);
+            this.seleccionadosSMS = [...this.seleccionadosSMS];
+        }
+    }
 
     estaSeleccionado(turno) {
         if (this.seleccionadosSMS.indexOf(turno) >= 0) {

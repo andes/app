@@ -1,4 +1,4 @@
-<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="registro.valor" name="saturacionOxigeno" label="SaO2" suffix=" % " min="0" max="100" (change)="emitChange()">
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="registro.valor" name="saturacionOxigeno" required="true" label="SaO2" suffix=" % " min="0" max="100" (change)="emitChange()">
 </plex-int>
 
 <p *ngIf="soloValores" class="readonly">
