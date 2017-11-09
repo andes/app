@@ -335,7 +335,7 @@ export class RevisionAgendaComponent implements OnInit {
                 this.plex.toast('success', 'Información', 'El turno fue actualizado', 1);
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
-                // this.turnoSeleccionado = null;
+                this.turnoSeleccionado = null;
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');
