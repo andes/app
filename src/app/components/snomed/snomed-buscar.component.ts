@@ -37,13 +37,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // tipo de busqueda a realizar por: problemas / procedimientos /
     @Input() tipoBusqueda: String;
-
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    @Output() tagBusqueda: EventEmitter<any> = new EventEmitter<any>();
 
     // Output de un boolean para indicar cuando se tienen resultados de
     // busqueda o no.
@@ -67,6 +67,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // boolean para indicar si esta cargando o no
     public loading = false;
+    public filtroActual = [];
+    public esFiltroActual = false;
 
     private dragAndDrop = false;
 
@@ -246,7 +248,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.loading = false;
                         this.resultados = resultados;
 
-                        this.contadorSemantigTags();
 
                         let frecuentes = [];
 
@@ -264,7 +265,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             }
 
                         });
-
+                        this.contadorSemantigTags(this.resultados);
                     }
 
                 }, err => {
@@ -279,7 +280,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
     }
 
-    contadorSemantigTags(): any {
+    contadorSemantigTags(resultados): any {
+
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
@@ -287,8 +289,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             entidadObservable: 0,
             situacion: 0
         };
+
         let tag;
-        this.resultados.forEach(x => {
+
+        resultados.forEach(x => {
             tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
             this.contadorSemanticTags[String(tag)]++;
         });
@@ -296,6 +300,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
+
         if (this.resultados.length >= this.resultadosAux.length) {
             this.resultadosAux = this.resultados;
         } else {
@@ -304,6 +309,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.esFiltroActual = this.getFiltroActual(filtro);
+    }
+
+    // TODOOOOOOO
+    getFiltroActual(filtro: any[]) {
+        return this.filtroActual.join('') === filtro.join('');
     }
 
     /**
@@ -345,6 +357,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     seleccionarConcepto(concepto) {
         this.resultados = [];
         this.searchTerm = '';
+        this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }
 

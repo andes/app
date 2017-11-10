@@ -4,7 +4,6 @@
     </div>
 </form>
 
-
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
 <div class="menu-buscador">
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -16,7 +15,7 @@
     </div>
     <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{}">
+            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{'border-hallazgos': esFiltroActual}">
                 HALLAZGOS
                 <small *ngIf="(contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']) > 0" class="badge badge-hallazgos ml-1 float-right">
                     {{ contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']}}</small>

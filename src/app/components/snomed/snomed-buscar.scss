@@ -73,3 +73,10 @@
     top: 100px;
     right: 55px;
 }
+
+.border-hallazgos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #f4a03b !important;
+}
