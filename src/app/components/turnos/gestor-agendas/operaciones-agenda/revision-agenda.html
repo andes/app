@@ -3,8 +3,6 @@
         <div class="col-4">
             <plex-box>
                 <header class="header-fixed" [ngClass]="{'header-fixed-front': mostrarHeaderCompleto}">
-                    <!-- <div class="row" *ngIf="showTurnos">
-        <div class="col-12 bloques-y-turnos"> -->
                     <fieldset>
                         <legend>
                             <div class="clearfix">
@@ -61,9 +59,8 @@
                             <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
                         </div>
                     </fieldset>
-                    <!-- </div>
-    </div> -->
                 </header>
+
                 <table *ngFor="let bloque of agenda.bloques" class="table table-striped">
                     <thead *ngIf="bloque.descripcion">
                         <tr>
@@ -240,11 +237,12 @@
                         </div>
                     </div>
                     <br>
+
                     <!--CODIFICACION-->
+
                     <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
                         <h5>Codificación</h5>
                         <hr>
-                        <!-- Turno no codificado por profesional -->
                         <div>
                             <div class="row" *ngIf="!existeCodificacionProfesional">
                                 <div class="col-4">
@@ -260,7 +258,6 @@
                             </div>
                             <div *ngIf="diagnosticos.length>0 && !turnoSeleccionado.diagnostico.ilegible && !showReparo ">
 
-                                <!-- Si el turno no fue codificado por profesional se permite cargar una lista de codificaciones -->
                                 <table class="table table-striped">
                                     <tbody>
                                         <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover">
@@ -311,8 +308,9 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /Turno no codificado por profesional -->
+
                     <!--/ CODIFICACION-->
+
                     <br>
 
                     <div class="row">

@@ -51,8 +51,7 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    showReparo = false;
-    repararDiagnistico: Boolean;
+    public showReparo = false;
     existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
@@ -62,12 +61,9 @@ export class RevisionAgendaComponent implements OnInit {
     bloqueSeleccionado: any = null;
     nuevoCodigo: any;
     reparo: any;
-    codigoPrincipal = [];
     paciente: IPaciente;
-    cambioTelefono = false;
     turnoTipoPrestacion: any = null;
     pacientesSearch = false;
-    telefono: String = '';
     diagnosticos = [];
     enableCodificada = false;
     enableAsistenciaCerrada = true;
