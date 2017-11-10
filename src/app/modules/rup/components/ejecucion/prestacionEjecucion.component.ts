@@ -342,9 +342,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
 
-        console.log(this.tipoBusqueda);
-
-
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
         if (this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
             esSolicitud = true;
@@ -667,7 +664,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     recibeTipoBusqueda(tipoDeBusqueda) {
         this.tipoBusqueda = tipoDeBusqueda;
-        console.log(this.tipoBusqueda);
     }
 
     cargaItems(registroActual, indice) {
