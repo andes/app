@@ -296,24 +296,34 @@
                                 </table>
                             </div>
                         </div>
+
+                        <!-- Reparo -->
                         <div *ngIf="turnoSeleccionado && existeCodificacionProfesional && showReparo">
-                            codificación del profesional:
-                            <div class="col-6">
-                                {{diagnosticos[indiceReparo].codificacionProfesional.sinonimo}}
+                            <div class="row">
+                                <div class="col">
+                                    <h5>codificación del profesional:</h5> {{diagnosticos[indiceReparo].codificacionProfesional.sinonimo}}
+                                    <hr>
+                                </div>
                             </div>
-                            Seleccionar código:
-                            <div class="col-8">
-                                <plex-select [(ngModel)]="reparo" name="searchReparo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
-                                    placeholder="Seleccione un ćodigo CIE10" (change)="repararDiagnostico()"></plex-select>
+                            <div class="row">
+                                <div class="col-8">
+                                    Seleccionar código reparo:
+                                    <plex-select [(ngModel)]="reparo" name="searchReparo" labelField="codigo+' '+sinonimo" (getData)="buscarCodificacion($event)"
+                                        placeholder="Seleccione un ćodigo CIE10" (change)="repararDiagnostico()"></plex-select>
+                                </div>
+                                <div class="col">
+                                    <br>
+                                    <plex-button icon="delete" label="Eliminar Reparo" type="danger" (click)="borrarReparo()"></plex-button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <!-- /Reparo -->
 
                     <!--/ CODIFICACION-->
-
                     <br>
 
-                    <div class="row">
+                    <div class="row" *ngIf="!showReparo">
                         <div class="col text-right">
                             <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
                             <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>

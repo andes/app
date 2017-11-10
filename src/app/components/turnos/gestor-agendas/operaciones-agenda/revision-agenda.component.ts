@@ -366,10 +366,14 @@ export class RevisionAgendaComponent implements OnInit {
 
     repararDiagnostico() {
         if (this.reparo) {
-            delete this.reparo.$order;
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = this.reparo;
             this.showReparo = false;
         }
+    }
+
+    borrarReparo(index) {
+        this.diagnosticos[this.indiceReparo].codificacionAuditoria = null;
+        this.showReparo = false;
     }
 
     volverRevision() {
