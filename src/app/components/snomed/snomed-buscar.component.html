@@ -44,7 +44,9 @@
     </div>
 </div>
 
-<ul class="conceptos list-unstyled">
+<plex-button label="BÚSQUEDA GUIADA" (click)="filtroRefSet()" type="primary"></plex-button>
+
+<ul *ngIf="!showRefSets" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -71,3 +73,72 @@
         </li>
     </ng-container>
 </ul>
+
+<!-- refsetids -->
+<div *ngIf="showRefSets && arrayPorRefsets">
+
+    <ul class="conceptos list-unstyled">
+        <!-- <plex-accordion> -->
+        <ng-container *ngFor="let items of arrayPorRefsets, let i = index;">
+            <li>
+                <div class="rup-card mini">
+                    <div class="container rup-content">
+                        <div class="row header">
+                            <div class="col-10">
+                                <b>{{items.nombre}}</b>
+                                <br> pequeña descripcion
+                            </div>
+                            <div class="col-1">
+                                <span class="badge-warning">
+                                    {{ items.valor.length }}
+                                </span>
+                            </div>
+                            <div class="col-1">
+                                <a href="javascript: void(0)" class="btn btn-sm btn-primary" (click)='desplegar(i , items.nombre)'>
+                                    <i class="mdi mdi-chevron-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div *ngIf="showContent === items.nombre">
+                    <ng-container *ngIf="items.valor.length === 0">
+                        <p>No hay resultados</p>
+                    </ng-container>
+                    <ul class="conceptos list-unstyled">
+                        <ng-container *ngFor="let item of items.valor">
+                            <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+                                [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
+                                    <div *ngIf="_dragScope" class=" type">
+                                        <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                    </div>
+                                    <div class="rup-content">
+                                        <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
+                                            <div class="title">
+                                                {{ item.term }}
+                                            </div>
+                                            <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
+                                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                                    <i class="mdi mdi-plus-box-outline"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ng-container>
+                    </ul>
+                </div>
+            </li>
+        </ng-container>
+        <!-- </plex-accordion> -->
+
+    </ul>
+</div>

@@ -1,5 +1,6 @@
+import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -72,6 +73,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     private cachePrestacionesTurneables = null;
 
+    public arrayPorRefsets = [];
+    public showRefSets = false;
+
+    public showContent;
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -92,7 +98,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         private auth: Auth,
         private plex: Plex,
         myElement: ElementRef,
-        public servicioTipoPrestacion: TipoPrestacionService) {
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioPrestacion: PrestacionesService) {
         this.elementRef = myElement;
     }
 
@@ -279,6 +286,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
     }
 
+
     contadorSemantigTags(): any {
         this.contadorSemanticTags = {
             hallazgo: 0,
@@ -296,12 +304,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
+        this.showRefSets = false;
         if (this.resultados.length >= this.resultadosAux.length) {
             this.resultadosAux = this.resultados;
         } else {
             this.resultados = this.resultadosAux;
         }
-
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
     }
@@ -346,6 +354,27 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         this.resultados = [];
         this.searchTerm = '';
         this.evtData.emit(concepto);
+    }
+
+
+    filtroRefSet() {
+        this.arrayPorRefsets = [];
+        let refset = this.servicioPrestacion.refsetsIds;
+        this.arrayPorRefsets.push({ nombre: 'Programable', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.programable)) });
+        this.arrayPorRefsets.push({ nombre: 'Cronicos', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.cronico)) });
+        this.arrayPorRefsets.push({ nombre: 'Antecedentes Personales (hallazgos)', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Personales_hallazgos)) });
+        this.arrayPorRefsets.push({ nombre: 'Antecedentes Familiares', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Familiares)) });
+        this.arrayPorRefsets.push({ nombre: 'Antecedentes Personales (procedimientos)', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Personales_procedimientos)) });
+        this.showRefSets = true;
+    }
+
+    desplegar(i, nombre) {
+        if (this.showContent === nombre) {
+            this.showContent = null;
+        } else {
+            this.showContent = nombre;
+        }
+
     }
 
 }
