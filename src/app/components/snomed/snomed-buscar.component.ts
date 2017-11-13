@@ -24,6 +24,7 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     resultadosAux: any[] = [];
+    @Input() arrayFrecuentes;
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
@@ -253,8 +254,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
-                            console.log(resultado);
-
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
                                 frecuentes = resultado[0].frecuentes.map(x => {
                                     if (x.frecuencia != null && x.frecuencia >= 1 && this.resultados.find(c => c.conceptId === x.concepto.conceptId)) {
