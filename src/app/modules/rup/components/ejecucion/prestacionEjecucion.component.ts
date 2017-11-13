@@ -629,7 +629,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onConceptoDrop(e: any) {
         if (e.dragData.huds) {
-            this.ejecutarConceptoHuds(e.dragData);
+            window.setTimeout(() => {
+                this.ejecutarConceptoHuds(e.dragData);
+            });
         } else {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
