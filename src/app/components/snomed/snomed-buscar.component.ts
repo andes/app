@@ -273,7 +273,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            //this.resultados = [];
             this._tengoResultado.emit(false);
         }
     }
