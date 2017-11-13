@@ -195,7 +195,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
-                // this.timeoutHandle = null;
                 this.loading = true;
                 this.resultados = [];
 
@@ -249,11 +248,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.loading = false;
                         this.resultados = resultados;
 
-
                         let frecuentes = [];
 
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
                                 frecuentes = resultado[0].frecuentes.map(x => {
                                     if (x.frecuencia != null && x.frecuencia >= 1 && this.resultados.find(c => c.conceptId === x.concepto.conceptId)) {
@@ -274,7 +273,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            this.resultados = [];
             this._tengoResultado.emit(false);
         }
     }
@@ -309,10 +307,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
-        this.esFiltroActual = this.getFiltroActual(filtro);
+        // this.esFiltroActual = this.getFiltroActual(filtro);
     }
 
-    // TODOOOOOOO
+    // :joy:
     getFiltroActual(filtro: any[]) {
         return this.filtroActual.join('') === filtro.join('');
     }
@@ -346,16 +344,23 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            this.resultados = [];
-            this.hideLista = true;
+            // this.resultados = [];
+            // this.hideLista = true;
             // this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
-        this.resultados = [];
-        this.searchTerm = '';
+        // this.resultados = this.resultadosAux = [];
+        // this.searchTerm = '';
+        // this.contadorSemanticTags = {
+        //     hallazgo: 0,
+        //     trastorno: 0,
+        //     procedimiento: 0,
+        //     entidadObservable: 0,
+        //     situacion: 0
+        // };
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }

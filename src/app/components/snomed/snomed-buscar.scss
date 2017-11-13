@@ -31,6 +31,7 @@
             width: 81%;
         }
         width: 99%;
+        height: 1.5rem;
         font-size: 0.6rem;
         border: none;
         background-color: #dddddd;
@@ -79,4 +80,25 @@
         outline: 0;
     }
     border: 1px solid #f4a03b !important;
+}
+
+.border-trastornos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #ff4a1a !important;
+}
+
+.border-procedimientos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #92278e !important;
+}
+
+.border-planes {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #6a99ad !important;
 }
