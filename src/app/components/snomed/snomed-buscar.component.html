@@ -45,8 +45,7 @@
 
 <ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
-            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
             <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
                 <div *ngIf="_dragScope" class=" type">
                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
@@ -70,3 +69,31 @@
         </li>
     </ng-container>
 </ul>
+
+
+<div *ngIf="arrayFrecuentes">
+    <ul class="conceptos list-unstyled">
+        <ng-container *ngFor="let item of arrayFrecuentes">
+
+            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.semanticTag  === 'procedimiento') ? 'planes' : item.semanticTag}}">
+                    <div class="type">
+                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                    </div>
+                    <div class="rup-content">
+                        <div class="header">
+                            <div class="title">
+                                {{item.term}}
+                            </div>
+                            <div class="actions">
+                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                    <i class="mdi mdi-plus-box-outline"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ng-container>
+    </ul>
+</div>

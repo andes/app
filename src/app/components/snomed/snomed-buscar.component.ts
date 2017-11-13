@@ -24,6 +24,7 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     resultadosAux: any[] = [];
+    @Input() arrayFrecuentes;
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
