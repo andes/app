@@ -22,6 +22,7 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 })
 
 export class SnomedBuscarComponent implements OnInit, OnChanges {
+
     resultadosAux: any[] = [];
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
@@ -36,13 +37,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // tipo de busqueda a realizar por: problemas / procedimientos /
     @Input() tipoBusqueda: String;
-
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
 
     // output de informacion que devuelve el componente
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    @Output() tagBusqueda: EventEmitter<any> = new EventEmitter<any>();
 
     // Output de un boolean para indicar cuando se tienen resultados de
     // busqueda o no.
@@ -66,6 +67,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // boolean para indicar si esta cargando o no
     public loading = false;
+    public filtroActual = [];
+    public esFiltroActual = false;
 
     private dragAndDrop = false;
 
@@ -75,6 +78,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
     */
+    public contadorSemanticTags = {
+        hallazgo: 0,
+        trastorno: 0,
+        procedimiento: 0,
+        entidadObservable: 0,
+        situacion: 0
+    };
 
     // inyectamos servicio de snomed, plex y tambien ElementRef
     // ElementRef lo utilizo para tener informacion del
@@ -225,7 +235,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'situacion']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'situación']
                         });
                         break;
                 }
@@ -237,6 +247,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     if (idTimeOut === this.timeoutHandle) {
                         this.loading = false;
                         this.resultados = resultados;
+
 
                         let frecuentes = [];
 
@@ -254,7 +265,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             }
 
                         });
-
+                        this.contadorSemantigTags(this.resultados);
                     }
 
                 }, err => {
@@ -269,7 +280,27 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
     }
 
-    filtroBuscadorSnomed(filtro: any[]) {
+    contadorSemantigTags(resultados): any {
+
+        this.contadorSemanticTags = {
+            hallazgo: 0,
+            trastorno: 0,
+            procedimiento: 0,
+            entidadObservable: 0,
+            situacion: 0
+        };
+
+        let tag;
+
+        resultados.forEach(x => {
+            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
+            this.contadorSemanticTags[String(tag)]++;
+        });
+
+    }
+
+    filtroBuscadorSnomed(filtro: any[], tipo = null) {
+
         if (this.resultados.length >= this.resultadosAux.length) {
             this.resultadosAux = this.resultados;
         } else {
@@ -277,7 +308,14 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.esFiltroActual = this.getFiltroActual(filtro);
+    }
 
+    // TODOOOOOOO
+    getFiltroActual(filtro: any[]) {
+        return this.filtroActual.join('') === filtro.join('');
     }
 
     /**
@@ -319,6 +357,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     seleccionarConcepto(concepto) {
         this.resultados = [];
         this.searchTerm = '';
+        this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }
 

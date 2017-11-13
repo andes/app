@@ -377,67 +377,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
 
-        // console.log(relacionesOrdenadas.map(x => 'cosa: ' + x.id + ' | relación: ' + x.relacionadoCon[0]));
-
-
-        // let relacionesOrdenadas = [];
-        // registros.forEach((rel, i) => {
-        //     if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //         // "padres"
-        //         relacionesOrdenadas.push(rel);
-        //     }
-        //     this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-        //         if (relacionesOrdenadas.filter(x => x.id === relP.id).length === 0) {
-        //             // "padres"
-        //             relacionesOrdenadas.push(relP);
-        //         }
-        //         if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //             relacionesOrdenadas.push(rel);
-        //         }
-        //     });
-        // });
-
-        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
-
-        // // this.reordenarRelaciones();
-
-
-        // registros.forEach((reg, index) => {
-
-        //     // HAY RELACIÓN
-        //     if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-
-        //         if (!this.temp.find(x => x.id === reg.relacionadoCon[0])) {
-        //             console.log('registros.filter((x) => x.id === reg.relacionadoCon[0])[0]', registros.filter((x) => x.id === reg.relacionadoCon[0])[0].relacionadoCon[0]);
-        //             this.temp.splice(index + 1, 0, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]);
-
-        //             if (registros.filter((x) => x.id === reg.relacionadoCon[0])) {
-        //                 // this.temp = [...this.temp, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]];
-        //             }
-        //             // this.temp = [...this.temp, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]];
-
-        //         }
-        //         // if (this.temp.find(x => x.id === reg.relacionadoCon[0])) {
-        //         //     this.temp.splice(registros.indexOf(registros.filter((x) => x.id === reg.relacionadoCon[0])[0]) + 1, 0, reg).splice(reg, 0);
-        //         // }
-
-        //         if (registros.find((x) => x.id === reg.relacionadoCon[0])) {
-        //             this.temp.splice(index + 1, 0, reg).splice(registros.indexOf(registros.filter((x) => x.id === reg.relacionadoCon[0])[0]), 0);
-        //         }
-
-        //         // NO HAY RELACIÓN
-        //     } else {
-        //         // Item "root", se agrega y listo
-        //         this.temp = [...this.temp, reg];
-        //     }
-
-        // });
-
-        // console.log('this.temp', this.temp.map(x => {
-        //     return x.concepto.term + (x.relacionadoCon[0] !== undefined ? ' relacionadoCon: ' + x.relacionadoCon[0] : ' ' + x.id);
-        // }));
-
-
     }
 
     reordenarRelaciones() {

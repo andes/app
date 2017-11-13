@@ -36,7 +36,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoARelacionar = [];
 
     // Tipo de busqueda
-    public tipoBusqueda: any;
+    public tipoBusqueda: any[];
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -343,7 +343,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda === 'planes') {
+        if (this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
@@ -855,4 +855,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
     }
+
+
 }
