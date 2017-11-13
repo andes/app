@@ -272,7 +272,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            this.resultados = [];
+            //this.resultados = [];
             this._tengoResultado.emit(false);
         }
     }
@@ -344,23 +344,23 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            this.resultados = [];
-            this.hideLista = true;
+            // this.resultados = [];
+            // this.hideLista = true;
             // this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
-        this.resultados = this.resultadosAux = [];
-        this.searchTerm = '';
-        this.contadorSemanticTags = {
-            hallazgo: 0,
-            trastorno: 0,
-            procedimiento: 0,
-            entidadObservable: 0,
-            situacion: 0
-        };
+        // this.resultados = this.resultadosAux = [];
+        // this.searchTerm = '';
+        // this.contadorSemanticTags = {
+        //     hallazgo: 0,
+        //     trastorno: 0,
+        //     procedimiento: 0,
+        //     entidadObservable: 0,
+        //     situacion: 0
+        // };
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }

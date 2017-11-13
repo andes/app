@@ -335,7 +335,8 @@
                             <!-- <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador> -->
                             <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
                             <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
-                                (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar>
+                                (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"
+                                (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar>
                         </plex-tab>
                     </plex-tabs>
                 </plex-box>
