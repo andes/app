@@ -4,7 +4,6 @@
     </div>
 </form>
 
-
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
 <div class="menu-buscador">
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -16,27 +15,27 @@
     </div>
     <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{}">
+            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{'border-hallazgos': getFiltroActual(['hallazgo', 'situacion'])}">
                 HALLAZGOS
                 <small *ngIf="(contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']) > 0" class="badge badge-hallazgos ml-1 float-right">
                     {{ contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']}}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['trastorno'])" [ngClass]="{}">
+            <button (click)="filtroBuscadorSnomed(['trastorno'])" [ngClass]="{'border-trastornos': getFiltroActual(['trastorno'])}">
                 TRASTORNOS
                 <small *ngIf="contadorSemanticTags['trastorno'] > 0" class="badge badge-trastornos ml-1 float-right"> {{ contadorSemanticTags['trastorno'] }}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" class="procedimientos">
+            <button (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" class="procedimientos" [ngClass]="{'border-procedimientos': getFiltroActual(['procedimiento', 'entidad observable'])}">
                 PROCEDIMIENTOS
                 <small *ngIf="(contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']) > 0" class="badge badge-procedimientos ml-1 float-right">
                     {{ contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']}}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['procedimiento'], 'planes')" class="planes">
+            <button (click)="filtroBuscadorSnomed(['procedimiento'], 'planes')" class="planes" [ngClass]="{'border-planes': getFiltroActual(['planes'])}">
                 PLANES
                 <small *ngIf="contadorSemanticTags['procedimiento'] > 0" class="badge badge-planes ml-1 float-right"> {{ contadorSemanticTags['procedimiento'] }}</small>
             </button>
@@ -46,8 +45,7 @@
 
 <ul class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
-            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
             <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
                 <div *ngIf="_dragScope" class=" type">
                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
@@ -71,3 +69,31 @@
         </li>
     </ng-container>
 </ul>
+
+
+<div *ngIf="arrayFrecuentes">
+    <ul class="conceptos list-unstyled">
+        <ng-container *ngFor="let item of arrayFrecuentes">
+
+            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.semanticTag  === 'procedimiento') ? 'planes' : item.semanticTag}}">
+                    <div class="type">
+                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
+                    </div>
+                    <div class="rup-content">
+                        <div class="header">
+                            <div class="title">
+                                {{item.term}}
+                            </div>
+                            <div class="actions">
+                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                    <i class="mdi mdi-plus-box-outline"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ng-container>
+    </ul>
+</div>

@@ -101,6 +101,8 @@ export class BuscadorComponent implements OnInit {
     // Emito el concepto seleccionado
     seleccionBusqueda(concepto) {
         this.evtData.emit(concepto);
+        this._tipoDeBusqueda.emit(this.tipoBusqueda);
+
     }
 
     // si hago clic en un concepto lo capturo y lo devuelvo
@@ -109,6 +111,7 @@ export class BuscadorComponent implements OnInit {
         this.evtData.emit(concepto);
         // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
     }
+
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed
     // recuperaLosMasFrecuentes(elementoRUP) {
