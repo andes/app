@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
@@ -311,8 +312,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         } else {
             this.resultados = this.resultadosAux;
         }
-        this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
+        return this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
     }
 
     /**
@@ -358,10 +359,19 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroRefSet() {
+        let conceptos = {
+            Hallazgos: ['hallazgo', 'situacion'],
+            Trastornos: ['trastorno'],
+            Procedimientos: ['procedimiento', 'entidad observable'],
+            Planes: ['procedimiento']
+        };
         this.arrayPorRefsets = [];
         Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
             let nombre = k.replace(/_/g, ' ');
             this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
+        });
+        Object.keys(conceptos).forEach(c => {
+            this.arrayPorRefsets.push({ nombre: c, valor: this.filtroBuscadorSnomed(conceptos[c]) });
         });
     }
 

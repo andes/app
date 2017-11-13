@@ -14,7 +14,7 @@
             No se han encontrado resultados
         </small>
     </div>
-    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
+    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros" *ngIf="!showRefSets">
         <div class="col m-0 p-0">
             <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{}">
                 HALLAZGOS
@@ -44,7 +44,8 @@
     </div>
 </div>
 
-<plex-button label="BÚSQUEDA GUIADA" (click)="showRefSets = true" type="primary"></plex-button>
+<plex-button label="BÚSQUEDA GUIADA" (click)="showRefSets = true" type="primary" *ngIf="!showRefSets"></plex-button>
+<plex-button label="BUSCADOR BASICO" (click)="showRefSets = false" type="primary" *ngIf="showRefSets"></plex-button>
 
 <ul *ngIf="!showRefSets" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
