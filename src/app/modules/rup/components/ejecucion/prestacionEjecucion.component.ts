@@ -485,7 +485,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
-                let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                window.setTimeout(() => {
+                    let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                });
                 // TODO revisar registro de destino
                 // if (registroDestino) {
                 //     registroDestino.relacionadoCon = [resultado];
