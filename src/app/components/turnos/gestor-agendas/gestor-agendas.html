@@ -142,7 +142,7 @@
                         <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
                     </div> -->
                     <div *ngIf="showSuspenderTurnos">
-                        <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
+                        <suspender-turno [agenda]="agenda" [accion]="'suspendida'" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
                             (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cerrarSuspenderTurno($event)">
                         </suspender-turno>
                     </div>
