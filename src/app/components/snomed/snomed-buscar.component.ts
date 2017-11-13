@@ -254,6 +254,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.resultados = resultados;
 
                         this.contadorSemantigTags();
+                        this.filtroRefSet();
 
                         let frecuentes = [];
 
@@ -356,16 +357,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         this.evtData.emit(concepto);
     }
 
-
     filtroRefSet() {
         this.arrayPorRefsets = [];
-        let refset = this.servicioPrestacion.refsetsIds;
-        this.arrayPorRefsets.push({ nombre: 'Programable', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.programable)) });
-        this.arrayPorRefsets.push({ nombre: 'Cronicos', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.cronico)) });
-        this.arrayPorRefsets.push({ nombre: 'Antecedentes Personales (hallazgos)', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Personales_hallazgos)) });
-        this.arrayPorRefsets.push({ nombre: 'Antecedentes Familiares', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Familiares)) });
-        this.arrayPorRefsets.push({ nombre: 'Antecedentes Personales (procedimientos)', valor: this.resultados.filter(x => x.refsetIds.find(item => item === refset.Antecedentes_Personales_procedimientos)) });
-        this.showRefSets = true;
+        Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
+            let nombre = k.replace(/_/g, ' ');
+            this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
+        });
     }
 
     desplegar(i, nombre) {

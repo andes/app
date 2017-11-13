@@ -44,7 +44,7 @@
     </div>
 </div>
 
-<plex-button label="BÚSQUEDA GUIADA" (click)="filtroRefSet()" type="primary"></plex-button>
+<plex-button label="BÚSQUEDA GUIADA" (click)="showRefSets = true" type="primary"></plex-button>
 
 <ul *ngIf="!showRefSets" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
@@ -75,7 +75,7 @@
 </ul>
 
 <!-- refsetids -->
-<div *ngIf="showRefSets && arrayPorRefsets">
+<div *ngIf="showRefSets">
 
     <ul class="conceptos list-unstyled">
         <!-- <plex-accordion> -->
