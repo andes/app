@@ -325,13 +325,13 @@ export class GestorAgendasComponent implements OnInit {
         this.editaAgenda = agenda;
 
         if (this.editaAgenda.estado === 'planificacion') {
-            this.showGestorAgendas = false;
             this.showEditarAgenda = true;
+            this.showGestorAgendas = false;
             this.showEditarAgendaPanel = false;
         } else {
             this.showGestorAgendas = true;
-            this.showEditarAgenda = false;
             this.showEditarAgendaPanel = true;
+            this.showEditarAgenda = false;
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
@@ -409,15 +409,18 @@ export class GestorAgendasComponent implements OnInit {
             agenda = ag;
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
+            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion' ) {
+                this.plex.info('danger', '', 'No puedes editar la agenda selecionada.', 3000);
+                return;
+            }
 
             if (!multiple) {
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
             } else {
-                let index;
-                if (this.estaSeleccionada(agenda)) {
+                let index = this.estaSeleccionada(agenda);
+                if (index >= 0) {
                     agenda.agendaSeleccionadaColor = 'success';
-                    index = this.agendasSeleccionadas.indexOf(agenda);
                     this.agendasSeleccionadas.splice(index, 1);
                     this.agendasSeleccionadas = [...this.agendasSeleccionadas];
                 } else {
@@ -459,7 +462,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     estaSeleccionada(agenda: any) {
-        return this.agendasSeleccionadas.find(x => x.id === agenda._id);
+        return this.agendasSeleccionadas.findIndex(x => x.id === agenda._id);
     }
 
     setColorEstadoAgenda(agenda) {
@@ -492,7 +495,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit(estado) {
-
         // Se suspende una agenda completa
         // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
         if (estado === 'suspendida') {

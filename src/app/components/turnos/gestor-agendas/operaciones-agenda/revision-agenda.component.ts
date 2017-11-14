@@ -210,7 +210,16 @@ export class RevisionAgendaComponent implements OnInit {
             nombre: event.query
         };
         if (event.query) {
-            this.serviceCie10.get(query).subscribe(event.callback);
+            this.serviceCie10.get(query).subscribe((datos) => {
+                this.diagnosticos.forEach(elem => {
+                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo );
+                    if (index >= 0) {
+                        datos.splice(index, 1);
+                    }
+                });
+
+                event.callback(datos);
+            });
         } else {
             event.callback([]);
         }
