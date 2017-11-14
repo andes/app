@@ -185,7 +185,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                         });
-                        debugger;
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
                         }
@@ -221,7 +220,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                     documento: this.auth.profesional.documento
                                 },
                                 frecuentes: registrosFrecuentes
-                            }
+                            };
 
                             this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
                                 this.plex.toast('success', 'Toast para ver que pase por acá');
@@ -299,7 +298,6 @@ export class PrestacionValidacionComponent implements OnInit {
             return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
         prestacionesSolicitadas.forEach(ps => {
-            debugger;
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
             if (ps.solicitud.turno) {
