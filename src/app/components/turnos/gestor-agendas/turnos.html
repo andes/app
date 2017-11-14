@@ -26,8 +26,8 @@
                     <!--Header completo-->
                     <div *ngIf="mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
-                            date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
+                            'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
                             hs
                         </div>
                     </div>
@@ -269,8 +269,8 @@
 
 <!-- Muestra el panel de Suspender turno -->
 <div class="clear"></div>
-<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
-    (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
+<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [accion]="'suspenderTurno'" [turnosSeleccionados]="turnosSeleccionados"
+    (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
 </suspender-turno>
 
 <!-- Muestra el panel de Nota -->
