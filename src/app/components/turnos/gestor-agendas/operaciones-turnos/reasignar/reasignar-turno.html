@@ -25,24 +25,17 @@
                     <span *ngIf="agendaAReasignar.profesionales?.length > 0">
                         <span></span>{{ agendaAReasignar.profesionales | enumerar:['apellido','nombre'] }}</span>
                     <span *ngIf="agendaAReasignar.profesionales?.length === 0">Sin profesionales asignados</span>
-
+                    <br>
+                    <b>Envío de SMS:</b>
+                    <plex-bool type="slide" [(ngModel)]="smsActivo" name="smsActivo"></plex-bool>
+                    <span *ngIf="smsActivo" class="badge badge-success">
+                        Activo
+                    </span>
+                    <span *ngIf="!smsActivo" class="badge-danger">
+                        Inactivo
+                    </span>
                     <br>
                     <fieldset>
-                        <legend>ENVÍO DE SMS</legend>
-                        <div class="row text-center">
-                            <div class="col-6">
-                                <plex-bool type="slide" [(ngModel)]="smsActivo" name="auditable"></plex-bool>
-                            </div>
-                            <div class="col">
-                                <span *ngIf="smsActivo" class="badge badge-success">
-                                    Activo
-                                </span>
-                                <span *ngIf="!smsActivo" class="badge-danger">
-                                    Inactivo
-                                </span>
-                            </div>
-                        </div>
-
                         <!--Turnos-->
 
                         <legend>TURNOS</legend>
