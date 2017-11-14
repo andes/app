@@ -34,7 +34,7 @@
                     </p>
                 </div>
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
-                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'plan' : '' }}">
+                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
                         <div class="rup-content">
@@ -62,7 +62,7 @@
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
                                                 <span class="small text-secondary">
-                                                  No hay turnos disponibles  
+                                                  No hay turnos disponibles
                                                 </span>
                                             </span>
                                         </div>
