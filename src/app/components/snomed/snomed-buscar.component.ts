@@ -1,5 +1,7 @@
+import { element } from 'protractor';
+import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -75,6 +77,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     private cachePrestacionesTurneables = null;
 
+    public arrayPorRefsets = [];
+    public showRefSets = false;
+
+    public showContent;
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -95,7 +102,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         private auth: Auth,
         private plex: Plex,
         myElement: ElementRef,
-        public servicioTipoPrestacion: TipoPrestacionService) {
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioPrestacion: PrestacionesService) {
         this.elementRef = myElement;
     }
 
@@ -248,6 +256,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.loading = false;
                         this.resultados = resultados;
 
+
+
                         let frecuentes = [];
 
                         // Frecuentes de este profesional
@@ -264,6 +274,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                         });
                         this.contadorSemantigTags(this.resultados);
+                        this.filtroRefSet();
                     }
 
                 }, err => {
@@ -278,7 +289,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     contadorSemantigTags(resultados): any {
-
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
@@ -297,17 +307,16 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
-
         if (this.resultados.length >= this.resultadosAux.length) {
             this.resultadosAux = this.resultados;
         } else {
             this.resultados = this.resultadosAux;
         }
-
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
-        // this.esFiltroActual = this.getFiltroActual(filtro);
+        this.esFiltroActual = this.getFiltroActual(filtro);
+        return this.resultados;
     }
 
     // :joy:
@@ -363,6 +372,32 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         // };
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
+    }
+
+    filtroRefSet() {
+        let conceptos = {
+            Hallazgos: ['hallazgo', 'situacion'],
+            Trastornos: ['trastorno'],
+            Procedimientos: ['procedimiento', 'entidad observable'],
+            Planes: ['procedimiento']
+        };
+        this.arrayPorRefsets = [];
+        Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
+            let nombre = k.replace(/_/g, ' ');
+            this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
+        });
+        Object.keys(conceptos).forEach(c => {
+            this.arrayPorRefsets.push({ nombre: c, valor: this.filtroBuscadorSnomed(conceptos[c]) });
+        });
+    }
+
+    desplegar(i, nombre) {
+        if (this.showContent === nombre) {
+            this.showContent = null;
+        } else {
+            this.showContent = nombre;
+        }
+
     }
 
 }
