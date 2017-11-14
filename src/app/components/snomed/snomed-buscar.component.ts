@@ -1,5 +1,7 @@
+import { element } from 'protractor';
+import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -75,6 +77,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     private cachePrestacionesTurneables = null;
 
+    public arrayPorRefsets = [];
+    public showRefSets = false;
+
+    public showContent;
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -95,7 +102,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         private auth: Auth,
         private plex: Plex,
         myElement: ElementRef,
-        public servicioTipoPrestacion: TipoPrestacionService) {
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioPrestacion: PrestacionesService) {
         this.elementRef = myElement;
     }
 
@@ -195,7 +203,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
-                // this.timeoutHandle = null;
                 this.loading = true;
 
                 // Limpio los resultados (también se limpian los contadores)
@@ -252,10 +259,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         this.resultados = resultados;
 
 
+
                         let frecuentes = [];
 
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
                                 frecuentes = resultado[0].frecuentes.map(x => {
                                     if (x.frecuencia != null && x.frecuencia >= 1 && this.resultados.find(c => c.conceptId === x.concepto.conceptId)) {
@@ -267,6 +276,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                         });
                         this.contadorSemantigTags(this.resultados);
+                        this.filtroRefSet();
                     }
 
                 }, err => {
@@ -276,13 +286,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 300);
         } else {
-            this.resultados = [];
             this._tengoResultado.emit(false);
         }
     }
 
     contadorSemantigTags(resultados): any {
-
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
@@ -307,14 +315,14 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         } else {
             this.resultados = this.resultadosAux;
         }
-
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
         this.esFiltroActual = this.getFiltroActual(filtro);
+        return this.resultados;
     }
 
-    // TODOOOOOOO
+    // :joy:
     getFiltroActual(filtro: any[]) {
         return this.filtroActual.join('') === filtro.join('');
     }
@@ -348,18 +356,51 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // si no estamos en el componente, limpiamos lista de problemas
         if (!inside && !this._draggable) {
-            this.resultados = [];
-            this.hideLista = true;
+            // this.resultados = [];
+            // this.hideLista = true;
             // this.searchTerm = '';
         }
     }
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
-        this.resultados = [];
-        this.searchTerm = '';
+        // this.resultados = this.resultadosAux = [];
+        // this.searchTerm = '';
+        // this.contadorSemanticTags = {
+        //     hallazgo: 0,
+        //     trastorno: 0,
+        //     procedimiento: 0,
+        //     entidadObservable: 0,
+        //     situacion: 0
+        // };
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
+    }
+
+    filtroRefSet() {
+        let conceptos = {
+            Hallazgos: ['hallazgo', 'situacion'],
+            Trastornos: ['trastorno'],
+            Procedimientos: ['procedimiento', 'entidad observable'],
+            Planes: ['procedimiento']
+        };
+        this.arrayPorRefsets = [];
+        Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
+            let nombre = k.replace(/_/g, ' ');
+            this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
+        });
+        Object.keys(conceptos).forEach(c => {
+            this.arrayPorRefsets.push({ nombre: c, valor: this.filtroBuscadorSnomed(conceptos[c]) });
+        });
+    }
+
+    desplegar(i, nombre) {
+        if (this.showContent === nombre) {
+            this.showContent = null;
+        } else {
+            this.showContent = nombre;
+        }
+
     }
 
 }

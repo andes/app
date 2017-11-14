@@ -13,29 +13,29 @@
             No se han encontrado resultados
         </small>
     </div>
-    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
+    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros" *ngIf="!showRefSets">
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{'border-hallazgos': esFiltroActual}">
+            <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{'border-hallazgos': getFiltroActual(['hallazgo', 'situacion'])}">
                 HALLAZGOS
                 <small *ngIf="(contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']) > 0" class="badge badge-hallazgos ml-1 float-right">
                     {{ contadorSemanticTags['hallazgo'] + contadorSemanticTags['situacion']}}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['trastorno'])" [ngClass]="{}">
+            <button (click)="filtroBuscadorSnomed(['trastorno'])" [ngClass]="{'border-trastornos': getFiltroActual(['trastorno'])}">
                 TRASTORNOS
                 <small *ngIf="contadorSemanticTags['trastorno'] > 0" class="badge badge-trastornos ml-1 float-right"> {{ contadorSemanticTags['trastorno'] }}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" class="procedimientos">
+            <button (click)="filtroBuscadorSnomed(['procedimiento', 'entidad observable'])" class="procedimientos" [ngClass]="{'border-procedimientos': getFiltroActual(['procedimiento', 'entidad observable'])}">
                 PROCEDIMIENTOS
                 <small *ngIf="(contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']) > 0" class="badge badge-procedimientos ml-1 float-right">
                     {{ contadorSemanticTags['procedimiento'] + contadorSemanticTags['entidadObservable']}}</small>
             </button>
         </div>
         <div class="col m-0 p-0">
-            <button (click)="filtroBuscadorSnomed(['procedimiento'], 'planes')" class="planes">
+            <button (click)="filtroBuscadorSnomed(['procedimiento'], 'planes')" class="planes" [ngClass]="{'border-planes': getFiltroActual(['planes'])}">
                 PLANES
                 <small *ngIf="contadorSemanticTags['procedimiento'] > 0" class="badge badge-planes ml-1 float-right"> {{ contadorSemanticTags['procedimiento'] }}</small>
             </button>
@@ -43,9 +43,13 @@
     </div>
 </div>
 
-<ul class="conceptos list-unstyled">
+<plex-button label="BÚSQUEDA GUIADA" (click)="showRefSets = true" type="primary" *ngIf="!showRefSets"></plex-button>
+<plex-button label="BUSCADOR BASICO" (click)="showRefSets = false" type="primary" *ngIf="showRefSets"></plex-button>
+
+<ul *ngIf="!showRefSets" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
-        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+        <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
             <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
                 <div *ngIf="_dragScope" class=" type">
                     <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
@@ -70,7 +74,6 @@
     </ng-container>
 </ul>
 
-
 <div *ngIf="arrayFrecuentes">
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
@@ -92,6 +95,69 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </li>
+        </ng-container>
+    </ul>
+</div>
+
+<!-- refsetids -->
+<div *ngIf="showRefSets">
+
+    <ul class="conceptos list-unstyled">
+        <!-- <plex-accordion> -->
+        <ng-container *ngFor="let items of arrayPorRefsets, let i = index;">
+            <li>
+                <div class="rup-card mini">
+                    <div class="container rup-content">
+                        <div class="row header">
+                            <div class="col-10">
+                                <b>{{items.nombre}}</b>
+                                <br> pequeña descripcion
+                            </div>
+                            <div class="col-1">
+                                <span class="badge-warning">
+                                    {{ items.valor.length }}
+                                </span>
+                            </div>
+                            <div class="col-1">
+                                <a href="javascript: void(0)" class="btn btn-sm btn-primary" (click)='desplegar(i , items.nombre)'>
+                                    <i class="mdi mdi-chevron-down"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div *ngIf="showContent === items.nombre">
+                    <ng-container *ngIf="items.valor.length === 0">
+                        <p>No hay resultados</p>
+                    </ng-container>
+                    <ul class="conceptos list-unstyled">
+                        <ng-container *ngFor="let item of items.valor">
+                            <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
+                                [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                <div class="rup-card mini {{ tipoBusqueda !== 'planes' ? item.semanticTag : 'planes'}}">
+                                    <div *ngIf="_dragScope" class=" type">
+                                        <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                    </div>
+                                    <div class="rup-content">
+                                        <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
+                                            <div class="title">
+                                                {{ item.term }}
+                                            </div>
+                                            <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
+                                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                                    <i class="mdi mdi-plus-box-outline"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ng-container>
+                    </ul>
                 </div>
             </li>
         </ng-container>

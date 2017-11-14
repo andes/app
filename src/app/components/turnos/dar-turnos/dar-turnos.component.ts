@@ -955,6 +955,7 @@ export class DarTurnosComponent implements OnInit {
                         this.actualizar('sinFiltro');
                         this.plex.toast('info', 'El turno se asignó correctamente');
 
+
                         // Enviar SMS sólo en Producción
                         if (environment.production === true) {
                             let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
@@ -982,19 +983,22 @@ export class DarTurnosComponent implements OnInit {
                                     turnos: [turnoSiguiente]
                                 };
                                 // Patchea el turno doble
-                                this.serviceAgenda.patchMultiple(agendaid, patch).subscribe((agendaActualizada) => {
+                                this.serviceAgenda.patch(agendaid, patch).subscribe((agendaActualizada) => {
                                     if (agendaActualizada) {
+                                        this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
                                         this.plex.toast('info', 'Se asignó un turno doble');
                                     }
                                 });
                             }
+                        } else {
+                            // Esto parece estar al pedo, pero si no está dentro del else no se refrescan los cambios del turno doble.
+                            this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
                         }
                         this.actualizarPaciente();
                         if (this.paciente && this._pacienteSeleccionado) {
                             this.cancelarDarTurno.emit(true);
                             return false;
                         } else {
-                            this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
                             this.buscarPaciente();
                         }
 

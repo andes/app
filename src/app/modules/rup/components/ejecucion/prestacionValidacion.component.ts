@@ -197,49 +197,39 @@ export class PrestacionValidacionComponent implements OnInit {
                         // this.plex.alert(registros.length);
 
                         registros.forEach(x => {
-                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
                             registrosFrecuentes.push({
                                 concepto: x.concepto,
-                                frecuencia: x.frecuencia
+                                frecuencia: 1
                             });
-                        });
-
-                        registrosFrecuentes.forEach(x => {
-                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
-                            registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
-                            // registrosFrecuentes.unshift(x);
                         });
 
                         // Frecuentes de este profesional
-                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                        // this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
 
+                        // if (resultado && resultado[0] && resultado[0].frecuentes) {
+                        //     resultado[0].frecuentes.forEach(fr => {
+                        //         if (registrosFrecuentes.filter(x => x.concepto.conceptId === fr.concepto.conceptId).length > 1) {
+                        //             registrosFrecuentes.splice(registrosFrecuentes.findIndex(y => y.concepto.conceptId === fr.concepto.conceptId));
+                        //         } else {
+                        //             fr.frecuencia++;
+                        //             registrosFrecuentes.push(fr);
+                        //         }
+                        //     });
+                        // }
 
-                            if (resultado && resultado[0] && resultado[0].frecuentes) {
-                                console.log('resultado FRECUENTES SIN CONCAT', registrosFrecuentes);
+                        let frecuentesProfesional = {
+                            profesional: {
+                                id: this.auth.profesional.id,
+                                nombre: this.auth.profesional.nombre,
+                                apellido: this.auth.profesional.apellido,
+                                documento: this.auth.profesional.documento
+                            },
+                            frecuentes: registrosFrecuentes
+                        }
 
-                                console.log('resultado FRECUENTES CON CONCAT', registrosFrecuentes);
+                        this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
-
-                                registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
-                            }
-
-                            let frecuentesProfesional = {
-                                profesional: {
-                                    id: this.auth.profesional.id,
-                                    nombre: this.auth.profesional.nombre,
-                                    apellido: this.auth.profesional.apellido,
-                                    documento: this.auth.profesional.documento
-                                },
-                                frecuentes: registrosFrecuentes
-                            }
-
-                            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
-                                console.log(frecuentes);
-                                this.plex.toast('success', 'Toast para ver que pase por acá');
-
-                            });
-
-                        });
+                        // });
 
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
