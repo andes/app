@@ -229,6 +229,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
+
                         // });
 
                         this.plex.toast('success', 'La prestación se validó correctamente');
@@ -296,13 +297,16 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
+
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
         prestacionesSolicitadas.forEach(ps => {
-
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
+            if (ps.solicitud.turno) {
+                this.asignarTurno[idRegistro] = ps;
+            }
         });
 
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
@@ -320,7 +324,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
                         let idRegistro = element.solicitud.registros[0].id;
-                        this.asignarTurno[idRegistro] = {};
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
                             this.asignarTurno[idRegistro] = element;
                         }
