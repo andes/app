@@ -285,7 +285,8 @@ export class TurnosComponent implements OnInit {
 
     isDobleSuspendido() {
         let indiceTurnoPadre = this.turnos.indexOf(this.turnosSeleccionados[0]) - 1;
-        return this.turnos[indiceTurnoPadre].estado === 'suspendido';
+        let response = (this.turnos[indiceTurnoPadre].estado === 'suspendido');
+        return response;
     }
 
     liberarTurno() {

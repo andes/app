@@ -17,6 +17,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
     @Input() turnosSeleccionados: ITurno[];
+    @Input() accion: any;
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
@@ -99,14 +100,23 @@ export class SuspenderTurnoComponent implements OnInit {
             return;
         }
 
-        let patch: any = {
-            op: 'suspenderTurno',
-            turnos: this.turnos,
-            motivoSuspension: this.motivoSuspensionSelect.select.nombre
-        };
+        let patch: any;
+        if (this.accion === 'suspenderTurno') {
+            patch = {
+                op: this.accion,
+                turnos: this.turnos,
+                motivoSuspension: this.motivoSuspensionSelect.select.nombre
+            };
+        } else {
+            patch = {
+                op: this.accion,
+                estado: this.accion
+            };
+        }
+
 
         // Patchea los turnosSeleccionados (1 o más)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(
 
             resultado => {
                 this.agenda = resultado;

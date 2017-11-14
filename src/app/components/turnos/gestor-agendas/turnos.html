@@ -288,8 +288,8 @@
 
 <!-- Muestra el panel de Suspender turno -->
 <div class="clear"></div>
-<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="saveSuspenderTurno($event)"
-    (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
+<suspender-turno *ngIf="showSuspenderTurno" [agenda]="agenda" [accion]="'suspenderTurno'" [turnosSeleccionados]="turnosSeleccionados"
+    (saveSuspenderTurno)="saveSuspenderTurno($event)" (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cancelaSuspenderTurno($event)">
 </suspender-turno>
 
 <!-- Muestra el panel de Nota -->

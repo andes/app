@@ -96,6 +96,9 @@ import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
 
+// RUP
+import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -194,6 +197,7 @@ import { RiesgoCardiovascularComponent } from './modules/rup/components/elemento
 
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -451,7 +455,8 @@ let RUPComponentsArray = [
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        FrecuentesProfesionalService
 
     ]
 })

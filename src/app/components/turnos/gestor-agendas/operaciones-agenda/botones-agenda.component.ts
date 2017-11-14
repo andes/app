@@ -128,13 +128,14 @@ export class BotonesAgendaComponent implements OnInit {
                 });
                 break;
             case 'suspendida':
-                this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
-                    if (!confirmado) {
-                        return false;
-                    } else {
-                        this.confirmarEstado(estado);
-                    }
-                });
+                // this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
+                //     if (!confirmado) {
+                //         return false;
+                //     } else {
+                //         this.confirmarEstado(estado);
+                //     }
+                // });
+                this.actualizarEstadoEmit.emit(estado);
                 break;
             case 'borrada':
                 this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {

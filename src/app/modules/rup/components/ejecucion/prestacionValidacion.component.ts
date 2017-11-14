@@ -10,6 +10,7 @@ import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -51,6 +52,7 @@ export class PrestacionValidacionComponent implements OnInit {
     temp: any = [];
 
     constructor(private servicioPrestacion: PrestacionesService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
@@ -71,8 +73,6 @@ export class PrestacionValidacionComponent implements OnInit {
             this.inicializar(id);
 
         });
-
-
     }
 
     redirect(pagina: string) {
@@ -189,6 +189,45 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
                         }
                         this.diagnosticoReadonly = true;
+
+                        // TODOOOO
+                        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+                        let registrosFrecuentes = [];
+                        registros.forEach(x => {
+                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                            registrosFrecuentes.push({
+                                concepto: x.concepto,
+                                frecuencia: x.frecuencia
+                            });
+                        });
+
+                        // Frecuentes de este profesional
+                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                            if (resultado && resultado[0] && resultado[0].frecuentes) {
+                                registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
+                                registrosFrecuentes.forEach(x => {
+                                    x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                                    registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                                    registrosFrecuentes.unshift(x);
+                                });
+                            }
+
+                            let frecuentesProfesional = {
+                                profesional: {
+                                    id: this.auth.profesional.id,
+                                    nombre: this.auth.profesional.nombre,
+                                    apellido: this.auth.profesional.apellido,
+                                    documento: this.auth.profesional.documento
+                                },
+                                frecuentes: registrosFrecuentes
+                            };
+
+                            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
+                                this.plex.toast('success', 'Toast para ver que pase por acá');
+                            });
+
+                        });
+
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -254,13 +293,16 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
+
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
         prestacionesSolicitadas.forEach(ps => {
-
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
+            if (ps.solicitud.turno) {
+                this.asignarTurno[idRegistro] = ps;
+            }
         });
 
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
@@ -278,7 +320,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
                         let idRegistro = element.solicitud.registros[0].id;
-                        this.asignarTurno[idRegistro] = {};
                         if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
                             this.asignarTurno[idRegistro] = element;
                         }
@@ -333,67 +374,6 @@ export class PrestacionValidacionComponent implements OnInit {
         });
 
         this.prestacion.ejecucion.registros = relacionesOrdenadas;
-
-        // console.log(relacionesOrdenadas.map(x => 'cosa: ' + x.id + ' | relación: ' + x.relacionadoCon[0]));
-
-
-        // let relacionesOrdenadas = [];
-        // registros.forEach((rel, i) => {
-        //     if (relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //         // "padres"
-        //         relacionesOrdenadas.push(rel);
-        //     }
-        //     this.relacionadoConPadre(rel.id).forEach((relP, i) => {
-        //         if (relacionesOrdenadas.filter(x => x.id === relP.id).length === 0) {
-        //             // "padres"
-        //             relacionesOrdenadas.push(relP);
-        //         }
-        //         if (rel.id !== relP.id && relacionesOrdenadas.filter(x => x.id === rel.id).length === 0) {
-        //             relacionesOrdenadas.push(rel);
-        //         }
-        //     });
-        // });
-
-        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
-
-        // // this.reordenarRelaciones();
-
-
-        // registros.forEach((reg, index) => {
-
-        //     // HAY RELACIÓN
-        //     if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-
-        //         if (!this.temp.find(x => x.id === reg.relacionadoCon[0])) {
-        //             console.log('registros.filter((x) => x.id === reg.relacionadoCon[0])[0]', registros.filter((x) => x.id === reg.relacionadoCon[0])[0].relacionadoCon[0]);
-        //             this.temp.splice(index + 1, 0, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]);
-
-        //             if (registros.filter((x) => x.id === reg.relacionadoCon[0])) {
-        //                 // this.temp = [...this.temp, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]];
-        //             }
-        //             // this.temp = [...this.temp, registros.filter((x) => x.id === reg.relacionadoCon[0])[0]];
-
-        //         }
-        //         // if (this.temp.find(x => x.id === reg.relacionadoCon[0])) {
-        //         //     this.temp.splice(registros.indexOf(registros.filter((x) => x.id === reg.relacionadoCon[0])[0]) + 1, 0, reg).splice(reg, 0);
-        //         // }
-
-        //         if (registros.find((x) => x.id === reg.relacionadoCon[0])) {
-        //             this.temp.splice(index + 1, 0, reg).splice(registros.indexOf(registros.filter((x) => x.id === reg.relacionadoCon[0])[0]), 0);
-        //         }
-
-        //         // NO HAY RELACIÓN
-        //     } else {
-        //         // Item "root", se agrega y listo
-        //         this.temp = [...this.temp, reg];
-        //     }
-
-        // });
-
-        // console.log('this.temp', this.temp.map(x => {
-        //     return x.concepto.term + (x.relacionadoCon[0] !== undefined ? ' relacionadoCon: ' + x.relacionadoCon[0] : ' ' + x.id);
-        // }));
-
 
     }
 

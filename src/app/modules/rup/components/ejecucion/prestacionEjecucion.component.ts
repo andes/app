@@ -11,6 +11,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 
 
@@ -35,7 +36,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoARelacionar = [];
 
     // Tipo de busqueda
-    public tipoBusqueda: any;
+    public tipoBusqueda: any[];
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -79,7 +80,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public prestacionValida = true;
     public mostrarMensajes = false;
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(
+        private servicioPrestacion: PrestacionesService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
@@ -117,6 +120,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
                             this.mostrarDatosEnEjecucion();
 
                         }
@@ -340,7 +344,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda === 'planes') {
+        if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
@@ -357,6 +361,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
+
+        this.tipoBusqueda[0] = '';
+
         return nuevoRegistro;
     }
 
@@ -430,7 +437,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             } else {
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
+                                    this.plex.confirm('¡Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
                                             valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
@@ -481,7 +488,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
-                let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                window.setTimeout(() => {
+                    let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                });
                 // TODO revisar registro de destino
                 // if (registroDestino) {
                 //     registroDestino.relacionadoCon = [resultado];
@@ -596,6 +605,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
+
         let params: any = {
             op: 'registros',
             registros: registros
@@ -603,10 +613,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+
             // actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
+
         });
     }
 
@@ -622,7 +634,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onConceptoDrop(e: any) {
         if (e.dragData.huds) {
-            this.ejecutarConceptoHuds(e.dragData);
+            window.setTimeout(() => {
+                this.ejecutarConceptoHuds(e.dragData);
+            });
         } else {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
@@ -760,6 +774,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             elementoRUP.frecuentes.forEach(element => {
                 this.masFrecuentes.push(element);
             });
+        } else {
+            // si no hay por un registro en particular mostramos el de la consulta
+            if (this.elementoRUP && this.elementoRUP.frecuentes) {
+                this.elementoRUP.frecuentes.forEach(element => {
+                    this.masFrecuentes.push(element);
+                });
+            }
         }
     }
 
@@ -845,5 +866,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             return false;
         }
     }
+    // recibe el tab que se clikeo y lo saca del array..
+    cerrartab($event) {
+        this.registrosHuds.splice($event, 1);
+    }
+
 
 }

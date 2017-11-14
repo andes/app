@@ -37,19 +37,21 @@
                             Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
                         </p>
                     </div>
-                    <div *ngIf="!transformarProblema" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
-                        <p>
-                            Arrastre aquí para vincularlos a esta consulta
-                        </p>
-                    </div>
 
-                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true}" [hidden]="showDatosSolicitud">
+
+                    <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true , canClose: true , tabFixed: true}" [hidden]="showDatosSolicitud" (_tab)="cerrartab($event)">
                         <!-- <div class="float-right">
                             <a href="javascript:void(0);" (click)="colapsarTodos()" class="btn btn-sm btn-primary">
                                 <i class="mdi mdi-chevron-down"></i>
                             </a>
                         </div> -->
                         <tab [tabTitle]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
+                            <!-- Area droppable de la consulta -->
+                            <div *ngIf="!transformarProblema" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)" class="droppable drop-area" [hidden]="!isDraggingConcepto">
+                                <p>
+                                    Arrastre aquí para vincularlos a esta consulta
+                                </p>
+                            </div>
                             <!-- Registros de la prestación -->
                             <div *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length && !showDatosSolicitud && itemsRegistros && !transformarProblema">
                                 <ng-container *ngFor="let registro of prestacion.ejecucion.registros; let i = index">
@@ -60,7 +62,7 @@
 
                                     <!-- Contenedor del registro RUP -->
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                                        <div class="rup-card {{registro.concepto.semanticTag}}" [ngClass]="{ 'plan': registro.esSolicitud === true }">
+                                        <div class="rup-card {{registro.concepto.semanticTag}}" [ngClass]="{ 'planes': registro.esSolicitud === true }">
 
                                             <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
@@ -305,7 +307,6 @@
 
             <!-- Panel Buscador SNOMED + HUDS -->
             <div class="col-4" *ngIf="prestacion">
-
                 <plex-box>
                     <plex-tabs [activeIndex]="panelIndex">
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 0">
@@ -314,13 +315,14 @@
                         </plex-tab>
                         <plex-tab label="Buscador" (click)="panelIndex = 1">
                             <!-- SNOMED [buscador.component.ts] -->
-                            <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
-
+                            <!-- <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador> -->
+                            <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
+                            <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                                (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar>
                         </plex-tab>
                     </plex-tabs>
                 </plex-box>
             </div>
-
         </div>
     </section>
 

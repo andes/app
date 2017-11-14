@@ -124,7 +124,7 @@
             <!-- Panel derecho -->
             <div *ngIf="agendasSeleccionadas?.length > 0" [ngClass]="{'col-8': showEditarAgendaPanel && agendasSeleccionadas?.length === 1, 'col-4': !showEditarAgendaPanel}">
                 <plex-box>
-                    <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1" type="info">
+                    <div *ngIf="showTurnos && agendasSeleccionadas?.length == 1 && !showSuspenderTurnos" type="info">
                         <turnos [agenda]="agendasSeleccionadas[0]" (reasignaTurno)="reasignaTurno($event)" (recargarAgendas)="loadAgendas($event)"></turnos>
                     </div>
                     <div *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1" type="info">
@@ -136,16 +136,19 @@
                         <nota-agenda (saveAgregarNotaAgenda)="saveAgregarNotaAgenda($event)" (cancelaAgregarNotaAgenda)="cancelaAgregarNotaAgenda($event)"
                             (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                     </div>
+                    <!-- Panel Suspender Turno -->
+                    <div *ngIf="showSuspenderTurnos">
+                        <suspender-turno [agenda]="agenda" [accion]="'suspendida'" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
+                            (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cerrarSuspenderTurno($event)">
+                        </suspender-turno>
+                    </div>
+                    <!-- /Panel suspender turno -->
+
                     <!-- FUNCINALIDAD REASIGNACION AUTOMATICA QUEDA AFUERA DEL RELEASE DOMUYO -->
                     <!-- Panel Reasignar Turnos Automático -->
                     <!-- <div *ngIf="showReasignarTurnoAutomatico && !showSuspenderTurnos">
                         <reasignar-turno-automatico [agendaAReasignar]="agendasSeleccionadas[0]" (reasignarTurnosEmit)="reasignarTurnos($event)"></reasignar-turno-automatico>
                     </div> -->
-                    <div *ngIf="showSuspenderTurnos">
-                        <suspender-turno [agenda]="agenda" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
-                            (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cerrarSuspenderTurno($event)">
-                        </suspender-turno>
-                    </div>
                 </plex-box>
             </div>
 
