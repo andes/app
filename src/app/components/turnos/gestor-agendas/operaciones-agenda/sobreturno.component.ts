@@ -19,6 +19,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 export class AgregarSobreturnoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
+    private _revision: any;
 
     @Input('agenda')
     set agenda(value: any) {
@@ -28,7 +29,16 @@ export class AgregarSobreturnoComponent implements OnInit {
         return this._agenda;
     }
 
-    @Output() volverAlGestor = new EventEmitter<IAgenda>();
+    @Input('revision')
+    set revision(value: any) {
+        this._revision = value;
+    }
+    get revision(): any {
+        return this._revision;
+    }
+
+    @Output() volverAlGestor = new EventEmitter<boolean>();
+    @Output() volverRevision = new EventEmitter<boolean>();
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
@@ -182,7 +192,8 @@ export class AgregarSobreturnoComponent implements OnInit {
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
-                this.volverAlGestor.emit(resultado);
+                this.volverAlGestor.emit(true);
+                this.volverRevision.emit(true);
             });
         } else {
             this.plex.alert('Debe completar los datos requeridos');
@@ -207,6 +218,11 @@ export class AgregarSobreturnoComponent implements OnInit {
     }
 
     cancelar() {
-        this.volverAlGestor.emit();
+        if (!this._revision) {
+            this.volverAlGestor.emit(true);
+        } else {
+            console.log('aca');
+            this.volverRevision.emit(true);
+        }
     }
 }
