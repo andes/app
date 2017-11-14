@@ -191,8 +191,11 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.diagnosticoReadonly = true;
 
                         // TODOOOO
-                        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+                        let registros = this.prestacion.ejecucion.registros;
                         let registrosFrecuentes = [];
+
+                        // this.plex.alert(registros.length);
+
                         registros.forEach(x => {
                             x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
                             registrosFrecuentes.push({
@@ -201,17 +204,23 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         });
 
+                        registrosFrecuentes.forEach(x => {
+                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
+                            registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                            // registrosFrecuentes.unshift(x);
+                        });
+
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
-                            console.log('resultado', resultado);
+
 
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
+                                console.log('resultado FRECUENTES SIN CONCAT', registrosFrecuentes);
+
+                                console.log('resultado FRECUENTES CON CONCAT', registrosFrecuentes);
+
+
                                 registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
-                                registrosFrecuentes.forEach(x => {
-                                    x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
-                                    registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
-                                    registrosFrecuentes.unshift(x);
-                                });
                             }
 
                             let frecuentesProfesional = {

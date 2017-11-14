@@ -197,7 +197,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             this.timeoutHandle = window.setTimeout(() => {
                 // this.timeoutHandle = null;
                 this.loading = true;
-                this.resultados = [];
+
+                // Limpio los resultados (también se limpian los contadores)
+                this.resultados = this.resultadosAux = [];
 
                 // buscamos
                 let apiMethod;
@@ -300,7 +302,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
 
-        if (this.resultados.length >= this.resultadosAux.length) {
+        if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
             this.resultadosAux = this.resultados;
         } else {
             this.resultados = this.resultadosAux;
