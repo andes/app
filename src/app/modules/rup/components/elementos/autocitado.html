@@ -1,5 +1,5 @@
 <div *ngIf="!soloValores && registro.valor">
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.prestacionSolicitada" name="nombrePrestacion" required="true" label="Prestación a Solicictar" [data]="tiposPrestacion" labelField="term">
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.prestacionSolicitada" name="nombrePrestacion" required="true" label="Prestación a Solicictar" [data]="tiposPrestacion" labelField="term" (change)="cambiarNombre()">
     </plex-select>
     <plex-text label="Motivo" multiline="true" autoFocus="1" required="true" [(ngModel)]="registro.valor.solicitudPrestacion.motivo"></plex-text>
 </div>

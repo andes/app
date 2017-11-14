@@ -203,8 +203,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
-                            console.log('resultado', resultado);
-
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
                                 registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
                                 registrosFrecuentes.forEach(x => {
@@ -225,9 +223,7 @@ export class PrestacionValidacionComponent implements OnInit {
                             }
 
                             this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
-                                console.log(frecuentes);
                                 this.plex.toast('success', 'Toast para ver que pase por acá');
-
                             });
 
                         });

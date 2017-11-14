@@ -46,9 +46,6 @@
                                         </b>
                                         <br>
                                         <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
-                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                            <b> {{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }} </b>
-                                        </div>
                                     </div>
                                     <div class="col-8">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
