@@ -410,7 +410,7 @@ export class GestorAgendasComponent implements OnInit {
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
             if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion' ) {
-                this.plex.info('danger', '', 'No puedes editar la agenda selecionada.', 3000);
+                this.plex.info('danger', '', 'No es posible editar la agenda seleccionada.', 3000);
                 return;
             }
 
