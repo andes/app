@@ -120,6 +120,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
                             this.mostrarDatosEnEjecucion();
 
                         }
@@ -343,7 +344,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
+        if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
@@ -360,6 +361,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
+
+        this.tipoBusqueda[0] = '';
+
         return nuevoRegistro;
     }
 
@@ -433,7 +437,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             } else {
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
+                                    this.plex.confirm('¡Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
                                             valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
@@ -484,7 +488,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
-                let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                window.setTimeout(() => {
+                    let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                });
                 // TODO revisar registro de destino
                 // if (registroDestino) {
                 //     registroDestino.relacionadoCon = [resultado];
@@ -628,7 +634,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onConceptoDrop(e: any) {
         if (e.dragData.huds) {
-            this.ejecutarConceptoHuds(e.dragData);
+            window.setTimeout(() => {
+                this.ejecutarConceptoHuds(e.dragData);
+            });
         } else {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
@@ -766,6 +774,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             elementoRUP.frecuentes.forEach(element => {
                 this.masFrecuentes.push(element);
             });
+        } else {
+            // si no hay por un registro en particular mostramos el de la consulta
+            if (this.elementoRUP && this.elementoRUP.frecuentes) {
+                this.elementoRUP.frecuentes.forEach(element => {
+                    this.masFrecuentes.push(element);
+                });
+            }
         }
     }
 
