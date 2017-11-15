@@ -190,11 +190,9 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                         this.diagnosticoReadonly = true;
 
-                        // TODOOOO
+                        // Se copian los registros en ejecución para agregar la frecuencia
                         let registros = this.prestacion.ejecucion.registros;
                         let registrosFrecuentes = [];
-
-                        // this.plex.alert(registros.length);
 
                         registros.forEach(x => {
                             registrosFrecuentes.push({
@@ -203,19 +201,6 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         });
 
-                        // Frecuentes de este profesional
-                        // this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
-
-                        // if (resultado && resultado[0] && resultado[0].frecuentes) {
-                        //     resultado[0].frecuentes.forEach(fr => {
-                        //         if (registrosFrecuentes.filter(x => x.concepto.conceptId === fr.concepto.conceptId).length > 1) {
-                        //             registrosFrecuentes.splice(registrosFrecuentes.findIndex(y => y.concepto.conceptId === fr.concepto.conceptId));
-                        //         } else {
-                        //             fr.frecuencia++;
-                        //             registrosFrecuentes.push(fr);
-                        //         }
-                        //     });
-                        // }
 
                         let frecuentesProfesional = {
                             profesional: {
@@ -228,8 +213,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
 
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
-
-                        // });
 
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
