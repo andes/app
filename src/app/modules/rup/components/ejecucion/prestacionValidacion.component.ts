@@ -190,7 +190,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                         this.diagnosticoReadonly = true;
 
-                        // Se copian los registros en ejecución para agregar la frecuencia
+                        // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                         let registros = this.prestacion.ejecucion.registros;
                         let registrosFrecuentes = [];
 
@@ -201,7 +201,6 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         });
 
-
                         let frecuentesProfesional = {
                             profesional: {
                                 id: this.auth.profesional.id,
@@ -210,7 +209,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                 documento: this.auth.profesional.documento
                             },
                             frecuentes: registrosFrecuentes
-                        }
+                        };
 
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 

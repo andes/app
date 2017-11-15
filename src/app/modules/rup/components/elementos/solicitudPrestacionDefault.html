@@ -11,10 +11,10 @@
     <div *ngIf="registro?.valor?.solicitudPrestacion?.profesionales">
         <p>
             <b>Profesional/es:</b>
-            <br />
+            <br>
             <span *ngFor="let profesional of registro.valor.solicitudPrestacion.profesionales">
                 {{profesional.apellido}}, {{profesional.nombre}}
-                <br />
+                <br>
             </span>
         </p>
     </div>

@@ -8,6 +8,7 @@ import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs/Rx';
 import { FrecuentesProfesionalService } from './../../modules/rup/services/frecuentesProfesional.service';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+import { log } from 'util';
 
 @Component({
     selector: 'snomed-buscar',
@@ -255,33 +256,43 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 apiMethod.subscribe(resultados => {
 
                     if (idTimeOut === this.timeoutHandle) {
+
+                        // Para evitar que se oculte la lista de resultados
                         this.loading = false;
-                        this.resultados = resultados;
-
-
-
-                        let frecuentes = [];
 
                         // Frecuentes de este profesional
                         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
 
+                            let frecuentes = [];
+
+                            // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
+                            this.resultados = resultados;
+
+                            // En base a los resultados se arman los contadores de los filtros
+                            this.contadorSemantigTags(this.resultados);
+
+                            // Hay más frecuentes?
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
+
+                                // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope de la lista con Array.unshift()
                                 frecuentes = resultado[0].frecuentes.map(x => {
                                     if (x.frecuencia != null && x.frecuencia >= 1 && this.resultados.find(c => c.conceptId === x.concepto.conceptId)) {
                                         this.resultados.splice(this.resultados.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
                                         this.resultados.unshift(x.concepto);
                                     }
                                 });
+
+                                // Finalmente se ordenan los más frecuentes de mayor a menor frecuencia
+                                frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
                             }
 
                         });
-                        this.contadorSemantigTags(this.resultados);
                         this.filtroRefSet();
                     }
 
                 }, err => {
                     this.loading = false;
-                    // this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
+                    this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
 
             }, 300);
