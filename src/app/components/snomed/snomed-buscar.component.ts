@@ -81,6 +81,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     public showContent;
 
+    public showFrecuentes = true;
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';

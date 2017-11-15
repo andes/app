@@ -361,9 +361,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         // agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-
-        this.tipoBusqueda[0] = '';
-
+        if (this.tipoBusqueda && this.tipoBusqueda.length) {
+            this.tipoBusqueda[0] = '';
+        }
         return nuevoRegistro;
     }
 
