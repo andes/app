@@ -34,7 +34,7 @@
                     </p>
                 </div>
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
-                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'plan' : '' }}">
+                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
                         <div class="rup-content">
@@ -46,9 +46,6 @@
                                         </b>
                                         <br>
                                         <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
-                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                            <b> {{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }} </b>
-                                        </div>
                                     </div>
                                     <div class="col-8">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
@@ -65,7 +62,7 @@
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
                                                 <span class="small text-secondary">
-                                                  No hay turnos disponibles  
+                                                  No hay turnos disponibles
                                                 </span>
                                             </span>
                                         </div>

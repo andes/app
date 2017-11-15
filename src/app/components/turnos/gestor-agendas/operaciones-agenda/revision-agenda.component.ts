@@ -25,43 +25,19 @@ import { Cie10Service } from './../../../../services/term/cie10.service';
 })
 
 export class RevisionAgendaComponent implements OnInit {
+    indiceReparo: any;
     @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
-        let turnos;
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            turnos = this.agenda.bloques[i].turnos;
-            this.turnosAsignados = (this.agenda.bloques[i].turnos).filter((turno) => {
-                return (turno.paciente && turno.paciente.id) && (turno.estado === 'asignado' || turno.estado === 'suspendido');
-            });
-            for (let t = 0; t < this.turnosAsignados.length; t++) {
-                // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-                this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                    if (paciente && paciente.carpetaEfectores) {
-                        let carpetaEfector = null;
-                        carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                            return (data.organizacion.id === this.auth.organizacion.id);
-                        });
-                        if (this.turnosAsignados[t] && this.turnosAsignados[t].paciente) {
-                            this.turnosAsignados[t].paciente = paciente;
-                            this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
-                        }
-                    }
-                });
-            }
-        }
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-        // for (let i = 0; i < this.agenda.bloques.length; i++) {
-        //     this.turnos = this.agenda.bloques[i].turnos;
-        // }
         this.estadoAsistenciaCerrada = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Asistencia Cerrada';
+            return e.nombre === 'Pendiente Auditoria';
         });
         this.estadoCodificado = this.estadosAgendaArray.find(e => {
-            return e.nombre === 'Codificada';
+            return e.nombre === 'Auditada';
         });
         this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoAsistenciaCerrada.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
         this.enableCodificada = (this._agenda.estado === this.estadoAsistenciaCerrada.id);
@@ -75,19 +51,19 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+    public showReparo = false;
+    existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
-    turnosAsignados = [];
+    showAgregarSobreturno: Boolean = false;
     sobreturnos = [];
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
     nuevoCodigo: any;
-    codigoPrincipal = [];
+    reparo: any;
     paciente: IPaciente;
-    cambioTelefono = false;
     turnoTipoPrestacion: any = null;
     pacientesSearch = false;
-    telefono: String = '';
     diagnosticos = [];
     enableCodificada = false;
     enableAsistenciaCerrada = true;
@@ -159,6 +135,7 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     seleccionarTurno(turno, bloque) {
+        this.existeCodificacionProfesional = false;
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
@@ -169,15 +146,14 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
+            this.showReparo = false;
         } else {
-            this.turnoSeleccionado = null;
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
-            if (turno.diagnosticoPrincipal && turno.diagnosticoPrincipal.codificacion) {
-                this.diagnosticos.push(turno.diagnosticoPrincipal);
-            }
-            if (turno.diagnosticoSecundario && turno.diagnosticoSecundario.length) {
-                this.diagnosticos = this.diagnosticos.concat(turno.diagnosticoSecundario);
+            if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
+                this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
+                // Verificamos si existe alguna codificación de profesional.
+                this.existeCodificacionProfesional = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? true : false;
             }
         }
     }
@@ -189,14 +165,6 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     asistenciaSeleccionada(asistencia) {
-        if (asistencia.id === 'asistio') {
-            if (!this.turnoSeleccionado.diagnosticoPrincipal) {
-                this.turnoSeleccionado.diagnosticoPrincipal = {
-                    codificacion: null,
-                    ilegible: false
-                };
-            }
-        }
         return (this.turnoSeleccionado.asistencia === asistencia.id);
     }
 
@@ -215,30 +183,47 @@ export class RevisionAgendaComponent implements OnInit {
             event.callback([]);
         }
     }
-
+    /**
+     * El auditor agrega nuevos diagnósticos al turno en el momento de revisión
+     * la codificaciónProfesional en estos casos debe ser siempre NULL
+     *
+     * @memberof RevisionAgendaComponent
+     */
     agregarDiagnostico() {
-        let nuevoDiagnostico = { codificacion: null, ilegible: false };
+        let nuevoDiagnostico = {
+            codificacionProfesional: null, // solamente obtenida de RUP o SIPS y definida por el profesional
+            codificacionAuditoria: null,  // corresponde a la codificación establecida la instancia de revisión de agendas
+            primeraVez: false
+        };
         if (this.nuevoCodigo) {
-            nuevoDiagnostico.codificacion = this.nuevoCodigo;
-            delete nuevoDiagnostico.codificacion.$order;
+            nuevoDiagnostico.codificacionAuditoria = this.nuevoCodigo;
+            delete nuevoDiagnostico.codificacionAuditoria.$order;
             this.diagnosticos.push(nuevoDiagnostico);
             this.nuevoCodigo = {};
         }
     }
 
     borrarDiagnostico(index) {
-        this.diagnosticos.splice(index, 1);
-        this.diagnosticos = [...this.diagnosticos];
+        if (this.diagnosticos[index].codificacionProfesional === null) {
+            this.diagnosticos.splice(index, 1);
+        } else {
+            this.diagnosticos[index].codificacionAuditoria = null;
+        }
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
     }
 
+    aprobar(index) {
+        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
+    }
+
+
     marcarIlegible() {
-        this.turnoSeleccionado.diagnosticoPrincipal.codificacion = null;
-        this.turnoSeleccionado.diagnosticoPrincipal.primeraVez = false;
+        console.log('MARCADO ILEGIBLE');
+        this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
+        this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
         this.diagnosticos = [];
-        this.turnoSeleccionado.diagnosticoSecundario = [];
     }
 
     cerrarAsistencia() {
@@ -284,7 +269,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnosticoPrincipal || (t.diagnosticoPrincipal && !t.diagnosticoPrincipal.codificacion && !t.diagnosticoPrincipal.ilegible && t.asistencia === 'asistio')) ||
+                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria && !t.diagnostico.ilegible && t.asistencia === 'asistio')) ||
                     !t.asistencia)
             );
         });
@@ -299,7 +284,7 @@ export class RevisionAgendaComponent implements OnInit {
                 'estado': this.estadoCodificado.id
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Codificación Cerrada');
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
                 this.enableAsistenciaCerrada = false;
                 this.enableCodificada = false;
             });
@@ -319,14 +304,9 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
         };
-        // TODO: Aca chequear los sobreturnos => this.bloqueSeleccinado == -1
         let datosTurno = {};
-        if (this.diagnosticos && this.diagnosticos.length && this.diagnosticos.length > 0) {
-            this.turnoSeleccionado.diagnosticoPrincipal = this.diagnosticos[0];
-            this.turnoSeleccionado.diagnosticoSecundario = this.diagnosticos.slice(1, this.diagnosticos.length);
-        } else {
-            delete this.turnoSeleccionado.diagnosticoPrincipal;
-            this.turnoSeleccionado.diagnosticoSecundario = [];
+        if (this.diagnosticos) {
+            this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;
         }
         // Aca chequeamos si es o no sobreturno
         if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
@@ -348,7 +328,7 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                this.plex.toast('success', 'Información', 'El turno fue actualizado');
+                this.plex.toast('success', 'Información', 'El turno fue actualizado', 1);
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
                 this.turnoSeleccionado = null;
@@ -358,9 +338,49 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
+    agregarSobreturno() {
+        this.showAgregarSobreturno = true;
+        this.showRevisionAgenda = false;
+        this.modoCompleto = false;
+    }
+
+    refresh() {
+        this.serviceAgenda.getById(this._agenda.id).subscribe(agenda => {
+            this._agenda = agenda;
+
+        }, err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
     volver() {
         this.volverAlGestor.emit(true);
+    }
 
+    mostrarReparo(index) {
+        this.indiceReparo = index;
+        this.showReparo = true;
+    }
+
+    repararDiagnostico() {
+        if (this.reparo) {
+            this.diagnosticos[this.indiceReparo].codificacionAuditoria = this.reparo;
+            this.showReparo = false;
+        }
+    }
+
+    borrarReparo(index) {
+        this.diagnosticos[this.indiceReparo].codificacionAuditoria = null;
+        this.showReparo = false;
+    }
+
+    volverRevision() {
+        this.showAgregarSobreturno = false;
+        this.showRevisionAgenda = true;
+        this.modoCompleto = true;
+        this.refresh();
     }
 
 }
