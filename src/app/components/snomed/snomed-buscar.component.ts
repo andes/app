@@ -13,9 +13,8 @@ import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
     selector: 'snomed-buscar',
     templateUrl: 'snomed-buscar.component.html',
     // creamos un handler para cuando se realiza un click
-    host: {
-        '(document:click)': 'handleClick($event)'
-    },
+    // tslint:disable-next-line:use-host-property-decorator
+    host: { '(document:click)': 'handleClick($event)' },
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None,
     styleUrls: [
