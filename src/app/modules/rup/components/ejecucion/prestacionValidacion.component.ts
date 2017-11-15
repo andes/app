@@ -190,11 +190,9 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                         this.diagnosticoReadonly = true;
 
-                        // TODOOOO
+                        // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                         let registros = this.prestacion.ejecucion.registros;
                         let registrosFrecuentes = [];
-
-                        // this.plex.alert(registros.length);
 
                         registros.forEach(x => {
                             x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
@@ -214,11 +212,7 @@ export class PrestacionValidacionComponent implements OnInit {
                             frecuentes: registrosFrecuentes
                         };
 
-                        console.log('frecuentesProfesional', frecuentesProfesional);
-
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
-
-                        // });
 
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
