@@ -4,11 +4,13 @@
 }
 
 .type.hallazgo,
+.type.situación,
 .type.trastorno {
     background-color: $problemas;
 }
 
-.type.procedimiento {
+.type.procedimiento,
+.type.entidad.observable {
     background-color: $procedimientos;
 }
 

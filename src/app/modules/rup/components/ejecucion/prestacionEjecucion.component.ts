@@ -11,7 +11,6 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 
 
@@ -82,7 +81,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     constructor(
         private servicioPrestacion: PrestacionesService,
-        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
@@ -437,7 +435,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             } else {
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('¡Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
+                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
                                             valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
