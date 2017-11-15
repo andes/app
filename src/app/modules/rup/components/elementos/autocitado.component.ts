@@ -21,11 +21,18 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
                 this.registro.valor = { solicitudPrestacion: {} };
                 this.registro.valor.solicitudPrestacion['autocitado'] = true;
                 this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
+                this.cambiarNombre();
             }
         });
     }
 
     darTurno(prestacionSolicitud) {
         this.darTurnoEmit.emit(prestacionSolicitud);
+    }
+
+    cambiarNombre() {
+        if (this.registro.valor.solicitudPrestacion.prestacionSolicitada) {
+            this.registro.nombre = this.registro.concepto.term + ': ' + this.registro.valor.solicitudPrestacion.prestacionSolicitada.term;
+        }
     }
 }

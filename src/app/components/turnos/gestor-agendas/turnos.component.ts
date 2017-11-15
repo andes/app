@@ -275,12 +275,18 @@ export class TurnosComponent implements OnInit {
             nota: this.agendaNoCerrada() && this.turnosSeleccionados.length > 0,
             // Se verifica si el siguiente turno se encuentra disponible
             turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
-            && this.todosConEstado('asignado') && this.siguienteDisponible(),
+                && this.todosConEstado('asignado') && this.siguienteDisponible(),
             // Se puede quitar turno doble sólo si está en ese estado
-            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble'),
+            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido(),
             // Se puede editar carpeta si el turno tiene paciente
             editarCarpeta: this.agendaNoCerrada() && this.turnosSeleccionados.length === 1 && this.tienenPacientes()
         };
+    }
+
+    isDobleSuspendido() {
+        let indiceTurnoPadre = this.turnos.indexOf(this.turnosSeleccionados[0]) - 1;
+        let response = (this.turnos[indiceTurnoPadre].estado === 'suspendido');
+        return response;
     }
 
     liberarTurno() {

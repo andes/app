@@ -320,7 +320,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
-
         if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
             this.resultadosAux = this.resultados;
         } else {
