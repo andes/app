@@ -204,42 +204,21 @@ export class PrestacionValidacionComponent implements OnInit {
                             });
                         });
 
-                        registrosFrecuentes.forEach(x => {
-                            x.frecuencia = x.frecuencia >= 1 ? Number(x.frecuencia) + 1 : 1;
-                            registrosFrecuentes.splice(registrosFrecuentes.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
-                            // registrosFrecuentes.unshift(x);
-                        });
+                        let frecuentesProfesional = {
+                            profesional: {
+                                id: this.auth.profesional.id,
+                                nombre: this.auth.profesional.nombre,
+                                apellido: this.auth.profesional.apellido,
+                                documento: this.auth.profesional.documento
+                            },
+                            frecuentes: registrosFrecuentes
+                        };
 
-                        // Frecuentes de este profesional
-                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                        console.log('frecuentesProfesional', frecuentesProfesional);
 
+                        this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
-                            if (resultado && resultado[0] && resultado[0].frecuentes) {
-                                console.log('resultado FRECUENTES SIN CONCAT', registrosFrecuentes);
-
-                                console.log('resultado FRECUENTES CON CONCAT', registrosFrecuentes);
-
-
-                                registrosFrecuentes = resultado[0].frecuentes.concat(registrosFrecuentes);
-                            }
-
-                            let frecuentesProfesional = {
-                                profesional: {
-                                    id: this.auth.profesional.id,
-                                    nombre: this.auth.profesional.nombre,
-                                    apellido: this.auth.profesional.apellido,
-                                    documento: this.auth.profesional.documento
-                                },
-                                frecuentes: registrosFrecuentes
-                            }
-
-                            this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => {
-                                console.log(frecuentes);
-                                this.plex.toast('success', 'Toast para ver que pase por acá');
-
-                            });
-
-                        });
+                        // });
 
                         this.plex.toast('success', 'La prestación se validó correctamente');
                     }, (err) => {
