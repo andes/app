@@ -96,7 +96,7 @@ export class TabsComponent implements OnInit, AfterContentInit {
         if (event.srcElement.scrollLeft > 0) {
             this.renderer.addClass(event.target, 'fixed');
         } else if (event.srcElement.scrollLeft === 0) {
-            this.renderer.addClass(event.target, 'fixed');
+            this.renderer.removeClass(event.target, 'fixed');
 
         }
 
