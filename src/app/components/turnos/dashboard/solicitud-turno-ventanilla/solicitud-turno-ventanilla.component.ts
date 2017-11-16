@@ -117,9 +117,17 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     loadOrganizacion(event) {
-        this.servicioOrganizacion.get({}).subscribe(organizaciones => {
-            event.callback(organizaciones);
-        });
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        }
+        // this.servicioOrganizacion.get({}).subscribe(organizaciones => {
+        //     event.callback(organizaciones);
+        // });
     }
 
     // loadProfesionales(event) {
