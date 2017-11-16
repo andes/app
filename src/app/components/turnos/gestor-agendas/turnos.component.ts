@@ -42,19 +42,22 @@ export class TurnosComponent implements OnInit {
                     // Si el turno está disponible pero ya paso la hora
                     if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
                         this.arrayDelDia[i]--;
-                    } else {
-                        if (turno.estado === 'asignado') {
-                            this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-                                if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
-                                    let carpetaEfector = null;
-                                    carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                                        return (data.organizacion.id === this.auth.organizacion.id);
-                                    });
-                                    turno.paciente.carpetaEfectores = carpetaEfector;
-                                }
-                            });
-                        }
                     }
+                    // esto no va mas. Cuando se actualiza MPI va a buscar los turnos pendientes del paciente y actualiza los datos.
+
+                    // else {
+                    //     if (turno.estado === 'asignado') {
+                    //         this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
+                    //             if (paciente && (paciente.id)) {  // && paciente.carpetaEfectores
+                    //                 let carpetaEfector = null;
+                    //                 carpetaEfector = paciente.carpetaEfectores.filter((data) => {
+                    //                     return (data.organizacion.id === this.auth.organizacion.id);
+                    //                 });
+                    //                 turno.paciente.carpetaEfectores = carpetaEfector;
+                    //             }
+                    //         });
+                    //     }
+                    // }
                 });
             }
         }
