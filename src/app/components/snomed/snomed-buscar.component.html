@@ -5,7 +5,7 @@
 </form>
 
 <!--MAESTRO DE PROBLEMAS - BD:tipoProblema-->
-<div class="menu-buscador">
+<div class="menu-buscador" *ngIf="!showRefSets">
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
     <div class="filtros d-flex">
         <b>Filtros</b>
@@ -13,7 +13,7 @@
             No se han encontrado resultados
         </small>
     </div>
-    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros" *ngIf="!showRefSets">
+    <div class="row m-0 mb-3 pb-3 d-flex botones-filtros">
         <div class="col m-0 p-0">
             <button (click)="filtroBuscadorSnomed(['hallazgo', 'situacion'])" [ngClass]="{'border-hallazgos': getFiltroActual(['hallazgo', 'situacion'])}">
                 HALLAZGOS
@@ -43,8 +43,20 @@
     </div>
 </div>
 
-<plex-button label="BÚSQUEDA GUIADA" (click)="showRefSets = true" type="primary" *ngIf="!showRefSets"></plex-button>
-<plex-button label="BUSCADOR BASICO" (click)="showRefSets = false" type="primary" *ngIf="showRefSets"></plex-button>
+<div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
+    <div class="col-4">
+        <span *ngIf="showRefSets">
+            <b *ngIf="!showRefSets || showGuiada">Frecuentes</b>
+            <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
+        </span>
+    </div>
+    <div class="col-8">
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false"
+            *ngIf="!showRefSets || showGuiada">BÚSQUEDA GUIADA</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false" *ngIf="showRefSets && !showGuiada">BUSCADOR BASICO</button>
+        <button *ngIf="showRefSets" class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; showGuiada = true">MÁS FRECUENTES</button>
+    </div>
+</div>
 
 <ul *ngIf="!showRefSets" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
@@ -74,7 +86,7 @@
     </ng-container>
 </ul>
 
-<div *ngIf="arrayFrecuentes">
+<div *ngIf="arrayFrecuentes && showFrecuentes">
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
 
@@ -102,7 +114,7 @@
 </div>
 
 <!-- refsetids -->
-<div *ngIf="showRefSets">
+<div *ngIf="showRefSets && !showFrecuentes">
 
     <ul class="conceptos list-unstyled">
         <!-- <plex-accordion> -->
@@ -148,6 +160,7 @@
                                                 {{ item.term }}
                                             </div>
                                             <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
+                                                    <small class="badge badge-{{ (tipoBusqueda === 'planes' ? 'planes' : item.semanticTag + 's') }} text-default">{{ item.semanticTag }}</small>
                                                 <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                                     <i class="mdi mdi-plus-box-outline"></i>
                                                 </a>
