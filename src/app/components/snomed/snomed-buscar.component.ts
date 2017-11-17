@@ -209,7 +209,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                 // Limpio los resultados (también se limpian los contadores)
                 this.resultados = this.resultadosAux = [];
-
+               
                 // buscamos
                 let apiMethod;
 
@@ -255,7 +255,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                 let idTimeOut = this.timeoutHandle;
 
                 apiMethod.subscribe(resultados => {
-
+                   
                     if (idTimeOut === this.timeoutHandle) {
 
                         // Para evitar que se oculte la lista de resultados
@@ -268,7 +268,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                             // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
                             this.resultados = resultados;
-
+                            console.log(this.resultados);
+                            this.filtroRefSet();
                             // En base a los resultados se arman los contadores de los filtros
                             this.contadorSemantigTags(this.resultados);
 
@@ -288,7 +289,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             }
 
                         });
-                        this.filtroRefSet();
+                       
                     }
 
                 }, err => {
@@ -389,6 +390,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     }
 
     filtroRefSet() {
+        console.log(this.resultados);
         let conceptos = {
             Hallazgos: ['hallazgo', 'situacion'],
             Trastornos: ['trastorno'],
