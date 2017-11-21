@@ -18,6 +18,7 @@ import * as moment from 'moment';
 })
 
 export class TurnosComponent implements OnInit {
+    carpetasPaciente: any;
     private _agenda: IAgenda;
     // Parámetros
     @Input('agenda')
@@ -43,6 +44,12 @@ export class TurnosComponent implements OnInit {
                     if (turno.estado === 'disponible' && this.delDia && turno.horaInicio < this.hoy) {
                         this.arrayDelDia[i]--;
                     }
+                    if (turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length > 0) {
+                        this.carpetasPaciente = turno.paciente.carpetaEfectores.filter((elem) => {
+                            return (elem.organizacion.nombre === this.auth.organizacion.nombre);
+                        });
+                    }
+
                 });
             }
         }
