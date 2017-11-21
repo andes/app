@@ -24,7 +24,10 @@
                             <div class="type">
                                 <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
-                            <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" >
+                            <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
+                                <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
+                                            <i class="mdi mdi-eye"></i>
+                                        </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
                                         {{ hallazgo.concepto.term }}
@@ -34,15 +37,10 @@
                                         última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}
                                         <br> estado: {{ hallazgo.evoluciones[0].estado }}
                                     </small>
-                                    <br>
-                                    <span *ngIf="hallazgo.evoluciones[0].esCronico" class="badge-danger">
-                                        Crónico
-                                    </span>
                                 </div>
+
                             </div>
-                            <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
-                                    <i class="mdi mdi-eye"></i>
-                                </span>
+
                             <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
@@ -65,6 +63,9 @@
                                 <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
+                                <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas p-1">
+                                            <i class="mdi mdi-eye"></i>
+                                        </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeActivo === iActivo}">
                                         {{ problema.concepto.term }}
@@ -77,9 +78,7 @@
                                     <br>
                                 </div>
                             </div>
-                            <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas p-1">
-                                <i class="mdi mdi-eye"></i>
-                            </span>
+
                             <div class="float-right p-1" *ngIf="emitirConceptos">
                                 <a href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="left">
                                     <i class="mdi mdi-plus-box-outline"></i>
@@ -101,13 +100,13 @@
                                 <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
+                                <span *ngIf="iOtros === eyeOtros" class="float-right text-problemas p-1">
+                                            <i class="mdi mdi-eye"></i>
+                                        </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeOtros === iOtros}">
                                         {{ problema.concepto.term }}
                                     </div>
-                                    <span *ngIf="iOtros === eyeOtros" class="float-right text-problemas p-1">
-                                        <i class="mdi mdi-eye"></i>
-                                    </span>
                                     <br>
                                     <small *ngIf="problema.evoluciones">
                                         última evolución: {{ problema.evoluciones[0].fechaCarga | fecha}}
