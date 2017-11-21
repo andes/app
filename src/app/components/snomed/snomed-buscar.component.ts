@@ -268,7 +268,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
                             // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
                             this.resultados = resultados;
-
+                            this.filtroRefSet();
                             // En base a los resultados se arman los contadores de los filtros
                             this.contadorSemantigTags(this.resultados);
 
@@ -288,7 +288,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             }
 
                         });
-                        this.filtroRefSet();
                     }
 
                 }, err => {
