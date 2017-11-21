@@ -197,6 +197,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     darTurnoSolicitud(event) {
         this.solicitudPrestacion = event;
+        console.log('solicitud ', this.solicitudPrestacion);
         this.showDarTurnos = true;
         this.showDashboard = false;
     }

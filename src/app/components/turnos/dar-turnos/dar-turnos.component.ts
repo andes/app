@@ -1,3 +1,4 @@
+import { log } from 'util';
 import { environment } from './../../../environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
@@ -175,7 +176,7 @@ export class DarTurnosComponent implements OnInit {
                 return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento;
             });
         }
-
+        this.actualizar('');
     }
 
     loadTipoPrestaciones(event) {
@@ -394,7 +395,9 @@ export class DarTurnosComponent implements OnInit {
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
-            this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
+            if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+                this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
+            }
         }
 
         // 1) Auth general (si puede ver esta pantalla)
@@ -411,7 +414,6 @@ export class DarTurnosComponent implements OnInit {
 
         // Filtro búsqueda
         if (etiqueta !== 'sinFiltro') {
-
             if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                 this.mostrarCalendario = true;
             } else {
@@ -421,10 +423,18 @@ export class DarTurnosComponent implements OnInit {
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                idProfesional: (this.opciones.profesional ? this.opciones.profesional.id : ''),
+                // idProfesional: (this.opciones.profesional ? (this._solicitudPrestacion ? this.opciones.profesional[0].id : this.opciones.profesional.id) : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
+            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].solicitudPrestacion.autocitado === true;
+            if (this.opciones.profesional && autocitado) {
+                params['idProfesional'] = this.opciones.profesional[0].id;
+            } else {
+                if (this.opciones.profesional && !autocitado) {
+                    params['idProfesional'] = this.opciones.profesional.id;
+                }
+            }
             if (!this.opciones.tipoPrestacion) {
                 params['tipoPrestaciones'] = this.filtradas.map((f) => { return f.id; });
             }
