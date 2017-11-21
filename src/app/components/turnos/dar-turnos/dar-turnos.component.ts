@@ -929,6 +929,7 @@ export class DarTurnosComponent implements OnInit {
                         documento: this.paciente.documento,
                         apellido: this.paciente.apellido,
                         nombre: this.paciente.nombre,
+                        fechaNacimiento: this.paciente.fechaNacimiento,
                         telefono: this.telefono,
                         carpetaEfectores: this.paciente.carpetaEfectores
                     };
