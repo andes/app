@@ -758,7 +758,7 @@ export class DarTurnosComponent implements OnInit {
     // a partir del documento y del efector
     obtenerCarpetaPaciente(paciente) {
 
-        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
+        this.carpetaEfector = { organizacion: { nombre: this.auth.organizacion, id: this.auth.organizacion.id }, nroCarpeta: '' };
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
         if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             this.carpetaEfector = this.paciente.carpetaEfectores.find((data) => {

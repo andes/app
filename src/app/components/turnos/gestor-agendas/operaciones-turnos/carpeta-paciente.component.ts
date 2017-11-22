@@ -22,7 +22,13 @@ export class CarpetaPacienteComponent implements OnInit {
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
 
     pacienteTurno: IPaciente;
-    carpetaPaciente: any = null;
+    carpetaPaciente = {
+        organizacion: {
+            id: this.auth.organizacion.id,
+            nombre: this.auth.organizacion.nombre
+        },
+        nroCarpeta: ''
+    };
 
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
@@ -32,36 +38,40 @@ export class CarpetaPacienteComponent implements OnInit {
         this.autorizado = this.auth.check(this.permisosRequeridos);
 
         if (this.autorizado) {
-
             // Hay paciente?
             if (this.turnoSeleccionado.paciente.id) {
                 // Traer las carpetas del paciente que haya en MPI
                 this.servicioPaciente.getById(this.turnoSeleccionado.paciente.id).subscribe(paciente => {
-
+                    this.pacienteTurno = paciente;
                     if (paciente.carpetaEfectores.length > 0) {
-
                         // Filtramos y traemos sólo la carpeta de la organización actual
-                        this.carpetaPaciente = paciente.carpetaEfectores.find(x => x.organizacion.id === this.auth.organizacion.id);
-
+                        let indiceCarpeta = paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+                        if (indiceCarpeta > -1) {
+                            this.carpetaPaciente = paciente.carpetaEfectores[indiceCarpeta];
+                        }
                     } else {
                         // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-                        this.servicioPaciente.getNroCarpeta({ documento: this.turnoSeleccionado.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpetaPaciente => {
-                            this.carpetaPaciente = carpetaPaciente;
+                        this.servicioPaciente.getNroCarpeta({ documento: this.turnoSeleccionado.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                            if (carpeta) {
+                                this.carpetaPaciente = carpeta;
+                            }
                         });
                     }
-
                 });
             }
         };
-
-
     }
 
     guardarCarpetaPaciente() {
 
-        if (this.carpetaPaciente !== null) {
-            this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaPaciente }).subscribe(resultadoCarpeta => {
-
+        if (this.carpetaPaciente.nroCarpeta !== '') {
+            let indiceCarpeta = this.pacienteTurno.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.pacienteTurno.carpetaEfectores[indiceCarpeta] = this.carpetaPaciente;
+            } else {
+                this.pacienteTurno.carpetaEfectores.push(this.carpetaPaciente);
+            }
+            this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.pacienteTurno.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);
             });
         }
