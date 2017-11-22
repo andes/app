@@ -25,7 +25,6 @@ import { log } from 'util';
 
 export class SnomedBuscarComponent implements OnInit, OnChanges {
 
-    resultadosAux: any[] = [];
     @Input() arrayFrecuentes;
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
@@ -84,6 +83,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     public showFrecuentes = true;
 
+    public conceptosTurneables: any[];
+    public resultadosAux: any[] = [];
+
     /*
     // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
     public tipoBusqueda: String = '';
@@ -116,6 +118,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
+
+        // Se traen los Conceptos Turneables para poder quitarlos de la lista de Procedimientos
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
 
         // Trae las prestaciones turneables y la guarda en memoria para luego
         // filtrar los resultados de las busquedas
@@ -188,6 +195,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm && this.searchTerm !== '') {
+
+            if (this.searchTerm.match(/^\s{1,}/)) {
+                this.searchTerm = '';
+                return;
+            };
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);
@@ -270,7 +282,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             this.resultados = resultados;
 
                             // En base a los resultados se arman los contadores de los filtros
-                            this.contadorSemantigTags(this.resultados);
+                            this.contarSemanticTags(this.resultados);
 
                             // Hay más frecuentes?
                             if (resultado && resultado[0] && resultado[0].frecuentes) {
@@ -296,13 +308,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
 
-            }, 300);
+            }, 600);
         } else {
             this._tengoResultado.emit(false);
         }
     }
 
-    contadorSemantigTags(resultados): any {
+    contarSemanticTags(resultados): any {
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
@@ -327,9 +339,20 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             this.resultados = this.resultadosAux;
         }
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
+
+        if (tipo !== 'planes') {
+            this.resultados = this.resultados.filter(x => {
+                if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId)) {
+                    return x;
+                }
+            });
+        }
+
+        // OK..
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
         this.esFiltroActual = this.getFiltroActual(filtro);
+
         return this.resultados;
     }
 
@@ -375,15 +398,8 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     // si hago clic en un concepto, entonces lo devuelvo
     seleccionarConcepto(concepto) {
-        // this.resultados = this.resultadosAux = [];
-        // this.searchTerm = '';
-        // this.contadorSemanticTags = {
-        //     hallazgo: 0,
-        //     trastorno: 0,
-        //     procedimiento: 0,
-        //     entidadObservable: 0,
-        //     situacion: 0
-        // };
+        this.filtroActual = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
+
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }
@@ -411,7 +427,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         } else {
             this.showContent = nombre;
         }
+    }
 
+    esTurneable(item) {
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === item.conceptId;
+        });
     }
 
 }
