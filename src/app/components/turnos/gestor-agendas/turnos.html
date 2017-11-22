@@ -151,7 +151,7 @@
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
                                     <br>Sin documento (temporal)
                                 </span>
-                                <span *ngIf="carpetasPaciente">
+                                <span *ngIf="turno.estado ==='asignado' && carpetasPaciente">
                                     | Nro Carpeta
                                     <span *ngFor="let carpeta of carpetasPaciente | slice:0:1;">{{ carpeta.nroCarpeta }}</span>
                                 </span>
