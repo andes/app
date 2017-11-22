@@ -2,6 +2,8 @@ import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
+import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'rup-buscador',
@@ -12,7 +14,7 @@ import { PrestacionesService } from '../../services/prestaciones.service';
 
 export class BuscadorComponent implements OnInit {
     @Input() elementoRUPprestacion;
-    @Input() arrayFrecuentes;
+    // @Input() arrayFrecuentes;
     @Input() resultados;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     /**
@@ -41,11 +43,11 @@ export class BuscadorComponent implements OnInit {
     // public showPlanes = false;
     public ejecucion: any[] = [];
 
-    // array de los mas frecuentes..
-    public masFrecuentes: any[] = [];
-    // Array de las mas frecuentes filtradas por semantictag de snomed
-    public masFrecuentesFiltradas: any[] = [];
-    public showFrecuentes = false;
+    // // array de los mas frecuentes..
+    // public masFrecuentes: any[] = [];
+    // // Array de las mas frecuentes filtradas por semantictag de snomed
+    // public masFrecuentesFiltradas: any[] = [];
+    // public showFrecuentes = false;
 
     public loading = false;
     public filtroActual = [];
@@ -73,7 +75,14 @@ export class BuscadorComponent implements OnInit {
 
     public showContent;
 
+    // Arra de salida para los mas frecuentes
+    public arrayFrecuentes: any[] = [];
+    // Boolean para mostrar lo mas fecuentes
+    public showFrecuentes = true;
+
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
+        private frecuentesProfesionalService: FrecuentesProfesionalService,
+        private auth: Auth,
         public servicioPrestacion: PrestacionesService) {
     }
 
@@ -90,8 +99,45 @@ export class BuscadorComponent implements OnInit {
         this._onDragEnd.emit(e);
     }
 
-    recibeResultados($event) {
-        this.resultados = $event;
+    recibeResultados(resultadosSnomed) {
+        console.log(resultadosSnomed);
+        // Limpio los resultados (también se limpian los contadores)
+        this.resultados = this.resultadosAux = [];
+        this.resultados = [];
+        // Hay más frecuentes?
+        // Frecuentes de este profesional
+        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+            let frecuentes = [];
+            // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
+            //this.resultados = resultadosSnomed;
+
+            this.contadorSemantigTags(resultadosSnomed);
+            if (resultado && resultado[0] && resultado[0].frecuentes) {
+
+                // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope de la lista con Array.unshift()
+                frecuentes = resultado[0].frecuentes.map(x => {
+                    console.log('vemos que saca', resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId));
+                    if (x.frecuencia != null && x.frecuencia >= 1 && resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId)) {
+                        resultadosSnomed.splice(resultadosSnomed.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+                        resultadosSnomed.unshift(x.concepto);
+                    }
+                    return x;
+                });
+                // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
+                frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
+                // Se le asignan los resultados ordenados con los mas frecuentes.
+                this.resultados = resultadosSnomed;
+
+                this.arrayFrecuentes = frecuentes;
+                console.log(this.arrayFrecuentes, 'arrayfrecuentes');
+                // Se llama a la funcion que arma los filtros por refsetId
+                this.filtroRefSet();
+            }
+        });
+
+        //     // Finalmente se ordenan los más frecuentes de mayor a menor frecuencia
+        //frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
+        // }
     }
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     // filtroBuscadorSnomed(tipoBusqueda) {

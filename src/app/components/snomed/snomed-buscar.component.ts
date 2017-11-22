@@ -26,7 +26,7 @@ import { log } from 'util';
 export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     resultadosAux: any[] = [];
-    @Input() arrayFrecuentes;
+    // @Input() arrayFrecuentes;
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
@@ -261,10 +261,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         // Para evitar que se oculte la lista de resultados
                         this.loading = false;
 
-                        // Frecuentes de este profesional
-                        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
+                        // // Frecuentes de este profesional
+                        // this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
 
-                            let frecuentes = [];
+                            // let frecuentes = [];
 
                             // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
                             // this.resultados = resultados;
@@ -288,7 +288,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                             //     frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
                             // }
 
-                        });
+                        // });
                     }
 
                 }, err => {

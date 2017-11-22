@@ -1,5 +1,5 @@
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar (_resultados)="recibeResultados($event)" [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
+<snomed-buscar (_resultados)="recibeResultados($event)" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
     (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)"></snomed-buscar>
 
 
@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<ul *ngIf="!showRefSets" class="conceptos list-unstyled">
+<ul *ngIf="!showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -86,22 +86,22 @@
     </ng-container>
 </ul>
 
-<div *ngIf="arrayFrecuentes && showFrecuentes">
+<div *ngIf="arrayFrecuentes && arrayFrecuentes.length > 0 && showFrecuentes">
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
 
             <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.semanticTag  === 'procedimiento') ? 'planes' : item.semanticTag}}">
+                <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.concepto.semanticTag  === 'procedimiento') ? 'planes' : item.concepto.semanticTag}}">
                     <div class="type">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                     </div>
                     <div class="rup-content">
                         <div class="header">
                             <div class="title">
-                                {{item.term}}
+                                {{item.concepto.term}}
                             </div>
                             <div class="actions">
-                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item.concepto)">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
                             </div>
@@ -116,7 +116,7 @@
 <!-- refsetids -->
 <div *ngIf="showRefSets && !showFrecuentes">
 
-    <ul class="conceptos list-unstyled"> -->
+    <ul class="conceptos list-unstyled"> 
         <!-- <plex-accordion> -->
          <ng-container *ngFor="let items of arrayPorRefsets, let i = index;">
             <li>
