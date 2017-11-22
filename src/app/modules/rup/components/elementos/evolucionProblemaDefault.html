@@ -1,18 +1,8 @@
-<ng-container *ngIf="hallazgoOrigen">
-    <div class="row">
-        <div class="col-12">
-            <span class="badge-info float-right">
-                Originado con la transformación de:
-                <strong>{{ hallazgoOrigen.nombre }}</strong>
-            </span>
-        </div>
-    </div>
-</ng-container>
 <ng-container *ngIf="!soloValores && referentSet.length > 0">
     <div class="row">
         <div class="col-12">
-            <span *ngFor="let rf of referentSet" class="badge badge-danger">
-                {{rf}}
+            <span *ngFor="let reference of referentSet" class="badge badge-danger">
+                {{ reference }}
             </span>
         </div>
     </div>
@@ -94,7 +84,7 @@
             </small> 
         </div>-->
 
-        <div class="col-8">
+        <div class="col">
             <div class="row no-gutters">
                 <div class="col">
                     <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
@@ -109,6 +99,10 @@
                         'badge-info': registro.valor.estado === 'transformado' 
                     }">
                         {{ registro.valor.estado }}
+                    </small>
+                    <small *ngIf="hallazgoOrigen" class="badge badge-info">
+                        Originado con la transformación de:
+                        <strong>{{ hallazgoOrigen.nombre }}</strong>
                     </small>
                 </div>
             </div>
