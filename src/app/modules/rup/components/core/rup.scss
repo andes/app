@@ -50,6 +50,15 @@
             background: $planes;
         }
     }
+    &.producto {
+        &:hover,
+        &.active {
+            border: 2px solid $productos;
+        }
+        .type {
+            background: $productos;
+        }
+    }
     .type {
         padding: 5px;
         width: 20px;
