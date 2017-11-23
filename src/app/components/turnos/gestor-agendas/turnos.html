@@ -153,7 +153,7 @@
                                 </span>
                                 <span *ngIf="turno.estado ==='asignado' && turno.paciente.carpetaEfectores">
                                     <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
-                                        <span *ngIf="carpeta.organizacion.nombre == nombreOrganizacion && carpeta.nroCarpeta!==null"> | Nro Carpeta {{carpeta.nroCarpeta}} </span>
+                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null"> | Nro Carpeta {{carpeta.nroCarpeta}} </span>
                                     </span>
                                 </span>
                             </small>

@@ -21,10 +21,18 @@ export class CarpetaPacienteComponent implements OnInit {
     autorizado: any;
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
 
-    pacienteTurno: IPaciente;
+    pacienteTurno: any;
     carpetaPaciente = {
         organizacion: {
             id: this.auth.organizacion.id,
+            nombre: this.auth.organizacion.nombre
+        },
+        nroCarpeta: ''
+    };
+
+    carpetaSave = {
+        organizacion: {
+            _id: this.auth.organizacion.id,
             nombre: this.auth.organizacion.nombre
         },
         nroCarpeta: ''
@@ -54,7 +62,7 @@ export class CarpetaPacienteComponent implements OnInit {
                     if (indiceCarpeta === -1) {
                         // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
                         this.servicioPaciente.getNroCarpeta({ documento: this.turnoSeleccionado.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                            if (carpeta) {
+                            if (carpeta.nroCarpeta) {
                                 this.carpetaPaciente = carpeta;
                             }
                         });
@@ -65,13 +73,13 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     guardarCarpetaPaciente() {
-
         if (this.carpetaPaciente.nroCarpeta !== '') {
+            this.carpetaSave.nroCarpeta = this.carpetaPaciente.nroCarpeta;
             let indiceCarpeta = this.pacienteTurno.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
-                this.pacienteTurno.carpetaEfectores[indiceCarpeta] = this.carpetaPaciente;
+                this.pacienteTurno.carpetaEfectores[indiceCarpeta] = this.carpetaSave;
             } else {
-                this.pacienteTurno.carpetaEfectores.push(this.carpetaPaciente);
+                this.pacienteTurno.carpetaEfectores.push(this.carpetaSave);
             }
             this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.pacienteTurno.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);

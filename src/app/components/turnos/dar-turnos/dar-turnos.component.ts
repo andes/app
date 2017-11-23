@@ -40,7 +40,7 @@ import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTi
 })
 
 export class DarTurnosComponent implements OnInit {
-
+    changeCarpeta = false;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
@@ -51,7 +51,7 @@ export class DarTurnosComponent implements OnInit {
             pacienteMPI => {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
-                this.obtenerCarpetaPaciente(this.paciente);
+                this.obtenerCarpetaPaciente();
                 this.mostrarCalendario = false;
             });
     }
@@ -67,7 +67,7 @@ export class DarTurnosComponent implements OnInit {
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
-                    this.obtenerCarpetaPaciente(this.paciente);
+                    this.obtenerCarpetaPaciente();
                 });
         }
     }
@@ -161,7 +161,13 @@ export class DarTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.opciones.fecha = moment().toDate();
 
-        this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
+        this.carpetaEfector = {
+            organizacion: {
+                _id: this.auth.organizacion.id,
+                nombre: this.auth.organizacion.nombre
+            },
+            nroCarpeta: ''
+        };
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
 
         if (this._pacienteSeleccionado) {
@@ -756,65 +762,43 @@ export class DarTurnosComponent implements OnInit {
 
     // Se busca el número de carpeta de la Historia Clínica en papel del paciente
     // a partir del documento y del efector
-    obtenerCarpetaPaciente(paciente) {
-
-        this.carpetaEfector = { organizacion: { nombre: this.auth.organizacion, id: this.auth.organizacion.id }, nroCarpeta: '' };
+    obtenerCarpetaPaciente() {
         // Verifico que tenga nro de carpeta de Historia clínica en el efector
-        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
-            this.carpetaEfector = this.paciente.carpetaEfectores.find((data) => {
-                return (data.organizacion.id === this.auth.organizacion.id);
-            });
-        }
 
-        if (!this.paciente.carpetaEfectores || (this.carpetaEfector && !(this.carpetaEfector.nroCarpeta))) {
-            if (this.paciente.documento && this.auth.organizacion._id) {
-                let params = {
-                    documento: this.paciente.documento,
-                    organizacion: this.auth.organizacion._id
-                };
-
-                this.servicePaciente.getNroCarpeta(params).subscribe(carpeta => {
-                    if (carpeta.nroCarpeta) {
-                        // Se actualiza la carpeta del Efector correspondiente
-                        this.carpetaEfector = {
-                            organizacion: carpeta.organizacion,
-                            nroCarpeta: carpeta.nroCarpeta
-                        };
-                    }
-                });
+        let indiceCarpeta = -1;
+        if (this.paciente.carpetaEfectores.length > 0) {
+            // Filtramos y traemos sólo la carpeta de la organización actual
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
             }
         }
-
-        if (this.carpetaEfector && this.carpetaEfector.nroCarpeta) {
-            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: this.carpetaEfector.nroCarpeta };
-        } else {
-            this.carpetaEfector = { organizacion: this.auth.organizacion, nroCarpeta: '' };
-        }
-    }
-
-    actualizarCarpetaPaciente(paciente) {
-        // Se realiza un patch del paciente
-        let listaCarpetas = [];
-        listaCarpetas = (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) ? paciente.carpetaEfectores : [];
-        let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
-        if (!carpetaActualizar) {
-            listaCarpetas.push(this.carpetaEfector);
-        } else {
-            listaCarpetas.forEach(carpeta => {
-                if (carpeta.organizacion._id === this.auth.organizacion.id) {
-                    carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
+        if (indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaEfector = carpeta;
+                    this.changeCarpeta = true;
                 }
             });
         }
-        let cambios = {
-            'op': 'updateCarpetaEfectores',
-            'carpetaEfectores': listaCarpetas
-        };
-        this.servicePaciente.patch(paciente.id, cambios).subscribe(resultado => {
-            if (resultado) {
-                // this.plex.toast('info', 'La información de la carpeta del paciente fue actualizada');
+    }
+
+    cambiarCarpeta() {
+        this.changeCarpeta = true;
+    }
+
+    actualizarCarpetaPaciente() {
+        if (this.carpetaEfector.nroCarpeta !== '') {
+            let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+            } else {
+                this.paciente.carpetaEfectores.push(this.carpetaEfector);
             }
-        });
+            this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(resultadoCarpeta => {
+            });
+        }
     }
 
     getUltimosTurnos() {
@@ -873,40 +857,20 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 this.paciente.contacto = [nuevoCel];
             }
-        }
-        let listaCarpetas = [];
-        listaCarpetas = (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) ? this.paciente.carpetaEfectores : [];
-        let carpetaActualizar = listaCarpetas.find(carpeta => carpeta.organizacion.id === this.auth.organizacion.id);
-        if (!carpetaActualizar) {
-            listaCarpetas.push(this.carpetaEfector);
-        } else {
-            listaCarpetas.forEach(carpeta => {
-                if (carpeta.organizacion._id === this.auth.organizacion.id) {
-                    carpeta.nroCarpeta = this.carpetaEfector.nroCarpeta;
+            // Actualizo teléfono del paciente en MPI
+            let cambios = {
+                'op': 'updateContactos',
+                'contacto': this.paciente.contacto
+            };
+            this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+                if (resultado) {
+                    this.plex.toast('info', 'Datos del paciente actualizados');
                 }
             });
         }
-        let cambios;
-        if (this.cambioTelefono) {
-            cambios = {
-                'op': 'updateContactosCarpeta',
-                'contacto': this.paciente.contacto,
-                'carpetaEfectores': listaCarpetas
-            };
-        } else {
-            cambios = {
-                'op': 'updateCarpetaEfectores',
-                'carpetaEfectores': listaCarpetas
-            };
+        if (this.changeCarpeta) {
+            this.actualizarCarpetaPaciente();
         }
-
-        // Actualizo teléfono y nro de carpeta del paciente en MPI
-        this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
-            if (resultado) {
-                this.plex.toast('info', 'Datos del paciente actualizados');
-            }
-        });
-
     }
 
     /**
@@ -1070,7 +1034,7 @@ export class DarTurnosComponent implements OnInit {
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
-                    this.obtenerCarpetaPaciente(this.paciente);
+                    this.obtenerCarpetaPaciente();
                 });
         } else {
             this.buscarPaciente();
@@ -1088,7 +1052,7 @@ export class DarTurnosComponent implements OnInit {
                     this.pacientesSearch = false;
                     this.verificarTelefono(this.paciente);
                     window.setTimeout(() => this.pacientesSearch = false, 100);
-                    this.obtenerCarpetaPaciente(this.paciente);
+                    this.obtenerCarpetaPaciente();
                     this.getUltimosTurnos();
                 });
         } else {
