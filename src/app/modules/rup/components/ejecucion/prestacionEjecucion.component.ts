@@ -12,6 +12,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { debounce } from 'rxjs/operator/debounce';
 
 
 @Component({
@@ -308,6 +309,16 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             });
 
+            // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
+            // y por lo tanto hay qye volver el registro orige a su estado original
+            if (_registro.valor.idRegistroTransformado) {
+                let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
+                if (registroOriginal) {
+                    registroOriginal.valor.estado = 'activo';
+                    delete registroOriginal.valor.idRegistroGenerado;
+                }
+            }
+            debugger;
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
             this.errores[this.indexEliminar] = null;
