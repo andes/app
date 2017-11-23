@@ -11,8 +11,8 @@
 <ng-container *ngIf="!soloValores && referentSet.length > 0 && registro.valor.estado !== 'transformado'">
     <div class="row">
         <div class="col-12">
-            <span *ngFor="let rf of referentSet" class="badge badge-danger">
-                {{rf}}
+            <span *ngFor="let reference of referentSet" class="badge badge-danger">
+                {{ reference }}
             </span>
         </div>
     </div>
@@ -96,6 +96,10 @@
                         'badge-info': registro.valor.estado === 'transformado' 
                     }">
                         {{ registro.valor.estado }}
+                    </small>
+                    <small *ngIf="hallazgoOrigen" class="badge badge-info">
+                        Originado con la transformación de:
+                        <strong>{{ hallazgoOrigen.nombre }}</strong>
                     </small>
                 </div>
             </div>
