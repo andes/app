@@ -16,14 +16,16 @@
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
                             </div>
-                            <!-- TODO: No funciona el filtro de profesional cuando es una solicitud de autocitacion -->
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
                                     placeholder="Profesionales" labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
-                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado===true" [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
+                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional" [readonly]="true">
                                 </plex-select>
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.registros[0].valor.solicitudPrestacion.autocitado===false" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
+                                labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
+                            </plex-select>
                             </div>
                             <div *ngIf="mostrarCalendario" class="col">
                                 <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles" title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"

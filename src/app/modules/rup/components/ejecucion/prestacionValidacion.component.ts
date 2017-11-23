@@ -70,7 +70,11 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.inicializar(id);
+            this.elementosRUPService.ready.subscribe((resultado) => {
+                if (resultado) {
+                    this.inicializar(id);
+                }
+            });
 
         });
     }
@@ -170,12 +174,12 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-                        let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-                        if (indexDiagnosticoPrincipal > -1) {
-                            let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-                            this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-                            this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-                        }
+                        // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
+                        // if (indexDiagnosticoPrincipal > -1) {
+                        //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
+                        //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
+                        //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
+                        // }
 
                         this.prestacion.ejecucion.registros.forEach(registro => {
                             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {

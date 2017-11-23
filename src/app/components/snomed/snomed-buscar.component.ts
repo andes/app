@@ -21,7 +21,7 @@ import { log } from 'util';
 
 export class SnomedBuscarComponent implements OnInit, OnChanges {
 
-    resultadosAux: any[] = [];
+    public conceptosTurneables: any[];
     // searchTermInput: Acá podemos enviarle como input un string
     // para que busque en SNOMED. ATENCION: al mandar este input se oculta
     // el text field para ingresar la busqueda a mano
@@ -70,6 +70,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
+
+        // Se traen los Conceptos Turneables para poder quitarlos de la lista de Procedimientos
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
 
         // Trae las prestaciones turneables y la guarda en memoria para luego
         // filtrar los resultados de las busquedas
@@ -132,6 +137,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
         }
 
         if (this.searchTerm && this.searchTerm !== '') {
+
+            if (this.searchTerm.match(/^\s{1,}/)) {
+                this.searchTerm = '';
+                return;
+            };
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);
@@ -208,7 +218,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
 
-            }, 300);
+            }, 600);
         } else {
             this._tengoResultado.emit(false);
         }
