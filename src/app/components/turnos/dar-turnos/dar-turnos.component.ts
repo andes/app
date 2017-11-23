@@ -427,7 +427,7 @@ export class DarTurnosComponent implements OnInit {
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
-            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].solicitudPrestacion.autocitado === true;
+            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
             if (this.opciones.profesional && autocitado) {
                 params['idProfesional'] = this.opciones.profesional[0].id;
             } else {
@@ -467,7 +467,6 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
 
-
             // Por defecto no se muestran las agendas que no tienen turnos disponibles
             if (!this.mostrarNoDisponibles) {
 
@@ -478,9 +477,6 @@ export class DarTurnosComponent implements OnInit {
                         agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda)) ||
                         ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0);
                 });
-                // this.agendas = this.agendas.filter(agenda => {
-                //     return ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0)
-                // });
             }
 
             // Por defecto se muestras los días de fines de semana (sab y dom)
