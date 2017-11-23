@@ -1,9 +1,9 @@
-.menu-buscador {
-    .btn {
-        width: 32.7%;
-    }
-}
-
+$problemas: #f1930d;
+$trastorno: #d9534f;
+$hallazgos: #d9534f;
+$procedimientos: #92278E;
+$planes: #0070ba;
+$productos: #ef0993;
 .header {
     align-items: center;
 }
@@ -33,8 +33,12 @@
             width: 118%;
         }
         &.planes {
-            margin-left: 18px !important;
             width: 81%;
+            margin-left: 15px !important;
+        }
+        &.productos {
+            width: 96%;
+            margin-left: 1px !important;
         }
         width: 99%;
         height: 1.5rem;
@@ -42,6 +46,14 @@
         border: none;
         background-color: #dddddd;
         cursor: pointer;
+        position: absolute;
+    }
+    .badge {
+        display: inline-block;
+        padding: 2px;
+        position: relative;
+        top: -18px;
+        right: 2px;
     }
 }
 
@@ -63,6 +75,13 @@
 .badge-entidad {
     border: 1px solid #92278e;
     color: #92278e;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.badge-productos {
+    border: 1px solid $productos;
+    color: $productos;
     font-weight: normal;
     text-transform: uppercase;
 }
@@ -107,4 +126,11 @@
         outline: 0;
     }
     border: 1px solid #6a99ad !important;
+}
+
+.border-productos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid $productos !important;
 }
