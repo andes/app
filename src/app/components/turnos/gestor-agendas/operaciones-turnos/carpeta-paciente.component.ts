@@ -43,13 +43,15 @@ export class CarpetaPacienteComponent implements OnInit {
                 // Traer las carpetas del paciente que haya en MPI
                 this.servicioPaciente.getById(this.turnoSeleccionado.paciente.id).subscribe(paciente => {
                     this.pacienteTurno = paciente;
+                    let indiceCarpeta = -1;
                     if (paciente.carpetaEfectores.length > 0) {
                         // Filtramos y traemos sólo la carpeta de la organización actual
-                        let indiceCarpeta = paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+                        indiceCarpeta = paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.carpetaPaciente = paciente.carpetaEfectores[indiceCarpeta];
                         }
-                    } else {
+                    }
+                    if (indiceCarpeta === -1) {
                         // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
                         this.servicioPaciente.getNroCarpeta({ documento: this.turnoSeleccionado.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                             if (carpeta) {
