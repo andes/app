@@ -14,6 +14,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { debounce } from 'rxjs/operator/debounce';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -325,7 +326,16 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             });
 
-            // Eliminamos el registro del array
+            // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
+            // y por lo tanto hay qye volver el registro orige a su estado original
+            if (_registro.valor.idRegistroTransformado) {
+                let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
+                if (registroOriginal) {
+                    registroOriginal.valor.estado = 'activo';
+                    delete registroOriginal.valor.idRegistroGenerado;
+                }
+            }
+            // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
 
             this.errores[this.indexEliminar] = null;
@@ -364,9 +374,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
-
-        // Armamos el elemento data a agregar al array de registros
+        // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
@@ -382,6 +390,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.tipoBusqueda && this.tipoBusqueda.length) {
             this.tipoBusqueda[0] = '';
         }
+        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
 
@@ -405,8 +414,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+        // si estamos cargando un concepto para una transformación de hall
         if (this.transformarProblema && this.registroATransformar) {
-            if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno' && snomedConcept.semanticTag !== 'situación') {
+
+            if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
                 return false;
             }
@@ -426,12 +437,15 @@ export class PrestacionEjecucionComponent implements OnInit {
             } else {
                 // this.registroATransformar.valor.estado = 'transformado';
                 valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
-                let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
-                nuevoRegistro.relacionadoCon = [this.registroATransformar];
-                this.transformarProblema = false;
-                // this.registroATransformar.valor.estado = 'transformado';
-                this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
-                return nuevoRegistro;
+                window.setTimeout(() => {
+                    let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
+                    nuevoRegistro.relacionadoCon = [this.registroATransformar];
+                    this.transformarProblema = false;
+                    this.registroATransformar.valor.estado = 'transformado';
+                    this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
+                    return nuevoRegistro;
+                });
+
             }
         } else {
             if (registoExiste) {
