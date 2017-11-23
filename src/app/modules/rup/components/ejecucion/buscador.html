@@ -1,6 +1,5 @@
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar (_resultados)="recibeResultados($event)" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
-    (_onDragStart)="dragStart(true)" (_onDragEnd)="dragEnd(false)"></snomed-buscar>
+<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar>
 
 
 
@@ -54,11 +53,11 @@
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false"
             *ngIf="!showRefSets || showGuiada">BÚSQUEDA GUIADA</button>
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false" *ngIf="showRefSets && !showGuiada">BUSCADOR BASICO</button>
-        <button *ngIf="showRefSets" class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; showGuiada = true">MÁS FRECUENTES</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true;">MÁS FRECUENTES</button>
     </div>
 </div>
 
-<ul *ngIf="!showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
+<ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -90,7 +89,7 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of arrayFrecuentes">
 
-            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <li draggable [dragScope]="'registros-rup'" [dragData]="item.concepto" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.concepto.semanticTag  === 'procedimiento') ? 'planes' : item.concepto.semanticTag}}">
                     <div class="type">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>

@@ -14,7 +14,6 @@ import { Auth } from '@andes/auth';
 
 export class BuscadorComponent implements OnInit {
     @Input() elementoRUPprestacion;
-    // @Input() arrayFrecuentes;
     @Input() resultados;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     /**
@@ -78,7 +77,11 @@ export class BuscadorComponent implements OnInit {
     // Arra de salida para los mas frecuentes
     public arrayFrecuentes: any[] = [];
     // Boolean para mostrar lo mas fecuentes
-    public showFrecuentes = true;
+    public showFrecuentes = false;
+
+    // TODO Ver si lo dejamos asi
+    public _dragScope = ['registros-rup', 'vincular-registros-rup'];
+
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -100,23 +103,17 @@ export class BuscadorComponent implements OnInit {
     }
 
     recibeResultados(resultadosSnomed) {
-        console.log(resultadosSnomed);
         // Limpio los resultados (también se limpian los contadores)
         this.resultados = this.resultadosAux = [];
-        this.resultados = [];
         // Hay más frecuentes?
         // Frecuentes de este profesional
         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
             let frecuentes = [];
             // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
-            //this.resultados = resultadosSnomed;
-
             this.contadorSemantigTags(resultadosSnomed);
             if (resultado && resultado[0] && resultado[0].frecuentes) {
-
                 // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope de la lista con Array.unshift()
                 frecuentes = resultado[0].frecuentes.map(x => {
-                    console.log('vemos que saca', resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId));
                     if (x.frecuencia != null && x.frecuencia >= 1 && resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId)) {
                         resultadosSnomed.splice(resultadosSnomed.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
                         resultadosSnomed.unshift(x.concepto);
@@ -127,19 +124,121 @@ export class BuscadorComponent implements OnInit {
                 frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
                 // Se le asignan los resultados ordenados con los mas frecuentes.
                 this.resultados = resultadosSnomed;
-
+                // Agrego los mas frecuentes del profesional
                 this.arrayFrecuentes = frecuentes;
-                console.log(this.arrayFrecuentes, 'arrayfrecuentes');
                 // Se llama a la funcion que arma los filtros por refsetId
                 this.filtroRefSet();
             }
         });
-
-        //     // Finalmente se ordenan los más frecuentes de mayor a menor frecuencia
-        //frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
-        // }
     }
-    // Recibe el parametro y lo setea para realizar la busqueda en Snomed
+
+    /**
+     *
+     * @param  $event Recibe un boolean de la busqueda de snomed
+     * Indica cuando se esta buscando y cuando ya termino la busqueda para mostrar
+     * el plex-loader.
+     */
+    Loader($event) {
+        this.loading = $event;
+    }
+
+    /**
+     *
+     * @param resultados Recibe el array de los resultados
+     * Cuenta cada semanticTag y lo agrega al array contadorSemanticTags
+     */
+
+    contadorSemantigTags(resultados): any {
+        this.contadorSemanticTags = {
+            hallazgo: 0,
+            trastorno: 0,
+            procedimiento: 0,
+            entidadObservable: 0,
+            situacion: 0
+        };
+
+        let tag;
+
+        resultados.forEach(x => {
+            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
+            this.contadorSemanticTags[String(tag)]++;
+        });
+
+    }
+    /**
+     *
+     * @param filtro Le pasamos el semanticTag a filtrar.
+     * @param tipo Le pasamos el tipo de busqueda a ejecutar.
+     * La funcion nos filtra los resultados segun el filtro y el tipo que le pasamos.
+     */
+
+    filtroBuscadorSnomed(filtro: any[], tipo = null) {
+        if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
+            this.resultadosAux = this.resultados;
+        } else {
+            this.resultados = this.resultadosAux;
+        }
+        this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.esFiltroActual = this.getFiltroActual(filtro);
+        return this.resultados;
+    }
+
+    // :joy:
+    getFiltroActual(filtro: any[]) {
+        return this.filtroActual.join('') === filtro.join('');
+    }
+
+    /**
+     * si hago clic en un concepto, entonces lo devuelvo
+     */
+    seleccionarConcepto(concepto) {
+        this.tagBusqueda.emit(this.filtroActual);
+        this.evtData.emit(concepto);
+    }
+
+    /**
+     * La funcion filtroRefSet tiene un objeto de conceptos con un array de los semanticTags
+     * que son los filtros
+     * Se va a mostrar en los desplegables los resultados filtrados, los guarda en
+     * arrayPorRefsets
+     */
+    filtroRefSet() {
+        let conceptos = {
+            Hallazgos: ['hallazgo', 'situacion'],
+            Trastornos: ['trastorno'],
+            Procedimientos: ['procedimiento', 'entidad observable'],
+            Planes: ['procedimiento']
+        };
+        this.arrayPorRefsets = [];
+        Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
+            let nombre = k.replace(/_/g, ' ');
+            this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
+        });
+        Object.keys(conceptos).forEach(c => {
+            this.arrayPorRefsets.push({ nombre: c, valor: this.filtroBuscadorSnomed(conceptos[c]) });
+        });
+    }
+
+    /**
+     *
+     * @param i Recibe la posicion Index del array
+     * @param nombre Se le pasa el nombre del objeto de la posicion i
+     * La funcion despliega los desplegables de la busqueda guiada.
+     * Al abrir uno automaticamente cierra el que anteriormente se abrio.
+     */
+    desplegar(i, nombre) {
+        if (this.showContent === nombre) {
+            this.showContent = null;
+        } else {
+            this.showContent = nombre;
+        }
+
+    }
+
+
+     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     // filtroBuscadorSnomed(tipoBusqueda) {
 
     //     this.tipoBusqueda = !tipoBusqueda ? 'todos' : tipoBusqueda;
@@ -184,13 +283,6 @@ export class BuscadorComponent implements OnInit {
 
     // }
 
-    // si hago clic en un concepto lo capturo y lo devuelvo
-    // Lo trae del buscador de SNOMED
-    ejecutarConcepto(concepto) {
-        this.evtData.emit(concepto);
-        // this.recuperaLosMasFrecuentes(this.elementoRUPpretacion);
-    }
-
     // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
     // conceptos de snomed
     // recuperaLosMasFrecuentes(elementoRUP) {
@@ -203,118 +295,5 @@ export class BuscadorComponent implements OnInit {
     //     mostrarMasfrecuentes(mostrar) {
     //         this.showFrecuentes = mostrar;
     //     }
-
-
-    contadorSemantigTags(resultados): any {
-        this.contadorSemanticTags = {
-            hallazgo: 0,
-            trastorno: 0,
-            procedimiento: 0,
-            entidadObservable: 0,
-            situacion: 0
-        };
-
-        let tag;
-
-        resultados.forEach(x => {
-            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
-            this.contadorSemanticTags[String(tag)]++;
-        });
-
-    }
-
-    filtroBuscadorSnomed(filtro: any[], tipo = null) {
-        if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
-            this.resultadosAux = this.resultados;
-        } else {
-            this.resultados = this.resultadosAux;
-        }
-        this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
-        this.tipoBusqueda = tipo ? tipo : '';
-        this.filtroActual = tipo ? ['planes'] : filtro;
-        this.esFiltroActual = this.getFiltroActual(filtro);
-        return this.resultados;
-    }
-
-    // :joy:
-    getFiltroActual(filtro: any[]) {
-        return this.filtroActual.join('') === filtro.join('');
-    }
-
-    /**
-     * Handler para cuando se ejecuta un click en el documento.
-     * @param event  Click event
-     * @returns      Void
-     */
-    handleClick(event): void {
-        // buscamos que elemento fue clickeado
-        let clickedComponent = event.target;
-
-        // creamos una bandera para saber si pertenece a este componente
-        let inside = false;
-
-        // loopeamos
-        do {
-            // si hice click dentro del codigo html del componente
-            // entonces indico que estoy adentro (inside = true)
-            // y no oculto la lista de resultados
-            if (clickedComponent === this.elementRef.nativeElement) {
-                inside = true;
-
-                this.hideLista = false;
-            }
-
-            // info de que componente hice clic
-            clickedComponent = clickedComponent.parentNode;
-        } while (clickedComponent);
-
-        // si no estamos en el componente, limpiamos lista de problemas
-        if (!inside && !this._draggable) {
-            // this.resultados = [];
-            // this.hideLista = true;
-            // this.searchTerm = '';
-        }
-    }
-
-    // si hago clic en un concepto, entonces lo devuelvo
-    seleccionarConcepto(concepto) {
-        // this.resultados = this.resultadosAux = [];
-        // this.searchTerm = '';
-        // this.contadorSemanticTags = {
-        //     hallazgo: 0,
-        //     trastorno: 0,
-        //     procedimiento: 0,
-        //     entidadObservable: 0,
-        //     situacion: 0
-        // };
-        this.tagBusqueda.emit(this.filtroActual);
-        this.evtData.emit(concepto);
-    }
-
-    filtroRefSet() {
-        let conceptos = {
-            Hallazgos: ['hallazgo', 'situacion'],
-            Trastornos: ['trastorno'],
-            Procedimientos: ['procedimiento', 'entidad observable'],
-            Planes: ['procedimiento']
-        };
-        this.arrayPorRefsets = [];
-        Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
-            let nombre = k.replace(/_/g, ' ');
-            this.arrayPorRefsets.push({ nombre: nombre, valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k])) });
-        });
-        Object.keys(conceptos).forEach(c => {
-            this.arrayPorRefsets.push({ nombre: c, valor: this.filtroBuscadorSnomed(conceptos[c]) });
-        });
-    }
-
-    desplegar(i, nombre) {
-        if (this.showContent === nombre) {
-            this.showContent = null;
-        } else {
-            this.showContent = nombre;
-        }
-
-    }
 
 }
