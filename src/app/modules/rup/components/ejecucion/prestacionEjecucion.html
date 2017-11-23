@@ -1,6 +1,6 @@
 <!-- Header de paciente -->
 <header *ngIf="prestacion && prestacion?.id">
-    <header-paciente *ngIf="paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="true" [paciente]="paciente"></header-paciente>
+    <header-paciente *ngIf="paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="false" [paciente]="paciente"></header-paciente>
 </header>
 <form class="plex-layout" #form="ngForm" *ngIf="!showCambioPaciente">
     <!-- Sección principal -->
@@ -334,11 +334,11 @@
                         </plex-tab>
                         <plex-tab label="Buscador" (click)="panelIndex = 1">
                             <!-- SNOMED [buscador.component.ts] -->
-                            <!-- <rup-buscador (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" [elementoRUPprestacion]="elementoRUP" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador> -->
+                            <rup-buscador (evtData)="ejecutarConcepto($event)" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                                (_onDragEnd)="arrastrandoConcepto(false)"></rup-buscador>
                             <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-                            <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)"
-                                [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
-                                (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar>
+                            <!-- <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                                (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar> -->
                         </plex-tab>
                     </plex-tabs>
                 </plex-box>
