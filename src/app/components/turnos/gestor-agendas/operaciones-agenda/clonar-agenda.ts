@@ -193,7 +193,7 @@ export class ClonarAgendaComponent implements OnInit {
                         dia.estado = 'conflicto';
                     }
                 }
-                if (agenda.espacioFisico) {
+                if (agenda.espacioFisico && this.agenda.espacioFisico) {
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
                         dia.estado = 'conflicto';

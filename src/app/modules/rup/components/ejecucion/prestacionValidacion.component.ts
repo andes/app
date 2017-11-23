@@ -70,7 +70,11 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.inicializar(id);
+            this.elementosRUPService.ready.subscribe((resultado) => {
+                if (resultado) {
+                    this.inicializar(id);
+                }
+            });
 
         });
     }
