@@ -54,7 +54,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     private cachePrestacionesTurneables = null;
 
-    // inyectamos servicio de snomed y plex
     constructor(private SNOMED: SnomedService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth,
@@ -197,7 +196,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'situación']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación']
                         });
                         break;
                 }
