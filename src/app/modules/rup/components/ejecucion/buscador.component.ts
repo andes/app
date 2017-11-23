@@ -55,18 +55,6 @@ export class BuscadorComponent implements OnInit {
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
 
-    /*
-    // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
-    public tipoBusqueda: String = '';
-    */
-    public contadorSemanticTags = {
-        hallazgo: 0,
-        trastorno: 0,
-        procedimiento: 0,
-        entidadObservable: 0,
-        situacion: 0
-    };
-
     public resultadosAux: any[] = [];
     public elementRef;
     public arrayPorRefsets = [];
@@ -82,6 +70,17 @@ export class BuscadorComponent implements OnInit {
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
 
+    public conceptosTurneables: any[];
+
+    public contadorSemanticTags = {
+        hallazgo: 0,
+        trastorno: 0,
+        procedimiento: 0,
+        entidadObservable: 0,
+        situacion: 0,
+        producto: 0
+    };
+
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -90,6 +89,10 @@ export class BuscadorComponent implements OnInit {
     }
 
     ngOnInit() {
+        // Se traen los Conceptos Turneables para poder quitarlos de la lista de Procedimientos
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
     }
 
     // drag and drop funciones. Hago los emit.
@@ -110,7 +113,7 @@ export class BuscadorComponent implements OnInit {
         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe(resultado => {
             let frecuentes = [];
             // Esperamos que haya un resultado de más frecuentes antes de mostrar los resultados completos
-            this.contadorSemantigTags(resultadosSnomed);
+            this.contarSemanticTags(resultadosSnomed);
             if (resultado && resultado[0] && resultado[0].frecuentes) {
                 // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope de la lista con Array.unshift()
                 frecuentes = resultado[0].frecuentes.map(x => {
@@ -148,13 +151,14 @@ export class BuscadorComponent implements OnInit {
      * Cuenta cada semanticTag y lo agrega al array contadorSemanticTags
      */
 
-    contadorSemantigTags(resultados): any {
+    contarSemanticTags(resultados): any {
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
             procedimiento: 0,
             entidadObservable: 0,
-            situacion: 0
+            situacion: 0,
+            producto: 0
         };
 
         let tag;
@@ -179,9 +183,20 @@ export class BuscadorComponent implements OnInit {
             this.resultados = this.resultadosAux;
         }
         this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
+
+        if (tipo !== 'planes') {
+            this.resultados = this.resultados.filter(x => {
+                if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId)) {
+                    return x;
+                }
+            });
+        }
+
+        // OK..
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
         this.esFiltroActual = this.getFiltroActual(filtro);
+
         return this.resultados;
     }
 
@@ -194,6 +209,8 @@ export class BuscadorComponent implements OnInit {
      * si hago clic en un concepto, entonces lo devuelvo
      */
     seleccionarConcepto(concepto) {
+        this.filtroActual = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
+
         this.tagBusqueda.emit(this.filtroActual);
         this.evtData.emit(concepto);
     }
@@ -237,8 +254,14 @@ export class BuscadorComponent implements OnInit {
 
     }
 
+    esTurneable(item) {
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === item.conceptId;
+        });
+    }
 
-     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
+
+    // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     // filtroBuscadorSnomed(tipoBusqueda) {
 
     //     this.tipoBusqueda = !tipoBusqueda ? 'todos' : tipoBusqueda;
