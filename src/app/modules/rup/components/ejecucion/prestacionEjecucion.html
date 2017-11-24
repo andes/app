@@ -97,7 +97,7 @@
                                                         <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary desvincular float-right" *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                             <i class="mdi mdi-vector-difference-ba"></i>
                                                         </a>
-                                                        <ng-container *ngIf="prestacion?.ejecucion?.registros?.length > 1">
+                                                        <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                             <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
 
                                                             <span *ngIf="registro?.valor?.estado && registro.valor?.estado !== 'transformado'">
