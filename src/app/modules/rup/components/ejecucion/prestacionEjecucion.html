@@ -105,7 +105,7 @@
                                                             *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                             <i class="mdi mdi-vector-difference-ba"></i>
                                                         </a>
-                                                        <ng-container *ngIf="prestacion?.ejecucion?.registros?.length > 1">
+                                                        <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                             <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)"
                                                                 [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
 
