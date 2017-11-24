@@ -71,14 +71,7 @@
                                             </span>
                                         </div>
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno')">
-                                            <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
-                                                Diagnóstico principal
-                                            </small> -->
-                                            <!-- title="Diagnóstico principal" titlePosition="right" -->
-                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                                                <!-- <plex-bool class="text-sm"  [readonly]="false" [(ngModel)]="elemento.esDiagnosticoPrincipal"
-                                                    type="slide" name="Diagnóstico principal"></plex-bool> -->
-                                                <!--  title="{{ elemento.esDiagnosticoPrincipal ? 'Seleccionar' : 'Deseleccionar'}}" -->
+                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
                                                 <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="pt-3">
                                                     <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                         'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
