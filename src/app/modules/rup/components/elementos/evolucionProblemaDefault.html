@@ -19,6 +19,13 @@
 </ng-container>
 <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
     <div *ngIf="elementoRUP && registro">
+        <div class="row" *ngIf="hallazgoOrigen">
+            <div class="col">
+                <small class="badge badge-info">
+                    Originado con la transformación de: <strong>{{ hallazgoOrigen.nombre }}</strong>
+                </small>
+            </div>
+        </div>
         <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones">
             <div class="col">
                 <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaInicio | fecha}} </strong>
