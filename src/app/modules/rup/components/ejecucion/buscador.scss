@@ -1,5 +1,136 @@
+$problemas: #f1930d;
+$trastorno: #d9534f;
+$hallazgos: #d9534f;
+$procedimientos: #92278E;
+$planes: #0070ba;
+$productos: #ef0993;
+.header {
+    align-items: center;
+}
+
+.results {
+    margin-top: 0;
+}
+
+.buscador {
+    margin-top: 5px;
+}
+
+.buscador input {
+    border-width: 2px;
+}
+
 .menu-buscador {
-    .btn {
-        width: 32.7%;
+    .filtros {
+        align-items: center;
+        height: 40px;
     }
+    .botones-filtros {
+        border-bottom: 1px solid #bbbbbb;
+    }
+    button {
+        &.procedimientos {
+            width: 118%;
+        }
+        &.planes {
+            width: 81%;
+            margin-left: 15px !important;
+        }
+        &.productos {
+            width: 96%;
+            margin-left: 1px !important;
+        }
+        width: 99%;
+        height: 1.5rem;
+        font-size: 0.6rem;
+        border: none;
+        background-color: #dddddd;
+        cursor: pointer;
+        position: absolute;
+    }
+    .badge {
+        display: inline-block;
+        padding: 2px;
+        position: relative;
+        top: -18px;
+        right: 2px;
+    }
+}
+
+.badge-hallazgos {
+    border: 1px solid #f4a03b;
+    color: #f4a03b;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.badge-trastornos {
+    border: 1px solid #ff4a1a;
+    color: #ff4a1a;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.badge-procedimientos,
+.badge-entidad {
+    border: 1px solid #92278e;
+    color: #92278e;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.badge-productos {
+    border: 1px solid $productos;
+    color: $productos;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.badge-planes {
+    border: 1px solid #6a99ad;
+    color: #6a99ad;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
+.loading-snomed {
+    float: right;
+    position: relative;
+    top: 100px;
+    right: 55px;
+}
+
+.border-hallazgos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #f4a03b !important;
+}
+
+.border-trastornos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #ff4a1a !important;
+}
+
+.border-procedimientos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #92278e !important;
+}
+
+.border-planes {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid #6a99ad !important;
+}
+
+.border-productos {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid $productos !important;
 }

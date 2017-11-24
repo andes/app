@@ -1,7 +1,7 @@
 <header *ngIf="prestacion">
     <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
 </header>
-<section *ngIf="!showDarTurnos && prestacion && paciente">
+<section *ngIf="prestacion && paciente && !showDarTurnos">
     <plex-box>
         <header>
             <div class="row">
@@ -162,7 +162,7 @@
         </div>
     </plex-box>
 </section>
-<footer *ngIf="!showDarTurnos">
+<footer *ngIf="prestacion && !showDarTurnos">
     <div class="row">
         <div class="col-3">
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'" label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>

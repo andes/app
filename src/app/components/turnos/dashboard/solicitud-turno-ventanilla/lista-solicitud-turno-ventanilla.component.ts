@@ -66,7 +66,8 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         let params = {
             idPaciente: this.paciente.id,
             tienePrestacionOrigen: 'no',
-            tieneTurno: 'no'
+            tieneTurno: 'no',
+            estado: 'pendiente'
         };
         // let options = {
         //     idPrestacionOrigen: '',
