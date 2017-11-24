@@ -151,9 +151,10 @@
                                 <span *ngIf="turno?.paciente?.id && turno.paciente.documento === ''">
                                     <br>Sin documento (temporal)
                                 </span>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta !== ''">
-                                    | Nro Carpeta
-                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{ carpeta.nroCarpeta }}</span>
+                                <span *ngIf="turno.estado ==='asignado' && turno.paciente.carpetaEfectores">
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null"> | Nro Carpeta {{carpeta.nroCarpeta}} </span>
+                                    </span>
                                 </span>
                             </small>
                             <small class="text-warning" *ngIf="turno.tipoTurno === 'profesional' && turno.estado === 'asignado'">(autocitado)</small>
