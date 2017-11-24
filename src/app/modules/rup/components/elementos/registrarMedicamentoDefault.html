@@ -19,7 +19,7 @@
     </div>
     <div class="col-2">
         <plex-select *ngIf="registro.valor" label="Unidad" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades" [required]="true"
-            (change)="emitChange()">
+            (change)="formatearUnidad()">
         </plex-select>
     </div>
     <div class="col-8">
@@ -30,7 +30,7 @@
             </div>
             <div class="col-5">
                 <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo"
-                    [data]="unidadTiempo" [required]="true" (change)="emitChange()"></plex-select>
+                    [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
             </div>
         </div>
     </div>
@@ -50,10 +50,7 @@
         <span>Estado</span> {{registro.valor.estado.nombre}}
     </p>
     <p class="readonly">
-        <span>Cantidad</span> {{registro.valor.cantidad}}
-    </p>
-    <p class="readonly">
-        <span>Unidad</span> {{registro.valor.unidad.nombre}}
+        <span>Cantidad</span> {{registro.valor.cantidad}} {{registro.valor.unidad.nombre}}
     </p>
     <p class="readonly">
         <span class="">{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</span>

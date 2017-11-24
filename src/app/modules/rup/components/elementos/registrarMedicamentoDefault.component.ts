@@ -24,7 +24,7 @@ export class RegistrarMedicamentoDefaultComponent extends RUPComponent implement
                 estado: 'Activo',
                 duracion: {
                     cantidad: '',
-                    unidad: { id: 'dias', nombre: 'Día(s)' },
+                    unidad: { id: 'dias', nombre: 'Día(s)' }
                 },
             };
         }
@@ -39,6 +39,16 @@ export class RegistrarMedicamentoDefaultComponent extends RUPComponent implement
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
         }
+    }
+
+    formatearDuracion() {
+        this.registro.valor.duracion.unidad = ((typeof this.registro.valor.duracion.unidad === 'string')) ? this.registro.valor.duracion.unidad : (Object(this.registro.valor.unidad).id);
+        this.emitChange();
+    }
+
+    formatearUnidad() {
+        this.registro.valor.unidad = ((typeof this.registro.valor.unidad === 'string')) ? this.registro.valor.unidad : (Object(this.registro.valor.unidad).id);
+        this.emitChange();
     }
 
 }
