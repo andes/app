@@ -495,15 +495,9 @@ export class DarTurnosComponent implements OnInit {
     }
 
     hayTurnosEnHorario(agenda) {
-        return agenda.bloques.filter(bloque => {
-            return bloque.turnos.filter(turno => {
-                let ultimoBloque = agenda.bloques.length - 1;
-                let ultimoTurno = bloque.turnos.length - 1;
-                return (
-                    moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format()
-                );
-            });
-        });
+        let ultimoBloque = agenda.bloques.length - 1;
+        let ultimoTurno = agenda.bloques[ultimoBloque].turnos.length - 1;
+        return (moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format());
     }
 
     hayTurnosDisponibles(agenda) {
