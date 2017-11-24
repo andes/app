@@ -361,7 +361,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;

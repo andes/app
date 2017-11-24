@@ -172,13 +172,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'procedimientos':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento', 'entidad observable']
+                            semanticTag: ['procedimiento', 'entidad observable', 'régimen/tratamiento']
                         });
                         break;
                     case 'planes':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento']
+                            semanticTag: ['procedimiento', 'régimen/tratamiento']
                         });
                         break;
                     case 'productos':
@@ -196,7 +196,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento']
                         });
                         break;
                 }

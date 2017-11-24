@@ -78,7 +78,8 @@ export class BuscadorComponent implements OnInit {
         procedimiento: 0,
         entidadObservable: 0,
         situacion: 0,
-        producto: 0
+        producto: 0,
+        regimenTratamiento: 0
     };
 
 
@@ -158,13 +159,15 @@ export class BuscadorComponent implements OnInit {
             procedimiento: 0,
             entidadObservable: 0,
             situacion: 0,
-            producto: 0
+            producto: 0,
+            regimenTratamiento: 0
         };
 
         let tag;
 
         resultados.forEach(x => {
             tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
+            tag = x.semanticTag && x.semanticTag === 'régimen/tratamiento' ? 'regimenTratamiento' : x.semanticTag;
             this.contadorSemanticTags[String(tag)]++;
         });
 
@@ -177,6 +180,10 @@ export class BuscadorComponent implements OnInit {
      */
 
     filtroBuscadorSnomed(filtro: any[], tipo = null) {
+        // OK..
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.tagBusqueda.emit(this.filtroActual);
         if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
             this.resultadosAux = this.resultados;
         } else {
@@ -192,11 +199,8 @@ export class BuscadorComponent implements OnInit {
             });
         }
 
-        // OK..
-        this.tipoBusqueda = tipo ? tipo : '';
-        this.filtroActual = tipo ? ['planes'] : filtro;
-        this.esFiltroActual = this.getFiltroActual(filtro);
 
+        this.esFiltroActual = this.getFiltroActual(filtro);
         return this.resultados;
     }
 
@@ -225,8 +229,8 @@ export class BuscadorComponent implements OnInit {
         let conceptos = {
             Hallazgos: ['hallazgo', 'situacion'],
             Trastornos: ['trastorno'],
-            Procedimientos: ['procedimiento', 'entidad observable'],
-            Planes: ['procedimiento']
+            Procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
+            Planes: ['procedimiento', 'régimen/tratamiento']
         };
         this.arrayPorRefsets = [];
         Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
