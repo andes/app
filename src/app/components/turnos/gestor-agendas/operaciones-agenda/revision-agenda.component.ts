@@ -339,7 +339,7 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                this.plex.toast('success', 'Información', 'El turno fue actualizado', 1);
+                this.plex.toast('success', 'Información', 'El turno fue actualizado');
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
                 this.turnoSeleccionado = null;
