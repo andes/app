@@ -132,6 +132,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
         switch (operacion) {
             case 'darTurno':
+                this.solicitudPrestacion = null;
                 this.showDashboard = false;
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;

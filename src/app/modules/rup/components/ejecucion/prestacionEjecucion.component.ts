@@ -315,20 +315,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (registro.relacionadoCon[0].id === _registro.id) {
                         registro.relacionadoCon = [];
                     }
-
-                    let relacionado = registros.findIndex(x => x.id === registro.relacionadoCon[0].id || x.id === registro.relacionadoCon[0]);
-                    if (relacionado) {
-                        if (registros[relacionado].valor.estado === 'transformado') {
-                            registros[relacionado].valor.estado = 'activo';
-                            delete registros[relacionado].valor.idRegistroGenerado;
-                        }
-                    }
                 }
             });
 
             // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
             // y por lo tanto hay qye volver el registro orige a su estado original
-            if (_registro.valor.idRegistroTransformado) {
+            if (_registro.valor && _registro.valor.idRegistroTransformado) {
                 let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
                 if (registroOriginal) {
                     registroOriginal.valor.estado = 'activo';
