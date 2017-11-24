@@ -1,8 +1,0 @@
-<plex-text *ngIf="!soloValores" placeholder="..." [(ngModel)]="data[tipoPrestacion.key]" name="observaciones" label="Observaciones" (keyup)="devolverValores()">
-</plex-text>
-
-<p *ngIf="soloValores">
-    <label>Observaciones</label>
-    <br /> {{data[tipoPrestacion.key]}}
-</p>
-

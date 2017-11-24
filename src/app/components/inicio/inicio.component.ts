@@ -1,45 +1,71 @@
-import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Rx';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Auth } from '@andes/auth';
+import {
+    Plex
+} from '@andes/plex';
+import {
+    Observable
+} from 'rxjs/Rx';
+import {
+    Component,
+    AfterViewInit,
+    HostBinding
+} from '@angular/core';
+import {
+    Auth
+} from '@andes/auth';
+import {
+    Wizard
+} from './../../classes/wizard.class';
+import {
+    AppComponent
+} from './../../app.component';
 
 @Component({
     templateUrl: 'inicio.html',
-    styleUrls: ['inicio.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    styleUrls: ['inicio.scss']
 })
-export class InicioComponent implements OnInit {
-    public usuario: number;
-    public password: string;
-    public organizacion: any;
-    private permisoAgendas = false;
+export class InicioComponent implements AfterViewInit {
+    @HostBinding('class.plex-layout') layout = true;
+    public turnos = '';
+    public mpi = '';
+    public rup = '';
+    public denied = false;
+    public accessList: any = [];
 
-    constructor(private plex: Plex, private auth: Auth) {}
+    constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) {}
 
-    ngOnInit() {
-        if ( this.auth.loggedIn() ) {
-            this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
-        }
+    ngAfterViewInit() {
+        window.setTimeout(() => {
+            this.denied = true;
+            if (this.auth.getPermissions('turnos:?').length > 0) {
+                if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
+                    this.turnos = 'gestor';
+                } else {
+                    if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
+                        this.turnos = 'inicioTurnos';
+                    }
+                }
+                // this.turnos = 'turnos';
+                this.denied = false;
+            }
+
+            if (this.auth.getPermissions('mpi:?').length > 0) {
+                this.mpi = 'mpi';
+                this.denied = false;
+            }
+
+            if (this.auth.getPermissions('rup:?').length > 0) {
+                this.rup = 'rup';
+                this.denied = false;
+            }
+        });
+        // Por ahora desactivamos el wizard!
+        // let wizard = new Wizard('turnos');
+        // wizard.addStep('Bienvenido al módulo de Agendas & Turnos', 'Este asistente lo ayudará a empezar a trabajar');
+        // wizard.addStep('Crear la agenda', 'El primer paso es crear una agenda a través del Gestor de Agendas');
+        // wizard.addStep('Publica la agenda', 'Luego la agenda debe publicarse para que esté lista para dar turnos');
+        // wizard.addStep('Dar Turnos', 'Ahora pueden otorgarse turnos');
+        // wizard.addStep('Acceso de profesionales', 'El personal de Salud puede acceder a los turnos dados desde el consultorio, incluso otorgar nuevos turnos');
+        // wizard.addStep('Comenzar a usar', 'La aplicación ya está lista para que comiences a utilizarla');
+        // wizard.render();
     }
-
-    login(event) {
-        if (event.formValid) {
-            this.auth.login(this.usuario.toString(), this.password, this.organizacion.id)
-                .subscribe((data) => {
-                    this.password = null;
-                    this.permisoAgendas = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
-                }, (err) => {
-                    this.plex.alert('Usuario o contraseña incorrectos');
-                });
-        }
-    }
-
-    logout(event) {
-        // TODO
-    }
-
-    loadOrganizaciones(event) {
-        this.auth.organizaciones().subscribe(event.callback);
-    }
-
 }

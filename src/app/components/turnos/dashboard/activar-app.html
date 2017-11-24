@@ -1,0 +1,95 @@
+<!--Header de estadisticas-->
+
+<fieldset>
+    <legend>ACTIVACION DE APP MOBILE</legend>
+    <br>
+    <!--<header>
+    <div class="row">
+        <div class="col">
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">INFORMACIÓN ESTADÍSTICA</span>
+                    </div>
+                </legend>
+            </fieldset>
+        </div>
+    </div>
+</header>-->
+    <!--Estadisticas Ventanilla-->
+    <br>
+    <!--Datos básicos del Paciente-->
+    <header>
+        <div class="row">
+            <div class="col">
+                <h5>
+                    <span style="color: #00A8E0">{{paciente | paciente}}</span>
+                </h5>
+            </div>
+        </div>
+        <hr>
+    </header>
+    <br>
+    <div class="row">
+        <div class="col-6">
+            <i class="mdi mdi-account-card-details"></i>
+            <span style="color: #00A8E0">Documento</span>
+        </div>
+        <div class="col-6">
+            <i class="mdi mdi-calendar-today"></i>
+            <span style="color: #00A8E0">Fecha de Nacimiento</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="paciente?.id">
+            <span *ngIf="paciente.documento !== ''">{{paciente.documento | number}}</span>
+            <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento (temporal)</span>
+        </div>
+        <div class="col-6" *ngIf="paciente?.id">
+            <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>
+            <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento (temporal)</span>
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="col-12">
+            <i class="mdi mdi-map-marker"></i>
+            <span style="color: #00A8E0">Usuario Andes (E-Mail obligatorio)</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text [(ngModel)]="email" [readonly]="!checkPass" name="searchTerm" placeholder="e-mail"></plex-text>
+        </div>
+    </div>
+    <br>
+
+    <div class="row">
+        <div class="col-12">
+            <i class="mdi mdi-map-marker"></i>
+            <span style="color: #00A8E0">Celular</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text [(ngModel)]="celular" [readonly]="!checkPass" name="searchTerm" placeholder="Celular"></plex-text>
+        </div>
+    </div>
+    <br>
+
+    <plex-button *ngIf="!hideButton" label="Activar App Mobile" icon="cloud-check" type="primary" (click)="activarApp()"></plex-button>
+    
+
+    <div *ngIf="!checkPass">
+        <h5>
+            <span style="color: red" *ngIf="message.length > 0">
+                <i class="mdi mdi-alert-circle-outline"></i>
+                {{message}}
+            </span>
+        </h5>
+    </div>
+
+    <plex-button *ngIf="!hideButtonResend" label="Reenviar Codigo Activación" icon="cloud-check" type="default" (click)="activarApp()"></plex-button>
+
+</fieldset>

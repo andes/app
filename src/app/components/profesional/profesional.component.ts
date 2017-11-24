@@ -13,17 +13,17 @@ const limit = 50;
     templateUrl: 'profesional.html'
 })
 export class ProfesionalComponent implements OnInit {
-    showcreate: boolean = false;
-    showupdate: boolean = false;
+    showcreate = false;
+    showupdate = false;
     datos: IProfesional[];
     searchForm: FormGroup;
     seleccion: IProfesional;
-    skip: number = 0;
-    loader: boolean = false;
-    finScroll: boolean = false;
-    tengoDatos: boolean = true;
+    skip = 0;
+    loader = false;
+    finScroll = false;
+    tengoDatos = true;
     value: any;
-    //cantidad: IProfesional[];
+    // cantidad: IProfesional[];
 
 
     constructor(private formBuilder: FormBuilder, private profesionalService: ProfesionalService) { }
@@ -39,18 +39,18 @@ export class ProfesionalComponent implements OnInit {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
-        })
+        });
         this.loadDatos();
 
     }
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            "apellido": this.value && this.value.apellido,
-            "nombre": this.value && this.value.nombre,
-            "documento": this.value && this.value.documento,
-            "skip": this.skip,
-            "limit": limit
+            'apellido': this.value && this.value.apellido,
+            'nombre': this.value && this.value.nombre,
+            'documento': this.value && this.value.documento,
+            'skip': this.skip,
+            'limit': limit
         };
         this.profesionalService.get(parametros)
             .subscribe(
@@ -89,7 +89,6 @@ export class ProfesionalComponent implements OnInit {
     }
 
     onEdit(objProfesional: IProfesional) {
-        console.log(objProfesional);
         this.showcreate = false;
         this.showupdate = true;
         this.seleccion = objProfesional;

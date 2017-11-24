@@ -1,0 +1,40 @@
+<fieldset *ngIf="showLiberarTurno">
+    <legend>Liberar Turnos</legend>
+    <div class="row">
+        <div class="col-4">
+            <label>Hora Turno</label>
+        </div>
+        <div class="col-8">
+            <label>Paciente</label>
+        </div>
+    </div>
+    <div class="row" *ngFor="let turno of turnosSeleccionados; let i = index">
+        <div class="col-4">
+            {{turnosSeleccionados[0].horaInicio | date: 'H:mm'}} hs
+        </div>
+        <div class="col-8">
+            <span *ngIf="turnosSeleccionados[0].paciente?.id">{{turnosSeleccionados[0].paciente | paciente }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <plex-select [(ngModel)]="motivoLiberacionSelect.select" name="motivoLiberacion" [data]="motivoLiberacion" label="Motivos de Liberación"
+                placeholder="Seleccione un motivo de liberación" [required]="true">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-warning p-3 text-white" *ngIf="!motivoLiberacionSelect.select?.nombre">
+                Seleccione un motivo de liberación
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3 float-right">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" label="Liberar" (click)="liberarTurno($event)" title="Guardar">
+        </plex-button>
+    </div>
+</fieldset>

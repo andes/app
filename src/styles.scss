@@ -1,63 +1,6 @@
 // Plex
 @import '~@andes/plex/src/lib/styles.scss';
-// Dehabitados para prueba piloto de MPI
-// App
-// @import '/app/styles/forms.scss';
-// .plex-box.plex-box-primary > .plex-box-header {
-//     // height: 12.5vh !important;
-// }
-// // TODO:
-// .plex-box.plex-box-primary > .plex-box-content {
-//     height: calc(100vh - 150px - 70px - 55px);
-//     clear: both;
-//     /* overflow-y: auto; */
-//     /* overflow-x: hidden; */
-//     padding: 0 25px;
-// }
-
-.table-striped {
-    font-size: 0.85em;
-
-    .text-success {
-        color: $green !important;
-    }
-
-    .bg-primary {
-        background-color: $dark-blue !important;
-    }
-
-}
-
-
-.plex-box-content .h4{
-    display: inline-block;
-    height: 38px;
-}
-
-
-.td-calendario {
-    position: relative;
-
-    .badge {
-        position: absolute;
-        bottom: 5px;
-        right: 5px;
-        color: white;
-        font-weight: normal;
-    }
-
-}
-
-// temp Paciente header @ Dar turnos 
-.sub-friso {
-    background-color: $blue !important;
-}
-.header-paciente {
-    min-width: 600px;
-    background-color: $blue;
-    color: white;
-
-    .estado-paciente {
-        border-left: 1px solid white !important;
-    }
-}
+// IMPORTS DE MÓDULOS
+// RUP
+// @andrrrl ver con @jfgabriel
+// @import './src/app/styles/turnos/turnos';

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 // import { Observable } from 'rxjs/Rx';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { TipoProblemaService } from './../../services/rup/tipoProblema.service';
 
 
 @Component({
@@ -20,16 +19,20 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         id: '',
         nombre: ''
     };
-     public tipo = {
+    public tipo = {
         id: '',
         nombre: ''
     };
     public titulo: String = '';
+    // public seleccionado: any = null;
+    // public reglas: any = {};
+    // private showRegla: boolean = false;
+    // private arrayReglas: any = [];
     // Parámetros In/Out
     @Input('seleccion') seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
 
-    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService, private servicioTipoProblema: TipoProblemaService) { };
+    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { };
 
     // ****************************************** //
     ngOnInit() {
@@ -46,7 +49,15 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 autonoma: false,
                 activo: true,
                 granularidad: String,
-                ejecucion: [],
+                 ejecucion: [// {
+                //     idTipoPrestacion: String,
+                //     reglas: [{
+                //         nombre: String,
+                //         valor: Number,
+                //         condicion: String
+                //     }]
+                // }
+                ],
                 turneable: false,
                 componente: {
                     ruta: '',
@@ -55,15 +66,21 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 tipo: String
 
             }; // this.modelo
+            // console.log("this.modelo");
+            // console.log(this.modelo);
         } else {
             this.granularidad.id = this.modelo.granularidad;
             this.tipo.id = this.modelo.tipo;
             this.titulo = 'Modificación tipo de prestación';
         }
+
+
+
     } // ngOnInit
 
     // ****************************************** //
     camelcase() {
+
         if (this.modelo.nombre) {
             let nombre = this.modelo.nombre.toLowerCase()
 
@@ -123,16 +140,35 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
 
 
     getTiposProblemas(event) {
-        this.servicioTipoProblema.get({}).subscribe(event.callback);
     }
 
     // ****************************************** //
     onSave() {
-        //debugger;
+        // if (this.reglas.nombre && this.reglas.valor && this.reglas.condicion) {
+        //     this.arrayReglas.push(this.reglas);
+        //     console.log(this.arrayReglas);
+        // }
+        // this.modelo.ejecucion[0].reglas = this.arrayReglas;
+
+
+
 
         this.modelo.granularidad = this.granularidad.id;
         this.modelo.tipo = this.tipo.id;
         // Modo Update
+        // console.log(this.modelo);
+        // //delete this.modelo.ejecucion //.$order;
+        // for (var i in this.modelo.ejecucion) {
+        //     delete this.modelo.ejecucion[i].$order;
+        // }
+        // console.log('----------------------');
+        // console.log(this.modelo);
+        // console.log('----------------------');
+        //  this.modelo.ejecucion[0].idTipoPrestacion = "2222";
+        // this.modelo.ejecucion[0].reglas[0].nombre = "prueba22";
+        // this.modelo.ejecucion[0].reglas[0].valor = 33;
+        // this.modelo.ejecucion[0].reglas[0].condicion = "condicion22";
+        // console.log(this.modelo);
         let method = (this.seleccion) ? this.tipoPrestacionService.put(this.modelo) : this.tipoPrestacionService.post(this.modelo);
 
         method.subscribe(tipoPrestacion => {
@@ -148,5 +184,34 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
         this.data.emit(null);
         return false;
     }; // onCancel()
+
+
+
+    // Ejecucion() {
+    //     this.showRegla = true;
+    //     this.modelo.ejecucion[0].idTipoPrestacion = this.seleccionado.id;
+    //     console.log(this.modelo.ejecucion[0].idTipoPrestacion);
+    //     console.log("###modelo");
+    //     console.log(this.modelo);
+    //     // console.log(this.modelo.ejecucion.idTipoPrestacion);
+    //     // console.log(this.reglas);
+
+    // }
+
+    // AgregarReglas() {
+    //     if (this.reglas.nombre && this.reglas.valor && this.reglas.condicion) {
+    //         this.arrayReglas.push(this.reglas);
+    //         console.log(this.arrayReglas);
+    //     }
+    //     this.modelo.ejecucion[0].reglas = this.arrayReglas;
+    //     // console.log(this.reglas);
+    //     console.log("###modelo");
+    //     console.log(this.modelo);
+    // }
+    // QuitaReglas(id) {
+    //     this.arrayReglas.splice(id,1);
+    // }
+
+
 
 } // export class TipoPrestacionCreateUpdateComponent

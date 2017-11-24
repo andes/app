@@ -1,0 +1,45 @@
+<fieldset *ngIf="showAgregarNotaAgenda">
+    <legend>Agregar Nota</legend>
+    <div class="alert alert-default small">
+        <div class="row">
+            <div class="col-4">
+                <label>Fecha</label>
+            </div>
+            <div class="col-4">
+                <label>Tipos de prestación</label>
+            </div>
+            <div class="col-4">
+                <label>Profesionales</label>
+            </div>
+        </div>
+        <ng-container *ngFor="let agenda of agendasSeleccionadas; let i = index">
+            <div class="row">
+                <div class="col-4">
+                    {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                </div>
+                <div class="col-4">
+                    <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                </div>
+                <div class="col-4">
+                    <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                    <ng-container *ngIf="agenda.profesionales">
+                        <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()"></plex-text>
+        </div>
+    </div>
+
+    <!--Botones-->
+    <div class="mt-3 float-right">
+        <plex-button type="danger" icon="close-circle-outline" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" icon="mdi-content-save" label="Guardar" (click)="guardarNota()" title="Guardar Nota">
+        </plex-button>
+    </div>
+</fieldset>

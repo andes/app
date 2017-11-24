@@ -14,8 +14,7 @@ export class OrganizacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<IOrganizacion[]> {
-        console.log ('url ', this.organizacionUrl);
-        return this.server.get(this.organizacionUrl, {params: params, showError: true});
+        return this.server.get(this.organizacionUrl, { params: params, showError: true });
     }
 
     /**
@@ -26,21 +25,21 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
+
     /**
-     * Metodo post. Inserta un objeto organizacion nuevo.
-     * @param {IOrganizacion} organizacion Recibe IOrganizacion
+     * Save. Si le organizacion por parametro tiene id hace put y sino hace post
+     *
+     * @param {IOrganizacion} organizacion guarda una organizacion
+     * @returns {Observable<IOrganizacion>} retorna un obervable
+     *
+     * @memberof OrganizacionService
      */
-    post(organizacion: IOrganizacion): Observable<IOrganizacion> {
-        return this.server.post(this.organizacionUrl, organizacion) // ...using post request
-    }
-
-     /**
-     * Metodo put. actualiza un objeto organizacion.
-     * @param {IOrganizacion} organizacion Recibe IOrganizacion
-     */
-
-    put(organizacion: IOrganizacion): Observable<IOrganizacion> {
-        return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion) // ...using post request
+    save(organizacion: IOrganizacion): Observable<IOrganizacion> {
+        if (organizacion.id) {
+            return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion);
+        } else {
+            return this.server.post(this.organizacionUrl, organizacion);
+        }
     }
 
     /**
@@ -50,15 +49,15 @@ export class OrganizacionService {
     disable(organizacion: IOrganizacion): Observable<IOrganizacion> {
         organizacion.activo = false;
         organizacion.fechaBaja = new Date();
-        return this.put(organizacion);
+        return this.save(organizacion);
     }
 
-     /**
-     * Metodo enable. habilita establecimiento.
-     * @param {IOrganizacion} establecimiento Recibe IOrganizacion
-     */
+    /**
+    * Metodo enable. habilita establecimiento.
+    * @param {IOrganizacion} establecimiento Recibe IOrganizacion
+    */
     enable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         establecimiento.activo = true;
-        return this.put(establecimiento);
+        return this.save(establecimiento);
     }
 }

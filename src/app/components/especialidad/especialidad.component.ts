@@ -14,16 +14,16 @@ const limit = 25;
     templateUrl: 'especialidad.html'
 })
 export class EspecialidadComponent implements OnInit {
-    showcreate: boolean = false;
-    showupdate: boolean = false;
+    showcreate = false;
+    showupdate = false;
     datos: IEspecialidad[];
     searchForm: FormGroup;
     seleccion: IEspecialidad;
-    skip: number = 0;
-    loader: boolean = false;
-    finScroll: boolean = false;
+    skip = 0;
+    loader = false;
+    finScroll = false;
     value: any;
-    tengoDatos: boolean = true;
+    tengoDatos = true;
 
     constructor(private formBuilder: FormBuilder, public plex: Plex, private especialidadService: EspecialidadService) { }
 
@@ -40,7 +40,7 @@ export class EspecialidadComponent implements OnInit {
             this.skip = 0;
             this.loadDatos(false);
 
-        })
+        });
         this.loadDatos();
     }
 
@@ -101,4 +101,4 @@ export class EspecialidadComponent implements OnInit {
         }
     }
 
-}
+};

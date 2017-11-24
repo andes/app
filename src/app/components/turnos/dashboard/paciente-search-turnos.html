@@ -1,0 +1,55 @@
+<section class="plex-layout">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box type="primary">
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
+                    placeholder="Ingrese un paciente o escanee un DNI">
+                </plex-text>
+                <!--Loader-->
+                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                <!--Alerta si no se encontró ningun paciente-->
+                <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
+                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
+                </div>
+
+                <!--Tabla de resultados -->
+                <table *ngIf="resultado && resultado.length" class="table table-striped">
+                    <tbody>
+                        <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionar(paciente)">
+                            <td>
+                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales sin validar se inactivan luego de un tiempo">Temporal</span>
+                                {{ paciente | paciente }}
+                                <br> |
+                                <b>Documento: </b>
+                                <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number}}</span>
+                                <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span> |
+                                <b>Fecha de Nacimiento</b>
+                                <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>
+                                <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento</span> |
+                                <b>Sexo</b>
+                                <span>{{paciente.sexo}}</span>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Solicitudes" icon="open-in-app" (click)="operacionSeleccionada('ingresarSolicitud', paciente)"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Operaciones de Turno" icon="calendar-multiple" (click)="operacionSeleccionada('operacionesTurno', paciente)"></plex-button>
+                            </td>
+                            <td>
+                                <plex-button *ngIf="pacienteSeleccionado" title="Activar App" icon="cellphone-android" (click)="operacionSeleccionada('activarApp', paciente)"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </plex-box>
+        </div>
+    </div>
+</section>
+<footer *ngIf="!esEscaneado">
+    <plex-button label="Nuevo Paciente temporal" icon="account-plus" type="primary" (click)="seleccionarPaciente(null)"></plex-button>
+</footer>

@@ -1,0 +1,12 @@
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="registro.valor" name="saturacionOxigeno" label="SaO2" suffix=" % " min="0" max="100" (change)="emitChange()">
+</plex-int>
+
+<p *ngIf="soloValores" class="readonly">
+    <span>Saturación oxígeno</span> {{registro.valor}} %
+</p>
+
+<p *ngIf="mensaje.texto">
+    <span class="badge-{{mensaje.class}}">
+    {{mensaje.texto}}
+    </span>
+</p>

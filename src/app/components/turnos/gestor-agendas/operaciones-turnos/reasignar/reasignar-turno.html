@@ -1,0 +1,142 @@
+<form *ngIf="autorizado && showReasignarTurno" class="plex-layout">
+    <section>
+        <div class="row">
+            <!-- Header -->
+            <div class="col">
+                <plex-box>
+                    <header>
+                        <!-- Títulos / Botones -->
+                        <div class="clearfix">
+                            <div class="page-title float-left">REASIGNACIÓN MANUAL DE TURNOS</div>
+                        </div>
+                    </header>
+
+                    <!--Resultados-->
+                    <div *ngIf="agendaAReasignar.length === 0" class="alert alert-default">
+                        <i class="mdi mdi-emoticon"></i> No quedan Turnos para reasignar es esta Agenda
+                    </div>
+
+                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio | date: 'dd/MM/yyyy'}}
+                    de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs
+                    <br>
+                    <b>Prestaciones:</b> {{ agendaAReasignar.tipoPrestaciones | enumerar:['term']:'/' }}
+                    <br>
+                    <b>Profesionales:</b>
+                    <span *ngIf="agendaAReasignar.profesionales?.length > 0">
+                        <span></span>{{ agendaAReasignar.profesionales | enumerar:['apellido','nombre'] }}</span>
+                    <span *ngIf="agendaAReasignar.profesionales?.length === 0">Sin profesionales asignados</span>
+                    <br>
+
+                    <!--Turnos-->
+                    <table *ngFor="let bloque of agendaAReasignar.bloques | sortBloques" class="table table-striped">
+                        <thead *ngIf="bloque.descripcion">
+                            <tr>
+                                <th colspan="3">
+                                </th>
+                            </tr>
+                            <tr>
+                                <th colspan="3">Bloque: {{bloque.descripcion}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(turno)}">
+                                <ng-container *ngIf="turno?.reasignado?.siguiente; then reasignado else noReasignado"></ng-container>
+                                <ng-template #reasignado>
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente && turno.paciente.id)">
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                        </td>
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
+                                            <small>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento | number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento === ''">| Sin documento (temporal)</span>
+                                            </small>
+                                            <small>
+                                                <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores[0]?.nroCarpeta"> | Nro Carpeta
+                                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{ carpeta.nroCarpeta }}</span>
+                                                </span>
+                                                <br>
+                                                <span *ngIf="turno?.tipoTurno">Tipo de turno: {{ turno.tipoTurno ? tiposDeTurnos[turno.tipoTurno].nombre
+                                                    : 'sin-tipo' }}</span>
+                                            </small>
+
+                                            <br *ngIf="turno?.paciente && bloque.tipoPrestaciones.length>1">
+                                            <small>
+                                                <span *ngIf="turno?.paciente?.id && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
+                                            </small>
+                                            <span *ngIf="turno?.estado === 'disponible'">Disponible</span>
+                                            <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno?.estado === 'turnoDoble'">Turno Doble</span>
+                                            <span *ngIf="turno?.nota">
+                                                <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                            </span>
+                                        </td>
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <div class="badge badge-info badge-reasignar float-right">
+                                                <i class="mdi mdi-check"></i>ya reasignado
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                </ng-template>
+
+                                <ng-template #noReasignado>
+                                    <ng-container *ngIf="(agendaAReasignar.estado === 'suspendida' && turno.estado === 'asignado') || (turno.estado === 'suspendido' && turno.paciente?.id)">
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                        </td>
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <span *ngIf="turno && turno.paciente">{{ turno.paciente | paciente }} </span>
+                                            <small>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento !== ''">| DNI {{turno.paciente.documento|number}}</span>
+                                                <span *ngIf="turno && turno.paciente && turno.paciente.documento === ''">| Sin documento (temporal)</span>
+                                            </small>
+                                            <small>
+                                                <span *ngIf="turno?.paciente?.carpetaEfectores && turno.paciente.carpetaEfectores.length>0"> | Nro Carpeta
+                                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</span>
+                                                </span>
+                                                <br>
+                                                <span *ngIf="turno?.tipoTurno">Tipo de turno: {{ turno.tipoTurno ? tiposDeTurnos[turno.tipoTurno].nombre
+                                                    : 'sin-tipo' }}</span>
+                                            </small>
+
+                                            <br *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">
+                                            <small>
+                                                <span *ngIf="turno && turno.paciente && bloque.tipoPrestaciones.length>1">{{turno.tipoPrestacion.nombre}}</span>
+                                            </small>
+                                            <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                            <span *ngIf="turno && turno.nota">
+                                                <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
+                                            </span>
+                                        </td>
+                                        <td (click)="seleccionarTurno(turno, bloque, false)">
+                                            <div class="badge badge-warning badge-reasignar float-right">
+                                                <i class="mdi mdi-account-convert"></i>sin reasignar
+                                            </div>
+                                        </td>
+                                    </ng-container>
+                                </ng-template>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </plex-box>
+            </div>
+            <div class="col-8">
+                <plex-box>
+                    <reasignar-turno-agendas [agendasSimilares]="agendasSimilares" [turnoSeleccionado]="turnosSeleccionados[0]" [agendaAReasignar]="agendaAReasignar"
+                        [datosAgenda]="datosAgenda" [agendaDestino]="agendaDestino" (turnoReasignadoEmit)="reasignacionManualAgendas($event)"></reasignar-turno-agendas>
+                </plex-box>
+            </div>
+        </div>
+
+    </section>
+    <!--Footer-->
+    <footer *ngIf="showReasignarTurno">
+        <div class="row">
+            <div class="col">
+                <plex-button type="primary" label="Gestor de Agendas" (click)="cancelar()"></plex-button>
+            </div>
+        </div>
+    </footer>
+</form>
+<permisos *ngIf="!autorizado" [permisos]="permisosRequeridos" [botonCancelar]="true" (cancelarEmit)="cancelar()"></permisos>

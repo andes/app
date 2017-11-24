@@ -1,8 +1,0 @@
-<plex-select [(ngModel)]="data[tipoPrestacion.key]" name="EdadGestacionalFetal" [data]="selectMetodoEdadGestacionalFetal"
-    label="Edad Gestacional Fetal" (change)="devolverValores()" placeholder="Seleccionar método">
-</plex-select>
-
-<plex-datetime *ngIf="showCampoFecha" type="date" [(ngModel)]="data[tipoPrestacion.key].fecha" (change)="devolverValores()"
-    name="fechaUltimaMenstruacion" label="Fecha ultima menstruacion">
-</plex-datetime>
-

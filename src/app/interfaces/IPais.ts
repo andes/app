@@ -1,4 +1,4 @@
-export interface IPais{
-    id: String,
-    nombre: String
+export interface IPais {
+    id: String;
+    nombre: String;
 }

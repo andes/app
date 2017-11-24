@@ -1,0 +1,5 @@
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 400" [(ngModel)]="registro.valor" name="peso" label="Peso" suffix="Kg" min="0" max="400" (change)="emitChange()" required="true">
+</plex-float>
+<p *ngIf="soloValores" class="readonly">
+    <span>Peso</span> {{registro.valor}} Kg
+</p>

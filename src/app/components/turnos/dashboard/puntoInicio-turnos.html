@@ -1,0 +1,66 @@
+<section>
+    <div class="row" *ngIf="showDashboard">
+        <div class="col-8">
+            <plex-box>
+                <header>
+                    <!--Busqueda de Pacientes-->
+                    <div class="clearfix">
+                        <div class="page-title">PUNTO DE INICIO | GESTIÓN DE PACIENTES</div>
+                    </div>
+
+                </header>
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <plex-button icon="printer" type="info" label="Imprimir"></plex-button>
+                    </div>
+                </div> -->
+                <div class="row">
+                    <div class="col-12" *ngIf="!showCreateUpdate">
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
+                            (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)"
+                            (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                    </div>
+                </div>
+            </plex-box>
+        </div>
+        <!--Panel de Estadisticas y Operaciones-->
+        <div class="col-4">
+            <plex-box>
+                <div *ngIf="showMostrarEstadisticasAgendas" type="info">
+                    <estadisticas-agendas></estadisticas-agendas>
+                </div>
+                <div *ngIf="showMostrarEstadisticasPacientes" type="info">
+                    <estadisticas-pacientes [paciente]="paciente"></estadisticas-pacientes>
+                </div>
+                <div *ngIf="showIngresarSolicitud" type="info">
+                    <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
+                </div>
+                <div *ngIf="showMostrarTurnosPaciente && paciente" type="info">
+                    <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
+                </div>
+                <div *ngIf="showActivarApp" type="info">
+                    <activar-app [paciente]="paciente"></activar-app>
+                </div>
+            </plex-box>
+        </div>
+    </div>
+    <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
+    para una mejor visualizacion de la carga de datos -->
+    <div class="row" *ngIf="showCreateUpdate">
+        <div class="col-12">
+            <div class="panel panel-default">
+                <div class="clear"></div>
+                <paciente-create-update [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--Footer-->
+<!-- <footer *ngIf="autorizado && !showDarTurnos">
+    <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
+</footer> -->
+
+<!--Components-->
+<dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
+    (cancelarDarTurno)="cancelarDarTurno()"></dar-turnos>

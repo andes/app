@@ -1,0 +1,14 @@
+.dar-turnos-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.calendario-expandido {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+.acciones-dar-turno {
+    display: flex;
+    justify-content: space-around;
+}

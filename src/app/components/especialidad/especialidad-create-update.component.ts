@@ -12,51 +12,47 @@ export class EspecialidadCreateUpdateComponent implements OnInit {
     public modelo: any = {};
     @Input('seleccion') seleccion: IEspecialidad;
     @Output() data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
-    //createForm: FormGroup;
+    // createForm: FormGroup;
     constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }
 
     ngOnInit() {
         Object.assign(this.modelo, this.seleccion);
-        if (!this.seleccion){
-        this.modelo = {
-            nombre: "" ,
-            descripcion: "" ,
-            disciplina: "" ,
-            complejidad: "" ,
-            codigo: {
-                sisa: "" ,
-                     },
-            activo: true,
+        if (!this.seleccion) {
+            this.modelo = {
+                nombre: '',
+                descripcion: '',
+                disciplina: '',
+                complejidad: '',
+                codigo: {
+                    sisa: '',
+                },
+                activo: true,
+            };
         }
-        }
-        //console.log(this.modelo.codigo.sisa);
-        //this.modelo.codigo.sisa = " ";
+        // console.log(this.modelo.codigo.sisa);
+        // this.modelo.codigo.sisa = " ";
     }
 
-    onSave(isvalid: boolean) {
-        if (isvalid) {
-            let espOperation: Observable<IEspecialidad>;
-            this.modelo.activo = true;
-            this.modelo.fechaAlta = Date();
+    onSave() {
+        // TODO: chequear si el formulario es válido
+        let espOperation: Observable<IEspecialidad>;
+        this.modelo.activo = true;
+        this.modelo.fechaAlta = Date();
 
-            if (this.seleccion) {
-                this.modelo.fechaAlta = this.seleccion.fechaAlta;
-                this.modelo.fechaBaja = this.seleccion.fechaBaja;
-                this.modelo.id = this.seleccion.id;
-                espOperation = this.especialidadService.put(this.modelo);
-            } else {
-                espOperation = this.especialidadService.post(this.modelo);
-            }
-
-            espOperation.subscribe(resultado => this.data.emit(resultado));
+        if (this.seleccion) {
+            this.modelo.fechaAlta = this.seleccion.fechaAlta;
+            this.modelo.fechaBaja = this.seleccion.fechaBaja;
+            this.modelo.id = this.seleccion.id;
+            espOperation = this.especialidadService.put(this.modelo);
         } else {
-            alert('Complete datos obligatorios');
+            espOperation = this.especialidadService.post(this.modelo);
         }
 
+        espOperation.subscribe(resultado => this.data.emit(resultado));
     }
 
     onCancel() {
-        this.data.emit(null)
+        this.data.emit(null);
         return false;
     }
 

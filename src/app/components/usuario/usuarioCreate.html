@@ -1,0 +1,44 @@
+<section *ngIf="!showUpdate">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box type="primary">
+                <header>
+                    <div class="page-title">Gestión de Usuarios</div>
+                </header>
+                <div class="row">
+                    <div class="col-6">
+                        <plex-int [(ngModel)]="documento" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>" placeholder="Ingrese el Documento">
+                        </plex-int>
+                    </div>
+                    <div class="col">
+                        <plex-button icon="search" label="Buscar" type="success" (click)="buscarUsuario()">
+                        </plex-button>
+                    </div>
+                    <!--Loader-->
+                    <div *ngIf="users && !users.length" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado
+                    </div>
+                    <!--Tabla de resultados por SimpleQuery -->
+                </div>
+            </plex-box>
+        </div>
+        <!--Panel lateral-->
+        <div class="col-4">
+            <plex-box type="primary">
+                <div class="gestionUsuarios"></div>
+            </plex-box>
+        </div>
+    </div>
+</section>
+<footer *ngIf="!showUpdate">
+    <div class="text-right">
+        <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
+        </plex-button>
+        <plex-button icon="content-save" label="Guardar" type="success" (click)="onSave()">
+        </plex-button>
+
+    </div>
+</footer>
+
+<usuarioUpdate *ngIf="showUpdate" [seleccion]="userModel" (data)='afterCreateUpdate(user)'></usuarioUpdate>

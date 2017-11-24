@@ -16,14 +16,16 @@ export class TipoPrestacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<ITipoPrestacion[]> {
-        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true })
+
+
+        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true });
     }
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<ITipoPrestacion> {
-        return this.server.get(this.tipoPrestacionUrl + "/" + id, null)
+        return this.server.get(this.tipoPrestacionUrl + '/' + id, null);
     }
     /**
      * Metodo post. Inserta un objeto tipoPrestacion nuevo.
@@ -37,14 +39,13 @@ export class TipoPrestacionService {
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     put(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        return this.server.put(this.tipoPrestacionUrl + "/" + tipoPrestacion.id, tipoPrestacion)
+        return this.server.put(this.tipoPrestacionUrl + '/' + tipoPrestacion.id, tipoPrestacion);
     }
     /**
      * Metodo disable. deshabilita tipoPrestacion.
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     disable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        tipoPrestacion.activo = false;
         return this.put(tipoPrestacion);
     }
     /**
@@ -52,7 +53,6 @@ export class TipoPrestacionService {
      * @param {ITipoPrestacion} tipoPrestacion Recibe ITipoPrestacion
      */
     enable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
-        tipoPrestacion.activo = true;
         return this.put(tipoPrestacion);
     }
 }
