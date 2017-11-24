@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
@@ -6,9 +5,7 @@ import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Observable } from 'rxjs/Rx';
-import { FrecuentesProfesionalService } from './../../modules/rup/services/frecuentesProfesional.service';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { log } from 'util';
 
 @Component({
     selector: 'snomed-buscar',
@@ -55,7 +52,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     private cachePrestacionesTurneables = null;
 
     constructor(private SNOMED: SnomedService,
-        private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth,
         private plex: Plex,
         public servicioTipoPrestacion: TipoPrestacionService,
