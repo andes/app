@@ -193,7 +193,13 @@ export class DarTurnosComponent implements OnInit {
             } else {
                 dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
             }
-            let data2 = this.verificarLlaves(dataF, event);
+            event.callback(dataF);
+            if (!this._solicitudPrestacion) {
+                this.actualizar('sinFiltro');
+            } else {
+                this.actualizar('');
+            }
+            // let data2 = this.verificarLlaves(dataF, event);
         });
     }
 
@@ -388,10 +394,10 @@ export class DarTurnosComponent implements OnInit {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
-            this.actualizar('');
+            // this.actualizar('');
         }
 
-        // this.actualizar('');
+        this.actualizar('');
     }
 
     /**
@@ -444,60 +450,63 @@ export class DarTurnosComponent implements OnInit {
             if (!this.opciones.tipoPrestacion) {
                 params['tipoPrestaciones'] = this.filtradas.map((f) => { return f.id; });
             }
-        } else {
-            // Agendas a partir de hoy aplicando filtros solo por permisos y efector
-            this.opciones.tipoPrestacion = null;
-            this.opciones.profesional = null;
-            params = {
-                // Mostrar sólo las agendas a partir de hoy en adelante, filtradas por las prestaciones con permisos
-                rango: true, desde: new Date(), hasta: fechaHasta,
-                tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
-                organizacion: this.auth.organizacion._id,
-                nominalizada: true
-            };
+            // Traer las agendas
+            this.serviceAgenda.get(params).subscribe(agendas => {
 
-        }
-        // Traer las agendas
-        this.serviceAgenda.get(params).subscribe(agendas => {
-
-            // Sólo traer agendas disponibles o publicadas
-            this.agendas = agendas.filter((data) => {
-                if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
-                    return (data.estado === 'publicada');
-                } else {
-                    if (this._solicitudPrestacion) {
-                        return (data.estado === 'disponible' || data.estado === 'publicada');
-                    } else {
+                // Sólo traer agendas disponibles o publicadas
+                this.agendas = agendas.filter((data) => {
+                    if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                         return (data.estado === 'publicada');
+                    } else {
+                        if (this._solicitudPrestacion) {
+                            return (data.estado === 'disponible' || data.estado === 'publicada');
+                        } else {
+                            return (data.estado === 'publicada');
+                        }
                     }
-                }
-            });
-
-            // Por defecto no se muestran las agendas que no tienen turnos disponibles
-            if (!this.mostrarNoDisponibles) {
-
-                this.agendas = this.agendas.filter(agenda => {
-                    let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                    return (agenda.estado === 'publicada' &&
-                        (agenda.turnosRestantesDelDia > 0 && delDia) ||
-                        agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda)) ||
-                        ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0);
                 });
-            }
 
-            // Por defecto se muestras los días de fines de semana (sab y dom)
-            this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
+                // Por defecto no se muestran las agendas que no tienen turnos disponibles
+                if (!this.mostrarNoDisponibles) {
 
-            // Ordena las Agendas por fecha/hora de inicio
-            this.agendas = this.agendas.sort((a, b) => {
-                let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
-                let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
-                {
-                    return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
-                };
+                    this.agendas = this.agendas.filter(agenda => {
+                        let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
+                        return (agenda.estado === 'publicada' &&
+                            (agenda.turnosRestantesDelDia > 0 && delDia) ||
+                            agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda)) ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0);
+                    });
+                }
+
+                // Por defecto se muestras los días de fines de semana (sab y dom)
+                this.opcionesCalendario.mostrarFinesDeSemana = this.ocultarFinesDeSemana ? true : false;
+
+                // Ordena las Agendas por fecha/hora de inicio
+                this.agendas = this.agendas.sort((a, b) => {
+                    let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
+                    let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
+                    {
+                        return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
+                    };
+                });
+
             });
+        } else {
+            this.agendas = [];
+        }
+        // else {
+        //     // Agendas a partir de hoy aplicando filtros solo por permisos y efector
+        //     this.opciones.tipoPrestacion = null;
+        //     this.opciones.profesional = null;
+        //     params = {
+        //         // Mostrar sólo las agendas a partir de hoy en adelante, filtradas por las prestaciones con permisos
+        //         rango: true, desde: new Date(), hasta: fechaHasta,
+        //         tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
+        //         organizacion: this.auth.organizacion._id,
+        //         nominalizada: true
+        //     };
 
-        });
+        // }
     }
 
     hayTurnosEnHorario(agenda) {
