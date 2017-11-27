@@ -14,7 +14,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
-import { debounce } from 'rxjs/operator/debounce';
 
 @Component({
     selector: 'rup-prestacionEjecucion',

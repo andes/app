@@ -63,6 +63,7 @@
     </div>
 </div>
 
+<!-- RESULTADOS PRINCIPALES -->
 <ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">

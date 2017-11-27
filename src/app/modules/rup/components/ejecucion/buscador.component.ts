@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
@@ -46,7 +45,6 @@ export class BuscadorComponent implements OnInit {
     // public masFrecuentes: any[] = [];
     // // Array de las mas frecuentes filtradas por semantictag de snomed
     // public masFrecuentesFiltradas: any[] = [];
-    // public showFrecuentes = false;
 
     public loading = false;
     public filtroActual = [];
@@ -81,7 +79,6 @@ export class BuscadorComponent implements OnInit {
         producto: 0,
         regimenTratamiento: 0
     };
-
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -131,8 +128,10 @@ export class BuscadorComponent implements OnInit {
                 // Agrego los mas frecuentes del profesional
                 this.arrayFrecuentes = frecuentes;
                 // Se llama a la funcion que arma los filtros por refsetId
-                this.filtroRefSet();
+            } else {
+                this.resultados = resultadosSnomed;
             }
+            this.filtroRefSet();
         });
     }
 
