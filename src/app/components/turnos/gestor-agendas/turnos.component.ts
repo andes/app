@@ -19,6 +19,7 @@ import * as moment from 'moment';
 
 export class TurnosComponent implements OnInit {
     private _agenda: IAgenda;
+    public idOrganizacion = this.auth.organizacion.id;
     // Parámetros
     @Input('agenda')
     set agenda(value: any) {

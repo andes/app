@@ -31,21 +31,6 @@ export class ListarTurnosComponent implements OnInit {
         this.turnosAsignados = (turnos).filter((turno) => {
             return (turno.paciente && turno.paciente.id) && (turno.estado === 'asignado' || turno.estado === 'suspendido');
         });
-        for (let t = 0; t < this.turnosAsignados.length; t++) {
-            // let params = { documento: this.turnos[t].paciente.documento, organizacion: this.auth.organizacion.id };
-            this.servicePaciente.getById(this.turnosAsignados[t].paciente.id).subscribe((paciente) => {
-                if (paciente && paciente.carpetaEfectores) {
-                    let carpetaEfector = null;
-                    carpetaEfector = paciente.carpetaEfectores.filter((data) => {
-                        return (data.organizacion.id === this.auth.organizacion.id);
-                    });
-                    if (this.turnosAsignados[t] && this.turnosAsignados[t].paciente) {
-                        this.turnosAsignados[t].paciente = paciente;
-                        this.turnosAsignados[t].paciente.carpetaEfectores = carpetaEfector;
-                    }
-                }
-            });
-        }
     }
     get agenda(): any {
         return this._agenda;
