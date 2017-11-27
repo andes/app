@@ -22,11 +22,12 @@
                 <div class="col">
                     <b>Ordenar por:</b>
                     <div class="btn-group" role="group">
-                        <button class="btn btn-sm btn-hallazgos" (click)="ordenarPorTipo('hallazgo')">Hallazgos</button>
-                        <button class="btn btn-sm btn-trastornos" (click)="ordenarPorTipo('trastorno')">Trastornos</button>
-                        <button class="btn btn-sm btn-procedimientos" (click)="ordenarPorTipo('procedimiento')">Procedimientos</button>
-                        <button class="btn btn-sm btn-planes" (click)="ordenarPorTipo('plan')">Planes</button>
-                        <button class="btn btn-sm btn-productos" (click)="ordenarPorTipo('producto')">Productos</button>
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-hallazgos" (click)="ordenarPorTipo('hallazgo')">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastornos" (click)="ordenarPorTipo('trastorno')">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-procedimientos"
+                            (click)="ordenarPorTipo('procedimiento')">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-planes" (click)="ordenarPorTipo('plan')">Planes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-productos" (click)="ordenarPorTipo('producto')">Productos</button>
                     </div>
                 </div>
             </div>

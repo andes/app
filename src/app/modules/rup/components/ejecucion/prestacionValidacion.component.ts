@@ -410,5 +410,17 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
+    hayRegistros(tipos: any[], tipo: any = null) {
+        if (!tipo) {
+            return this.prestacion.ejecucion.registros.filter(x => {
+                return tipos.find(y => (!x.esSolicitud && y === x.concepto.semanticTag));
+            }).length > 0;
+        } else {
+            return this.prestacion.ejecucion.registros.filter(x => {
+                return tipos.find(y => (x.esSolicitud && y === x.concepto.semanticTag));
+            }).length > 0;
+        }
+    }
+
 }
 

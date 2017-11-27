@@ -263,6 +263,9 @@ export class BuscadorComponent implements OnInit {
         });
     }
 
+    public reemplazar(arr, glue) {
+        return arr.join(glue);
+    }
 
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed
     // filtroBuscadorSnomed(tipoBusqueda) {
