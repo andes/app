@@ -109,7 +109,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{delDia ? arrayDelDia[i] : bloque.restantesDelDia}}</td>
+                        <td>{{delDia ? (arrayDelDia[i] < 0 ? 0: arrayDelDia[i]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
