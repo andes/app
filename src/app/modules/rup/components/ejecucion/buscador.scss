@@ -80,6 +80,10 @@ $productos: #ef0993;
     text-transform: uppercase;
 }
 
+.badge-procedimientos {
+    right: -18% !important;
+}
+
 .badge-productos {
     border: 1px solid $productos;
     color: $productos;

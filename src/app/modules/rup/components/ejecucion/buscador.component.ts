@@ -183,7 +183,7 @@ export class BuscadorComponent implements OnInit {
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
         this.tagBusqueda.emit(this.filtroActual);
-        if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
+        if (this.resultados && this.resultados.length >= this.resultadosAux.length && !this.loading) {
             this.resultadosAux = this.resultados;
         } else {
             this.resultados = this.resultadosAux;

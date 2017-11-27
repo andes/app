@@ -66,9 +66,13 @@
 
                                     <!-- Contenedor del registro RUP -->
 
-                                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                                        <div class="rup-card {{(registro.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : registro.concepto.semanticTag)}}" [ngClass]="{ 'planes': registro.esSolicitud === true }">
-                                            <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
+                                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
+                                        [ngClass]="{'relacionado': registro?.relacionadoCon}">
+                                        <div class="rup-card {{(registro.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : registro.concepto.semanticTag)}}"
+                                            [ngClass]="{ 'planes': registro.esSolicitud === true }">
+                                            <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
+                                                [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                                (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                             </div>
 
@@ -102,7 +106,8 @@
                                                             <i class="mdi mdi-vector-difference-ba"></i>
                                                         </a>
                                                         <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
-                                                            <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
+                                                            <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)"
+                                                                [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
                                                         </ng-container>
                                                         <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary">
                                                             <i class="mdi mdi-chevron-down"></i>
@@ -312,7 +317,8 @@
                                 (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                         </plex-tab>
                         <plex-tab label="Buscador" (click)="panelIndex = 1">
-                            <rup-buscador (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
+                            <rup-buscador (evtData)="ejecutarConcepto($event)" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                                (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                             <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
                             <!-- <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
