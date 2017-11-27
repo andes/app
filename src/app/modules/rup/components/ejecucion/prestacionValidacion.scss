@@ -4,9 +4,12 @@
 }
 
 .type.hallazgo,
-.type.situación,
-.type.trastorno {
+.type.situación {
     background-color: $problemas;
+}
+
+.type.trastorno {
+    background-color: $trastornos;
 }
 
 .type.procedimiento,

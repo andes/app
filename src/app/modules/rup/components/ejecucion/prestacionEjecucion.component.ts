@@ -902,5 +902,4 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.registrosHuds.splice($event, 1);
     }
 
-
 }

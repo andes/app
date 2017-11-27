@@ -47,21 +47,11 @@
 
 <ng-container *ngIf="soloValores">
     <p class="readonly">
-        <span>Estado</span> {{registro.valor.estado.nombre}}
-    </p>
-    <p class="readonly">
-        <span>Cantidad</span> {{registro.valor.cantidad}}
-    </p>
-    <p class="readonly">
-        <span>Unidad</span> {{registro.valor.unidad.nombre}}
-    </p>
-    <p class="readonly">
-        <span class="">{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</span>
-    </p>
-    <p class="readonly">
-        <span>Indicación</span> {{registro.valor.indicacion}}
-    </p>
-    <p class="readonly">
+        <small class="badge badge-info">{{registro.valor.estado.nombre}}</small>
+        <small class="badge badge-{{registro.valor.recetable ? 'success' : 'danger'}}">{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</small>
+        <br>
+        <span>Cantidad</span>{{registro.valor.cantidad}} {{registro.valor.unidad.nombre}}
         <span>Durante</span> {{registro.valor.duracion.cantidad}} {{registro.valor.duracion.unidad.nombre}}
+        <span>Indicación</span> {{registro.valor.indicacion}}
     </p>
 </ng-container>
