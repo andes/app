@@ -134,6 +134,7 @@ export class BuscadorComponent implements OnInit {
                 frecuentes.forEach(element => {
                     this.arrayFrecuentes.push(element.concepto);
                 });
+                this.resultadosFrecuentesAux = this.arrayFrecuentes;
                 // Se llama a la funcion que arma los filtros por refsetId
                 this.filtroRefSet();
             }

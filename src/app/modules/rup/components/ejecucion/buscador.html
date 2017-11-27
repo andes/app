@@ -82,14 +82,14 @@
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-4">
         <span *ngIf="showRefSets">
-            <b *ngIf="!showRefSets || showGuiada">Frecuentes</b>
+            <b *ngIf="!showFrecuentes">Frecuentes</b>
             <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
         </span>
     </div>
     <div class="col-8">
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false" *ngIf="!showRefSets || showGuiada">BÚSQUEDA GUIADA</button>
-        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false" *ngIf="showRefSets && !showGuiada">BUSCADOR BASICO</button>
-        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; contarSemanticTags(arrayFrecuentes)">MÁS FRECUENTES</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false; showFrecuentes = false; contarSemanticTags(resultadosAux)" *ngIf="(showRefSets && !showGuiada) || showFrecuentes">BUSCADOR BASICO</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; showRefSets = false; contarSemanticTags(resultadosFrecuentesAux)" *ngIf="!showFrecuentes">MÁS FRECUENTES</button>
     </div>
 </div>
 
