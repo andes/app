@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
@@ -41,9 +40,10 @@ export class BuscadorComponent implements OnInit {
     // public showPlanes = false;
     public ejecucion: any[] = [];
 
-    // // array de los mas frecuentes.. public masFrecuentes: any[] = []; // Array
-    // de las mas frecuentes filtradas por semantictag de snomed public
-    // masFrecuentesFiltradas: any[] = []; public showFrecuentes = false;
+    // // array de los mas frecuentes..
+    // public masFrecuentes: any[] = [];
+    // // Array de las mas frecuentes filtradas por semantictag de snomed
+    // public masFrecuentesFiltradas: any[] = [];
 
     public loading = false;
     public filtroActual = [];
@@ -78,7 +78,8 @@ export class BuscadorComponent implements OnInit {
         procedimiento: 0,
         entidadObservable: 0,
         situacion: 0,
-        producto: 0
+        producto: 0,
+        regimenTratamiento: 0
     };
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
@@ -136,8 +137,10 @@ export class BuscadorComponent implements OnInit {
                 });
                 this.resultadosFrecuentesAux = this.arrayFrecuentes;
                 // Se llama a la funcion que arma los filtros por refsetId
-                this.filtroRefSet();
+            } else {
+                this.resultados = resultadosSnomed;
             }
+            this.filtroRefSet();
         });
     }
 
@@ -164,13 +167,15 @@ export class BuscadorComponent implements OnInit {
             procedimiento: 0,
             entidadObservable: 0,
             situacion: 0,
-            producto: 0
+            producto: 0,
+            regimenTratamiento: 0
         };
 
         let tag;
 
         resultados.forEach(x => {
             tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
+            tag = x.semanticTag && x.semanticTag === 'régimen/tratamiento' ? 'regimenTratamiento' : x.semanticTag;
             this.contadorSemanticTags[String(tag)]++;
         });
 
@@ -210,12 +215,8 @@ export class BuscadorComponent implements OnInit {
             }
         }
 
-        this.tipoBusqueda = tipo
-            ? tipo
-            : '';
-        this.filtroActual = tipo
-            ? ['planes']
-            : filtro;
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
         this.esFiltroActual = this.getFiltroActual(filtro);
         return arrayAFiltrar;
     }
@@ -259,8 +260,8 @@ export class BuscadorComponent implements OnInit {
         let conceptos = {
             Hallazgos: ['hallazgo', 'situacion'],
             Trastornos: ['trastorno'],
-            Procedimientos: ['procedimiento', 'entidad observable'],
-            Planes: ['procedimiento']
+            Procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
+            Planes: ['procedimiento', 'régimen/tratamiento']
         };
         this.arrayPorRefsets = [];
         Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
