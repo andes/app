@@ -21,6 +21,7 @@
     &.hallazgo,
     &.trastorno,
     &.entidad.observable,
+    &.regimen,
     &.situación {
         &:hover,
         &.active {
@@ -31,6 +32,7 @@
         }
     }
     &.entidad.observable,
+    &.regimen,
     &.procedimiento {
         &:hover,
         &.active {
