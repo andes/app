@@ -238,6 +238,12 @@ fieldset[disabled] .btn-problemas.active {
     border-color: $planes;
 }
 
+.btn-productos {
+    color: white;
+    background-color: $productos;
+    border-color: $productos;
+}
+
 .btn-planes:hover,
 .btn-planes:focus,
 .btn-planes:active,

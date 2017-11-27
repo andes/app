@@ -47,6 +47,11 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public hallazgosCronicos: any = [];
 
+    /**
+     * Listado de todos los medicamentos
+     */
+    public medicamentos: any = [];
+
 
     /**
      * Listado de todos los hallazgos
@@ -92,6 +97,7 @@ export class HudsBusquedaComponent implements OnInit {
             // this.listarHallazgos();
             this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
+            this.listarMedicamentos();
         }
     }
 
@@ -227,6 +233,13 @@ export class HudsBusquedaComponent implements OnInit {
                     return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
                 }
             });
+        });
+    }
+
+    // Trae los medicamentos registrados para el paciente 
+    listarMedicamentos() {
+        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
+            this.medicamentos = medicamentos;
         });
     }
 

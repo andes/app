@@ -11,6 +11,7 @@ export class PrestacionesService {
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
+    private cacheMedicamentos: any[] = [];
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -248,6 +249,80 @@ export class PrestacionesService {
 
 
     /**
+     * Metodo getByPacienteMedicamento lista todos los medicamentos registrados del paciente
+     * @param {String} idPaciente
+     */
+    getByPacienteMedicamento(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'producto')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    registros = [...registros, ...agregar];
+
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+            registros.forEach(registro => {
+                let registroEncontrado = registroSalida.find(reg => {
+                    if (reg.concepto.conceptId === registro.concepto.conceptId) {
+                        if (reg.evoluciones.find(e => e.idRegistro === registro.valor.idRegistroOrigen)) {
+                            return reg;
+                        }
+                    }
+                });
+                if (!registroEncontrado && registro.valor) {
+                    let dato = {
+                        concepto: registro.concepto,
+                        prestaciones: [registro.idPrestacion],
+                        evoluciones: [{
+                            idRegistro: registro.id,
+                            fechaCarga: registro.createdAt,
+                            profesional: registro.createdBy.nombreCompleto,
+                            idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
+                        }]
+                    };
+                    registroSalida.push(dato);
+                } else {
+                    let ultimaEvolucion = registroEncontrado.evoluciones[registroEncontrado.evoluciones.length - 1];
+                    let nuevaEvolucion = {
+                        fechaCarga: registro.createdAt,
+                        idRegistro: registro.id,
+                        profesional: registro.createdBy.nombreCompleto,
+                        idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
+                    };
+                    registroEncontrado.prestaciones.push(registro.idPrestacion);
+                    registroEncontrado.evoluciones.push(nuevaEvolucion);
+                    // ordenamos las evoluciones para que la primero del array sea la ultima registrada
+                    registroEncontrado.evoluciones = registroEncontrado.evoluciones.sort(
+                        function (a, b) {
+                            a = a.fechaCarga;
+                            b = b.fechaCarga;
+                            return b - a;
+                        });
+                }
+
+            });
+            this.cacheMedicamentos[idPaciente] = registroSalida;
+            return registroSalida;
+        });
+    }
+
+
+    /**
      * Metodo getUnHallazgoPaciente x Concepto obtiene un hallazgo cronico o activo con todas sus evoluciones
      * para un paciente
      * @param {String} idPaciente
@@ -344,10 +419,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -365,10 +440,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -392,10 +467,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []

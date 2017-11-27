@@ -377,9 +377,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-        if (this.tipoBusqueda && this.tipoBusqueda.length) {
-            this.tipoBusqueda[0] = '';
-        }
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }

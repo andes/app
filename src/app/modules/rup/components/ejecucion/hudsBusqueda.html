@@ -2,9 +2,11 @@
     <div class="col">
 
         <div class="menu-huds">
-            <plex-button type="problemas btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
+            <plex-button type="problemas btn-sm" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
             </plex-button>
-            <plex-button type="planes btn-sm m-0" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
+            <plex-button type="planes btn-sm" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
+            </plex-button>
+            <plex-button type="productos btn-sm" label="MEDICAMENTOS" (click)="actualizarVista('medicamentos')">
             </plex-button>
         </div>
     </div>
@@ -153,6 +155,48 @@
                         </div>
                     </div>
                 </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- Vista: medicamentos -->
+        <ng-container *ngIf="vista == 'medicamentos'">
+            <div class="vista-titulo">Medicamentos</div>
+
+            <div *ngIf="medicamentos" class="list-group">
+                <ul *ngIf="medicamentos" class="conceptos list-unstyled">
+                    <ng-container *ngFor="let medicamento of medicamentos; let iCronico = index">
+                        <li draggable class="" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                            <div class="rup-card mini producto" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(medicamento, 'medicamento')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
+                                <div class="type">
+                                    <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
+                                </div>
+                                <div class="rup-content hover" (click)="devolverRegistrosHuds(medicamento, 'medicamento')">
+                                    <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
+                                                        <i class="mdi mdi-eye"></i>
+                                                    </span>
+                                    <div class="header">
+                                        <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
+                                            {{ medicamento.concepto.term }}
+                                        </div>
+                                        <br>
+                                        <small *ngIf="medicamento.evoluciones">
+                                                    último registro: {{ medicamento.evoluciones[0].fechaCarga | fecha }}
+                                                    <br> Estado: {{ medicamento.evoluciones[0].estado }}
+                                                </small>
+                                    </div>
+
+                                </div>
+
+                                <div class="float-right p-1" *ngIf="emitirConceptos">
+                                    <a href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
+                                        <i class="mdi mdi-plus-box-outline"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+                <div *ngIf="medicamentos.length === 0">No hay medicamentos registrados</div>
             </div>
         </ng-container>
     </div>
