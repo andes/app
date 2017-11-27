@@ -498,7 +498,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param resultadoHuds conpecto de la HUDS puede ser un hallazgo o una prestación
      */
     ejecutarConceptoHuds(resultadoHuds) {
-
+        debugger;
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {

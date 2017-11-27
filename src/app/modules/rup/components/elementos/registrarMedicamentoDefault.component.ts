@@ -15,6 +15,7 @@ export class RegistrarMedicamentoDefaultComponent extends RUPComponent implement
     inicioEstimadoUnidad: any = null;
 
     ngOnInit() {
+        debugger;
         if (!this.registro.valor) {
             this.registro.valor = {
                 cantidad: 0,
@@ -27,17 +28,12 @@ export class RegistrarMedicamentoDefaultComponent extends RUPComponent implement
                     unidad: 'dias'
                 },
             };
-        }
-        // Observa cuando cambia la propiedad 'dosis' en otro elemento RUP
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
+        } else {
+            // Si llega un idRegistroOrigen es porque se vuelve a indicar un medicamento que ya existe en la HUDS
+            // tenemos que mostrar las evoluciones anteriores
+            if (this.registro.valor.idRegistroOrigen) {
 
-            if (this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
             }
-        });
-        if (this.registro.valor) {
-            this.mensaje = this.getMensajes();
         }
     }
 

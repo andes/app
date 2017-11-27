@@ -293,6 +293,12 @@ export class PrestacionesService {
                             fechaCarga: registro.createdAt,
                             profesional: registro.createdBy.nombreCompleto,
                             idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
+                            duracion: registro.valor.duracion ? registro.valor.duracion : null,
+                            estado: registro.valor.estado ? registro.valor.estado : '',
+                            indicacion: registro.valor.indicacion ? registro.valor.indicacion : '',
+                            recetable: registro.valor.recetable ? registro.valor.recetable : false,
+                            unidad: registro.valor.unidad ? registro.valor.unidad : '',
+                            cantidad: registro.valor.cantidad ? registro.valor.cantidad : 0
                         }]
                     };
                     registroSalida.push(dato);
@@ -303,6 +309,12 @@ export class PrestacionesService {
                         idRegistro: registro.id,
                         profesional: registro.createdBy.nombreCompleto,
                         idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
+                        duracion: registro.valor.duracion ? registro.valor.duracion : ultimaEvolucion.duracion,
+                        estado: registro.valor.estado ? registro.valor.estado : ultimaEvolucion.estado,
+                        indicacion: registro.valor.indicacion ? registro.valor.indicacion : ultimaEvolucion.indicacion,
+                        recetable: registro.valor.recetable ? registro.valor.recetable : ultimaEvolucion.recetable,
+                        unidad: registro.valor.unidad ? registro.valor.unidad : '',
+                        cantidad: registro.valor.cantidad ? registro.valor.cantidad : 0
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);

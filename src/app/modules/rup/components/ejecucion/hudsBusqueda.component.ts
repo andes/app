@@ -135,6 +135,13 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+    devolverMedicamento(medicamento) {
+        let resultado = {
+            tipo: 'medicamento',
+            data: medicamento
+        };
+        this.evtData.emit(resultado);
+    }
 
     devolverRegistrosHuds(registro, tipo) {
         let index;

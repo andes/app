@@ -47,7 +47,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
             });
         }
 
-
         if (!this.registro.valor) {
             this.registro.valor = { estado: 'activo' };
         } else {
