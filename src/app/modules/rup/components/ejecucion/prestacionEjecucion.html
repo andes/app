@@ -317,7 +317,7 @@
                                 (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                         </plex-tab>
                         <plex-tab label="Buscador" (click)="panelIndex = 1">
-                            <rup-buscador (evtData)="ejecutarConcepto($event)" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
+                            <rup-buscador (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
                                 (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                             <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
