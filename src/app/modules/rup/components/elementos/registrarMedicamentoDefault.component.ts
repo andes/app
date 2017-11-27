@@ -18,13 +18,13 @@ export class RegistrarMedicamentoDefaultComponent extends RUPComponent implement
         if (!this.registro.valor) {
             this.registro.valor = {
                 cantidad: 0,
-                unidad: { id: 'envases', nombre: 'Envases' },
+                unidad: 'unidades',
                 recetable: false,
                 indicacion: '',
-                estado: 'Activo',
+                estado: 'activo',
                 duracion: {
                     cantidad: '',
-                    unidad: { id: 'dias', nombre: 'Día(s)' }
+                    unidad: 'dias'
                 },
             };
         }
