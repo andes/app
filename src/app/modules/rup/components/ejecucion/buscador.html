@@ -81,10 +81,10 @@
 
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-4">
-        <span *ngIf="showRefSets">
-            <b *ngIf="!showFrecuentes">Frecuentes</b>
+        <!-- <span *ngIf="showRefSets"> -->
+            <b *ngIf="showFrecuentes">Frecuentes</b>
             <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
-        </span>
+        <!-- </span> -->
     </div>
     <div class="col-8">
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false" *ngIf="!showRefSets || showGuiada">BÚSQUEDA GUIADA</button>
@@ -162,7 +162,6 @@
                         <div class="row header">
                             <div class="col-10">
                                 <b>{{items.nombre}}</b>
-                                <br> pequeña descripcion
                             </div>
                             <div class="col-1">
                                 <span class="badge-warning">
