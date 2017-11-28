@@ -190,10 +190,13 @@ export class BuscadorComponent implements OnInit {
      */
 
     filtroBuscadorSnomed(filtro: any[], tipo = null, arrayAFiltrar = null) {
+
         this.tipoBusqueda = tipo ? tipo : '';
         this.filtroActual = tipo ? ['planes'] : filtro;
         this.tagBusqueda.emit(this.filtroActual);
+
         let filtroResultados = false;
+
         if (arrayAFiltrar === null) {
             arrayAFiltrar = this.resultados;
             filtroResultados = true;
@@ -207,9 +210,20 @@ export class BuscadorComponent implements OnInit {
         } else {
             arrayAFiltrar = arrayAFiltrar.filter(x => filtro.find(y => y === x.semanticTag));
         }
+
+        // PLANES
         if (tipo !== 'planes') {
             arrayAFiltrar = arrayAFiltrar.filter(x => {
                 if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId)) {
+                    return x;
+                }
+            });
+            if (filtroResultados) {
+                this.resultados = arrayAFiltrar;
+            }
+        } else {
+            arrayAFiltrar = arrayAFiltrar.filter(x => {
+                if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId && x.esSolicitud)) {
                     return x;
                 }
             });
