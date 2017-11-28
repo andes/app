@@ -20,12 +20,14 @@
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
                                     placeholder="Profesionales" labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado===true" [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
-                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional" [readonly]="true">
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado===true" [(ngModel)]="_solicitudPrestacion.solicitud.profesional"
+                                    (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
+                                    name="profesional" [readonly]="true">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.registros[0].valor.solicitudPrestacion.autocitado===false" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
-                                labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
-                            </plex-select>
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.registros[0].valor.solicitudPrestacion.autocitado===false" [(ngModel)]="opciones.profesional"
+                                    (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
+                                    name="profesional">
+                                </plex-select>
                             </div>
                             <div *ngIf="mostrarCalendario" class="col">
                                 <plex-bool [(ngModel)]="mostrarNoDisponibles" type="slide" name="mostrarNoDisponibles" title="{{mostrarNoDisponibles ? 'Ocultar agendas sin turnos' : 'Mostrar agendas sin turnos'}}"
@@ -53,28 +55,6 @@
             <div class="col-4">
                 <plex-box>
                     <plex-tabs>
-                        <!-- Tab: Llaves -->
-                        <plex-tab *ngIf="llaves.length> 0" icon="key" label="Llaves">
-                            <fieldset>
-                                <legend class="pt-3 text-center">Llaves del paciente</legend>
-                                <ul class="list-group">
-                                    <li *ngFor="let llave of llaves let i=index" class="list-group-item hover" [appHover]="'active'" (click)="seleccionarLlave(i)">
-                                        <div class="list-group-item-text">
-                                            <label class="mt-0 pt-0">Solicitud</label>
-                                            <div>{{llave.tipoPrestacion.nombre}}</div>
-                                            <div *ngIf="!llave.solicitudVigente" class="text-warning">
-                                                <i class="mdi mdi-alert"></i> Esta solicitud ha vencido</div>
-                                            <label class="mt-3">Origen</label>
-                                            <div>{{llave.fechaSolicitud | date:'dd/MM/yyyy HH:mm'}}</div>
-                                            <div *ngIf="llave.profesional">{{llave.profesional | profesional}}</div>
-                                            <div>
-                                                <em class="small">{{llave.organizacion}}</em>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </fieldset>
-                        </plex-tab>
                         <!-- Tab: Turnos -->
 
                         <plex-tab icon="list" label="Turnos">
@@ -165,30 +145,32 @@
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div *ngFor="let turno of bloque.turnos; let i=index">
-                                                <ng-container *ngIf="turno.horaInicio >= hoy">
-                                                    <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                                                        <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
-                                                            (click)="seleccionarTurno(bloque,i)">
-                                                            {{turno.horaInicio | date: 'HH:mm'}}
+                                            <ng-container *ngIf="tieneTurnos(bloque)">
+                                                <div *ngFor="let turno of bloque.turnos; let i=index">
+                                                    <ng-container *ngIf="turno.horaInicio >= hoy">
+                                                        <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                                                            <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
+                                                                (click)="seleccionarTurno(bloque,i)">
+                                                                {{turno.horaInicio | date: 'HH:mm'}}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div *ngIf="bloque.pacienteSimultaneos">
-                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
-                                                            [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
-                                                            {{turno.horaInicio | date: 'HH:mm'}}
+                                                        <div *ngIf="bloque.pacienteSimultaneos">
+                                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
+                                                                [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                                                {{turno.horaInicio | date: 'HH:mm'}}
+                                                            </div>
+                                                            <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
                                                         </div>
-                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
-                                                    </div>
-                                                    <div *ngIf="bloque.citarPorBloque">
-                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
-                                                            [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
-                                                            {{turno.horaInicio | date: 'HH:mm'}}
+                                                        <div *ngIf="bloque.citarPorBloque">
+                                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
+                                                                [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                                                {{turno.horaInicio | date: 'HH:mm'}}
+                                                            </div>
+                                                            <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
                                                         </div>
-                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
-                                                    </div>
-                                                </ng-container>
-                                            </div>
+                                                    </ng-container>
+                                                </div>
+                                            </ng-container>
                                         </div>
 
                                     </ng-container>

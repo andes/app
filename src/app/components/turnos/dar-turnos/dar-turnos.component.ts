@@ -19,7 +19,6 @@ import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
-import { ILlavesTipoPrestacion } from './../../../interfaces/llaves/ILlavesTipoPrestacion';
 import { CalendarioDia } from './calendario-dia.class';
 
 // Servicios
@@ -30,7 +29,6 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
-import { LlavesTipoPrestacionService } from './../../../services/llaves/llavesTipoPrestacion.service';
 
 @Component({
     selector: 'dar-turnos',
@@ -89,7 +87,6 @@ export class DarTurnosComponent implements OnInit {
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
 
-    llaveTP: any;
     estadoT: EstadosDarTurnos;
 
     turnoDoble = false;
@@ -112,7 +109,6 @@ export class DarTurnosComponent implements OnInit {
     tiposTurnosSelect: String;
     tiposTurnosLabel: String;
     filtradas: any = [];
-    llaves: any = [];
     hoy: Date;
     bloque: IBloque;
     delDiaDisponibles: number;
@@ -151,7 +147,6 @@ export class DarTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacionPaciente: PrestacionesService,
-        private llaveTipoPrestacionService: LlavesTipoPrestacionService,
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
@@ -228,135 +223,6 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
-    public verificarLlaves(tipoPrestaciones: any[], event) {
-        tipoPrestaciones.forEach((tipoPrestacion, index) => {
-            let band = true;
-            this.llaveTipoPrestacionService.get({ idTipoPrestacion: tipoPrestacion.id, activa: true }).subscribe(
-                llaves => {
-                    this.llaveTP = llaves[0];
-                    if (!this.llaveTP) {
-                        band = true;
-                    } else {
-                        // Verifico que si la llave tiene rango de edad, el paciente esté en ese rango
-                        if (this.llaveTP.llave && this.llaveTP.llave.edad && this.paciente) {
-                            let edad = new EdadPipe().transform(this.paciente, []);
-                            // Edad desde
-                            if (this.llaveTP.llave.edad.desde) {
-                                let edadDesde = String(this.llaveTP.llave.edad.desde.valor) + ' ' + this.llaveTP.llave.edad.desde.unidad;
-                                if (edad < edadDesde) {
-                                    band = false;
-                                }
-                            }
-                            // Edad hasta
-                            if (this.llaveTP.llave.edad.hasta) {
-                                let edadHasta = String(this.llaveTP.llave.edad.hasta.valor) + ' ' + this.llaveTP.llave.edad.hasta.unidad;
-                                if (edad > edadHasta) {
-                                    band = false;
-                                }
-                            }
-                        }
-                        // Verifico que si la llave tiene seteado sexo, el sexo del paciente coincida
-                        if (this.llaveTP.llave && this.llaveTP.llave.sexo && this.paciente) {
-                            if (this.llaveTP.llave.sexo !== this.paciente.sexo) {
-                                band = false;
-                            }
-                        }
-                    }
-                    if (band) {
-                        this.filtradas.push(tipoPrestacion);
-                        if (this.llaveTP) {
-                            this.llaves = [...this.llaves, this.llaveTP];
-                        }
-                    }
-                },
-                err => {
-                    if (err) {
-                        band = false;
-                    }
-                }, () => {
-                    if (tipoPrestaciones.length - 1 === index) {
-                        // event.callback(this.filtradas);
-                        // Se actualiza el calendario con las agendas filtradas por permisos y llaves
-                        this.cargarDatosLlaves(event);
-                    }
-                });
-        });
-    }
-
-    cargarDatosLlaves(event) {
-        if (this.llaves.length === 0) {
-
-            event.callback(this.filtradas);
-            if (!this._solicitudPrestacion) {
-                this.actualizar('sinFiltro');
-            } else {
-                this.actualizar('');
-            }
-
-        } else {
-            this.llaves.forEach((cadaLlave, indiceLlave) => {
-                let solicitudVigente = false;
-                // Si la llave requiere solicitud, verificamos en prestacionPaciente la fecha de solicitud
-                if (cadaLlave.llave && cadaLlave.llave.solicitud && this.paciente) {
-                    let params = {
-                        estado: 'pendiente',
-                        idPaciente: this.paciente.id,
-                        idTipoPrestacion: cadaLlave.tipoPrestacion.id
-                    };
-                    this.servicioPrestacionPaciente.get(params).subscribe(
-                        prestacionPaciente => {
-                            if (prestacionPaciente.length > 0) {
-                                if (cadaLlave.llave.solicitud.vencimiento) {
-
-                                    if (cadaLlave.llave.solicitud.vencimiento.unidad === 'Días') {
-                                        this.llaves[indiceLlave].profesional = prestacionPaciente[0].solicitud.profesional;
-                                        this.llaves[indiceLlave].organizacion = prestacionPaciente[0].solicitud.organizacion;
-                                        this.llaves[indiceLlave].fechaSolicitud = prestacionPaciente[0].solicitud.fecha;
-                                        // Controla si la solicitud está vigente
-                                        let end = moment(prestacionPaciente[0].solicitud.fecha).add(cadaLlave.llave.solicitud.vencimiento.valor, 'days');
-                                        solicitudVigente = moment().isBefore(end);
-                                        this.llaves[indiceLlave].solicitudVigente = solicitudVigente;
-                                        if (!solicitudVigente) {
-                                            let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-                                            this.filtradas.splice(indiceFiltradas, 1);
-                                            this.filtradas = [...this.filtradas];
-                                        }
-                                    }
-                                }
-                            } else {
-                                // Si no existe una solicitud para el paciente y el tipo de prestacion, saco la llave de la lista y saco la prestacion del select
-                                this.llaves.splice(indiceLlave, 1);
-                                this.llaves = [...this.llaves];
-
-                                let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-                                this.filtradas.splice(indiceFiltradas, 1);
-                                this.filtradas = [...this.filtradas];
-                            }
-                        },
-                        err => {
-                            if (err) {
-                            }
-                        },
-                        () => {
-                            event.callback(this.filtradas);
-                            this.actualizar('sinFiltro');
-                        }
-                    );
-
-                } else {
-                    // Elimino la llave del arreglo
-                    let ind = this.llaves.indexOf(cadaLlave);
-                    this.llaves.splice(ind, 1);
-                    this.llaves = [...this.llaves];
-
-                    let indiceFiltradas = this.filtradas.indexOf(cadaLlave);
-                    this.filtradas.splice(indiceFiltradas, 1);
-                    this.filtradas = [...this.filtradas];
-                }
-            });
-        }
-    }
-
     loadProfesionales(event) {
         if (event.query) {
             let query = {
@@ -394,9 +260,7 @@ export class DarTurnosComponent implements OnInit {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
-            // this.actualizar('');
         }
-
         this.actualizar('');
     }
 
@@ -420,22 +284,19 @@ export class DarTurnosComponent implements OnInit {
 
         let params: any = {};
         this.estadoT = 'noSeleccionada';
+        this.agendas = [];
         this.agenda = null;
 
         let fechaHasta = (moment(this.opciones.fecha).endOf('month')).toDate();
 
         // Filtro búsqueda
-        if (etiqueta !== 'sinFiltro') {
-            if (this.opciones.tipoPrestacion || this.opciones.profesional) {
-                this.mostrarCalendario = true;
-            } else {
-                this.mostrarCalendario = false;
-            }
+        if (this.opciones.tipoPrestacion || this.opciones.profesional) {
+            this.mostrarCalendario = true;
+
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                // idProfesional: (this.opciones.profesional ? (this._solicitudPrestacion ? this.opciones.profesional[0].id : this.opciones.profesional.id) : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
@@ -492,21 +353,8 @@ export class DarTurnosComponent implements OnInit {
 
             });
         } else {
-            this.agendas = [];
+            this.mostrarCalendario = false;
         }
-        // else {
-        //     // Agendas a partir de hoy aplicando filtros solo por permisos y efector
-        //     this.opciones.tipoPrestacion = null;
-        //     this.opciones.profesional = null;
-        //     params = {
-        //         // Mostrar sólo las agendas a partir de hoy en adelante, filtradas por las prestaciones con permisos
-        //         rango: true, desde: new Date(), hasta: fechaHasta,
-        //         tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
-        //         organizacion: this.auth.organizacion._id,
-        //         nominalizada: true
-        //     };
-
-        // }
     }
 
     hayTurnosEnHorario(agenda) {
@@ -721,15 +569,6 @@ export class DarTurnosComponent implements OnInit {
 
     seleccionarAlternativa(indice: number) {
         this.seleccionarAgenda(this.alternativas[indice]);
-    }
-
-    seleccionarLlave(indice: number) {
-        if (this.llaves[indice].solicitudVigente) {
-            this.opciones.tipoPrestacion = this.llaves[indice].tipoPrestacion;
-            this.actualizar('');
-        } else {
-            this.plex.info('alert', 'Esta solicitud ha vencido y el profesional debe solicitarla nuevamente');
-        }
     }
 
     verAgenda(direccion: String) {
@@ -1035,7 +874,17 @@ export class DarTurnosComponent implements OnInit {
 
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
-        return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+        if (this._solicitudPrestacion) {
+            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+            if (autocitado && bloque.restantesProfesional > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+            if (!autocitado && bloque.restantesGestion > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+        } else {
+            return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+        }
     }
 
     afterCreateUpdate(paciente) {
