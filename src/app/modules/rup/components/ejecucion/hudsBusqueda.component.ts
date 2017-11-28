@@ -145,9 +145,9 @@ export class HudsBusquedaComponent implements OnInit {
 
     devolverRegistrosHuds(registro, tipo) {
         let index;
-        if (tipo === 'hallazgo') {
+        if (tipo === 'hallazgo' || tipo === 'medicamento') {
             index = this.registrosHuds.findIndex(r => {
-                return (r.tipo === 'hallazgo' && r.data.concepto.id === registro.concepto.id);
+                return ((r.tipo === 'hallazgo' || r.tipo === 'medicamento') && r.data.concepto.id === registro.concepto.id);
             });
 
             switch (registro.concepto.semanticTag) {
@@ -155,6 +155,8 @@ export class HudsBusquedaComponent implements OnInit {
                 case 'trastorno':
                     registro.class = 'problemas';
                     break;
+                case 'producto':
+                    registro.class = 'productos';
             }
         } else if (tipo === 'prestacion') {
             // Se populan las relaciones usando el _id
@@ -243,7 +245,7 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los medicamentos registrados para el paciente 
+    // Trae los medicamentos registrados para el paciente
     listarMedicamentos() {
         this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
             this.medicamentos = medicamentos;

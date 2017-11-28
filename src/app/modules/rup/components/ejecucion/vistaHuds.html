@@ -17,7 +17,7 @@
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true, canClose: true, tabFixed: false}" (_tab)="cerrartab($event)">
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
-                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo'">
+                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>

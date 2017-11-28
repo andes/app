@@ -38,6 +38,7 @@
             &.hallazgos a,
             &.procedimientos a,
             &.planes a,
+            &.productos a,
             &.prestacion a {
                 color: white;
             }
@@ -72,6 +73,9 @@
             &.prestacion.active,
             {
                 background-color: rgba(0, 112, 186, 1);
+            }
+            &.productos {
+                background-color: $productos;
             }
         }
         &.fixed {

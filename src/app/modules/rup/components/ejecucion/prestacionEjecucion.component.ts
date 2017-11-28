@@ -811,6 +811,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
+        debugger;
         this.registrosHuds = registrosHuds;
     }
 

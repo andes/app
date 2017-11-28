@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="col-4">
-                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados" [required]="true" (change)="emitChange()">
+                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados" [required]="true" (change)="formateaEstado()">
                 </plex-select>
             </div>
         </div>
@@ -42,24 +42,80 @@
         <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()"></plex-text>
     </div>
 </div>
+<div class="row">&nbsp;</div>
+<!--Listado de evoluciones-->
+<ng-container *ngIf="!soloValores && evoluciones && evoluciones.length > 0">
+    <div class="row">
+        <div class="col-12">
+            <label class="box-title-secundario" for="comment">Indicaciones Anteriores:</label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2 text-120">
+            <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
+        </div>
+        <div class="col-2 text-120">
+            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {{unaEvolucion.fechaCarga | fecha }} <br>
+            <strong> Profesional: </strong>{{unaEvolucion.profesional }}
+            <br>
+            <strong>Estado</strong> {{unaEvolucion.estado}} /
+            <strong>Cantidad</strong> {{unaEvolucion.cantidad}} {{unaEvolucion.unidad}}
+            <br>
+            <strong>Durante</strong> {{unaEvolucion.duracion.cantidad}} {{unaEvolucion.duracion.unidad}} /
+            <strong>{{unaEvolucion.recetable ? 'Recetable' : 'No recetable' }}</strong>
+            <br>
+            <strong>Indicación:</strong> {{unaEvolucion.indicacion}}
+        </div>
+    </div>
+</ng-container>
 
+<ng-container *ngIf="soloValores ">
+    <div class="row" *ngIf="!registro.evoluciones">
+        <div class="col-6">
+            <p class="readonly">
+                <strong>Estado</strong> {{registro.valor.estado}} /
+                <strong>Cantidad</strong> {{registro.valor.cantidad}} {{registro.valor.unidad}}
+            </p>
+            <p class="readonly">
+                <strong>Durante</strong> {{registro.valor.duracion.cantidad}} {{registro.valor.duracion.unidad}} /
+                <strong>{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</strong>
+            </p>
+        </div>
+        <div class="col-6">
+            <p class="readonly">
+                <strong>Indicación</strong> {{registro.valor.indicacion}}
+            </p>
+        </div>
+    </div>
 
+    <div class="row" *ngIf="registro.evoluciones">
+        <div class="col pt-1">
+            <p><strong>{{registro.concepto.term}}</strong></p>
+            <ng-container *ngIf="registro?.evoluciones">
+                <div *ngFor="let evolucionM of registro.evoluciones" class="row ml-1">
+                    <div class="row">
+                        <div class="col-12">
+                            {{evolucionM.fechaCarga | fecha }} <br>
+                            <strong> Profesional: </strong>{{evolucionM.profesional }}
+                            <br>
+                            <strong>Estado</strong> {{evolucionM.estado}} /
+                            <strong>Cantidad</strong> {{evolucionM.cantidad}} {{evolucionM.unidad}}
+                            <br>
+                            <strong>Durante</strong> {{evolucionM.duracion.cantidad}} {{evolucionM.duracion.unidad}} /
+                            <strong>{{evolucionM.recetable ? 'Recetable' : 'No recetable' }}</strong>
+                            <br>
+                            <strong>Indicación:</strong> {{evolucionM.indicacion}}
+                            <br><br>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+    </div>
 
-
-<ng-container *ngIf="soloValores">
-    <p class="readonly">
-        <span>Estado</span> {{registro.valor.estado.nombre}}
-    </p>
-    <p class="readonly">
-        <span>Cantidad</span> {{registro.valor.cantidad}} {{registro.valor.unidad.nombre}}
-    </p>
-    <p class="readonly">
-        <span class="">{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</span>
-    </p>
-    <p class="readonly">
-        <span>Indicación</span> {{registro.valor.indicacion}}
-    </p>
-    <p class="readonly">
-        <span>Durante</span> {{registro.valor.duracion.cantidad}} {{registro.valor.duracion.unidad.nombre}}
-    </p>
 </ng-container>

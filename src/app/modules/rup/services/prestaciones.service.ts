@@ -373,6 +373,25 @@ export class PrestacionesService {
         );
     }
 
+
+    /**
+         * Metodo getUnMedicamentoXOrigen obtiene un registro de medicamento con todas sus evoluciones
+         * para un paciente buscandolo por el registro de origen
+         * @param {String} idPaciente
+         * @param {String} idRegistroOrigen
+         */
+    getUnMedicamentoXOrigen(idPaciente: any, idRegistroOrigen: any): Observable<any> {
+        let registros = [];
+        return this.getByPacienteMedicamento(idPaciente).map(registrosMed =>
+            registrosMed.find(registro => {
+                if (registro.evoluciones.find(e => e.idRegistro === idRegistroOrigen)) {
+                    return registro;
+                }
+            })
+        );
+    }
+
+
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id

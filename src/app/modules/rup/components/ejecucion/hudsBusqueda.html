@@ -171,11 +171,11 @@
                                     <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                                 </div>
                                 <div class="rup-content hover" (click)="devolverRegistrosHuds(medicamento, 'medicamento')">
-                                    <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
+                                    <span *ngIf="iCronico === eyeCronico" class="float-right text-productos p-1">
                                                         <i class="mdi mdi-eye"></i>
                                                     </span>
                                     <div class="header">
-                                        <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
+                                        <div class="title" [ngClass]="{'text-productos': eyeCronico === iCronico}">
                                             {{ medicamento.concepto.term }}
                                         </div>
                                         <br>
