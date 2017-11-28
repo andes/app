@@ -54,7 +54,7 @@
                 <plex-box>
                     <plex-tabs>
                         <!-- Tab: Llaves -->
-                        <plex-tab *ngIf="llaves.length> 0" icon="key" label="Llaves">
+                        <!-- <plex-tab *ngIf="llaves.length> 0" icon="key" label="Llaves">
                             <fieldset>
                                 <legend class="pt-3 text-center">Llaves del paciente</legend>
                                 <ul class="list-group">
@@ -74,7 +74,7 @@
                                     </li>
                                 </ul>
                             </fieldset>
-                        </plex-tab>
+                        </plex-tab> -->
                         <!-- Tab: Turnos -->
 
                         <plex-tab icon="list" label="Turnos">
@@ -87,7 +87,7 @@
                                             (click)="seleccionarBusqueda(i)">
                                             <div class="list-group-item-text">
                                                 <div *ngIf="busqueda.tipoPrestacion">
-                                                    {{busqueda.tipoPrestacion.nombre}}
+                                                    {{busqueda.tipoPrestacion.term}}
                                                 </div>
                                                 <div *ngIf="busqueda.profesional">
                                                     {{busqueda.profesional | profesional}}
