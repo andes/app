@@ -52,21 +52,21 @@
     }
 }
 
-.badge-hallazgos {
+.badge-hallazgo {
     border: 1px solid #f4a03b;
     color: #f4a03b;
     font-weight: normal;
     text-transform: uppercase;
 }
 
-.badge-trastornos {
+.badge-trastorno {
     border: 1px solid #ff4a1a;
     color: #ff4a1a;
     font-weight: normal;
     text-transform: uppercase;
 }
 
-.badge-procedimientos,
+.badge-procedimiento,
 .badge-entidad,
 .badge-regimen {
     border: 1px solid #92278e;
@@ -75,11 +75,11 @@
     text-transform: uppercase;
 }
 
-.badge-procedimientos {
+.badge-procedimiento {
     right: -18% !important;
 }
 
-.badge-productos {
+.badge-producto {
     border: 1px solid $productos;
     color: $productos;
     font-weight: normal;
@@ -100,21 +100,21 @@
     right: 55px;
 }
 
-.border-hallazgos {
+.border-hallazgo {
     &:focus {
         outline: 0;
     }
     border: 1px solid #f4a03b !important;
 }
 
-.border-trastornos {
+.border-trastorno {
     &:focus {
         outline: 0;
     }
     border: 1px solid #ff4a1a !important;
 }
 
-.border-procedimientos {
+.border-procedimiento {
     &:focus {
         outline: 0;
     }
@@ -128,7 +128,7 @@
     border: 1px solid #6a99ad !important;
 }
 
-.border-productos {
+.border-producto {
     &:focus {
         outline: 0;
     }
