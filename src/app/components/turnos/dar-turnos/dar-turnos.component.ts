@@ -873,7 +873,17 @@ export class DarTurnosComponent implements OnInit {
 
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
-        return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+        if (this._solicitudPrestacion) {
+            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+            if (autocitado && bloque.restantesProfesional > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+            if (!autocitado && bloque.restantesGestion > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+        } else {
+            return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+        }
     }
 
     afterCreateUpdate(paciente) {
