@@ -1,13 +1,3 @@
-<ng-container *ngIf="hallazgoOrigen">
-    <div class="row">
-        <div class="col-12">
-            <span class="badge-info float-right">
-                Originado con la transformación de:
-                <strong>{{ hallazgoOrigen.nombre }}</strong>
-            </span>
-        </div>
-    </div>
-</ng-container>
 <ng-container *ngIf="!soloValores && referentSet.length > 0 && registro.valor.estado !== 'transformado'">
     <div class="row">
         <div class="col-12">
