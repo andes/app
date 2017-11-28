@@ -189,12 +189,9 @@ export class DarTurnosComponent implements OnInit {
                 dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
             }
             event.callback(dataF);
-            if (!this._solicitudPrestacion) {
-                this.actualizar('sinFiltro');
-            } else {
+            if (this._solicitudPrestacion) {
                 this.actualizar('');
             }
-            // let data2 = this.verificarLlaves(dataF, event);
         });
     }
 
@@ -260,7 +257,6 @@ export class DarTurnosComponent implements OnInit {
                 this.busquedas.push(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
-            // this.actualizar('');
         }
 
         this.actualizar('');
@@ -286,22 +282,20 @@ export class DarTurnosComponent implements OnInit {
 
         let params: any = {};
         this.estadoT = 'noSeleccionada';
+        this.agendas = [];
         this.agenda = null;
 
         let fechaHasta = (moment(this.opciones.fecha).endOf('month')).toDate();
 
         // Filtro búsqueda
-        if (etiqueta !== 'sinFiltro') {
-            if (this.opciones.tipoPrestacion || this.opciones.profesional) {
-                this.mostrarCalendario = true;
-            } else {
-                this.mostrarCalendario = false;
-            }
+        // if (etiqueta !== 'sinFiltro') {
+        if (this.opciones.tipoPrestacion || this.opciones.profesional) {
+            this.mostrarCalendario = true;
+
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
                 idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
-                // idProfesional: (this.opciones.profesional ? (this._solicitudPrestacion ? this.opciones.profesional[0].id : this.opciones.profesional.id) : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
@@ -358,20 +352,8 @@ export class DarTurnosComponent implements OnInit {
 
             });
         } else {
-            this.agendas = [];
+            this.mostrarCalendario = false;
         }
-        // else {
-        //     // Agendas a partir de hoy aplicando filtros solo por permisos y efector
-        //     this.opciones.tipoPrestacion = null;
-        //     this.opciones.profesional = null;
-        //     params = {
-        //         // Mostrar sólo las agendas a partir de hoy en adelante, filtradas por las prestaciones con permisos
-        //         rango: true, desde: new Date(), hasta: fechaHasta,
-        //         tipoPrestaciones: this.filtradas.map((f) => { return f.id; }),
-        //         organizacion: this.auth.organizacion._id,
-        //         nominalizada: true
-        //     };
-
         // }
     }
 
@@ -752,7 +734,7 @@ export class DarTurnosComponent implements OnInit {
                 if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
 
                     this.plex.info('warning', 'Esta agenda ya no está disponible.');
-                    this.actualizar('sinFiltro');
+                    this.actualizar('');
                     return false;
 
                 } else {
@@ -785,7 +767,7 @@ export class DarTurnosComponent implements OnInit {
                         this.estadoT = 'noSeleccionada';
                         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
                         this.agenda = null;
-                        this.actualizar('sinFiltro');
+                        this.actualizar('');
                         this.plex.toast('info', 'El turno se asignó correctamente');
 
 

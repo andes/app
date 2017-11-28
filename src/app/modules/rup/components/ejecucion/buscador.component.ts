@@ -190,6 +190,9 @@ export class BuscadorComponent implements OnInit {
      */
 
     filtroBuscadorSnomed(filtro: any[], tipo = null, arrayAFiltrar = null) {
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.tagBusqueda.emit(this.filtroActual);
         let filtroResultados = false;
         if (arrayAFiltrar === null) {
             arrayAFiltrar = this.resultados;
@@ -214,9 +217,6 @@ export class BuscadorComponent implements OnInit {
                 this.resultados = arrayAFiltrar;
             }
         }
-
-        this.tipoBusqueda = tipo ? tipo : '';
-        this.filtroActual = tipo ? ['planes'] : filtro;
         this.esFiltroActual = this.getFiltroActual(filtro);
         return arrayAFiltrar;
     }
@@ -319,6 +319,10 @@ export class BuscadorComponent implements OnInit {
         return this.conceptosTurneables.find(x => {
             return x.conceptId === item.conceptId;
         });
+    }
+
+    public reemplazar(arr, glue) {
+        return arr.join(glue);
     }
 
     // Recibe el parametro y lo setea para realizar la busqueda en Snomed

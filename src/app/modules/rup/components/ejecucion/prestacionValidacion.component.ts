@@ -49,7 +49,10 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array para armar árbol de relaciones
     public relaciones: any[];
 
-    temp: any = [];
+    // Array que guarda el árbol de relaciones
+    public registrosOrdenados: any[] = [];
+
+    tipoOrden: any = '';
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -139,7 +142,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
             });
 
-            this.armarRelaciones(this.prestacion.ejecucion.registros);
+            this.registrosOrdenados = this.prestacion.ejecucion.registros;
+            this.armarRelaciones(this.registrosOrdenados);
             // this.reordenarRelaciones();
 
         });
@@ -362,7 +366,9 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
 
-        this.prestacion.ejecucion.registros = relacionesOrdenadas;
+        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
+        this.registrosOrdenados = relacionesOrdenadas;
+
 
     }
 
@@ -382,6 +388,38 @@ export class PrestacionValidacionComponent implements OnInit {
     swapItems(a, b) {
         this.prestacion.ejecucion.registros[a] = this.prestacion.ejecucion.registros.splice(b, 1, this.prestacion.ejecucion.registros[a])[0];
         return this;
+    }
+
+    ordenarPorTipo(tipo: any) {
+        if (this.tipoOrden === tipo) {
+            return 0;
+        } else {
+            this.tipoOrden = tipo;
+        }
+        this.prestacion.ejecucion.registros = this.prestacion.ejecucion.registros.sort(registro => {
+            if ((registro.concepto.semanticTag === 'procedimiento' && registro.esSolicitud && tipo === 'plan')) {
+                return -1;
+            }
+            if (registro.esSolicitud === false && registro.concepto.semanticTag === tipo) {
+                return -1;
+            }
+            if (registro.concepto.semanticTag !== tipo || tipo !== 'plan') {
+                return 1;
+            }
+            return 0;
+        });
+    }
+
+    hayRegistros(tipos: any[], tipo: any = null) {
+        if (!tipo) {
+            return this.prestacion.ejecucion.registros.filter(x => {
+                return tipos.find(y => (!x.esSolicitud && y === x.concepto.semanticTag));
+            }).length > 0;
+        } else {
+            return this.prestacion.ejecucion.registros.filter(x => {
+                return tipos.find(y => (x.esSolicitud && y === x.concepto.semanticTag));
+            }).length > 0;
+        }
     }
 
 }
