@@ -5,7 +5,6 @@
 
 export const environment = {
   production: false,
-  // API: '//localhost:3002/api',
-  API: 'https://d-testing.hospitalneuquen.org.ar/api',
+  API: '//localhost:3002/api',
   APIStatusCheck: false
 };
