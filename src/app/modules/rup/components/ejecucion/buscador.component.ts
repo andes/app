@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
@@ -174,8 +175,7 @@ export class BuscadorComponent implements OnInit {
         let tag;
 
         resultados.forEach(x => {
-            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : x.semanticTag;
-            tag = x.semanticTag && x.semanticTag === 'régimen/tratamiento' ? 'regimenTratamiento' : x.semanticTag;
+            tag = x.semanticTag && x.semanticTag === 'entidad observable' ? 'entidadObservable' : (x.semanticTag === 'régimen/tratamiento' ? 'regimenTratamiento' : x.semanticTag);
             this.contadorSemanticTags[String(tag)]++;
         });
 
@@ -257,6 +257,7 @@ export class BuscadorComponent implements OnInit {
      * arrayPorRefsets
      */
     filtroRefSet() {
+        let frecuentes = [];
         let conceptos = {
             Hallazgos: ['hallazgo', 'situacion'],
             Trastornos: ['trastorno'],
@@ -270,11 +271,30 @@ export class BuscadorComponent implements OnInit {
                 nombre: nombre,
                 valor: this.resultados.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k]))
             });
+            frecuentes.push({
+                nombre: nombre,
+                valor: this.arrayFrecuentes.filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[k]))
+            });
         });
         Object.keys(conceptos).forEach(c => {
             this.arrayPorRefsets.push({
                 nombre: c,
                 valor: this.filtroBuscadorSnomed(conceptos[c])
+            });
+            frecuentes.push({
+                nombre: c,
+                valor: this.filtroBuscadorSnomed(conceptos[c], null, this.arrayFrecuentes)
+            });
+        });
+
+        // hago el merge de los arrays
+        this.arrayPorRefsets.forEach(c => {
+            frecuentes.forEach(f => {
+                if (c.nombre === f.nombre) {
+                    for (const valor of f.valor) {
+                        c.valor.unshift(valor);
+                    }
+                }
             });
         });
     }
