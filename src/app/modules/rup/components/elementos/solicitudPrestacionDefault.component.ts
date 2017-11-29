@@ -12,8 +12,10 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
 
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = {};
-            this.registro.valor['solicitudPrestacion']['autocitado'] = false;
+            this.registro.valor = {
+                solicitudPrestacion: {}
+            };
+            this.registro.valor.solicitudPrestacion['autocitado'] = false;
         }
     }
 

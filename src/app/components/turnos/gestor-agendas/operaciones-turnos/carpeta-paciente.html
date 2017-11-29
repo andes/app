@@ -11,12 +11,9 @@
                 {{turnoSeleccionado.paciente | paciente}}
             </span>
         </div>
-        <div class="col-12" *ngIf="carpetaPaciente">
+        <div class="col-12">
             <plex-text label="Número de Carpeta" name="nroCarpeta" [(ngModel)]="carpetaPaciente.nroCarpeta">
             </plex-text>
-        </div>
-        <div class="col-12" *ngIf="!carpetaPaciente">
-            Cargando...
         </div>
     </div>
     <hr>

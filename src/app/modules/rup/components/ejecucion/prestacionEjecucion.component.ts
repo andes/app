@@ -1,3 +1,5 @@
+import { ConceptObserverService } from './../../services/conceptObserver.service';
+import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -12,7 +14,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
-
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -35,7 +36,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoARelacionar = [];
 
     // Tipo de busqueda
-    public tipoBusqueda: any;
+    public tipoBusqueda: any[];
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -79,12 +80,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     public prestacionValida = true;
     public mostrarMensajes = false;
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(
+        private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
-        private servicioPaciente: PacienteService) { }
+        private servicioPaciente: PacienteService,
+        private conceptObserverService: ConceptObserverService) { }
 
     /**
      * Inicializamos prestacion a traves del id que viene como parametro de la url
@@ -95,6 +98,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
+
+        // Limpiar los valores observados al iniciar la ejecución
+        // Evita que se autocompleten valores de una consulta anterior
+        this.conceptObserverService.destroy();
+
         this.route.params.subscribe(params => {
             let id = params['id'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
@@ -117,6 +125,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Busca el elementoRUP que implementa esta prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
                             this.mostrarDatosEnEjecucion();
 
                         }
@@ -140,12 +149,14 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.prestacion) {
 
             // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-            let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-            if (indexDiagnosticoPrincipal > -1) {
-                let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-                this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-                this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-            }
+            // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
+            // if (indexDiagnosticoPrincipal > -1) {
+            //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
+            //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
+            //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
+            // }
+
+
 
             // recorremos los registros ya almacenados en la prestacion
             this.prestacion.ejecucion.registros.forEach(registro => {
@@ -162,23 +173,23 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     /**
-     * Mover un registro a una posicion especifica
+     * Mover un registro a una posición específica
      *
-     * @param posicionActual: posicion actual del registro
-     * @param posicionNueva: posicion donde cargar el registro
+     * @param posicionActual: posición actual del registro
+     * @param posicionNueva: posición donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
+
         // // buscamos el registro
         let registro = this.prestacion.ejecucion.registros[posicionActual];
 
-        // lo quitamos de la posicion actual
+        // lo quitamos de la posición actual
         this.prestacion.ejecucion.registros.splice(posicionActual, 1);
 
-        // agregamos a la nueva posicion
+        // agregamos a la nueva posición
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
-
         if (this.prestacion.ejecucion.registros[posicionNueva]) {
             if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
                 let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
@@ -197,10 +208,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
     /**
-     * Mover un registro hacia una posicion especifica
-     * Para ello busca su posicion actual y llama a moverRegistroEnPoscion()
+     * Mover un registro hacia una posición específica
+     * Para ello busca su posición actual y llama a moverRegistroEnPoscion()
      *
-     * @param {number} posicionNueva: posicion actual del registro
+     * @param {number} posicionNueva: posición actual del registro
      * @param {*} registro: objeto a mover en el array de registros
      * @memberof PrestacionEjecucionComponent
      */
@@ -208,18 +219,16 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (registro.dragData) {
             registro = registro.dragData;
         }
-        // buscamos posicion actual
+        // buscamos posición actual
         let posicionActual = this.prestacion.ejecucion.registros.findIndex(r => (registro.id === r.id));
 
-        // si la posicion a la que lo muevo es distinta a la actual
-        // o si la posicion nueva es distinta a la siguiente de la actual (misma posicion)
+        // si la posición a la que lo muevo es distinta a la actual
+        // o si la posición nueva es distinta a la siguiente de la actual (misma posicion)
         if ((posicionActual !== posicionNueva) && (posicionNueva !== posicionActual + 1)) {
             // movemos
             this.moverRegistroEnPosicion(posicionActual, posicionNueva);
         }
     }
-
-
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
         let registros = this.prestacion.ejecucion.registros;
@@ -240,7 +249,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];
-                // buscamos en la posicion que se encuentra el registro de orgien y destino
+                // buscamos en la posición que se encuentra el registro de orgien y destino
                 let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
                 let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
 
@@ -297,17 +306,29 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registros = this.prestacion.ejecucion.registros;
             let _registro = registros[this.indexEliminar];
 
-            // quitamos toda la vinculacion que puedan tener con el registro
+            // Quitamos toda la vinculación que puedan tener con el registro
             registros.forEach(registro => {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+
+                    // relacionadoCon está populado, y debe comprobarse el id
                     if (registro.relacionadoCon[0].id === _registro.id) {
                         registro.relacionadoCon = [];
                     }
                 }
             });
 
+            // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
+            // y por lo tanto hay qye volver el registro orige a su estado original
+            if (_registro.valor && _registro.valor.idRegistroTransformado) {
+                let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
+                if (registroOriginal) {
+                    registroOriginal.valor.estado = 'activo';
+                    delete registroOriginal.valor.idRegistroGenerado;
+                }
+            }
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
+
             this.errores[this.indexEliminar] = null;
             this.indexEliminar = null;
             this.confirmarEliminar = false;
@@ -331,32 +352,33 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-        // this.recuperaLosMasFrecuentes(snomedConcept);
-        // si proviene del drag and drop
+        // Si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
-        // elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+        // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda === 'planes') {
+        if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
-        // verificamos si es un plan. Si es plan seteamos esSolicitud en true.
+        // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
-        // agregamos al array de registros
+
+        // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
+
+        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
 
@@ -380,7 +402,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+        // si estamos cargando un concepto para una transformación de hall
         if (this.transformarProblema && this.registroATransformar) {
+
             if (snomedConcept.semanticTag !== 'hallazgo' && snomedConcept.semanticTag !== 'trastorno') {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
                 return false;
@@ -399,14 +423,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     }
                 });
             } else {
-                this.registroATransformar.valor.estado = 'transformado';
+                // this.registroATransformar.valor.estado = 'transformado';
                 valor = { idRegistroTransformado: this.registroATransformar.id, origen: 'transformación' };
-                let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
-                nuevoRegistro.relacionadoCon = [this.registroATransformar];
-                this.transformarProblema = false;
-                this.registroATransformar.valor.estado = 'transformado';
-                this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
-                return nuevoRegistro;
+                window.setTimeout(() => {
+                    let nuevoRegistro = this.cargarNuevoRegistro(snomedConcept, valor);
+                    nuevoRegistro.relacionadoCon = [this.registroATransformar];
+                    this.transformarProblema = false;
+                    this.registroATransformar.valor.estado = 'transformado';
+                    this.registroATransformar.valor['idRegistroGenerado'] = nuevoRegistro.id;
+                    return nuevoRegistro;
+                });
+
             }
         } else {
             if (registoExiste) {
@@ -415,14 +442,16 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
             this.colapsarPrestaciones();
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situacion') {
+            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
                             if (cronico) {
-                                valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                valor = {
+                                    idRegistroOrigen: dato.evoluciones[0].idRegistro
+                                };
                                 resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                 if (registroDestino) {
                                     registroDestino.relacionadoCon = [resultado];
@@ -430,9 +459,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                             } else {
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('Desea evolucionar el mismo?', 'Se encuentra registrado el problema activo').then((confirmar) => {
+                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
-                                            valor = { idRegistroOrigen: dato.evoluciones[0].idRegistro };
+                                            valor = {
+                                                idRegistroOrigen: dato.evoluciones[0].idRegistro
+                                            };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                             if (registroDestino) {
                                                 registroDestino.relacionadoCon = [resultado];
@@ -481,7 +512,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
-                let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                window.setTimeout(() => {
+                    let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
+                });
                 // TODO revisar registro de destino
                 // if (registroDestino) {
                 //     registroDestino.relacionadoCon = [resultado];
@@ -596,6 +629,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
+
         let params: any = {
             op: 'registros',
             registros: registros
@@ -603,10 +637,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+
             // actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+
+
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
+
         });
     }
 
@@ -622,7 +660,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     onConceptoDrop(e: any) {
         if (e.dragData.huds) {
-            this.ejecutarConceptoHuds(e.dragData);
+            window.setTimeout(() => {
+                this.ejecutarConceptoHuds(e.dragData);
+            });
         } else {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
@@ -631,6 +671,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                         break;
                     case 'hallazgo':
                     case 'trastorno':
+                    case 'situación':
                         this.ejecutarConcepto(e.dragData.data.concepto);
                         break;
                     default:
@@ -760,6 +801,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             elementoRUP.frecuentes.forEach(element => {
                 this.masFrecuentes.push(element);
             });
+        } else {
+            // si no hay por un registro en particular mostramos el de la consulta
+            if (this.elementoRUP && this.elementoRUP.frecuentes) {
+                this.elementoRUP.frecuentes.forEach(element => {
+                    this.masFrecuentes.push(element);
+                });
+            }
         }
     }
 
@@ -849,4 +897,5 @@ export class PrestacionEjecucionComponent implements OnInit {
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
     }
+
 }

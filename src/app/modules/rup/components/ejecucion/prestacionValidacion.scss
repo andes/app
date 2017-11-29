@@ -4,14 +4,23 @@
 }
 
 .type.hallazgo,
-.type.trastorno {
+.type.situación {
     background-color: $problemas;
 }
 
-.type.procedimiento {
+.type.trastorno {
+    background-color: $trastornos;
+}
+
+.type.procedimiento,
+.type.entidad.observable {
     background-color: $procedimientos;
 }
 
 .type.plan {
     background-color: $planes;
+}
+
+.type.producto {
+    background-color: $productos;
 }

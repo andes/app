@@ -12,7 +12,11 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     public refsetsIds = {
-        cronico: '1641000013105'
+        cronico: '1641000013105',
+        // programable: '1661000013109',
+        Antecedentes_Familiares: '1621000013103',
+        Antecedentes_Personales_procedimientos: '1911000013100',
+        Antecedentes_Personales_hallazgos: '1901000013103'
     };
 
     constructor(private server: Server, public auth: Auth) { }

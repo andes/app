@@ -117,9 +117,9 @@ export class CalendarioComponent {
                     if (agendasPorFecha.length === 1) {
                         ag = this.agendaPorFecha(inicio);
                     }
-
                     let dia = new CalendarioDia(inicio.toDate(), ag, this._solicitudPrestacion);
-                    if (dia.estado === 'vacio' && this._solicitudPrestacion) {
+                    // if (dia.estado === 'vacio' && this._solicitudPrestacion) {
+                    if (dia.estado === 'vacio') {
                         dia.cantidadAgendas = 0;
                         dia.estado = 'vacio';
                         dia.agenda = null;

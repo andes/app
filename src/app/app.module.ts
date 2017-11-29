@@ -96,6 +96,9 @@ import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
 
+// RUP
+import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -191,9 +194,11 @@ import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.c
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
+import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -282,7 +287,8 @@ const RUP_COMPONENTS = [
     FiltradoGlomerularComponent,
     RiesgoCardiovascularComponent,
     VistaHudsComponent,
-    HudsBusquedaPacienteComponent
+    HudsBusquedaPacienteComponent,
+    RegistrarMedicamentoDefaultComponent
 ];
 
 // Locales
@@ -313,7 +319,8 @@ export let RUPRegistry = {
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent': HipertensionArterialComponent,
     'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent
+    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
+    'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent
 
 };
 
@@ -337,7 +344,8 @@ let RUPComponentsArray = [
     ObesidadComponent,
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    RegistrarMedicamentoDefaultComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -451,7 +459,8 @@ let RUPComponentsArray = [
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        FrecuentesProfesionalService
 
     ]
 })

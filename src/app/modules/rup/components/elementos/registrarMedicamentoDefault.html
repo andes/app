@@ -1,0 +1,52 @@
+<!-- Header -->
+
+<div class="row" *ngIf="!soloValores">
+    <div class="col-2">
+        <plex-int *ngIf="registro.valor" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad" name="cantidad" label="Cantidad" min="0" max="2000" (change)="emitChange()" required="true">
+        </plex-int>
+    </div>
+    <div class="col-2">
+        <plex-select *ngIf="registro.valor" label="Unidad" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades" [required]="true" (change)="formatearUnidad()">
+        </plex-select>
+    </div>
+    <div class="col-2">
+        <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
+    </div>
+    <div class="col-2">
+        <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados" [required]="true" (change)="emitChange()">
+        </plex-select>
+    </div>
+</div>
+<div class="row" *ngIf="!soloValores">
+    <div class="col-8">
+        <div class="row no-gutters">
+            <div class="col-3">
+                <label for="">Duración</label>
+                <plex-int [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad" [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
+            </div>
+            <div class="col-3">
+                <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" *ngIf="!soloValores">
+    <div class="col">
+        <!-- Indicación -->
+        <plex-text label="Indicación" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()"></plex-text>
+    </div>
+</div>
+
+
+
+<ng-container *ngIf="soloValores">
+    <p class="readonly">
+        <small class="badge badge-info">{{registro.valor.estado.nombre}}</small>
+        <small class="badge badge-{{registro.valor.recetable ? 'success' : 'danger'}}">{{registro.valor.recetable ? 'Recetable' : 'No recetable' }}</small>
+        <br>
+        <span>Cantidad</span>{{registro.valor.cantidad}} {{registro.valor.unidad.nombre}}
+        <span>Durante</span> {{registro.valor.duracion.cantidad}} {{registro.valor.duracion.unidad.nombre}}
+        <span>Indicación</span> {{registro.valor.indicacion}}
+    </p>
+</ng-container>
