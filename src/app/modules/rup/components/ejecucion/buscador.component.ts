@@ -329,8 +329,6 @@ export class BuscadorComponent implements OnInit {
         } else {
             this.showContent = nombre;
         }
-        debugger
-        // 
         let tipo = nombre.toLowerCase();
         let filtro: any = [];
         switch (tipo) {
@@ -356,7 +354,6 @@ export class BuscadorComponent implements OnInit {
         this.filtroActual = filtro;
         this.tagBusqueda.emit(this.filtroActual);
         this.esFiltroActual = this.getFiltroActual(filtro);
-        // 
 
     }
 
