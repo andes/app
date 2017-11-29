@@ -34,11 +34,8 @@ export class PrestacionesService {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
         }
-        let opt;
-        opt = {
-            params: params,
-            options
-        };
+
+        let opt = { params: params, options };
 
         return this.server.get(this.prestacionesUrl, opt);
     }
@@ -305,6 +302,20 @@ export class PrestacionesService {
         return this.server.get(url, opt);
     }
 
+    getRegistrosEjecucion(idPaciente: string, conceptIds: any[]) {
+        let opt = {
+            params: {
+                'idPaciente': idPaciente,
+                'ordenFechaEjecucion': true,
+                'conceptsIdEjecucion': conceptIds,
+            },
+            options: {
+                showError: true
+            }
+        };
+
+        return this.server.get(this.prestacionesUrl, opt);
+    }
     /**
      * Metodo post. Inserta un objeto nuevo.
      * @param {any} prestacion Recibe solicitud RUP con paciente
@@ -325,6 +336,17 @@ export class PrestacionesService {
         return this.server.patch(this.prestacionesUrl + '/' + idPrestacion, cambios);
     }
 
+    /**
+     * Inicializar una prestación con algunos datos obligatorios
+     *
+     * @param {*} paciente Objeto con la info del paciente
+     * @param {*} snomedConcept Objeto con la info del concepto SNOMED
+     * @param {String} [momento='solicitud'] Momento en el cual estoy creando la prestacion (solicitud / ejecucion / validacion)
+     * @param {*} [fecha=new Date()] Fecha a almacenar en el momento
+     * @param {*} [turno=null] Objeto turno
+     * @returns {*} Prestacion
+     * @memberof PrestacionesService
+     */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
