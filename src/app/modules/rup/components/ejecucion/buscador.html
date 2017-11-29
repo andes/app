@@ -90,7 +90,7 @@
     <div class="col-12">
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false"*ngIf="!showRefSets || showFrecuentes">BÚSQUEDA GUIADA</button>
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false; showFrecuentes = false; contarSemanticTags(resultadosAux);" *ngIf="showFrecuentes || showRefSets">BUSCADOR BASICO</button>
-        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; contarSemanticTags(resultadosFrecuentesAux);" *ngIf="!showFrecuentes">MÁS FRECUENTES</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false; showFrecuentes = true; contarSemanticTags(arrayFrecuentes);" *ngIf="!showFrecuentes">MÁS FRECUENTES</button>
     </div>
 </div>
 
@@ -190,7 +190,7 @@
                         <ng-container *ngFor="let item of items.valor">
                             <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
                                 [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                <div class="rup-card mini {{ (tipoBusqueda === 'planes' && item.semanticTag  === 'procedimiento') ? 'planes' : item.semanticTag}}">
+                                <div class="rup-card mini {{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }}">
                                     <div *ngIf="_dragScope" class=" type">
                                         <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
                                     </div>
@@ -200,7 +200,7 @@
                                                 {{ item.term }}
                                             </div>
                                             <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
-                                                <small class="badge badge-{{ (tipoBusqueda === 'planes' && item.semanticTag  === 'procedimiento') ? 'planes' : item.semanticTag}} text-default">{{ item.semanticTag }}</small>
+                                                <small class="badge badge-{{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }} text-default">{{ item.semanticTag }}</small>
                                                 <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                                     <i class="mdi mdi-plus-box-outline"></i>
                                                 </a>
