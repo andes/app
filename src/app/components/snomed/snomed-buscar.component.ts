@@ -67,7 +67,9 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
-        this.lastRequest.unsubscribe();
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
     }
 
     ngOnInit() {
@@ -216,7 +218,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
                 }
 
                 this.lastRequest = apiMethod.subscribe(resultados => {
-                    console.log(this.timeoutHandle);
 
                     if (idTimeOut === this.timeoutHandle) {
 

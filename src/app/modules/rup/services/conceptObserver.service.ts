@@ -40,7 +40,7 @@ export class ConceptObserverService {
 
   /**
    * Limpia los observers para que no aparezcan valores los valores en una consulta nueva
-   * 
+   *
    */
 
   public destroy() {
