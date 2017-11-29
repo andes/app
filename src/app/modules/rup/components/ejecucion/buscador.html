@@ -89,8 +89,8 @@
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-12">
         <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = true; showFrecuentes = false; showGuiada = false"*ngIf="!showRefSets || showFrecuentes">BÚSQUEDA GUIADA</button>
-        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false; showFrecuentes = false;" *ngIf="showFrecuentes || showRefSets">BUSCADOR BASICO</button>
-        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true;" *ngIf="!showFrecuentes">MÁS FRECUENTES</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showRefSets = false; showFrecuentes = false; contarSemanticTags(resultadosAux);" *ngIf="showFrecuentes || showRefSets">BUSCADOR BASICO</button>
+        <button class="btn btn-primary btn-sm float-right m-1" (click)="showFrecuentes = true; contarSemanticTags(resultadosFrecuentesAux);" *ngIf="!showFrecuentes">MÁS FRECUENTES</button>
     </div>
 </div>
 
