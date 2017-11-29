@@ -108,6 +108,7 @@ export class BuscadorComponent implements OnInit {
     }
 
     recibeResultados(resultadosSnomed) {
+        debugger;
         // Limpio los resultados (también se limpian los contadores)
         this.resultados = this.resultadosAux = [];
         // Hay más frecuentes? Frecuentes de este profesional

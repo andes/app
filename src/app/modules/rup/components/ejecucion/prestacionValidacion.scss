@@ -13,7 +13,8 @@
 }
 
 .type.procedimiento,
-.type.entidad.observable {
+.type.entidad.observable,
+.régimen\/tratamiento {
     background-color: $procedimientos;
 }
 
@@ -23,4 +24,18 @@
 
 .type.producto {
     background-color: $productos;
+}
+
+.bg-invert {
+    background-color: $invert !important;
+}
+
+.btn-orden {
+    height: 28px;
+    width: 28px;
+    i {
+        position: relative;
+        left: -3px;
+        top: -6px;
+    }
 }

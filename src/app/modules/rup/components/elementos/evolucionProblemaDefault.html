@@ -12,7 +12,8 @@
         <div class="row" *ngIf="hallazgoOrigen">
             <div class="col">
                 <small class="badge badge-info">
-                    Originado con la transformación de: <strong>{{ hallazgoOrigen.nombre }}</strong>
+                    Originado con la transformación de:
+                    <strong>{{ hallazgoOrigen.nombre }}</strong>
                 </small>
             </div>
         </div>
@@ -35,8 +36,10 @@
             <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
+                        (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
+                        [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
@@ -82,7 +85,7 @@
             <div class="row no-gutters">
                 <div class="col">
                     <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
-                    <small class="badge badge-info">{{ registro.concepto.semanticTag }}</small>
+                    <!-- <small class="badge badge-info">{{ registro.concepto.semanticTag }}</small> -->
                     <ng-container *ngIf="referentSet.length > 0">
                         <small *ngFor="let rf of referentSet" class="badge badge-danger">{{rf}}</small>
                     </ng-container>
