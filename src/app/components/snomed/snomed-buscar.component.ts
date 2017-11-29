@@ -232,6 +232,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
             }, 600);
         } else {
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+                this.loading.emit(false);
+            }
             this._tengoResultado.emit(false);
         }
     }
