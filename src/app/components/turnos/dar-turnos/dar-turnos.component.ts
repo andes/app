@@ -258,7 +258,6 @@ export class DarTurnosComponent implements OnInit {
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
         }
-
         this.actualizar('');
     }
 
@@ -288,7 +287,6 @@ export class DarTurnosComponent implements OnInit {
         let fechaHasta = (moment(this.opciones.fecha).endOf('month')).toDate();
 
         // Filtro búsqueda
-        // if (etiqueta !== 'sinFiltro') {
         if (this.opciones.tipoPrestacion || this.opciones.profesional) {
             this.mostrarCalendario = true;
 
@@ -354,7 +352,6 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.mostrarCalendario = false;
         }
-        // }
     }
 
     hayTurnosEnHorario(agenda) {
