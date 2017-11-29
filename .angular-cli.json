@@ -42,7 +42,10 @@
     },
     "defaults": {
         "styleExt": "css",
-        "prefixInterfaces": false
+        "prefixInterfaces": false,
+        "build": {
+            "showCircularDependencies": false
+        }
     },
     "lint": [{
         "files": "src/**/*.ts",
