@@ -217,7 +217,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{elemento.concepto.semanticTag}} {{ elemento.esSolicitud ? 'plan' : elemento.concepto.semanticTag }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}">
                                                     <div class="type">
                                                     </div>
                                                     <div class="rup-content">
@@ -233,32 +233,18 @@
                                                                 <div class="col-8">
                                                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
                                                                     </rup>
-                                                                    <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'">
-                                                                        <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
-                                                                    </div>
-                                                                    <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                                                        <!-- <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                                                                            <small *ngIf="elemento.esDiagnosticoPrincipal" class="badge badge-info">Diagnóstico principal</small>
-                                                                        </ng-container> -->
-                                                                        <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
-                                                                            <small *ngIf="elemento.esPrimeraVez" class="badge badge-info">Es primera vez</small>
-                                                                        </ng-container>
-                                                                    </ng-container>
                                                                 </div>
-                                                                <!-- <div class="col-1 m-0 p-0 text-center">
-                                                                    <div class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline" (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'"></div>
-                                                                </div> -->
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
                                                                         <b>Evolución: </b>{{ elemento.valor.evolucion }}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
-                                                                        <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
+                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
+                                                                        <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
-                                                                        <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
+                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
+                                                                        <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
                                                                     </div>
                                                                     <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
                                                                         <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}

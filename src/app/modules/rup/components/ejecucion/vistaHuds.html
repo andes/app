@@ -44,7 +44,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{elemento.concepto.semanticTag}} {{ elemento.esSolicitud ? 'plan' : elemento.concepto.semanticTag }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}">
                                                     <div class="type">
                                                     </div>
                                                     <div class="rup-content">
@@ -76,11 +76,11 @@
                                                                     <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
                                                                         <b>Evolución: </b>{{ elemento.valor.evolucion }}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.valor?.motivo" class="text-secondary">
-                                                                        <b>Motivo:</b> {{ elemento.valor.motivo || '(no definido)' }}
+                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
+                                                                        <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
                                                                     </div>
-                                                                    <div *ngIf="elemento?.valor?.indicaciones" class="text-secondary">
-                                                                        <b>Indicaciones: </b> {{ elemento.valor.indicaciones || '(ninguna)' }}
+                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
+                                                                        <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
                                                                     </div>
                                                                     <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
                                                                         <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
