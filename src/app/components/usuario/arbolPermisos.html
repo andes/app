@@ -16,11 +16,11 @@
 
     <div *ngIf="item.type !== 'boolean'">
         <!-- El seleccionar todos para prestaciones se quita segun requerimientos -->
-        <!-- <h5>
+         <h5>
             {{item.title}}
             <plex-bool [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
-        </h5> -->
-        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)" placeholder="Selecciones los elementos con permios"
+        </h5> 
+        <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
             (change)="selectChange()" name="plexSelect"></plex-select>
     </div>
 </div>

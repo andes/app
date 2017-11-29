@@ -19,7 +19,6 @@
         }
     }
     &.hallazgo,
-    &.trastorno,
     &.entidad.observable,
     &.regimen,
     &.situación {
@@ -29,6 +28,15 @@
         }
         .type {
             background: $problemas;
+        }
+    }
+    &.trastorno {
+        &:hover,
+        &.active {
+            border: 2px solid $trastornos;
+        }
+        .type {
+            background: $trastornos;
         }
     }
     &.entidad.observable,
@@ -186,52 +194,100 @@ transition: all 200ms;
 
 /* colores botones / acciones */
 
-.btn-problemas {
+.btn-hallazgos {
     color: white;
-    background-color: $problemas;
-    border-color: $problemas;
+    background-color: $hallazgos;
+    border-color: $hallazgos;
 }
 
-.btn-problemas:hover,
-.btn-problemas:focus,
-.btn-problemas:active,
-.btn-problemas.active,
-.open .dropdown-toggle.btn-problemas {
+.btn-hallazgos:hover,
+.btn-hallazgos:focus,
+.btn-hallazgos:active,
+.btn-hallazgos.active,
+.open .dropdown-toggle.btn-hallazgos {
     color: white;
-    background-color: $problemas;
-    border-color: $problemas;
+    background-color: $hallazgos;
+    border-color: $hallazgos;
 }
 
-.btn-problemas:active,
-.btn-problemas.active,
-.open .dropdown-toggle.btn-problemas {
+.btn-hallazgos:active,
+.btn-hallazgos.active,
+.open .dropdown-toggle.btn-hallazgos {
     background-image: none;
 }
 
-.btn-problemas.disabled,
-.btn-problemas[disabled],
-fieldset[disabled] .btn-problemas,
-.btn-problemas.disabled:hover,
-.btn-problemas[disabled]:hover,
-fieldset[disabled] .btn-problemas:hover,
-.btn-problemas.disabled:focus,
-.btn-problemas[disabled]:focus,
-fieldset[disabled] .btn-problemas:focus,
-.btn-problemas.disabled:active,
-.btn-problemas[disabled]:active,
-fieldset[disabled] .btn-problemas:active,
-.btn-problemas.disabled.active,
-.btn-problemas[disabled].active,
-fieldset[disabled] .btn-problemas.active {
-    background-color: $problemas;
-    border-color: $problemas;
+.btn-hallazgos.disabled,
+.btn-hallazgos[disabled],
+fieldset[disabled] .btn-hallazgos,
+.btn-hallazgos.disabled:hover,
+.btn-hallazgos[disabled]:hover,
+fieldset[disabled] .btn-hallazgos:hover,
+.btn-hallazgos.disabled:focus,
+.btn-hallazgos[disabled]:focus,
+fieldset[disabled] .btn-hallazgos:focus,
+.btn-hallazgos.disabled:active,
+.btn-hallazgos[disabled]:active,
+fieldset[disabled] .btn-hallazgos:active,
+.btn-hallazgos.disabled.active,
+.btn-hallazgos[disabled].active,
+fieldset[disabled] .btn-hallazgos.active {
+    background-color: $hallazgos;
+    border-color: $hallazgos;
 }
 
-.btn-problemas .badge {
-    color: $problemas;
+.btn-hallazgos .badge {
+    color: $hallazgos;
     background-color: white;
 }
 
+// Trastornos
+.btn-trastornos {
+    color: white;
+    background-color: $trastornos;
+    border-color: $trastornos;
+}
+
+.btn-trastornos:hover,
+.btn-trastornos:focus,
+.btn-trastornos:active,
+.btn-trastornos.active,
+.open .dropdown-toggle.btn-trastornos {
+    color: white;
+    background-color: $trastornos;
+    border-color: $trastornos;
+}
+
+.btn-trastornos:active,
+.btn-trastornos.active,
+.open .dropdown-toggle.btn-trastornos {
+    background-image: none;
+}
+
+.btn-trastornos.disabled,
+.btn-trastornos[disabled],
+fieldset[disabled] .btn-trastornos,
+.btn-trastornos.disabled:hover,
+.btn-trastornos[disabled]:hover,
+fieldset[disabled] .btn-trastornos:hover,
+.btn-trastornos.disabled:focus,
+.btn-trastornos[disabled]:focus,
+fieldset[disabled] .btn-trastornos:focus,
+.btn-trastornos.disabled:active,
+.btn-trastornos[disabled]:active,
+fieldset[disabled] .btn-trastornos:active,
+.btn-trastornos.disabled.active,
+.btn-trastornos[disabled].active,
+fieldset[disabled] .btn-trastornos.active {
+    background-color: $trastornos;
+    border-color: $trastornos;
+}
+
+.btn-trastornos .badge {
+    color: $trastornos;
+    background-color: white;
+}
+
+// FIN Trastornos
 .btn-planes {
     color: white;
     background-color: $planes;
@@ -284,6 +340,55 @@ fieldset[disabled] .btn-planes.active {
     background-color: white;
 }
 
+// Productos
+.btn-productos {
+    color: white;
+    background-color: $productos;
+    border-color: $productos;
+}
+
+.btn-productos:hover,
+.btn-productos:focus,
+.btn-productos:active,
+.btn-productos.active,
+.open .dropdown-toggle.btn-productos {
+    color: white;
+    background-color: $productos;
+    border-color: $productos;
+}
+
+.btn-productos:active,
+.btn-productos.active,
+.open .dropdown-toggle.btn-productos {
+    background-image: none;
+}
+
+.btn-productos.disabled,
+.btn-productos[disabled],
+fieldset[disabled] .btn-productos,
+.btn-productos.disabled:hover,
+.btn-productos[disabled]:hover,
+fieldset[disabled] .btn-productos:hover,
+.btn-productos.disabled:focus,
+.btn-productos[disabled]:focus,
+fieldset[disabled] .btn-productos:focus,
+.btn-productos.disabled:active,
+.btn-productos[disabled]:active,
+fieldset[disabled] .btn-productos:active,
+.btn-productos.disabled.active,
+.btn-productos[disabled].active,
+fieldset[disabled] .btn-productos.active {
+    background-color: $productos;
+    border-color: $productos;
+}
+
+.btn-productos .badge {
+    color: $productos;
+    background-color: white;
+}
+
+// FIN Productos
+// Prestaciones
 .btn-prestaciones {
     color: white;
     background-color: $procedimientos;
@@ -330,6 +435,7 @@ fieldset[disabled] .btn-prestaciones.active {
     background-color: white;
 }
 
+// FIN Prestaciones
 .btn-procedimientos {
     color: white;
     background-color: $procedimientos;

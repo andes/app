@@ -61,6 +61,7 @@
                                     </div>
 
                                     <!-- Contenedor del registro RUP -->
+
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
                                         <div class="rup-card {{(registro.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : registro.concepto.semanticTag)}}" [ngClass]="{ 'planes': registro.esSolicitud === true }">
                                             <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
@@ -79,7 +80,7 @@
                                                             <span class="badge badge-info">
                                                                 {{registro.relacionadoCon[0].concepto.term}}
                                                             </span>
-                                                            <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor.origen"
+                                                            <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
                                                                 title="Desvincular" class="btn btn-sm btn-primary">
                                                                 <i class="mdi mdi-link-variant-off"></i>
                                                             </a>

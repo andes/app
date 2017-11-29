@@ -2,7 +2,7 @@
     <div class="col">
 
         <div class="menu-huds">
-            <plex-button type="problemas btn-sm" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
+            <plex-button type="hallazgos btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
             </plex-button>
             <plex-button type="planes btn-sm" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
             </plex-button>
@@ -28,8 +28,8 @@
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
                                 <span *ngIf="iCronico === eyeCronico" class="float-right text-problemas p-1">
-                                            <i class="mdi mdi-eye"></i>
-                                        </span>
+                                    <i class="mdi mdi-eye"></i>
+                                </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeCronico === iCronico}">
                                         {{ hallazgo.concepto.term }}
@@ -66,8 +66,8 @@
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
                                 <span *ngIf="iActivo === eyeActivo" class="float-right text-problemas p-1">
-                                            <i class="mdi mdi-eye"></i>
-                                        </span>
+                                    <i class="mdi mdi-eye"></i>
+                                </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeActivo === iActivo}">
                                         {{ problema.concepto.term }}
@@ -103,8 +103,8 @@
                             </div>
                             <div class="rup-content hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
                                 <span *ngIf="iOtros === eyeOtros" class="float-right text-problemas p-1">
-                                            <i class="mdi mdi-eye"></i>
-                                        </span>
+                                    <i class="mdi mdi-eye"></i>
+                                </span>
                                 <div class="header">
                                     <div class="title" [ngClass]="{'text-problemas': eyeOtros === iOtros}">
                                         {{ problema.concepto.term }}
