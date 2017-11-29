@@ -131,12 +131,13 @@ export class BuscadorComponent implements OnInit {
                 frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
                 // Se le asignan los resultados ordenados con los mas frecuentes.
                 this.resultados = resultadosSnomed;
-                // Agrego los mas frecuentes del profesional
-                let algo = [];
-                frecuentes.forEach(element => {
-                    this.arrayFrecuentes.push(element.concepto);
-                });
-                this.resultadosFrecuentesAux = this.arrayFrecuentes;
+                // Si ya cargo lo mas frecuentes no los vuelve a cargar
+                if (this.arrayFrecuentes.length === 0) {
+                    frecuentes.forEach(element => {
+                        this.arrayFrecuentes.push(element.concepto);
+                    });
+                    this.resultadosFrecuentesAux = this.arrayFrecuentes;
+                }
                 // Se llama a la funcion que arma los filtros por refsetId
             } else {
                 this.resultados = resultadosSnomed;
