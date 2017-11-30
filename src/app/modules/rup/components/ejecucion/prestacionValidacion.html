@@ -19,15 +19,30 @@
                 </div>
             </div>
             <div class="row no-gutters">
-                <div class="col">
-                    <b>Ordenar por:</b>
+                <div class="col-1 mr-0 pr-0">
+                    <small>Organizar</small>
+                    <br>
+                    <div class="btn-group">
+                        <button (click)="ordenarPorFecha('down')" class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1" [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
+                            <i class="mdi mdi-24px mdi-menu-down"></i>
+                        </button>
+                        <button (click)="ordenarPorFecha('up')" class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0" [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
+                            <i class="mdi mdi-24px mdi-menu-up"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-11 ml-0 pl-0">
+                    <small>Ordenar por</small>
+                    <br>
                     <div class="btn-group" role="group">
-                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-hallazgos" (click)="ordenarPorTipo('hallazgo')">Hallazgos</button>
-                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastornos" (click)="ordenarPorTipo('trastorno')">Trastornos</button>
-                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-procedimientos"
-                            (click)="ordenarPorTipo('procedimiento')">Procedimientos</button>
-                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-planes" (click)="ordenarPorTipo('plan')">Planes</button>
-                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-productos" (click)="ordenarPorTipo('producto')">Productos</button>
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-default text-uppercase mr-1 border-hallazgo"
+                            (click)="ordenarPorTipo(['hallazgo', 'situación'])">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-default text-uppercase mr-1 border-trastorno" (click)="ordenarPorTipo(['trastorno'])">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-default text-uppercase mr-1 border-procedimiento"
+                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-default text-uppercase mr-1 border-planes"
+                            (click)="ordenarPorTipo(['planes'])">Planes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])">Productos</button>
                     </div>
                 </div>
             </div>
@@ -47,7 +62,39 @@
                         Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
                     </p>
                 </div>
+
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['hallazgo', 'situación'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['hallazgo', 'situación'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['trastorno'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['producto'], ', ') }}
+                        </div>
+                    </ng-container>
+
                     <div class="rup-card {{(elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag)}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
@@ -57,15 +104,19 @@
                                     <div class="col-3">
                                         <b *ngIf="elemento?.nombre">
                                             {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                            <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                         </b>
                                         <br>
-                                        <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                         <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                            <b> {{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'
-                                                }} </b>
+                                            <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
                                         </div>
                                     </div>
                                     <div class="col-8">
+                                        <span class="badge badge-{{ ((tipoOrden === 'plan') ? 'planes' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : elemento.concepto.semanticTag)) }}">{{elemento.concepto.semanticTag}}</span>
+                                        <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                            + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                        </small>
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                             [registro]="elemento" [soloValores]="true">
                                         </rup>
@@ -133,12 +184,7 @@
                                             <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
                                         </div>
                                         <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
-                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'
-                                            }}
-                                        </div>
-                                        <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
-                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                            + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
                                         </div>
                                     </div>
                                 </div>
