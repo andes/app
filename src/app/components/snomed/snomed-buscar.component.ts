@@ -1,14 +1,15 @@
-import { element } from 'protractor';
-import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
-import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren } from '@angular/core';
-import { SnomedService } from './../../services/term/snomed.service';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { FrecuentesProfesionalService } from './../../modules/rup/services/frecuentesProfesional.service';
+import { ISubscription } from 'rxjs/Subscription';
+
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+
+import { SnomedService } from './../../services/term/snomed.service';
+import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { log } from 'util';
+
+import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'snomed-buscar',
@@ -19,7 +20,7 @@ import { log } from 'util';
     ]
 })
 
-export class SnomedBuscarComponent implements OnInit, OnChanges {
+export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
     public conceptosTurneables: any[];
     // searchTermInput: Acá podemos enviarle como input un string
@@ -54,12 +55,21 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
     private cachePrestacionesTurneables = null;
 
+    // ultima request que se almacena con el subscribe
+    private lastRequest: ISubscription;
+
     constructor(private SNOMED: SnomedService,
-        private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth,
         private plex: Plex,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacion: PrestacionesService) {
+    }
+
+    /* limpiamos la request que se haya ejecutado */
+    ngOnDestroy() {
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
     }
 
     ngOnInit() {
@@ -172,13 +182,13 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'procedimientos':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento', 'entidad observable']
+                            semanticTag: ['procedimiento', 'entidad observable', 'régimen/tratamiento']
                         });
                         break;
                     case 'planes':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento']
+                            semanticTag: ['procedimiento', 'régimen/tratamiento']
                         });
                         break;
                     case 'productos':
@@ -196,14 +206,18 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     default:
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación']
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento']
                         });
                         break;
                 }
 
                 let idTimeOut = this.timeoutHandle;
 
-                apiMethod.subscribe(resultados => {
+                if (this.lastRequest) {
+                    this.lastRequest.unsubscribe();
+                }
+
+                this.lastRequest = apiMethod.subscribe(resultados => {
 
                     if (idTimeOut === this.timeoutHandle) {
 
@@ -219,6 +233,10 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
             }, 600);
         } else {
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+                this.loading.emit(false);
+            }
             this._tengoResultado.emit(false);
         }
     }

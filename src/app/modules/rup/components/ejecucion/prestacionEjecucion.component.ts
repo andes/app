@@ -14,7 +14,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
-import { debounce } from 'rxjs/operator/debounce';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -315,20 +314,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (registro.relacionadoCon[0].id === _registro.id) {
                         registro.relacionadoCon = [];
                     }
-
-                    let relacionado = registros.findIndex(x => x.id === registro.relacionadoCon[0].id || x.id === registro.relacionadoCon[0]);
-                    if (relacionado) {
-                        if (registros[relacionado].valor.estado === 'transformado') {
-                            registros[relacionado].valor.estado = 'activo';
-                            delete registros[relacionado].valor.idRegistroGenerado;
-                        }
-                    }
                 }
             });
 
             // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
             // y por lo tanto hay qye volver el registro orige a su estado original
-            if (_registro.valor.idRegistroTransformado) {
+            if (_registro.valor && _registro.valor.idRegistroTransformado) {
                 let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
                 if (registroOriginal) {
                     registroOriginal.valor.estado = 'activo';
@@ -361,7 +352,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
@@ -387,9 +377,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-        if (this.tipoBusqueda && this.tipoBusqueda.length) {
-            this.tipoBusqueda[0] = '';
-        }
+
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
@@ -733,7 +721,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }).map(registro => {
             return {
-                label: 'vincular con: ' + registro.concepto.term,
+                label: 'vincular con: ' + (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
                 handler: () => {
                     this.vincularRegistros(registroActual, registro);
                 }
@@ -909,6 +897,5 @@ export class PrestacionEjecucionComponent implements OnInit {
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
     }
-
 
 }

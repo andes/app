@@ -1,4 +1,3 @@
-import { LlavesTipoPrestacionService } from './../../../../services/llaves/llavesTipoPrestacion.service';
 import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
@@ -15,8 +14,6 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 
 // Interfaces
 import { IPaciente } from './../../../../interfaces/IPaciente';
-import { ILlave } from './../../../../interfaces/llaves/ILlave';
-import { ILlavesTipoPrestacion } from './../../../../interfaces/llaves/ILlavesTipoPrestacion';
 
 @Component({
     selector: 'solicitud-turno-ventanilla',
@@ -88,18 +85,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     // VER SI HACE FALTA
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
 
-
-    // LLAVES
-    public llaves: any[] = [];
-    public llaveTP: ILlavesTipoPrestacion;
-    public filtradas: any[] = [];
-
     constructor(
         private servicioPrestacion: PrestacionesService,
         private servicioTipoPrestacion: TipoPrestacionService,
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
-        private llaveTipoPrestacionService: LlavesTipoPrestacionService,
         private auth: Auth,
         private router: Router,
         private plex: Plex) { }
@@ -182,7 +172,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             } else {
                 dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
             }
-            this.filtradas = dataF;
             event.callback(dataF);
         });
     }
@@ -204,7 +193,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                     return delete profesional.$order;
                 });
             }
-
 
             this.modelo.solicitud.registros = {
                 nombre: this.modelo.solicitud.tipoPrestacion.term,

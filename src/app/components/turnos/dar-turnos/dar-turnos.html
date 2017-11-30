@@ -67,7 +67,7 @@
                                             (click)="seleccionarBusqueda(i)">
                                             <div class="list-group-item-text">
                                                 <div *ngIf="busqueda.tipoPrestacion">
-                                                    {{busqueda.tipoPrestacion.nombre}}
+                                                    {{busqueda.tipoPrestacion.term}}
                                                 </div>
                                                 <div *ngIf="busqueda.profesional">
                                                     {{busqueda.profesional | profesional}}

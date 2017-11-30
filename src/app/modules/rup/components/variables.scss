@@ -1,15 +1,17 @@
 @import 'node_modules/@andes/plex/src/lib/css/variables';
 // Variables
-$problemas: #f1930d;
-$trastorno: #d9534f;
-$hallazgos: #d9534f;
-$procedimientos: #92278E;
-$planes: #0070ba;
-$productos: #ef0993;
+$problemas: #f1930d; // deprecated
+$trastornos: #ff4a1a;
+$hallazgos: #f4a03b;
+$procedimientos: #92278e;
+$planes: #0070cc;
+// $productos: #ef0993;
+$productos: #00bcb4;
 $lista-problemas: "hallazgo",
 "trastorno",
 "situación";
 $selector: ();
 $lista-procedimientos: "procedimiento",
-"entidad";
-$selector2: ();
+"entidad",
+"regimen";
+$invert: #002738;

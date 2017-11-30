@@ -189,12 +189,9 @@ export class DarTurnosComponent implements OnInit {
                 dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
             }
             event.callback(dataF);
-            if (!this._solicitudPrestacion) {
-                this.actualizar('sinFiltro');
-            } else {
+            if (this._solicitudPrestacion) {
                 this.actualizar('');
             }
-            // let data2 = this.verificarLlaves(dataF, event);
         });
     }
 
@@ -391,7 +388,6 @@ export class DarTurnosComponent implements OnInit {
 
             } else {
 
-                this.bloques = this.agenda.bloques;
                 this.alternativas = [];
 
                 // Tipo de Prestación, para poder filtrar las agendas
@@ -735,7 +731,7 @@ export class DarTurnosComponent implements OnInit {
                 if (agd.estado !== 'disponible' && agd.estado !== 'publicada') {
 
                     this.plex.info('warning', 'Esta agenda ya no está disponible.');
-                    this.actualizar('sinFiltro');
+                    this.actualizar('');
                     return false;
 
                 } else {
@@ -768,7 +764,7 @@ export class DarTurnosComponent implements OnInit {
                         this.estadoT = 'noSeleccionada';
                         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
                         this.agenda = null;
-                        this.actualizar('sinFiltro');
+                        this.actualizar('');
                         this.plex.toast('info', 'El turno se asignó correctamente');
 
 
@@ -918,12 +914,9 @@ export class DarTurnosComponent implements OnInit {
                 });
         } else {
             this.seleccion = paciente;
-            // this.verificarTelefono(this.seleccion);
             this.esEscaneado = true;
             this.escaneado.emit(this.esEscaneado);
             this.selected.emit(this.seleccion);
-            // this.pacientesSearch = false;
-            // this.showCreateUpdate = true;
             this.showDarTurnos = false;
         }
     }
@@ -996,7 +989,9 @@ export class DarTurnosComponent implements OnInit {
 
     volver() {
         this.showDarTurnos = false;
-        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
+        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
+        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
         this.cancelarDarTurno.emit(true);
         this.buscarPaciente();
     }
