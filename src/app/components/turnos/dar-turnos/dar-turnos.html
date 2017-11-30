@@ -55,28 +55,6 @@
             <div class="col-4">
                 <plex-box>
                     <plex-tabs>
-                        <!-- Tab: Llaves -->
-                        <!-- <plex-tab *ngIf="llaves.length> 0" icon="key" label="Llaves">
-                            <fieldset>
-                                <legend class="pt-3 text-center">Llaves del paciente</legend>
-                                <ul class="list-group">
-                                    <li *ngFor="let llave of llaves let i=index" class="list-group-item hover" [appHover]="'active'" (click)="seleccionarLlave(i)">
-                                        <div class="list-group-item-text">
-                                            <label class="mt-0 pt-0">Solicitud</label>
-                                            <div>{{llave.tipoPrestacion.nombre}}</div>
-                                            <div *ngIf="!llave.solicitudVigente" class="text-warning">
-                                                <i class="mdi mdi-alert"></i> Esta solicitud ha vencido</div>
-                                            <label class="mt-3">Origen</label>
-                                            <div>{{llave.fechaSolicitud | date:'dd/MM/yyyy HH:mm'}}</div>
-                                            <div *ngIf="llave.profesional">{{llave.profesional | profesional}}</div>
-                                            <div>
-                                                <em class="small">{{llave.organizacion}}</em>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </fieldset>
-                        </plex-tab> -->
                         <!-- Tab: Turnos -->
 
                         <plex-tab icon="list" label="Turnos">

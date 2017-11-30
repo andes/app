@@ -109,6 +109,7 @@ export class BuscadorComponent implements OnInit {
     }
 
     recibeResultados(resultadosSnomed) {
+        debugger;
         // Limpio los resultados (también se limpian los contadores)
         this.resultados = this.resultadosAux = [];
         // Hay más frecuentes? Frecuentes de este profesional
@@ -130,16 +131,13 @@ export class BuscadorComponent implements OnInit {
                 // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
                 frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
                 // Se le asignan los resultados ordenados con los mas frecuentes.
-                this.resultados = resultadosSnomed;
-                // Agrego los mas frecuentes del profesional
-                let algo = [];
-                frecuentes.forEach(element => {
-                    this.arrayFrecuentes.push(element.concepto);
-                });
+                this.resultados = this.resultadosAux = resultadosSnomed;
+                this.arrayFrecuentes = frecuentes;
                 this.resultadosFrecuentesAux = this.arrayFrecuentes;
-                // Se llama a la funcion que arma los filtros por refsetId
+                this.arrayFrecuentes = this.arrayFrecuentes.map(x => x.concepto);
+
             } else {
-                this.resultados = resultadosSnomed;
+                this.resultados = this.resultadosAux = resultadosSnomed;
             }
             this.filtroRefSet();
         });
@@ -162,6 +160,8 @@ export class BuscadorComponent implements OnInit {
      */
 
     contarSemanticTags(resultados): any {
+        // resultados = resultados && resultados[0].frecuencia ? resultados.map(x => x.concepto) : resultados;
+
         this.contadorSemanticTags = {
             hallazgo: 0,
             trastorno: 0,
@@ -189,50 +189,31 @@ export class BuscadorComponent implements OnInit {
      * disitinte de conceptos nos retorna el resultado.
      */
 
-    filtroBuscadorSnomed(filtro: any[], tipo = null, arrayAFiltrar = null) {
+    filtroBuscadorSnomed(filtro: any[], tipo = null) {
 
-        this.tipoBusqueda = tipo ? tipo : '';
-        this.filtroActual = tipo ? ['planes'] : filtro;
-        this.tagBusqueda.emit(this.filtroActual);
-
-        let filtroResultados = false;
-
-        if (arrayAFiltrar === null) {
-            arrayAFiltrar = this.resultados;
-            filtroResultados = true;
-            if (arrayAFiltrar.length >= this.resultadosAux.length && !this.loading) {
-                this.resultadosAux = arrayAFiltrar;
-            } else {
-                arrayAFiltrar = this.resultadosAux;
-            }
-            arrayAFiltrar = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
-
+        if (this.resultados.length >= this.resultadosAux.length && !this.loading) {
+            this.resultadosAux = this.resultados;
         } else {
-            arrayAFiltrar = arrayAFiltrar.filter(x => filtro.find(y => y === x.semanticTag));
+            this.resultados = this.resultadosAux;
         }
+        this.resultados = this.resultadosAux.filter(x => filtro.find(y => y === x.semanticTag));
 
-        // PLANES
         if (tipo !== 'planes') {
-            arrayAFiltrar = arrayAFiltrar.filter(x => {
+            this.resultados = this.resultados.filter(x => {
                 if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId)) {
                     return x;
                 }
             });
-            if (filtroResultados) {
-                this.resultados = arrayAFiltrar;
-            }
-        } else {
-            arrayAFiltrar = arrayAFiltrar.filter(x => {
-                if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId && x.esSolicitud)) {
-                    return x;
-                }
-            });
-            if (filtroResultados) {
-                this.resultados = arrayAFiltrar;
-            }
         }
+
+        // OK..
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.tagBusqueda.emit(this.filtroActual);
         this.esFiltroActual = this.getFiltroActual(filtro);
-        return arrayAFiltrar;
+
+        return this.resultados;
+
     }
 
     // :joy:
@@ -247,12 +228,25 @@ export class BuscadorComponent implements OnInit {
      * Llama a la funcion this.filtroBuscadorSnomed con el array de frecuentes.
      */
     filtroFrecuentes(filtro, tipo = null) {
-        if (this.arrayFrecuentes.length >= this.resultadosFrecuentesAux.length && !this.loading) {
-            this.resultadosFrecuentesAux = this.arrayFrecuentes;
-        } else {
-            this.arrayFrecuentes = this.resultadosFrecuentesAux;
+        // if (this.arrayFrecuentes.length >= this.resultadosFrecuentesAux.length && !this.loading) {
+        //     this.resultadosFrecuentesAux = this.arrayFrecuentes;
+        // } else {
+        this.arrayFrecuentes = this.resultadosFrecuentesAux.map(x => x.concepto);
+        // }
+        this.arrayFrecuentes = this.arrayFrecuentes.filter(x => filtro.find(y => y === x.semanticTag));
+        if (tipo !== 'planes') {
+            this.arrayFrecuentes = this.arrayFrecuentes.filter(x => {
+                if (!this.conceptosTurneables.find(y => y.conceptId === x.conceptId)) {
+                    return x;
+                }
+            });
         }
-        this.arrayFrecuentes = this.filtroBuscadorSnomed(filtro, tipo, this.arrayFrecuentes);
+
+        // OK..
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = tipo ? ['planes'] : filtro;
+        this.tagBusqueda.emit(this.filtroActual);
+        this.esFiltroActual = this.getFiltroActual(filtro);
     }
     /**
      * si hago clic en un concepto, entonces lo devuelvo
@@ -276,7 +270,8 @@ export class BuscadorComponent implements OnInit {
             Hallazgos: ['hallazgo', 'situacion'],
             Trastornos: ['trastorno'],
             Procedimientos: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
-            Planes: ['procedimiento', 'régimen/tratamiento']
+            Planes: ['procedimiento', 'régimen/tratamiento'],
+            Productos: ['producto']
         };
         this.arrayPorRefsets = [];
         Object.keys(this.servicioPrestacion.refsetsIds).forEach(k => {
@@ -293,24 +288,33 @@ export class BuscadorComponent implements OnInit {
         Object.keys(conceptos).forEach(c => {
             this.arrayPorRefsets.push({
                 nombre: c,
-                valor: this.filtroBuscadorSnomed(conceptos[c])
+                valor: this.resultadosAux.filter(x => conceptos[c].find(y => y === x.semanticTag))
             });
             frecuentes.push({
                 nombre: c,
-                valor: this.filtroBuscadorSnomed(conceptos[c], null, this.arrayFrecuentes)
+                valor: this.arrayFrecuentes.filter(x => conceptos[c].find(y => y === x.semanticTag))
             });
         });
 
+        // frecuentes = this.arrayFrecuentes.map(x => {
+        //     if (x.frecuencia != null && x.frecuencia >= 1 && resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId)) {
+        //         resultadosSnomed.splice(resultadosSnomed.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
+        //         resultadosSnomed.unshift(x.concepto);
+        //     }
+        //     return x;
+        // });
+
+
         // hago el merge de los arrays
-        this.arrayPorRefsets.forEach(c => {
-            frecuentes.forEach(f => {
-                if (c.nombre === f.nombre) {
-                    for (const valor of f.valor) {
-                        c.valor.unshift(valor);
-                    }
-                }
-            });
-        });
+        // this.arrayPorRefsets.forEach(c => {
+        //     frecuentes.forEach(f => {
+        //         if (c.nombre === f.nombre) {
+        //             for (const valor of f.valor) {
+        //                 c.valor.unshift(valor);
+        //             }
+        //         }
+        //     });
+        // });
     }
 
     /**
@@ -326,6 +330,31 @@ export class BuscadorComponent implements OnInit {
         } else {
             this.showContent = nombre;
         }
+        let tipo = nombre.toLowerCase();
+        let filtro: any = [];
+        switch (tipo) {
+            case 'hallazgo':
+                filtro = ['hallazgo', 'situación'];
+                break;
+            case 'trastorno':
+                filtro = ['trastorno'];
+                break;
+            case 'procedimiento':
+                filtro = ['procedimiento', 'entidad observable', 'régimen/tratamiento'];
+                break;
+            case 'planes':
+                filtro = ['planes'];
+                break;
+            case 'producto':
+                filtro = ['producto'];
+                break;
+
+        }
+        // OK..
+        this.tipoBusqueda = tipo ? tipo : '';
+        this.filtroActual = filtro;
+        this.tagBusqueda.emit(this.filtroActual);
+        this.esFiltroActual = this.getFiltroActual(filtro);
 
     }
 
