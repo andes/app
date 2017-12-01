@@ -377,7 +377,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-
         this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
@@ -499,7 +498,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param resultadoHuds conpecto de la HUDS puede ser un hallazgo o una prestación
      */
     ejecutarConceptoHuds(resultadoHuds) {
-
         if (resultadoHuds.tipo === 'prestacion') {
             this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
@@ -721,7 +719,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }).map(registro => {
             return {
-                label: 'vincular con: ' + registro.concepto.term,
+                label: 'vincular con: ' + (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
                 handler: () => {
                     this.vincularRegistros(registroActual, registro);
                 }
