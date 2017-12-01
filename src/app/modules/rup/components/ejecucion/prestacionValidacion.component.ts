@@ -25,6 +25,7 @@ export class PrestacionValidacionComponent implements OnInit {
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // prestacion actual en ejecucion
     public prestacion: any;
+    public registrosOriginales: any;
     public paciente;
     // array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
@@ -98,6 +99,8 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+
+            this.registrosOriginales = prestacion.ejecucion.registros;
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
@@ -480,6 +483,11 @@ export class PrestacionValidacionComponent implements OnInit {
             }
             return 0;
         });
+    }
+
+    limpiarOrden() {
+        this.prestacion.ejecucion.registros = this.registrosOriginales;
+        this.tipoOrden = null;
     }
 
     compareArrays(arr1: any[], arr2: any[]) {

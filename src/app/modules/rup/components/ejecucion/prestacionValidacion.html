@@ -43,7 +43,7 @@
                         <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-default text-uppercase mr-1 border-planes"
                             (click)="ordenarPorTipo(['planes'])">Planes</button>
                         <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])">Productos</button>
-                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="tipoOrden = ''">
+                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
                             <i class="mdi mdi-close"></i>
                         </button>
                     </div>
@@ -71,35 +71,35 @@
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['hallazgo', 'situación'])">
-                        <div class="text-capitalize titulo-hallazgos">
+                        <div class="text-capitalize mt-4 titulo-hallazgos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Hallazgos</h5>
                             <!-- {{ reemplazar([ 'hallazgo', 'situación'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
-                        <div class="text-capitalize titulo-trastornos">
+                        <div class="text-capitalize mt-4 titulo-trastornos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Trastornos</h5>
                             <!-- {{ reemplazar(['trastorno'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
-                        <div class="text-capitalize titulo-procedimientos">
+                        <div class="text-capitalize mt-4 titulo-procedimientos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Procedimientos</h5>
                             <!-- {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
-                        <div class="text-capitalize titulo-planes">
+                        <div class="text-capitalize mt-4 titulo-planes">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Planes</h5>
                             <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
-                        <div class="text-capitalize titulo-productos">
+                        <div class="text-capitalize mt-4 titulo-productos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Productos</h5>
                             <!-- {{ reemplazar(['producto'], ', ') }} -->
                         </div>
