@@ -15,8 +15,8 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
     // opciones para el grafico
     public barChartOptions: any = {};
     public barChartLabels: any[];
-    public barChartType: string = 'line';
-    public barChartLegend: boolean = false;
+    public barChartType = 'line';
+    public barChartLegend = false;
     public barChartData: any[] = [];
 
     ngOnInit() {
@@ -36,7 +36,7 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
 
                     // armamos array de resultados
                     this.pesos = prestaciones.map(prestacion => ({
-                        //fecha: prestacion.ejecucion.fecha,
+                        // fecha: prestacion.ejecucion.fecha,
                         fecha: prestacion.ejecucion.fecha,
                         registro: prestacion.ejecucion.registros.filter(p => { return conceptIds.indexOf(p.concepto.conceptId) > -1; })
                     }));

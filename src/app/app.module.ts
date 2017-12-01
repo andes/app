@@ -278,7 +278,8 @@ let RUPComponentsArray = [
     HipertensionArterialComponent,
     FiltradoGlomerularComponent,
     RiesgoCardiovascularComponent,
-    SeguimientoDelPesoComponent
+    SeguimientoDelPesoComponent,
+    RegistrarMedicamentoDefaultComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
