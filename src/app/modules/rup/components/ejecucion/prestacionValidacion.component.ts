@@ -21,6 +21,7 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+    ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // prestacion actual en ejecucion
@@ -427,12 +428,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     esTipoOrden(registro, tipos: any[]) {
 
-        if (!this.arrayTitulos.find(x => this.compareArrays(x, tipos))) {
-            this.arrayTitulos.push(tipos);
-        }
-
         if (!registro.esSolicitud) {
-
             return tipos.find(x => x === registro.concepto.semanticTag);
         } else {
             return tipos.find(x => x === 'planes');
@@ -465,6 +461,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     ordenarPorTipo(tipos: any[]) {
 
+        this.ordenSeleccionado = tipos.join(',');
 
         if (this.tipoOrden === tipos) {
             return 0;
