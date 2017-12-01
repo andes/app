@@ -422,20 +422,20 @@ export class PrestacionValidacionComponent implements OnInit {
 
     }
 
-    esTitulo(registro) {
-        return this.arrayTitulos.find(x => x.concepto.semanticTag === registro.concepto.semanticTag).length > 0;
+    esTipoOrden(registro, tipos: any[]) {
+
+        if (!this.arrayTitulos.find(x => this.compareArrays(x, tipos))) {
+            this.arrayTitulos.push(tipos);
+        }
+
+        if (!registro.esSolicitud) {
+
+            return tipos.find(x => x === registro.concepto.semanticTag);
+        } else {
+            return tipos.find(x => x === 'planes');
+        }
     }
 
-    esTipoOrden(registro, tipos: any[]) {
-        if (!this.arrayTitulos.find(x => tipos.find(y => y === x.concepto.semanticTag))) {
-            this.arrayTitulos.push(registro);
-        }
-        if (!registro.esSolicitud) {
-            return tipos.find(x => x === registro.concepto.semanticTag && !registro.esSolicitud);
-        } else {
-            return tipos.find(x => x === 'planes' && registro.esSolicitud);
-        }
-    }
 
     public reemplazar(arr, glue) {
         return arr.join(glue);
@@ -461,6 +461,8 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ordenarPorTipo(tipos: any[]) {
+
+
         if (this.tipoOrden === tipos) {
             return 0;
         } else {
@@ -478,6 +480,10 @@ export class PrestacionValidacionComponent implements OnInit {
             }
             return 0;
         });
+    }
+
+    compareArrays(arr1: any[], arr2: any[]) {
+        return arr1.join('') === arr2.join('');
     }
 
 
