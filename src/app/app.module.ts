@@ -258,28 +258,28 @@ export let RUPRegistry = {
 };
 
 let RUPComponentsArray = [
-    PesoComponent,
+    AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
+    FiltradoGlomerularComponent,
+    FrecuenciaCardiacaComponent,
+    FrecuenciaRespiratoriaComponent,
+    HipertensionArterialComponent,
     IndiceDeMasaCorporalComponent,
     NuevaEvolucionProblemaComponent,
+    ObesidadComponent,
     ObservacionesComponent,
+    PesoComponent,
+    RegistrarMedicamentoDefaultComponent,
+    RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
+    SeguimientoDelPesoComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
     TemperaturaComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
-    TensionSistolicaComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    AutocitadoComponent,
-    ObesidadComponent,
-    HipertensionArterialComponent,
-    FiltradoGlomerularComponent,
-    RiesgoCardiovascularComponent,
-    SeguimientoDelPesoComponent,
-    RegistrarMedicamentoDefaultComponent
+    TensionSistolicaComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
