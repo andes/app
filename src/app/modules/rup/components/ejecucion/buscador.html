@@ -82,7 +82,7 @@
 
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-12">
-        <b *ngIf="!showRefSets || showGuiada">Frecuentes</b>
+        <b *ngIf="!showRefSets || showGuiada && showFrecuentes">Frecuentes</b>
         <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
     </div>
 </div>
@@ -95,7 +95,7 @@
 </div>
 
 <!-- RESULTADOS PRINCIPALES -->
-<ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
+<ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0 && showFrecuentesTipoPrestacion" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -217,42 +217,12 @@
     </ul>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <h5>Filtros</h5>
-<div class="menu-buscador">
-    <plex-button label="HALLAZGOS" (click)="filtroBuscadorSnomed('problemas')" type=" btn-sm btn-problemas"></plex-button>
-    <plex-button label="PROCEDIMIENTOS" (click)="filtroBuscadorSnomed('procedimientos')" type=" btn-sm btn-procedimientos"></plex-button>
-    <plex-button label="PLANES" (click)="filtroBuscadorSnomed('planes')" type=" btn-sm btn-planes"></plex-button>
-</div> -->
-
-
-<!-- <div *ngIf="listaPlanes && listaPlanes.length === 0 && !loading">
-    No se han encontrado resultados
-</div> -->
-
-<!-- Cargando... -->
-<!-- <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-
-<div *ngIf="arrayFrecuentes">
+<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length && !showFrecuentesTipoPrestacion">
+    <p> Más frecuentes de {{conceptoFrecuente.term}} </p>
     <ul class="conceptos list-unstyled">
-        <ng-container *ngFor="let item of arrayFrecuentes">
-
-            <li *ngIf="tipoBusqueda === 'procedimientos' && (item.semanticTag === 'procedimiento' || item.semanticTag === 'entidad observable') || tipoBusqueda === 'problemas' && (item.semanticTag === 'trastorno' || item.semanticTag === 'hallazgo' || item.semanticTag === 'situación') || tipoBusqueda === 'planes' && (item.semanticTag === 'procedimientos')"
-                draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                <div class="rup-card mini">
+        <ng-container *ngFor="let item of frecuentesTipoPrestacion">
+            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                 <div class="rup-card mini {{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }}">
                     <div class="type">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                     </div>
@@ -261,15 +231,17 @@
                             <div class="title">
                                 {{item.term}}
                             </div>
-                            <div class="actions">
-                                <a href="javascript: void(0)" (click)="seleccionBusqueda(item)">
+                            <!-- <div class="actions">
+                                <small class="badge badge-{{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }} text-default">{{ (tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                </small>
+                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </li>
         </ng-container>
     </ul>
-</div> -->
+</div>
