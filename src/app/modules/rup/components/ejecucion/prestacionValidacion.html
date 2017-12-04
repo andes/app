@@ -18,7 +18,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row no-gutters">
+            <div class="row no-gutters menu-ordenamiento">
                 <div class="col-1 mr-0 pr-0">
                     <small>Organizar</small>
                     <br>
@@ -54,20 +54,29 @@
         </header>
         <div class="row no-gutters">
             <div class="col-9 titulos">
-                <!-- div de la info de la solicitud -->
-                <div [hidden]="!showDatosSolicitud">
-                    <p>
-                        <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
-                        <br>
-                        <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
-                        <br>
-                        <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
-                    </p>
-                    <p *ngIf="prestacion.solicitud.prestacionOrigen">
-                        Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
-                    </p>
-                </div>
 
+                <!-- div de la info de la solicitud -->
+                <div [hidden]="!showDatosSolicitud" class="mb-2">
+                    <div class="row no-gutters">
+                        <div class="col">
+                            <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
+                            <br>
+                            <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                            <br>
+                            <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
+                        </div>
+                        <div *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" class="col-1">
+                            <button class="btn btn-warning float-right" (click)="imprimirResumen()">
+                                <i class="mdi mdi-14px mdi-printer"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row no-gutters">
+                        <div class="col" *ngIf="prestacion.solicitud.prestacionOrigen">
+                            Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
+                        </div>
+                    </div>
+                </div>
 
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
 

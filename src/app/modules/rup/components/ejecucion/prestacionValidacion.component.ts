@@ -491,6 +491,10 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
+    imprimirResumen() {
+        window.print();
+    }
+
 
 }
 
