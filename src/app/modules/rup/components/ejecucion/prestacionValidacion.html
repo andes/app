@@ -36,19 +36,24 @@
                     <br>
                     <div class="btn-group" role="group">
                         <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-default text-uppercase mr-1 border-hallazgo"
-                            (click)="ordenarPorTipo(['hallazgo', 'situación'])">Hallazgos</button>
-                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-default text-uppercase mr-1 border-trastorno" (click)="ordenarPorTipo(['trastorno'])">Trastornos</button>
+                            (click)="ordenarPorTipo(['hallazgo', 'situación'])" [ngClass]="{'bg-hallazgos': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-default text-uppercase mr-1 border-trastorno" (click)="ordenarPorTipo(['trastorno'])"
+                            [ngClass]="{'bg-trastornos': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
                         <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-default text-uppercase mr-1 border-procedimiento"
-                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])">Procedimientos</button>
+                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" [ngClass]="{'bg-procedimientos': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
                         <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-default text-uppercase mr-1 border-planes"
-                            (click)="ordenarPorTipo(['planes'])">Planes</button>
-                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])">Productos</button>
+                            (click)="ordenarPorTipo(['planes'])" [ngClass]="{'bg-planes': ordenSeleccionado === 'planes'}">Planes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])"
+                            [ngClass]="{'bg-productos': ordenSeleccionado === reemplazar(['producto'], ',')}">Productos</button>
+                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
+                            <i class="mdi mdi-close"></i>
+                        </button>
                     </div>
                 </div>
             </div>
         </header>
         <div class="row no-gutters">
-            <div class="col-9">
+            <div class="col-9 titulos">
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud">
                     <p>
@@ -63,35 +68,41 @@
                     </p>
                 </div>
 
+
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['hallazgo', 'situación'])">
-                        <div class="text-capitalize">
-                            {{ reemplazar(['hallazgo', 'situación'], ', ') }}
+                        <div class="text-capitalize mt-4 titulo-hallazgos">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Hallazgos</h5>
+                            <!-- {{ reemplazar([ 'hallazgo', 'situación'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
-                        <div class="text-capitalize">
-                            {{ reemplazar(['trastorno'], ', ') }}
+                        <div class="text-capitalize mt-4 titulo-trastornos">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Trastornos</h5>
+                            <!-- {{ reemplazar(['trastorno'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
-                        <div class="text-capitalize">
-                            {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }}
+                        <div class="text-capitalize mt-4 titulo-procedimientos">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Procedimientos</h5>
+                            <!-- {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
-                        <div class="text-capitalize">
-                            {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }}
+                        <div class="text-capitalize mt-4 titulo-planes">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Planes</h5>
+                            <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
-                        <div class="text-capitalize">
-                            {{ reemplazar(['producto'], ', ') }}
+                        <div class="text-capitalize mt-4 titulo-productos">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Productos</h5>
+                            <!-- {{ reemplazar(['producto'], ', ') }} -->
                         </div>
                     </ng-container>
 
@@ -112,7 +123,7 @@
                                         </div>
                                     </div>
                                     <div class="col-8">
-                                        <span class="badge badge-{{ ((tipoOrden === 'plan') ? 'planes' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : elemento.concepto.semanticTag)) }}">{{elemento.concepto.semanticTag}}</span>
+                                        <span class="badge badge-{{ ((tipoOrden === ['planes'] || elemento.esSolicitud) ? 'planes' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : elemento.concepto.semanticTag)) }}">{{elemento.concepto.semanticTag}}</span>
                                         <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                             <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                             + elemento.relacionadoCon[0].concepto.term.slice(1)}}

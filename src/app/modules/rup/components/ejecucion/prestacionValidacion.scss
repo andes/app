@@ -39,3 +39,54 @@
         top: -6px;
     }
 }
+
+// Resetea algunas reglas de .badge
+.badge {
+    border: 1px solid;
+    padding: 3px;
+}
+
+.titulo-hallazgos~.titulo-hallazgos {
+    display: none;
+}
+
+.titulo-trastornos~.titulo-trastornos {
+    display: none;
+}
+
+.titulo-procedimientos~.titulo-procedimientos {
+    display: none;
+}
+
+.titulo-planes~.titulo-planes {
+    display: none;
+}
+
+.titulo-productos~.titulo-productos {
+    display: none;
+}
+
+.bg-hallazgos {
+    color: white;
+    background-color: $hallazgos;
+}
+
+.bg-trastornos {
+    color: white;
+    background-color: $trastornos;
+}
+
+.bg-procedimientos {
+    color: white;
+    background-color: $procedimientos;
+}
+
+.bg-planes {
+    color: white;
+    background-color: $planes;
+}
+
+.bg-productos {
+    color: white;
+    background-color: $productos;
+}
