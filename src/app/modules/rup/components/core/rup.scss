@@ -560,3 +560,26 @@ fieldset[disabled] .btn-procedimientos.active {
     font-weight: normal;
     text-transform: uppercase;
 }
+
+.input-group-addon {
+    input {
+        text-align: right;
+    }
+}
+
+.form-group>label {
+    margin-bottom: 0 !important;
+}
+
+.indicacion-default {
+    textarea {
+        height: 108px !important;
+    }
+}
+
+.anteriores {
+    width: 100%;
+    div {
+        border: 1px solid #ccc;
+    }
+}

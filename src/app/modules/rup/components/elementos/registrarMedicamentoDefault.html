@@ -1,45 +1,50 @@
 <!-- Header -->
 
 <div class="row" *ngIf="!soloValores">
-    <div class="col-6">
+    <div class="col-7">
         <div class="row">
             <div class="col-8">
                 <div class="row no-gutters">
-                    <div class="col-6">
+                    <div class="col-7">
                         <label for="">Cantidad</label>
-                        <plex-int *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad" name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
+                        <plex-int *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad"
+                            name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
                         </plex-int>
                     </div>
-                    <div class="col-6">
-                        <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades" [required]="true" (change)="formatearUnidad()">
+                    <div class="col-5">
+                        <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades"
+                            [required]="true" (change)="formatearUnidad()">
                         </plex-select>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-                <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable"></plex-bool>
+                <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable"
+                    name="recetable" class="pb-1"></plex-bool>
             </div>
         </div>
         <div class="row">
             <div class="col-8">
                 <div class="row no-gutters">
-                    <div class="col-6">
+                    <div class="col-7">
                         <label for="">Duración</label>
                         <plex-int [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad" [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
                     </div>
-                    <div class="col-6">
-                        <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
+                    <div class="col-5">
+                        <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo"
+                            [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados" [required]="true" (change)="formateaEstado()">
+                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados"
+                    [required]="true" (change)="formateaEstado()">
                 </plex-select>
             </div>
         </div>
     </div>
-    <div class="col-6">
-        <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()"></plex-text>
+    <div class="col-5">
+        <plex-text label="Indicación" multiline="true" rows="5" [(ngModel)]="registro.valor.indicacion" (change)="emitChange()" class="indicacion-default"></plex-text>
     </div>
 </div>
 <div class="row">&nbsp;</div>
@@ -50,17 +55,22 @@
             <label class="box-title-secundario" for="comment">Indicaciones Anteriores:</label>
         </div>
     </div>
-    <div class="row">
-        <div class="col-2 text-120">
-            <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
+    <div class="row anteriores mr-0 pr-0 ml-0">
+        <div class="col-5 text-left border border-right-0 border-secondary pl-0">
+            <plex-button *ngIf="indice > 0" type="info" icon="chevron-left" class="mdi-18px" (click)="cambiarEvolucion('-') "></plex-button>
+            <plex-button *ngIf="indice === 0" type="default" icon="chevron-left" class="mdi-18px"></plex-button>
         </div>
-        <div class="col-2 text-120">
-            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
+        <div class="col-2 text-center border border-left-0 border-right-0 border-secondary pt-2">
+            {{ unaEvolucion.fechaCarga | fecha }}
+        </div>
+        <div class="col-5 text-right border border-left-0 border-secondary pr-0">
+            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
+                (click)="cambiarEvolucion('+') "></plex-button>
+            <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
         </div>
     </div>
     <div class="row">
-        <div class="col-12">
-            {{unaEvolucion.fechaCarga | fecha }} <br>
+        <div class="col-7">
             <strong> Profesional: </strong>{{unaEvolucion.profesional }}
             <br>
             <strong>Estado</strong> {{unaEvolucion.estado}} /
@@ -68,7 +78,8 @@
             <br>
             <strong>Durante</strong> {{unaEvolucion.duracion.cantidad}} {{unaEvolucion.duracion.unidad}} /
             <strong>{{unaEvolucion.recetable ? 'Recetable' : 'No recetable' }}</strong>
-            <br>
+        </div>
+        <div class="col-5">
             <strong>Indicación:</strong> {{unaEvolucion.indicacion}}
         </div>
     </div>
@@ -95,12 +106,15 @@
 
     <div class="row" *ngIf="registro.evoluciones">
         <div class="col pt-1">
-            <p><strong>{{registro.concepto.term}}</strong></p>
+            <p>
+                <strong>{{registro.concepto.term}}</strong>
+            </p>
             <ng-container *ngIf="registro?.evoluciones">
                 <div *ngFor="let evolucionM of registro.evoluciones" class="row ml-1">
                     <div class="row">
                         <div class="col-12">
-                            {{evolucionM.fechaCarga | fecha }} <br>
+                            {{evolucionM.fechaCarga | fecha }}
+                            <br>
                             <strong> Profesional: </strong>{{evolucionM.profesional }}
                             <br>
                             <strong>Estado</strong> {{evolucionM.estado}} /
@@ -110,7 +124,8 @@
                             <strong>{{evolucionM.recetable ? 'Recetable' : 'No recetable' }}</strong>
                             <br>
                             <strong>Indicación:</strong> {{evolucionM.indicacion}}
-                            <br><br>
+                            <br>
+                            <br>
                         </div>
                     </div>
                 </div>
