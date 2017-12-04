@@ -1,7 +1,7 @@
 <header *ngIf="prestacion">
     <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
 </header>
-<section *ngIf="!showDarTurnos && prestacion && paciente">
+<section *ngIf="prestacion && paciente && !showDarTurnos">
     <plex-box>
         <header>
             <div class="row">
@@ -11,9 +11,38 @@
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
 
                         <div class="float-right mr-2">
-                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
+                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
+                                (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row no-gutters">
+                <div class="col-1 mr-0 pr-0">
+                    <small>Organizar</small>
+                    <br>
+                    <div class="btn-group">
+                        <button (click)="ordenarPorFecha('down')" class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1" [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
+                            <i class="mdi mdi-24px mdi-menu-down"></i>
+                        </button>
+                        <button (click)="ordenarPorFecha('up')" class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0" [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
+                            <i class="mdi mdi-24px mdi-menu-up"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-11 ml-0 pl-0">
+                    <small>Ordenar por</small>
+                    <br>
+                    <div class="btn-group" role="group">
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-default text-uppercase mr-1 border-hallazgo"
+                            (click)="ordenarPorTipo(['hallazgo', 'situación'])">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-default text-uppercase mr-1 border-trastorno" (click)="ordenarPorTipo(['trastorno'])">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-default text-uppercase mr-1 border-procedimiento"
+                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-default text-uppercase mr-1 border-planes"
+                            (click)="ordenarPorTipo(['planes'])">Planes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])">Productos</button>
                     </div>
                 </div>
             </div>
@@ -33,8 +62,40 @@
                         Prestación de origen: {{prestacion.solicitud.prestacionOrigen}}
                     </p>
                 </div>
+
                 <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
-                    <div class="rup-card {{elemento.concepto.semanticTag}}  {{ elemento.esSolicitud ? 'plan' : '' }}">
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['hallazgo', 'situación'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['hallazgo', 'situación'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['trastorno'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
+                        <div class="text-capitalize">
+                            {{ reemplazar(['producto'], ', ') }}
+                        </div>
+                    </ng-container>
+
+                    <div class="rup-card {{(elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag)}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
                         <div class="rup-content">
@@ -43,42 +104,42 @@
                                     <div class="col-3">
                                         <b *ngIf="elemento?.nombre">
                                             {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                            <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                         </b>
                                         <br>
-                                        <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
                                         <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                            <b> {{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }} </b>
+                                            <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
                                         </div>
                                     </div>
                                     <div class="col-8">
-                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
+                                        <span class="badge badge-{{ ((tipoOrden === 'plan') ? 'planes' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : elemento.concepto.semanticTag)) }}">{{elemento.concepto.semanticTag}}</span>
+                                        <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                            + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                        </small>
+                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                            [registro]="elemento" [soloValores]="true">
                                         </rup>
                                         <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                             <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
-                                               Ya tiene un turno asignado
+                                                Ya tiene un turno asignado
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
                                                 <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
                                                 <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
-                                                No hay turnos disponibles  
+                                                    No hay turnos disponibles
                                                 </span>
                                             </span>
                                             <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
                                                 <span class="small text-secondary">
-                                                  No hay turnos disponibles  
+                                                    No hay turnos disponibles
                                                 </span>
                                             </span>
                                         </div>
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno')">
-                                            <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
-                                                Diagnóstico principal
-                                            </small> -->
-                                            <!-- title="Diagnóstico principal" titlePosition="right" -->
-                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'">
-                                                <!-- <plex-bool class="text-sm"  [readonly]="false" [(ngModel)]="elemento.esDiagnosticoPrincipal"
-                                                    type="slide" name="Diagnóstico principal"></plex-bool> -->
-                                                <!--  title="{{ elemento.esDiagnosticoPrincipal ? 'Seleccionar' : 'Deseleccionar'}}" -->
-                                                <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="pt-3">
+                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
+                                                <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}"
+                                                    class="pt-3">
                                                     <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                         'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                         'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
@@ -100,7 +161,8 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-1 m-0 pr-3 text-right">
-                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
+                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio"
+                                            class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
                                             (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
                                     </div>
                                 </div>
@@ -109,7 +171,8 @@
                                         <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
                                             <div class="col-6">
                                                 <b>Evolución </b>
-                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }}</ng-container>
+                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
+                                                    | date: 'EEE dd/MM/yyyy' }}</ng-container>
                                                 <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
 
                                                 <br> {{ elemento.valor.evolucion }}
@@ -121,10 +184,7 @@
                                             <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
                                         </div>
                                         <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
-                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
-                                        </div>
-                                        <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="text-secondary">
-                                            <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
                                         </div>
                                     </div>
                                 </div>
@@ -138,14 +198,14 @@
                 <plex-box class="...relaciones w-25">
                     <header>
                         <div class="clearfix">
-                            <div *ngIf="prestacion.ejecucion.registros">
+                            <div *ngIf="registrosOrdenados">
                                 <div class="page-title">
                                     Relaciones
                                 </div>
                             </div>
                         </div>
                     </header>
-                    <ng-container *ngFor="let rama of prestacion.ejecucion.registros; let iRama = index">
+                    <ng-container *ngFor="let rama of registrosOrdenados; let iRama = index">
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal,
@@ -168,20 +228,24 @@
         </div>
     </plex-box>
 </section>
-<footer *ngIf="!showDarTurnos">
+<footer *ngIf="prestacion && !showDarTurnos">
     <div class="row">
         <div class="col-3">
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'" label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
+                label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'" label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
+                label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
         </div>
         <div class=" col-4 text-center">
         </div>
         <div class="col text-right ">
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'" label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
+                label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"></plex-button>
 
-            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()" type="danger" *ngIf="prestacion && prestacion.estados
+            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()" type="danger"
+                *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'
                 && prestacion.estados[prestacion.estados.length-1].createdBy.username === auth.usuario.username">
             </plex-button>
@@ -191,4 +255,5 @@
 
 <!-- Calendario para dar turnos autocitados -->
 <!-- <pre> {{solicitudTurno | json}}</pre> -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente"
+    [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>

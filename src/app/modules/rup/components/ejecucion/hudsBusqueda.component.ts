@@ -47,6 +47,11 @@ export class HudsBusquedaComponent implements OnInit {
      */
     public hallazgosCronicos: any = [];
 
+    /**
+     * Listado de todos los medicamentos
+     */
+    public medicamentos: any = [];
+
 
     /**
      * Listado de todos los hallazgos
@@ -92,6 +97,7 @@ export class HudsBusquedaComponent implements OnInit {
             // this.listarHallazgos();
             this.listarHallazgosNoActivos();
             this.listarProblemasActivos();
+            this.listarMedicamentos();
         }
     }
 
@@ -129,12 +135,19 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+    devolverMedicamento(medicamento) {
+        let resultado = {
+            tipo: 'medicamento',
+            data: medicamento
+        };
+        this.evtData.emit(resultado);
+    }
 
     devolverRegistrosHuds(registro, tipo) {
         let index;
-        if (tipo === 'hallazgo') {
+        if (tipo === 'hallazgo' || tipo === 'medicamento') {
             index = this.registrosHuds.findIndex(r => {
-                return (r.tipo === 'hallazgo' && r.data.concepto.id === registro.concepto.id);
+                return ((r.tipo === 'hallazgo' || r.tipo === 'medicamento') && r.data.concepto.id === registro.concepto.id);
             });
 
             switch (registro.concepto.semanticTag) {
@@ -142,6 +155,8 @@ export class HudsBusquedaComponent implements OnInit {
                 case 'trastorno':
                     registro.class = 'problemas';
                     break;
+                case 'producto':
+                    registro.class = 'productos';
             }
         } else if (tipo === 'prestacion') {
             // Se populan las relaciones usando el _id
@@ -227,6 +242,13 @@ export class HudsBusquedaComponent implements OnInit {
                     return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
                 }
             });
+        });
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarMedicamentos() {
+        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
+            this.medicamentos = medicamentos;
         });
     }
 

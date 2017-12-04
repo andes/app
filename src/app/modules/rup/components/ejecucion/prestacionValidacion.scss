@@ -4,14 +4,38 @@
 }
 
 .type.hallazgo,
-.type.trastorno {
+.type.situación {
     background-color: $problemas;
 }
 
-.type.procedimiento {
+.type.trastorno {
+    background-color: $trastornos;
+}
+
+.type.procedimiento,
+.type.entidad.observable,
+.régimen\/tratamiento {
     background-color: $procedimientos;
 }
 
 .type.plan {
     background-color: $planes;
+}
+
+.type.producto {
+    background-color: $productos;
+}
+
+.bg-invert {
+    background-color: $invert !important;
+}
+
+.btn-orden {
+    height: 28px;
+    width: 28px;
+    i {
+        position: relative;
+        left: -3px;
+        top: -6px;
+    }
 }

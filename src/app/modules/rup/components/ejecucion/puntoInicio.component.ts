@@ -119,18 +119,6 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
-                            // TODO:: buscamos los datos de los pacientes en agendas No se si es correcto q por cada paciente consulte la api
-                            // if (turno.estado === 'asignado' && (!turno.paciente.carpetaEfectores || turno.paciente.carpetaEfectores.length <= 0)) {
-                            //     this.servicePaciente.getById(turno.paciente.id).subscribe((paciente) => {
-                            //         if (paciente && (paciente.id)) {
-                            //             let carpetaEfector = null;
-                            //             carpetaEfector = paciente.carpetaEfectores.filter((carpeta) => {
-                            //                 return (carpeta.organizacion.id === this.auth.organizacion.id);
-                            //             });
-                            //             turno.paciente.carpetaEfectores = [carpetaEfector];
-                            //         }
-                            //     });
-                            // }
                         });
                     });
 
@@ -149,7 +137,6 @@ export class PuntoInicioComponent implements OnInit {
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
-            
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
@@ -331,7 +318,7 @@ export class PuntoInicioComponent implements OnInit {
         // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
         // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
         if (prestacion) {
-            if (prestacion.estados[prestacion.estados.length - 1].createdBy.username != this.auth.usuario.username) {
+            if (prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
                 return null;
             }
         }

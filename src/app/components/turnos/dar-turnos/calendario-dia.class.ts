@@ -67,7 +67,6 @@ export class CalendarioDia {
                         this.programadosDisponibles += bloque.restantesProgramados;
                         this.gestionDisponibles += bloque.restantesGestion;
                         this.profesionalDisponibles += bloque.restantesProfesional;
-
                         if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
                             if (solicitudPrestacion) {
                                 if (this.gestionDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false) {
@@ -83,18 +82,10 @@ export class CalendarioDia {
                                 if (this.programadosDisponibles > 0) {
                                     this.estado = 'disponible';
                                 } else {
-                                    if (this.delDiaDisponibles > 0) {
-                                        this.estado = 'ocupado';
-                                    } else {
-                                        this.estado = 'vacio';
-                                    }
+                                    this.estado = 'vacio';
                                 }
                             }
                         }
-
-                        // if (this.agenda.estado === 'publicada' && !solicitudPrestacion) {
-                        //     this.estado = (this.programadosDisponibles > 0) ? 'disponible' : 'ocupado';
-                        // }
 
                     });
 

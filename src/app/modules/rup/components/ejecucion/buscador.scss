@@ -1,5 +1,60 @@
+@import '../variables';
+.header {
+    align-items: center;
+}
+
+.results {
+    margin-top: 0;
+}
+
+.buscador {
+    margin-top: 5px;
+}
+
+.buscador input {
+    border-width: 2px;
+}
+
 .menu-buscador {
-    .btn {
-        width: 32.7%;
+    .filtros {
+        align-items: center;
+        height: 40px;
     }
+    .botones-filtros {
+        border-bottom: 1px solid #bbbbbb;
+    }
+    button {
+        &.procedimientos {
+            width: 118%;
+        }
+        &.planes {
+            width: 81%;
+            margin-left: 15px !important;
+        }
+        &.productos {
+            width: 96%;
+            margin-left: 1px !important;
+        }
+        width: 99%;
+        height: 1.5rem;
+        font-size: 0.6rem;
+        border: none;
+        background-color: #dddddd;
+        cursor: pointer;
+        position: absolute;
+    }
+    .badge {
+        display: inline-block;
+        padding: 2px;
+        position: relative;
+        top: -18px;
+        right: 2px;
+    }
+}
+
+.loading-snomed {
+    float: right;
+    position: relative;
+    top: 100px;
+    right: 55px;
 }
