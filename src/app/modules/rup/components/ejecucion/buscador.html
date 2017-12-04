@@ -82,7 +82,7 @@
 
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-12">
-        <b *ngIf="!showRefSets || showGuiada">Frecuentes</b>
+        <b *ngIf="!showRefSets || showGuiada && showFrecuentes">Frecuentes</b>
         <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
     </div>
 </div>
@@ -95,7 +95,7 @@
 </div>
 
 <!-- RESULTADOS PRINCIPALES -->
-<ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0" class="conceptos list-unstyled">
+<ul *ngIf="!showFrecuentes && !showRefSets && resultados && resultados.length > 0 && showFrecuentesTipoPrestacion" class="conceptos list-unstyled">
     <ng-container *ngFor="let item of resultados">
         <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass"
             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -217,10 +217,10 @@
     </ul>
 </div>
 
-<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length">
+<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length && !showFrecuentesTipoPrestacion">
+    <p> Más frecuentes de {{conceptoFrecuente.term}} </p>
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of frecuentesTipoPrestacion">
-
             <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                  <div class="rup-card mini {{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }}">
                     <div class="type">

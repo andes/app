@@ -17,15 +17,17 @@ export class BuscadorComponent implements OnInit {
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     // Son los mas frecuentes del elemento rup.(tipo de prestación)
     @Input() frecuentesTipoPrestacion;
+    @Input() showFrecuentesTipoPrestacion;
+    @Input() conceptoFrecuente;
     /**
      * Devuelve un elemento seleccionado.
      */
-
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
-    // emito el tipo de busqueda para que lo reciba el buscador SNOMED.
+    // Emito cuando tengo un resultado de la busqueda.
+    @Output() tengoResultado: EventEmitter<any> = new EventEmitter<any>();
 
     // TODOO Ver el tag con ele tipo de busqueda
 
@@ -141,6 +143,7 @@ export class BuscadorComponent implements OnInit {
                 this.resultados = this.resultadosAux = resultadosSnomed;
             }
             this.filtroRefSet();
+            this.tengoResultado.emit(true);
         });
     }
 
