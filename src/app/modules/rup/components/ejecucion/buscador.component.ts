@@ -15,9 +15,12 @@ export class BuscadorComponent implements OnInit {
     @Input() elementoRUPprestacion;
     @Input() resultados;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
+    // Son los mas frecuentes del elemento rup.(tipo de prestación)
+    @Input() frecuentesTipoPrestacion;
     /**
      * Devuelve un elemento seleccionado.
      */
+
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
@@ -60,11 +63,10 @@ export class BuscadorComponent implements OnInit {
 
     public showContent;
 
-    // Arra de salida para los mas frecuentes
+    // Arra de salida para los mas frecuentes del profesional
     public arrayFrecuentes: any[] = [];
     // Boolean para mostrar lo mas fecuentes
     public showFrecuentes = false;
-
     // Guardo una copia completa de los mas frecuentes;
     public resultadosFrecuentesAux: any[] = [];
 
@@ -295,25 +297,6 @@ export class BuscadorComponent implements OnInit {
             });
         });
 
-        // frecuentes = this.arrayFrecuentes.map(x => {
-        //     if (x.frecuencia != null && x.frecuencia >= 1 && resultadosSnomed.find(c => c.conceptId === x.concepto.conceptId)) {
-        //         resultadosSnomed.splice(resultadosSnomed.findIndex(r => r.conceptId === x.concepto.conceptId), 1);
-        //         resultadosSnomed.unshift(x.concepto);
-        //     }
-        //     return x;
-        // });
-
-
-        // hago el merge de los arrays
-        // this.arrayPorRefsets.forEach(c => {
-        //     frecuentes.forEach(f => {
-        //         if (c.nombre === f.nombre) {
-        //             for (const valor of f.valor) {
-        //                 c.valor.unshift(valor);
-        //             }
-        //         }
-        //     });
-        // });
     }
 
     /**
@@ -366,29 +349,5 @@ export class BuscadorComponent implements OnInit {
     public reemplazar(arr, glue) {
         return arr.join(glue);
     }
-
-    // Recibe el parametro y lo setea para realizar la busqueda en Snomed
-    // filtroBuscadorSnomed(tipoBusqueda) {     this.tipoBusqueda = !tipoBusqueda ?
-    // 'todos' : tipoBusqueda;     this.masFrecuentesFiltradas = [];
-    // this.masFrecuentes.forEach(element => {         let semanticTag: String;
-    // switch (tipoBusqueda) {             case 'trastorno':             case
-    // 'hallazgo':             case 'problema':                 semanticTag =
-    // 'hallazgo';                 break;             case 'procedimiento':
-    // semanticTag = 'procedimiento';                 break;             case
-    // 'planes':                 semanticTag = 'planes';                 break; case
-    // 'todos':                 // '"hallazgo" "trastorno" "situacion" "entidad
-    // observable" "procedimiento"'                 semanticTag = 'todos'; break; }
-    //       if (semanticTag === tipoBusqueda) {
-    // this.masFrecuentesFiltradas.push(element);         }     });
-    // this.tipoBusqueda = tipoBusqueda;     // <rup-buscador> en
-    // prestacionEjecucion.html     this._tipoDeBusqueda.emit(tipoBusqueda); } Emito
-    // el concepto seleccionado seleccionBusqueda(concepto) {
-    // this.evtData.emit(concepto); this._tipoDeBusqueda.emit(this.tipoBusqueda); }
-    // Recupero los mas frecuentes de los elementos rup y creo el objeto con los
-    // conceptos de snomed recuperaLosMasFrecuentes(elementoRUP) {     debugger;
-    // elementoRUP.frecuentes.forEach(element => { this.masFrecuentes.push(element);
-    //     }); } Capturo el emit de snomed y seteo la variable para mostrar o
-    // ocultar los mas frecuentes. mostrarMasfrecuentes(mostrar) {
-    // this.showFrecuentes = mostrar;     }
 
 }
