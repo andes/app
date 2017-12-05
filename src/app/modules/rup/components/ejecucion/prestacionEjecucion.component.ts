@@ -23,6 +23,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
+   
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -79,7 +80,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public prestacionValida = true;
     public mostrarMensajes = false;
-
+    // Seteamos el concepto desde el cual se buscan sus frecuentes
+    public conceptoFrecuente: any;
+    // boolean de si tengo o no resultados en el buscador
+    public tengoResultado: any;
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -792,6 +796,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     recuperaLosMasFrecuentes(concepto, elementoRUP = null) {
+        this.conceptoFrecuente = concepto;
         this.masFrecuentes = [];
         if (!elementoRUP) {
             elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
@@ -808,6 +813,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 });
             }
         }
+        this.tengoResultado = false;
     }
 
     agregarListadoHuds(registrosHuds) {
@@ -895,6 +901,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     // recibe el tab que se clikeo y lo saca del array..
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
+    }
+
+    recibeSitengoResultado($event) {
+       this.tengoResultado = $event;
     }
 
 }

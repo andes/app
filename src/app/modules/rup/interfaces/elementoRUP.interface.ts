@@ -25,6 +25,9 @@ export interface IElementoRUP {
     //              "Toma de temperatura rectal del paciente (SCTID: 18649001")
     //              se implementan con el mismo elemento RUP "Toma de temperatura"
     conceptos: ISnomedConcept[];
+    // Conceptos SNOMED que voy a tener que buscar por los registros de la HUDS del paciente
+    // para poder armar por ejemplo la curva de peso.
+    conceptosBuscar: ISnomedConcept[];
     // Elementos RUP requeridos para la ejecución.
     // Por ejemplo, en "Control de Niño sano" es obligatorio ejecutar "Toma de peso"
     requeridos: [{
