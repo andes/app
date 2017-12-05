@@ -10,7 +10,8 @@
                         <legend>Datos principales</legend>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
                         </plex-datetime>
-                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion" [required]="true">
+                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term"
+                            [data]="tiposPrestacion" [required]="true">
                         </plex-select>
                     </fieldset>
                 </div>
@@ -28,15 +29,16 @@
     <!--Footer-->
     <footer *ngIf="!buscandoPaciente">
         <div class="float-left">
-            <plex-button type="danger"  label="CANCELAR" (click)="cancelar()">
+            <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
             </plex-button>
         </div>
-            <div class="float-right">
-            <plex-button *ngIf="form.valid"  label="GUARDAR" validateForm="true" type="success" (click)="guardar()">
+        <div class="float-right">
+            <plex-button *ngIf="form.valid" label="INICIAR PRESTACIÓN" validateForm="true" type="success" (click)="guardar()">
             </plex-button>
         </div>
     </footer>
 </form>
 
 <!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>

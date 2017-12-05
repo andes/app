@@ -93,7 +93,7 @@
 
 @media print {
     @page {
-        size: landscape;
+        size: portrait;
     }
     nav,
     footer,
@@ -159,7 +159,7 @@
             }
             &:first-child {
                 .row~.row {
-                    width: 210px;
+                    width: 140px;
                     vertical-align: text-top;
                 }
             }
@@ -206,7 +206,8 @@
         overflow: visible;
     }
     .menu-ordenamiento,
-    .mdi-arrow-left-drop-circle-outline {
+    .mdi-arrow-left-drop-circle-outline,
+    .mdi-arrow-down-drop-circle-outline {
         display: none;
     }
     .type {
@@ -219,11 +220,17 @@
         margin-bottom: 0 !important;
     }
     .rup-card~.rup-card {
-        &:nth-child(5) {
+        &:nth-child(6) {
             page-break-after: always;
         }
         &:last-child {
             page-break-after: avoid !important;
         }
+    }
+    .relaciones {
+        display: none;
+    }
+    tooltip-content {
+        display: none;
     }
 }

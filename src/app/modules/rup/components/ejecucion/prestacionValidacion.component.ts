@@ -492,7 +492,12 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     imprimirResumen() {
-        window.print();
+        this.prestacion.ejecucion.registros.forEach(x => {
+            x.icon = 'down';
+        });
+        setTimeout(() => {
+            window.print();
+        });
     }
 
 
