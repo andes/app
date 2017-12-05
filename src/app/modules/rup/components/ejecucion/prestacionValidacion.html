@@ -45,6 +45,8 @@
                             (click)="ordenarPorTipo(['planes'])" [ngClass]="{'bg-planes': ordenSeleccionado === 'planes'}">Planes</button>
                         <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])"
                             [ngClass]="{'bg-productos': ordenSeleccionado === reemplazar(['producto'], ',')}">Productos</button>
+                        <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-default text-uppercase mr-1 border-adjunto"
+                            (click)="ordenarPorTipo(['elemento de registro'])" [ngClass]="{'bg-adjuntos': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
                         <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
                             <i class="mdi mdi-close"></i>
                         </button>
@@ -211,6 +213,7 @@
                     </div>
                 </ng-container>
             </div>
+
             <div class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
@@ -242,6 +245,36 @@
                         </ul>
                     </ng-container>
                 </plex-box>
+            </div>
+        </div>
+        <div class="container imprimir mt-3" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    Profesional:
+                    <b>{{ auth.profesional.nombreCompleto }}</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6 mt-5">
+                    ---------------------------------------------------
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    Efector:
+                    <b>{{ auth.organizacion.nombre }}</b>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    Fecha:
+                    <b>{{ (prestacion.updatedAt ? prestacion.updatedAt : prestacion.createdAt) | date: 'EEE dd/MM/yyyy'}}
+                    </b>
+                </div>
             </div>
         </div>
     </plex-box>

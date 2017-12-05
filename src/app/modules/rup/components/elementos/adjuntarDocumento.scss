@@ -14,8 +14,8 @@
 }
 
 .image img {
-    width: 86px;
     height: 86px;
+    width: auto;
 }
 
 .x-mark {
@@ -64,6 +64,7 @@
 .close:after {
     transform: rotate(-45deg);
 }
+
 .thumbnail {
     max-width: 40%;
 }
@@ -115,7 +116,6 @@
     animation-duration: 1s;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
-
     -webkit-animation-name: parpadeo;
     -webkit-animation-duration: 2s;
     -webkit-animation-timing-function: linear;

@@ -1,34 +1,43 @@
-<div>
-    <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
-    <div *ngIf="!waiting && !soloValores">
-        <plex-button type="primary" label="Cargar documentos" title="Cargar documentos" (click)="upload.click()"></plex-button>
-        o
-        <plex-button *ngIf="!waiting" type="primary" label="Desde AppMobile" title="Desde AppMobile" (click)="fromMobile()"></plex-button>
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-12">
+            <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+            <strong *ngIf="!soloValores">Cargar documentos</strong>
+            <span *ngIf="!waiting && !soloValores">
+                <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()"></plex-button>
+                <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi AppMobile" (click)="fromMobile()"></plex-button>
+            </span>
+            <span *ngIf="waiting">
+                <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+                <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelar()"></plex-button>
+            </span>
+        </div>
     </div>
-    <div *ngIf="waiting">
-        <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
-        <plex-button  type="primary" label="Cancelar" title="Cancelar" (click)="cancelar()"></plex-button>
-    </div>
-    <div class="image-container hr-inline-group" *ngIf="fotos">
-        <ng-container *ngFor="let doc of fotos; let i = index">
-            <a (click)="activaLightbox(i)">
-                <div class="image" >
+    <div class="row">
+        <div class="col-12">
+            <div class="image-container hr-inline-group" *ngIf="fotos">
+                <ng-container *ngFor="let doc of fotos; let i = index">
+                    <a (click)="activaLightbox(i)">
+                        <div class="image hover">
 
-                    <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'" >
-                    <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'" >
-                    <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
-                        <span class="close"></span>
+                            <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
+                            <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
+                            <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
+                                <span class="close"></span>
+                            </div>
+                        </div>
+                    </a>
+
+                    <div (click)="lightbox = false" *ngIf="soloValores && i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
+                        class="hover">
+                        <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                        <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
+                        <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
+                        <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
                     </div>
-                </div>
-            </a>
-
-            <div (click)="lightbox = false" *ngIf="soloValores && i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }">
-                <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'" >
-                <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'" >
-                <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
+                </ng-container>
             </div>
-        </ng-container>
+        </div>
     </div>
 
 
