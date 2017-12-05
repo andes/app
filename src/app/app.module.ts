@@ -162,6 +162,8 @@ import { ElementosRUPService } from './modules/rup/services/elementosRUP.service
 import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
 import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
+import { AdjuntosService } from './modules/rup/services/adjuntos.service';
+
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -193,9 +195,9 @@ import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.c
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
+import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumeto';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
-
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 
@@ -253,6 +255,7 @@ export let RUPRegistry = {
     'HipertensionArterialComponent': HipertensionArterialComponent,
     'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
+    'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent
 };
@@ -279,7 +282,8 @@ let RUPComponentsArray = [
     TemperaturaComponent,
     TensionArterialComponent,
     TensionDiastolicaComponent,
-    TensionSistolicaComponent
+    TensionSistolicaComponent,
+    AdjuntarDocumentoComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -378,6 +382,7 @@ let RUPComponentsArray = [
         Server,
         SmsService,
         PrestacionesService,
+        AdjuntosService,
         TipoPrestacionService,
         ElementosRUPService,
         ConceptObserverService,
