@@ -13,7 +13,7 @@
                         <div class="float-right mr-2">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                                 (click)="mostrarDatosSolicitud(true)"></plex-button>
-                            <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                         </div>
                     </div>
                 </div>
@@ -53,7 +53,7 @@
             </div>
         </header>
         <div class="row no-gutters">
-            <div class="col-9 titulos">
+            <div class="col titulos">
 
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" class="mb-2">
@@ -66,9 +66,7 @@
                             <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
                         </div>
                         <div *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" class="col-1">
-                            <button class="btn btn-warning float-right" (click)="imprimirResumen()">
-                                <i class="mdi mdi-14px mdi-printer"></i>
-                            </button>
+                            <plex-button type="warning" icon="printer mdi-14px" class="float-right" title="Imprimir Resumen" titlePosition="left" (click)="imprimirResumen()"></plex-button>
                         </div>
                     </div>
                     <div class="row no-gutters">
@@ -213,9 +211,9 @@
                     </div>
                 </ng-container>
             </div>
-            <div class="col-3">
+            <div class="relaciones col-3">
                 <!-- ÁRBOL -->
-                <plex-box class="...relaciones w-25">
+                <plex-box class="w-25">
                     <header>
                         <div class="clearfix">
                             <div *ngIf="registrosOrdenados">
