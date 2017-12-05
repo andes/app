@@ -267,7 +267,6 @@ export class DarTurnosComponent implements OnInit {
      */
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
-            debugger
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
                 this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
