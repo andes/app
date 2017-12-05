@@ -513,15 +513,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                 window.setTimeout(() => {
                     let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
                 });
-                // TODO revisar registro de destino
-                // if (registroDestino) {
-                //     registroDestino.relacionadoCon = [resultado];
-                // }
             } else {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
-            // this.ejecutarConcepto(resultadoHuds.data.concepto, true);
         }
     }
 
@@ -534,7 +529,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.transformarProblema = true;
     }
 
-    ConfirmaTransformar(nuevoHallazgo) {
+    confirmaTransformar(nuevoHallazgo) {
         // si proviene del drag and drop
         this.isDraggingConcepto = false;
         if (nuevoHallazgo.dragData) {
@@ -571,7 +566,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     private controlValido(registro) {
         if (registro.registros.length <= 0) {
             registro.valido = (registro.valor) ? true : false;
+            if (!registro.valido) {
+                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
+                this.colapsarPrestaciones('expand');
+            }
         } else {
+
             let total = registro.registros.length;
             let contadorValiddos = 0;
             registro.registros.forEach(r => {
@@ -599,6 +599,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             this.prestacion.ejecucion.registros.forEach(r => {
                 if (!this.controlValido(r)) {
+
                     this.prestacionValida = false;
                     this.mostrarMensajes = true;
                     resultado = false;
@@ -620,13 +621,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.beforeSave()) {
             return;
         }
+
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
         });
-
 
         let params: any = {
             op: 'registros',
@@ -638,8 +639,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-
-
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
 
@@ -775,19 +774,21 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
-    colapsarTodos() {
-
-    }
-
-    colapsarPrestaciones() {
+    colapsarPrestaciones(option = 'expand') {
         if (this.prestacion.ejecucion.registros) {
             this.copiaRegistro = JSON.parse(JSON.stringify(this.itemsRegistros));
             this.prestacion.ejecucion.registros.forEach(element => {
                 if (this.itemsRegistros[element.id]) {
-                    this.itemsRegistros[element.id].collapse = true;
+                    if (option === 'expand') {
+                        this.itemsRegistros[element.id].collapse = false;
+                    } else if (option === 'collapse') {
+                        console.log('sadsadsad');
+                        this.itemsRegistros[element.id].collapse = true;
+                    }
                 }
             });
         }
+
     }
 
     recuperaLosMasFrecuentes(concepto, elementoRUP = null) {
