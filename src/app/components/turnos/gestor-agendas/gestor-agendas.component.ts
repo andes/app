@@ -349,7 +349,9 @@ export class GestorAgendasComponent implements OnInit {
     loadPrestaciones(event) {
         this.servicioPrestacion.get({
             turneable: 1
-        }).subscribe(event.callback);
+        }).subscribe(listaConceptos => {
+            event.callback(listaConceptos);
+        });
     }
 
     loadProfesionales(event) {
@@ -409,7 +411,7 @@ export class GestorAgendasComponent implements OnInit {
             agenda = ag;
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
-            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion' ) {
+            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
                 this.plex.info('danger', '', 'No es posible editar la agenda seleccionada.', 3000);
                 return;
             }

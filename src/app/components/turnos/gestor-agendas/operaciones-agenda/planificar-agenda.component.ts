@@ -78,11 +78,11 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
-            let dataF = data.filter(x => {
-                return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
-            });
-            event.callback(dataF);
+        this.servicioTipoPrestacion.get({}).subscribe((data) => {
+            // let dataF = data.filter(x => {
+            //     return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
+            // });
+            event.callback(data);
         });
     }
 

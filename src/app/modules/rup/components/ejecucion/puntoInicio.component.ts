@@ -313,7 +313,7 @@ export class PuntoInicioComponent implements OnInit {
 
     tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
-        let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
+        let existe = permisos.find(permiso => (permiso === tipoPrestacion.conceptId));
 
         // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
         // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion

@@ -28,7 +28,7 @@
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
-                                [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
+                            idField="term" [multiple]="true"  [required]="true" (change)="cambioPrestaciones()">
                             </plex-select>
                         </div>
                     </div>

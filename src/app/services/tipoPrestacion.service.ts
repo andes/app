@@ -7,7 +7,8 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class TipoPrestacionService {
 
-    private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
+    // private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
+    private tipoPrestacionUrl = '/core/term/snomed';  // URL to web api
 
     constructor(private server: Server) { }
 
@@ -16,9 +17,21 @@ export class TipoPrestacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<ITipoPrestacion[]> {
-
-
-        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true });
+        params['refsetId'] = '1661000013109';
+        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true }).map(concepto => {
+            let salida = [];
+            concepto.forEach(element => {
+                salida.push({
+                    id: element.conceptId,
+                    conceptId: element.conceptId,
+                    term: element.term,
+                    fsn: element.fsn,
+                    semanticTag: element.semanticTag,
+                    nombre: element.term,
+                });
+            });
+            return salida;
+        });
     }
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
