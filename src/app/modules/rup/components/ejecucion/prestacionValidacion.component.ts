@@ -16,7 +16,10 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
 @Component({
     selector: 'rup-prestacionValidacion',
     templateUrl: 'prestacionValidacion.html',
-    styleUrls: ['prestacionValidacion.scss'],
+    styleUrls: [
+        'prestacionValidacion.scss',
+        'prestacionValidacion-print.scss'
+    ],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
@@ -484,7 +487,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     limpiarOrden() {
         this.prestacion.ejecucion.registros = this.registrosOriginales;
-        this.tipoOrden = null;
+        this.tipoOrden = this.ordenSeleccionado = null;
     }
 
     compareArrays(arr1: any[], arr2: any[]) {
