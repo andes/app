@@ -17,6 +17,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
+    @Output() listarCarpetasEmit = new EventEmitter<boolean>();
     @Output() actualizarEstadoEmit = new EventEmitter<string>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
@@ -170,6 +171,8 @@ export class BotonesAgendaComponent implements OnInit {
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
+            // Imprimir pdf carpetas
+            listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir,
         };
     }
 
@@ -300,6 +303,10 @@ export class BotonesAgendaComponent implements OnInit {
 
     listarTurnos() {
         this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    listarCarpetas() {
+        this.listarCarpetasEmit.emit(true);
     }
 
     cancelar() {
