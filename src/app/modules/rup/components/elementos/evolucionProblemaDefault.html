@@ -60,19 +60,31 @@
                 <label class="box-title-secundario" for="comment">Evoluciones Anteriores:</label>
             </div>
         </div>
-        <div class="row">
-            <div class="col-2 text-120">
-                <plex-button *ngIf="indice > 0" type="link" icon="chevron-left" (click)="cambiarEvolucion('-') "></plex-button>
+
+
+        <div class="row anteriores mr-0 pr-0 ml-0">
+            <div class="col-5 text-left border border-right-0 border-secondary pl-0">
+                <plex-button *ngIf="indice > 0" type="info" icon="chevron-left" class="mdi-18px" (click)="cambiarEvolucion('-') "></plex-button>
+                <plex-button *ngIf="indice === 0" type="default" icon="chevron-left" class="mdi-18px"></plex-button>
             </div>
-            <div class="col-2 text-120">
-                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="link" icon="chevron-right " (click)="cambiarEvolucion('+') "></plex-button>
+            <div class="col-2 text-center border border-left-0 border-right-0 border-secondary pt-2">
+                {{ unaEvolucion.fechaCarga | fecha }}
+            </div>
+            <div class="col-5 text-right border border-left-0 border-secondary pr-0">
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
+                    (click)="cambiarEvolucion('+') "></plex-button>
+                <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-12">
-                {{unaEvolucion.fechaCarga | fecha }}
-                <br> Profesional: {{unaEvolucion.profesional }}
-                <br>{{unaEvolucion.evolucion }}
+            <div class="col-6">
+                <br>
+                <strong>Profesional:</strong> {{unaEvolucion.profesional }}
+            </div>
+            <div class="col-6">
+                <br>
+                <strong>Evolución:</strong> {{unaEvolucion.evolucion}}
             </div>
         </div>
     </ng-container>

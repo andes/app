@@ -82,7 +82,7 @@
 
 <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
     <div class="col-12">
-        <b *ngIf="!showRefSets || showGuiada && showFrecuentes">Frecuentes</b>
+        <b *ngIf="showFrecuentes">Frecuentes</b>
         <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
     </div>
 </div>
@@ -217,7 +217,7 @@
     </ul>
 </div>
 
-<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length && !showFrecuentesTipoPrestacion">
+<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length && !showFrecuentesTipoPrestacion && !showRefSets">
     <p> Más frecuentes de {{conceptoFrecuente.term}} </p>
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of frecuentesTipoPrestacion">
@@ -231,13 +231,13 @@
                             <div class="title">
                                 {{item.term}}
                             </div>
-                            <!-- <div class="actions">
+                            <div class="actions">
                                 <small class="badge badge-{{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'planes' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : item.semanticTag)) }} text-default">{{ (tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                 </small>
                                 <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                 </div>

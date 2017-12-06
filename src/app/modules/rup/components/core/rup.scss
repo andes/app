@@ -1,155 +1,160 @@
-@import '../variables';
-.rup-card {
-    width: 100%;
-    display: flex;
-    border: 2px solid #ccc;
-    margin-bottom: 10px;
-    transition: 200ms all;
-    -webkit-transition: 200ms all;
-    &.mini {
-        margin-bottom: 0;
-        .rup-content {
-            .header {
-                padding: 5px;
-                border-bottom: 0 none;
-                .title {
-                    font-size: 0.75rem;
-                }
-            }
-        }
-    }
-    &.hallazgo,
-    &.entidad.observable,
-    &.regimen,
-    &.situación {
-        &:hover,
-        &.active {
-            border: 2px solid $problemas;
-        }
-        .type {
-            background: $problemas;
-        }
-    }
-    &.trastorno {
-        &:hover,
-        &.active {
-            border: 2px solid $trastornos;
-        }
-        .type {
-            background: $trastornos;
-        }
-    }
-    &.entidad.observable,
-    &.regimen,
-    &.procedimiento {
-        &:hover,
-        &.active {
-            border: 2px solid $procedimientos;
-        }
-        .type {
-            background: $procedimientos;
-        }
-    }
-    &.planes {
-        &:hover,
-        &.active {
-            border: 2px solid $planes;
-        } // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
-        // y precisamente para poder cargar los estilos se saca desde el semanticTag
-        .type {
-            background: $planes;
-        }
-    }
-    &.producto {
-        &:hover,
-        &.active {
-            border: 2px solid $productos;
-        }
-        .type {
-            background: $productos;
-        }
-    }
-    .type {
-        padding: 5px;
-        width: 20px;
-        float: left;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        i {
-            color: white;
-        }
-    }
-    .rup-content {
-        margin: 0;
+    @import '../variables';
+    .rup-card {
         width: 100%;
-        .header {
-            padding: 5px 15px;
-            text-transform: capitalize;
-            border-bottom: 1px solid #ccc;
-            .title {
-                display: inline-flex;
-                font-size: 1.3em;
-            }
-            .actions {
-                float: right !important;
-                .btn {
-                    margin: 0 5px;
+        display: flex;
+        border: 2px solid #ccc;
+        margin-bottom: 10px;
+        transition: 200ms all;
+        -webkit-transition: 200ms all;
+        &.mini {
+            margin-bottom: 0;
+            .rup-content {
+                .header {
+                    padding: 5px;
+                    border-bottom: 0 none;
+                    .title {
+                        font-size: 0.75rem;
+                    }
                 }
             }
         }
-        .rup-body {
-            padding: 15px;
+        &.hallazgo,
+        &.entidad.observable,
+        &.regimen,
+        &.situación {
+            &:hover,
+            &.active {
+                border: 2px solid $problemas;
+            }
+            .type {
+                background: $problemas;
+            }
         }
-        .rup-footer {
-            padding: 5px 15px;
+        &.trastorno {
+            &:hover,
+            &.active {
+                border: 2px solid $trastornos;
+            }
+            .type {
+                background: $trastornos;
+            }
+        }
+        &.entidad.observable,
+        &.regimen,
+        &.procedimiento {
+            &:hover,
+            &.active {
+                border: 2px solid $procedimientos;
+            }
+            .type {
+                background: $procedimientos;
+            }
+        }
+        &.planes {
+            &:hover,
+            &.active {
+                border: 2px solid $planes;
+            } // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
+            // y precisamente para poder cargar los estilos se saca desde el semanticTag
+            .type {
+                background: $planes;
+            }
+        }
+        &.producto {
+            &:hover,
+            &.active {
+                border: 2px solid $productos;
+            }
+            .type {
+                background: $productos;
+            }
+        }
+        &.elemento {
+            &:hover,
+            &.active {
+                border: 2px solid $adjuntos;
+            }
+            .type {
+                background: $adjuntos;
+            }
+        }
+        .type {
+            padding: 5px;
+            width: 20px;
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            i {
+                color: white;
+            }
+        }
+        .rup-content {
+            margin: 0;
+            width: 100%;
+            .header {
+                padding: 5px 15px;
+                text-transform: capitalize;
+                border-bottom: 1px solid #ccc;
+                .title {
+                    display: inline-flex;
+                    font-size: 1.3em;
+                }
+                .actions {
+                    float: right !important;
+                    .btn {
+                        margin: 0 5px;
+                    }
+                }
+            }
+            .rup-body {
+                padding: 15px;
+            }
+            .rup-footer {
+                padding: 5px 15px;
+            }
         }
     }
-}
 
-.text-secondary {
-    color: #818182 !important;
-}
+    .text-secondary {
+        color: #818182 !important;
+    }
+    /* drag and drop */
 
+    .drag-handle {
+        cursor: -webkit-grab;
+        color: white;
+    }
 
-/* drag and drop */
+    .drag-over-border {
+        border: $red dashed 2px;
+    }
 
-.drag-handle {
-    cursor: -webkit-grab;
-    color: white;
-}
+    .droppable.drag-target-border,
+    .drag-target-border {
+        border: $dark-grey dashed 2px;
+    }
 
-.drag-over-border {
-    border: $red dashed 2px;
-}
-
-.droppable.drag-target-border,
-.drag-target-border {
-    border: $dark-grey dashed 2px;
-}
-
-.droppable {
-    width: 100%;
-    height: auto;
-    border: 2px dashed $dark-grey;
-    padding: 10px 0;
-    margin: 20px 0;
-    text-align: center;
-    text-transform: uppercase;
-    color: $dark-grey;
-}
-
-.drop-area {
-    min-height: 50px;
-    p {
-        font-size: 20px;
-        margin: 0;
+    .droppable {
+        width: 100%;
+        height: auto;
+        border: 2px dashed $dark-grey;
+        padding: 10px 0;
+        margin: 20px 0;
         text-align: center;
+        text-transform: uppercase;
+        color: $dark-grey;
     }
-}
 
-
-/*
+    .drop-area {
+        min-height: 50px;
+        p {
+            font-size: 20px;
+            margin: 0;
+            text-align: center;
+        }
+    }
+    /*
 .spin::before {
 -webkit-transform: rotate(180deg);
 -moz-transform: rotate(180deg);
@@ -160,403 +165,496 @@ transition: all 200ms;
 }
 */
 
-.drop-posicion {
-    background: $light-grey;
-    color: $dark-grey;
-    padding: 5px;
-    border: 2px dashed white;
-    margin: 5px 0;
-    text-align: center;
-    .drop-posicion-hover {
-        border: 2px dashed $dark-grey;
+    .drop-posicion {
+        background: $light-grey;
+        color: $dark-grey;
+        padding: 5px;
+        border: 2px dashed white;
+        margin: 5px 0;
+        text-align: center;
+        .drop-posicion-hover {
+            border: 2px dashed $dark-grey;
+        }
     }
-}
+    /* fin drag & drop */
+    /* elemento rup solo lectura */
 
+    .readonly {
+        font-size: 16px;
+        span {
+            display: block;
+            font-weight: normal;
+            color: #818182;
+            font-size: 14px;
+        }
+    }
+    /* fin elemento rup solo lectura */
+    /* colores botones / acciones */
 
-/* fin drag & drop */
+    .btn-hallazgos {
+        color: white;
+        background-color: $hallazgos;
+        border-color: $hallazgos;
+    }
 
+    .btn-hallazgos:hover,
+    .btn-hallazgos:focus,
+    .btn-hallazgos:active,
+    .btn-hallazgos.active,
+    .open .dropdown-toggle.btn-hallazgos {
+        color: white;
+        background-color: $hallazgos;
+        border-color: $hallazgos;
+    }
 
-/* elemento rup solo lectura */
+    .btn-hallazgos:active,
+    .btn-hallazgos.active,
+    .open .dropdown-toggle.btn-hallazgos {
+        background-image: none;
+    }
 
-.readonly {
-    font-size: 16px;
-    span {
-        display: block;
+    .btn-hallazgos.disabled,
+    .btn-hallazgos[disabled],
+    fieldset[disabled] .btn-hallazgos,
+    .btn-hallazgos.disabled:hover,
+    .btn-hallazgos[disabled]:hover,
+    fieldset[disabled] .btn-hallazgos:hover,
+    .btn-hallazgos.disabled:focus,
+    .btn-hallazgos[disabled]:focus,
+    fieldset[disabled] .btn-hallazgos:focus,
+    .btn-hallazgos.disabled:active,
+    .btn-hallazgos[disabled]:active,
+    fieldset[disabled] .btn-hallazgos:active,
+    .btn-hallazgos.disabled.active,
+    .btn-hallazgos[disabled].active,
+    fieldset[disabled] .btn-hallazgos.active {
+        background-color: $hallazgos;
+        border-color: $hallazgos;
+    }
+
+    .btn-hallazgos .badge {
+        color: $hallazgos;
+        background-color: white;
+    }
+
+    .btn-adjuntos {
+        color: white;
+        background-color: $adjuntos;
+        border-color: $adjuntos;
+    }
+
+    .btn-adjuntos:hover,
+    .btn-adjuntos:focus,
+    .btn-adjuntos:active,
+    .btn-adjuntos.active,
+    .open .dropdown-toggle.btn-adjuntos {
+        color: white;
+        background-color: $adjuntos;
+        border-color: $adjuntos;
+    }
+
+    .btn-adjuntos:active,
+    .btn-adjuntos.active,
+    .open .dropdown-toggle.btn-adjuntos {
+        background-image: none;
+    }
+
+    .btn-adjuntos.disabled,
+    .btn-adjuntos[disabled],
+    fieldset[disabled] .btn-adjuntos,
+    .btn-adjuntos.disabled:hover,
+    .btn-adjuntos[disabled]:hover,
+    fieldset[disabled] .btn-adjuntos:hover,
+    .btn-adjuntos.disabled:focus,
+    .btn-adjuntos[disabled]:focus,
+    fieldset[disabled] .btn-adjuntos:focus,
+    .btn-adjuntos.disabled:active,
+    .btn-adjuntos[disabled]:active,
+    fieldset[disabled] .btn-adjuntos:active,
+    .btn-adjuntos.disabled.active,
+    .btn-adjuntos[disabled].active,
+    fieldset[disabled] .btn-adjuntos.active {
+        background-color: $adjuntos;
+        border-color: $adjuntos;
+    }
+
+    .btn-adjuntos .badge {
+        color: $adjuntos;
+        background-color: white;
+    } // Trastornos
+    .btn-trastornos {
+        color: white;
+        background-color: $trastornos;
+        border-color: $trastornos;
+    }
+
+    .btn-trastornos:hover,
+    .btn-trastornos:focus,
+    .btn-trastornos:active,
+    .btn-trastornos.active,
+    .open .dropdown-toggle.btn-trastornos {
+        color: white;
+        background-color: $trastornos;
+        border-color: $trastornos;
+    }
+
+    .btn-trastornos:active,
+    .btn-trastornos.active,
+    .open .dropdown-toggle.btn-trastornos {
+        background-image: none;
+    }
+
+    .btn-trastornos.disabled,
+    .btn-trastornos[disabled],
+    fieldset[disabled] .btn-trastornos,
+    .btn-trastornos.disabled:hover,
+    .btn-trastornos[disabled]:hover,
+    fieldset[disabled] .btn-trastornos:hover,
+    .btn-trastornos.disabled:focus,
+    .btn-trastornos[disabled]:focus,
+    fieldset[disabled] .btn-trastornos:focus,
+    .btn-trastornos.disabled:active,
+    .btn-trastornos[disabled]:active,
+    fieldset[disabled] .btn-trastornos:active,
+    .btn-trastornos.disabled.active,
+    .btn-trastornos[disabled].active,
+    fieldset[disabled] .btn-trastornos.active {
+        background-color: $trastornos;
+        border-color: $trastornos;
+    }
+
+    .btn-trastornos .badge {
+        color: $trastornos;
+        background-color: white;
+    } // FIN Trastornos
+    .btn-planes {
+        color: white;
+        background-color: $planes;
+        border-color: $planes;
+    }
+
+    .btn-productos {
+        color: white;
+        background-color: $productos;
+        border-color: $productos;
+    }
+
+    .btn-planes:hover,
+    .btn-planes:focus,
+    .btn-planes:active,
+    .btn-planes.active,
+    .open .dropdown-toggle.btn-planes {
+        color: white;
+        background-color: $planes;
+        border-color: $planes;
+    }
+
+    .btn-planes:active,
+    .btn-planes.active,
+    .open .dropdown-toggle.btn-planes {
+        background-image: none;
+    }
+
+    .btn-planes.disabled,
+    .btn-planes[disabled],
+    fieldset[disabled] .btn-planes,
+    .btn-planes.disabled:hover,
+    .btn-planes[disabled]:hover,
+    fieldset[disabled] .btn-planes:hover,
+    .btn-planes.disabled:focus,
+    .btn-planes[disabled]:focus,
+    fieldset[disabled] .btn-planes:focus,
+    .btn-planes.disabled:active,
+    .btn-planes[disabled]:active,
+    fieldset[disabled] .btn-planes:active,
+    .btn-planes.disabled.active,
+    .btn-planes[disabled].active,
+    fieldset[disabled] .btn-planes.active {
+        background-color: $planes;
+        border-color: $planes;
+    }
+
+    .btn-planes .badge {
+        color: $planes;
+        background-color: white;
+    } // Productos
+    .btn-productos {
+        color: white;
+        background-color: $productos;
+        border-color: $productos;
+    }
+
+    .btn-productos:hover,
+    .btn-productos:focus,
+    .btn-productos:active,
+    .btn-productos.active,
+    .open .dropdown-toggle.btn-productos {
+        color: white;
+        background-color: $productos;
+        border-color: $productos;
+    }
+
+    .btn-productos:active,
+    .btn-productos.active,
+    .open .dropdown-toggle.btn-productos {
+        background-image: none;
+    }
+
+    .btn-productos.disabled,
+    .btn-productos[disabled],
+    fieldset[disabled] .btn-productos,
+    .btn-productos.disabled:hover,
+    .btn-productos[disabled]:hover,
+    fieldset[disabled] .btn-productos:hover,
+    .btn-productos.disabled:focus,
+    .btn-productos[disabled]:focus,
+    fieldset[disabled] .btn-productos:focus,
+    .btn-productos.disabled:active,
+    .btn-productos[disabled]:active,
+    fieldset[disabled] .btn-productos:active,
+    .btn-productos.disabled.active,
+    .btn-productos[disabled].active,
+    fieldset[disabled] .btn-productos.active {
+        background-color: $productos;
+        border-color: $productos;
+    }
+
+    .btn-productos .badge {
+        color: $productos;
+        background-color: white;
+    } // FIN Productos
+    // Prestaciones
+    .btn-prestaciones {
+        color: white;
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-prestaciones:hover,
+    .btn-prestaciones:focus,
+    .btn-prestaciones:active,
+    .btn-prestaciones.active,
+    .open .dropdown-toggle.btn-prestaciones {
+        color: white;
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-prestaciones:active,
+    .btn-prestaciones.active,
+    .open .dropdown-toggle.btn-prestaciones {
+        background-image: none;
+    }
+
+    .btn-prestaciones.disabled,
+    .btn-prestaciones[disabled],
+    fieldset[disabled] .btn-prestaciones,
+    .btn-prestaciones.disabled:hover,
+    .btn-prestaciones[disabled]:hover,
+    fieldset[disabled] .btn-prestaciones:hover,
+    .btn-prestaciones.disabled:focus,
+    .btn-prestaciones[disabled]:focus,
+    fieldset[disabled] .btn-prestaciones:focus,
+    .btn-prestaciones.disabled:active,
+    .btn-prestaciones[disabled]:active,
+    fieldset[disabled] .btn-prestaciones:active,
+    .btn-prestaciones.disabled.active,
+    .btn-prestaciones[disabled].active,
+    fieldset[disabled] .btn-prestaciones.active {
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-prestaciones .badge {
+        color: $procedimientos;
+        background-color: white;
+    } // FIN Prestaciones
+    .btn-procedimientos {
+        color: white;
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-procedimientos:hover,
+    .btn-procedimientos:focus,
+    .btn-procedimientos:active,
+    .btn-procedimientos.active,
+    .open .dropdown-toggle.btn-procedimientos {
+        color: white;
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-procedimientos:active,
+    .btn-procedimientos.active,
+    border .open .dropdown-toggle.btn-procedimientos {
+        background-image: none;
+    }
+
+    .btn-procedimientos.disabled,
+    .btn-procedimientos[disabled],
+    fieldset[disabled] .btn-procedimientos,
+    .btn-procedimientos.disabled:hover,
+    .btn-procedimientos[disabled]:hover,
+    fieldset[disabled] .btn-procedimientos:hover,
+    .btn-procedimientos.disabled:focus,
+    .btn-procedimientos[disabled]:focus,
+    fieldset[disabled] .btn-procedimientos:focus,
+    .btn-procedimientos.disabled:active,
+    .btn-procedimientos[disabled]:active,
+    fieldset[disabled] .btn-procedimientos:active,
+    .btn-procedimientos.disabled.active,
+    .btn-procedimientos[disabled].active,
+    fieldset[disabled] .btn-procedimientos.active {
+        background-color: $procedimientos;
+        border-color: $procedimientos;
+    }
+
+    .btn-procedimientos .badge {
+        color: $procedimientos;
+        background-color: white;
+    }
+    /* fin colores botones / acciones */
+
+    .border-hallazgo {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid #f4a03b !important;
+    }
+
+    .border-trastorno {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid #ff4a1a !important;
+    }
+
+    .border-procedimiento {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid #92278e !important;
+    }
+
+    .border-planes {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid #6a99ad !important;
+    }
+
+    .border-producto {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid $productos !important;
+    }
+
+    .border-adjunto {
+        &:focus {
+            outline: 0;
+        }
+        border: 1px solid $adjuntos !important;
+    }
+
+    .badge-hallazgo {
+        border: 1px solid #f4a03b;
+        color: #f4a03b;
         font-weight: normal;
-        color: #818182;
-        font-size: 14px;
+        text-transform: uppercase;
     }
-}
 
-
-/* fin elemento rup solo lectura */
-
-
-/* colores botones / acciones */
-
-.btn-hallazgos {
-    color: white;
-    background-color: $hallazgos;
-    border-color: $hallazgos;
-}
-
-.btn-hallazgos:hover,
-.btn-hallazgos:focus,
-.btn-hallazgos:active,
-.btn-hallazgos.active,
-.open .dropdown-toggle.btn-hallazgos {
-    color: white;
-    background-color: $hallazgos;
-    border-color: $hallazgos;
-}
-
-.btn-hallazgos:active,
-.btn-hallazgos.active,
-.open .dropdown-toggle.btn-hallazgos {
-    background-image: none;
-}
-
-.btn-hallazgos.disabled,
-.btn-hallazgos[disabled],
-fieldset[disabled] .btn-hallazgos,
-.btn-hallazgos.disabled:hover,
-.btn-hallazgos[disabled]:hover,
-fieldset[disabled] .btn-hallazgos:hover,
-.btn-hallazgos.disabled:focus,
-.btn-hallazgos[disabled]:focus,
-fieldset[disabled] .btn-hallazgos:focus,
-.btn-hallazgos.disabled:active,
-.btn-hallazgos[disabled]:active,
-fieldset[disabled] .btn-hallazgos:active,
-.btn-hallazgos.disabled.active,
-.btn-hallazgos[disabled].active,
-fieldset[disabled] .btn-hallazgos.active {
-    background-color: $hallazgos;
-    border-color: $hallazgos;
-}
-
-.btn-hallazgos .badge {
-    color: $hallazgos;
-    background-color: white;
-}
-
-// Trastornos
-.btn-trastornos {
-    color: white;
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos:hover,
-.btn-trastornos:focus,
-.btn-trastornos:active,
-.btn-trastornos.active,
-.open .dropdown-toggle.btn-trastornos {
-    color: white;
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos:active,
-.btn-trastornos.active,
-.open .dropdown-toggle.btn-trastornos {
-    background-image: none;
-}
-
-.btn-trastornos.disabled,
-.btn-trastornos[disabled],
-fieldset[disabled] .btn-trastornos,
-.btn-trastornos.disabled:hover,
-.btn-trastornos[disabled]:hover,
-fieldset[disabled] .btn-trastornos:hover,
-.btn-trastornos.disabled:focus,
-.btn-trastornos[disabled]:focus,
-fieldset[disabled] .btn-trastornos:focus,
-.btn-trastornos.disabled:active,
-.btn-trastornos[disabled]:active,
-fieldset[disabled] .btn-trastornos:active,
-.btn-trastornos.disabled.active,
-.btn-trastornos[disabled].active,
-fieldset[disabled] .btn-trastornos.active {
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos .badge {
-    color: $trastornos;
-    background-color: white;
-}
-
-// FIN Trastornos
-.btn-planes {
-    color: white;
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-planes:hover,
-.btn-planes:focus,
-.btn-planes:active,
-.btn-planes.active,
-.open .dropdown-toggle.btn-planes {
-    color: white;
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-planes:active,
-.btn-planes.active,
-.open .dropdown-toggle.btn-planes {
-    background-image: none;
-}
-
-.btn-planes.disabled,
-.btn-planes[disabled],
-fieldset[disabled] .btn-planes,
-.btn-planes.disabled:hover,
-.btn-planes[disabled]:hover,
-fieldset[disabled] .btn-planes:hover,
-.btn-planes.disabled:focus,
-.btn-planes[disabled]:focus,
-fieldset[disabled] .btn-planes:focus,
-.btn-planes.disabled:active,
-.btn-planes[disabled]:active,
-fieldset[disabled] .btn-planes:active,
-.btn-planes.disabled.active,
-.btn-planes[disabled].active,
-fieldset[disabled] .btn-planes.active {
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-planes .badge {
-    color: $planes;
-    background-color: white;
-}
-
-// Productos
-.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos:hover,
-.btn-productos:focus,
-.btn-productos:active,
-.btn-productos.active,
-.open .dropdown-toggle.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos:active,
-.btn-productos.active,
-.open .dropdown-toggle.btn-productos {
-    background-image: none;
-}
-
-.btn-productos.disabled,
-.btn-productos[disabled],
-fieldset[disabled] .btn-productos,
-.btn-productos.disabled:hover,
-.btn-productos[disabled]:hover,
-fieldset[disabled] .btn-productos:hover,
-.btn-productos.disabled:focus,
-.btn-productos[disabled]:focus,
-fieldset[disabled] .btn-productos:focus,
-.btn-productos.disabled:active,
-.btn-productos[disabled]:active,
-fieldset[disabled] .btn-productos:active,
-.btn-productos.disabled.active,
-.btn-productos[disabled].active,
-fieldset[disabled] .btn-productos.active {
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos .badge {
-    color: $productos;
-    background-color: white;
-}
-
-// FIN Productos
-// Prestaciones
-.btn-prestaciones {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones:hover,
-.btn-prestaciones:focus,
-.btn-prestaciones:active,
-.btn-prestaciones.active,
-.open .dropdown-toggle.btn-prestaciones {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones:active,
-.btn-prestaciones.active,
-.open .dropdown-toggle.btn-prestaciones {
-    background-image: none;
-}
-
-.btn-prestaciones.disabled,
-.btn-prestaciones[disabled],
-fieldset[disabled] .btn-prestaciones,
-.btn-prestaciones.disabled:hover,
-.btn-prestaciones[disabled]:hover,
-fieldset[disabled] .btn-prestaciones:hover,
-.btn-prestaciones.disabled:focus,
-.btn-prestaciones[disabled]:focus,
-fieldset[disabled] .btn-prestaciones:focus,
-.btn-prestaciones.disabled:active,
-.btn-prestaciones[disabled]:active,
-fieldset[disabled] .btn-prestaciones:active,
-.btn-prestaciones.disabled.active,
-.btn-prestaciones[disabled].active,
-fieldset[disabled] .btn-prestaciones.active {
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones .badge {
-    color: $procedimientos;
-    background-color: white;
-}
-
-// FIN Prestaciones
-.btn-procedimientos {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos:hover,
-.btn-procedimientos:focus,
-.btn-procedimientos:active,
-.btn-procedimientos.active,
-.open .dropdown-toggle.btn-procedimientos {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos:active,
-.btn-procedimientos.active,
-border .open .dropdown-toggle.btn-procedimientos {
-    background-image: none;
-}
-
-.btn-procedimientos.disabled,
-.btn-procedimientos[disabled],
-fieldset[disabled] .btn-procedimientos,
-.btn-procedimientos.disabled:hover,
-.btn-procedimientos[disabled]:hover,
-fieldset[disabled] .btn-procedimientos:hover,
-.btn-procedimientos.disabled:focus,
-.btn-procedimientos[disabled]:focus,
-fieldset[disabled] .btn-procedimientos:focus,
-.btn-procedimientos.disabled:active,
-.btn-procedimientos[disabled]:active,
-fieldset[disabled] .btn-procedimientos:active,
-.btn-procedimientos.disabled.active,
-.btn-procedimientos[disabled].active,
-fieldset[disabled] .btn-procedimientos.active {
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos .badge {
-    color: $procedimientos;
-    background-color: white;
-}
-
-
-/* fin colores botones / acciones */
-
-.border-hallazgo {
-    &:focus {
-        outline: 0;
+    .badge-trastorno {
+        border: 1px solid #ff4a1a;
+        color: #ff4a1a;
+        font-weight: normal;
+        text-transform: uppercase;
     }
-    border: 1px solid #f4a03b !important;
-}
 
-.border-trastorno {
-    &:focus {
-        outline: 0;
+    .badge-procedimiento,
+    .badge-entidad,
+    .badge-regimen {
+        border: 1px solid #92278e;
+        color: #92278e;
+        font-weight: normal;
+        text-transform: uppercase;
     }
-    border: 1px solid #ff4a1a !important;
-}
 
-.border-procedimiento {
-    &:focus {
-        outline: 0;
+    .badge-procedimiento {
+        right: -18% !important;
     }
-    border: 1px solid #92278e !important;
-}
 
-.border-planes {
-    &:focus {
-        outline: 0;
+    .badge-planes {
+        border: 1px solid #6a99ad;
+        color: #6a99ad;
+        font-weight: normal;
+        text-transform: uppercase;
     }
-    border: 1px solid #6a99ad !important;
-}
 
-.border-producto {
-    &:focus {
-        outline: 0;
+    .badge-producto {
+        border: 1px solid $productos;
+        color: $productos;
+        font-weight: normal;
+        text-transform: uppercase;
     }
-    border: 1px solid $productos !important;
-}
 
-.badge-hallazgo {
-    border: 1px solid #f4a03b;
-    color: #f4a03b;
-    font-weight: normal;
-    text-transform: uppercase;
-}
+    .badge-elemento.de.registro {
+        border: 1px solid $adjuntos;
+        color: $adjuntos;
+        font-weight: normal;
+        text-transform: uppercase;
+    }
 
-.badge-trastorno {
-    border: 1px solid #ff4a1a;
-    color: #ff4a1a;
-    font-weight: normal;
-    text-transform: uppercase;
-}
+    .input-group-addon {
+        input {
+            text-align: right;
+        }
+    }
 
-.badge-procedimiento,
-.badge-entidad,
-.badge-regimen {
-    border: 1px solid #92278e;
-    color: #92278e;
-    font-weight: normal;
-    text-transform: uppercase;
-}
+    .form-group>label {
+        margin-bottom: 0 !important;
+    }
 
-.badge-procedimiento {
-    right: -18% !important;
-}
+    .indicacion-default {
+        textarea {
+            height: 108px !important;
+        }
+    }
 
-.badge-producto {
-    border: 1px solid $productos;
-    color: $productos;
-    font-weight: normal;
-    text-transform: uppercase;
-}
+    .anteriores {
+        width: 100%;
+        div {
+            border: 1px solid #ccc;
+        }
+    }
 
-.badge-planes {
-    border: 1px solid #6a99ad;
-    color: #6a99ad;
-    font-weight: normal;
-    text-transform: uppercase;
-}
+    .bg-hallazgos {
+        color: white;
+        background-color: $hallazgos;
+    }
+
+    .bg-trastornos {
+        color: white;
+        background-color: $trastornos;
+    }
+
+    .bg-procedimientos {
+        color: white;
+        background-color: $procedimientos;
+    }
+
+    .bg-planes {
+        color: white;
+        background-color: $planes;
+    }
+
+    .bg-productos {
+        color: white;
+        background-color: $productos;
+    }
+
+    .bg-adjuntos {
+        color: white;
+        background: $adjuntos;
+    }
