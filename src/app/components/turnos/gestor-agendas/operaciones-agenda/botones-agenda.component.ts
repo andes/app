@@ -172,7 +172,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
             // Imprimir pdf carpetas
-            listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir,
+            listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
         };
     }
 
@@ -250,6 +250,12 @@ export class BotonesAgendaComponent implements OnInit {
         let agenda = this.agendasSeleccionadas[0];
         return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria');
         // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
+    }
+
+    puedoImprimirCarpetas() {
+        return this.agendasSeleccionadas.filter((agenda) => {
+            return agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+        }).length <= 0;
     }
 
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
