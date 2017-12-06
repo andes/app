@@ -132,8 +132,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
                             this.mostrarDatosEnEjecucion();
                             if (this.elementoRUP.requeridos.length > 0) {
-                                for (let concepto of this.elementoRUP.requeridos) {
-                                    this.ejecutarConcepto(concepto);
+                                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
+                                    if (!registoExiste) {
+                                        this.ejecutarConcepto(elementoRequerido.concepto);
+                                    }
                                 }
                             }
 
@@ -805,7 +808,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.conceptoFrecuente = concepto;
         } else {
             this.conceptoFrecuente = this.prestacion.solicitud.tipoPrestacion;
-         }
+        }
         this.masFrecuentes = [];
         if (!elementoRUP && concepto) {
             elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
