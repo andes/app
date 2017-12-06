@@ -23,7 +23,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
-   
+
 
     @HostBinding('class.plex-layout') layout = true;
 
@@ -131,6 +131,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
                             this.mostrarDatosEnEjecucion();
+                            if (this.elementoRUP.requeridos.length > 0) {
+                                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
+                                    if (!registoExiste) {
+                                        this.ejecutarConcepto(elementoRequerido.concepto);
+                                    }
+                                }
+                            }
 
                         }
                     }, (err) => {
@@ -381,7 +389,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
-        this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
+        // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
     }
 
@@ -795,10 +803,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
-    recuperaLosMasFrecuentes(concepto, elementoRUP = null) {
-        this.conceptoFrecuente = concepto;
+    recuperaLosMasFrecuentes(concepto = null, elementoRUP = null) {
+        if (concepto) {
+            this.conceptoFrecuente = concepto;
+        } else {
+            this.conceptoFrecuente = this.prestacion.solicitud.tipoPrestacion;
+        }
         this.masFrecuentes = [];
-        if (!elementoRUP) {
+        if (!elementoRUP && concepto) {
             elementoRUP = this.elementosRUPService.buscarElemento(concepto, false);
         }
         if (elementoRUP && elementoRUP.frecuentes) {
@@ -904,7 +916,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     recibeSitengoResultado($event) {
-       this.tengoResultado = $event;
+        this.tengoResultado = $event;
     }
 
 }

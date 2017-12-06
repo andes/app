@@ -198,6 +198,7 @@ import { RiesgoCardiovascularComponent } from './modules/rup/components/elemento
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumeto';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
+import { InformesComponent } from './modules/rup/components/elementos/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 
@@ -238,6 +239,7 @@ export let RUPRegistry = {
     'PesoComponent': PesoComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+    'InformesComponent': InformesComponent,
     'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
     'ObservacionesComponent': ObservacionesComponent,
     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
@@ -268,6 +270,7 @@ let RUPComponentsArray = [
     FrecuenciaRespiratoriaComponent,
     HipertensionArterialComponent,
     IndiceDeMasaCorporalComponent,
+    InformesComponent,
     NuevaEvolucionProblemaComponent,
     ObesidadComponent,
     ObservacionesComponent,
