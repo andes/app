@@ -16,3 +16,6 @@ $lista-procedimientos: "procedimiento",
 "entidad",
 "regimen";
 $invert: #002738;
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
+// la interpolacion del string a una variable directamente
+$rup_colors: ( problemas: $problemas, trastornos: $trastornos, hallazgos: $hallazgos, procedimientos: $procedimientos, planes: $planes, productos: $productos, adjuntos: $adjuntos, lista-problemas: $lista-problemas, lista-procedimientos: $lista-procedimientos, invert: $invert);
