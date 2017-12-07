@@ -121,6 +121,8 @@ export class BuscadorComponent implements OnInit {
             // Esperamos que haya un resultado de más frecuentes antes de mostrar los
             // resultados completos
             this.contarSemanticTags(resultadosSnomed);
+            // limpio los filtros cuando se recibe un nuevo resultado
+            this.filtroBuscadorSnomed([]);
             if (resultado && resultado[0] && resultado[0].frecuentes) {
                 // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope
                 // de la lista con Array.unshift()
