@@ -76,6 +76,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
     public showListadoTurnos = false;
+    public showCarpetas = false;
     public showSuspenderTurnos = false;
     public agendas: any = [];
     public agenda: any = {};
@@ -315,6 +316,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
+        this.showCarpetas = false;
         this.loadAgendas();
     }
 
@@ -574,6 +576,11 @@ export class GestorAgendasComponent implements OnInit {
     listarTurnos(agenda) {
         this.showGestorAgendas = false;
         this.showListadoTurnos = true;
+    }
+
+    listarCarpetas(agenda) {
+        this.showGestorAgendas = false;
+        this.showCarpetas = true;
     }
 
     // Devuelve la duración (HH:mm) de una agenda
