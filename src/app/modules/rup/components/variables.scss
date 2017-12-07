@@ -1,13 +1,15 @@
 @import 'node_modules/@andes/plex/src/lib/css/variables';
 // Variables
-$problemas: #f1930d; // deprecated
-$trastornos: #ff4a1a;
-$hallazgos: #f4a03b;
-$procedimientos: #92278e;
-$planes: #0070cc;
+$problema: #f1930d; // deprecated
+$trastorno: #ff4a1a;
+$hallazgo: #f4a03b;
+$procedimiento: #92278e;
+$plan: #0070cc;
 // $productos: #ef0993;
-$productos: #00bcb4;
-$adjuntos: #b9c512;
+$producto: #00bcb4;
+$adjunto: #b9c512;
+
+/*
 $lista-problemas: "hallazgo",
 "trastorno",
 "situación";
@@ -15,7 +17,12 @@ $selector: ();
 $lista-procedimientos: "procedimiento",
 "entidad",
 "regimen";
+*/
+
 $invert: #002738;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
-$rup_colors: ( problemas: $problemas, trastornos: $trastornos, hallazgos: $hallazgos, procedimientos: $procedimientos, planes: $planes, productos: $productos, adjuntos: $adjuntos, lista-problemas: $lista-problemas, lista-procedimientos: $lista-procedimientos, invert: $invert);
+$rup_colors: ( problema: $problema, trastorno: $trastorno, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto,
+/*lista-problemas: $lista-problemas, lista-procedimientos: $lista-procedimientos,*/
+
+invert: $invert);

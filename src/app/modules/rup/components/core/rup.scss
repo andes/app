@@ -24,19 +24,19 @@
     &.situación {
         &:hover,
         &.active {
-            border: 2px solid $problemas;
+            border: 2px solid $problema;
         }
         .type {
-            background: $problemas;
+            background: $problema;
         }
     }
     &.trastorno {
         &:hover,
         &.active {
-            border: 2px solid $trastornos;
+            border: 2px solid $trastorno;
         }
         .type {
-            background: $trastornos;
+            background: $trastorno;
         }
     }
     &.entidad.observable,
@@ -44,38 +44,38 @@
     &.procedimiento {
         &:hover,
         &.active {
-            border: 2px solid $procedimientos;
+            border: 2px solid $procedimiento;
         }
         .type {
-            background: $procedimientos;
+            background: $procedimiento;
         }
     }
     &.planes {
         &:hover,
         &.active {
-            border: 2px solid $planes;
+            border: 2px solid $plan;
         } // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
         // y precisamente para poder cargar los estilos se saca desde el semanticTag
         .type {
-            background: $planes;
+            background: $plan;
         }
     }
     &.producto {
         &:hover,
         &.active {
-            border: 2px solid $productos;
+            border: 2px solid $producto;
         }
         .type {
-            background: $productos;
+            background: $producto;
         }
     }
     &.elemento {
         &:hover,
         &.active {
-            border: 2px solid $adjuntos;
+            border: 2px solid $adjunto;
         }
         .type {
-            background: $adjuntos;
+            background: $adjunto;
         }
     }
     .type {
@@ -203,10 +203,6 @@ transition: all 200ms;
 // BUTTONS
 @each $tag,
 $color in $rup_colors {
-    .btn-lola {
-        background: $tag;
-        color: $color;
-    }
     .btn-#{$tag} {
         color: #000;
         // background-color: $hallazgos;

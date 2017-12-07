@@ -1,21 +1,21 @@
 @import '../core/rup';
 .text-problemas {
-    color: $problemas;
+    color: $problema;
 }
 
 .text-productos {
-    color: $productos;
+    color: $producto;
 }
 
 // .border-hallazgo {
 //     border-color: $problemas;
 // }
 .text-planes {
-    color: $planes;
+    color: $plan;
 }
 
 .border-planes {
-    border-color: $planes $planes $planes;
+    border-color: $plan;
 }
 
 .borde-prestaciones input,
@@ -35,9 +35,9 @@
 // }
 .borde-planes input,
 .borde-planes input:focus {
-    border-color: $planes;
-    background-color: $planes !important;
-    background-color: $planes;
+    border-color: $plan;
+    background-color: $plan !important;
+    background-color: $plan;
     color: white;
 }
 
@@ -46,9 +46,9 @@
 // }
 .borde-problemas input,
 .borde-problemas input:focus {
-    border-color: $problemas;
-    background-color: $problemas !important;
-    background-color: $problemas;
+    border-color: $problema;
+    background-color: $problema !important;
+    background-color: $problema;
     color: white;
 }
 
@@ -57,9 +57,9 @@
 // }
 .borde-procedimientos input,
 .borde-procedimientos input:focus {
-    border-color: $procedimientos;
-    background-color: $procedimientos !important;
-    background-color: $procedimientos;
+    border-color: $procedimiento;
+    background-color: $procedimiento !important;
+    background-color: $procedimiento;
     color: white;
 }
 
