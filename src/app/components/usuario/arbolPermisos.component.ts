@@ -94,7 +94,8 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                         term: event.query
                     };
                     this.servicioTipoPrestacion.get(query).subscribe((data) => {
-                        data = [...data, ...this.seleccionados];
+                        debugger;
+                        data = [...data, ...this.seleccionados || []];
                         event.callback(data);
                     });
                     break;
