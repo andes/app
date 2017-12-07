@@ -139,7 +139,6 @@ export class GestorAgendasComponent implements OnInit {
             espacioFisico: '',
             estado: ''
         };
-
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
@@ -163,7 +162,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && !this.prestaciones) {
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         if (tipo === 'fecha') {
@@ -211,7 +210,6 @@ export class GestorAgendasComponent implements OnInit {
     };
 
     getAgendas(params: any) {
-        debugger
         this.serviceAgenda.get(params).subscribe(agendas => {
             this.turnosSuspendidos = [];
             agendas.forEach(agenda => {
