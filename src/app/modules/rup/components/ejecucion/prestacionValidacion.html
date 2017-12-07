@@ -11,8 +11,7 @@
                         <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
 
                         <div class="float-right mr-2">
-                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
-                                (click)="mostrarDatosSolicitud(true)"></plex-button>
+                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                         </div>
                     </div>
@@ -35,18 +34,12 @@
                     <small>Ordenar por</small>
                     <br>
                     <div class="btn-group" role="group">
-                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-default text-uppercase mr-1 border-hallazgo"
-                            (click)="ordenarPorTipo(['hallazgo', 'situación'])" [ngClass]="{'bg-hallazgos': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
-                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-default text-uppercase mr-1 border-trastorno" (click)="ordenarPorTipo(['trastorno'])"
-                            [ngClass]="{'bg-trastornos': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
-                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-default text-uppercase mr-1 border-procedimiento"
-                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" [ngClass]="{'bg-procedimientos': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
-                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-default text-uppercase mr-1 border-planes"
-                            (click)="ordenarPorTipo(['planes'])" [ngClass]="{'bg-planes': ordenSeleccionado === 'planes'}">Planes</button>
-                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-default text-uppercase mr-1 border-producto" (click)="ordenarPorTipo(['producto'])"
-                            [ngClass]="{'bg-productos': ordenSeleccionado === reemplazar(['producto'], ',')}">Productos</button>
-                        <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-default text-uppercase mr-1 border-adjunto"
-                            (click)="ordenarPorTipo(['elemento de registro'])" [ngClass]="{'bg-adjuntos': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-hallazgo text-uppercase mr-1 " (click)="ordenarPorTipo(['hallazgo', 'situación'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastorno text-uppercase mr-1" (click)="ordenarPorTipo(['trastorno'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-procedimiento text-uppercase mr-1" (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-plan text-uppercase mr-1" (click)="ordenarPorTipo(['planes'])" [ngClass]="{'active': ordenSeleccionado === 'planes'}">Planes</button>
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-producto text-uppercase mr-1" (click)="ordenarPorTipo(['producto'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Productos</button>
+                        <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-adjunto text-uppercase mr-1" (click)="ordenarPorTipo(['elemento de registro'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
                         <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
                             <i class="mdi mdi-close"></i>
                         </button>
@@ -143,8 +136,7 @@
                                             <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                             + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                         </small>
-                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                            [registro]="elemento" [soloValores]="true">
+                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
                                         </rup>
                                         <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                             <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
@@ -164,8 +156,7 @@
                                         </div>
                                         <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno')">
                                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
-                                                <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}"
-                                                    class="pt-3">
+                                                <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="pt-3">
                                                     <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                         'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                         'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
@@ -187,8 +178,7 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-1 m-0 pr-3 text-right">
-                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio"
-                                            class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
+                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
                                             (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
                                     </div>
                                 </div>
@@ -197,8 +187,7 @@
                                         <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
                                             <div class="col-6">
                                                 <b>Evolución </b>
-                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio
-                                                    | date: 'EEE dd/MM/yyyy' }}</ng-container>
+                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }}</ng-container>
                                                 <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaCarga | fromNow }}</ng-container>
 
                                                 <br> {{ elemento.valor.evolucion }}
@@ -288,21 +277,17 @@
 <footer *ngIf="prestacion && !showDarTurnos">
     <div class="row">
         <div class="col-3">
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
-                label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'" label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'" label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
         </div>
         <div class=" col-4 text-center">
         </div>
         <div class="col text-right ">
 
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
-                label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'" label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"></plex-button>
 
-            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()" type="danger"
-                *ngIf="prestacion && prestacion.estados
+            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()" type="danger" *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'
                 && prestacion.estados[prestacion.estados.length-1].createdBy.username === auth.usuario.username">
             </plex-button>
@@ -312,5 +297,4 @@
 
 <!-- Calendario para dar turnos autocitados -->
 <!-- <pre> {{solicitudTurno | json}}</pre> -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente"
-    [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>

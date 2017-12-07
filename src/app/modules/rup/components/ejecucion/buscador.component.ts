@@ -100,6 +100,10 @@ export class BuscadorComponent implements OnInit {
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
         });
+
+        if (this.frecuentesTipoPrestacion.length > 0) {
+            this.contarSemanticTags(this.frecuentesTipoPrestacion);
+        }
     }
 
     // drag and drop funciones. Hago los emit.
