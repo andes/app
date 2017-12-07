@@ -919,4 +919,21 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.tengoResultado = $event;
     }
 
+    /**
+     *
+     * @param concepto
+     * recibe un concepto y retorna si existe en los requeridos o no;
+     */
+    existe(concepto) {
+        let existe;
+        if (this.elementoRUP.requeridos.length > 0) {
+            existe = this.elementoRUP.requeridos.find(x => x.concepto.conceptId === concepto.conceptId);
+            if (existe) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
 }

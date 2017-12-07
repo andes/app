@@ -108,6 +108,12 @@
                         </div>
                     </ng-container>
 
+                    <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['elemento de registro'])">
+                        <div class="text-capitalize mt-4 titulo-adjuntos">
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Adjuntos</h5>
+                        </div>
+                    </ng-container>
+
                     <div class="rup-card {{(elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag)}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
