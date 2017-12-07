@@ -76,8 +76,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                             this.registro.valor.estado = 'activo';
                         }
                     });
-
-            }
+                }
 
             // Si ademas el problema se origino con la transformación de un problema tambien lo mostramos
             if (this.registro.valor.estado !== 'transformado') {
@@ -125,24 +124,25 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
 
 
     friendlyDate(fecha) {
+        if (this.registro.valor.fechaInicio) {
+            let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
+            let newDateMoment = moment();
 
-        let oldDateMoment = moment(fecha, 'YYYY/MM/DD');
-        let newDateMoment = moment();
+            let numYears = newDateMoment.diff(oldDateMoment, 'years');
+            let numMonths = newDateMoment.diff(oldDateMoment, 'months');
+            let numDays = newDateMoment.diff(oldDateMoment, 'days');
 
-        let numYears = newDateMoment.diff(oldDateMoment, 'years');
-        let numMonths = newDateMoment.diff(oldDateMoment, 'months');
-        let numDays = newDateMoment.diff(oldDateMoment, 'days');
-
-        if (numYears > 0) {
-            this.inicioEstimadoUnidad = numYears;
-            this.inicioEstimadoTiempo = { id: 'anios', nombre: 'Año(s)' };
-        } else {
-            if (numMonths > 0) {
-                this.inicioEstimadoUnidad = numMonths;
-                this.inicioEstimadoTiempo = { id: 'mes', nombre: 'Mes(es)' };
+            if (numYears > 0) {
+                this.inicioEstimadoUnidad = numYears;
+                this.inicioEstimadoTiempo = { id: 'anios', nombre: 'Año(s)' };
             } else {
-                this.inicioEstimadoUnidad = numDays;
-                this.inicioEstimadoTiempo = { id: 'dias', nombre: 'Día(s)' };
+                if (numMonths > 0) {
+                    this.inicioEstimadoUnidad = numMonths;
+                    this.inicioEstimadoTiempo = { id: 'mes', nombre: 'Mes(es)' };
+                } else {
+                    this.inicioEstimadoUnidad = numDays;
+                    this.inicioEstimadoTiempo = { id: 'dias', nombre: 'Día(s)' };
+                }
             }
         }
     }
