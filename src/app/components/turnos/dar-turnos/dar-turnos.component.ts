@@ -329,10 +329,14 @@ export class DarTurnosComponent implements OnInit {
 
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                        return (agenda.estado === 'publicada' &&
-                            (agenda.turnosRestantesDelDia > 0 && delDia) ||
-                            agenda.turnosRestantesProgramados > 0 && this.hayTurnosEnHorario(agenda)) ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && this._solicitudPrestacion && agenda.turnosRestantesProfesional > 0 || agenda.turnosRestantesGestion > 0);
+
+                        return (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
+                        ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
+                        || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
+                        ||
+                        ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
+                        (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
+                        (!autocitado && agenda.turnosRestantesGestion > 0))));
                     });
                 }
 
