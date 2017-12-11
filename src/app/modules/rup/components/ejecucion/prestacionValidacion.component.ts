@@ -109,12 +109,12 @@ export class PrestacionValidacionComponent implements OnInit {
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
             // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-            let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-            if (indexDiagnosticoPrincipal > -1) {
-                let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-                this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-                this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-            }
+            // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
+            // if (indexDiagnosticoPrincipal > -1) {
+            //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
+            //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
+            //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
+            // }
 
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
@@ -245,7 +245,7 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     romperValidacion() {
-        this.plex.confirm('Esta acción puede traer consecuencias 💀 ☠️💀 ☠️<br />¿Desea continuar?', 'Romper validación').then(validar => {
+        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
             if (!validar) {
                 return false;
             } else {

@@ -411,6 +411,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (registros.length > 0) {
             this.showVincular = true;
         }
+
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         // si estamos cargando un concepto para una transformación de hall
