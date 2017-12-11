@@ -128,18 +128,18 @@
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td>{{countBloques[indiceBloque].delDia}}</td>
-                                                            <td>{{countBloques[indiceBloque].programado}}</td>
+                                                            <td>{{countBloques[indiceBloque]?.delDia}}</td>
+                                                            <td>{{countBloques[indiceBloque]?.programado}}</td>
                                                             <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false; then llaveSolicitudValor else llaveComunValor"></ng-container>
                                                             <ng-template #llaveComunValor>
-                                                                <td>{{countBloques[indiceBloque].gestion}}</td>
+                                                                <td>{{countBloques[indiceBloque]?.gestion}}</td>
                                                             </ng-template>
                                                             <ng-template #llaveSolicitudValor>
                                                                 <td>
-                                                                    <b>{{countBloques[indiceBloque].gestion}}</b>
+                                                                    <b>{{countBloques[indiceBloque]?.gestion}}</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <td>{{countBloques[indiceBloque].profesional}}</td>
+                                                            <td>{{countBloques[indiceBloque]?.profesional}}</td>
 
                                                         </tr>
                                                     </tbody>

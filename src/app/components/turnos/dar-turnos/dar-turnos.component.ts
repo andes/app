@@ -883,7 +883,13 @@ export class DarTurnosComponent implements OnInit {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
         } else {
-            return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
+            if (delDia && bloque.restantesDelDia > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+            if (!delDia && bloque.restantesProgramados > 0 ) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
         }
     }
 
