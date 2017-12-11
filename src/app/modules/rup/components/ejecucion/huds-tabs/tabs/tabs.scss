@@ -52,13 +52,13 @@
                 background-color: rgba(240, 173, 78, 1);
             }
             &.trastornos {
-                background-color: $trastornos;
+                background-color: $trastorno;
             }
             &.hallazgos {
-                background-color: $hallazgos;
+                background-color: $hallazgo;
             }
             &.procedimientos {
-                background-color: $procedimientos;
+                background-color: $procedimiento;
             }
             &.planes,
             &.prestacion,
@@ -75,7 +75,7 @@
                 background-color: rgba(0, 112, 186, 1);
             }
             &.productos {
-                background-color: $productos;
+                background-color: $producto;
             }
         }
         &.fixed {

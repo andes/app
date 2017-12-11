@@ -1,33 +1,33 @@
 @import '../variables';
 .type.prestacion {
-    background-color: $planes;
+    background-color: $plan;
 }
 
 .type.hallazgo,
 .type.situación {
-    background-color: $problemas;
+    background-color: $problema;
 }
 
 .type.trastorno {
-    background-color: $trastornos;
+    background-color: $trastorno;
 }
 
 .type.procedimiento,
 .type.entidad.observable,
 .régimen\/tratamiento {
-    background-color: $procedimientos;
+    background-color: $procedimiento;
 }
 
 .type.plan {
-    background-color: $planes;
+    background-color: $plan;
 }
 
 .type.producto {
-    background-color: $productos;
+    background-color: $producto;
 }
 
 .type.elemento.de.registro {
-    background-color: $adjuntos;
+    background-color: $adjunto;
 }
 
 .bg-invert {
@@ -71,5 +71,9 @@
 }
 
 .imprimir {
+    display: none;
+}
+
+.titulo-adjuntos~.titulo-adjuntos {
     display: none;
 }

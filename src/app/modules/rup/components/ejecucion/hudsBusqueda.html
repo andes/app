@@ -2,12 +2,23 @@
     <div class="col">
 
         <div class="menu-huds">
-            <plex-button type="hallazgos btn-sm m-0" label="HALLAZGOS" (click)="actualizarVista('hallazgos')">
-            </plex-button>
-            <plex-button type="planes btn-sm" label="PRESTACIONES" (click)="actualizarVista('prestaciones')">
-            </plex-button>
-            <plex-button type="productos btn-sm" label="MEDICAMENTOS" (click)="actualizarVista('medicamentos')">
-            </plex-button>
+
+            <span>
+                <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgos')" [ngClass]="{'active': vista === 'hallazgos'}">
+                    <span>HALLAZGOS</span>
+            </button>
+            </span>
+            <span>
+                <button class="btn btn-plan btn-sm m-0" (click)="actualizarVista('prestaciones')" [ngClass]="{'active': vista === 'prestaciones'}">
+                    <span>PRESTACIONES</span>
+            </button>
+            </span>
+            <span>
+                <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('medicamentos')" [ngClass]="{'active': vista === 'medicamentos'}">
+                    <span>MEDICAMENTOS</span>
+            </button>
+            </span>
+
         </div>
     </div>
 </div>
