@@ -21,7 +21,7 @@
         height: 40px;
     }
     .botones-filtros {
-        border-bottom: 1px solid #bbbbbb;
+        // border-bottom: 1px solid #bbbbbb;
     }
     button {
         &.procedimientos {
@@ -49,13 +49,24 @@
         // background-color: #dddddd;
         // cursor: pointer;
         position: absolute;
+        text-align: left;
+        padding: 7px 5px;
+        /////////////////////
+        // top: 0;
+        // right: 2px;
+        // position: absolute;
+        // text-align: left;
+        // padding: 5px;
+        // z-index: 1000;
     }
     .badge {
         display: inline-block;
-        padding: 2px;
-        position: relative;
-        top: -18px;
+        top: 0;
         right: 2px;
+        position: absolute;
+        text-align: left;
+        padding: 5px;
+        z-index: 1000;
     }
 }
 
@@ -64,4 +75,12 @@
     position: relative;
     top: 100px;
     right: 55px;
+}
+
+@each $tag,
+$color in $rup_colors {
+    .menu-buscador .badge-#{$tag} {
+        color: white;
+        background-color: $color;
+    }
 }

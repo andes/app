@@ -12,7 +12,7 @@
                 <plex-box>
                     <header>
                         <div class="row">
-                            <div class="col-9 page-title titulo-consulta" (click)="recuperaLosMasFrecuentes()">
+                            <div class="col-9 page-title titulo-consulta">
                                 {{prestacion.solicitud.tipoPrestacion.term}} -
                                 <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                             </div>
@@ -56,9 +56,8 @@
                                     </div>
 
                                     <!-- Contenedor del registro RUP -->
-
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                                        <div class="rup-card {{(registro.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : registro.concepto.semanticTag)}}" [ngClass]="{ 'planes': registro.esSolicitud === true }">
+                                        <div class="rup-card {{ ((registro.esSolicitud) ? 'plan' : ((registro.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((registro.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : registro.concepto.semanticTag))) }}">
                                             <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i>
                                             </div>
@@ -212,9 +211,10 @@
                                             <hr>
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
-
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}">
+                                                <!-- <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}"> -->
+                                                <div class="rup-card {{ (elemento.esSolicitud ? 'plan' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((elemento.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : elemento.concepto.semanticTag))) }}">
                                                     <div class="type">
+
                                                     </div>
                                                     <div class="rup-content">
                                                         <div class="rup-body">
