@@ -411,6 +411,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (registros.length > 0) {
             this.showVincular = true;
         }
+
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         // si estamos cargando un concepto para una transformación de hall
@@ -647,7 +648,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         };
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
 
             // actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {

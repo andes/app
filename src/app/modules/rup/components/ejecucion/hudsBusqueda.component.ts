@@ -227,8 +227,10 @@ export class HudsBusquedaComponent implements OnInit {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             // Buscamos si es crónico
             this.hallazgosCronicos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
-                    return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
+                if (hallazgo.evoluciones[0].estado === 'activo') {
+                    if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
+                        return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
+                    }
                 }
             });
         });
