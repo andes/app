@@ -154,7 +154,7 @@
                                                 </span>
                                             </span>
                                         </div>
-                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno')">
+                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
                                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
                                                 <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="pt-3">
                                                     <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
