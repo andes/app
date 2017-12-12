@@ -17,6 +17,7 @@ export class BotonesAgendaComponent implements OnInit {
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
+    @Output() listarCarpetasEmit = new EventEmitter<boolean>();
     @Output() actualizarEstadoEmit = new EventEmitter<string>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
@@ -170,6 +171,8 @@ export class BotonesAgendaComponent implements OnInit {
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
+            // Imprimir pdf carpetas
+            listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
         };
     }
 
@@ -249,6 +252,12 @@ export class BotonesAgendaComponent implements OnInit {
         // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
     }
 
+    puedoImprimirCarpetas() {
+        return this.agendasSeleccionadas.filter((agenda) => {
+            return agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+        }).length <= 0;
+    }
+
     // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
     haySoloTurnosReservados() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
@@ -300,6 +309,10 @@ export class BotonesAgendaComponent implements OnInit {
 
     listarTurnos() {
         this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    listarCarpetas() {
+        this.listarCarpetasEmit.emit(true);
     }
 
     cancelar() {

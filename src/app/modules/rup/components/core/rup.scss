@@ -24,19 +24,19 @@
     &.situación {
         &:hover,
         &.active {
-            border: 2px solid $problemas;
+            border: 2px solid $problema;
         }
         .type {
-            background: $problemas;
+            background: $problema;
         }
     }
     &.trastorno {
         &:hover,
         &.active {
-            border: 2px solid $trastornos;
+            border: 2px solid $trastorno;
         }
         .type {
-            background: $trastornos;
+            background: $trastorno;
         }
     }
     &.entidad.observable,
@@ -44,29 +44,38 @@
     &.procedimiento {
         &:hover,
         &.active {
-            border: 2px solid $procedimientos;
+            border: 2px solid $procedimiento;
         }
         .type {
-            background: $procedimientos;
+            background: $procedimiento;
         }
     }
     &.planes {
         &:hover,
         &.active {
-            border: 2px solid $planes;
+            border: 2px solid $plan;
         } // hay que mezclar las dos opciones, porque el semanticTag para los planes es un procedimiento
         // y precisamente para poder cargar los estilos se saca desde el semanticTag
         .type {
-            background: $planes;
+            background: $plan;
         }
     }
     &.producto {
         &:hover,
         &.active {
-            border: 2px solid $productos;
+            border: 2px solid $producto;
         }
         .type {
-            background: $productos;
+            background: $producto;
+        }
+    }
+    &.elemento {
+        &:hover,
+        &.active {
+            border: 2px solid $adjunto;
+        }
+        .type {
+            background: $adjunto;
         }
     }
     .type {
@@ -191,300 +200,77 @@ transition: all 200ms;
 
 /* fin elemento rup solo lectura */
 
-
-/* colores botones / acciones */
-
-.btn-hallazgos {
-    color: white;
-    background-color: $hallazgos;
-    border-color: $hallazgos;
+// BUTTONS
+@each $tag,
+$color in $rup_colors {
+    .btn-#{$tag} {
+        color: #000;
+        // background-color: $hallazgos;
+        // border-color: map-get($rup_colors, #{$tag});
+        border-color: $color;
+    }
+    .btn-#{$tag}:hover,
+    .btn-#{$tag}:focus,
+    .btn-#{$tag}:active,
+    .btn-#{$tag}.active,
+    .open .dropdown-toggle.btn-#{$tag} {
+        // color: white;
+        // border-color: $hallazgos;
+    }
+    .btn-#{$tag}:active,
+    .btn-#{$tag}.active,
+    .open .dropdown-toggle.btn-#{$tag} {
+        color: white;
+        // background-color: map-get($rup_colors, #{$tag});
+        background-color: $color;
+        background-image: none;
+    }
+    .btn-#{$tag}.disabled,
+    .btn-#{$tag}[disabled] {
+        border-color: transparent;
+    }
+    // .btn-hallazgos.disabled,
+    // .btn-hallazgos[disabled],
+    // fieldset[disabled] .btn-hallazgos,
+    // .btn-hallazgos.disabled:hover,
+    // .btn-hallazgos[disabled]:hover,
+    // fieldset[disabled] .btn-hallazgos:hover,
+    // .btn-hallazgos.disabled:focus,
+    // .btn-hallazgos[disabled]:focus,
+    // fieldset[disabled] .btn-hallazgos:focus,
+    // .btn-hallazgos.disabled:active,
+    // .btn-hallazgos[disabled]:active,
+    // fieldset[disabled] .btn-hallazgos:active,
+    // .btn-hallazgos.disabled.active,
+    // .btn-hallazgos[disabled].active,
+    // fieldset[disabled] .btn-hallazgos.active {
+    //     background-color: $hallazgos;
+    //     border-color: $hallazgos;
+    // }
+    // .btn-hallazgos .badge {
+    //     color: $hallazgos;
+    //     background-color: white;
+    // }
 }
 
-.btn-hallazgos:hover,
-.btn-hallazgos:focus,
-.btn-hallazgos:active,
-.btn-hallazgos.active,
-.open .dropdown-toggle.btn-hallazgos {
-    color: white;
-    background-color: $hallazgos;
-    border-color: $hallazgos;
+// BADGES
+@each $tag,
+$color in $rup_colors {
+    .badge-#{$tag} {
+        font-weight: normal;
+        text-transform: uppercase;
+        color: $color;
+        //border-color: map-get($rup_colors, #{$tag});
+        border: 1px solid $color;
+        &:focus {
+            outline: 0;
+        }
+    }
 }
 
-.btn-hallazgos:active,
-.btn-hallazgos.active,
-.open .dropdown-toggle.btn-hallazgos {
-    background-image: none;
-}
+//////////////////////////////////////////////
 
-.btn-hallazgos.disabled,
-.btn-hallazgos[disabled],
-fieldset[disabled] .btn-hallazgos,
-.btn-hallazgos.disabled:hover,
-.btn-hallazgos[disabled]:hover,
-fieldset[disabled] .btn-hallazgos:hover,
-.btn-hallazgos.disabled:focus,
-.btn-hallazgos[disabled]:focus,
-fieldset[disabled] .btn-hallazgos:focus,
-.btn-hallazgos.disabled:active,
-.btn-hallazgos[disabled]:active,
-fieldset[disabled] .btn-hallazgos:active,
-.btn-hallazgos.disabled.active,
-.btn-hallazgos[disabled].active,
-fieldset[disabled] .btn-hallazgos.active {
-    background-color: $hallazgos;
-    border-color: $hallazgos;
-}
-
-.btn-hallazgos .badge {
-    color: $hallazgos;
-    background-color: white;
-}
-
-// Trastornos
-.btn-trastornos {
-    color: white;
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos:hover,
-.btn-trastornos:focus,
-.btn-trastornos:active,
-.btn-trastornos.active,
-.open .dropdown-toggle.btn-trastornos {
-    color: white;
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos:active,
-.btn-trastornos.active,
-.open .dropdown-toggle.btn-trastornos {
-    background-image: none;
-}
-
-.btn-trastornos.disabled,
-.btn-trastornos[disabled],
-fieldset[disabled] .btn-trastornos,
-.btn-trastornos.disabled:hover,
-.btn-trastornos[disabled]:hover,
-fieldset[disabled] .btn-trastornos:hover,
-.btn-trastornos.disabled:focus,
-.btn-trastornos[disabled]:focus,
-fieldset[disabled] .btn-trastornos:focus,
-.btn-trastornos.disabled:active,
-.btn-trastornos[disabled]:active,
-fieldset[disabled] .btn-trastornos:active,
-.btn-trastornos.disabled.active,
-.btn-trastornos[disabled].active,
-fieldset[disabled] .btn-trastornos.active {
-    background-color: $trastornos;
-    border-color: $trastornos;
-}
-
-.btn-trastornos .badge {
-    color: $trastornos;
-    background-color: white;
-}
-
-// FIN Trastornos
-.btn-planes {
-    color: white;
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-planes:hover,
-.btn-planes:focus,
-.btn-planes:active,
-.btn-planes.active,
-.open .dropdown-toggle.btn-planes {
-    color: white;
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-planes:active,
-.btn-planes.active,
-.open .dropdown-toggle.btn-planes {
-    background-image: none;
-}
-
-.btn-planes.disabled,
-.btn-planes[disabled],
-fieldset[disabled] .btn-planes,
-.btn-planes.disabled:hover,
-.btn-planes[disabled]:hover,
-fieldset[disabled] .btn-planes:hover,
-.btn-planes.disabled:focus,
-.btn-planes[disabled]:focus,
-fieldset[disabled] .btn-planes:focus,
-.btn-planes.disabled:active,
-.btn-planes[disabled]:active,
-fieldset[disabled] .btn-planes:active,
-.btn-planes.disabled.active,
-.btn-planes[disabled].active,
-fieldset[disabled] .btn-planes.active {
-    background-color: $planes;
-    border-color: $planes;
-}
-
-.btn-planes .badge {
-    color: $planes;
-    background-color: white;
-}
-
-// Productos
-.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos:hover,
-.btn-productos:focus,
-.btn-productos:active,
-.btn-productos.active,
-.open .dropdown-toggle.btn-productos {
-    color: white;
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos:active,
-.btn-productos.active,
-.open .dropdown-toggle.btn-productos {
-    background-image: none;
-}
-
-.btn-productos.disabled,
-.btn-productos[disabled],
-fieldset[disabled] .btn-productos,
-.btn-productos.disabled:hover,
-.btn-productos[disabled]:hover,
-fieldset[disabled] .btn-productos:hover,
-.btn-productos.disabled:focus,
-.btn-productos[disabled]:focus,
-fieldset[disabled] .btn-productos:focus,
-.btn-productos.disabled:active,
-.btn-productos[disabled]:active,
-fieldset[disabled] .btn-productos:active,
-.btn-productos.disabled.active,
-.btn-productos[disabled].active,
-fieldset[disabled] .btn-productos.active {
-    background-color: $productos;
-    border-color: $productos;
-}
-
-.btn-productos .badge {
-    color: $productos;
-    background-color: white;
-}
-
-// FIN Productos
-// Prestaciones
-.btn-prestaciones {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones:hover,
-.btn-prestaciones:focus,
-.btn-prestaciones:active,
-.btn-prestaciones.active,
-.open .dropdown-toggle.btn-prestaciones {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones:active,
-.btn-prestaciones.active,
-.open .dropdown-toggle.btn-prestaciones {
-    background-image: none;
-}
-
-.btn-prestaciones.disabled,
-.btn-prestaciones[disabled],
-fieldset[disabled] .btn-prestaciones,
-.btn-prestaciones.disabled:hover,
-.btn-prestaciones[disabled]:hover,
-fieldset[disabled] .btn-prestaciones:hover,
-.btn-prestaciones.disabled:focus,
-.btn-prestaciones[disabled]:focus,
-fieldset[disabled] .btn-prestaciones:focus,
-.btn-prestaciones.disabled:active,
-.btn-prestaciones[disabled]:active,
-fieldset[disabled] .btn-prestaciones:active,
-.btn-prestaciones.disabled.active,
-.btn-prestaciones[disabled].active,
-fieldset[disabled] .btn-prestaciones.active {
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-prestaciones .badge {
-    color: $procedimientos;
-    background-color: white;
-}
-
-// FIN Prestaciones
-.btn-procedimientos {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos:hover,
-.btn-procedimientos:focus,
-.btn-procedimientos:active,
-.btn-procedimientos.active,
-.open .dropdown-toggle.btn-procedimientos {
-    color: white;
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos:active,
-.btn-procedimientos.active,
-border .open .dropdown-toggle.btn-procedimientos {
-    background-image: none;
-}
-
-.btn-procedimientos.disabled,
-.btn-procedimientos[disabled],
-fieldset[disabled] .btn-procedimientos,
-.btn-procedimientos.disabled:hover,
-.btn-procedimientos[disabled]:hover,
-fieldset[disabled] .btn-procedimientos:hover,
-.btn-procedimientos.disabled:focus,
-.btn-procedimientos[disabled]:focus,
-fieldset[disabled] .btn-procedimientos:focus,
-.btn-procedimientos.disabled:active,
-.btn-procedimientos[disabled]:active,
-fieldset[disabled] .btn-procedimientos:active,
-.btn-procedimientos.disabled.active,
-.btn-procedimientos[disabled].active,
-fieldset[disabled] .btn-procedimientos.active {
-    background-color: $procedimientos;
-    border-color: $procedimientos;
-}
-
-.btn-procedimientos .badge {
-    color: $procedimientos;
-    background-color: white;
-}
-
-
-/* fin colores botones / acciones */
-
+/*
 .border-hallazgo {
     &:focus {
         outline: 0;
@@ -520,6 +306,17 @@ fieldset[disabled] .btn-procedimientos.active {
     border: 1px solid $productos !important;
 }
 
+.border-adjunto {
+    &:focus {
+        outline: 0;
+    }
+    border: 1px solid $adjuntos !important;
+}
+*/
+
+
+/*
+
 .badge-hallazgo {
     border: 1px solid #f4a03b;
     color: #f4a03b;
@@ -547,6 +344,13 @@ fieldset[disabled] .btn-procedimientos.active {
     right: -18% !important;
 }
 
+.badge-planes {
+    border: 1px solid #6a99ad;
+    color: #6a99ad;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+
 .badge-producto {
     border: 1px solid $productos;
     color: $productos;
@@ -554,9 +358,33 @@ fieldset[disabled] .btn-procedimientos.active {
     text-transform: uppercase;
 }
 
-.badge-planes {
-    border: 1px solid #6a99ad;
-    color: #6a99ad;
+.badge-elemento.de.registro {
+    border: 1px solid $adjuntos;
+    color: $adjuntos;
     font-weight: normal;
     text-transform: uppercase;
+}
+*/
+
+.input-group-addon {
+    input {
+        text-align: right;
+    }
+}
+
+.form-group>label {
+    margin-bottom: 0 !important;
+}
+
+.indicacion-default {
+    textarea {
+        height: 108px !important;
+    }
+}
+
+.anteriores {
+    width: 100%;
+    div {
+        border: 1px solid #ccc;
+    }
 }

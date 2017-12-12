@@ -16,15 +16,20 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
 @Component({
     selector: 'rup-prestacionValidacion',
     templateUrl: 'prestacionValidacion.html',
-    styleUrls: ['prestacionValidacion.scss'],
+    styleUrls: [
+        'prestacionValidacion.scss',
+        'prestacionValidacion-print.scss'
+    ],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+    ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // prestacion actual en ejecucion
     public prestacion: any;
+    public registrosOriginales: any;
     public paciente;
     // array de elementos RUP que se pueden ejecutar
     public elementosRUP: any[];
@@ -98,6 +103,8 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
+
+            this.registrosOriginales = prestacion.ejecucion.registros;
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
@@ -422,20 +429,15 @@ export class PrestacionValidacionComponent implements OnInit {
 
     }
 
-    esTitulo(registro) {
-        return this.arrayTitulos.find(x => x.concepto.semanticTag === registro.concepto.semanticTag).length > 0;
+    esTipoOrden(registro, tipos: any[]) {
+
+        if (!registro.esSolicitud) {
+            return tipos.find(x => x === registro.concepto.semanticTag);
+        } else {
+            return tipos.find(x => x === 'planes');
+        }
     }
 
-    esTipoOrden(registro, tipos: any[]) {
-        if (!this.arrayTitulos.find(x => tipos.find(y => y === x.concepto.semanticTag))) {
-            this.arrayTitulos.push(registro);
-        }
-        if (!registro.esSolicitud) {
-            return tipos.find(x => x === registro.concepto.semanticTag && !registro.esSolicitud);
-        } else {
-            return tipos.find(x => x === 'planes' && registro.esSolicitud);
-        }
-    }
 
     public reemplazar(arr, glue) {
         return arr.join(glue);
@@ -461,6 +463,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ordenarPorTipo(tipos: any[]) {
+
+        this.ordenSeleccionado = tipos.join(',');
+
         if (this.tipoOrden === tipos) {
             return 0;
         } else {
@@ -477,6 +482,24 @@ export class PrestacionValidacionComponent implements OnInit {
                 return 1;
             }
             return 0;
+        });
+    }
+
+    limpiarOrden() {
+        this.prestacion.ejecucion.registros = this.registrosOriginales;
+        this.tipoOrden = this.ordenSeleccionado = null;
+    }
+
+    compareArrays(arr1: any[], arr2: any[]) {
+        return arr1.join('') === arr2.join('');
+    }
+
+    imprimirResumen() {
+        this.prestacion.ejecucion.registros.forEach(x => {
+            x.icon = 'down';
+        });
+        setTimeout(() => {
+            window.print();
         });
     }
 

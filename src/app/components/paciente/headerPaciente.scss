@@ -5,23 +5,21 @@
     z-index: 3000;
     background: #0070BA;
     padding-right: 5px;
-    cursor: help;
-    // Texto
+    cursor: help; // Texto
     .texto {
         color: white;
         white-space: nowrap;
-    }
-    // Foto header
+    } // Foto header
     .foto {
         height: 50px;
         padding: 5px;
-    }
-    // Popover con detalles de paciente
+    } // Popover con detalles de paciente
     .popover {
         display: none;
         margin-top: 18%;
         cursor: default;
         font-size: 1em;
+        min-width: 275px;
     }
     &:hover .popover {
         display: block;

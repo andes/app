@@ -1,29 +1,33 @@
 @import '../variables';
 .type.prestacion {
-    background-color: $planes;
+    background-color: $plan;
 }
 
 .type.hallazgo,
 .type.situación {
-    background-color: $problemas;
+    background-color: $problema;
 }
 
 .type.trastorno {
-    background-color: $trastornos;
+    background-color: $trastorno;
 }
 
 .type.procedimiento,
 .type.entidad.observable,
 .régimen\/tratamiento {
-    background-color: $procedimientos;
+    background-color: $procedimiento;
 }
 
 .type.plan {
-    background-color: $planes;
+    background-color: $plan;
 }
 
 .type.producto {
-    background-color: $productos;
+    background-color: $producto;
+}
+
+.type.elemento.de.registro {
+    background-color: $adjunto;
 }
 
 .bg-invert {
@@ -38,4 +42,38 @@
         left: -3px;
         top: -6px;
     }
+}
+
+// Resetea algunas reglas de .badge
+.badge {
+    border: 1px solid;
+    padding: 3px;
+}
+
+.titulo-hallazgos~.titulo-hallazgos {
+    display: none;
+}
+
+.titulo-trastornos~.titulo-trastornos {
+    display: none;
+}
+
+.titulo-procedimientos~.titulo-procedimientos {
+    display: none;
+}
+
+.titulo-planes~.titulo-planes {
+    display: none;
+}
+
+.titulo-productos~.titulo-productos {
+    display: none;
+}
+
+.imprimir {
+    display: none;
+}
+
+.titulo-adjuntos~.titulo-adjuntos {
+    display: none;
 }

@@ -25,22 +25,29 @@
     }
     button {
         &.procedimientos {
-            width: 118%;
+            // width: 118%;
         }
         &.planes {
-            width: 81%;
-            margin-left: 15px !important;
+            // width: 81%;
+            // margin-left: 15px !important;
         }
         &.productos {
-            width: 96%;
-            margin-left: 1px !important;
+            // width: 96%;
+            // margin-left: 1px !important;
+        }
+        &[disabled] {
+            cursor: not-allowed;
+            filter: alpha(opacity=65);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            opacity: .65;
         }
         width: 99%;
         height: 1.5rem;
         font-size: 0.6rem;
-        border: none;
-        background-color: #dddddd;
-        cursor: pointer;
+        // border: none;
+        // background-color: #dddddd;
+        // cursor: pointer;
         position: absolute;
     }
     .badge {
