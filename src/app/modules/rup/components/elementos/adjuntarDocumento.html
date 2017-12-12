@@ -20,18 +20,20 @@
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
 
-                            <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
-                            <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
+                            <img [src]="createUrl(doc.id)" alt="" *ngIf="doc.ext !== 'pdf'">
+                            <a [href]="createUrl(doc.id)" target="_blank" *ngIf="doc.ext === 'pdf'">
+                                <img src="assets/img/pdf.png" alt="" >
+                            </a>
                             <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
                                 <span class="close"></span>
                             </div>
                         </div>
                     </a>
 
-                    <div (click)="lightbox = false" *ngIf="soloValores && i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
+                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
                         class="hover">
                         <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                        <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
+                        <img [src]="createUrl(doc.id)" alt="" *ngIf="doc.ext !== 'pdf'">
                         <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
                         <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
                     </div>

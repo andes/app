@@ -2,6 +2,8 @@ import { Component, Output, Input, EventEmitter, OnInit, ViewChildren, QueryList
 import { RUPComponent } from './../core/rup.component';
 import * as moment from 'moment';
 import { DomSanitizer } from '@angular/platform-browser';
+import { environment } from '../../../../../environments/environment';
+
 @Component({
     selector: 'rup-adjuntar-documento',
     templateUrl: 'adjuntarDocumento.html',
@@ -27,10 +29,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.fotos = [];
         } else {
             this.registro.valor.documentos.forEach((item: any) => {
-                this.fotos.push({
-                    ext: item.ext,
-                    file: this.sanitazer.bypassSecurityTrustResourceUrl(item.plain64)
-                });
+                this.fotos.push(item);
             });
         }
 
@@ -45,15 +44,22 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            let foto = {
-                ext:  this.fileExtension(inputValue.value),
-                file:  this.sanitazer.bypassSecurityTrustResourceUrl(myReader.result)
+            let metadata = {
+                prestacion: this.prestacion.id,
+                registro: this.registro.id
             };
-            this.fotos.push(foto);
-            this.registro.valor.documentos.push({
-                ext:  this.fileExtension(inputValue.value),
-                plain64: myReader.result
+            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
+                this.fotos.push({
+                    ext:  this.fileExtension(inputValue.value),
+                    id:  data._id
+                });
+                this.registro.valor.documentos.push({
+                    ext:  this.fileExtension(inputValue.value),
+                    id:  data._id
+                });
             });
+
+
         };
         myReader.readAsDataURL(file);
     }
@@ -82,8 +88,10 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     }
 
     activaLightbox(index) {
-        this.lightbox = true;
-        this.indice = index;
+        if (this.fotos[index].ext !== 'pdf') {
+            this.lightbox = true;
+            this.indice = index;
+        }
     }
 
     imagenPrevia(i) {
@@ -98,6 +106,13 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         if (imagenSiguiente <= this.fotos.length - 1) {
             this.indice = imagenSiguiente;
         }
+    }
+
+    createUrl(id) {
+        /** Hack momentaneo */
+        let jwt = window.sessionStorage.getItem('jwt');
+        let apiUri = environment.API;
+        return apiUri + '/modules/rup/store/' + id + '?token=' + jwt;
     }
 
     fromMobile () {
@@ -124,26 +139,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                 this.adjunto = data[0];
                 let docs = this.adjunto.valor.documentos;
                 docs.forEach((item) => {
-                    if (item.ext === 'pdf') {
-                        item.plain64 = item.plain64.replace('image/*', 'application/pdf');
-                    } else {
-                        item.plain64 = item.plain64.replace('image/*', 'image/jpeg');
-                    }
-                    let e = {
-                        ext: item.ext,
-                        file:  this.sanitazer.bypassSecurityTrustResourceUrl(item.plain64),
-                    };
-                    this.fotos.push(e);
-                    this.registro.valor.documentos.push({
-                        ext:  item.ext,
-                        plain64: item.plain64
-                    });
+
+                    this.fotos.push(item);
 
                 });
                 this.adjuntosService.delete(this.adjunto._id).subscribe(() => {});
-                // let file: string = this.registro.valor[0].file as string;
-                // file = file.replace('image/*', 'application/octet-stream');
-                // window.open(file);
 
             } else {
                 this.timeout = setTimeout( (() => {

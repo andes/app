@@ -42,4 +42,14 @@ export class AdjuntosService {
     delete (id) {
         return this.server.delete(this.prestacionesUrl + '/' + id);
     }
+
+    /**
+     * Upload a file
+     * @param {string} file  Archivo en Base64
+     * @param {string} metadata.prestacion Id de la prestacion
+     * @param {string} metadata.registro Id del registro
+     */
+    upload (file, metadata) {
+        return this.server.post('/modules/rup/store', {file, metadata});
+    }
 }
