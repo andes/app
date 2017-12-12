@@ -119,6 +119,11 @@
                         <div class="header" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                             <div class="title">
                                 {{item.term}}
+                                <ng-container *ngIf="busquedaActual === 'sugeridos'">
+                                    <span *ngIf="item?.sugeridoPor" class="text-right pl-2">
+                                        <b><i>Sugerido por {{item.sugeridoPor}}</i></b>
+                                    </span>
+                                </ng-container>
                             </div>
                             <div class="actions">
                                 <small class="badge badge-{{ ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">{{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}

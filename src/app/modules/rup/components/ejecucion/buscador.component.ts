@@ -1,6 +1,6 @@
 import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -11,9 +11,9 @@ import { Auth } from '@andes/auth';
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit {
+export class BuscadorComponent implements OnInit, OnChanges {
 
-    @Input() elementoRUPprestacion;
+    // @Input() elementoRUPprestacion;
     // @Input() resultados;
     @Input() _draggable: Boolean = false; // TODO Ver si lo sacamos.
     // Son los mas frecuentes del elemento rup.(tipo de prestación)
@@ -62,8 +62,7 @@ export class BuscadorComponent implements OnInit {
     public arrayFrecuentes: any[] = [];
     // Boolean para mostrar lo mas fecuentes
     public showFrecuentes = false;
-    // Guardo una copia completa de los mas frecuentes;
-    public resultadosFrecuentesAux: any[] = [];
+
 
     // TODO Ver si lo dejamos asi
     public _dragScope = ['registros-rup', 'vincular-registros-rup'];
@@ -109,7 +108,20 @@ export class BuscadorComponent implements OnInit {
 
         if (this.frecuentesTipoPrestacion.length > 0) {
             // inicializamos el elemento todos con el conjunto total de resultados
-            this.results.sugeridos['todos'] = this.frecuentesTipoPrestacion;
+            // this.results.sugeridos['todos'] = this.frecuentesTipoPrestacion;
+
+            // if (this.frecuentesTipoPrestacion) {
+            //     // 
+            // }
+
+            this.results.sugeridos['todos'] = [];
+
+
+            this.frecuentesTipoPrestacion.forEach(element => {
+                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
+                    this.results.sugeridos['todos'].push(element);
+                }
+            });
 
             // filtramos los resultados
             this.filtrarResultados('sugeridos');
@@ -136,6 +148,24 @@ export class BuscadorComponent implements OnInit {
         this.filtroActual = 'todos';
     }
 
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.frecuentesTipoPrestacion && changes.frecuentesTipoPrestacion.currentValue) {
+            if (typeof this.results.sugeridos['todos'] === 'undefined') {
+                this.results.sugeridos['todos'] = [];
+            }
+
+            changes.frecuentesTipoPrestacion.currentValue.forEach(element => {
+                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
+
+                    if (this.conceptoFrecuente.term) {
+                        element.sugeridoPor = this.conceptoFrecuente.term;
+                    }
+
+                    this.results.sugeridos['todos'].push(element);
+                }
+            });
+        }
+      }
 
     /**
      * Setear la variable tipo de busqueda
@@ -145,12 +175,6 @@ export class BuscadorComponent implements OnInit {
      */
     public setTipoBusqueda(busquedaActual): void {
         this.busquedaActual = busquedaActual;
-
-        // if (busquedaActual === 'busquedaGuiada') {
-        //     this.filtrarResultadosBusquedaGuiada();
-        // } else {
-        //     this.filtrarResultados(this.busquedaActual);
-        // }
     }
 
     // drag and drop funciones. Hago los emit.
@@ -185,7 +209,7 @@ export class BuscadorComponent implements OnInit {
         // this.filtrarResultados(this.busquedaActual);
         this.filtrarResultados('buscadorBasico');
 
-        // filtramos los resultados para la busqueda guiada y que quede armado 
+        // filtramos los resultados para la busqueda guiada y que quede armado
         // con el formato para los desplegables
         this.filtrarResultadosBusquedaGuiada();
         // Hay más frecuentes? Frecuentes de este profesional
@@ -301,7 +325,6 @@ export class BuscadorComponent implements OnInit {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
-        debugger;
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = this.conceptos[this.filtroActual];
 
