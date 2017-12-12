@@ -36,7 +36,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     }
 
-    changeListener($event) : void {
+    changeListener($event): void {
         this.readThis($event.target);
     }
 

@@ -204,7 +204,11 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     /**
      * Busca paciente cada vez que el campo de busca cambia su valor
      */
-    public buscar() {
+    public buscar($event) {
+        /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
+        if ($event.type) {
+            return;
+        }
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
