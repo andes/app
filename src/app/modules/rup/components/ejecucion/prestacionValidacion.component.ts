@@ -172,7 +172,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
         if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un diagnóstico principal');
+            this.plex.toast('info', 'Debe seleccionar un diagnóstico principal', 'Diagnóstico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
@@ -234,7 +234,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
-                        this.plex.toast('success', 'La prestación se validó correctamente');
+                        this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                     });

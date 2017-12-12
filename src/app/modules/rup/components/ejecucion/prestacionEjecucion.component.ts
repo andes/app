@@ -648,7 +648,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         };
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada');
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
 
             // actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
