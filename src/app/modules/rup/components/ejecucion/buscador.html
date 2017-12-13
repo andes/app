@@ -86,7 +86,7 @@
         </ng-container>
 
         <div class="filtros d-flex">
-            <small class="pr-1">Filtros:</small>
+            <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
             <small class="ml-3" *ngIf="searchTerm && results && results.length === 0 && !loading">
                 No se han encontrado resultados
@@ -198,100 +198,3 @@
             </li>
         </ng-container>
     </ul>
-
-
-    <!-- <div *ngIf="busquedaActual && results && results[busquedaActual] && results[busquedaActual]?.length">
-    <ul class="conceptos list-unstyled">
-
-        <ng-container *ngFor="let item of results[busquedaActual], let i = index;">
-            <li>
-                <div class="rup-card mini" *ngIf="busquedaActual === 'busquedaGuiada'">
-                    <div class="container rup-content">
-                        <div class="row header">
-                            <div class="col-10">
-                                <b>{{items.nombre}}</b>
-                            </div>
-                            <div class="col-1">
-                                <span class="badge-warning">
-                                    {{ items.valor.length }}
-                                </span>
-                            </div>
-                            <div class="col-1">
-                                <a href="javascript: void(0)" class="btn btn-sm btn-primary" (click)='desplegar(i , items.nombre)'>
-                                    <i class="mdi mdi-chevron-down"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div *ngIf="showContent === items.nombre">
-                    <ng-container *ngIf="items.valor.length === 0">
-                        <p>No hay resultados</p>
-                    </ng-container>
-
-                    <ul class="conceptos list-unstyled">
-                        <ng-container *ngFor="let item of items.valor">
-                            <li draggable class="" *ngIf="!hideLista" [dragHandle]="'.drag-bar'" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                <div class="rup-card mini {{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }}">
-                                    <div *ngIf="_dragScope" class=" type">
-                                        <i #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i>
-                                    </div>
-                                    <div class="rup-content">
-                                        <div class="header" [ngClass]="{'actions-left': tipoBusqueda === 'equipamientos'}">
-                                            <div class="title">
-                                                {{ item.term }}
-                                            </div>
-                                            <div [ngClass]="{'actions': _dragScope, 'actions-left': tipoBusqueda === 'equipamientos'}">
-                                                <small class="badge badge-{{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">{{ item.semanticTag }}</small>
-                                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
-                                                    <i class="mdi mdi-plus-box-outline"></i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ng-container>
-                    </ul>
-                </div>
-
-
-            </li>
-        </ng-container>
-        </ul>
-</div> -->
-
-
-
-    <!--
-<div *ngIf="frecuentesTipoPrestacion && frecuentesTipoPrestacion.length > 0 && conceptosTurneables && conceptosTurneables.length && !showFrecuentesTipoPrestacion && !showRefSets">
-    <p> Más frecuentes de {{conceptoFrecuente.term}} </p>
-    <ul class="conceptos list-unstyled">
-        <ng-container *ngFor="let item of frecuentesTipoPrestacion">
-            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                <div class="rup-card mini {{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }}">
-                    <div class="type">
-                        <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
-                    </div>
-                    <div class="rup-content">
-                        <div class="header">
-                            <div class="title">
-                                {{item.term}}
-                            </div>
-                            <div class="actions">
-                                <small class="badge badge-{{ ((tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">{{ (tipoBusqueda === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
-                                </small>
-                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
-                                    <i class="mdi mdi-plus-box-outline"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </li>
-        </ng-container>
-    </ul>
-</div>
--->
