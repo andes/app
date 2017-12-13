@@ -15,6 +15,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     loading = false;
     waiting = false;
     timeout = null;
+    errorExt = false;
 
     fotos: any[] = [];
     lightbox = false;
@@ -46,7 +47,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     readThis(inputValue: any): void {
         let ext = this.fileExtension(inputValue.value);
+        this.errorExt = false;
         if (!this.extensions.find((item) => item === ext)) {
+            this.errorExt = true;
             return;
         }
         let file: File = inputValue.files[0];

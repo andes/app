@@ -6,6 +6,9 @@
             <span *ngIf="!waiting && !soloValores">
                 <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()"></plex-button>
                 <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi AppMobile" (click)="fromMobile()"></plex-button>
+                <span *ngIf="errorExt">
+                    <span class="badge-danger"> Archivo invalido </span>
+                </span>
             </span>
             <span *ngIf="waiting">
                 <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
@@ -13,6 +16,7 @@
             </span>
         </div>
     </div>
+    
     <div class="row">
         <div class="col-12">
             <div class="image-container hr-inline-group" *ngIf="fotos">
