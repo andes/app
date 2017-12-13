@@ -10,7 +10,7 @@ import { environment } from '../../../../../environments/environment';
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
-
+    extensions = ['bmp', 'jpg', 'jpeg', 'png', 'pdf'];
     adjunto: any;
     loading = false;
     waiting = false;
@@ -43,7 +43,13 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         this.readThis($event.target);
     }
 
+
     readThis(inputValue: any): void {
+        debugger;
+        let ext = this.fileExtension(inputValue.value);
+        if (!this.extensions.find((item) => item === ext)) {
+            return;
+        }
         let file: File = inputValue.files[0];
         let myReader: FileReader = new FileReader();
 
@@ -54,11 +60,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             };
             this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
                 this.fotos.push({
-                    ext:  this.fileExtension(inputValue.value),
+                    ext,
                     id:  data._id
                 });
                 this.registro.valor.documentos.push({
-                    ext:  this.fileExtension(inputValue.value),
+                    ext,
                     id:  data._id
                 });
             });
