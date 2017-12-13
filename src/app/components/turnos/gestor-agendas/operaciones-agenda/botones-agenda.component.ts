@@ -12,8 +12,6 @@ import * as moment from 'moment';
 
 export class BotonesAgendaComponent implements OnInit {
 
-    // @Input() turnosSuspendidos: any[];
-
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
@@ -258,25 +256,24 @@ export class BotonesAgendaComponent implements OnInit {
         }).length <= 0;
     }
 
-    // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
+    // Verifica que las agendas seleccionadas tengan al menos un turno de acceso directo poder para publicar la agenda
     haySoloTurnosReservados() {
+        let band = false;
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                if (this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0) {
-                    if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
-                        // No se puede Publicar
-                        return false;
-                    }
+                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
+                    band = false || band;
+                } else {
+                    band = true;
                 }
             }
         }
         if (this.agendasSeleccionadas.length > 0) {
-            return true;
+            return band;
         } else {
             return false;
         }
     }
-
 
     // Botón editar agenda
     editarAgenda() {
