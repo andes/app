@@ -452,7 +452,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
-            this.colapsarPrestaciones();
+            this.colapsarPrestaciones('collapse');
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
             if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
@@ -701,7 +701,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
         if (dragging === true) {
-            this.colapsarPrestaciones();
+            this.colapsarPrestaciones('collapse');
         } else {
             this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
         }
@@ -795,7 +795,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     if (option === 'expand') {
                         this.itemsRegistros[element.id].collapse = false;
                     } else if (option === 'collapse') {
-                        console.log('sadsadsad');
                         this.itemsRegistros[element.id].collapse = true;
                     }
                 }
