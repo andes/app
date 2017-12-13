@@ -17,12 +17,12 @@
                 </small>
             </div>
         </div>
-        <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones">
+        <div class="row" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto.evoluciones && registro.concepto.semanticTag === 'trastorno'">
             <div class="col">
                 <strong>Inicio del Hallazgo: {{hallazgoHudsCompleto?.evoluciones[0].fechaInicio | fecha}} </strong>
             </div>
         </div>
-        <div class="row">
+        <div class="row" *ngIf="registro.concepto.semanticTag === 'trastorno'">
             <!--ESTADO DEL PROBLEMA-->
             <div class="col-4">
                 <label class="box-title-secundario">Estado actual</label>
@@ -36,10 +36,8 @@
             <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
-                        (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
-                        [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
@@ -71,8 +69,7 @@
                 {{ unaEvolucion.fechaCarga | fecha }}
             </div>
             <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
-                    (click)="cambiarEvolucion('+') "></plex-button>
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
                 <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
             </div>
         </div>

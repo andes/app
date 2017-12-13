@@ -51,7 +51,7 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
 
                     // asignamos los pesos al data para el chart
                     this.barChartData = [
-                        { data: this.pesos.map(p => p.registro[0].valor), label: 'kgs' }
+                        { data: this.pesos.map(p => p.registro[0].valor), label: 'kgs', fill: false }
                     ];
 
                     // agregamos las leyendas del eje x

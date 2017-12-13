@@ -50,7 +50,7 @@
             background: $procedimiento;
         }
     }
-    &.planes {
+    &.plan {
         &:hover,
         &.active {
             border: 2px solid $plan;
@@ -69,7 +69,7 @@
             background: $producto;
         }
     }
-    &.elemento {
+    &.elementoderegistro {
         &:hover,
         &.active {
             border: 2px solid $adjunto;
@@ -264,6 +264,10 @@ $color in $rup_colors {
         border: 1px solid $color;
         &:focus {
             outline: 0;
+        }
+        &.active {
+            background-color: $color;
+            mix-blend-mode: hard-light;
         }
     }
 }

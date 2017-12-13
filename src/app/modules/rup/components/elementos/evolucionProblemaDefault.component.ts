@@ -46,9 +46,12 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                 });
             });
         }
-
         if (!this.registro.valor) {
             this.registro.valor = { estado: 'activo' };
+            if (this.registro.concepto.semanticTag === 'hallazgo') {
+                this.registro.valor.fechaInicio = new Date();
+                this.friendlyDate(this.registro.valor.fechaInicio);
+            }
         } else {
             // Si llega un idRegistroOrigen es porque se trata de evolucionar un problema que ya existe en la HUDS
             // tenemos que mostrar las evoluciones anteriores
@@ -71,12 +74,20 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                                 this.unaEvolucion = this.evoluciones[0];
                                 this.registro.valor.estado = this.registro.valor.estado ? this.registro.valor.estado : (this.unaEvolucion.estado ? this.unaEvolucion.estado : 'activo');
                                 this.registro.valor.evolucion = this.registro.valor.evolucion ? this.registro.valor.evolucion : '';
+                                if (this.registro.concepto.semanticTag === 'hallazgo') {
+                                    this.registro.valor.fechaInicio = new Date();
+                                    this.friendlyDate(this.registro.valor.fechaInicio);
+                                }
                             }
                         } else {
                             this.registro.valor.estado = 'activo';
+                            if (this.registro.concepto.semanticTag === 'hallazgo') {
+                                this.registro.valor.fechaInicio = new Date();
+                                this.friendlyDate(this.registro.valor.fechaInicio);
+                            }
                         }
                     });
-                }
+            }
 
             // Si ademas el problema se origino con la transformación de un problema tambien lo mostramos
             if (this.registro.valor.estado !== 'transformado') {

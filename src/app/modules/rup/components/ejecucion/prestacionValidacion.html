@@ -114,7 +114,7 @@
                         </div>
                     </ng-container>
 
-                    <div class="rup-card {{(elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag)}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
+                    <div class="rup-card {{ (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : ((elemento.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : elemento.concepto.semanticTag))}}  {{ elemento.esSolicitud ? 'planes' : '' }}">
                         <div class="type"></div>
 
                         <div class="rup-content">
@@ -154,7 +154,7 @@
                                                 </span>
                                             </span>
                                         </div>
-                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno')">
+                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
                                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
                                                 <small title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="pt-3">
                                                     <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
@@ -242,7 +242,7 @@
                 </plex-box>
             </div>
         </div>
-        <div class="container imprimir mt-3" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
+        <!-- <div class="container imprimir mt-3" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
             <div class="row">
                 <div class="col-6"></div>
                 <div class="col-6">
@@ -271,7 +271,7 @@
                     </b>
                 </div>
             </div>
-        </div>
+        </div> -->
     </plex-box>
 </section>
 <footer *ngIf="prestacion && !showDarTurnos">
