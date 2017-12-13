@@ -271,17 +271,17 @@
             <div class="col-4" *ngIf="prestacion">
                 <plex-box>
                     <plex-tabs [activeIndex]="panelIndex">
-                        <plex-tab label="Historia de Salud" (click)="panelIndex = 0">
-                            <!-- HUDS [hudsBusqueda.component.ts] -->
-                            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
-                        </plex-tab>
-                        <plex-tab label="Buscador" (click)="panelIndex = 1">
+                        <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente" [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)"
                                 (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                             <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
                             <!-- <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
-                                (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar> -->
+                            (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar> -->
+                        </plex-tab>
+                        <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
+                            <!-- HUDS [hudsBusqueda.component.ts] -->
+                            <rup-hudsBusqueda [paciente]="prestacion?.paciente" [prestacionActual]="prestacion.id" [_dragScope]="'registros-rup'" (evtData)="ejecutarConceptoHuds($event)" (evtHuds)="agregarListadoHuds($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)"></rup-hudsBusqueda>
                         </plex-tab>
                     </plex-tabs>
                 </plex-box>
