@@ -52,4 +52,12 @@ export class AdjuntosService {
     upload (file, metadata) {
         return this.server.post('/modules/rup/store', {file, metadata});
     }
+
+    /**
+     * Genera un token de archivo
+     */
+
+     generateToken() {
+        return this.server.post('/auth/file-token', {});
+     }
 }

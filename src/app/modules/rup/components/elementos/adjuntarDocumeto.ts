@@ -19,6 +19,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     fotos: any[] = [];
     lightbox = false;
     indice;
+    fileToken: String = null;
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -32,6 +33,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                 this.fotos.push(item);
             });
         }
+        this.adjuntosService.generateToken().subscribe((data: any) => {
+            this.fileToken = data.token;
+        });
 
     }
 
@@ -110,9 +114,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
     createUrl(id) {
         /** Hack momentaneo */
-        let jwt = window.sessionStorage.getItem('jwt');
+        // let jwt = window.sessionStorage.getItem('jwt');
         let apiUri = environment.API;
-        return apiUri + '/modules/rup/store/' + id + '?token=' + jwt;
+        return apiUri + '/modules/rup/store/' + id + '?token=' + this.fileToken;
     }
 
     fromMobile () {
