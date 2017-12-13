@@ -23,8 +23,6 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
-
-
     @HostBinding('class.plex-layout') layout = true;
 
     // prestacion actual en ejecucion
@@ -84,6 +82,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoFrecuente: any;
     // boolean de si tengo o no resultados en el buscador
     public tengoResultado: any;
+    // el concepto que seleccionamos para eliminar lo guradamos aca.
+    public conceptoAEliminar: any;
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -356,9 +357,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     confirmarEliminarRegistro(registroEliminar, scope) {
+        this.conceptoAEliminar = registroEliminar.dragData.concepto;
         this.scopeEliminar = scope;
-        let index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.id === r.id));
-
+        let index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.dragData.concepto.conceptId === r.concepto.conceptId));
         this.indexEliminar = index;
         this.confirmarEliminar = true;
     }
