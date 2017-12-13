@@ -45,7 +45,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
 
 
     readThis(inputValue: any): void {
-        debugger;
         let ext = this.fileExtension(inputValue.value);
         if (!this.extensions.find((item) => item === ext)) {
             return;
