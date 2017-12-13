@@ -107,15 +107,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         });
 
         if (this.frecuentesTipoPrestacion.length > 0) {
-            // inicializamos el elemento todos con el conjunto total de resultados
-            // this.results.sugeridos['todos'] = this.frecuentesTipoPrestacion;
-
-            // if (this.frecuentesTipoPrestacion) {
-            //     // 
-            // }
-
             this.results.sugeridos['todos'] = [];
-
 
             this.frecuentesTipoPrestacion.forEach(element => {
                 if (this.results.sugeridos['todos'].indexOf(element) === -1) {
@@ -148,6 +140,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.filtroActual = 'todos';
     }
 
+    /**
+     * Utilizamos el ngOnChanges para detectar cambios en los Inputs, en este caso
+     * para agregar a los sugeridos nuevos conceptos para registrar en la consulta
+     *
+     * @param {SimpleChanges} changes
+     * @memberof BuscadorComponent
+     */
     ngOnChanges(changes: SimpleChanges) {
         if (changes.frecuentesTipoPrestacion && changes.frecuentesTipoPrestacion.currentValue) {
             if (typeof this.results.sugeridos['todos'] === 'undefined') {

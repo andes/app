@@ -145,7 +145,7 @@
 
             <div *ngIf="prestaciones" class="list-group">
                 <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
-                    <div class="rup-card mini planes" [ngClass]="{'active': eyePrestacion === iPrestacion || estaEnTabs(prestacion, 'prestacion')}">
+                    <div class="rup-card mini plan" [ngClass]="{'active': eyePrestacion === iPrestacion || estaEnTabs(prestacion, 'prestacion')}">
                         <div class="type ">
                             <!-- Vacío -->
                         </div>
