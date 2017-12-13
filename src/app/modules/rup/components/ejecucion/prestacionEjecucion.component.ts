@@ -357,9 +357,14 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     confirmarEliminarRegistro(registroEliminar, scope) {
-        this.conceptoAEliminar = registroEliminar.dragData.concepto;
+        let index;
+        if (registroEliminar.dragData) {
+            this.conceptoAEliminar = registroEliminar.dragData.concepto;
+            index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
+        } else {
+            index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.id === r.id));
+        }
         this.scopeEliminar = scope;
-        let index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.dragData.concepto.conceptId === r.concepto.conceptId));
         this.indexEliminar = index;
         this.confirmarEliminar = true;
     }
