@@ -324,7 +324,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
     existePrestacion(bloque: any, idPrestacion: string) {
         return bloque.tipoPrestaciones.find((tp) => {
-            return tp._id === idPrestacion;
+            return tp.conceptId === idPrestacion;
         });
     }
 
