@@ -29,7 +29,6 @@ export class CalendarioDia {
 
                 // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
                 if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
-
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
                         countBloques.push({
                             delDia: bloque.restantesDelDia + bloque.restantesProgramados,
@@ -52,8 +51,7 @@ export class CalendarioDia {
 
                     // En caso contrario, se calculan los contadores por separado
                 } else {
-
-                    // loopear turnos para sacar el tipo de turno!
+                    let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
                     this.agenda.bloques.forEach((bloque, indexBloque) => {
                         countBloques.push({
                             // Asignamos a contadores dinamicos la cantidad inicial de c/u
@@ -69,10 +67,12 @@ export class CalendarioDia {
                         this.profesionalDisponibles += bloque.restantesProfesional;
                         if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
                             if (solicitudPrestacion) {
-                                if (this.gestionDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === false) {
+                                if (this.gestionDisponibles > 0 && !autocitado) {
                                     this.estado = 'disponible';
-                                } else if (this.profesionalDisponibles > 0 && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+                                    disponible = true;
+                                } else if (this.profesionalDisponibles > 0 && autocitado) {
                                     this.estado = 'disponible';
+                                    disponible = true;
                                 } else {
                                     this.estado = 'vacio';
                                     disponible = false;
@@ -90,7 +90,15 @@ export class CalendarioDia {
                     });
 
                     if (disponible) {
-                        this.turnosDisponibles += this.programadosDisponibles + this.gestionDisponibles + this.profesionalDisponibles;
+                        if (solicitudPrestacion) {
+                            if (autocitado) {
+                                this.turnosDisponibles += this.profesionalDisponibles;
+                            } else {
+                                this.turnosDisponibles += this.gestionDisponibles;
+                            }
+                        } else {
+                            this.turnosDisponibles += this.programadosDisponibles;
+                        }
                     }
                 }
             } else {

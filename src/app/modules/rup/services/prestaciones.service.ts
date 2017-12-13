@@ -343,7 +343,7 @@ export class PrestacionesService {
         //     registros = this.cacheRegistros[idPaciente];
         //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         // } else {
-        return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
+        return this.getByPacienteHallazgo(idPaciente, true).map(hallazgos =>
             hallazgos.find(registro => {
                 if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
                     return registro;

@@ -58,9 +58,14 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
         this.sinResultados.emit(false);
     }
 
-    public buscar() {
+    public buscar($event) {
+        /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
+        if ($event.type) {
+            return;
+        }
+
         this.pacienteSeleccionado = null;
-        super.buscar();
+        super.buscar({});
         if (!this.resultado || this.resultado.length === 0) {
             this.mostrarNuevo = true;
             this.sinResultados.emit(true);

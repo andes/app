@@ -6,7 +6,7 @@
                 <header>
                     <div class="page-title">Buscar un paciente</div>
                 </header>
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>"
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>"
                     placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
                 </plex-text>
                 <!--Loader-->
