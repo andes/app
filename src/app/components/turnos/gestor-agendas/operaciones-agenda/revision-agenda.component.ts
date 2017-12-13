@@ -182,7 +182,7 @@ export class RevisionAgendaComponent implements OnInit {
         if (event.query) {
             this.serviceCie10.get(query).subscribe((datos) => {
                 this.diagnosticos.forEach(elem => {
-                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo );
+                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo);
                     if (index >= 0) {
                         datos.splice(index, 1);
                     }
@@ -231,7 +231,6 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     marcarIlegible() {
-        console.log('MARCADO ILEGIBLE');
         this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
         this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
         this.diagnosticos = [];
@@ -244,8 +243,8 @@ export class RevisionAgendaComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
         }
-        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        if (this.agenda.sobreturnos) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
         // turnoSinVerificar = this.turnos.find(t => {
         turnoSinVerificar = listaTurnos.find(t => {
@@ -274,8 +273,8 @@ export class RevisionAgendaComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
         }
-        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        if (this.agenda.sobreturnos) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
         turnoSinCodificar = listaTurnos.find(t => {
             return (
