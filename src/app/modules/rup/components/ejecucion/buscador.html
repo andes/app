@@ -110,7 +110,7 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
 
-            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini {{ ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }}">
                     <div class="type">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
