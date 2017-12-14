@@ -128,7 +128,6 @@
                             </td>
                             <td (click)="seleccionarTurno(agenda.sobreturnos[i], -1)">
                                 <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
-                                <span *ngIf="sobreturno.paciente && sobreturno.paciente.id">{{ sobreturno.paciente | paciente }} </span>
                                 <small>
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento !== ''">| DNI: {{ sobreturno.paciente.documento | number }}</span>
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''" class="text-danger">| DNI: Sin documento (temporal)</span>
@@ -147,7 +146,7 @@
                                     <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
                                 <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Codificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Auditado</span>
 
                             </td>
                         </tr>
