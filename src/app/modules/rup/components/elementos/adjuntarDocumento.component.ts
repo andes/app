@@ -10,6 +10,7 @@ import { environment } from '../../../../../environments/environment';
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
+    @ViewChildren('upload') childsComponents: QueryList<any>;
 
     imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
     extensions = [
@@ -63,6 +64,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
         if (!this.extensions.find((item) => item === ext.toLowerCase())) {
+            (this.childsComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
             return;
         }
@@ -70,6 +72,8 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
+            console.log(this.childsComponents.first);
+            (this.childsComponents.first as any).nativeElement.value = '';
             let metadata = {
                 prestacion: this.prestacion.id,
                 registro: this.registro.id
@@ -138,11 +142,16 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
-    createUrl(id) {
+    createUrl(doc) {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
-        let apiUri = environment.API;
-        return apiUri + '/modules/rup/store/' + id + '?token=' + this.fileToken;
+        if (doc.id) {
+            let apiUri = environment.API;
+            return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
+        } else {
+            // Por si hay algún documento en la vieja versión.
+            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
+        }
     }
 
     fromMobile() {

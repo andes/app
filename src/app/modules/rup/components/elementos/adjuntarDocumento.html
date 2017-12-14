@@ -24,8 +24,8 @@
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
 
-                            <img [src]="createUrl(doc.id)" alt="" *ngIf="esImagen(doc.ext)">
-                            <a [href]="createUrl(doc.id)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
                                 {{ doc.ext }}
                             </a>
                             <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
@@ -36,8 +36,8 @@
 
                     <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
                         <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                        <img [src]="createUrl(doc.id)" alt="" *ngIf="esImagen(doc.ext)">
-                        <a [href]="createUrl(doc.id)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
                             {{ doc.ext }}
                         </a>
                         <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
