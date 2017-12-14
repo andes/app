@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <br>
-                    <div class="row" *ngIf=" turno.estado !== 'suspendido'">
+                    <div class="row" *ngIf=" turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
                         <div class="col-4" *ngIf="turno.asistencia !== 'asistio'">
                             <!-- no funcionan bien los title="" -->
                             <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)"></plex-button>
@@ -58,11 +58,6 @@
                             <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                         </div>
                     </div>
-                    <!--<div class="row" *ngIf=" turno.estado === 'suspendido'">
-                        <div class="col text-center ">
-                            <h4> <span class="text-danger">Suspendido</span> </h4>
-                        </div>
-                    </div>-->
                 </div>
                 <!-- fin Panel -->
             </div>
