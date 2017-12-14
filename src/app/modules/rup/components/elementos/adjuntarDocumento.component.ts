@@ -10,7 +10,18 @@ import { environment } from '../../../../../environments/environment';
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
-    extensions = ['bmp', 'jpg', 'jpeg', 'png', 'pdf'];
+
+    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
+    extensions = [
+        // Documentos
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
+        // Audio/Video
+        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+        // Otros
+        'dat'
+    ];
+
+
     adjunto: any;
     loading = false;
     waiting = false;
@@ -23,6 +34,9 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     fileToken: String = null;
 
     ngOnInit() {
+
+        this.extensions = this.extensions.concat(this.imagenes);
+
         if (!this.registro.valor) {
             this.registro.valor = {};
         }
@@ -48,7 +62,7 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
     readThis(inputValue: any): void {
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext)) {
+        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
             this.errorExt = true;
             return;
         }
@@ -63,11 +77,11 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
             this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
                 this.fotos.push({
                     ext,
-                    id:  data._id
+                    id: data._id
                 });
                 this.registro.valor.documentos.push({
                     ext,
-                    id:  data._id
+                    id: data._id
                 });
             });
 
@@ -85,9 +99,13 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         }
     }
 
+    esImagen(extension) {
+        return this.imagenes.find(x => x === extension.toLowerCase());
+    }
+
     imageUploaded($event) {
         let foto = {
-            ext:  this.fileExtension($event.file.name),
+            ext: this.fileExtension($event.file.name),
             file: $event.src,
         };
         this.fotos.push(foto);
@@ -127,24 +145,24 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         return apiUri + '/modules/rup/store/' + id + '?token=' + this.fileToken;
     }
 
-    fromMobile () {
+    fromMobile() {
         let paciente = this.paciente.id;
         let prestacion = this.prestacion.id;
         let registro = this.registro.id;
         this.loading = true;
-        this.adjuntosService.post({paciente, prestacion, registro}).subscribe((data) => {
+        this.adjuntosService.post({ paciente, prestacion, registro }).subscribe((data) => {
             this.adjunto = data;
             this.waiting = true;
             this.loading = false;
 
-            this.timeout = setTimeout( (() => {
+            this.timeout = setTimeout((() => {
                 this.backgroundSync();
-            }).bind(this) , 5000);
+            }).bind(this), 5000);
 
         });
     }
 
-    backgroundSync () {
+    backgroundSync() {
         this.adjuntosService.get({ id: this.adjunto.id, estado: 'upload' }).subscribe((data) => {
             if (data.length > 0) {
                 this.waiting = false;
@@ -155,20 +173,20 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                     this.fotos.push(item);
 
                 });
-                this.adjuntosService.delete(this.adjunto._id).subscribe(() => {});
+                this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
 
             } else {
-                this.timeout = setTimeout( (() => {
+                this.timeout = setTimeout((() => {
                     this.backgroundSync();
-                }).bind(this) , 5000);
+                }).bind(this), 5000);
             }
         });
     }
 
-    cancelar () {
+    cancelar() {
         clearTimeout(this.timeout);
         this.waiting = false;
-        this.adjuntosService.delete(this.adjunto._id).subscribe(() => {});
+        this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
     }
 
 }
