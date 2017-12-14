@@ -60,7 +60,7 @@ export class TurnosPacienteComponent implements OnInit {
             // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                    return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.organizacion._id === this.auth.organizacion.id);
                 });
                 this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
                     return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
