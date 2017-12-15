@@ -33,14 +33,14 @@ export class RevisionAgendaComponent implements OnInit {
     set agenda(value: any) {
         this._agenda = value;
         this.horaInicio = moment(this._agenda.horaInicio).format('dddd').toUpperCase();
-        this.estadoAsistenciaCerrada = this.estadosAgendaArray.find(e => {
+        this.estadoPendienteAuditoria = this.estadosAgendaArray.find(e => {
             return e.nombre === 'Pendiente Auditoria';
         });
         this.estadoCodificado = this.estadosAgendaArray.find(e => {
             return e.nombre === 'Auditada';
         });
-        this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoAsistenciaCerrada.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
-        this.enableCodificada = (this._agenda.estado === this.estadoAsistenciaCerrada.id);
+        this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoPendienteAuditoria.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
+        this.enableCodificada = (this._agenda.estado === this.estadoPendienteAuditoria.id);
     }
     get agenda(): any {
         return this._agenda;
@@ -71,7 +71,7 @@ export class RevisionAgendaComponent implements OnInit {
     public seleccion = null;
     public esEscaneado = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
-    private estadoAsistenciaCerrada;
+    private estadoPendienteAuditoria;
     private estadoCodificado;
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
@@ -182,7 +182,7 @@ export class RevisionAgendaComponent implements OnInit {
         if (event.query) {
             this.serviceCie10.get(query).subscribe((datos) => {
                 this.diagnosticos.forEach(elem => {
-                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo );
+                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo);
                     if (index >= 0) {
                         datos.splice(index, 1);
                     }
@@ -231,8 +231,7 @@ export class RevisionAgendaComponent implements OnInit {
 
 
     marcarIlegible() {
-        console.log('MARCADO ILEGIBLE');
-        this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = null;
+        this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = 'Ilegible';
         this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
         this.diagnosticos = [];
     }
@@ -244,8 +243,8 @@ export class RevisionAgendaComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
         }
-        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        if (this.agenda.sobreturnos) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
         // turnoSinVerificar = this.turnos.find(t => {
         turnoSinVerificar = listaTurnos.find(t => {
@@ -256,8 +255,8 @@ export class RevisionAgendaComponent implements OnInit {
         } else {
             // Se cambia de estado la agenda a asistenciaCerrada
             let patch = {
-                'op': this.estadoAsistenciaCerrada.id,
-                'estado': this.estadoAsistenciaCerrada.id
+                'op': this.estadoPendienteAuditoria.id,
+                'estado': this.estadoPendienteAuditoria.id
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Asistencia Cerrada');
@@ -274,21 +273,18 @@ export class RevisionAgendaComponent implements OnInit {
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
         }
-        for (let i = 0; i < this.agenda.sobreturnos.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos[i].turnos);
+        if (this.agenda.sobreturnos) {
+            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria && !t.diagnostico.ilegible && t.asistencia === 'asistio')) ||
-                    !t.asistencia)
+                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
+                    && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });
 
-        if (turnoSinCodificar) {
-            // this.plex.alert('No se puede cerrar la codificación debido a que existen turnos que no fueron chequeados',
-            // 'Cerrar Codificación');
-        } else {
+        if (!turnoSinCodificar) {
             // Se cambia de estado la agenda a asistenciaCerrada
             let patch = {
                 'op': this.estadoCodificado.id,

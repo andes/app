@@ -246,7 +246,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria');
+        return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
         // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
     }
 
