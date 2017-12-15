@@ -77,6 +77,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.servicePaciente.getById(paciente.id).subscribe(
                     pacienteMPI => {
                         this.paciente = pacienteMPI;
+                        if (!this.paciente.scan) {
+                            this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
+                        }
                         this.showMostrarEstadisticasAgendas = false;
                         if (this.esOperacion) {
                             this.esOperacion = false;
