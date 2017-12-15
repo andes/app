@@ -23,8 +23,6 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
         moment.locale('es');
 
         if (this.elementoRUP.conceptosBuscar && this.elementoRUP.conceptosBuscar.length > 0) {
-            // set options charts
-            this.setChartOptions();
 
             // armo el array de conceptIds a buscar en la HUDS
             const conceptIds = this.elementoRUP.conceptosBuscar.map(concepto => concepto.conceptId);
@@ -35,11 +33,16 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
                 if (prestaciones.length) {
 
                     // armamos array de resultados
-                    this.pesos = prestaciones.map(prestacion => ({
-                        // fecha: prestacion.ejecucion.fecha,
-                        fecha: prestacion.ejecucion.fecha,
-                        registro: prestacion.ejecucion.registros.filter(p => { return conceptIds.indexOf(p.concepto.conceptId) > -1; })
-                    }));
+                    this.pesos = prestaciones.map(prestacion => {
+                        let registro = prestacion.ejecucion.registros.filter(p => { return conceptIds.indexOf(p.concepto.conceptId) > -1; });
+                        return ({
+                            // fecha: prestacion.ejecucion.fecha,
+                            fecha: prestacion.ejecucion.fecha,
+                            registro: registro[0],
+                            profesional: registro[0].createdBy,
+                            prestacion: prestacion.solicitud.tipoPrestacion.term
+                        });
+                    });
 
                     // ordenamos los pesos por fecha
                     this.pesos.sort(function (a, b) {
@@ -51,26 +54,32 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
 
                     // asignamos los pesos al data para el chart
                     this.barChartData = [
-                        { data: this.pesos.map(p => p.registro[0].valor), label: 'kgs', fill: false }
+                        { data: this.pesos.map(p => p.registro.valor), label: 'kgs', fill: false }
                     ];
 
                     // agregamos las leyendas del eje x
                     this.barChartLabels = this.pesos.map(p => moment(p.fecha));
 
+                    // set options charts
+                    this.setChartOptions(this.pesos);
+
                     // nuevo titulo
                     this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
+
                 }
             });
 
         }
     }
+
     /**
      * Inicializamos las propiedades de la libreria para gráficos
-     *
+     * 
      * @private
+     * @param {any} data Data a utilizar para armar los tooltips
      * @memberof SeguimientoDelPesoComponent
      */
-    private setChartOptions(): void {
+    private setChartOptions(data): void {
         this.barChartOptions = {
             scaleShowVerticalLines: false,
             responsive: true,
@@ -93,20 +102,34 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
                     type: 'time',
                     time: {
                         unit: 'month',
-                        tooltipFormat: 'LLLL',
-                        displayFormats: {
-                            'millisecond': 'MMM DD',
-                            'second': 'MMM DD',
-                            'minute': 'MMM DD',
-                            'hour': 'MMM DD',
-                            'day': 'MMM DD',
-                            'week': 'MMM DD',
-                            'month': 'MMM DD',
-                            'quarter': 'MMM DD',
-                            'year': 'MMM DD',
-                        }
+                        tooltipFormat: 'DD/MM/YYYY'
+                        // displayFormats: {
+                        //     'millisecond': 'MMM DD',
+                        //     'second': 'MMM DD',
+                        //     'minute': 'MMM DD',
+                        //     'hour': 'MMM DD',
+                        //     'day': 'MMM DD',
+                        //     'week': 'MMM DD',
+                        //     'month': 'MMM DD',
+                        //     'quarter': 'MMM DD',
+                        //     'year': 'MMM DD',
+                        // }
                     }
                 }],
+            },
+            tooltips: {
+                callbacks: {
+                    // Use the footer callback to display the sum of the items showing in the tooltip
+                    footer: function (tooltipItems, _data) {
+                        let text = [];
+                        tooltipItems.forEach(function (tooltipItem) {
+                            text.push('Profesional: ' + data[tooltipItem.index].profesional.nombreCompleto);
+                            text.push('Prestación: ' + data[tooltipItem.index].prestacion);
+                        });
+
+                        return text;
+                    },
+                }
             }
         };
     }
