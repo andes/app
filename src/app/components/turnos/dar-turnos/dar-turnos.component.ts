@@ -331,12 +331,12 @@ export class DarTurnosComponent implements OnInit {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
 
                         return (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
-                        ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
-                        || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
-                        ||
-                        ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
-                        (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
-                        (!autocitado && agenda.turnosRestantesGestion > 0))));
+                            ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
+                                || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
+                            ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
+                                (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
+                                    (!autocitado && agenda.turnosRestantesGestion > 0))));
                     });
                 }
 
@@ -887,7 +887,7 @@ export class DarTurnosComponent implements OnInit {
             if (delDia && bloque.restantesDelDia > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
-            if (!delDia && bloque.restantesProgramados > 0 ) {
+            if (!delDia && bloque.restantesProgramados > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
         }
@@ -921,6 +921,9 @@ export class DarTurnosComponent implements OnInit {
                     window.setTimeout(() => this.pacientesSearch = false, 100);
                     this.obtenerCarpetaPaciente();
                     this.getUltimosTurnos();
+                    if (!this.paciente.scan) {
+                        this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
+                    }
                 });
         } else {
             this.seleccion = paciente;
