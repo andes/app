@@ -13,9 +13,24 @@
     display: inline-block;
 }
 
-.image img {
+a.adjunto {
+    display: inline-block;
+    width: 60px;
     height: 86px;
+    color: white;
+    background-color: #b9c512;
+    border-radius: 10px 1px 1px 1px;
+    padding-top: 25px !important;
+    font-size: 20px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.image img {
+    height: auto;
     width: auto;
+    max-width: 200px;
+    max-height: 86px;
 }
 
 .x-mark {
