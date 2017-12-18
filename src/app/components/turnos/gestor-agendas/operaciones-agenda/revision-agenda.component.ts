@@ -259,7 +259,7 @@ export class RevisionAgendaComponent implements OnInit {
                 'estado': this.estadoPendienteAuditoria.id
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Asistencia Cerrada');
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
                 // this.enableAsistenciaCerrada = false;
                 // this.enableCodificada = true;
             });

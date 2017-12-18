@@ -162,7 +162,7 @@ export class TurnosComponent implements OnInit {
     }
 
     agendaNoCerrada() {
-        return this.agenda.estado !== 'asistenciaCerrada' && this.agenda.estado !== 'codificada';
+        return this.agenda.estado !== 'pendienteAuditoria' && this.agenda.estado !== 'codificada';
     }
 
     tienenPacientes() {
