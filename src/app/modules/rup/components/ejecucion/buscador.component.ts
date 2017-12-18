@@ -127,18 +127,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe((resultados: any) => {
             // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
-            const frecuentesProfesional = resultados[0].frecuentes.map(res => {
-                let concepto = res.concepto;
+            if (resultados && resultados.length) {
+                const frecuentesProfesional = resultados[0].frecuentes.map(res => {
+                    let concepto = res.concepto;
+                    concepto.frecuencia = res.frecuencia;
+                    return concepto;
+                });
 
-                concepto.frecuencia = res.frecuencia;
+                this.results['misFrecuentes']['todos'] = frecuentesProfesional;
+                this.filtrarResultados('misFrecuentes');
 
-                return concepto;
-            });
-
-            this.results['misFrecuentes']['todos'] = frecuentesProfesional;
-            this.filtrarResultados('misFrecuentes');
-
-            this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
+                this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
+            }
         });
 
         // seteamos el tipo de búsqueda actual como sugeridos
