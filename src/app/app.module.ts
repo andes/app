@@ -196,7 +196,7 @@ import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.c
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
-import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumeto';
+import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
