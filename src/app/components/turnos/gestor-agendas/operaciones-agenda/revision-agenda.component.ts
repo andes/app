@@ -246,13 +246,12 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
-        if (turnoSinVerificar) {
-            // this.plex.alert('No se puede cerrar la asistencia debido a que existen turnos que no fueron verificados', 'Cerrar Asistencia');
-        } else {
-            // Se cambia de estado la agenda a asistenciaCerrada
+        if (!turnoSinVerificar) {
+            // TODO!!!
+            // Se cambia de estado la agenda a pendienteAuditoria
             let patch = {
-                'op': this.estadoPendienteAuditoria.id,
-                'estado': this.estadoPendienteAuditoria.id
+                'op': 'pendienteAuditoria',
+                'estado': 'pendienteAuditoria'
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
