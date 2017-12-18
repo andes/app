@@ -9,6 +9,7 @@ $plan: #0070cc;
 $producto: #00bcb4;
 $adjunto: #b9c512;
 $todos: #666;
+$otro: #b9c512;
 
 /*
 $lista-problemas: "hallazgo",
@@ -26,4 +27,4 @@ $invert: #002738;
 $rup_colors: ( problema: $problema, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto,
 /*lista-problemas: $lista-problemas, lista-procedimientos: $lista-procedimientos,*/
 
-invert: $invert, todos: $todos);
+invert: $invert, todos: $todos, otro: $otro);

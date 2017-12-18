@@ -163,7 +163,7 @@
                                             <label>Del día</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )" name="accesoDirectoDelDia">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" [required]="true" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )" name="accesoDirectoDelDia">
                                             </plex-int>
                                         </div>
                                         <div class="col-4">
@@ -177,7 +177,7 @@
                                             <label>Programados</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" [min]="0" (keyup)="cambiaCantTipo( 'accesoDirectoProgramado' )"
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoProgramado" [min]="0" [required]="true" (keyup)="cambiaCantTipo( 'accesoDirectoProgramado' )"
                                                 name="accesoDirectoProgramado">
                                             </plex-int>
                                         </div>
@@ -197,7 +197,7 @@
                                             <label>Con llave</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" [required]="true" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion">
                                             </plex-int>
                                         </div>
                                         <div class="col-4">
@@ -211,7 +211,7 @@
                                             <label class="no-wrap">Para profesional</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" [required]="true"  (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional">
                                             </plex-int>
                                         </div>
                                         <div class=" col-4 ">

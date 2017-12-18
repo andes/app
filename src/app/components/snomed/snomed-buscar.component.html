@@ -1,5 +1,5 @@
 <form *ngIf="!hideSearchInput">
     <div class="buscador">
-        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar {{tipoBusqueda === 'problemas' ? 'hallazgos' : tipoBusqueda}} ..."></plex-text>
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar ..."></plex-text>
     </div>
 </form>
