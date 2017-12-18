@@ -39,8 +39,6 @@ export class RevisionAgendaComponent implements OnInit {
         this.estadoCodificado = this.estadosAgendaArray.find(e => {
             return e.nombre === 'Auditada';
         });
-        this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoPendienteAuditoria.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
-        this.enableCodificada = (this._agenda.estado === this.estadoPendienteAuditoria.id);
     }
     get agenda(): any {
         return this._agenda;
@@ -65,8 +63,6 @@ export class RevisionAgendaComponent implements OnInit {
     turnoTipoPrestacion: any = null;
     pacientesSearch = false;
     diagnosticos = [];
-    enableCodificada = false;
-    enableAsistenciaCerrada = true;
     public showRegistrosTurno = false;
     public seleccion = null;
     public esEscaneado = false;
@@ -260,8 +256,6 @@ export class RevisionAgendaComponent implements OnInit {
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
-                // this.enableAsistenciaCerrada = false;
-                // this.enableCodificada = true;
             });
         }
     }
@@ -292,8 +286,6 @@ export class RevisionAgendaComponent implements OnInit {
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
-                this.enableAsistenciaCerrada = false;
-                this.enableCodificada = false;
             });
         }
 
