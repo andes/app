@@ -54,7 +54,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public elementRef;
     public arrayPorRefsets = [];
     public showRefSets = false;
-     // boolean que se utiliza para expandir o contraer los contenidos de la busqueda guiada
+    // boolean que se utiliza para expandir o contraer los contenidos de la busqueda guiada
     public desplegarConceptos;
 
     // Arra de salida para los mas frecuentes del profesional
@@ -172,7 +172,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 }
             });
         }
-      }
+    }
 
     /**
      * Buscar resultados para los tipos de busqueda que sean sugeridos o mis frecuentes
@@ -180,7 +180,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public buscar() {
-        debugger;
         // en caso que se cambie de tipo de busqueda y no existan resultados
         // en el filtro actual, seteamos el filtro en 'todos'
         if (this.results[this.busquedaActual][this.filtroActual].length === 0) {
@@ -224,7 +223,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public setTipoBusqueda(busquedaActual): void {
         this.busquedaActual = busquedaActual;
 
-        if ( (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+        if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
             this.buscar();
         }
     }
@@ -246,7 +245,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     recibeResultados(resultadosSnomed) {
-        debugger;
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
 
@@ -286,7 +284,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public filtrarResultados(busquedaActual) {
         // almacenamos los resultados en una variable auxiliar para poder loopear
-         let resultados = this.results[busquedaActual]['todos'];
+        let resultados = this.results[busquedaActual]['todos'];
 
         Object.keys(this.conceptos).forEach(concepto => {
             this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
