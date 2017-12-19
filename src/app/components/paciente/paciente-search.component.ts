@@ -288,10 +288,13 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                             //
                                             // Actualizamos los datos del paciente con los datos obtenidos del DNI
                                             //
-                                            this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
-                                            this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
-                                            this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
-                                            this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            if (!(this.pacientesSimilares[0].paciente.estado === 'validado')) {
+
+                                                this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
+                                                this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
+                                                this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
+                                                this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            }
                                             this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                                         } else {
                                             if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {

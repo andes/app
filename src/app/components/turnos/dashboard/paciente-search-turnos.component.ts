@@ -55,6 +55,7 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     public seleccionarPaciente(paciente: any) {
         super.seleccionarPaciente(paciente);
+        this.resultado = [paciente];
         this.sinResultados.emit(false);
     }
 
