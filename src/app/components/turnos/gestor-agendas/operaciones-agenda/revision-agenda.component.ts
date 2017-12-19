@@ -182,7 +182,7 @@ export class RevisionAgendaComponent implements OnInit {
         if (event.query) {
             this.serviceCie10.get(query).subscribe((datos) => {
                 this.diagnosticos.forEach(elem => {
-                    let index = datos.findIndex((item) => item.codigo === elem.codificacion.codigo);
+                    let index = datos.findIndex(item => item.codigo === elem.codificacionAuditoria.codigo);
                     if (index >= 0) {
                         datos.splice(index, 1);
                     }
