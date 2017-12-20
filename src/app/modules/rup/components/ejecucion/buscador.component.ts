@@ -125,7 +125,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
         }
 
-        this.frecuentesProfesionalService.getById(this.auth.profesional.id).subscribe((resultados: any) => {
+        const query = {
+            'idProfesional': this.auth.profesional.id,
+            'tipoPrestacion': this.conceptoFrecuente.conceptId,
+            'idOrganizacion': this.auth.organizacion.id,
+        }
+
+        this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
             // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
             if (resultados && resultados.length) {
                 const frecuentesProfesional = resultados[0].frecuentes.map(res => {

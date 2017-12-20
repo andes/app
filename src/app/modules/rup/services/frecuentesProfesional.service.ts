@@ -16,10 +16,29 @@ export class FrecuentesProfesionalService {
 
     /**
      * Metodo getById. Trae el objeto elementoRup por su Id.
-     * @param {String} id Busca por Id
+     * @param {String} idProfesional Busca por Id
      */
-    getById(id: String): Observable<IFrecuentesProfesional> {
-        return this.server.get(url + '/' + id);
+    getById(idProfesional: String): Observable<IFrecuentesProfesional> {
+        return this.server.get(url + '/' + idProfesional);
+    }
+
+    /**
+     * Metodo get. Trae lista de elementosRup más frecuentes.
+     *
+     * @param {*} params Opciones de busqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<IPrestacion[]>}
+     *
+     * @memberof PrestacionesService
+     */
+    get(params: any, options: any = {}): Observable<IFrecuentesProfesional[]> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt = { params: params, options };
+
+        return this.server.get(url, opt);
     }
 
     /**
