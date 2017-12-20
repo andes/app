@@ -129,7 +129,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             'idProfesional': this.auth.profesional.id,
             'tipoPrestacion': this.conceptoFrecuente.conceptId,
             'idOrganizacion': this.auth.organizacion.id,
-        }
+        };
 
         this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
             // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
