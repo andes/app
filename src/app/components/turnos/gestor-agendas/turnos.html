@@ -97,7 +97,7 @@
         </table>
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
-        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let i = index">
+        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
             <table *ngIf="agenda.nominalizada" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
                 <thead>
                     <tr>
@@ -109,7 +109,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{delDia ? (arrayDelDia[i] < 0 ? 0: arrayDelDia[i]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
+                        <td>{{delDia ? (arrayDelDia[k] < 0 ? 0: arrayDelDia[k]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
                         <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
                         <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
