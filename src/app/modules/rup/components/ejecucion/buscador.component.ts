@@ -188,11 +188,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public buscar() {
         // en caso que se cambie de tipo de busqueda y no existan resultados
         // en el filtro actual, seteamos el filtro en 'todos'
-        if (this.results[this.busquedaActual][this.filtroActual].length === 0) {
+        if (this.results[this.busquedaActual].length && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
 
-        if (this.search) {
+        if (this.results[this.busquedaActual].length && this.search) {
             let search = this.search.toLowerCase();
 
             // reiniciamos los resultados desde la copia auxiliar que tenemos
