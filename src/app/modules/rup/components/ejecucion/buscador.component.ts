@@ -186,11 +186,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public buscar() {
-        console.log(this.results , this.busquedaActual);
-        // debugger;
         // en caso que se cambie de tipo de busqueda y no existan resultados
         // en el filtro actual, seteamos el filtro en 'todos'
-        if (this.results[this.busquedaActual][this.filtroActual].length === 0) {
+        if (this.results[this.busquedaActual].length && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
 
