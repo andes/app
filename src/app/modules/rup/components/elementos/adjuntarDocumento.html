@@ -6,6 +6,9 @@
             <span *ngIf="!waiting && !soloValores">
                 <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()"></plex-button>
                 <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi AppMobile" (click)="fromMobile()"></plex-button>
+                <span *ngIf="errorExt">
+                    <span class="badge-danger"> Archivo invalido </span>
+                </span>
             </span>
             <span *ngIf="waiting">
                 <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
@@ -13,6 +16,7 @@
             </span>
         </div>
     </div>
+
     <div class="row">
         <div class="col-12">
             <div class="image-container hr-inline-group" *ngIf="fotos">
@@ -20,19 +24,22 @@
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
 
-                            <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
-                            <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
+                            <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                            <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                                {{ doc.ext }}
+                            </a>
                             <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
                                 <span class="close"></span>
                             </div>
                         </div>
                     </a>
 
-                    <div (click)="lightbox = false" *ngIf="soloValores && i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
-                        class="hover">
+                    <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }" class="hover">
                         <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
-                        <img [src]="doc.file" alt="" *ngIf="doc.ext !== 'pdf'">
-                        <img src="assets/img/pdf.png" alt="" *ngIf="doc.ext === 'pdf'">
+                        <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                        <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                            {{ doc.ext }}
+                        </a>
                         <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
                     </div>
                 </ng-container>

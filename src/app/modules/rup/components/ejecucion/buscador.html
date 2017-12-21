@@ -15,7 +15,12 @@
 <!-- Fin Tipo de búsqueda -->
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar>
+<!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
+<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'" [searchTermInput]="search"></snomed-buscar>
+
+<div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
+    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..."></plex-text>
+</div>
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador" *ngIf="!showRefSets">
@@ -50,7 +55,7 @@
                 </div>
 
             </div>
-            <div class="row m-0 mt-3 mb-3 pb-3 d-flex botones-filtros" *ngIf="busquedaActual !== 'busquedaGuiada'">
+            <div class="row m-0 mt-3 mb-3 pb-3 d-flex botones-filtros">
                 <div class="col m-0 p-0">
                     <small *ngIf="getCantidadResultados('procedimientos')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimientos'}">{{ getCantidadResultados('procedimientos')}}</small>
 
@@ -75,22 +80,33 @@
                 </div>
 
             </div>
-            <!-- <div class="row m-0 mt-3 mb-3 pb-3 d-flex botones-filtros" *ngIf="busquedaActual !== 'busquedaGuiada'">
-                <div class="col m-0 p-0">
-                    <small *ngIf="getCantidadResultados('elementoderegistro')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimientos'}">{{ getCantidadResultados('procedimientos')}}</small>
 
-                    <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}" [disabled]="getCantidadResultados('procedimientos') === 0" class="btn btn-block btn-procedimiento">
-                        ELEMENTO DE REGISTRO
+            <div class="row m-0 mt-3 mb-3 pb-3 d-flex botones-filtros">
+                <div class="col-4 m-0 p-0">
+                    <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
+
+                    <button (click)="filtroBuscadorSnomed('otros')" [ngClass]="{'active': filtroActual === 'otros'}" [disabled]="getCantidadResultados('otros') === 0" class="btn btn-block btn-otro">
+                        ELEMENTOS DE REGISTRO
                     </button>
-                </div> -->
+                </div>
+            </div>
         </ng-container>
 
-        <div class="filtros d-flex">
+        <div>
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-            <small class="ml-3" *ngIf="searchTerm && results && results.length === 0 && !loading">
-                No se han encontrado resultados
-            </small>
+
+            <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
+                <!-- <ng-container *ngIf="searchTerm">
+                    No se han encontrado resultados.
+                </ng-container> -->
+
+                <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
+
+                <p class="text-center" *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes')">
+                    Intentar con el <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
+                </p>
+            </ng-container>
         </div>
     </ng-container>
 </div>
@@ -110,7 +126,7 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
 
-            <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                 <div class="rup-card mini {{ ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }}">
                     <div class="type">
                         <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
@@ -126,8 +142,9 @@
                                 </ng-container>
                             </div>
                             <div class="actions">
-                                <small class="badge badge-{{ ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">{{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
-                                    </small>
+                                <small class="badge badge-{{ ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">
+                                    {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                </small>
                                 <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                     <i class="mdi mdi-plus-box-outline"></i>
                                 </a>
@@ -177,13 +194,13 @@
                                     <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
                                 </div>
                                 <div class="rup-content">
-                                    <div class="header" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                                    <div class="header" [ngClass]="{'actions-left': items.nombre === 'equipamientos'}">
                                         <div class="title">
                                             {{item.term}}
                                         </div>
                                         <div class="actions">
-                                            <small class="badge badge-{{ ((items.nombre === 'Planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">
-                                                {{ (items.nombre === 'Planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                            <small class="badge badge-{{ ((items.nombre === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">
+                                                {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                             </small>
                                             <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
                                                 <i class="mdi mdi-plus-box-outline"></i>
@@ -198,3 +215,4 @@
             </li>
         </ng-container>
     </ul>
+</div>

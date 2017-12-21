@@ -83,8 +83,8 @@
 
                                                     <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-
                                                         <a *ngIf="!existe(registro.concepto);" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger desvincular float-right">
+
                                                             <i class="mdi mdi-delete"></i>
                                                         </a>
                                                         <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary desvincular float-right" *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
@@ -93,10 +93,10 @@
                                                         <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                             <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
                                                         </ng-container>
-                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary">
-                                                            <i class="mdi mdi-chevron-down"></i>
-                                                        </a>
 
+                                                        <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary">
+                                                            <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : itemsRegistros[registro.id]?.collapse}"></i>
+                                                        </a>
                                                     </div>
                                                 </div>
 
@@ -275,9 +275,6 @@
                             <rup-buscador [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente" [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)"
                                 (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
-                            <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
-                            <!-- <snomed-buscar [tipoBusqueda]="tipoBusqueda" [_dragScope]="['registros-rup', 'vincular-registros-rup']" (evtData)="ejecutarConcepto($event)" [arrayFrecuentes]="masFrecuentes" (_tipoDeBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
-                            (_onDragEnd)="arrastrandoConcepto(false)" (tagBusqueda)="recibeTipoBusqueda($event)"></snomed-buscar> -->
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
                             <!-- HUDS [hudsBusqueda.component.ts] -->
@@ -291,28 +288,29 @@
 
     <!-- Footer -->
     <footer *ngIf="!showCambioPaciente">
+
         <div class="row">
-            <div class="col-6 offset-3 text-center">
-                <div droppable [dropScope]="'borrar-registros-rup'" (onDrop)="confirmarEliminarRegistro($event, 'footer')" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="drop-posicion" *ngIf="registros && registros.length">
+            <div class="col-4" *ngIf="!showCambioPaciente">
+                <plex-button label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
+            </div>
+
+            <div class="col-4 text-center">
+                <div droppable [dropScope]="'borrar-registros-rup'" (onDrop)="confirmarEliminarRegistro($event, 'footer')" [dragOverClass]="'drop-posicion-hover'" [hidden]="!isDraggingRegistro" class="p-3">
                     <i class="mdi mdi-delete"></i> Quitar de la consulta
                 </div>
-                <div *ngIf="confirmarEliminar && scopeEliminar == 'footer'" class="confirmarDesvincular">
-                    ¿Quitar de la consulta?
+                <div *ngIf="confirmarEliminar && scopeEliminar == 'footer'">
+                    ¿Seguro que quiere quitar {{conceptoAEliminar.term}} de la consulta?
 
-                    <div class="float-right">
-                        <span (click)="confirmarEliminar = false;" class="hover">
-                            Cancelar
-                        </span> |
-                        <span (click)="eliminarRegistro()" class="confirm hover">
-                            Quitar
-                        </span>
+                    <div>
+                        <button class="btn btn-danger p-1" (click)="confirmarEliminar = false;">Cancelar</button> |
+                        <button class="btn btn-success p-1" (click)="eliminarRegistro()">Quitar</button>
+
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col" *ngIf="!showCambioPaciente">
-                <plex-button label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
+
+            <div class="col-4" *ngIf="!showCambioPaciente">
+
                 <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" class="float-right"></plex-button>
             </div>
         </div>

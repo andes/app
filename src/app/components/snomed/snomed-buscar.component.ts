@@ -30,7 +30,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
     // tipo de busqueda a realizar por: problemas / procedimientos /
     @Input() tipoBusqueda: String;
     // output de informacion que devuelve el componente
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // Output que devuelve los resultados de la busqueda
     @Output() _resultados: EventEmitter<any> = new EventEmitter<any>();
 
@@ -223,7 +223,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
                         // Para evitar que se oculte la lista de resultados
                         this.loading.emit(false);
-                        this._resultados.emit(resultados);
+                        this._resultados.emit(this.formatearResultados(resultados));
                     }
 
                 }, err => {
@@ -233,12 +233,30 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
             }, 600);
         } else {
+            // cancelamos ultimo request
             if (this.lastRequest) {
                 this.lastRequest.unsubscribe();
                 this.loading.emit(false);
+
+                this._resultados.emit(this.formatearResultados());
             }
+
             this._tengoResultado.emit(false);
         }
     }
 
+    /**
+     * Creamos un objeto de resultados a devolver que contiene 'term' que es el string con el que busco
+     * y despues 'items' que es un array de resultados de conceptos de SNOMED
+     *
+     * @param {any} resultados Array de resultados de SNOMED
+     * @returns Object
+     * @memberof SnomedBuscarComponent
+     */
+    formatearResultados(resultados = []) {
+        return {
+            term: this.searchTerm,
+            items: resultados
+        }
+    }
 }
