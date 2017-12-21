@@ -229,6 +229,8 @@ export class PrestacionValidacionComponent implements OnInit {
                                 apellido: this.auth.profesional.apellido,
                                 documento: this.auth.profesional.documento
                             },
+                            tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
+                            organizacion: this.prestacion.solicitud.organizacion,
                             frecuentes: registrosFrecuentes
                         };
 
