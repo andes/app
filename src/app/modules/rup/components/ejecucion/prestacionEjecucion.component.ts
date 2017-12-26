@@ -85,6 +85,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+    // boleean para verificar si estan todos los conceptos colapsados
+    public collapse = true;
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -298,7 +300,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
                 delete this.confirmarDesvincular[registroId];
-                this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
+                // this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
             }
         }
 
@@ -737,7 +739,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }).map(registro => {
             return {
-                label: 'vincular con: ' + (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
+                label: (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
                 handler: () => {
                     this.vincularRegistros(registroActual, registro);
                 }
@@ -791,6 +793,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
+        this.registrosColapsados();
     }
 
     colapsarPrestaciones(option = 'expand') {
@@ -941,5 +944,24 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }
         return false;
+    }
+
+    registrosColapsados() {
+        this.prestacion.ejecucion.registros.forEach(registro => {
+            let unRegistro = this.itemsRegistros[registro.id].collapse;
+            if (unRegistro !== this.collapse) {
+                this.collapse = !this.collapse;
+            }
+        });
+    }
+
+    eliminaTodosLosRegistros() {
+        this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
+            if (confirm) {
+                this.prestacion.ejecucion.registros = [];
+                return true;
+            }
+            return false;
+        });
     }
 }
