@@ -39,8 +39,6 @@ export class RevisionAgendaComponent implements OnInit {
         this.estadoCodificado = this.estadosAgendaArray.find(e => {
             return e.nombre === 'Auditada';
         });
-        this.enableAsistenciaCerrada = (!(this._agenda.estado === this.estadoPendienteAuditoria.id)) && (!(this._agenda.estado === this.estadoCodificado.id));
-        this.enableCodificada = (this._agenda.estado === this.estadoPendienteAuditoria.id);
     }
     get agenda(): any {
         return this._agenda;
@@ -65,8 +63,6 @@ export class RevisionAgendaComponent implements OnInit {
     turnoTipoPrestacion: any = null;
     pacientesSearch = false;
     diagnosticos = [];
-    enableCodificada = false;
-    enableAsistenciaCerrada = true;
     public showRegistrosTurno = false;
     public seleccion = null;
     public esEscaneado = false;
@@ -250,18 +246,15 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
-        if (turnoSinVerificar) {
-            // this.plex.alert('No se puede cerrar la asistencia debido a que existen turnos que no fueron verificados', 'Cerrar Asistencia');
-        } else {
-            // Se cambia de estado la agenda a asistenciaCerrada
+        if (!turnoSinVerificar) {
+            // TODO!!!
+            // Se cambia de estado la agenda a pendienteAuditoria
             let patch = {
-                'op': this.estadoPendienteAuditoria.id,
-                'estado': this.estadoPendienteAuditoria.id
+                'op': 'pendienteAuditoria',
+                'estado': 'pendienteAuditoria'
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Asistencia Cerrada');
-                // this.enableAsistenciaCerrada = false;
-                // this.enableCodificada = true;
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
             });
         }
     }
@@ -292,8 +285,6 @@ export class RevisionAgendaComponent implements OnInit {
             };
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
-                this.enableAsistenciaCerrada = false;
-                this.enableCodificada = false;
             });
         }
 

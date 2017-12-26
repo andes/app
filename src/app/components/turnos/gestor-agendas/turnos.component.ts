@@ -162,7 +162,7 @@ export class TurnosComponent implements OnInit {
     }
 
     agendaNoCerrada() {
-        return this.agenda.estado !== 'asistenciaCerrada' && this.agenda.estado !== 'codificada';
+        return this.agenda.estado !== 'pendienteAuditoria' && this.agenda.estado !== 'pendienteAsistencia' && this.agenda.estado !== 'codificada' && this.agenda.estado !== 'auditada';
     }
 
     tienenPacientes() {
@@ -245,7 +245,6 @@ export class TurnosComponent implements OnInit {
     }
 
     actualizarBotones() {
-
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
             darAsistencia: this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
