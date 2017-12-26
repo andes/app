@@ -203,20 +203,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
-        if (this.prestacion.ejecucion.registros[posicionNueva]) {
-            if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
-                let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
-                // Primer letra con mayúsculas
-                prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
-                this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
-                    if (confirm) {
-                        this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
-                        return true;
-                    }
-                    return false;
-                });
-            }
-        }
+        // if (this.prestacion.ejecucion.registros[posicionNueva]) {
+        //     if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
+        //         let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
+        //         // Primer letra con mayúsculas
+        //         prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
+        //         this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
+        //             if (confirm) {
+        //                 this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
+        //                 return true;
+        //             }
+        //             return false;
+        //         });
+        //     }
+        // }
     }
 
 
@@ -262,12 +262,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];
-                // buscamos en la posición que se encuentra el registro de orgien y destino
-                let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
-                let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
+                // // buscamos en la posición que se encuentra el registro de orgien y destino
+                // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
+                // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
 
-                registros.splice(indexOrigen, 1);
-                registros.splice(indexDestino + 1, 0, registroOrigen);
+                // registros.splice(indexOrigen, 1);
+                // registros.splice(indexDestino + 1, 0, registroOrigen);
             }
         }
 
