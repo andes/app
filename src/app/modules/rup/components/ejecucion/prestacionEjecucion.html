@@ -43,26 +43,27 @@
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true , canClose: true , tabFixed: true}" [hidden]="showDatosSolicitud"
                         (_tab)="cerrartab($event)">
 
-                        <div class="row">
-                            <div class="col-9">
-                                Acciones sobre los registros
-                            </div>
-                            <div class="col-3 float-right text-right">
-                                <a href="javascript:void(0);" title="Collapsar los registros" [ngClass]="{'disabled' : !collapse}" (click)="colapsarPrestaciones('collapse'); collapse = false;"
-                                    class="btn btn-primary">
-                                    <i class="mdi mdi-chevron-down"></i>
-                                </a>
-                                <a href="javascript:void(0);" title="Expandir los registros" [ngClass]="{'disabled' : collapse}" (click)="colapsarPrestaciones(); collapse = true;"
-                                    class="btn btn-primary">
-                                    <i class="mdi mdi-chevron-down"></i>
-                                </a>
-                                <a href="javascript:void(0);" title="Quitar todos los registros" (click)="eliminaTodosLosRegistros()" class="btn btn-danger desvincular float-right">
-                                    <i class="mdi mdi-delete"></i>
-                                </a>
-                            </div>
-                        </div>
-
                         <tab [tabTitle]="(prestacion.ejecucion.registros && prestacion.ejecucion.registros.length) ? 'Registros de esta consulta (' + prestacion.ejecucion.registros.length + ')' : 'Registros de esta consulta '">
+
+                            <div class="row" *ngIf="prestacion.ejecucion && prestacion.ejecucion.registros && prestacion.ejecucion.registros.length">
+                                <div class="col-9">
+                                    Acciones sobre los registros
+                                </div>
+                                <div class="col-3 float-right text-right panel-acciones">
+                                    <a href="javascript:void(0);" *ngIf="collapse" title="Collapsar los registros" (click)="colapsarPrestaciones('collapse'); collapse = false;"
+                                        class="btn btn-primary">
+                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" *ngIf="!collapse" title="Expandir los registros" (click)="colapsarPrestaciones(); collapse = true;"
+                                        class="btn btn-primary">
+                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
+                                    </a>
+                                    <!-- <a href="javascript:void(0);" title="Quitar todos los registros" (click)="eliminaTodosLosRegistros()" class="btn btn-danger desvincular float-right">
+                                                <i class="mdi mdi-delete"></i>
+                                            </a> -->
+                                </div>
+                            </div>
+
                             <!-- Area droppable de la consulta -->
                             <div *ngIf="!transformarProblema" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)"
                                 class="droppable drop-area" [hidden]="!isDraggingConcepto">

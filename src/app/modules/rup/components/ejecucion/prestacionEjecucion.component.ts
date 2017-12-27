@@ -955,13 +955,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    eliminaTodosLosRegistros() {
-        this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
-            if (confirm) {
-                this.prestacion.ejecucion.registros = [];
-                return true;
-            }
-            return false;
-        });
-    }
+    // eliminaTodosLosRegistros() {
+    //     this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
+    //         if (confirm) {
+    //             this.prestacion.ejecucion.registros = [];
+    //             return true;
+    //         }
+    //         return false;
+    //     });
+    // }
 }
