@@ -95,3 +95,24 @@ $color in $rup_colors {
         }
     }
 }
+.scroll {
+    overflow: scroll;
+    height: calc(100vh - 456px);
+    margin-bottom: 0;
+} 
+.down {
+    height: calc(100vh - 250px);
+}
+
+.buscador-hidden {
+    opacity: 0;
+    position: absolute;
+    -webkit-transform: translate(0, -60px);
+    -webkit-transition: -webkit-transform .2s, opacity 0 .3s;
+   }
+   
+.buscador-visible {
+    opacity: 1;
+    -webkit-transform: translate(0, 0);
+    -webkit-transition: -webkit-transform .2s;
+   }
