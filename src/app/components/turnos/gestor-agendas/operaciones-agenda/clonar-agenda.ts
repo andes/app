@@ -61,7 +61,7 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
         let params = {
-            fechaDesde: this.inicioAgenda,
+            fechaDesde: this.today,
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
         };
