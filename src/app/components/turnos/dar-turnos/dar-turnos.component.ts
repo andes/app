@@ -45,7 +45,6 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        // this.paciente = value;
         this.servicePaciente.getById(this._pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
@@ -262,7 +261,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /**
-     *
      * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
@@ -310,8 +308,7 @@ export class DarTurnosComponent implements OnInit {
             }
             // Traer las agendas
             this.serviceAgenda.get(params).subscribe(agendas => {
-
-                // Sólo traer agendas disponibles o publicadas
+                // Filtrar agendas disponibles o publicadas
                 this.agendas = agendas.filter((data) => {
                     if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                         return (data.estado === 'publicada');
@@ -459,7 +456,6 @@ export class DarTurnosComponent implements OnInit {
                         this.profesionalDisponibles = 0;
 
                         this.agenda.bloques.forEach((bloque, indexBloque) => {
-                            // this.bloques.forEach((bloque, indexBloque) => {
                             countBloques.push({
                                 // Si la agenda es de hoy los programados se suman a los del día
                                 delDia: agendaDeHoy ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
@@ -614,11 +610,9 @@ export class DarTurnosComponent implements OnInit {
     // Se busca el número de carpeta de la Historia Clínica en papel del paciente
     // a partir del documento y del efector
     obtenerCarpetaPaciente() {
-        // Verifico que tenga nro de carpeta de Historia clínica en el efector
-
         let indiceCarpeta = -1;
         if (this.paciente.carpetaEfectores.length > 0) {
-            // Filtramos y traemos sólo la carpeta de la organización actual
+            // Filtro por organizacion
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
@@ -873,6 +867,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     tieneTurnos(bloque: IBloque): boolean {
+        console.log('Filtro TP ', this.opciones.tipoPrestacion);
         let turnos = bloque.turnos;
         if (this._solicitudPrestacion) {
             let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
