@@ -329,14 +329,13 @@ export class DarTurnosComponent implements OnInit {
 
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-
-                        return (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
+                        let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
                             ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
-                                || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
-                            ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
-                                (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
-                                    (!autocitado && agenda.turnosRestantesGestion > 0))));
+                                || (agenda.turnosRestantesProgramados > 0 && delDia === false))) ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
+                                (!autocitado && agenda.turnosRestantesGestion > 0))));
+                        return cond;
+
                     });
                 }
 
@@ -361,7 +360,10 @@ export class DarTurnosComponent implements OnInit {
     hayTurnosEnHorario(agenda) {
         let ultimoBloque = agenda.bloques.length - 1;
         let ultimoTurno = agenda.bloques[ultimoBloque].turnos.length - 1;
-        return (moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format());
+        let ultimahora = moment(agenda.horaFin).format();
+        let horaLimite = (moment(new Date()).format());
+        let resolucion = (ultimahora > horaLimite);
+        return resolucion;
     }
 
     hayTurnosDisponibles(agenda) {
@@ -885,7 +887,7 @@ export class DarTurnosComponent implements OnInit {
         } else {
             let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
             if (delDia && bloque.restantesDelDia > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+                return turnos.find(turno => turno.estado === 'disponible') != null;
             }
             if (!delDia && bloque.restantesProgramados > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;

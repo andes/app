@@ -147,28 +147,26 @@
                                             </div>
                                             <ng-container *ngIf="tieneTurnos(bloque)">
                                                 <div *ngFor="let turno of bloque.turnos; let i=index">
-                                                    <ng-container *ngIf="turno.horaInicio >= hoy">
-                                                        <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
-                                                            <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
-                                                                (click)="seleccionarTurno(bloque,i)">
-                                                                {{turno.horaInicio | date: 'HH:mm'}}
-                                                            </div>
+                                                    <div *ngIf="!bloque.pacienteSimultaneos && !bloque.citarPorBloque">
+                                                        <div *ngIf="turno.estado == 'disponible'" class="text-center hover p-2 mb-3 outline-dashed-default" [appHover]="'text-success outline-success'"
+                                                            (click)="seleccionarTurno(bloque,i)">
+                                                            {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
-                                                        <div *ngIf="bloque.pacienteSimultaneos">
-                                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
-                                                                [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
-                                                                {{turno.horaInicio | date: 'HH:mm'}}
-                                                            </div>
-                                                            <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
+                                                    </div>
+                                                    <div *ngIf="bloque.pacienteSimultaneos">
+                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
+                                                            [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                                            {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
-                                                        <div *ngIf="bloque.citarPorBloque">
-                                                            <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
-                                                                [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
-                                                                {{turno.horaInicio | date: 'HH:mm'}}
-                                                            </div>
-                                                            <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
+                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadSimultaneos<bloque.turnos.length"> -->
+                                                    </div>
+                                                    <div *ngIf="bloque.citarPorBloque">
+                                                        <div *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)" class="text-center hover p-2 mb-3 outline-dashed-default"
+                                                            [appHover]="'text-success outline-success'" (click)="seleccionarTurno(bloque,i)">
+                                                            {{turno.horaInicio | date: 'HH:mm'}}
                                                         </div>
-                                                    </ng-container>
+                                                        <!-- <br *ngIf="turno.estado == 'disponible' && primerSimultaneoDisponible(bloque, turno, i)  && i+bloque.cantidadBloque<bloque.turnos.length"> -->
+                                                    </div>
                                                 </div>
                                             </ng-container>
                                         </div>
