@@ -130,11 +130,11 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
 
-            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e, item)">
-                <div class="rup-card mini" [ngClass]="getCssClass(item)">
+            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="type">
                         <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
-                        <i class="icon icon-rup-semantic-{{getIcon(item)}}"></i>
+                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                     </div>
                     <div class="rup-content">
                         <div class="header" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
@@ -147,7 +147,7 @@
                                 </ng-container>
                             </div>
                             <div class="actions">
-                                <small class="badge badge-{{ getCssClass(item) }} text-default">
+                                <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
                                     {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                 </small>
                                 <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">

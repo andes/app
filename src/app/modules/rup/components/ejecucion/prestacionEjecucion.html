@@ -57,13 +57,14 @@
 
                                     <!-- Contenedor del registro RUP -->
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                                        <div class="rup-card {{ ((registro.esSolicitud) ? 'plan' : ((registro.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((registro.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : registro.concepto.semanticTag))) }}">
+                                        <!-- <div class="rup-card {{ ((registro.esSolicitud) ? 'plan' : ((registro.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((registro.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : registro.concepto.semanticTag))) }}"> -->
+                                        <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="type drag-handle " draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']" [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
 
                                                 <span class="legend">
                                                     <!-- <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i> -->
                                                     {{registro.concepto.semanticTag}}
-                                                    <i class="icon icon-rup-semantic-{{getIcon(registro.concepto)}}"></i>
+                                                    <i class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getCssClass(registro.concepto, 'planes') : servicioPrestacion.getCssClass(registro.concepto)}}"></i>
                                                 </span>
                                             </div>
 
