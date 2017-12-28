@@ -16,20 +16,17 @@
                                         <i (click)="vincularPacienteClic(pac)" class="mdi mdi-link-variant mdi-hover-show linkear"></i>
                                     </h4>
                                     <div class="card-block">
-                                        <h4 class="card-title">{{pac.paciente.apellido | uppercase}} {{pac.paciente.nombre | uppercase}} </h4>
-                                        <div *ngIf="pac.paciente.documento !== ''">DU: {{pac.paciente.documento}}</div>
-                                        <div *ngIf="pac.paciente.documento === ''">DU:
+                                        <h4 class="card-title">{{pac.apellido | uppercase}} {{pac.nombre | uppercase}} </h4>
+                                        <div *ngIf="pac.documento !== ''">DU: {{pac.documento}}</div>
+                                        <div *ngIf="pac.documento === ''">DU:
                                             <b class="text-danger">Sin documento (temporal)</b>
                                         </div>
-                                        <div *ngIf="pac.paciente.fechaNacimiento !== ''">Fecha Nac.: {{ pac.paciente.fechaNacimiento | fecha }}</div>
-                                        <div *ngIf="pac.paciente.fechaNacimiento === ''">Fecha Nac.:
+                                        <div *ngIf="pac.fechaNacimiento !== ''">Fecha Nac.: {{ pac.fechaNacimiento | fecha }}</div>
+                                        <div *ngIf="pac.fechaNacimiento === ''">Fecha Nac.:
                                             <b class="text-danger">Sin fecha de nacimiento (temporal)</b>
                                         </div>
-                                        <div>Sexo: {{ pac.paciente.sexo }}</div>
-                                        <div>Similitud:
-                                            <span class="badge badge-default">{{ pac.matching }}%</span>
-                                        </div>
-                                        <div class={{pac.paciente.estado}}> {{ pac.paciente.estado | uppercase }}</div>
+                                        <div>Sexo: {{ pac.sexo }}</div>
+                                       <div class={{pac.estado}}> {{ pac.estado | uppercase }}</div>
                                     </div>
                                 </div>
                             </li>
@@ -51,20 +48,17 @@
                                         <i (click)="desvincularPaciente(pac)" class="mdi mdi-link-variant-off mdi-hover-show deslinkear"></i>
                                     </h4>
                                     <div class="card-block">
-                                        <h4 class="card-title">{{pac.paciente.apellido}} {{pac.paciente.nombre}} </h4>
-                                        <div *ngIf="pac.paciente.documento !== ''">DU: {{pac.paciente.documento}}</div>
-                                        <div *ngIf="pac.paciente.documento === ''">DU:
+                                        <h4 class="card-title">{{pac.apellido}} {{pac.nombre}} </h4>
+                                        <div *ngIf="pac.documento !== ''">DU: {{pac.documento}}</div>
+                                        <div *ngIf="pac.documento === ''">DU:
                                             <b class="text-danger">Sin documento (temporal)</b>
                                         </div>
-                                        <div *ngIf="pac.paciente.fechaNacimiento !== ''">Fecha Nac.: {{ pac.paciente.fechaNacimiento | fecha }}</div>
-                                        <div *ngIf="pac.paciente.fechaNacimiento === ''">Fecha Nac.:
+                                        <div *ngIf="pac.fechaNacimiento !== ''">Fecha Nac.: {{ pac.fechaNacimiento | fecha }}</div>
+                                        <div *ngIf="pac.fechaNacimiento === ''">Fecha Nac.:
                                             <b class="text-danger">Sin fecha de nacimiento (temporal)</b>
                                         </div>
-                                        <div>Sexo: {{pac.paciente.sexo}}</div>
-                                        <div>Similitud:
-                                            <span class="badge badge-default">{{pac.matching}}%</span>
-                                        </div>
-                                        <div class={{pac.paciente.estado}}> {{pac.paciente.estado | uppercase }}</div>
+                                        <div>Sexo: {{pac.sexo}}</div>
+                                        <div class={{pac.estado}}> {{pac.estado | uppercase }}</div>
                                     </div>
                                 </div>
                             </li>

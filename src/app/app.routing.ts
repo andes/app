@@ -95,7 +95,6 @@ const appRoutes: Routes = [
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
-
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
@@ -106,8 +105,6 @@ const appRoutes: Routes = [
   /* ELIMINAR ==> */ { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes

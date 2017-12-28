@@ -8,7 +8,6 @@ import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
 
 @Injectable()
 export class PacienteService {
-
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
     private carpetaUrl = '/modules/turnos/carpetasPacientes';
 
@@ -29,6 +28,10 @@ export class PacienteService {
 
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
+    }
+
+    getAuditoria(params: any): Observable<IPaciente[]> {
+        return this.server.get(this.pacienteUrl + '/auditoria/', {params: params, showError: true});
     }
 
     getDashboard(): Observable<IPaciente[]> {
