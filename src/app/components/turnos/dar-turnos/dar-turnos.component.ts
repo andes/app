@@ -330,7 +330,7 @@ export class DarTurnosComponent implements OnInit {
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
                         let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
-                            ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
+                            (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
                                 || (agenda.turnosRestantesProgramados > 0 && delDia === false))) ||
                             ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
                                 (!autocitado && agenda.turnosRestantesGestion > 0))));
@@ -417,9 +417,9 @@ export class DarTurnosComponent implements OnInit {
                 this.bloques = this.bloques.filter(
                     function (value) {
                         if (agendaDeHoy) {
-                            return Number(value.restantesDelDia) + Number(value.restantesProgramados) > 0;
+                            return (value.restantesDelDia) + (value.restantesProgramados) > 0;
                         } else {
-                            return (Number(value.restantesProgramados) + Number(value.reservadoGestion) + Number(value.restantesProfesional) > 0);
+                            return ((value.restantesProgramados) + (value.reservadoGestion) + (value.restantesProfesional) > 0);
                         }
                     }
                 );
@@ -472,10 +472,6 @@ export class DarTurnosComponent implements OnInit {
                             bloque.turnos.forEach((turno) => {
                                 if (turno.estado === 'turnoDoble' && turnoAnterior) {
                                     turno = turnoAnterior;
-                                }
-                                // Si el turno está disponible pero ya paso la hora
-                                if (agendaDeHoy && turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                    countBloques[indexBloque].delDia--;
                                 }
                                 turnoAnterior = turno;
                             });
@@ -752,7 +748,7 @@ export class DarTurnosComponent implements OnInit {
                     };
                     this.agenda = agd;
                     this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
+                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                     let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
                     let agendaid = this.agenda.id;
 
@@ -886,7 +882,7 @@ export class DarTurnosComponent implements OnInit {
             }
         } else {
             let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
-            if (delDia && bloque.restantesDelDia > 0) {
+            if (delDia && (bloque.restantesDelDia + bloque.restantesProgramados) > 0) {
                 return turnos.find(turno => turno.estado === 'disponible') != null;
             }
             if (!delDia && bloque.restantesProgramados > 0) {
