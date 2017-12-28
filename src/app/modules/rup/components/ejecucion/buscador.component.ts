@@ -104,7 +104,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // inicializamos variable resultsAux con la misma estructura que results
         // this.resultsAux = JSON.parse(JSON.stringify(this.results));
         this.resultsAux = Object.assign({}, this.results);
-
+        this.filtrarResultadosBusquedaGuiada();
         // Se traen los Conceptos Turneables para poder quitarlos de la lista de
         // Procedimientos
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
@@ -192,7 +192,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.filtroActual = 'todos';
         }
         // debugger;
-        if ( this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
+        if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
             // reiniciamos los resultados desde la copia auxiliar que tenemos
             this.results = JSON.parse(JSON.stringify(this.resultsAux));
@@ -315,17 +315,31 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         Object.keys(this.servicioPrestacion.refsetsIds).forEach(key => {
             let nombre = key.replace(/_/g, ' ');
-            this.results.busquedaGuiada.push({
-                nombre: nombre,
-                valor: this.results.buscadorBasico['todos'].filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[key]))
-            });
+            if (this.results.buscadorBasico['todos']) {
+                this.results.busquedaGuiada.push({
+                    nombre: nombre,
+                    valor: this.results.buscadorBasico['todos'].filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[key]))
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: nombre,
+                    valor: []
+                });
+            }
         });
 
         Object.keys(this.conceptos).forEach(concepto => {
-            this.results.busquedaGuiada.push({
-                nombre: concepto,
-                valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-            });
+            if (this.results.buscadorBasico['todos']) {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: []
+                });
+            }
         });
     }
 

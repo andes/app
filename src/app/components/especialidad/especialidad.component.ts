@@ -94,6 +94,7 @@ export class EspecialidadComponent implements OnInit {
     }
 
     nextPage() {
+        debugger;
         if (this.tengoDatos) {
             this.skip += limit;
             this.loadDatos(true);

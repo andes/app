@@ -161,7 +161,7 @@
 
 <!-- BUSQUEDA GUIADA -->
 
-<div *ngIf="busquedaActual && results && results[busquedaActual] && results[busquedaActual].length && busquedaActual === 'busquedaGuiada'">
+<div>
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let items of results[busquedaActual], let i = index;">
             <li>
