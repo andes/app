@@ -85,6 +85,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+    public conceptosTurneables: any[];
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -149,6 +151,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                     });
                 }
+            });
+
+            // Se traen los Conceptos Turneables para poder quitarlos de la lista de procedimientos
+            this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+                this.conceptosTurneables = conceptosTurneables;
             });
         });
     }
@@ -409,6 +416,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+        debugger;
         let valor;
         let resultado;
         this.isDraggingConcepto = false;
@@ -941,5 +949,96 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }
         return false;
+    }
+
+
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
+    /**
+     * Determina la clase a utilizar segun sematicTag o si es turneable
+     *
+     * @param {any} item 
+     * @returns string clase css
+     * @memberof BuscadorComponent
+     */
+    public getCssClass(item) {
+        let clase = item.semanticTag;
+
+        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
+
+        if (this.esTurneable(item)) {
+            clase = 'plan';
+        } else if (item.semanticTag === 'régimen/tratamiento') {
+            clase = 'regimen';
+        } else if (item.semanticTag === 'elemento de registro') {
+            clase = 'elementoderegistro';
+        }
+
+        return clase;
+    }
+
+    /**
+     * Determina el icono a utilizar segun sematicTag o si es turneable
+     * 
+     * @param {any} item 
+     * @returns string Icono
+     * @memberof BuscadorComponent
+     */
+    public getIcon(item) {
+        let icon = item.semanticTag;
+
+        if (this.esTurneable(item)) {
+            icon = 'plan';
+        } else {
+            switch (item.semanticTag) {
+                case 'hallazgo':
+                case 'situación':
+                    icon = 'hallazgo';
+                    break;
+
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+
+                case 'procedimiento':
+                case 'entidad observable':
+                case 'régimen/tratamiento':
+                    icon = 'trastorno';
+                    break;
+                
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+                    
+                case 'producto':
+                    icon = 'producto';
+                    break;
+
+                case 'elemento de registro':
+                    icon = 'elementoderegistro';
+                    break;
+
+                
+            }
+        }
+
+        return icon;
     }
 }
