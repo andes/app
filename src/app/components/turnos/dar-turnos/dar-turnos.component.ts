@@ -867,24 +867,31 @@ export class DarTurnosComponent implements OnInit {
     }
 
     tieneTurnos(bloque: IBloque): boolean {
-        console.log('Filtro TP ', this.opciones.tipoPrestacion);
-        let turnos = bloque.turnos;
-        if (this._solicitudPrestacion) {
-            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
-            if (autocitado && bloque.restantesProfesional > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-            }
-            if (!autocitado && bloque.restantesGestion > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+        let prestacionesBlq = bloque.tipoPrestaciones.map(function (obj) {
+            return obj.conceptId;
+        });
+        let indice = prestacionesBlq.indexOf(this.opciones.tipoPrestacion.conceptId);
+        if ( indice >= 0) {
+            let turnos = bloque.turnos;
+            if (this._solicitudPrestacion) {
+                let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+                if (autocitado && bloque.restantesProfesional > 0) {
+                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+                }
+                if (!autocitado && bloque.restantesGestion > 0) {
+                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+                }
+            } else {
+                let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
+                if (delDia && bloque.restantesDelDia > 0) {
+                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+                }
+                if (!delDia && bloque.restantesProgramados > 0) {
+                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+                }
             }
         } else {
-            let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
-            if (delDia && bloque.restantesDelDia > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-            }
-            if (!delDia && bloque.restantesProgramados > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-            }
+            return false;
         }
     }
 
