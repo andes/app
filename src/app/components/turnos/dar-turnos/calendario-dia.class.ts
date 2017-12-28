@@ -23,76 +23,80 @@ export class CalendarioDia {
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             this.estadoAgenda = this.agenda.estado;
+            if (disponible) {
+                let countBloques = [];
 
-            let countBloques = [];
-
-            // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
-            if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
-                this.agenda.bloques.forEach((bloque, indexBloque) => {
-                    countBloques.push({
-                        delDia: bloque.restantesDelDia + bloque.restantesProgramados,
-                        programado: 0,
-                        gestion: bloque.restantesGestion,
-                        profesional: bloque.restantesProfesional
+                // Si la agenda es de hoy, los turnos programados deberán sumarse  al contador "delDia"
+                if (this.agenda.horaInicio >= moment().startOf('day').toDate() && this.agenda.horaInicio <= moment().endOf('day').toDate()) {
+                    this.agenda.bloques.forEach((bloque, indexBloque) => {
+                        countBloques.push({
+                            delDia: bloque.restantesDelDia + bloque.restantesProgramados,
+                            programado: 0,
+                            gestion: bloque.restantesGestion,
+                            profesional: bloque.restantesProfesional
+                        });
+                        this.delDiaDisponibles += countBloques[indexBloque].delDia;
                     });
-                    this.delDiaDisponibles += countBloques[indexBloque].delDia;
-                });
-                // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
-                this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles;
-                this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
-                // En caso contrario, se calculan los contadores por separado
-            } else {
-                let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
-                this.agenda.bloques.forEach((bloque, indexBloque) => {
-                    countBloques.push({
-                        // Asignamos a contadores dinamicos la cantidad inicial de c/u
-                        delDia: bloque.restantesDelDia,
-                        programado: bloque.restantesProgramados,
-                        gestion: bloque.restantesGestion,
-                        profesional: bloque.restantesProfesional
+                    // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
+                    this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles;
+                    this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
+                    // En caso contrario, se calculan los contadores por separado
+                } else {
+                    let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+                    this.agenda.bloques.forEach((bloque, indexBloque) => {
+                        countBloques.push({
+                            // Asignamos a contadores dinamicos la cantidad inicial de c/u
+                            delDia: bloque.restantesDelDia,
+                            programado: bloque.restantesProgramados,
+                            gestion: bloque.restantesGestion,
+                            profesional: bloque.restantesProfesional
+                        });
+
+                        this.delDiaDisponibles += bloque.restantesDelDia;
+                        this.programadosDisponibles += bloque.restantesProgramados;
+                        this.gestionDisponibles += bloque.restantesGestion;
+                        this.profesionalDisponibles += bloque.restantesProfesional;
+                        if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
+                            if (solicitudPrestacion) {
+                                if (this.gestionDisponibles > 0 && !autocitado) {
+                                    this.estado = 'disponible';
+                                    disponible = true;
+                                } else if (this.profesionalDisponibles > 0 && autocitado) {
+                                    this.estado = 'disponible';
+                                    disponible = true;
+                                } else {
+                                    this.estado = 'vacio';
+                                    disponible = false;
+                                    this.turnosDisponibles = 0;
+                                }
+                            } else {
+                                if (this.programadosDisponibles > 0) {
+                                    this.estado = 'disponible';
+                                } else {
+                                    this.estado = 'vacio';
+                                }
+                            }
+                        }
+
                     });
 
-                    this.delDiaDisponibles += bloque.restantesDelDia;
-                    this.programadosDisponibles += bloque.restantesProgramados;
-                    this.gestionDisponibles += bloque.restantesGestion;
-                    this.profesionalDisponibles += bloque.restantesProfesional;
-                    if (this.agenda.estado === 'disponible' || this.agenda.estado === 'publicada') {
+                    if (disponible) {
                         if (solicitudPrestacion) {
-                            if (this.gestionDisponibles > 0 && !autocitado) {
-                                this.estado = 'disponible';
-                                disponible = true;
-                            } else if (this.profesionalDisponibles > 0 && autocitado) {
-                                this.estado = 'disponible';
-                                disponible = true;
+                            if (autocitado) {
+                                this.turnosDisponibles += this.profesionalDisponibles;
                             } else {
-                                this.estado = 'vacio';
-                                disponible = false;
-                                this.turnosDisponibles = 0;
+                                this.turnosDisponibles += this.gestionDisponibles;
                             }
                         } else {
-                            if (this.programadosDisponibles > 0) {
-                                this.estado = 'disponible';
-                            } else {
-                                this.estado = 'vacio';
-                            }
+                            this.turnosDisponibles += this.programadosDisponibles;
                         }
-                    }
-
-                });
-
-                if (disponible) {
-                    if (solicitudPrestacion) {
-                        if (autocitado) {
-                            this.turnosDisponibles += this.profesionalDisponibles;
-                        } else {
-                            this.turnosDisponibles += this.gestionDisponibles;
-                        }
-                    } else {
-                        this.turnosDisponibles += this.programadosDisponibles;
                     }
                 }
+
+            } else {
+                this.estado = 'ocupado';
             }
         }
-    }
 
+    }
 }
