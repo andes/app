@@ -1,10 +1,12 @@
 @import '../variables';
 // TODO: Crear paquete NPM con las fonts
 @import '../../assets/font.css';
+$rotate: -90deg;
 .rup-card {
     width: 100%;
     display: flex;
-    // border: 2px solid #ccc;
+    flex-direction: column;
+    border: 2px solid #ccc;
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
@@ -57,64 +59,132 @@
     @each $tag,
     $color in $rup_colors {
         &.#{$tag} {
-            // &:hover,
-            // &.active {
-            //     border: 2px solid $color;
-            // }
             &:hover {
-                .rup-content {
-                    border-right: 2px solid $color;
-                    border-bottom: 2px solid $color;
-                    border-top: 2px solid $color;
-                }
+                border-left: 2px solid $color;
+                border-right: 2px solid $color;
+                border-bottom: 2px solid $color;
+                border-top: 2px solid $color;
+                box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
-            .type {
+            .rup-header,
+            .rup-header .icon-rup,
+            .rup-body .legend,
+            .rup-footer .type {
                 background: $color;
             }
+            .rup-header .icon-rup {
+                border-bottom: 1px solid $color;
+                mix-blend-mode: hard-light;
+            }
         }
     }
-    .type {
-        padding: 5px;
-        font-size: 1.2rem;
-        width: 40px;
-        float: left;
+    .rup-header {
+        text-transform: capitalize;
         display: flex;
-        align-items: center;
-        justify-content: center;
-        i {
-            color: white;
-            font-size: 2rem;
-            line-height: 30px;
+        .icon-rup,
+        .title,
+        .actions {
+            padding: 5px;
         }
-    }
-    .rup-content {
-        margin: 0;
-        width: 100%;
-        border-right: 2px solid #ccc;
-        border-top: 2px solid #ccc;
-        border-bottom: 2px solid #ccc;
-        .header {
-            padding: 5px 15px;
-            text-transform: capitalize;
-            border-bottom: 1px solid #ccc;
-            .title {
+        .icon-rup {
+            font-size: 1.2rem;
+            width: 55px;
+            padding: 11px 0 0 0;
+            text-align: center;
+            // float: left;
+            // display: flex;
+            // align-items: center;
+            // justify-content: center;
+            i {
+                color: white;
+                font-size: 2.5rem;
+                line-height: 30px;
+            }
+        }
+        .title {
+            font-size: 1.3em;
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            max-width: 100%;
+            background: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            .vinculadoCon {
                 display: inline-flex;
-                font-size: 1.3em;
-            }
-            .actions {
-                float: right !important;
-                .btn {
-                    margin: 0 5px;
-                }
             }
         }
-        .rup-body {
-            padding: 15px;
-        }
-        .rup-footer {
-            padding: 5px 15px;
+        .actions {
+            padding: 10px 20px;
+            background: white;
+            // float: right !important;
+            margin-left: auto;
+            .btn {
+                margin: 0 5px;
+            }
+            .btn:first-child {
+                margin-right: 0;
+            }
         }
     }
+    .rup-body {
+        display: flex;
+        min-height: 120px;
+        .legend {
+            padding: 5px;
+            font-size: 1.2rem;
+            width: 55px;
+            // float: left;
+            // display: flex;
+            // align-items: center;
+            // justify-content: center;
+            // float: left;
+            // display: inline-flex;
+            // -ms-transform-origin: left top 0;
+            // -moz-transform-origin: left top 0;
+            // -webkit-transform-origin: left top 0;
+            // transform-origin: left top 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            span {
+                display: block;
+                text-transform: uppercase;
+                -ms-transform: rotate($rotate);
+                -moz-transform: rotate($rotate);
+                -webkit-transform: rotate($rotate);
+                transform: rotate($rotate);
+                font-size: 0.9rem;
+                margin-bottom: 50px;
+                color: white;
+                min-width: 120px;
+            }
+        }
+        .content {
+            margin: 0;
+            padding: 10px 20px;
+            flex: 1;
+            border-top: 1px solid #666;
+        }
+    }
+    .rup-footer {
+        padding: 0;
+        display: flex;
+        .type {
+            width: 55px;
+        }
+    }
+    // .rup-body {
+    //     .header {}
+    //     .content {
+    //         border-top: 1px solid #ccc;
+    //         margin: 0;
+    //         padding: 15px;
+    //     }
+    // }
     &:hover {
         .type {
             // transition: transform 300ms;
@@ -135,24 +205,9 @@
 
 /* drag and drop */
 
-$rotate: -90deg;
 .drag-handle {
     cursor: -webkit-grab;
     color: white;
-    .legend {
-        text-transform: uppercase;
-        float: left;
-        display: inline-flex;
-        -ms-transform: rotate($rotate);
-        -moz-transform: rotate($rotate);
-        -webkit-transform: rotate($rotate);
-        transform: rotate($rotate);
-        // -ms-transform-origin: left top 0;
-        // -moz-transform-origin: left top 0;
-        // -webkit-transform-origin: left top 0;
-        // transform-origin: left top 0;
-        font-size: 0.9rem;
-    }
 }
 
 .drag-over-border {
