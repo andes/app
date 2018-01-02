@@ -3,54 +3,72 @@
 @import '../../assets/font.css';
 $rotate: -90deg;
 .rup-card {
+    &:not(.mini) {
+        border: 2px solid #ccc;
+    }
     width: 100%;
     display: flex;
     flex-direction: column;
-    border: 2px solid #ccc;
     margin-bottom: 10px;
     transition: 200ms all;
     -webkit-transition: 200ms all;
     &.mini {
         margin-bottom: 2px;
-        .rup-content {
-            .header {
-                padding: 5px;
-                border-bottom: 0 none;
-                .title {
-                    font-size: 0.75rem;
-                }
+        .rup-header {
+            .icon-rup {
+                border-right: 2px solid #ccc;
+            }
+            .title {
+                color: black;
+                font-size: 0.75rem;
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+            }
+            .actions {
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
             }
         }
         &:hover {
-            .rup-content {
+            .title {
+                background: #eee;
+                border-bottom: 2px solid $blue;
+                border-top: 2px solid $blue;
+            }
+            .actions {
+                background: #eee;
                 border-right: 2px solid $blue;
                 border-bottom: 2px solid $blue;
                 border-top: 2px solid $blue;
-                //     transition: transform 300ms;
-                //     transform: scale(1.01);
-                //     padding-left: 10px;
             }
         }
         @each $tag,
         $color in $rup_colors {
             &.#{$tag} {
                 &:hover {
-                    .type {
-                        background: $color;
-                        i {
-                            color: white;
+                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+                    .rup-header {
+                        .icon-rup {
+                            background: $color;
+                            border-right: 2px solid $color;
+                            i {
+                                color: white;
+                            }
                         }
                     }
                 }
                 &.active {
                     border: 2px solid $color;
+                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
                 }
-                .type {
-                    border: 2px solid $color;
-                    color: $color;
-                    background: white;
-                    i {
-                        color: $color;
+                .rup-header {
+                    .icon-rup {
+                        border: 2px solid $color;
+                        background: white;
+                        i {
+                            color: $color;
+                        }
                     }
                 }
             }
@@ -58,7 +76,7 @@ $rotate: -90deg;
     }
     @each $tag,
     $color in $rup_colors {
-        &.#{$tag} {
+        &.#{$tag}:not(.mini) {
             &:hover {
                 border-left: 2px solid $color;
                 border-right: 2px solid $color;
@@ -91,10 +109,6 @@ $rotate: -90deg;
             width: 55px;
             padding: 11px 0 0 0;
             text-align: center;
-            // float: left;
-            // display: flex;
-            // align-items: center;
-            // justify-content: center;
             i {
                 color: white;
                 font-size: 2.5rem;
@@ -120,7 +134,6 @@ $rotate: -90deg;
         .actions {
             padding: 10px 20px;
             background: white;
-            // float: right !important;
             margin-left: auto;
             .btn {
                 margin: 0 5px;
@@ -137,16 +150,6 @@ $rotate: -90deg;
             padding: 5px;
             font-size: 1.2rem;
             width: 55px;
-            // float: left;
-            // display: flex;
-            // align-items: center;
-            // justify-content: center;
-            // float: left;
-            // display: inline-flex;
-            // -ms-transform-origin: left top 0;
-            // -moz-transform-origin: left top 0;
-            // -webkit-transform-origin: left top 0;
-            // transform-origin: left top 0;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -177,22 +180,13 @@ $rotate: -90deg;
             width: 55px;
         }
     }
-    // .rup-body {
-    //     .header {}
-    //     .content {
-    //         border-top: 1px solid #ccc;
-    //         margin: 0;
-    //         padding: 15px;
-    //     }
-    // }
     &:hover {
-        .type {
-            // transition: transform 300ms;
-            // transform: scale(1.01);
-            // padding-left: 10px;
-            i {
-                transition: 200ms all;
-                -webkit-transition: 200ms all;
+        .rup-header {
+            .rup-icon {
+                i {
+                    transition: 200ms all;
+                    -webkit-transition: 200ms all;
+                }
             }
         }
     }
@@ -239,12 +233,29 @@ $rotate: -90deg;
     }
 }
 
-.spin::before {
+// a.collapse-card:hover>i::before {
+//     -webkit-transform: rotate(360deg);
+//     -moz-transform: rotate(360deg);
+//     -o-transform: rotate(360deg);
+//     -ms-transform: rotate(360deg);
+//     transform: rotate(360deg);
+//     transition: all 200ms;
+// }
+.spin-in::before {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
     -o-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
     transform: rotate(180deg);
+    transition: all 200ms;
+}
+
+.spin-out::before {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
     transition: all 200ms;
 }
 

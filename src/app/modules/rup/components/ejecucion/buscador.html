@@ -130,30 +130,31 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
 
-            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)" class="drag-handle">
+
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
-                    <div class="type">
-                        <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
-                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
-                    </div>
-                    <div class="rup-content">
-                        <div class="header" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
-                            <div class="title">
-                                {{item.term}}
-                                <ng-container *ngIf="busquedaActual === 'sugeridos'">
-                                    <span *ngIf="item?.sugeridoPor" class="text-right pl-2">
-                                        <b><i>Sugerido por {{item.sugeridoPor}}</i></b>
-                                    </span>
-                                </ng-container>
-                            </div>
-                            <div class="actions">
-                                <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
-                                    {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
-                                </small>
-                                <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
-                                    <i class="mdi mdi-plus-box"></i>
-                                </a>
-                            </div>
+                    <div class="rup-header">
+                        <div class="icon-rup">
+                            <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
+                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
+                        </div>
+
+                        <div class="title" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                            {{item.term}}
+                            <ng-container *ngIf="busquedaActual === 'sugeridos'">
+                                <span *ngIf="item?.sugeridoPor" class="text-right pl-2">
+                                    <b><i>Sugerido por {{item.sugeridoPor}}</i></b>
+                                </span>
+                            </ng-container>
+                        </div>
+
+                        <div class="actions">
+                            <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
+                                {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                            </small>
+                            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                <i class="mdi mdi-plus-box"></i>
+                            </a>
                         </div>
                     </div>
                 </div>

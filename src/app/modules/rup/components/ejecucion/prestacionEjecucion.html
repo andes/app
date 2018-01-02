@@ -88,20 +88,22 @@
                                                         {{registro.concepto.semanticTag}}
                                                     </span>
 
-                                                    <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary desvincular " *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
+                                                    <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar " *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                         <i class="mdi mdi-vector-difference-ba"></i>
+                                                        <i class="mdi mdi-vector-difference-ab"></i>
                                                     </a>
 
-                                                    <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary">
-                                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : itemsRegistros[registro.id]?.collapse}"></i>
+                                                    <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
+                                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
                                                     </a>
 
                                                     <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                         <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
                                                     </ng-container>
 
-                                                    <a *ngIf="!existe(registro.concepto);" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger desvincular">
+                                                    <a *ngIf="!existe(registro.concepto);" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger eliminar">
                                                         <i class="mdi mdi-delete"></i>
+                                                        <i class="mdi mdi-delete-empty"></i>
                                                     </a>
                                                 </div>
                                             </div>
