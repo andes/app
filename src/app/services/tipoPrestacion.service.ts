@@ -19,7 +19,6 @@ export class TipoPrestacionService {
     get(params: any): Observable<ITipoPrestacion[]> {
         params['refsetId'] = '1661000013109';
         return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true }).map(concepto => {
-            debugger;
             let salida = [];
             concepto.forEach(element => {
                 salida.push({

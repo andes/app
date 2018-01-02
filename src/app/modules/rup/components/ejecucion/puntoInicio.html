@@ -22,7 +22,7 @@
                             <plex-text [(ngModel)]="paciente" (change)="filtrar()" label="Buscar paciente"></plex-text>
                         </div>
                         <div class="col-6">
-                            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
+                            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion" idField="term" labelField="term" (change)="filtrar()">
                             </plex-select>
                         </div>
                     </div>
