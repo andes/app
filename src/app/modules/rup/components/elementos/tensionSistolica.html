@@ -5,8 +5,8 @@
     <span>Tensión Sistólica</span> {{registro.valor}} mmHG
 </p>
 
-<p *ngIf="mensaje.texto">
+<p *ngIf="mensaje?.texto">
     <span class="badge-{{mensaje.class}}">
-    {{mensaje.texto}}
+        {{mensaje.texto}}
     </span>
 </p>

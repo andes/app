@@ -84,3 +84,14 @@ $color in $rup_colors {
         background-color: $color;
     }
 }
+@media (max-width: 1600px) {
+  .botoneraPrincipal{
+        display: block;
+        & button {
+            display: inline-block;
+            width: 50%;
+            float: left;
+            border: 1px solid white;
+        }
+    }
+}

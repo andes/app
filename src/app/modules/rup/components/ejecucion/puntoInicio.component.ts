@@ -91,13 +91,13 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada'],
+                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria'],
                 tieneTurnosAsignados: true,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
             // Prestaciones
             this.servicioPrestacion.get({
-                fechaDesde: this.fecha,
+                fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
