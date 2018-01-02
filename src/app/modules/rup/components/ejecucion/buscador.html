@@ -130,11 +130,11 @@
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
 
-            <li draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)" class="drag-handle">
+            <li>
 
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="rup-header">
-                        <div class="icon-rup">
+                        <div class="icon-rup drag-handle" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                         </div>
@@ -168,25 +168,24 @@
 <!-- BUSQUEDA GUIADA -->
 
 <div *ngIf="busquedaActual && results && results[busquedaActual] && results[busquedaActual].length && busquedaActual === 'busquedaGuiada'">
-    <ul class="conceptos list-unstyled">
+    <ul class="busqueda-guiada list-unstyled">
         <ng-container *ngFor="let items of results[busquedaActual], let i = index;">
-            <li>
-                <div class="rup-card mini">
-                    <div class="container rup-content">
-                        <div class="row header">
-                            <div class="col-10">
-                                <b>{{items.nombre}}</b>
-                            </div>
-                            <div class="col-1">
-                                <span class="badge-warning">
-                                {{ items.valor.length }}
-                            </span>
-                            </div>
-                            <div class="col-1">
-                                <a href="javascript: void(0)" class="btn btn-sm btn-primary" (click)='desplegar(items.nombre)' [ngClass]="{'disabled': items.valor.length === 0}">
-                                    <i class="mdi mdi-chevron-down"></i>
-                                </a>
-                            </div>
+            <li class="grupo">
+
+                <div class="container">
+                    <div class="row header">
+                        <div class="col-10">
+                            <b>{{items.nombre}}</b>
+                        </div>
+                        <div class="col-1">
+                            <span class="badge-warning">
+                            {{ items.valor.length }}
+                        </span>
+                        </div>
+                        <div class="col-1">
+                            <a href="javascript: void(0)" class="btn btn-sm btn-primary" (click)='desplegar(items.nombre)' [ngClass]="{'disabled': items.valor.length === 0}">
+                                <i class="mdi mdi-chevron-down"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -195,28 +194,31 @@
                     <ng-container *ngFor="let item of items.valor">
 
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                            <div class="rup-card mini {{ ((items.nombre === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }}">
-                                <div class="type">
-                                    <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i>
-                                </div>
-                                <div class="rup-content">
-                                    <div class="header" [ngClass]="{'actions-left': items.nombre === 'equipamientos'}">
-                                        <div class="title">
-                                            {{item.term}}
-                                        </div>
-                                        <div class="actions">
-                                            <small class="badge badge-{{ ((items.nombre === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag))) }} text-default">
-                                                {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
-                                            </small>
-                                            <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
-                                                <i class="mdi mdi-plus-box-outline"></i>
-                                            </a>
-                                        </div>
+
+                            <div class="rup-card mini" [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual)">
+                                <div class="rup-header">
+                                    <div class="icon-rup drag-handle">
+                                        <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
+                                    </div>
+
+                                    <div class="title" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                                        {{item.term}}
+                                    </div>
+
+                                    <div class="actions">
+                                        <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
+                                            {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                        </small>
+                                        <a href="javascript: void(0)" (click)="seleccionarConcepto(item)">
+                                            <i class="mdi mdi-plus-box-outline"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </li>
                     </ng-container>
+
                 </ul>
             </li>
         </ng-container>
