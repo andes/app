@@ -63,11 +63,13 @@ export class PuntoInicioComponent implements OnInit {
             if (!this.auth.profesional.id) {
                 this.redirect('inicio');
             } else {
-                this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
-                    if (data && data.length <= 0) {
+                this.servicioTipoPrestacion.get({}).subscribe(data => {
+                    let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+                    let dataF = data.filter((x) => { return permisos.indexOf(x.id.toString()) >= 0; });
+                    if (dataF && dataF.length <= 0) {
                         this.redirect('inicio');
                     }
-                    this.tiposPrestacion = data;
+                    this.tiposPrestacion = dataF;
                     this.actualizar();
                 });
             }
@@ -97,9 +99,9 @@ export class PuntoInicioComponent implements OnInit {
             this.servicioPrestacion.get({
                 fechaDesde: this.fecha,
                 fechaHasta: new Date(),
-                organizacion: this.auth.organizacion.id
+                organizacion: this.auth.organizacion.id,
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
-                // this.auth.getPermissions('rup:tipoPrestacion:?')
+                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
             this.agendas = data[0];
