@@ -20,7 +20,7 @@ $rotate: -90deg;
             }
             .title {
                 color: black;
-                font-size: 0.75rem;
+                font-size: 1rem;
                 border-top: 2px solid #ccc;
                 border-bottom: 2px solid #ccc;
             }
@@ -46,7 +46,8 @@ $rotate: -90deg;
         @each $tag,
         $color in $rup_colors {
             &.#{$tag} {
-                &:hover {
+                &:hover,
+                &.active {
                     box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
                     .rup-header {
                         .icon-rup {
@@ -56,12 +57,23 @@ $rotate: -90deg;
                                 color: white;
                             }
                         }
+                        .title {
+                            background: #eee;
+                            border-bottom: 2px solid $blue;
+                            border-top: 2px solid $blue;
+                        }
+                        .actions {
+                            background: #eee;
+                            border-right: 2px solid $blue;
+                            border-bottom: 2px solid $blue;
+                            border-top: 2px solid $blue;
+                        }
                     }
                 }
-                &.active {
-                    border: 2px solid $color;
-                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
-                }
+                // &.active {
+                //     border: 2px solid $color;
+                //     box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+                // }
                 .rup-header {
                     .icon-rup {
                         border: 2px solid $color;
@@ -127,6 +139,7 @@ $rotate: -90deg;
             font-size: 1rem;
             font-weight: 600;
             padding: 10px 20px;
+            display: inline-grid;
             .vinculadoCon {
                 display: inline-flex;
             }

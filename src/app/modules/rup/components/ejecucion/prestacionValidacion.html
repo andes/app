@@ -6,9 +6,9 @@
         <header>
             <div class="row">
                 <div class="col-9" *ngIf="prestacion?.solicitud">
-                    <div class="page-title">Resumen
-                        <b>{{prestacion.solicitud.tipoPrestacion.term}}</b> -
-                        <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
+                    <div class="page-title titulo-consulta">
+                        <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
+                        <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
 
                         <div class="float-right mr-2">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>

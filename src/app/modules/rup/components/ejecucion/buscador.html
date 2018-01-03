@@ -142,8 +142,8 @@
                         <div class="title" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                             {{item.term}}
                             <ng-container *ngIf="busquedaActual === 'sugeridos'">
-                                <span *ngIf="item?.sugeridoPor" class="text-right pl-2">
-                                    <b><i>Sugerido por {{item.sugeridoPor}}</i></b>
+                                <span *ngIf="item?.sugeridoPor" class="sugerido">
+                                    <i>Sugerido por {{item.sugeridoPor}}</i>
                                 </span>
                             </ng-container>
                         </div>

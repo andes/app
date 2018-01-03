@@ -141,10 +141,18 @@ $color in $rup_colors {
     .botoneraPrincipal {
         display: block;
         & button {
-            display: inline-block;
             width: 50%;
             float: left;
             border: 1px solid white;
         }
+    }
+}
+
+.rup-card.mini .rup-header .title {
+    //display: inline-grid;
+    .sugerido {
+        font-weight: 400;
+        font-size: 0.8rem;
+        float: left;
     }
 }

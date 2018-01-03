@@ -77,3 +77,11 @@
 .titulo-adjuntos~.titulo-adjuntos {
     display: none;
 }
+
+.titulo-consulta {
+    font-weight: 400;
+    color: black;
+    .consulta {
+        color: $blue;
+    }
+}

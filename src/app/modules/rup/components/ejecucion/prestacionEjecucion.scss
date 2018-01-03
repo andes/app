@@ -125,3 +125,11 @@
     position: relative;
     top: 34px !important;
 }
+
+.titulo-consulta {
+    font-weight: 400;
+    color: black;
+    .consulta {
+        color: $blue;
+    }
+}
