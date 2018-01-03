@@ -33,7 +33,7 @@
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li>
-                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
+                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                             <div class="rup-header">
 
                                 <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
