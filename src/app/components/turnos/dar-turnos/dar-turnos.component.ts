@@ -790,7 +790,7 @@ export class DarTurnosComponent implements OnInit {
                             if (turnoSiguiente.estado === 'disponible') {
                                 let patch: any = {
                                     op: 'darTurnoDoble',
-                                    turnos: [turnoSiguiente]
+                                    turnos: [turnoSiguiente.id]
                                 };
                                 // Patchea el turno doble
                                 this.serviceAgenda.patch(agendaid, patch).subscribe((agendaActualizada) => {
