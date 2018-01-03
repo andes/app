@@ -133,3 +133,25 @@
         color: $blue;
     }
 }
+
+.tabs-buscador-huds {
+    .nav-tabs {
+        border-bottom: 1px solid black;
+        box-shadow: -1px 1px 2px 0px darkgrey;
+        .nav-item {
+            flex: 1;
+            a {
+                display: block;
+                text-transform: uppercase;
+                background-color: #ccc;
+                border-radius: 0;
+                text-align: center;
+                color: #666;
+                &.active {
+                    background-color: white;
+                    color: $blue;
+                }
+            }
+        }
+    }
+}
