@@ -835,7 +835,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
-        this.registrosHuds = registrosHuds;
+        // this.registrosHuds = registrosHuds;
     }
 
     // Actualiza ambas columnas de registros según las relaciones
