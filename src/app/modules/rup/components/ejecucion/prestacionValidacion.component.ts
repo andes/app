@@ -108,14 +108,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
-            // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-            // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-            // if (indexDiagnosticoPrincipal > -1) {
-            //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-            //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-            //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-            // }
-
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
@@ -189,14 +181,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
                         this.prestacion = prestacion;
-
-                        // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-                        // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-                        // if (indexDiagnosticoPrincipal > -1) {
-                        //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-                        //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-                        //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-                        // }
 
                         this.prestacion.ejecucion.registros.forEach(registro => {
                             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
@@ -300,11 +284,22 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
+    /**
+     * Revisamos entre las solicitudes a futuro generadas si es posible asignar un turno
+     * para autocitaciones
+     * @memberof PrestacionValidacionComponent
+     */
     cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
-
-        let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
+        let prestacionesPermitidas = this.auth.getPermissions('rup:tipoPrestacion:?');
+        // Nos quedamos con los tipos de prestacion de las prestaciones solicitadas
+        // solo aquellas para las que tiene permisos
+        prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => {
+            if (prestacionesPermitidas.find(pp => pp === ps.solicitud.tipoPrestacion.conceptId)) {
+                return ps;
+            }
         });
+        let tiposPrestaciones = prestacionesSolicitadas.map(ps => ps.solicitud.tipoPrestacion);
+
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
@@ -313,13 +308,15 @@ export class PrestacionValidacionComponent implements OnInit {
             }
         });
 
+        // buscamos agendas disponibles o publicadas donde este el profesional e incluyan
+        // los tipos de prestaciones solicitadas
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
-            // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
             this.servicioAgenda.get({
                 fechaDesde: new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada'],
-                profesionales: [this.auth.profesional.id]
+                profesionales: [this.auth.profesional.id],
+                tipoPrestaciones: prestacionesPermitidas
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));

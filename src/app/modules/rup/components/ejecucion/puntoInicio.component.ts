@@ -83,6 +83,7 @@ export class PuntoInicioComponent implements OnInit {
      * Actualiza el listado de agendas y prestaciones
      */
     actualizar() {
+
         Observable.forkJoin(
             // Agendas
             this.servicioAgenda.get({
@@ -98,7 +99,7 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
-                // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
+                // filtrar por las prestaciones permitidas,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
