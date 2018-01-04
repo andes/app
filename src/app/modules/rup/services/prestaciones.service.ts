@@ -553,7 +553,7 @@ export class PrestacionesService {
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
-                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.tipoPrestacion.conceptId === plan.concepto.conceptId);
+                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
 
                 if (!existePrestacion) {
 
@@ -602,10 +602,6 @@ export class PrestacionesService {
 
             return this.patch(prestacion.id, dto);
         }
-
-
-
-
 
     }
     /**
