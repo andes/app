@@ -204,7 +204,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
-                                            <div class="col-3">
+                                            <div class="col-4">
                                                 <b>Evolución </b>
 
                                                 <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">
@@ -221,7 +221,7 @@
                                             </div>
 
                                             <!-- <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"></div> -->
-                                            <div class="col-9"> {{ elemento.valor.evolucion }}</div>
+                                            <div class="col-8"> {{ elemento.valor.evolucion }}</div>
                                         </div>
 
                                         <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">

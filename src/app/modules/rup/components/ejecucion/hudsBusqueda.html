@@ -36,9 +36,16 @@
                         <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                             <div class="rup-header">
 
-                                <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                    <i *ngIf="emitirConceptos" class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
-                                </div>
+                                <ng-container *ngIf="emitirConceptos">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="!emitirConceptos">
+                                    <div class="icon-rup ">
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
 
                                 <div class="title" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
 
@@ -79,11 +86,17 @@
                         <!-- <div class="rup-card mini {{problema.concepto.semanticTag}}" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1"> -->
                         <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
                             <div class="rup-header">
-                                <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
-                                    <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
-                                    <i *ngIf="emitirConceptos" class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
-                                </div>
+                                <ng-container *ngIf="emitirConceptos">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="!emitirConceptos">
+                                    <div class="icon-rup">
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
 
                                 <div class="title" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
 
@@ -123,10 +136,18 @@
 
                         <div class="rup-card mini  {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': eyeOtros === iOtros || estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
-                                <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                    <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
-                                    <i *ngIf="emitirConceptos" class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
-                                </div>
+
+                                <ng-container *ngIf="emitirConceptos">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                        <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
+                                <ng-container *ngIf="!emitirConceptos">
+                                    <div class="icon-rup">
+                                        <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
+                                    </div>
+                                </ng-container>
 
 
                                 <div class="title" (click)="devolverRegistrosHuds(problema, 'hallazgo')" (mouseenter)="eyeOtros = iOtros" (mouseleave)="eyeOtros = -1">
@@ -208,13 +229,21 @@
                 <ul *ngIf="medicamentos" class="conceptos list-unstyled">
                     <ng-container *ngFor="let medicamento of medicamentos; let iCronico = index">
 
-                        <li draggable class="" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <li>
 
                             <div class="rup-card mini producto" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(medicamento, 'medicamento')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                                 <div class="rup-header">
-                                    <div class="icon-rup">
-                                        <i *ngIf="emitirConceptos" class="icon icon-rup-semantic-producto"></i>
-                                    </div>
+
+                                    <ng-container *ngIf="emitirConceptos">
+                                        <div class="icon-rup" draggable class="" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                            <i class="icon icon-rup-semantic-producto"></i>
+                                        </div>
+                                    </ng-container>
+                                    <ng-container *ngIf="!emitirConceptos">
+                                        <div class="icon-rup">
+                                            <i class="icon icon-rup-semantic-producto"></i>
+                                        </div>
+                                    </ng-container>
 
                                     <div class="title" (click)="devolverRegistrosHuds(medicamento, 'medicamento')">
                                         {{ medicamento.concepto.term }}
