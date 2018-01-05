@@ -326,14 +326,13 @@ export class DarTurnosComponent implements OnInit {
 
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
+                        let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
+                            (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
+                                || (agenda.turnosRestantesProgramados > 0 && delDia === false))) ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
+                                (!autocitado && agenda.turnosRestantesGestion > 0))));
+                        return cond;
 
-                        return (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
-                            ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
-                                || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
-                            ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
-                                (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
-                                    (!autocitado && agenda.turnosRestantesGestion > 0))));
                     });
                 }
 
@@ -358,7 +357,10 @@ export class DarTurnosComponent implements OnInit {
     hayTurnosEnHorario(agenda) {
         let ultimoBloque = agenda.bloques.length - 1;
         let ultimoTurno = agenda.bloques[ultimoBloque].turnos.length - 1;
-        return (moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format());
+        let ultimahora = moment(agenda.horaFin).format();
+        let horaLimite = (moment(new Date()).format());
+        let resolucion = (ultimahora > horaLimite);
+        return resolucion;
     }
 
     hayTurnosDisponibles(agenda) {
@@ -412,9 +414,9 @@ export class DarTurnosComponent implements OnInit {
                 this.bloques = this.bloques.filter(
                     function (value) {
                         if (agendaDeHoy) {
-                            return Number(value.restantesDelDia) + Number(value.restantesProgramados) > 0;
+                            return (value.restantesDelDia) + (value.restantesProgramados) > 0;
                         } else {
-                            return (Number(value.restantesProgramados) + Number(value.reservadoGestion) + Number(value.restantesProfesional) > 0);
+                            return ((value.restantesProgramados) + (value.reservadoGestion) + (value.restantesProfesional) > 0);
                         }
                     }
                 );
@@ -466,10 +468,6 @@ export class DarTurnosComponent implements OnInit {
                             bloque.turnos.forEach((turno) => {
                                 if (turno.estado === 'turnoDoble' && turnoAnterior) {
                                     turno = turnoAnterior;
-                                }
-                                // Si el turno está disponible pero ya paso la hora
-                                if (agendaDeHoy && turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                    countBloques[indexBloque].delDia--;
                                 }
                                 turnoAnterior = turno;
                             });
@@ -744,7 +742,7 @@ export class DarTurnosComponent implements OnInit {
                     };
                     this.agenda = agd;
                     this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
+                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                     let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
                     let agendaid = this.agenda.id;
 
@@ -867,34 +865,26 @@ export class DarTurnosComponent implements OnInit {
     }
 
     tieneTurnos(bloque: IBloque): boolean {
-        let prestacionesBlq = bloque.tipoPrestaciones.map(function (obj) {
-            return obj.conceptId;
-        });
-        let indice = prestacionesBlq.indexOf(this.opciones.tipoPrestacion.conceptId);
-        if ( indice >= 0) {
-            let turnos = bloque.turnos;
-            if (this._solicitudPrestacion) {
-                let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
-                if (autocitado && bloque.restantesProfesional > 0) {
-                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-                }
-                if (!autocitado && bloque.restantesGestion > 0) {
-                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-                }
-            } else {
-                let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
-                if (delDia && bloque.restantesDelDia > 0) {
-                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-                }
-                if (!delDia && bloque.restantesProgramados > 0) {
-                    return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
-                }
+        let turnos = bloque.turnos;
+        if (this._solicitudPrestacion) {
+            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
+            if (autocitado && bloque.restantesProfesional > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
+            if (!autocitado && bloque.restantesGestion > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
         } else {
-            return false;
+            let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
+            if (delDia && (bloque.restantesDelDia + bloque.restantesProgramados) > 0) {
+                return turnos.find(turno => turno.estado === 'disponible') != null;
+            }
+            if (!delDia && bloque.restantesProgramados > 0) {
+                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            }
         }
     }
-
+  
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
         this.showDarTurnos = true;
