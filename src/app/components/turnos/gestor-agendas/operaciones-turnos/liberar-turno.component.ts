@@ -19,7 +19,7 @@ export class LiberarTurnoComponent implements OnInit {
     @Output() reasignarTurnoLiberado = new EventEmitter<boolean>();
     @Output() cancelaLiberarTurno = new EventEmitter<boolean>();
 
-    pacientes: any = [];
+    turnos: any = [];
 
     showLiberarTurno: Boolean = true;
 
@@ -42,12 +42,11 @@ export class LiberarTurnoComponent implements OnInit {
     };
 
     ngOnInit() {
-        this.pacientes = this.turnosSeleccionados;
+        this.turnos = this.turnosSeleccionados;
         this.motivoLiberacionSelect.select = this.motivoLiberacion[1];
     }
 
     liberarTurno() {
-
         if (this.motivoLiberacionSelect.select.nombre === null) {
             return;
         }
@@ -55,9 +54,9 @@ export class LiberarTurnoComponent implements OnInit {
         let alertCount = 0;
         let patch = {
             op: 'liberarTurno',
-            turnos: this.pacientes
+            turnos: this.turnos.map((resultado) => {return resultado._id; })
         };
-        let mensaje = this.pacientes.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
+        let mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
         this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
 
@@ -74,11 +73,11 @@ export class LiberarTurnoComponent implements OnInit {
 
     agregarPacienteListaEspera() {
 
-        for (let x = 0; x < this.pacientes.length; x++) {
+        for (let x = 0; x < this.turnos.length; x++) {
             let patch = {
                 'op': 'listaEsperaSuspensionAgenda',
                 'idAgenda': this.agenda.id,
-                'pacientes': this.pacientes[x]
+                'pacientes': this.turnos[x]
             };
 
             this.liberarTurno();
@@ -97,7 +96,7 @@ export class LiberarTurnoComponent implements OnInit {
 
     cancelar() {
         this.cancelaLiberarTurno.emit(true);
-        this.pacientes = [];
+        this.turnos = [];
     }
 
     constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }

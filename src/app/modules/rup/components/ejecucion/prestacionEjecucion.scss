@@ -25,15 +25,14 @@
     text-align: center;
 }
 
-.spin::before {
-    -webkit-transform: rotate(180deg);
-    -moz-transform: rotate(180deg);
-    -o-transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    transform: rotate(180deg);
-    transition: all 200ms;
-}
-
+// .spin::before {
+//     -webkit-transform: rotate(180deg);
+//     -moz-transform: rotate(180deg);
+//     -o-transform: rotate(180deg);
+//     -ms-transform: rotate(180deg);
+//     transform: rotate(180deg);
+//     transition: all 200ms;
+// }
 .drop-posicion {
     background: $light-grey;
     color: $dark-grey;
@@ -62,6 +61,51 @@
     margin: 2px 0 0 20px;
     span.badge {
         padding: 7px 5px;
+        font-size: 0.7rem;
+    }
+}
+
+.eliminar {
+    .mdi-delete {
+        opacity: 1;
+    }
+    .mdi-delete-empty {
+        opacity: 0;
+        display: none;
+    }
+    &:hover {
+        .mdi-delete {
+            opacity: 0;
+            display: none;
+            transition: all 300ms;
+        }
+        .mdi-delete-empty {
+            opacity: 1;
+            display: inline-block;
+            transition: all 300ms;
+        }
+    }
+}
+
+.transformar {
+    .mdi-vector-difference-ba {
+        opacity: 1;
+    }
+    .mdi-vector-difference-ab {
+        opacity: 0;
+        display: none;
+    }
+    &:hover {
+        .mdi-vector-difference-ba {
+            opacity: 0;
+            display: none;
+            transition: all 300ms;
+        }
+        .mdi-vector-difference-ab {
+            opacity: 1;
+            display: inline-block;
+            transition: all 300ms;
+        }
     }
 }
 
@@ -81,3 +125,40 @@
     position: relative;
     top: 34px !important;
 }
+
+.titulo-consulta {
+    font-weight: 400;
+    color: black;
+    .consulta {
+        color: $blue;
+    }
+}
+
+.tabs-buscador-huds {
+    .nav-tabs {
+        border-bottom: 1px solid black;
+        box-shadow: -1px 1px 2px 0px darkgrey;
+        .nav-item {
+            flex: 1;
+            a {
+                display: block;
+                text-transform: uppercase;
+                background-color: #ccc;
+                border-radius: 0;
+                text-align: center;
+                color: #666;
+                &.active {
+                    background-color: white;
+                    color: $blue;
+                }
+            }
+        }
+    }
+}
+
+.panel-acciones { 
+    a {
+        margin: 2px;
+    }
+}
+
