@@ -11,7 +11,9 @@ export interface ITurno {
         nombre: String,
         apellido: String,
         documento: String,
+        fechaNacimiento: Date,
         telefono: String,
+        sexo: String
     };
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
