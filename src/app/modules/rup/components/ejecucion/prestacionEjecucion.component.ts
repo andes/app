@@ -85,8 +85,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+
+    public conceptosTurneables: any[];
+
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
+  
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -151,6 +155,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                     });
                 }
+            });
+
+            // Se traen los Conceptos Turneables para poder quitarlos de la lista de procedimientos
+            this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+                this.conceptosTurneables = conceptosTurneables;
             });
         });
     }
@@ -946,6 +955,26 @@ export class PrestacionEjecucionComponent implements OnInit {
         return false;
     }
 
+
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
     registrosColapsados() {
         this.prestacion.ejecucion.registros.forEach(registro => {
             let unRegistro = this.itemsRegistros[registro.id].collapse;
@@ -964,4 +993,5 @@ export class PrestacionEjecucionComponent implements OnInit {
     //         return false;
     //     });
     // }
+
 }

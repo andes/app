@@ -20,7 +20,14 @@ export class PrestacionesService {
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
 
-    constructor(private server: Server, public auth: Auth) { }
+    public conceptosTurneables: any[];
+
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
+
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
+     }
 
     /**
      * Metodo get. Trae lista de objetos prestacion.
@@ -600,5 +607,96 @@ export class PrestacionesService {
 
 
 
+    }
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
+    /**
+     * Determina la clase a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+        *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Clase a ser utilizado para estilizar las cards de RUP
+     * @memberof PrestacionesService
+     */
+    public getCssClass(conceptoSNOMED, filtroActual: null) {
+        let clase = conceptoSNOMED.semanticTag;
+
+        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            clase = 'plan';
+        } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
+            clase = 'regimen';
+        } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
+            clase = 'elementoderegistro';
+        }
+
+        return clase;
+    }
+
+    /**
+     * Determina el icono a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+     *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Icono a ser utilizado por la font de RUP
+     * @memberof PrestacionesService
+     */
+    public getIcon(conceptoSNOMED, filtroActual: null) {
+        let icon = conceptoSNOMED.semanticTag;
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            icon = 'plan';
+        } else {
+            switch (conceptoSNOMED.semanticTag) {
+                case 'hallazgo':
+                case 'situación':
+                    icon = 'hallazgo';
+                    break;
+
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+
+                case 'procedimiento':
+                case 'entidad observable':
+                case 'régimen/tratamiento':
+                    icon = 'procedimiento';
+                    break;
+                
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+                    
+                case 'producto':
+                    icon = 'producto';
+                    break;
+
+                case 'elemento de registro':
+                    icon = 'elementoderegistro';
+                    break;
+
+                
+            }
+        }
+
+        return icon;
     }
 }
