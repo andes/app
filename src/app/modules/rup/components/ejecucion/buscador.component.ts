@@ -95,6 +95,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public search; // buscador de sugeridos y mis frecuentes
 
+    public scrollTop = 0; // captura el scroll de los resultados del buscador
+    public showMenuBuscador = true;
+
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth,
@@ -239,7 +242,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     dragStart(e) {
         this._onDragStart.emit(e);
     }
-    
+
     dragEnd(e) {
         this._onDragEnd.emit(e);
 
@@ -475,5 +478,17 @@ export class BuscadorComponent implements OnInit, OnChanges {
         return this.conceptos[this.filtroActual];
     }
 
-    
+    /**
+     * captura el evento scroll
+     *
+     * @memberof BuscadorComponent
+     */
+    public onScroll(event) {
+        if (event.srcElement.scrollTop > this.scrollTop) {
+            this.showMenuBuscador = false;
+        } else {
+            this.showMenuBuscador = true;
+        }
+        this.scrollTop = event.srcElement.scrollTop;
+    }
 }
