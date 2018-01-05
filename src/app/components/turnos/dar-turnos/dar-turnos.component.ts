@@ -45,7 +45,6 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        // this.paciente = value;
         this.servicePaciente.getById(this._pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this.paciente = pacienteMPI;
@@ -262,7 +261,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     /**
-     *
      * @param etiqueta: define qué filtros usar para traer todas las Agendas
      */
     actualizar(etiqueta) {
@@ -310,8 +308,7 @@ export class DarTurnosComponent implements OnInit {
             }
             // Traer las agendas
             this.serviceAgenda.get(params).subscribe(agendas => {
-
-                // Sólo traer agendas disponibles o publicadas
+                // Filtrar agendas disponibles o publicadas
                 this.agendas = agendas.filter((data) => {
                     if (data.horaInicio >= moment(new Date()).startOf('day').toDate() && data.horaInicio <= moment(new Date()).endOf('day').toDate()) {
                         return (data.estado === 'publicada');
@@ -329,14 +326,13 @@ export class DarTurnosComponent implements OnInit {
 
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
+                        let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
+                            (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
+                                || (agenda.turnosRestantesProgramados > 0 && delDia === false))) ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
+                                (!autocitado && agenda.turnosRestantesGestion > 0))));
+                        return cond;
 
-                        return (agenda.estado === 'publicada' && !this._solicitudPrestacion &&
-                            ((agenda.turnosRestantesDelDia > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
-                                || (agenda.turnosRestantesProgramados > 0 && delDia === false)))
-                            ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') &&
-                                (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
-                                    (!autocitado && agenda.turnosRestantesGestion > 0))));
                     });
                 }
 
@@ -361,7 +357,10 @@ export class DarTurnosComponent implements OnInit {
     hayTurnosEnHorario(agenda) {
         let ultimoBloque = agenda.bloques.length - 1;
         let ultimoTurno = agenda.bloques[ultimoBloque].turnos.length - 1;
-        return (moment(agenda.bloques[ultimoBloque].turnos[ultimoTurno].horaInicio).format() > moment(new Date()).format());
+        let ultimahora = moment(agenda.horaFin).format();
+        let horaLimite = (moment(new Date()).format());
+        let resolucion = (ultimahora > horaLimite);
+        return resolucion;
     }
 
     hayTurnosDisponibles(agenda) {
@@ -415,9 +414,9 @@ export class DarTurnosComponent implements OnInit {
                 this.bloques = this.bloques.filter(
                     function (value) {
                         if (agendaDeHoy) {
-                            return Number(value.restantesDelDia) + Number(value.restantesProgramados) > 0;
+                            return (value.restantesDelDia) + (value.restantesProgramados) > 0;
                         } else {
-                            return (Number(value.restantesProgramados) + Number(value.reservadoGestion) + Number(value.restantesProfesional) > 0);
+                            return ((value.restantesProgramados) + (value.reservadoGestion) + (value.restantesProfesional) > 0);
                         }
                     }
                 );
@@ -459,7 +458,6 @@ export class DarTurnosComponent implements OnInit {
                         this.profesionalDisponibles = 0;
 
                         this.agenda.bloques.forEach((bloque, indexBloque) => {
-                            // this.bloques.forEach((bloque, indexBloque) => {
                             countBloques.push({
                                 // Si la agenda es de hoy los programados se suman a los del día
                                 delDia: agendaDeHoy ? (bloque.restantesDelDia as number) + (bloque.restantesProgramados as number) : bloque.restantesDelDia,
@@ -470,10 +468,6 @@ export class DarTurnosComponent implements OnInit {
                             bloque.turnos.forEach((turno) => {
                                 if (turno.estado === 'turnoDoble' && turnoAnterior) {
                                     turno = turnoAnterior;
-                                }
-                                // Si el turno está disponible pero ya paso la hora
-                                if (agendaDeHoy && turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                    countBloques[indexBloque].delDia--;
                                 }
                                 turnoAnterior = turno;
                             });
@@ -614,11 +608,9 @@ export class DarTurnosComponent implements OnInit {
     // Se busca el número de carpeta de la Historia Clínica en papel del paciente
     // a partir del documento y del efector
     obtenerCarpetaPaciente() {
-        // Verifico que tenga nro de carpeta de Historia clínica en el efector
-
         let indiceCarpeta = -1;
         if (this.paciente.carpetaEfectores.length > 0) {
-            // Filtramos y traemos sólo la carpeta de la organización actual
+            // Filtro por organizacion
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
@@ -745,12 +737,13 @@ export class DarTurnosComponent implements OnInit {
                         apellido: this.paciente.apellido,
                         nombre: this.paciente.nombre,
                         fechaNacimiento: this.paciente.fechaNacimiento,
+                        sexo: this.paciente.sexo,
                         telefono: this.telefono,
                         carpetaEfectores: this.paciente.carpetaEfectores
                     };
                     this.agenda = agd;
                     this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
-                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = Number(this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
+                    this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
                     let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
                     let agendaid = this.agenda.id;
 
@@ -884,15 +877,15 @@ export class DarTurnosComponent implements OnInit {
             }
         } else {
             let delDia = bloque.horaInicio >= moment().startOf('day').toDate() && bloque.horaInicio <= moment().endOf('day').toDate();
-            if (delDia && bloque.restantesDelDia > 0) {
-                return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
+            if (delDia && (bloque.restantesDelDia + bloque.restantesProgramados) > 0) {
+                return turnos.find(turno => turno.estado === 'disponible') != null;
             }
             if (!delDia && bloque.restantesProgramados > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
         }
     }
-
+  
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
         this.showDarTurnos = true;

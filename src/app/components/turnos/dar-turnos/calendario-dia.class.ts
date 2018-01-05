@@ -23,7 +23,6 @@ export class CalendarioDia {
         } else {
             let disponible: boolean = this.agenda.turnosDisponibles > 0;
             this.estadoAgenda = this.agenda.estado;
-
             if (disponible) {
                 let countBloques = [];
 
@@ -36,19 +35,11 @@ export class CalendarioDia {
                             gestion: bloque.restantesGestion,
                             profesional: bloque.restantesProfesional
                         });
-
-                        bloque.turnos.forEach((turno) => {
-                            // Si ya pasó la hora del turno lo resto del total
-                            if (turno.estado === 'disponible' && turno.horaInicio < this.hoy) {
-                                countBloques[indexBloque].delDia--;
-                            }
-                        });
                         this.delDiaDisponibles += countBloques[indexBloque].delDia;
                     });
                     // Si es hoy, no hay turnos del día y hay turnos de gestión, el estado de la Agenda es "no disponible"
                     this.turnosDisponibles = this.turnosDisponibles + this.delDiaDisponibles;
                     this.estado = (this.delDiaDisponibles > 0 && this.gestionDisponibles === 0) ? 'disponible' : 'ocupado';
-
                     // En caso contrario, se calculan los contadores por separado
                 } else {
                     let autocitado = solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
@@ -101,10 +92,11 @@ export class CalendarioDia {
                         }
                     }
                 }
+
             } else {
                 this.estado = 'ocupado';
             }
         }
-    }
 
+    }
 }
