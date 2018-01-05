@@ -416,7 +416,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
-        debugger;
         let valor;
         let resultado;
         this.isDraggingConcepto = false;
