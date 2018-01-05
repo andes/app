@@ -85,8 +85,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+
     public conceptosTurneables: any[];
 
+    // boleean para verificar si estan todos los conceptos colapsados
+    public collapse = true;
+  
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -210,20 +214,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(posicionNueva, 0, registro);
 
         // quitamos relacion si existe
-        if (this.prestacion.ejecucion.registros[posicionNueva]) {
-            if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
-                let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
-                // Primer letra con mayúsculas
-                prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
-                this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
-                    if (confirm) {
-                        this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
-                        return true;
-                    }
-                    return false;
-                });
-            }
-        }
+        // if (this.prestacion.ejecucion.registros[posicionNueva]) {
+        //     if (this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon) {
+        //         let prestacion = this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon[0].concepto.fsn;
+        //         // Primer letra con mayúsculas
+        //         prestacion = prestacion[0].toUpperCase() + prestacion.slice(1);
+        //         this.plex.confirm('Se va a romper la vinculación con el registro:<br><b>' + prestacion + '</b>', '¿Romper vinculación?').then(confirm => {
+        //             if (confirm) {
+        //                 this.prestacion.ejecucion.registros[posicionNueva].relacionadoCon = [];
+        //                 return true;
+        //             }
+        //             return false;
+        //         });
+        //     }
+        // }
     }
 
 
@@ -269,12 +273,12 @@ export class PrestacionEjecucionComponent implements OnInit {
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];
-                // buscamos en la posición que se encuentra el registro de orgien y destino
-                let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
-                let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
+                // // buscamos en la posición que se encuentra el registro de orgien y destino
+                // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
+                // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
 
-                registros.splice(indexOrigen, 1);
-                registros.splice(indexDestino + 1, 0, registroOrigen);
+                // registros.splice(indexOrigen, 1);
+                // registros.splice(indexDestino + 1, 0, registroOrigen);
             }
         }
 
@@ -305,7 +309,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
                 delete this.confirmarDesvincular[registroId];
-                this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
+                // this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
             }
         }
 
@@ -744,7 +748,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         }).map(registro => {
             return {
-                label: 'vincular con: ' + (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
+                label: (registro.concepto.term.length > 50 ? registro.concepto.term.slice(0, 50) + '...' : registro.concepto.term),
                 handler: () => {
                     this.vincularRegistros(registroActual, registro);
                 }
@@ -798,6 +802,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.itemsRegistros[indice]) {
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
+        this.registrosColapsados();
     }
 
     colapsarPrestaciones(option = 'expand') {
@@ -969,4 +974,24 @@ export class PrestacionEjecucionComponent implements OnInit {
             return x.conceptId === concepto.conceptId;
         });
     }
+
+    registrosColapsados() {
+        this.prestacion.ejecucion.registros.forEach(registro => {
+            let unRegistro = this.itemsRegistros[registro.id].collapse;
+            if (unRegistro !== this.collapse) {
+                this.collapse = !this.collapse;
+            }
+        });
+    }
+
+    // eliminaTodosLosRegistros() {
+    //     this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
+    //         if (confirm) {
+    //             this.prestacion.ejecucion.registros = [];
+    //             return true;
+    //         }
+    //         return false;
+    //     });
+    // }
+
 }

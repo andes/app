@@ -86,7 +86,7 @@
                                 <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
-                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.edad">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
                             </td>
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
