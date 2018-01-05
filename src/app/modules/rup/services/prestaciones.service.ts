@@ -65,13 +65,13 @@ export class PrestacionesService {
             opt = {
                 params: {
                     'idPaciente': idPaciente,
-                    'ordenFecha': true
+                    'ordenFecha': true,
+                    'sinEstado': 'modificada'
                 },
                 options: {
                     showError: true
                 }
             };
-
             return this.server.get(this.prestacionesUrl, opt).map(data => {
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
