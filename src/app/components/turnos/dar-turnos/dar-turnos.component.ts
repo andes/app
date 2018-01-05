@@ -885,7 +885,7 @@ export class DarTurnosComponent implements OnInit {
             }
         }
     }
-  
+
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
         this.showDarTurnos = true;
