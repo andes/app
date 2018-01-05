@@ -131,4 +131,12 @@ export class ElementosRUPService {
             }
         }
     }
+
+    /**
+     * Metodo get. Trae el objeto elementoRup.
+     * @param {any} params Opciones de busqueda
+     */
+    guiada (id): Observable<IElementoRUP[]> {
+        return this.server.get(url + '/' + id + '/guiada', { showError: true });
+    }
 }

@@ -272,7 +272,7 @@
                 <plex-box>
                     <plex-tabs [activeIndex]="panelIndex">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
-                            <rup-buscador [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente" [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)"
+                            <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente" [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)"
                                 (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                         </plex-tab>
