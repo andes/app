@@ -110,18 +110,13 @@ export class TurnosComponent implements OnInit {
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
-
-
         if (this.turnosSeleccionados.length < this.turnos.length) {
             this.todos = false;
         }
-
         if (this.turnosSeleccionados.length === this.turnos.length) {
             this.todos = true;
         }
-
         this.cantSel = this.turnosSeleccionados.length;
-
         this.actualizarBotones();
     }
 
@@ -245,29 +240,32 @@ export class TurnosComponent implements OnInit {
     }
 
     actualizarBotones() {
+        let puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia:').length > 0;
+        let puedeSuspenderTurno = this.auth.getPermissions('turnos:turnos:suspenderTurno:').length > 0;
+        let puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno:').length > 0;
+        let puedeEditarCarpeta = this.auth.getPermissions('turnos:turnos:editarCarpeta:').length > 0;
+        let puedeMarcarTurnDoble = this.auth.getPermissions('turnos:turnos:turnoDoble:').length > 0;
         this.botones = {
             // Dar asistencia: el turno está con paciente asignado, sin asistencia ==> pasa a estar con paciente asignado, con asistencia
-            darAsistencia: this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
+            darAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenPacientes() && this.agendaNoSuspendida() && (this.noTienenAsistencia() && this.ningunoConEstado('suspendido')) && this.agendaHoy(),
             // Sacar asistencia: el turno está con paciente asignado, con asistencia ==> pasa a estar "sin asistencia" (mantiene el paciente)
-            sacarAsistencia: this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes(),
+            sacarAsistencia: puedeRegistrarAsistencia && this.agendaNoCerrada() && this.tienenAsistencia() && this.tienenPacientes(),
             // Suspender turno: El turno no tiene asistencia ==> el estado pasa a "suspendido"
-            suspenderTurno: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
+            suspenderTurno: puedeSuspenderTurno && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.noTienenAsistencia() && this.ningunoConEstado('suspendido') && this.ningunoConEstado('turnoDoble'),
             // Liberar turno: está "asignado" ==> el estado pasa a "disponible" y se elimina el paciente
-            liberarTurno: this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
-            // TODO: Reasignar turno: está "asignado" pero sin asistencia ==> *Reunión*
-            reasignarTurno: false,
+            liberarTurno: puedeLiberarTurno && this.agendaNoCerrada() && (this.turnosSeleccionados.length === 1 && !this.turnosSeleccionados[0].sobreturno && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia() && this.todosConEstado('asignado')),
             // Pasar paciente a la lista de espera: está "asignado" pero sin asistencia ==> Pasa a la "bolsa de gatos"
             listaDeEspera: this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.noTienenAsistencia(),
+            // Se verifica si el siguiente turno se encuentra disponible
+            turnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
+                && this.todosConEstado('asignado') && this.siguienteDisponible(),
+            // Se puede quitar turno doble sólo si está en ese estado
+            quitarTurnoDoble: puedeMarcarTurnDoble && this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido(),
             // Enviar SMS
             // sms: this.agendaNoSuspendida() && this.todosConEstado('asignado') && this.todosConEstado('suspendido') && this.noTienenAsistencia() && (!this.hayTurnosTarde()),
             nota: this.agendaNoCerrada() && this.turnosSeleccionados.length > 0,
-            // Se verifica si el siguiente turno se encuentra disponible
-            turnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.tienenPacientes() && this.noTienenAsistencia()
-                && this.todosConEstado('asignado') && this.siguienteDisponible(),
-            // Se puede quitar turno doble sólo si está en ese estado
-            quitarTurnoDoble: this.turnosSeleccionados.length === 1 && this.agendaNoCerrada() && this.agendaNoSuspendida() && this.todosConEstado('turnoDoble') && !this.isDobleSuspendido(),
             // Se puede editar carpeta si el turno tiene paciente
-            editarCarpeta: this.agendaNoCerrada() && this.turnosSeleccionados.length === 1 && this.tienenPacientes()
+            editarCarpeta: puedeEditarCarpeta && this.agendaNoCerrada() && this.turnosSeleccionados.length === 1 && this.tienenPacientes()
         };
     }
 
@@ -311,11 +309,11 @@ export class TurnosComponent implements OnInit {
     eventosTurno(operacion) {
         let patch: any = {
             op: operacion,
-            turnos: this.turnosSeleccionados
+            turnos: this.turnosSeleccionados.map((resultado) => { return resultado.id; })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => {
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
             this.agenda = resultado;
         });
 
@@ -366,12 +364,11 @@ export class TurnosComponent implements OnInit {
 
         let patch: any = {
             op: operacion,
-            turnos: turnosActualizar
+            turnos: turnosActualizar.map((resultado) => { return resultado.id; })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
-
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
         this.actualizarBotones();
@@ -403,13 +400,9 @@ export class TurnosComponent implements OnInit {
     }
 
     enviarSMS() {
-
         let turno;
-
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-
             let idTurno = this.turnosSeleccionados[x].id;
-
             this.turnos.filter(function (el, index, arr) {
                 if (el.id === idTurno) {
                     turno = el;

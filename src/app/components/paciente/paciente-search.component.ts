@@ -281,7 +281,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                     };
                                     if (pacienteEncontrado) {
                                         this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
-                                        this.seleccionarPaciente(pacienteEncontrado);
+                                        this.seleccionarPaciente(pacienteEncontrado.paciente ? pacienteEncontrado.paciente : pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
                                             this.logService.post('mpi', 'macheoAlto', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });

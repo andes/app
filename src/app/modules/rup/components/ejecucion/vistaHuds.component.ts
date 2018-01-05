@@ -7,6 +7,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -29,7 +30,8 @@ export class VistaHudsComponent implements OnInit {
     constructor(public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
-        private servicioPaciente: PacienteService) { }
+        private servicioPaciente: PacienteService,
+        private servicioPrestacion: PrestacionesService) { }
 
     /**
     *Inicializamos con el id del paciente
