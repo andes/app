@@ -83,6 +83,13 @@ export class PuntoInicioComponent implements OnInit {
      * Actualiza el listado de agendas y prestaciones
      */
     actualizar() {
+        let fechaActual = new Date();
+        let fechaFiltro = new Date(this.fecha);
+        let inicioPrestaciones = this.fecha;
+        let finPrestaciones = new Date();
+        if (fechaFiltro > fechaActual) {
+            inicioPrestaciones = new Date();
+        }
 
         Observable.forkJoin(
             // Agendas
@@ -101,10 +108,22 @@ export class PuntoInicioComponent implements OnInit {
                 organizacion: this.auth.organizacion.id,
                 // filtrar por las prestaciones permitidas,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
+            }),
+            // Prestaciones en estado Pendientes con un turno asignado
+            this.servicioPrestacion.get({
+                tieneTurno: 'si',
+                estado: 'pendiente',
+                organizacion: this.auth.organizacion.id,
+                // filtrar por las prestaciones permitidas,
+                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+
+            if (data[2]) {
+                this.prestaciones = [...this.prestaciones, ...data[2]];
+            }
 
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
@@ -140,10 +159,12 @@ export class PuntoInicioComponent implements OnInit {
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
+            // en estado ejecucion o validada
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
                 (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
                     p.createdAt <= moment(this.fecha).endOf('day').toDate())
-                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
+                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
+                && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
@@ -280,6 +301,9 @@ export class PuntoInicioComponent implements OnInit {
         this.router.navigate(['/rup/buscaHuds']);
     }
 
+    /**
+    * Crear una prestacion nueva
+    */
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
@@ -287,6 +311,35 @@ export class PuntoInicioComponent implements OnInit {
                     this.router.navigate(['/rup/ejecucion', prestacion.id]);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                });
+            } else {
+                return false;
+            }
+        });
+    }
+
+    /**
+    * Ejecutar una prestacion que esta en estado pendiente
+    */
+    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
+
+        let params: any = {
+            op: 'estadoPush',
+            ejecucion: {
+                fecha: new Date(),
+                registros: [],
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+            },
+            estado: { tipo: 'ejecucion' }
+        };
+
+        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
+            if (confirmacion) {
+                this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
+                    this.router.navigate(['/rup/ejecucion', idPrestacion]);
+                }, (err) => {
+                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
                 });
             } else {
                 return false;
@@ -379,6 +432,9 @@ export class PuntoInicioComponent implements OnInit {
         }
         return prestaciones;
     }
+
+
+
 }
 
 
