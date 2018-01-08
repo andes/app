@@ -74,7 +74,7 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
 
     /**
      * Inicializamos las propiedades de la libreria para gráficos
-     * 
+     *
      * @private
      * @param {any} data Data a utilizar para armar los tooltips
      * @memberof SeguimientoDelPesoComponent

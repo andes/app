@@ -8,6 +8,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { LogService } from '../../../../services/log.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -31,7 +32,8 @@ export class VistaHudsComponent implements OnInit {
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
-        private logService: LogService ) { }
+        private logService: LogService,
+        private servicioPrestacion: PrestacionesService) { }
 
     /**
     *Inicializamos con el id del paciente
@@ -83,8 +85,8 @@ export class VistaHudsComponent implements OnInit {
     volver() {
         this.router.navigate(['rup']);
     }
-     // recibe el tab que se clikeo y lo saca del array..
-     cerrartab($event) {
+    // recibe el tab que se clikeo y lo saca del array..
+    cerrartab($event) {
         this.registrosHuds.splice($event, 1);
     }
 

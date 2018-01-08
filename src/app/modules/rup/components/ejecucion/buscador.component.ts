@@ -1,3 +1,4 @@
+import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
@@ -192,7 +193,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.filtroActual = 'todos';
         }
         // debugger;
-        if ( this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
+        if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
             // reiniciamos los resultados desde la copia auxiliar que tenemos
             this.results = JSON.parse(JSON.stringify(this.resultsAux));
@@ -238,9 +239,14 @@ export class BuscadorComponent implements OnInit, OnChanges {
     dragStart(e) {
         this._onDragStart.emit(e);
     }
-
+    
     dragEnd(e) {
         this._onDragEnd.emit(e);
+
+        let filtro = this.getFiltroSeleccionado();
+
+        // devolvemos los tipos de filtros
+        this.tagBusqueda.emit(filtro);
     }
 
     /**
@@ -406,8 +412,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
+        let filtro = this.getFiltroSeleccionado();
+
+        // devolvemos los tipos de filtros
+        this.tagBusqueda.emit(filtro);
+
+        // devolvemos el concepto SNOMED
+        this.evtData.emit(concepto);
+    }
+
+    getFiltroSeleccionado() {
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
-        let filtro = this.conceptos[this.filtroActual];
+        let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
 
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
         // o bien, si estamos en el buscador guiado, si la opcion desplegada es planes
@@ -416,11 +432,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             filtro = ['planes'];
         }
 
-        // devolvemos los tipos de filtros
-        this.tagBusqueda.emit(filtro);
-
-        // devolvemos el concepto SNOMED
-        this.evtData.emit(concepto);
+        return filtro;
     }
 
     /**
@@ -463,4 +475,5 @@ export class BuscadorComponent implements OnInit, OnChanges {
         return this.conceptos[this.filtroActual];
     }
 
+    
 }

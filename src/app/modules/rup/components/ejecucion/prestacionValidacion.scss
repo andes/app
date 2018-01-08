@@ -1,4 +1,15 @@
 @import '../variables';
+// TODO: Crear paquete NPM con las fonts
+@media print {
+    @import '../../assets/font.css';
+    * {
+        -webkit-print-color-adjust: exact !important;
+        /* Chrome, Safari */
+        color-adjust: exact !important;
+        /*Firefox*/
+    }
+}
+
 .type.prestacion {
     background-color: $plan;
 }
@@ -76,4 +87,22 @@
 
 .titulo-adjuntos~.titulo-adjuntos {
     display: none;
+}
+
+.titulo-consulta {
+    font-weight: 400;
+    color: black;
+    .consulta {
+        color: $blue;
+    }
+}
+
+.diagnostico-principal,
+.primera-vez {
+    line-height: 36px;
+    vertical-align: middle;
+    display: flex;
+    span {
+        margin-left: 10px;
+    }
 }

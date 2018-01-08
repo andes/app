@@ -14,7 +14,11 @@ import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
 @Component({
     selector: 'rup',
-    styleUrls: ['rup.scss'],
+    styleUrls: [
+        'rup.scss',
+        // TODO: Crear package NPM con las fonts
+        // '../../assets/font.css'
+    ],
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
