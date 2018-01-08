@@ -5,6 +5,8 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
+import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { ElementosRUPService } from '../../services/elementosRUP.service';
 
 @Component({
     selector: 'rup-buscador',
@@ -21,6 +23,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     @Input() frecuentesTipoPrestacion;
     @Input() showFrecuentesTipoPrestacion;
     @Input() conceptoFrecuente;
+    @Input() prestacion: IPrestacion;
     /**
      * Devuelve un elemento seleccionado.
      */
@@ -79,6 +82,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     };
 
+    // Listados de grupos de la busqueda guiada
+    public grupos_guida: any[] = [];
+
     // posibles valores para el filtro actual: 'hallazgos', 'trastornos', 'procedimientos', 'planes', 'productos'
     public filtroActual: any;
 
@@ -97,7 +103,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
-        private auth: Auth,
+        private auth: Auth, private elementoRUP: ElementosRUPService,
         public servicioPrestacion: PrestacionesService) {
     }
 
@@ -108,6 +114,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         // Se traen los Conceptos Turneables para poder quitarlos de la lista de
         // Procedimientos
+
+        this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+            this.grupos_guida = grupos;
+            this.filtrarResultadosBusquedaGuiada();
+        });
+
+
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
         });
@@ -239,7 +252,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     dragStart(e) {
         this._onDragStart.emit(e);
     }
-    
+
     dragEnd(e) {
         this._onDragEnd.emit(e);
 
@@ -319,19 +332,43 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
         // this.results.buscadorBasico['procedimientos'] = this.results.buscadorBasico['procedimientos'].filter(x => !this.esTurneable(x));
 
-        Object.keys(this.servicioPrestacion.refsetsIds).forEach(key => {
-            let nombre = key.replace(/_/g, ' ');
-            this.results.busquedaGuiada.push({
-                nombre: nombre,
-                valor: this.results.buscadorBasico['todos'].filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[key]))
-            });
+        // Object.keys(this.servicioPrestacion.refsetsIds).forEach(key => {
+        //     let nombre = key.replace(/_/g, ' ');
+        //     this.results.busquedaGuiada.push({
+        //         nombre: nombre,
+        //         valor: this.results.buscadorBasico['todos'].filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[key]))
+        //     });
+        // });
+
+        this.grupos_guida.forEach(data => {
+            if (this.results.buscadorBasico['todos']) {
+
+                this.results.busquedaGuiada.push({
+                    nombre: data.nombre,
+                    valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: data.nombre,
+                    valor: []
+                });
+            }
+
+
         });
 
         Object.keys(this.conceptos).forEach(concepto => {
-            this.results.busquedaGuiada.push({
-                nombre: concepto,
-                valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-            });
+            if (this.results.buscadorBasico['todos']) {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: []
+                });
+            }
         });
     }
 
@@ -475,5 +512,5 @@ export class BuscadorComponent implements OnInit, OnChanges {
         return this.conceptos[this.filtroActual];
     }
 
-    
+
 }
