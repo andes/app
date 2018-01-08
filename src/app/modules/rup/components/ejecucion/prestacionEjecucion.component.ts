@@ -90,7 +90,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
-  
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -847,7 +847,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
-        this.registrosHuds = registrosHuds;
+        // this.registrosHuds = registrosHuds;
     }
 
     // Actualiza ambas columnas de registros según las relaciones

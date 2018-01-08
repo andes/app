@@ -146,7 +146,7 @@
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
                     <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 
