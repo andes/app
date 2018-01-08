@@ -83,7 +83,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     };
 
     // Listados de grupos de la busqueda guiada
-    public grupos_guida: any[];
+    public grupos_guida: any[] = [];
 
     // posibles valores para el filtro actual: 'hallazgos', 'trastornos', 'procedimientos', 'planes', 'productos'
     public filtroActual: any;
@@ -117,7 +117,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
             this.grupos_guida = grupos;
-        })
+            this.filtrarResultadosBusquedaGuiada();
+        });
+
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -250,7 +252,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     dragStart(e) {
         this._onDragStart.emit(e);
     }
-    
+
     dragEnd(e) {
         this._onDragEnd.emit(e);
 
@@ -339,18 +341,34 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // });
 
         this.grupos_guida.forEach(data => {
-            // let nombre = key.replace(/_/g, ' ');
-            this.results.busquedaGuiada.push({
-                nombre: data.nombre,
-                valor: this.results.buscadorBasico['todos'].filter(x =>  data.conceptIds.indexOf(x.conceptId) >= 0 )
-            });
+            if (this.results.buscadorBasico['todos']) {
+
+                this.results.busquedaGuiada.push({
+                    nombre: data.nombre,
+                    valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: data.nombre,
+                    valor: []
+                });
+            }
+
+
         });
 
         Object.keys(this.conceptos).forEach(concepto => {
-            this.results.busquedaGuiada.push({
-                nombre: concepto,
-                valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-            });
+            if (this.results.buscadorBasico['todos']) {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
+                });
+            } else {
+                this.results.busquedaGuiada.push({
+                    nombre: concepto,
+                    valor: []
+                });
+            }
         });
     }
 
@@ -494,5 +512,5 @@ export class BuscadorComponent implements OnInit, OnChanges {
         return this.conceptos[this.filtroActual];
     }
 
-    
+
 }
