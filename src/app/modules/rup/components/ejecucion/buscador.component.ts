@@ -483,8 +483,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
      *
      * @memberof BuscadorComponent
      */
+    // cambiar el nombre..
     public onScroll(event) {
-        if (event.srcElement.scrollTop > this.scrollTop) {
+        if (event.srcElement.scrollTop > this.scrollTop && event.srcElement.scrollHeight > 600) {
             this.showMenuBuscador = false;
         } else {
             this.showMenuBuscador = true;

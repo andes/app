@@ -32,7 +32,8 @@
 
             <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
                 <div class="container-filtros">
-                    <ul class="botones-filtros">
+                    <!-- <ul class="botones-filtros"> -->
+                    <ul [ngClass]="{'botones-filtros': showMenuBuscador}">
                         <li class="">
                             <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
