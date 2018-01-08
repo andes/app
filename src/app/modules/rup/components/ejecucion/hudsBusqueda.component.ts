@@ -66,7 +66,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Listado de todos los registros de la HUDS seleccionados
      */
-    public registrosHuds: any = [];
+    @Input() registrosHuds: any = [];
 
     /**
      * Devuelve un elemento seleccionado que puede ser
@@ -192,7 +192,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.registrosHuds.splice(index, 1);
         }
 
-        this.evtHuds.emit(this.registrosHuds);
+        this.evtHuds.emit(elemento);
 
     }
 
