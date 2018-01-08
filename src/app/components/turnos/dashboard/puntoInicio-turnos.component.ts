@@ -44,6 +44,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
     esEscaneado = false;
     textoPacienteSearch = '';
     resultadoCreate;
+    turnoArancelamiento: any;
+    showArancelamiento = false;
     private esOperacion = false;
 
 
@@ -58,6 +60,17 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
+    showArancelamientoForm(turno) {
+        this.turnoArancelamiento = turno;
+        this.showDashboard = false;
+        this.showArancelamiento = true;
+
+    }
+
+    volverAPuntoInicio() {
+        this.showArancelamiento = false;
+        this.showDashboard = true;
+    }
     onPacienteSelected(paciente: IPaciente): void {
         // debugger
         this.paciente = paciente;
