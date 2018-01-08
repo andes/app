@@ -415,20 +415,27 @@ export class PrestacionesService {
         return this.server.get(url, opt);
     }
 
-    getRegistrosEjecucion(idPaciente: string, conceptIds: any[]) {
+    /**
+     * Buscar en la HUDS de un paciente los registros que coincidan con los conceptIds
+     *
+     * @param {string} idPaciente Paciente a buscar
+     * @param {any[]} conceptIds Array de conceptId de SNOMED que deseo buscar
+     * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
+     * @memberof PrestacionesService
+     */
+    getRegistrosHuds(idPaciente: string, conceptIds: any[]) {
         let opt = {
             params: {
-                'idPaciente': idPaciente,
-                'ordenFechaEjecucion': true,
-                'conceptsIdEjecucion': conceptIds,
+                'conceptIds': conceptIds,
             },
             options: {
                 showError: true
             }
         };
 
-        return this.server.get(this.prestacionesUrl, opt);
+        return this.server.get(this.prestacionesUrl + '/huds/' + idPaciente, opt);
     }
+
     /**
      * Metodo post. Inserta un objeto nuevo.
      * @param {any} prestacion Recibe solicitud RUP con paciente
@@ -479,10 +486,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -500,10 +507,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -527,10 +534,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
