@@ -202,7 +202,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public buscar() {
         // en caso que se cambie de tipo de busqueda y no existan resultados
         // en el filtro actual, seteamos el filtro en 'todos'
-        if (this.results[this.busquedaActual].length > 0 && this.results[this.busquedaActual][this.filtroActual].length === 0) {
+        if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
 
@@ -211,7 +211,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
-
             // filtramos uno a uno los conceptos segun el string de busqueda
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
