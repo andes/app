@@ -205,11 +205,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results[this.busquedaActual].length > 0 && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
-        // debugger;
+
+        // reiniciamos los resultados desde la copia auxiliar que tenemos
+        this.results = JSON.parse(JSON.stringify(this.resultsAux));
+
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
-            // reiniciamos los resultados desde la copia auxiliar que tenemos
-            this.results = JSON.parse(JSON.stringify(this.resultsAux));
 
             // filtramos uno a uno los conceptos segun el string de busqueda
             Object.keys(this.conceptos).forEach(concepto => {
@@ -240,10 +241,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public setTipoBusqueda(busquedaActual): void {
-        this.busquedaActual = busquedaActual;
+        if (this.busquedaActual !== busquedaActual) {
+            this.busquedaActual = busquedaActual;
 
-        if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
-            this.buscar();
+            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+                this.buscar();
+            }
         }
     }
 
