@@ -44,57 +44,92 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}">
-                                                    <div class="type">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                    <div class="rup-header">
+                                                        <div class="icon-rup">
+                                                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                                        </div>
+                                                        <div class="title">
+                                                            <ng-container *ngIf="elemento?.nombre">
+                                                                {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                                            </ng-container>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+
+                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                                                <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                                                + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                            </small>
+                                                        </div>
                                                     </div>
-                                                    <div class="rup-content">
-                                                        <div class="rup-body">
+                                                    <div class="rup-body">
+                                                        <div class="legend">
+                                                            <span>
+                                                                {{elemento.concepto.semanticTag}}
+                                                            </span>
+                                                        </div>
+                                                        <div class="content">
                                                             <div class="row">
-                                                                <div class="col-3">
-                                                                    <b *ngIf="elemento?.nombre">
-                                                                        {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
-                                                                    </b>
-                                                                    <br>
-                                                                    <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true">
-                                                                    </rup>
+
+                                                                <div class="col-12">
+                                                                    <!-- <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div> -->
+
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true"></rup>
+
                                                                     <div *ngIf="elemento.esSolicitud && prestacion?.estados[prestacion?.estados.length-1].tipo === 'validada'">
                                                                         <plex-button label="Asignar turno" type="primary" (click)="darTurno(elemento.prestacionSolicitud)"></plex-button>
                                                                     </div>
+
                                                                     <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
                                                                         <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
                                                                             <small *ngIf="elemento.esPrimeraVez" class="badge badge-info">Es primera vez</small>
                                                                         </ng-container>
                                                                     </ng-container>
-                                                                </div>
 
+                                                                </div>
                                                             </div>
+
                                                             <div class="row">
                                                                 <div class="col-12">
-                                                                    <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
-                                                                        <b>Evolución: </b>{{ elemento.valor.evolucion }}
+                                                                    <div class="row" *ngIf="elemento?.valor?.evolucion">
+                                                                        <div class="col-4">
+                                                                            <div class="text-secondary">
+                                                                                <b>Evolución: </b>
+
+                                                                                <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')" class="text-secondary">
+                                                                                    <br />
+                                                                                    <b>Inicio aproximado: </b>
+                                                                                    <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
+                                                                                    <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}
+                                                                                    </ng-container>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="col-8">
+                                                                            {{ elemento.valor.evolucion }}
+                                                                        </div>
                                                                     </div>
-                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
-                                                                        <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
-                                                                    </div>
-                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
-                                                                        <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
-                                                                    </div>
-                                                                    <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
-                                                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                                                    </div>
-                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')" class="text-secondary">
-                                                                        <b>Inicio aproximado: </b>
-                                                                        <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
-                                                                        <ng-container *ngIf="elemento?.evoluciones">{{ elemento.evoluciones[0].fechaInicio | fromNow }}
-                                                                        </ng-container>
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
+                                                                                <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
+                                                                            </div>
+                                                                            <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
+                                                                                <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
+                                                                            </div>
+                                                                            <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
+                                                                                <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                                            </div>
+
+                                                                        </div>
                                                                     </div>
                                                                 </div>
+
                                                             </div>
                                                         </div>
-
                                                     </div>
                                                 </div>
                                             </ng-container>
@@ -111,7 +146,7 @@
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
                     <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 

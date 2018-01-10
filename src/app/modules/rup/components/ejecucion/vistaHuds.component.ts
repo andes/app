@@ -7,6 +7,8 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { LogService } from '../../../../services/log.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -29,7 +31,9 @@ export class VistaHudsComponent implements OnInit {
     constructor(public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
-        private servicioPaciente: PacienteService) { }
+        private servicioPaciente: PacienteService,
+        private logService: LogService,
+        private servicioPrestacion: PrestacionesService) { }
 
     /**
     *Inicializamos con el id del paciente
@@ -46,17 +50,43 @@ export class VistaHudsComponent implements OnInit {
                         this.paciente = paciente;
                     });
             });
+        } else {
+            // Loggeo de lo que ve el profesional
+            this.logService.post('rup', 'hudsPantalla', {
+                paciente: {
+                    id: this.paciente.id,
+                    nombre: this.paciente.nombre,
+                    apellido: this.paciente.apellido,
+                    sexo: this.paciente.sexo,
+                    fechaNacimiento: this.paciente.fechaNacimiento,
+                    documento: this.paciente.documento
+                }
+            }).subscribe(() => { return true; });
         }
     }
 
-    agregarListadoHuds(registrosHuds) {
-        this.registrosHuds = registrosHuds;
+    agregarListadoHuds(elemento) {
+        if (elemento.tipo === 'prestacion') {
+            // Loggeo de lo que ve el médico
+            this.logService.post('rup', 'hudsPrestacion', {
+                paciente: {
+                    id: this.paciente.id,
+                    nombre: this.paciente.nombre,
+                    apellido: this.paciente.apellido,
+                    sexo: this.paciente.sexo,
+                    fechaNacimiento: this.paciente.fechaNacimiento,
+                    documento: this.paciente.documento
+                },
+                prestacion: elemento.data.id
+            }).subscribe(() => { return true; });
+        }
+        // this.registrosHuds = registrosHuds;
     }
     volver() {
         this.router.navigate(['rup']);
     }
-     // recibe el tab que se clikeo y lo saca del array..
-     cerrartab($event) {
+    // recibe el tab que se clikeo y lo saca del array..
+    cerrartab($event) {
         this.registrosHuds.splice($event, 1);
     }
 

@@ -20,7 +20,14 @@ export class PrestacionesService {
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
 
-    constructor(private server: Server, public auth: Auth) { }
+    public conceptosTurneables: any[];
+
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
+
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
+     }
 
     /**
      * Metodo get. Trae lista de objetos prestacion.
@@ -408,20 +415,27 @@ export class PrestacionesService {
         return this.server.get(url, opt);
     }
 
-    getRegistrosEjecucion(idPaciente: string, conceptIds: any[]) {
+    /**
+     * Buscar en la HUDS de un paciente los registros que coincidan con los conceptIds
+     *
+     * @param {string} idPaciente Paciente a buscar
+     * @param {any[]} conceptIds Array de conceptId de SNOMED que deseo buscar
+     * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
+     * @memberof PrestacionesService
+     */
+    getRegistrosHuds(idPaciente: string, conceptIds: any[]) {
         let opt = {
             params: {
-                'idPaciente': idPaciente,
-                'ordenFechaEjecucion': true,
-                'conceptsIdEjecucion': conceptIds,
+                'conceptIds': conceptIds,
             },
             options: {
                 showError: true
             }
         };
 
-        return this.server.get(this.prestacionesUrl, opt);
+        return this.server.get(this.prestacionesUrl + '/huds/' + idPaciente, opt);
     }
+
     /**
      * Metodo post. Inserta un objeto nuevo.
      * @param {any} prestacion Recibe solicitud RUP con paciente
@@ -472,10 +486,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -493,10 +507,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -520,10 +534,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -618,5 +632,96 @@ export class PrestacionesService {
         delete prestacionCopia._id;
 
         return this.server.post(this.prestacionesUrl, prestacionCopia);
+    }
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
+    /**
+     * Determina la clase a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+        *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Clase a ser utilizado para estilizar las cards de RUP
+     * @memberof PrestacionesService
+     */
+    public getCssClass(conceptoSNOMED, filtroActual: null) {
+        let clase = conceptoSNOMED.semanticTag;
+
+        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            clase = 'plan';
+        } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
+            clase = 'regimen';
+        } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
+            clase = 'elementoderegistro';
+        }
+
+        return clase;
+    }
+
+    /**
+     * Determina el icono a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+     *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Icono a ser utilizado por la font de RUP
+     * @memberof PrestacionesService
+     */
+    public getIcon(conceptoSNOMED, filtroActual: null) {
+        let icon = conceptoSNOMED.semanticTag;
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            icon = 'plan';
+        } else {
+            switch (conceptoSNOMED.semanticTag) {
+                case 'hallazgo':
+                case 'situación':
+                    icon = 'hallazgo';
+                    break;
+
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+
+                case 'procedimiento':
+                case 'entidad observable':
+                case 'régimen/tratamiento':
+                    icon = 'procedimiento';
+                    break;
+                
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+                    
+                case 'producto':
+                    icon = 'producto';
+                    break;
+
+                case 'elemento de registro':
+                    icon = 'elementoderegistro';
+                    break;
+
+                
+            }
+        }
+
+        return icon;
     }
 }
