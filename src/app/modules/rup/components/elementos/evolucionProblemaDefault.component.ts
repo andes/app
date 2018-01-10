@@ -33,7 +33,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
-        debugger;
         // buscamos si el hallazgo pertenece a algún referentSet
         if (this.registro.concepto && this.registro.concepto.refsetIds) {
             this.registro.concepto.refsetIds.forEach(refSet => {
