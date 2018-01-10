@@ -21,8 +21,6 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
     public evoluciones;
     public referentSet = [];
 
-    public diagnosticoPrestacionEmit: any = new EventEmitter<any>();
-
     // estadoActual: any = { id: 'activo', nombre: 'Activo' };
     inicioEstimadoUnidad: any = null;
     inicioEstimadoTiempo: any = { id: 'dias', nombre: 'Día(s)' };
@@ -35,6 +33,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
      * entonces inicializamos data como un objeto
      */
     ngOnInit() {
+        debugger;
         // buscamos si el hallazgo pertenece a algún referentSet
         if (this.registro.concepto && this.registro.concepto.refsetIds) {
             this.registro.concepto.refsetIds.forEach(refSet => {
@@ -47,6 +46,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
             });
         }
         if (!this.registro.valor) {
+
             this.registro.valor = { estado: 'activo' };
             if (this.registro.concepto.semanticTag === 'hallazgo') {
                 this.registro.valor.fechaInicio = new Date();
@@ -80,6 +80,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                                 }
                             }
                         } else {
+                            this.hallazgoHudsCompleto = null;
                             this.registro.valor.estado = 'activo';
                             if (this.registro.concepto.semanticTag === 'hallazgo') {
                                 this.registro.valor.fechaInicio = new Date();
@@ -183,9 +184,5 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                     }
                 });
         }
-    }
-
-    diagnosticoPrestacion(id: any) {
-        this.diagnosticoPrestacionEmit(id);
     }
 }
