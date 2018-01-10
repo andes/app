@@ -18,25 +18,23 @@ $rotate: -90deg;
             .icon-rup {
                 border-right: 2px solid #ccc;
             }
-            .title {
-                color: black;
-                font-size: 1rem;
+            .actions {
                 border-top: 2px solid #ccc;
                 border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
             }
-            .actions {
+            .rup-border {
+                width: 100%;
                 border-top: 2px solid #ccc;
                 border-bottom: 2px solid #ccc;
                 border-right: 2px solid #ccc;
             }
         }
         &:hover {
-            .title {
-                background: #eee;
-                border-bottom: 2px solid $blue;
-                border-top: 2px solid $blue;
-            }
-            .actions {
+            background: #eee;
+        }
+        .rup-border {
+            &:hover {
                 background: #eee;
                 border-right: 2px solid $blue;
                 border-bottom: 2px solid $blue;
@@ -52,28 +50,12 @@ $rotate: -90deg;
                     .rup-header {
                         .icon-rup {
                             background: $color;
-                            border-right: 2px solid $color;
                             i {
                                 color: white;
                             }
                         }
-                        .title {
-                            background: #eee;
-                            border-bottom: 2px solid $blue;
-                            border-top: 2px solid $blue;
-                        }
-                        .actions {
-                            background: #eee;
-                            border-right: 2px solid $blue;
-                            border-bottom: 2px solid $blue;
-                            border-top: 2px solid $blue;
-                        }
                     }
                 }
-                // &.active {
-                //     border: 2px solid $color;
-                //     box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
-                // }
                 .rup-header {
                     .icon-rup {
                         border: 2px solid $color;
@@ -116,10 +98,12 @@ $rotate: -90deg;
         .actions {
             padding: 5px;
         }
+        .btn-icon-rup {
+            line-height: 1.3em;
+        }
         .icon-rup {
             font-size: 1.2rem;
             width: 55px;
-            padding: 11px 0 0 0;
             text-align: center;
             i {
                 color: white;
@@ -246,14 +230,6 @@ $rotate: -90deg;
     }
 }
 
-// a.collapse-card:hover>i::before {
-//     -webkit-transform: rotate(360deg);
-//     -moz-transform: rotate(360deg);
-//     -o-transform: rotate(360deg);
-//     -ms-transform: rotate(360deg);
-//     transform: rotate(360deg);
-//     transition: all 200ms;
-// }
 .spin-in::before {
     -webkit-transform: rotate(180deg);
     -moz-transform: rotate(180deg);
@@ -308,8 +284,6 @@ $rotate: -90deg;
 $color in $rup_colors {
     .btn-#{$tag} {
         color: $color;
-        // background-color: $hallazgos;
-        // border-color: map-get($rup_colors, #{$tag});
         border-color: $color;
         background: white;
     }
@@ -325,7 +299,6 @@ $color in $rup_colors {
     .btn-#{$tag}.active,
     .open .dropdown-toggle.btn-#{$tag} {
         color: white;
-        // background-color: map-get($rup_colors, #{$tag});
         background-color: $color;
         background-image: none;
     }
@@ -335,28 +308,6 @@ $color in $rup_colors {
         border-color: #ccc;
         color: #ccc;
     }
-    // .btn-hallazgos.disabled,
-    // .btn-hallazgos[disabled],
-    // fieldset[disabled] .btn-hallazgos,
-    // .btn-hallazgos.disabled:hover,
-    // .btn-hallazgos[disabled]:hover,
-    // fieldset[disabled] .btn-hallazgos:hover,
-    // .btn-hallazgos.disabled:focus,
-    // .btn-hallazgos[disabled]:focus,
-    // fieldset[disabled] .btn-hallazgos:focus,
-    // .btn-hallazgos.disabled:active,
-    // .btn-hallazgos[disabled]:active,
-    // fieldset[disabled] .btn-hallazgos:active,
-    // .btn-hallazgos.disabled.active,
-    // .btn-hallazgos[disabled].active,
-    // fieldset[disabled] .btn-hallazgos.active {
-    //     background-color: $hallazgos;
-    //     border-color: $hallazgos;
-    // }
-    // .btn-hallazgos .badge {
-    //     color: $hallazgos;
-    //     background-color: white;
-    // }
 }
 
 // BADGES
@@ -366,7 +317,6 @@ $color in $rup_colors {
         font-weight: normal;
         text-transform: uppercase;
         color: $color;
-        //border-color: map-get($rup_colors, #{$tag});
         border: 1px solid $color;
         &:focus {
             outline: 0;
