@@ -72,13 +72,13 @@ export class PrestacionesService {
             opt = {
                 params: {
                     'idPaciente': idPaciente,
-                    'ordenFecha': true
+                    'ordenFecha': true,
+                    'sinEstado': 'modificada'
                 },
                 options: {
                     showError: true
                 }
             };
-
             return this.server.get(this.prestacionesUrl, opt).map(data => {
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
@@ -556,35 +556,42 @@ export class PrestacionesService {
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
         let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
-
         return this.post(prestacion);
     }
 
     validarPrestacion(prestacion, planes, conceptosTurneables): Observable<any> {
+
         let planesCrear = [];
         if (planes.length) {
 
             planes.forEach(plan => {
-                // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
-                // que prestacion quiere solicitar debo hacer ese cambio
-                let conceptoSolicitud = plan.concepto;
-                if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
-                    conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
-                }
 
-                // Controlemos que se trata de una prestación turneable.
-                // Solo creamos prestaciones pendiente para conceptos turneables
-                let existeConcepto = conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
-                if (existeConcepto) {
-                    // creamos objeto de prestacion
-                    let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
-                    // asignamos la prestacion de origen
-                    nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+                // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
+                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
 
-                    // agregamos los registros en la solicitud
-                    nuevaPrestacion.solicitud.registros.push(plan);
+                if (!existePrestacion) {
 
-                    planesCrear.push(nuevaPrestacion);
+                    // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
+                    // que prestacion quiere solicitar debo hacer ese cambio
+                    let conceptoSolicitud = plan.concepto;
+                    if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
+                        conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
+                    }
+
+                    // Controlemos que se trata de una prestación turneable.
+                    // Solo creamos prestaciones pendiente para conceptos turneables
+                    let existeConcepto = conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                    if (existeConcepto) {
+                        // creamos objeto de prestacion
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                        // asignamos la prestacion de origen
+                        nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                        // agregamos los registros en la solicitud
+                        nuevaPrestacion.solicitud.registros.push(plan);
+
+                        planesCrear.push(nuevaPrestacion);
+                    }
                 }
             });
 
@@ -610,10 +617,21 @@ export class PrestacionesService {
             return this.patch(prestacion.id, dto);
         }
 
+    }
+    /**
+    * Metodo clonar. Inserta una copia de una prestacion.
+    * @param {any} prestacionCopia Recibe una copia de una prestacion
+    */
+    clonar(prestacionCopia: any, estado: any): Observable<any> {
 
+        // Agregamos el estado de la prestacion copiada.
+        prestacionCopia.estados.push(estado);
 
+        // Eliminamos los id de la prestacion
+        delete prestacionCopia.id;
+        delete prestacionCopia._id;
 
-
+        return this.server.post(this.prestacionesUrl, prestacionCopia);
     }
 
     /**
@@ -687,11 +705,9 @@ export class PrestacionesService {
                 case 'régimen/tratamiento':
                     icon = 'procedimiento';
                     break;
-
                 case 'trastorno':
                     icon = 'trastorno';
                     break;
-
                 case 'producto':
                     icon = 'producto';
                     break;
@@ -699,8 +715,6 @@ export class PrestacionesService {
                 case 'elemento de registro':
                     icon = 'elementoderegistro';
                     break;
-
-
             }
         }
 
