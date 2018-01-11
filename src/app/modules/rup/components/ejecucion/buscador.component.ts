@@ -97,6 +97,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     // public totalesTodos: Number = 0;
 
+    public copiaFiltroActual: any;
+
     private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
@@ -242,7 +244,17 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public setTipoBusqueda(busquedaActual): void {
         if (this.busquedaActual !== busquedaActual) {
             this.busquedaActual = busquedaActual;
-
+            // creamos una copia del filtro
+            /**
+             * Si vamos a la busqueda guiada seteamos el filtro en todos, en caso contrario
+             * lo dejamos como estaba al principio
+             */
+            if (busquedaActual === 'busquedaGuiada') {
+                this.copiaFiltroActual = this.filtroActual;
+                this.filtroActual = 'todos';
+            } else {
+                this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
+            }
             if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
                 this.buscar();
             }
@@ -477,7 +489,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     /**
      *
-     * @param i Recibe la posicion Index del array
      * @param nombre Se le pasa el nombre del objeto de la posicion i
      * La funcion despliega los desplegables de la busqueda guiada.
      * Al abrir uno automaticamente cierra el que anteriormente se abrio.
