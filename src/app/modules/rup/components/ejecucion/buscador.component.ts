@@ -273,7 +273,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     recibeResultados(resultadosSnomed) {
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
-
         if (resultadosSnomed.items.length) {
 
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
@@ -300,10 +299,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
         }
 
         // si limpio la busqueda, reinicio el buscador sugerido y misFrecuentes
-        if (!resultadosSnomed.term) {
+        if (resultadosSnomed.items.length === 0) {
             this.results['sugerido'] = this.resultsAux.sugerido;
             this.results['misFrecuentes'] = this.resultsAux.misFrecuentes;
             this.results['buscadorBasico'] = [];
+            // Llamamos a la funcion de la busqueda guiada para que limpie los campos.
+            this.filtrarResultadosBusquedaGuiada();
         }
 
     }
