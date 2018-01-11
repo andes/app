@@ -52,9 +52,10 @@
                                 <div class="rup-border">
 
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-7 p-0 m-0">
                                             <div class="p-0 pl-2">
                                                 {{ hallazgo.concepto.term }}
+                                                <br>
                                                 <ng-container *ngIf="hallazgo.evoluciones">
                                                     <small class="sugerido">última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}</small>
                                                 </ng-container>
@@ -62,7 +63,7 @@
                                         </div>
 
 
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="hallazgo.evoluciones">
                                                     <small class="estado badge badge-success">{{ hallazgo.evoluciones[0].estado }}</small>
@@ -113,18 +114,16 @@
                                 <div class="rup-border">
 
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-7 p-0 m-0">
                                             <div class="p-0 pl-2">
-
                                                 {{ problema.concepto.term }}
-
-
+                                                <br>
                                                 <ng-container *ngIf="problema.evoluciones">
                                                     <small class="sugerido">última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
                                                 </ng-container>
                                             </div>
                                         </div>
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
 
                                                 <ng-container *ngIf="problema.evoluciones">
@@ -174,22 +173,23 @@
                                 </ng-container>
                                 <div class="rup-border">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-7 p-0 m-0">
                                             <div class="p-0 pl-2">
 
                                                 {{ problema.concepto.term }}
-
+                                                <br>
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="sugerido">última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
+                                                    <small>última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
                                                     <span class="badge badge-info" *ngIf="problema.evoluciones[0].estado === 'transformado'">
                                                         Transformado en: {{ problema.transformado?.concepto.term }}
                                                     </span>
                                                 </ng-container>
 
+
                                             </div>
                                         </div>
 
-                                        <div class="col-6 p-0 m-0">
+                                        <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="problema.evoluciones">
                                                     <small class="badge badge-success">{{ problema.evoluciones[0].estado }}</small>
@@ -233,11 +233,14 @@
                                                     <i class="icon icon-rup-semantic-plan"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
-                                                    {{ prestacion.solicitud.tipoPrestacion.term }} ({{ prestacion.estados[prestacion.estados.length - 1].createdAt | fecha }})
+                                                    {{ prestacion.solicitud.tipoPrestacion.term }}
 
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
+                                                                <small>Creada: {{ prestacion.estados[prestacion.estados.length -
+                                                                    1].createdAt | fecha }}</small>
+                                                                <br>
                                                                 <small>Profesional: {{ prestacion.estados[prestacion.estados.length
                                                                     - 1].createdBy.nombreCompleto}}</small>
                                                             </div>
