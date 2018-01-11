@@ -1,22 +1,22 @@
-<div class="row">
+<div class="row mt-1">
     <div class="col">
 
         <div class="menu-huds">
 
             <span>
-                    <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgos')" [ngClass]="{'active': vista === 'hallazgos'}">
-                        <span>HALLAZGOS</span>
-            </button>
+                <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgos')" [ngClass]="{'active': vista === 'hallazgos'}">
+                    <span>HALLAZGOS</span>
+                </button>
             </span>
             <span>
-                    <button class="btn btn-plan btn-sm m-0" (click)="actualizarVista('prestaciones')" [ngClass]="{'active': vista === 'prestaciones'}">
-                        <span>PRESTACIONES</span>
-            </button>
+                <button class="btn btn-plan btn-sm m-0" (click)="actualizarVista('prestaciones')" [ngClass]="{'active': vista === 'prestaciones'}">
+                    <span>PRESTACIONES</span>
+                </button>
             </span>
             <span>
-                    <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('medicamentos')" [ngClass]="{'active': vista === 'medicamentos'}">
-                        <span>MEDICAMENTOS</span>
-            </button>
+                <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('medicamentos')" [ngClass]="{'active': vista === 'medicamentos'}">
+                    <span>MEDICAMENTOS</span>
+                </button>
             </span>
 
         </div>
@@ -33,11 +33,13 @@
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li>
-                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
+                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}"
+                            (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
+                                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
                                     </div>
                                 </ng-container>
@@ -62,10 +64,12 @@
                                         <small class="estado badge badge-success">{{ hallazgo.evoluciones[0].estado }}</small>
                                     </ng-container>
 
-                                    <a href="javascript: void(0)" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" *ngIf="iCronico === eyeCronico" title="Agregar a los tabs" titlePosition="bottom">
+                                    <a href="javascript: void(0)" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" *ngIf="iCronico === eyeCronico" title="Agregar a los tabs"
+                                        titlePosition="bottom">
                                         <i class="mdi mdi-eye"></i>
                                     </a>
-                                    <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta" titlePosition="left">
+                                    <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta"
+                                        titlePosition="left">
                                         <i class="mdi mdi-plus-box"></i>
                                     </a>
 
@@ -84,11 +88,13 @@
                     <li>
 
                         <!-- <div class="rup-card mini {{problema.concepto.semanticTag}}" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1"> -->
-                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}" (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
+                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': eyeActivo === iActivo || estaEnTabs(problema, 'hallazgo')}"
+                            (mouseenter)="eyeActivo = iActivo" (mouseleave)="eyeActivo = -1">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
                                 </ng-container>
@@ -113,11 +119,13 @@
                                         <small class="badge badge-success">{{ problema.evoluciones[0].estado }}</small>
                                     </ng-container>
 
-                                    <a href="javascript: void(0)" (click)="devolverRegistrosHuds(problema, 'hallazgo')" *ngIf="iActivo === eyeActivo" title="Agregar a los tabs" titlePosition="bottom">
+                                    <a href="javascript: void(0)" (click)="devolverRegistrosHuds(problema, 'hallazgo')" *ngIf="iActivo === eyeActivo" title="Agregar a los tabs"
+                                        titlePosition="bottom">
                                         <i class="mdi mdi-eye"></i>
                                     </a>
 
-                                    <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="bottom">
+                                    <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverHallazgo(problema)" title="Agregar a la consulta"
+                                        titlePosition="bottom">
                                         <i class="mdi mdi-plus-box"></i>
                                     </a>
                                 </div>
@@ -138,7 +146,8 @@
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
@@ -231,11 +240,13 @@
 
                         <li>
 
-                            <div class="rup-card mini producto" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(medicamento, 'medicamento')}" (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
+                            <div class="rup-card mini producto" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(medicamento, 'medicamento')}"
+                                (mouseenter)="eyeCronico = iCronico" (mouseleave)="eyeCronico = -1">
                                 <div class="rup-header">
 
                                     <ng-container *ngIf="emitirConceptos">
-                                        <div class="icon-rup" draggable class="" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                        <div class="icon-rup" draggable class="" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}"
+                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                             <i class="icon icon-rup-semantic-producto"></i>
                                         </div>
                                     </ng-container>
@@ -258,11 +269,13 @@
                                             <small class="badge badge-success">{{ medicamento.evoluciones[medicamento.evoluciones.length-1].estado }}</small>
                                         </ng-container>
 
-                                        <a *ngIf="iCronico === eyeCronico" href="javascript: void(0)" (click)="devolverRegistrosHuds(medicamento, 'medicamento')" title="Agregar a los tabs" titlePosition="bottom">
+                                        <a *ngIf="iCronico === eyeCronico" href="javascript: void(0)" (click)="devolverRegistrosHuds(medicamento, 'medicamento')"
+                                            title="Agregar a los tabs" titlePosition="bottom">
                                             <i class="mdi mdi-eye"></i>
                                         </a>
 
-                                        <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverMedicamento(medicamento)" title="Agregar a la consulta" titlePosition="left">
+                                        <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverMedicamento(medicamento)" title="Agregar a la consulta"
+                                            titlePosition="left">
                                             <i class="mdi mdi-plus-box"></i>
                                         </a>
                                     </div>
