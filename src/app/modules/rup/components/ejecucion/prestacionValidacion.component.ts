@@ -251,24 +251,34 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
 
-                // hacemos el patch y luego creamos los planes
-                let cambioEstado: any = {
-                    op: 'romperValidacion',
-                    estado: { tipo: 'ejecucion' }
-                };
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
 
-                // Vamos a cambiar el estado de la prestación a ejecucion
-                this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-                    this.prestacion = prestacion;
+                // Guardamos la prestacion copia
+                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
 
-                    // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                    let prestacionModificada = prestacionClonada;
+
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+
+                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });
-
-                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
 
