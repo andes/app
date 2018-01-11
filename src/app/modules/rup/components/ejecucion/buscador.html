@@ -226,13 +226,13 @@
 
                                     <div class="rup-border">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-7 p-0 m-0">
+                                            <div class="col-6 p-0 m-0">
                                                 <div class="title p-0 pt-1 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                                                     {{ item.term }}
                                                 </div>
                                             </div>
 
-                                            <div class="col-5 p-0 m-0">
+                                            <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
                                                         {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
