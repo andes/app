@@ -15,6 +15,7 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 })
 
 export class BuscadorComponent implements OnInit, OnChanges {
+    autofocus: any;
 
     // @Input() elementoRUPprestacion;
     // @Input() resultados;
@@ -242,6 +243,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public setTipoBusqueda(busquedaActual): void {
         this.busquedaActual = busquedaActual;
 
+        this.autofocus = !this.autofocus;
         if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
             this.buscar();
         }

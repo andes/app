@@ -46,6 +46,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
     // En caso de querer ocultar el input de busqueda y solo utilizar el valor de searchTerm
     @Input() hideSearchInput: Boolean = false;
+    @Input() autofocus: Boolean = true;
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';

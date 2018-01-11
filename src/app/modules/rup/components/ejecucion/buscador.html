@@ -17,10 +17,10 @@
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
 <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
-    [searchTermInput]="search"></snomed-buscar>
+    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
-    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..."></plex-text>
+    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
 </div>
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
@@ -152,12 +152,12 @@
                         <div class="rup-border">
 
                             <div class="row p-0 m-0 border-secondary border-left-0">
-                                <div class="col-7 p-0 m-0">
+                                <div class="col-6 p-0 m-0">
                                     <div class="title p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                                         {{item.term}}
                                     </div>
                                 </div>
-                                <div class="col-5 p-0 m-0">
+                                <div class="col-6 p-0 m-0">
                                     <div class="p-0 pt-1 pr-1 float-right">
                                         <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
                                             {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
