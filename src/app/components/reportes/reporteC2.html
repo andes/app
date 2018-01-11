@@ -5,12 +5,12 @@
 
                 <div class="row">
                     <div class="col-3">
-                        <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'fecha')" name="horaInicio" label="Desde"
+                        <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
                             class="fechas">
                         </plex-datetime>
                     </div>
                     <div class="col-3">
-                        <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'fecha')" name="horaFin" label="Hasta"
+                        <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
                             class="fechas">
                         </plex-datetime>
                     </div>
@@ -57,10 +57,10 @@
                             {{ diagnostico.suma1 }}
                         </td>
                         <td style = "text-align:center">
-                            {{ diagnostico.sumaDosCuatro }}
+                            {{ diagnostico.suma24 }}
                         </td>
                         <td style = "text-align:center">
-                            {{ diagnostico.sumaCincoNueve }}
+                            {{ diagnostico.suma59 }}
                         </td>
                         <td style = "text-align:center">
                             {{ diagnostico.suma1014 }}
@@ -91,6 +91,29 @@
                         </td>
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr><td colspan="16"></td></tr>
+                    <tr>
+                        <td colspan="2" style = "text-align:right">
+                            Total de Consultas
+                        </td>
+                        <td style = "text-align:center">{{totalConsultas}}</td>
+                        <td style = "text-align:center">{{totalMenor1}}</td>
+                        <td style = "text-align:center">{{total1}}</td>
+                        <td style = "text-align:center">{{total24}}</td>
+                        <td style = "text-align:center">{{total59}}</td>
+                        <td style = "text-align:center">{{total1014}}</td>
+                        <td style = "text-align:center">{{total1524}}</td>
+                        <td style = "text-align:center">{{total2534}}</td>
+                        <td style = "text-align:center">{{total3544}}</td>
+                        <td style = "text-align:center">{{total4564}}</td>
+                        <td style = "text-align:center">{{totalMayor65}}</td>
+                        <td style = "text-align:center">{{totalMasculino}}</td>
+                        <td style = "text-align:center">{{totalFemenino}}</td>
+                        <td style = "text-align:center">{{totalOtro}}</td>
+                        
+                      </tr>
+                </tfoot>
             </table>
         </plex-box>
     </section>
@@ -98,6 +121,6 @@
         <plex-button type="success" label="Imprimir" (click)="imprimir()" class="float-right"></plex-button>
     </footer>
 </form>
-<!-- { "_id": "Obesidad, no especificada", "codigo": "E66.9", "total": 1, "sumaMenor1": 0, "suma1": 0, "sumaDosCuatro": 0, 
-    "sumaCincoNueve": 0, "suma1014": 0, "suma1524": 0, "suma2534": 1, "suma3544": 0, "suma4564": 1, 
+<!-- { "_id": "Obesidad, no especificada", "codigo": "E66.9", "total": 1, "sumaMenor1": 0, "suma1": 0, "suma24": 0, 
+    "suma59": 0, "suma1014": 0, "suma1524": 0, "suma2534": 1, "suma3544": 0, "suma4564": 1, 
     "sumaMayor65": 0, "sumaMasculino": 1, "sumaFemenino": 1, "sumaOtro": 0 } -->
