@@ -199,7 +199,7 @@
                 <div class="container m-0 p-0">
                     <div class="row header m-0 p-0">
                         <div class="col-10 m-0 p-0">
-                            <b>{{items.nombre}}</b>
+                            <b>{{ items.nombre[0].toUpperCase() + items.nombre.slice(1) }}</b>
                         </div>
                         <div class="col-2 m-0 p-0">
                             <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)='desplegar(items.nombre)' [ngClass]="{'disabled': items.valor.length === 0}">
@@ -234,7 +234,7 @@
 
                                             <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
-                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
+                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
                                                         {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>
                                                     <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
