@@ -464,7 +464,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
-        let filtro = this.getFiltroSeleccionado();
+        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+        // let filtro = this.getFiltroSeleccionado();
 
         // devolvemos los tipos de filtros
         this.tagBusqueda.emit(filtro);
