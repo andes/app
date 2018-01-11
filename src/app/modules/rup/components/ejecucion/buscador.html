@@ -202,8 +202,9 @@
                             <b>{{ items.nombre[0].toUpperCase() + items.nombre.slice(1) }}</b>
                         </div>
                         <div class="col-2 m-0 p-0">
-                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)='desplegar(items.nombre)' [ngClass]="{'disabled': items.valor.length === 0}">
-                                <i class="mdi mdi-chevron-down"></i>
+                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)="desplegar(items.nombre)" [ngClass]="{'disabled': items.valor.length === 0, 'bg-inverse': opcionDesplegada === items.nombre}">
+                                <i *ngIf="opcionDesplegada !== items.nombre" class="mdi mdi-chevron-down"></i>
+                                <i *ngIf="opcionDesplegada === items.nombre" class="mdi mdi-chevron-up"></i>
                             </button>
                             <span class="badge badge-warning float-right mr-1 p-1">
                                 {{ items.valor.length }}
@@ -212,7 +213,7 @@
                     </div>
                 </div>
 
-                <ul class="conceptos list-unstyled" *ngIf="desplegarConceptos === items.nombre">
+                <ul class="conceptos list-unstyled" *ngIf="opcionDesplegada === items.nombre">
                     <ng-container *ngFor="let item of items.valor">
 
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
