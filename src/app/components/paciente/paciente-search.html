@@ -1,72 +1,72 @@
-<section *ngIf="!showCreateUpdate || bloquearCreate" class="plex-layout">
-    <div class="row">
-        <!--Panel central-->
-        <div class="col">
-            <plex-box>
-                <header>
-                    <div class="page-title">Buscar un paciente</div>
-                </header>
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>"
-                    placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
-                </plex-text>
-                <!--Loader-->
-                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-                <!--Alerta si no se encontró ningun paciente-->
-                <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
-                </div>
-                <!--Tabla de resultados por SimpleQuery -->
-                <table *ngIf="resultado && resultado.length" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Estado</th>
-                            <th>Documento</th>
-                            <th>Apellido y Nombre</th>
-                            <th>Fecha de Nacimiento</th>
-                            <th>Sexo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionarPaciente(paciente)">
-                            <td>
-                                <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>
-                            </td>
-                            <td>
-                                <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
-                                <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
-                            </td>
-                            <td>{{paciente | paciente}}</td>
-                            <td>
-                                <span *ngIf="paciente.fechaNacimiento !== null">
-                                    {{paciente.fechaNacimiento | fecha}}
-                                    <br> {{paciente | edad}}
-                                </span>
-                                <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
-                                    Sin fecha de nacimiento
-                                </span>
-                            </td>
-                            <td>{{paciente | sexo}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </plex-box>
-        </div>
-        <!--Panel lateral-->
-        <div class="col-3" *ngIf="modoCompleto">
-            <plex-box>
-                <header>
-                    <div class="page-title">Estado de
-                        <span title="Indice Maestro de Pacientes">MPI</span>
+<section *ngIf="!showCreateUpdate || bloquearCreate">
+    <plex-box>
+        <div class="row">
+            <!--Panel central-->
+            <div class="col">
+                <fieldset>
+                    <legend>
+                        Buscar un paciente
+                    </legend>
+                    <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-barcode-scan'></i>"
+                        placeholder="Escanee un documento digital, o escriba un documento/apellido/nombre">
+                    </plex-text>
+                    <!--Loader-->
+                    <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                    <!--Alerta si no se encontró ningun paciente-->
+                    <div *ngIf="resultado && !resultado.length && !esEscaneado" class="alert alert-danger">
+                        <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
                     </div>
-                </header>
-                <pacientes-dashboard [showCharts]="true"></pacientes-dashboard>
-            </plex-box>
+                    <!--Tabla de resultados por SimpleQuery -->
+                    <table *ngIf="resultado && resultado.length" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Estado</th>
+                                <th>Documento</th>
+                                <th>Apellido y Nombre</th>
+                                <th>Fecha de Nacimiento</th>
+                                <th>Sexo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="hover" *ngFor="let paciente of resultado" (click)="seleccionarPaciente(paciente)">
+                                <td>
+                                    <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                    <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning" title="Los pacientes temporales son inactivados puedo de un tiempo, a menos que hayan sido validados">Temporal</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
+                                    <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
+                                </td>
+                                <td>{{paciente | paciente}}</td>
+                                <td>
+                                    <span *ngIf="paciente.fechaNacimiento !== null">
+                                        {{paciente.fechaNacimiento | fecha}}
+                                        <br> {{paciente | edad}}
+                                    </span>
+                                    <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
+                                        Sin fecha de nacimiento
+                                    </span>
+                                </td>
+                                <td>{{paciente | sexo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+            </div>
+            <!--Panel lateral-->
+            <div class="col-3" *ngIf="modoCompleto">
+                <fieldset>
+                    <legend>
+                        Estado de
+                        <span title="Indice Maestro de Pacientes">MPI</span>
+                    </legend>
+                    <pacientes-dashboard [showCharts]="true"></pacientes-dashboard>
+                </fieldset>
+            </div>
         </div>
-    </div>
+    </plex-box>
 
 </section>
-
 <!-- Muestra el footer sólo si no está en modo edición -->
 <footer *ngIf="!hideFooter && !showCreateUpdate && (mostrarCancelar || mostrarNuevo)">
     <plex-button *ngIf="mostrarCancelar" label="{{btnCancelarLabel}}" type="info" (click)="cancelar()"></plex-button>

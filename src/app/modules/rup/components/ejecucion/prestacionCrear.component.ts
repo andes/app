@@ -12,7 +12,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 
 @Component({
-    templateUrl: 'prestacionCrear.html'
+    templateUrl: 'prestacionCrear.html',
+    styleUrls: ['prestacionCrear.scss']
 })
 export class PrestacionCrearComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;

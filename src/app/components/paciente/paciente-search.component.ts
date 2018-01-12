@@ -10,7 +10,7 @@ import { LogService } from './../../services/log.service';
 @Component({
     selector: 'pacientesSearch',
     templateUrl: 'paciente-search.html',
-    styleUrls: ['paciente-search.css']
+    styleUrls: ['paciente-search.scss']
 })
 
 export class PacienteSearchComponent implements OnInit, OnDestroy {
