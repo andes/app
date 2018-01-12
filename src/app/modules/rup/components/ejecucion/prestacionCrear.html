@@ -7,13 +7,13 @@
             <div class="row">
                 <div class="col-6">
                     <fieldset>
-                        <!-- Búsqueda de pacientes -->
-                        <plex-button *ngIf="paciente" label="BUSCAR OTRO PACIENTE" type="primary" (click)="buscandoPaciente = true; paciente = null"></plex-button>
+
                         <!-- <legend>Paciente</legend> -->
+                        <legend *ngIf="paciente && !buscandoPaciente">Paciente</legend>
                     </fieldset>
                     <paciente-detalle *ngIf="paciente && !buscandoPaciente" [paciente]="paciente" [size]="'small'"></paciente-detalle>
-                    <pacientesSearch *ngIf="!paciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-                        [modoCompleto]="false" [bloquearCreate]="true" [btnCancelarLabel]="btnCancelarLabel" class="fix-margen"></pacientesSearch>
+                    <pacientesSearch *ngIf="!paciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [modoCompleto]="false"
+                        [bloquearCreate]="true" [btnCancelarLabel]="btnCancelarLabel" class="fix-margen"></pacientesSearch>
                 </div>
                 <div class="col-6">
                     <fieldset>
@@ -30,9 +30,11 @@
     </section>
 
     <!--Footer-->
-    <footer *ngIf="!buscandoPaciente">
+    <footer>
+        <!-- Búsqueda de pacientes -->
+        <plex-button *ngIf="paciente" label="BUSCAR OTRO PACIENTE" type="primary" (click)="buscandoPaciente = true; paciente = null"></plex-button>
         <div class="float-left">
-            <plex-button type="danger" label="PUNTO DE INICIO" (click)="cancelar()">
+            <plex-button type="danger" label="PUNTO DE INICIO" (click)="cancelar()" class="mr-1">
             </plex-button>
         </div>
         <div class="float-right">
