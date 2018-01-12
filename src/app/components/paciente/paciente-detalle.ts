@@ -14,4 +14,10 @@ export class PacienteDetalleComponent {
      * @memberof PacienteDetalleComponent
      */
     @Input() paciente: IPaciente;
+
+    /**
+     * Tamaño de resultados, para que sea más flexible cuando hay poco espacio de pantalla
+     * Opciones (se puede extender): 'normal' (default) | 'small'
+     */
+    @Input() size: String = 'normal';
 }
