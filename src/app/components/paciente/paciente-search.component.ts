@@ -41,6 +41,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      */
     @Input() modoCompleto = true;
     /**
+     * Label del botón "cancelar"
+     */
+    @Input() btnCancelarLabel = 'Cancelar';
+    /**
      * Indica si quiere bloquear la modificación del paciente una vez seleccionado
      */
     @Input() bloquearCreate = false;
