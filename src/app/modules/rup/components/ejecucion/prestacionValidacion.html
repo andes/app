@@ -4,13 +4,13 @@
 <section *ngIf="prestacion && paciente && !showDarTurnos">
     <plex-box>
         <header>
-            <div class="row">
+            <div class="row" id="headerPrestacion">
                 <div class="col-9" *ngIf="prestacion?.solicitud">
                     <div class="page-title titulo-consulta">
                         <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
                         <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
 
-                        <div class="float-right mr-2">
+                        <div class="float-right mr-2" id="botones">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
@@ -54,7 +54,7 @@
             <div class="col titulos">
 
                 <!-- div de la info de la solicitud -->
-                <div [hidden]="!showDatosSolicitud" class="mb-2">
+                <div [hidden]="!showDatosSolicitud" class="mb-2" id="datosSolicitud">
                     <div class="row no-gutters">
                         <div class="col">
                             <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
@@ -115,137 +115,114 @@
                         </div>
                     </ng-container>
 
-                    <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
-                        <div class="rup-header">
-                            <div class="icon-rup">
-                                <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
-                            </div>
-                            <div class="title">
-                                <ng-container *ngIf="elemento?.nombre">
-                                    {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
-                                    <!-- <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div> -->
-                                </ng-container>
-
-                                <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                    <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
+                    <div class="elementoRup">
+                        <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                            <div class="rup-header">
+                                <div class="icon-rup">
+                                    <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                                 </div>
+                                <div class="title">
+                                    <ng-container *ngIf="elemento?.nombre">
+                                        {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                        <!-- <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div> -->
+                                    </ng-container>
 
-                            </div>
-                            <div class="actions">
-                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                    + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
-                            </div>
-                        </div>
-
-                        <div class="rup-body">
-                            <div class="legend">
-                                <span>
-                                    {{elemento.concepto.semanticTag}}
-                                </span>
-                            </div>
-                            <div class="content">
-                                <div class="row">
-
-                                    <div class="col-12">
-
-                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true"></rup>
-
-                                        <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
-                                            <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
-                                                Ya tiene un turno asignado
-                                            </span>
-                                            <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
-                                                <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
-                                                <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
-                                                    No hay turnos disponibles
-                                                </span>
-                                            </span>
-                                            <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
-                                                <span class="small text-secondary">
-                                                    No hay turnos disponibles
-                                                </span>
-                                            </span>
-                                        </div>
-
-                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
-                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
-
-                                                <label title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="diagnostico-principal">Diagnóstico principal
-
-                                                    <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                        'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
-                                                        'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
-                                                    }">
-                                                    </span>
-                                                </label>
-                                            </ng-container>
-
-                                            <!--  title="Es primera vez" titlePosition="right" -->
-                                            <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
-                                                <label title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="primera-vez">
-                                                            <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                                'mdi-toggle-switch': elemento.esPrimeraVez,
-                                                                'mdi-toggle-switch-off': !elemento.esPrimeraVez
-                                                            }">
-                                                            </span>
-                                                        </label>
-                                            </ng-container>
-                                        </ng-container>
+                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
+                                        <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
                                     </div>
-                                    <!-- <div class="col-1 m-0 pr-3 text-right">
-                                        <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
-                                            (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
-                                    </div> -->
+
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
-                                            <div class="col-4">
-                                                <b>Evolución </b>
+                                <div class="actions">
+                                    <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
 
-                                                <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">
-                                                    <br />
-                                                    <span *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                                        Inicio: 
-                                                    </span> {{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }}
-                                                </ng-container>
+                                    <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                        + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                    </small>
+                                </div>
+                            </div>
 
-                                                <ng-container *ngIf="elemento?.evoluciones">
-                                                    <br /> {{ elemento.evoluciones[0].fechaCarga | fromNow }}
-                                                </ng-container>
+                            <div class="rup-body">
+                                <div class="legend">
+                                    <span>
+                                        {{elemento.concepto.semanticTag}}
+                                    </span>
+                                </div>
+                                <div class="content">
+                                    <div class="row">
 
+                                        <div class="col-12">
+
+                                            <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion" [registro]="elemento" [soloValores]="true"></rup>
+
+                                            <div *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
+                                                <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
+                                                    Ya tiene un turno asignado
+                                                </span>
+                                                <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
+                                                    <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
+                                                    <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
+                                                        No hay turnos disponibles
+                                                    </span>
+                                                </span>
+                                                <span *ngIf="asignarTurno[elemento.id] && !asignarTurno[elemento.id].solicitud">
+                                                    <span class="small text-secondary">
+                                                        No hay turnos disponibles
+                                                    </span>
+                                                </span>
                                             </div>
 
-                                            <!-- <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"></div> -->
-                                            <div class="col-8"> {{ elemento.valor.evolucion }}</div>
+                                            <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
+                                                <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'">
+
+                                                    <label title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}" class="diagnostico-principal">Diagnóstico principal
+    
+                                                        <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                            'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
+                                                            'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
+                                                        }">
+                                                        </span>
+                                                    </label>
+                                                </ng-container>
+
+                                                <!--  title="Es primera vez" titlePosition="right" -->
+                                                <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2">
+                                                    <label title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="primera-vez">
+                                                                <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                                    'mdi-toggle-switch': elemento.esPrimeraVez,
+                                                                    'mdi-toggle-switch-off': !elemento.esPrimeraVez
+                                                                }">
+                                                                </span>
+                                                            </label>
+                                                </ng-container>
+                                            </ng-container>
                                         </div>
+                                        <!-- <div class="col-1 m-0 pr-3 text-right">
+                                            <div *ngIf="elemento?.valor?.evolucion || elemento?.valor?.solicitudPrestacion?.motivo || elemento?.valor?.solicitudPrestacion?.indicaciones || (elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0) || elemento?.valor?.fechaInicio" class="text-info hover mdi mdi-24px mdi-arrow-{{ elemento.icon || 'left' }}-drop-circle-outline"
+                                                (click)="elemento.icon = elemento.icon === 'down' ? 'left' : 'down'" [ngClass]="{'text-secondary': elemento.icon === 'down'}"></div>
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div *ngIf="elemento?.valor?.evolucion" class="row text-secondary">
+                                                <div class="col-4">
+                                                    <b>Evolución </b>
 
-                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
-                                            <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
-                                        </div>
-                                        <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
-                                            <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
-                                        </div>
-
-                                        <!-- <div  class="row text-secondary">
-                                            <div class="col-3 text-left text-secondary" *ngIf="elemento?.valor?.evolucion">
-                                                <b>Evolución </b>
-
-                                                <br />
-
-                                                <ng-container class="text-bold" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                                    <ng-container *ngIf="!elemento?.evoluciones">
-                                                        Inicio: {{ elemento.valor.fechaInicio | fromNow }}. ({{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }})
+                                                    <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">
+                                                        <br />
+                                                        <span *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                                            Inicio: 
+                                                        </span> {{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }}
                                                     </ng-container>
-                                                </ng-container>
 
-                                                <ng-container *ngIf="elemento?.evoluciones">
-                                                    {{ elemento.evoluciones[0].fechaCarga | fromNow }}
-                                                </ng-container>
+                                                    <ng-container *ngIf="elemento?.evoluciones">
+                                                        <br /> {{ elemento.evoluciones[0].fechaCarga | fromNow }}
+                                                    </ng-container>
+
+                                                </div>
+
+                                                <!-- <div class="col-6 text-left text-secondary" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"></div> -->
+                                                <div class="col-8"> {{ elemento.valor.evolucion }}</div>
                                             </div>
 
                                             <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
@@ -254,16 +231,41 @@
                                             <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
                                                 <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
                                             </div>
-                                            <div class="col-9">
-                                                {{ elemento.valor.evolucion }}
-                                            </div>
-                                        </div> -->
 
+                                            <!-- <div  class="row text-secondary">
+                                                <div class="col-3 text-left text-secondary" *ngIf="elemento?.valor?.evolucion">
+                                                    <b>Evolución </b>
+    
+                                                    <br />
+    
+                                                    <ng-container class="text-bold" *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
+                                                        <ng-container *ngIf="!elemento?.evoluciones">
+                                                            Inicio: {{ elemento.valor.fechaInicio | fromNow }}. ({{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }})
+                                                        </ng-container>
+                                                    </ng-container>
+    
+                                                    <ng-container *ngIf="elemento?.evoluciones">
+                                                        {{ elemento.evoluciones[0].fechaCarga | fromNow }}
+                                                    </ng-container>
+                                                </div>
+    
+                                                <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
+                                                    <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo || '(no definido)' }}
+                                                </div>
+                                                <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
+                                                    <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
+                                                </div>
+                                                <div class="col-9">
+                                                    {{ elemento.valor.evolucion }}
+                                                </div>
+                                            </div> -->
+
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </ng-container>
             </div>

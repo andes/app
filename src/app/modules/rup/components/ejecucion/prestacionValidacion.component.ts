@@ -1,9 +1,10 @@
+import { HeaderPacienteComponent } from './../../../../components/paciente/headerPaciente.component';
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { SnomedService } from './../../../../services/term/snomed.service';
 import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, ViewChild, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -12,6 +13,9 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
+
+import * as html2pdf from 'html2pdf.js';
+import * as moment from 'moment';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -25,6 +29,10 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
 })
 export class PrestacionValidacionComponent implements OnInit {
     ordenSeleccionado: string;
+    
+    //@ViewChild('headerPaciente') content: HeaderPacienteComponent;
+    
+
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
     // prestacion actual en ejecucion
@@ -507,14 +515,83 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     imprimirResumen() {
+        /* Version inicial que abre dialogo de impresión y utiliza CSS
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
         setTimeout(() => {
             window.print();
         });
+        */
+
+        let content = "";
+        let headerPrestacion:any = document.getElementById("headerPrestacion").cloneNode(true);
+        let datosSolicitud:any = document.getElementById("datosSolicitud").cloneNode(true);
+
+        // merse code starting ....
+        // quitamos mersamente los botones, del encabezado
+        headerPrestacion.children[0].style = "width: 100%; max-width: 100%; flex:0 0 100%";
+        headerPrestacion.children[0].children[0].style = "font-size: 18px; margin-bottom: 20px; border-bottom: 1px solid black;";
+        headerPrestacion.children[0].children[0].children[2].innerHTML = '';
+        
+        datosSolicitud.children[0].style = "margin-bottom: 20px;";
+
+        const header = '<header>' + 
+            headerPrestacion.innerHTML + 
+            datosSolicitud.innerHTML + 
+        '</header>';
+
+        content +=  header;
+
+        // agregamos prestaciones
+        let elementosRUP:HTMLCollection = document.getElementsByClassName("elementoRup");
+
+        const total = elementosRUP.length;
+        for (let i = 0; i < total; i++) {
+            content += elementosRUP[i].innerHTML;
+        }
+
+
+        // creamos el nombre del archivo quitando caracteres raros, espacios, etc.
+        const fileName = this.slugify(this.prestacion.solicitud.tipoPrestacion.term + ' ' + this.paciente.nombreCompleto + moment(new Date(this.prestacion.ejecucion.fecha)).format("DD-MM-YYYY")) + '.pdf';
+
+        html2pdf(content, {
+            pdfCallback: function(doc) {
+                // decomentar cuando la funcion pdfCallback este estable, de esta forma vamos a 
+                // poder agregar el header y también indicarle que el output sea una nueva ventana para imprimir
+                // doc.add(header);
+                // doc.output('dataurlnewwindow');
+            },
+            margin:       [10, 20],
+            filename:     fileName,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { dpi: 192, letterRendering: true },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'p' }
+        });
+
     }
 
-
+    /**
+     * Creamos un slug para el nombre del archivo y quitamos caracteres raros
+     *
+     * @private
+     * @param {string} text Nombre a formatear 
+     * @returns {string} Slug formateado
+     * @memberof PrestacionValidacionComponent
+     */
+    private slugify (text) {
+        const a = 'àáäâèéëêìíïîòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;'
+        const b = 'aaaaeeeeiiiioooouuuuncsyoarsnpwgnmuxzh------'
+        const p = new RegExp(a.split('').join('|'), 'g')
+      
+        return text.toString().toLowerCase()
+          .replace(/\s+/g, '-')           // Replace spaces with -
+          .replace(p, c =>
+              b.charAt(a.indexOf(c)))     // Replace special chars
+          .replace(/&/g, '-and-')         // Replace & with 'and'
+          .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+          .replace(/\-\-+/g, '-')         // Replace multiple - with single -
+          .replace(/^-+/, '')             // Trim - from start of text
+          .replace(/-+$/, '')             // Trim - from end of text
+      }
 }
-
