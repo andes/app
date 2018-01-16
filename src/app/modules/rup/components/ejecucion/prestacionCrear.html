@@ -11,7 +11,7 @@
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
                         </plex-datetime>
                         <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term"
-                            [data]="tiposPrestacion" [required]="true">
+                            [data]="tiposPrestacion" [required]="true" idField="term">
                         </plex-select>
                     </fieldset>
                 </div>

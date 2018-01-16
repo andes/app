@@ -25,7 +25,7 @@
                         </div>
                         <div class="col-6">
                             <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion"
-                                labelField="term" (change)="filtrar()">
+                                labelField="term" (change)="filtrar()" idField="term">
                             </plex-select>
                         </div>
                     </div>

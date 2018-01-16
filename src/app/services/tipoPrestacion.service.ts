@@ -7,8 +7,8 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class TipoPrestacionService {
 
-    // private tipoPrestacionUrl = '/core/tm/tiposPrestaciones';  // URL to web api
-    private tipoPrestacionUrl = '/core/term/snomed';  // URL to web api
+    private tipoPrestacionUrl = '/core/tm/v2/tipoPrestaciones';  // URL to web api
+    // private tipoPrestacionUrl = '/core/term/snomed';  // URL to web api
 
     constructor(private server: Server) { }
 
@@ -17,7 +17,7 @@ export class TipoPrestacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<ITipoPrestacion[]> {
-        params['refsetId'] = '1661000013109';
+        // params['refsetId'] = '1661000013109';
         return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true }).map(concepto => {
             let salida = [];
             concepto.forEach(element => {
