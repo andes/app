@@ -19,13 +19,13 @@
                         <!--Filtros-->
                         <div class="row">
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fecha')" name="fechaDesde" label="Desde"
+                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection($event,'fechaDesde')" name="fechaDesde" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
                                 <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-6' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fecha')" name="fechaHasta" label="Hasta"
+                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection($event,'fechaHasta')" name="fechaHasta" label="Hasta"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
