@@ -98,6 +98,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     // public totalesTodos: Number = 0;
 
+    public copiaFiltroActual: any;
+
     private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
@@ -203,15 +205,15 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public buscar() {
         // en caso que se cambie de tipo de busqueda y no existan resultados
         // en el filtro actual, seteamos el filtro en 'todos'
-        if (this.results[this.busquedaActual].length > 0 && this.results[this.busquedaActual][this.filtroActual].length === 0) {
+        if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
-        // debugger;
+
+        // reiniciamos los resultados desde la copia auxiliar que tenemos
+        this.results = JSON.parse(JSON.stringify(this.resultsAux));
+
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
-            // reiniciamos los resultados desde la copia auxiliar que tenemos
-            this.results = JSON.parse(JSON.stringify(this.resultsAux));
-
             // filtramos uno a uno los conceptos segun el string de busqueda
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
@@ -241,11 +243,22 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public setTipoBusqueda(busquedaActual): void {
-        this.busquedaActual = busquedaActual;
-
-        this.autofocus = !this.autofocus;
-        if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
-            this.buscar();
+        if (this.busquedaActual !== busquedaActual) {
+            this.busquedaActual = busquedaActual;
+            // creamos una copia del filtro
+            /**
+             * Si vamos a la busqueda guiada seteamos el filtro en todos, en caso contrario
+             * lo dejamos como estaba al principio
+             */
+            if (busquedaActual === 'busquedaGuiada') {
+                this.copiaFiltroActual = this.filtroActual;
+                this.filtroActual = 'todos';
+            } else {
+                this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
+            }
+            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+                this.buscar();
+            }
         }
     }
 
@@ -273,7 +286,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     recibeResultados(resultadosSnomed) {
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
-
         if (resultadosSnomed.items.length) {
 
             this.results.buscadorBasico['todos'] = resultadosSnomed.items;
@@ -300,10 +312,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
         }
 
         // si limpio la busqueda, reinicio el buscador sugerido y misFrecuentes
-        if (!resultadosSnomed.term) {
+        if (resultadosSnomed.items.length === 0) {
             this.results['sugerido'] = this.resultsAux.sugerido;
             this.results['misFrecuentes'] = this.resultsAux.misFrecuentes;
             this.results['buscadorBasico'] = [];
+            // Llamamos a la funcion de la busqueda guiada para que limpie los campos.
+            this.filtrarResultadosBusquedaGuiada();
         }
 
     }
@@ -451,7 +465,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
-        let filtro = this.getFiltroSeleccionado();
+        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+        // let filtro = this.getFiltroSeleccionado();
 
         // devolvemos los tipos de filtros
         this.tagBusqueda.emit(filtro);
@@ -476,7 +491,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     /**
      *
-     * @param i Recibe la posicion Index del array
      * @param nombre Se le pasa el nombre del objeto de la posicion i
      * La funcion despliega los desplegables de la busqueda guiada.
      * Al abrir uno automaticamente cierra el que anteriormente se abrio.
