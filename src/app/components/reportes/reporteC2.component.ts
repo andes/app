@@ -53,7 +53,6 @@ export class ReporteC2Component implements OnInit {
             horaInicio: '',
             horaFin: ''
         };
-        // this.diagnosticos = [];
     }
 
     public imprimir() {

@@ -23,7 +23,8 @@
                 <thead>
                     <!-- <th></th> -->
                     <th>Codigo</th>
-                    <th>Descripcion</th>
+                    <th>Descripción</th>
+                    <th>Descripción General</th>
                     <th style = "text-align:center">Total Consultas</th>
                     <th style = "text-align:center">&lt;1</th>
                     <th style = "text-align:center">1</th>
@@ -42,10 +43,15 @@
                 <tbody>
                     <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': false}">
                         <td>
+                            <!-- {{ diagnostico | json }} -->
                             {{ diagnostico.codigo }}
                         </td>
                         <td>
-                            {{ diagnostico.descripcion }}
+                            {{ diagnostico.nombre }}
+                        </td>
+                        <td>
+                            <!-- {{ diagnostico.descripcion }} -->
+                            {{ diagnostico.reporteC2 }}
                         </td>
                         <td style = "text-align:center">
                             {{ diagnostico.total }}
@@ -94,7 +100,7 @@
                 <tfoot>
                     <tr><td colspan="16"></td></tr>
                     <tr>
-                        <td colspan="2" style = "text-align:right">
+                        <td colspan="3" style = "text-align:right">
                             Total de Consultas
                         </td>
                         <td style = "text-align:center">{{totalConsultas}}</td>
