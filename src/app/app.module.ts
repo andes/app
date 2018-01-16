@@ -232,6 +232,7 @@ import { routing, appRoutingProviders } from './app.routing';
 // Libs
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
+import {PopoverModule} from "ngx-popover";
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -304,6 +305,7 @@ let RUPComponentsArray = [
         Ng2DragDropModule,
         ChartsModule,
         routing,
+        PopoverModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })

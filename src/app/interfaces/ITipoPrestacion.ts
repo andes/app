@@ -5,4 +5,8 @@ export interface ITipoPrestacion {
     fsn: String;
     semanticTag: String;
     nombre: String;
+    acceptability?: {
+        conceptId: String,
+        preferredTerm: String
+    }
 }

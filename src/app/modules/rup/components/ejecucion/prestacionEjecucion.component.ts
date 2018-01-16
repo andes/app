@@ -14,6 +14,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -85,6 +86,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+    public sinonimos: ITipoPrestacion[] = [];
+
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
     constructor(
@@ -142,6 +145,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     }
                                 }
                             }
+
+                            this.servicioTipoPrestacion.get({ conceptsIds: [this.prestacion.solicitud.tipoPrestacion.conceptId] }).subscribe(sinonimos => {
+                                this.sinonimos = sinonimos;
+                            })
 
                         }
                     }, (err) => {

@@ -44,6 +44,7 @@
         "enhanced-resolve": "^3.4.1",
         "ng2-charts": "^1.6.0",
         "ng2-drag-drop": "^1.5.1",
+        "ngx-popover": "0.0.16",
         "rxjs": "^5.4.2",
         "zone.js": "^0.8.14"
     },

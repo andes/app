@@ -28,6 +28,7 @@ export class TipoPrestacionService {
                     fsn: element.fsn,
                     semanticTag: element.semanticTag,
                     nombre: element.term,
+                    acceptability: element.acceptability
                 });
             });
             return salida;
