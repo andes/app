@@ -83,6 +83,8 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+  
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
