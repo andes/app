@@ -93,11 +93,11 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
-            this.listarProblemasCronicos();
-            // this.listarHallazgos();
-            this.listarHallazgosNoActivos();
-            this.listarProblemasActivos();
-            this.listarMedicamentos();
+            // this.listarProblemasCronicos();
+            this.listarHallazgos();
+            // this.listarHallazgosNoActivos();
+            // this.listarProblemasActivos();
+            // this.listarMedicamentos();
         }
     }
 
@@ -206,45 +206,49 @@ export class HudsBusquedaComponent implements OnInit {
     listarHallazgos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgos = hallazgos;
+            this.listarProblemasCronicos();
+            this.listarHallazgosNoActivos();
+            this.listarProblemasActivos();
+            this.listarMedicamentos();
         });
     }
 
     // Trae los problemas activos NO activos
     listarHallazgosNoActivos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
+        // this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
 
-            this.hallazgosNoActivos = listaHallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
-            this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
-                if (element.evoluciones[0].idRegistroGenerado) {
-                    element['transformado'] = listaHallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
-                } return element;
-            });
+        this.hallazgosNoActivos = this.hallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
+        this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
+            if (element.evoluciones[0].idRegistroGenerado) {
+                element['transformado'] = this.hallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
+            } return element;
         });
+        // });
     }
 
     // Trae los problemas crónicos (por SNOMED refsetId)
     listarProblemasCronicos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            // Buscamos si es crónico
-            this.hallazgosCronicos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.evoluciones[0].estado === 'activo') {
-                    if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
-                        return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
-                    }
+        // this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
+        // Buscamos si es crónico
+        this.hallazgosCronicos = this.hallazgos.filter((hallazgo) => {
+            if (hallazgo.evoluciones[0].estado === 'activo') {
+                if (hallazgo.concepto && hallazgo.concepto.refsetIds) {
+                    return hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico);
                 }
-            });
+            }
         });
+        // });
     }
 
     // Trae los problemas activos NO crónicos
     listarProblemasActivos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.evoluciones[0].estado === 'activo') {
-                    return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
-                }
-            });
+        // this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
+        this.problemasActivos = this.hallazgos.filter((hallazgo) => {
+            if (hallazgo.evoluciones[0].estado === 'activo') {
+                return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
+            }
         });
+        // });
     }
 
     // Trae los medicamentos registrados para el paciente
