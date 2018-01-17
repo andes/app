@@ -239,8 +239,7 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
-                                    <rup [paciente]="prestacion.paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
@@ -248,16 +247,13 @@
                                     <h4>{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
-                                            <b>Fecha: </b>
-                                            <br> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}
+                                            <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>
-                                            <br> {{ registro.data.solicitud.profesional | profesional }}
+                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b>
-                                            <br> {{ registro.data.solicitud.organizacion.nombre }}
+                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -265,50 +261,37 @@
                                             <hr>
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
-                                                <!-- <div class="rup-card {{ elemento.esSolicitud ? 'planes' : (elemento.concepto.semanticTag === 'régimen/tratamiento' ? 'regimen' : elemento.concepto.semanticTag) }}"> -->
-                                                <div class="rup-card {{ (elemento.esSolicitud ? 'plan' : ((elemento.concepto.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((elemento.concepto.semanticTag === 'elemento de registro') ? 'elementoderegistro' : elemento.concepto.semanticTag))) }}">
-                                                    <div class="type">
 
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                    <div class="rup-header">
+                                                        <div class="icon-rup">
+                                                            <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                                        </div>
+                                                        <div class="title">
+                                                            <ng-container *ngIf="elemento?.nombre">
+                                                                {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                                            </ng-container>
+                                                        </div>
+                                                        <div class="actions">
+                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+
+                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                                                <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                                                + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                            </small>
+                                                        </div>
                                                     </div>
-                                                    <div class="rup-content">
-                                                        <div class="rup-body">
+                                                    <div class="rup-body">
+                                                        <div class="legend">
+                                                            <span>
+                                                                {{elemento.concepto.semanticTag}}
+                                                            </span>
+                                                        </div>
+                                                        <div class="content">
                                                             <div class="row">
-                                                                <div class="col-3">
-                                                                    <b *ngIf="elemento?.nombre">
-                                                                        {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
-                                                                    </b>
-                                                                    <br>
-                                                                    <div class="small text-secondary text-truncate" *ngIf="elemento?.valor?.evolucion">{{ elemento?.valor?.evolucion }}</div>
-                                                                </div>
-                                                                <div class="col-8">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                                                        [registro]="elemento" [soloValores]="true">
-                                                                    </rup>
-                                                                </div>
-                                                            </div>
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div *ngIf="elemento?.valor?.evolucion" class="text-secondary">
-                                                                        <b>Evolución: </b>{{ elemento.valor.evolucion }}
-                                                                    </div>
-                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.motivo" class="text-secondary">
-                                                                        <b>Motivo:</b> {{ elemento.valor.solicitudPrestacion.motivo
-                                                                        || '(no definido)' }}
-                                                                    </div>
-                                                                    <div *ngIf="elemento?.valor?.solicitudPrestacion?.indicaciones" class="text-secondary">
-                                                                        <b>Indicaciones: </b> {{ elemento.valor.solicitudPrestacion.indicaciones
-                                                                        || '(ninguna)' }}
-                                                                    </div>
-                                                                    <div *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon?.length > 0" class="text-secondary">
-                                                                        <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                                                        + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                                                    </div>
-                                                                    <div *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')"
-                                                                        class="text-secondary">
-                                                                        <b>Inicio aproximado: </b>
-                                                                        <ng-container *ngIf="!elemento?.evoluciones">{{ elemento.valor.fechaInicio | fromNow }}</ng-container>
 
-                                                                    </div>
+                                                                <div class="col-12">
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="registro.data" [registro]="elemento" [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -331,10 +314,8 @@
                 <plex-box>
                     <plex-tabs [activeIndex]="panelIndex">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
-                            <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
-                                [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)"
-                                (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
-                                (_onDragEnd)="arrastrandoConcepto(false)">
+                            <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente" [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event)"
+                                (tagBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
@@ -383,5 +364,4 @@
     </footer>
 </form>
 <!-- Búsqueda de pacientes -->
-<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false"
-    [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>
+<pacientesSearch [bloquearCreate]="true" (selected)="cambiarElPaciente($event)" *ngIf="showCambioPaciente" [modoCompleto]="false" [mostrarCancelar]="true" (cancel)="showCambioPaciente = false"></pacientesSearch>
