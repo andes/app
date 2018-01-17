@@ -33,7 +33,7 @@
             <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li>
-                        <div class="rup-card mini hover {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
+                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
@@ -51,7 +51,7 @@
                                 <div class="rup-border">
 
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-7 p-0 m-0" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
+                                        <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
                                             <div class="p-0 pl-2">
                                                 {{ hallazgo.concepto.term }}
                                                 <br>
@@ -90,7 +90,7 @@
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
                     <li>
 
-                        <div class="rup-card mini hover {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
+                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
@@ -107,7 +107,7 @@
                                 <div class="rup-border">
 
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-7 p-0 m-0" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
+                                        <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
                                             <div class="p-0 pl-2">
                                                 {{ problema.concepto.term }}
                                                 <br>
@@ -145,7 +145,7 @@
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
                     <li>
 
-                        <div class="rup-card mini hover {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
+                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
@@ -162,7 +162,7 @@
                                 </ng-container>
                                 <div class="rup-border">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-7 p-0 m-0" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
+                                        <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
                                             <div class="p-0 pl-2">
 
                                                 {{ problema.concepto.term }}
@@ -263,7 +263,7 @@
 
                         <li>
 
-                            <div class="rup-card mini producto hover" [ngClass]="{'active': estaEnTabs(medicamento, 'medicamento')}">
+                            <div class="rup-card mini producto" [ngClass]="{'active': estaEnTabs(medicamento, 'medicamento')}">
                                 <div class="rup-header">
                                     <div class="rup-border">
 
