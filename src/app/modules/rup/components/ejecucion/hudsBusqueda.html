@@ -22,7 +22,7 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row huds-busqueda">
     <div class="col">
 
         <!-- Vista: Hallazgos -->
@@ -66,17 +66,17 @@
                                         <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="hallazgo.evoluciones">
-                                                    <small class="estado badge badge-success">{{ hallazgo.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{ hallazgo.evoluciones[0].estado }}</small>
                                                 </ng-container>
 
                                                 <!-- <a href="javascript: void(0)" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')" *ngIf="iCronico === eyeCronico" title="Agregar a los tabs"
                                         titlePosition="bottom">
                                         <i class="mdi mdi-eye"></i>
                                     </a> -->
-                                                <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta"
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta"
                                                     titlePosition="left">
-                                                    <i class="mdi mdi-plus-box"></i>
-                                                </a>
+                                                    <i class="mdi mdi-plus"></i>
+                                                </button>
 
                                             </div>
                                         </div>
@@ -127,15 +127,16 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
 
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="badge badge-success">{{ problema.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{ problema.evoluciones[0].estado }}</small>
                                                 </ng-container>
 
                                                 <!-- <button (click)="devolverRegistrosHuds(problema, 'hallazgo')" *ngIf="iActivo === eyeActivo" title="Agregar a los tabs" titlePosition="bottom">
                                                     <i class="mdi mdi-eye"></i>
                                                 </button> -->
 
-                                                <button *ngIf="emitirConceptos" (click)="devolverHallazgo(problema)" title="Agregar a la consulta" titlePosition="bottom">
-                                                    <i class="mdi mdi-plus-box"></i>
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(problema)" title="Agregar a la consulta"
+                                                    titlePosition="left">
+                                                    <i class="mdi mdi-plus"></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -180,9 +181,9 @@
                                                 <br>
                                                 <ng-container *ngIf="problema.evoluciones">
                                                     <small>última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
-                                                    <span class="badge badge-info" *ngIf="problema.evoluciones[0].estado === 'transformado'">
+                                                    <small class="badge badge-info text-default p-1" *ngIf="problema.evoluciones[0].estado === 'transformado'">
                                                         Transformado en: {{ problema.transformado?.concepto.term }}
-                                                    </span>
+                                                    </small>
                                                 </ng-container>
 
 
@@ -192,7 +193,7 @@
                                         <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="badge badge-success">{{ problema.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{ problema.evoluciones[0].estado }}</small>
 
                                                 </ng-container>
 
@@ -252,7 +253,7 @@
 
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <span class="badge badge-{{prestacion.estados[prestacion.estados.length - 1].tipo}}">{{prestacion.estados[prestacion.estados.length - 1].tipo}} </span>
+                                                <small class="badge badge-{{prestacion.estados[prestacion.estados.length - 1].tipo}} text-default p-1">{{prestacion.estados[prestacion.estados.length - 1].tipo}} </small>
 
                                                 <!-- <span *ngIf="iPrestacion === eyePrestacion" class="float-right text-planes m-r-2">
                                                     <i class="mdi mdi-eye"></i>
@@ -283,57 +284,64 @@
 
                             <div class="rup-card mini producto hover" (click)="devolverRegistrosHuds(medicamento, 'medicamento')" [ngClass]="{'active': eyeCronico === iCronico || estaEnTabs(medicamento, 'medicamento')}">
                                 <div class="rup-header">
-
-                                    <ng-container *ngIf="emitirConceptos">
-                                        <div class="icon-rup" draggable class="" [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}"
-                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                            <i class="icon icon-rup-semantic-producto"></i>
-                                        </div>
-                                    </ng-container>
-                                    <ng-container *ngIf="!emitirConceptos">
-                                        <div class="icon-rup">
-                                            <i class="icon icon-rup-semantic-producto"></i>
-                                        </div>
-                                    </ng-container>
-
                                     <div class="rup-border">
+
                                         <div class="row p-0 m-0 border-secondary border-left-0">
-                                            <div class="col-6 p-0 m-0">
-                                                <div class="p-0 pl-2">
-                                                    {{ medicamento.concepto.term }}
+                                            <div class="col-10 p-0 m-0">
+                                                <div class="row m-0 p-0">
+
+                                                    <ng-container *ngIf="emitirConceptos">
+                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}"
+                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                            <i class="icon icon-rup-semantic-producto"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!emitirConceptos">
+                                                        <div class="icon-rup">
+                                                            <i class="icon icon-rup-semantic-producto"></i>
+                                                        </div>
+                                                    </ng-container>
+
+                                                    <div class="col p-0 pl-2 float-left">
+                                                        {{ medicamento.concepto.term }}
+
+                                                        <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <ng-container *ngIf="medicamento.evoluciones">
+                                                                    <small class="sugerido">último registro: {{ medicamento.evoluciones[0].fechaCarga
+                                                                        | fecha }}
+                                                                    </small>
+                                                                </ng-container>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                 </div>
                                             </div>
-
-                                            <div class="col-6 p-0 m-0">
+                                            <div class="col-2 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <ng-container *ngIf="medicamento.evoluciones">
-                                                        <small class="badge badge-success">{{ medicamento.evoluciones[medicamento.evoluciones.length-1].estado
+                                                        <small class="badge badge-success text-default p-1">{{ medicamento.evoluciones[medicamento.evoluciones.length-1].estado
                                                             }}
                                                         </small>
                                                     </ng-container>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row p-0 m-0">
-                                            <div class="col-12 p-0 m-0 ml-2">
-                                                <ng-container *ngIf="medicamento.evoluciones">
-                                                    <small class="sugerido">último registro: {{ medicamento.evoluciones[0].fechaCarga | fecha }}
-                                                    </small>
-                                                </ng-container>
 
-                                                <!-- <a *ngIf="iCronico === eyeCronico" href="javascript: void(0)" (click)="devolverRegistrosHuds(medicamento, 'medicamento')"
+
+                                            <!-- <a *ngIf="iCronico === eyeCronico" href="javascript: void(0)" (click)="devolverRegistrosHuds(medicamento, 'medicamento')"
                                                 title="Agregar a los tabs" titlePosition="bottom">
                                                 <i class="mdi mdi-eye"></i>
                                             </a> -->
 
-                                                <!-- <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverMedicamento(medicamento)" title="Agregar a la consulta"
+                                            <!-- <a *ngIf="emitirConceptos" href="javascript: void(0)" (click)="devolverMedicamento(medicamento)" title="Agregar a la consulta"
                                                 titlePosition="left">
                                                 <i class="mdi mdi-plus-box"></i>
                                             </a> -->
-                                            </div>
-                                        </div>
-                                    </div>
 
+                                        </div>
+
+                                    </div>
                                 </div>
 
                             </div>
