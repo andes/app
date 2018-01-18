@@ -15,12 +15,17 @@
                 <plex-box>
                     <header>
                         <div class="row" >
-                            <div class="col-9 page-title titulo-consulta"   >
-                                {{prestacion.solicitud.tipoPrestacion.term}} -
-                                <span>{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
-
+                            <div class="col-11 page-title titulo-consulta"   >
+                                    <ng-container *ngIf="prestacion.solicitud.tipoPrestacion.preferido">
+                                        {{prestacion.solicitud.tipoPrestacion.preferido}}
+                                        <span *ngIf="prestacion.solicitud.tipoPrestacion.preferido" class="titulo-preferido"> ({{prestacion.solicitud.tipoPrestacion.term}}) </span>
+                                    </ng-container>
+                                    <ng-container *ngIf="!prestacion.solicitud.tipoPrestacion.preferido">
+                                        {{prestacion.solicitud.tipoPrestacion.term}}
+                                    </ng-container>
+                                |
+                                <span class="titulo-fecha"> {{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
                                 <button class="btn btn-primary btn-sm m-0 active btn-sinonimos"  *ngIf="sinonimos.length > 1" [popover]="myPopover" > +{{ sinonimos.length - 1 }} sinónimos </button>
-
                             </div>
                             <popover-content #myPopover title="Sinónimos" popoverPlacement="bottom" [closeOnClickOutside]="true">
                                 <!-- <h3 class="popover-title"> Sinónimos </h3>     -->
@@ -35,7 +40,7 @@
                                     </div>
                                 </div>
                             </popover-content>
-                            <div class="col-3 float-right text-right">
+                            <div class="col-1 float-right text-right">
                                 <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                                     (click)="mostrarDatosSolicitud(true)"></plex-button>
                                 <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
