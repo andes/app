@@ -189,7 +189,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
                         this.prestacion = prestacion;
-                        
+
                         this.prestacion.ejecucion.registros.forEach(registro => {
                             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
@@ -231,8 +231,8 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
                         // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                        if(this.prestacion.solicitud.turno) {
-                            this.servicioAgenda.patchCodificarTurno({"op": "codificarTurno", "turnos": [this.prestacion.solicitud.turno]}).subscribe(salida => {});
+                        if (this.prestacion.solicitud.turno) {
+                            this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
                         }
 
 
