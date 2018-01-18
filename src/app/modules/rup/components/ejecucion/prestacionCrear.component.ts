@@ -74,6 +74,10 @@ export class PrestacionCrearComponent implements OnInit {
         }
 
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
+        let preferido = this.servicioTipoPrestacion.searchPreferido(this.tipoPrestacionSeleccionada, this.tiposPrestacion);
+        if (preferido && preferido.term !== this.tipoPrestacionSeleccionada.term) {
+            this.tipoPrestacionSeleccionada.preferido = preferido.term;
+        }
         let nuevaPrestacion;
         nuevaPrestacion = {
             paciente: {

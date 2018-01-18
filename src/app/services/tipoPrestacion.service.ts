@@ -69,4 +69,11 @@ export class TipoPrestacionService {
     enable(tipoPrestacion: ITipoPrestacion): Observable<ITipoPrestacion> {
         return this.put(tipoPrestacion);
     }
+
+    searchPreferido (concept: ITipoPrestacion, prestaciones: ITipoPrestacion[]) {
+        let data = prestaciones.filter(item => {
+            return item.conceptId === concept.conceptId && item.acceptability.conceptId === '900000000000548007';
+        });
+        return data.length > 0 ? data [0] : null;
+    }
 }

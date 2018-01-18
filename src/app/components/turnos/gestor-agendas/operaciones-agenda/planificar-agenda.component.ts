@@ -11,6 +11,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'planificar-agenda',
@@ -49,6 +50,7 @@ export class PlanificarAgendaComponent implements OnInit {
     textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
     showMapaEspacioFisico = false;
+    prestacionesPermitidas: ITipoPrestacion[];
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -82,6 +84,7 @@ export class PlanificarAgendaComponent implements OnInit {
             let dataF = data.filter(x => {
                 return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
             });
+            this.prestacionesPermitidas = dataF;
             event.callback(dataF);
         });
     }
@@ -298,6 +301,12 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
+        this.modelo.tipoPrestaciones.forEach((item) => {
+            let preferido = this.servicioTipoPrestacion.searchPreferido(item, this.prestacionesPermitidas);
+            if (!item.preferido && preferido && preferido.term !== item.term) {
+                item.preferido = preferido.term;
+            }
+        });
         if (this.modelo.bloques.length === 0) {
             this.addBloque();
             this.bloqueActivo = 0;

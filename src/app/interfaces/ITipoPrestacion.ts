@@ -8,5 +8,6 @@ export interface ITipoPrestacion {
     acceptability?: {
         conceptId: String,
         preferredTerm: String
-    }
+    };
+    preferido?: String;
 }
