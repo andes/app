@@ -1,12 +1,3 @@
-<ng-container *ngIf="!soloValores && referentSet.length > 0 && registro.valor.estado !== 'transformado'">
-    <div class="row">
-        <div class="col-12">
-            <span *ngFor="let reference of referentSet" class="badge badge-danger">
-                {{ reference }}
-            </span>
-        </div>
-    </div>
-</ng-container>
 <div *ngIf="!soloValores && registro.valor.estado !== 'transformado'">
     <div *ngIf="elementoRUP && registro">
         <div class="row" *ngIf="hallazgoOrigen">
@@ -95,14 +86,11 @@
                 <div class="col">
                     <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
                     <!-- <small class="badge badge-info">{{ registro.concepto.semanticTag }}</small> -->
-                    <ng-container *ngIf="referentSet.length > 0">
-                        <small *ngFor="let rf of referentSet" class="badge badge-danger">{{rf}}</small>
-                    </ng-container>
                     <small class="badge" [ngClass]="{
-                        'badge-danger': registro.valor.estado === 'activo', 
-                        'badge-warning': registro.valor.estado === 'inactivo', 
-                        'badge-success': registro.valor.estado === 'resuelto', 
-                        'badge-info': registro.valor.estado === 'transformado' 
+                        'badge-danger': registro.valor.estado === 'activo',
+                        'badge-warning': registro.valor.estado === 'inactivo',
+                        'badge-success': registro.valor.estado === 'resuelto',
+                        'badge-info': registro.valor.estado === 'transformado'
                     }">
                         {{ registro.valor.estado }}
                     </small>

@@ -141,6 +141,16 @@
                                                 <!-- ... Body -->
                                                 <div class="content" *ngIf="paciente">
 
+                                                    <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <span *ngFor="let rf of matchinBusquedaGuiada(registro.concepto)" class="badge badge-danger">
+                                                                       {{rf.nombre}}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </ng-container>
+
                                                     <div *ngIf="mostrarMensajes && !registro.valido">
                                                         <span class="badge badge-danger">
                                                             Debe completar los datos

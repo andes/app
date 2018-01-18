@@ -148,6 +148,15 @@
                                 </span>
                             </div>
                             <div class="content">
+                                <ng-container *ngIf="matchinBusquedaGuiada(elemento.concepto)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span *ngFor="let rf of matchinBusquedaGuiada(elemento.concepto)" class="badge badge-danger">
+                                                    {{rf.nombre}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-container>
                                 <div class="row">
 
                                     <div class="col-12">
@@ -210,7 +219,7 @@
                                                 <ng-container class="text-bold" *ngIf="!elemento?.evoluciones">
                                                     <br />
                                                     <span *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag ==='situación' || elemento.concepto.semanticTag === 'trastorno')">
-                                                        Inicio: 
+                                                        Inicio:
                                                     </span> {{ elemento.valor.fechaInicio | fromNow }}. {{ elemento.valor.fechaInicio | date: 'EEE dd/MM/yyyy' }}
                                                 </ng-container>
 
