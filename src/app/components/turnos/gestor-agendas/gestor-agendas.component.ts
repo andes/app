@@ -363,7 +363,7 @@ export class GestorAgendasComponent implements OnInit {
     loadPrestaciones(event) {
         if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
             this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
+                conceptsIds: this.prestacionesPermisos
             }).subscribe(event.callback);
         } else {
             this.servicioPrestacion.get({
