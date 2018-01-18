@@ -54,46 +54,46 @@
                         <td style = "text-align:center">
                             {{ diagnostico.total }}
                         </td>
-                        <td *ngIf="!diagnostico.sumaLactante" style = "text-align:center">
+                        <td *ngIf="!diagnostico.sumaLactante" style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor1 > 0}">
                             {{ diagnostico.sumaMenor1 }}
                         </td>
-                        <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style = "text-align:center">
+                        <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaLactante > 0}">
                             {{ diagnostico.sumaLactante }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
                             {{ diagnostico.suma1 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma24 > 0}">
                             {{ diagnostico.suma24 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma59 > 0}">
                             {{ diagnostico.suma59 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
                             {{ diagnostico.suma1014 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1524 > 0}">
                             {{ diagnostico.suma1524 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
                             {{ diagnostico.suma2534 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma3544 > 0}">
                             {{ diagnostico.suma3544 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
                             {{ diagnostico.suma4564 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor65 > 0}">
                             {{ diagnostico.sumaMayor65 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
                             {{ diagnostico.sumaMasculino }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaFemenino > 0}">
                             {{ diagnostico.sumaFemenino }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaOtro > 0}">
                             {{ diagnostico.sumaOtro }}
                         </td>
                     </tr>
@@ -105,19 +105,19 @@
                             Total de Consultas
                         </td>
                         <td style = "text-align:center">{{totalConsultas}}</td>
-                        <td style = "text-align:center">{{totalMenor1}}</td>
-                        <td style = "text-align:center">{{total1}}</td>
-                        <td style = "text-align:center">{{total24}}</td>
-                        <td style = "text-align:center">{{total59}}</td>
-                        <td style = "text-align:center">{{total1014}}</td>
-                        <td style = "text-align:center">{{total1524}}</td>
-                        <td style = "text-align:center">{{total2534}}</td>
-                        <td style = "text-align:center">{{total3544}}</td>
-                        <td style = "text-align:center">{{total4564}}</td>
-                        <td style = "text-align:center">{{totalMayor65}}</td>
-                        <td style = "text-align:center">{{totalMasculino}}</td>
-                        <td style = "text-align:center">{{totalFemenino}}</td>
-                        <td style = "text-align:center">{{totalOtro}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total1 > 0}">{{total1}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total24 > 0}">{{total24}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total59 > 0}">{{total59}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total1014 > 0}">{{total1014}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total1524 > 0}">{{total1524}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total2534 > 0}">{{total2534}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total3544 > 0}">{{total3544}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': total4564 > 0}">{{total4564}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalMayor65 > 0}">{{totalMayor65}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalMasculino > 0}">{{totalMasculino}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalFemenino > 0}">{{totalFemenino}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalOtro > 0}">{{totalOtro}}</td>
                         
                       </tr>
                 </tfoot>
