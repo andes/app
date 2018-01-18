@@ -51,7 +51,7 @@
                         <td>
                             {{ diagnostico.reporteC2 }}
                         </td>
-                        <td style = "text-align:center">
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': true}">
                             {{ diagnostico.total }}
                         </td>
                         <td *ngIf="!diagnostico.sumaLactante" style = "text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor1 > 0}">
@@ -104,7 +104,7 @@
                         <td colspan="3" style = "text-align:right">
                             Total de Consultas
                         </td>
-                        <td style = "text-align:center">{{totalConsultas}}</td>
+                        <td style = "text-align:center" [ngClass]="{'font-weight-bold': true}">{{totalConsultas}}</td>
                         <td style = "text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td>
                         <td style = "text-align:center" [ngClass]="{'font-weight-bold': total1 > 0}">{{total1}}</td>
                         <td style = "text-align:center" [ngClass]="{'font-weight-bold': total24 > 0}">{{total24}}</td>
