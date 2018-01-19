@@ -78,7 +78,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-
+        debugger
         let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         let turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
         let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
@@ -86,14 +86,29 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let tipoTurno;
 
         // Si la agenda es del día
-        if (this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
+        if (this.agendaSeleccionada.estado === 'publicada' && this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
             this.agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
             // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
-
-            tipoTurno = turno.tipoTurno !== null ? turno.tipoTurno : 'sin-tipo';
-
+            if (this.agendaSeleccionada.estado === 'publicada' && bloque.restantesProgramados > 0) {
+                tipoTurno = 'programado';
+            } else {
+                if (bloque.restantesGestion > 0 && this.turnoSeleccionado.tipoTurno === 'gestion') {
+                    tipoTurno = 'gestion';
+                } else {
+                    if (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional') {
+                        tipoTurno = 'profesional';
+                    }
+                }
+            }
+            // tipoTurno = turno.tipoTurno !== null ? turno.tipoTurno : 'sin-tipo';
+            // return agenda.bloques.filter(bloque => {
+            //     return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
+            //            (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
+            //            (bloque.reservadoGestion > 0  && this.turnoSeleccionado.tipoTurno === 'gestion')
+            //         );
+            // }).length > 0;
             // if (this.agendaSeleccionada.estado === 'disponible') {
             //     tipoTurno = 'gestion';
             // }
@@ -221,9 +236,16 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     hayTurnosDisponibles(agenda: IAgenda) {
+        console.log(this.agendaAReasignar.profesionales);
+        // Aca tendria que agregar la condicion verificando el tipo de turno de la agenda original
         return agenda.bloques.filter(bloque => {
             return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
-                   (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day'));
+                (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
+                    (bloque.restantesGestion > 0 && this.turnoSeleccionado.tipoTurno === 'gestion') ||
+                    (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional')
+                    // && this.datosAgenda.profesionales === agenda.profesionales)
+                    // ver caso del profesional => tiene q coincidir con el profesional de la agenda destino
+                );
         }).length > 0;
     }
 
