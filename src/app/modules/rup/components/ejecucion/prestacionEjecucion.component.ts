@@ -1,4 +1,3 @@
-import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -14,6 +13,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 
 @Component({
@@ -862,6 +862,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
+        // Limpiar los valores observados al iniciar la ejecución
+        // Evita que se autocompleten valores de una consulta anterior
+        this.conceptObserverService.destroy();
         // this.registrosHuds = registrosHuds;
     }
 

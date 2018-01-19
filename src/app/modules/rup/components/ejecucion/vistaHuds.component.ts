@@ -9,6 +9,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { LogService } from '../../../../services/log.service';
 import { PrestacionesService } from '../../services/prestaciones.service';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
 
 @Component({
     selector: 'rup-vistaHuds',
@@ -33,7 +34,8 @@ export class VistaHudsComponent implements OnInit {
         private router: Router, private route: ActivatedRoute,
         private servicioPaciente: PacienteService,
         private logService: LogService,
-        private servicioPrestacion: PrestacionesService) { }
+        private servicioPrestacion: PrestacionesService,
+        private conceptObserverService: ConceptObserverService) { }
 
     /**
     *Inicializamos con el id del paciente
@@ -41,6 +43,11 @@ export class VistaHudsComponent implements OnInit {
     *
     */
     ngOnInit() {
+
+        // Limpiar los valores observados al iniciar la ejecución
+        // Evita que se autocompleten valores de una consulta anterior
+        this.conceptObserverService.destroy();
+
         if (!this.paciente) {
             this.route.params.subscribe(params => {
                 let id = params['id'];
@@ -67,6 +74,9 @@ export class VistaHudsComponent implements OnInit {
 
     agregarListadoHuds(elemento) {
         if (elemento.tipo === 'prestacion') {
+            // Limpiar los valores observados al iniciar la ejecución
+            // Evita que se autocompleten valores de una consulta anterior
+            this.conceptObserverService.destroy();
             // Loggeo de lo que ve el médico
             this.logService.post('rup', 'hudsPrestacion', {
                 paciente: {

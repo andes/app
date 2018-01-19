@@ -7,13 +7,15 @@ import * as moment from 'moment';
 })
 export class PesoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            if (this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
-            }
-        });
+        if (!this.soloValores) {
+            // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
         }
