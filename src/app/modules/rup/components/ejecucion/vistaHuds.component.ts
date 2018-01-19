@@ -74,6 +74,9 @@ export class VistaHudsComponent implements OnInit {
 
     agregarListadoHuds(elemento) {
         if (elemento.tipo === 'prestacion') {
+            // Limpiar los valores observados al iniciar la ejecución
+            // Evita que se autocompleten valores de una consulta anterior
+            this.conceptObserverService.destroy();
             // Loggeo de lo que ve el médico
             this.logService.post('rup', 'hudsPrestacion', {
                 paciente: {

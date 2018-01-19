@@ -9,13 +9,15 @@ import * as moment from 'moment';
 export class SaturacionOxigenoComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         // Observa cuando cambia la propiedad 'SaturacionOxigeno' en otro elemento RUP
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            // No soy yo mismo
-            if (this.registro !== data && this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
-            }
-        });
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                // No soy yo mismo
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
         }

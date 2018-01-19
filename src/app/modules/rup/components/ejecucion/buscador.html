@@ -17,10 +17,10 @@
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
 <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
-    [searchTermInput]="search"></snomed-buscar>
+    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
-    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..."></plex-text>
+    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
 </div>
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
@@ -152,12 +152,12 @@
                         <div class="rup-border">
 
                             <div class="row p-0 m-0 border-secondary border-left-0">
-                                <div class="col-7 p-0 m-0">
-                                    <div class="title p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                                <div class="col-6 p-0 m-0">
+                                    <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                                         {{item.term}}
                                     </div>
                                 </div>
-                                <div class="col-5 p-0 m-0">
+                                <div class="col-6 p-0 m-0">
                                     <div class="p-0 pt-1 pr-1 float-right">
                                         <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
                                             {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
@@ -172,7 +172,7 @@
                                 <div class="col-12 p-0 m-0 ml-2">
                                     <ng-container *ngIf="busquedaActual === 'sugeridos'">
                                         <span *ngIf="item?.sugeridoPor" class="sugerido">
-                                            <i>Sugerido por {{item.sugeridoPor}}</i>
+                                            <i>Sugerido por {{ item.sugeridoPor }}</i>
                                         </span>
                                     </ng-container>
                                 </div>
@@ -199,11 +199,12 @@
                 <div class="container m-0 p-0">
                     <div class="row header m-0 p-0">
                         <div class="col-10 m-0 p-0">
-                            <b>{{items.nombre}}</b>
+                            <b>{{ items.nombre[0].toUpperCase() + items.nombre.slice(1) }}</b>
                         </div>
                         <div class="col-2 m-0 p-0">
-                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)='desplegar(items.nombre)' [ngClass]="{'disabled': items.valor.length === 0}">
-                                <i class="mdi mdi-chevron-down"></i>
+                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)="desplegar(items.nombre)" [ngClass]="{'disabled': items.valor.length === 0, 'bg-inverse': opcionDesplegada === items.nombre}">
+                                <i *ngIf="opcionDesplegada !== items.nombre" class="mdi mdi-chevron-down"></i>
+                                <i *ngIf="opcionDesplegada === items.nombre" class="mdi mdi-chevron-up"></i>
                             </button>
                             <span class="badge badge-warning float-right mr-1 p-1">
                                 {{ items.valor.length }}
@@ -212,7 +213,7 @@
                     </div>
                 </div>
 
-                <ul class="conceptos list-unstyled" *ngIf="desplegarConceptos === items.nombre">
+                <ul class="conceptos list-unstyled" *ngIf="opcionDesplegada === items.nombre">
                     <ng-container *ngFor="let item of items.valor">
 
                         <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
@@ -227,14 +228,14 @@
                                     <div class="rup-border">
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-6 p-0 m-0">
-                                                <div class="title p-0 pt-1 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
+                                                <div class="p-0 pt-1 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                                                     {{ item.term }}
                                                 </div>
                                             </div>
 
                                             <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
-                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
+                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
                                                         {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>
                                                     <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">

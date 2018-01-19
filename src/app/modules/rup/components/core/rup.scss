@@ -129,7 +129,6 @@ $rotate: -90deg;
             }
         }
         .actions {
-            padding: 10px 20px;
             background: white;
             margin-left: auto;
             .btn {
@@ -350,3 +349,8 @@ $color in $rup_colors {
         border: 1px solid #ccc;
     }
 }
+
+// Debería ser global (Plex)
+// .bg-inverse {
+//     background-color: #002738 !important;
+// }
