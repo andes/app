@@ -9,7 +9,7 @@ import { Component, Input } from '@angular/core';
     }   
   `],
   template: `
-    <div [hidden]="!active" class="pane">
+    <div [hidden]="!active" class="pane pl-0 pr-0">
       <ng-content></ng-content>
     </div>
   `

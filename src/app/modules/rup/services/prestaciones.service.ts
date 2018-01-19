@@ -257,7 +257,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getByPacienteMedicamento(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente, false).map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');

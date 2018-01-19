@@ -48,38 +48,9 @@
                 display: block;
                 border-width: 2px;
                 min-height: 91px;
-                /*
-                width: 99%;
-                height: 1.5rem;
-                font-size: 0.6rem;
-                // border: none;
-                // background-color: #dddddd;
-                // cursor: pointer;
-                position: absolute;
-                text-align: left;
-                padding: 7px 5px;
-                /////////////////////
-                // top: 0;
-                // right: 2px;
-                // position: absolute;
-                // text-align: left;
-                // padding: 5px;
-                // z-index: 1000;
-                */
                 i {
                     font-size: 3rem;
                     display: block;
-                }
-                &.procedimientos {
-                    // width: 118%;
-                }
-                &.planes {
-                    // width: 81%;
-                    // margin-left: 15px !important;
-                }
-                &.productos {
-                    // width: 96%;
-                    // margin-left: 1px !important;
                 }
                 &[disabled] {
                     cursor: not-allowed;
@@ -87,8 +58,7 @@
                     -webkit-box-shadow: none;
                     box-shadow: none;
                     opacity: .65;
-                }
-                // fix a mano para el boton btn-otro para que entre el texto en los filtros
+                } // fix a mano para el boton btn-otro para que entre el texto en los filtros
                 &.btn-otro {
                     padding-top: 0;
                     padding-bottom: 0;
@@ -148,11 +118,20 @@ $color in $rup_colors {
     }
 }
 
-.rup-card.mini .rup-header .title {
-    //display: inline-grid;
+.rup-card.mini .rup-header {
+    .title {
+        color: black;
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+    }
     .sugerido {
         font-weight: 400;
         font-size: 0.8rem;
         float: left;
     }
+}
+
+.rup-header .float-right {
+    // Fix desfasaje de height en badges
+    line-height: 1em;
 }

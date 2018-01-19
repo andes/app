@@ -15,6 +15,7 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 })
 
 export class BuscadorComponent implements OnInit, OnChanges {
+    autofocus: any;
 
     // @Input() elementoRUPprestacion;
     // @Input() resultados;
@@ -495,9 +496,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * Al abrir uno automaticamente cierra el que anteriormente se abrio.
      */
     public desplegar(nombre) {
-        this.opcionDesplegada = nombre;
+        // this.opcionDesplegada = nombre;
 
-        this.desplegarConceptos = (this.desplegarConceptos === nombre) ? null : nombre;
+        this.opcionDesplegada = (this.opcionDesplegada === nombre) ? null : nombre;
     }
 
     /**

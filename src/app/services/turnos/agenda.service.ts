@@ -36,6 +36,10 @@ export class AgendaService {
         return this.server.patch(this.agendaUrl + '/' + id + '/multiple', params);
     }
 
+    patchCodificarTurno(params: any): Observable<IAgenda> {
+        return this.server.patch(this.agendaUrl, params);
+    }
+
     save(agenda: IAgenda): Observable<IAgenda> {
         if (agenda.id) {
             return this.server.put(this.agendaUrl + '/' + agenda.id, agenda);

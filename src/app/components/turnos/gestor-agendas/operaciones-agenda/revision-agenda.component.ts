@@ -178,7 +178,12 @@ export class RevisionAgendaComponent implements OnInit {
         if (event.query) {
             this.serviceCie10.get(query).subscribe((datos) => {
                 this.diagnosticos.forEach(elem => {
-                    let index = datos.findIndex(item => item.codigo === elem.codificacionAuditoria.codigo);
+                    let index = -1;
+                    if (this.nuevoCodigo) {
+                        index = datos.findIndex(item => item.codigo === elem.codificacionAuditoria.codigo);
+                    } else {
+                        index = datos.findIndex(item => item.codigo === elem.codificacionProfesional.codigo);
+                    }
                     if (index >= 0) {
                         datos.splice(index, 1);
                     }
@@ -366,6 +371,7 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.reparo) {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = this.reparo;
             this.showReparo = false;
+            this.reparo = {};
         }
     }
 

@@ -359,7 +359,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     defualtDiagnosticoPrestacion() {
-        debugger;
         let count = 0;
         // for (let elemento of this.prestacion.ejecucion.registros) {
             let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
