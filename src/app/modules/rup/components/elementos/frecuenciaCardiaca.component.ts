@@ -9,13 +9,15 @@ export class FrecuenciaCardiacaComponent extends RUPComponent implements OnInit 
     ngOnInit() {
         let paciente = this.paciente;
         // Observa cuando cambia la propiedad 'frecuencia cardicaca' en otro elemento RUP
-        this.conceptObserverService.observe(this.registro).subscribe((data) => {
-            // No soy yo mismo
-            if (this.registro !== data && this.registro.valor !== data.valor) {
-                this.registro.valor = data.valor;
-                this.emitChange(false);
-            }
-        });
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                // No soy yo mismo
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
+            });
+        }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
         }
