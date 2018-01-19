@@ -1,5 +1,5 @@
 <form class="plex-layout">
-    <div id="printpage">
+    <div id="printpage" *ngIf="showForm">
         <section>
             <plex-box>
                 <!--Header de listado de Turnos-->
@@ -24,6 +24,15 @@
                     </div>
                     <div class="col">
                         <label>DNI </label>{{turnoSeleccionado.paciente.documento}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <label>Obra social </label>{{obraSocial}}
+                    </div>
+                    <div class="col">
+                        <label>Código </label>{{codigoOs}}
                     </div>
                 </div>
                 <hr>
