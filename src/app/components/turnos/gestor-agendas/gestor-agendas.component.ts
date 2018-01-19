@@ -62,6 +62,7 @@ export class GestorAgendasComponent implements OnInit {
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
 
+    public showSuspendida = false;
     public showGestorAgendas = true;
     public showTurnos = false;
     public showReasignarTurno = false;
@@ -427,7 +428,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showBotonesAgenda = false;
         this.showTurnos = false;
-
+        this.showSuspendida = false; // Por default no mostramos el panel de agenda suspendida
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
             agenda = ag;
@@ -439,6 +440,9 @@ export class GestorAgendasComponent implements OnInit {
             }
 
             if (!multiple) {
+                if (ag.estado === 'suspendida') {
+                    this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
+                }
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
             } else {
@@ -469,6 +473,7 @@ export class GestorAgendasComponent implements OnInit {
                 if (this.hayAgendasSuspendidas()) {
                     // this.showGestorAgendas = false;
                     this.showReasignarTurnoAutomatico = true;
+                    //   this.showSuspenderTurnos = true;
                     // this.agendasSeleccionadas[0] = ag;
                 } else {
                     this.showTurnos = true;

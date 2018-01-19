@@ -1,0 +1,69 @@
+<!--Header de agenda-->
+<header class="header-fixed" [ngClass]="{'header-fixed-front': mostrarHeaderCompleto}">
+    <div *ngIf="showData" class="row">
+        <div class="col-12 bloques-y-turnos">
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">Turnos Suspendidos</span>
+                        <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{ estadosAgenda[agenda.estado]?.nombre }}</span>
+                    </div>
+                </legend>
+                <!--Header de la agenda-->
+                <div class="alert alert-default mb-0">
+                    <!--Header pequeño-->
+                    <div class="row">
+                        <div class="col-12">
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+                            'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</header>
+
+<div class="row lista-turnos" *ngIf="showData">
+    <div class="col-12">
+        <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
+        <!--Turnos-->
+        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
+            <table class="table">
+                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
+                    <tr>
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                            hs
+                        </th>
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
+                        </th>
+                        <th *ngIf="bloque.citarPorBloque">
+                            <span class="text-info">Citación por segmento</span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table table-striped">
+                <tbody>
+                    <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
+                        <td>
+                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                        </td>
+                        <td>
+                            <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                            </small>
+                            <small>
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.telefono !== ''">
+                                    <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                            </small>
+                        </td>
+                        <td>
+                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
+                                title="Ya reasignado" titlePosition="left">
+                                <i class="mdi mdi-account-check"></i>
+                            </small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>

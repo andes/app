@@ -143,6 +143,11 @@
                         </suspender-turno>
                     </div>
 
+                    <!-- Panel de Agenda Suspendida -->
+                    <div *ngIf="showSuspendida">
+                        <suspendida [agenda]="agenda"></suspendida>
+                    </div>
+
                     <!-- FUNCINALIDAD REASIGNACION AUTOMATICA QUEDA AFUERA DEL RELEASE DOMUYO -->
                     <!-- Panel Reasignar Turnos Automático -->
                     <!-- <div *ngIf="showReasignarTurnoAutomatico && !showSuspenderTurnos">
