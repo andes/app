@@ -145,10 +145,7 @@
                                 </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
-                                        <<<<<<< HEAD <b>Ya tiene un turno asignado</b>
-                                            =======
-                                            <b>Ya tiene un turno asignado</b>
-                                            >>>>>>> develop
+                                        <b>Ya tiene un turno asignado</b>
                                     </span>
                                     <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
                                         <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
