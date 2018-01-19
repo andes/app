@@ -174,10 +174,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     if (this.esTurnoDoble(turnoReasignado)) {
                         let patch: any = {
                             op: 'darTurnoDoble',
-                            turnos: [turnoSiguiente.id]
+                            turnos: [turnoSiguiente._id]
                         };
                         // Patchea el turno doble
-                        // this.serviceAgenda.patchMultiple(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
                         this.serviceAgenda.patch(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
                             if (agendaActualizada) {
                                 this.plex.toast('info', 'Se reasignó un turno doble');
