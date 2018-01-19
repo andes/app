@@ -170,7 +170,15 @@
                             </div>
 
                             <div class="content">
-
+                                <ng-container *ngIf="matchinBusquedaGuiada(elemento.concepto)">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <span *ngFor="let rf of matchinBusquedaGuiada(elemento.concepto)" class="badge badge-danger">
+                                                {{rf.nombre}}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </ng-container>
                                 <div class="row">
                                     <div class="col-12">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"

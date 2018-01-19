@@ -61,6 +61,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
+    public grupos_guida: any[] = [];
+
     tipoOrden: any[] = null;
     arrayTitulos: any[] = [];
 
@@ -130,6 +132,10 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.diagnosticoReadonly = true;
             }
 
+            this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+                this.grupos_guida = grupos;
+            });
+
             // Carga la información completa del paciente
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
@@ -154,7 +160,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
 
             });
-
+            this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
             this.armarRelaciones(this.registrosOrdenados);
             // this.reordenarRelaciones();
@@ -352,6 +358,17 @@ export class PrestacionValidacionComponent implements OnInit {
         elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
     }
 
+    defualtDiagnosticoPrestacion() {
+        let count = 0;
+        // for (let elemento of this.prestacion.ejecucion.registros) {
+            let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+            if (items.length === 1) {
+                items[0].esDiagnosticoPrincipal = true;
+            }
+
+        // }
+    }
+
     primeraVez(elem) {
         this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
         elem.esPrimeraVez = !elem.esPrimeraVez;
@@ -515,6 +532,19 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
+    /**
+     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * @param {IConcept} concept
+     */
+    matchinBusquedaGuiada (concept) {
+        let results = [];
+        this.grupos_guida.forEach(data => {
+            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
+                results.push(data);
+            }
+        });
+        return results;
+    }
 
 }
 
