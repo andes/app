@@ -78,7 +78,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-        debugger
         let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         let turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
         let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
@@ -102,20 +101,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     }
                 }
             }
-            // tipoTurno = turno.tipoTurno !== null ? turno.tipoTurno : 'sin-tipo';
-            // return agenda.bloques.filter(bloque => {
-            //     return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
-            //            (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
-            //            (bloque.reservadoGestion > 0  && this.turnoSeleccionado.tipoTurno === 'gestion')
-            //         );
-            // }).length > 0;
-            // if (this.agendaSeleccionada.estado === 'disponible') {
-            //     tipoTurno = 'gestion';
-            // }
-
-            // if (this.agendaSeleccionada.estado === 'publicada') {
-            //     tipoTurno = 'programado';
-            // }
         }
 
         // Creo el Turno nuevo
@@ -192,7 +177,8 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                             turnos: [turnoSiguiente.id]
                         };
                         // Patchea el turno doble
-                        this.serviceAgenda.patchMultiple(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
+                        // this.serviceAgenda.patchMultiple(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
+                        this.serviceAgenda.patch(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
                             if (agendaActualizada) {
                                 this.plex.toast('info', 'Se reasignó un turno doble');
                             }
@@ -235,16 +221,15 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             });
     }
 
-    hayTurnosDisponibles(agenda: IAgenda) {
-        console.log(this.agendaAReasignar.profesionales);
-        // Aca tendria que agregar la condicion verificando el tipo de turno de la agenda original
+    hayTurnosDisponibles(agenda: any) {
+        let profesionalOrigen = this.agendaAReasignar.profesionales.length > 0 ? this.agendaAReasignar.profesionales[0].id : null;
+        let profesionalDestino = agenda.profesionales.length > 0 ? agenda.profesionales[0]._id : null;
         return agenda.bloques.filter(bloque => {
             return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
                 (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
                     (bloque.restantesGestion > 0 && this.turnoSeleccionado.tipoTurno === 'gestion') ||
-                    (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional')
-                    // && this.datosAgenda.profesionales === agenda.profesionales)
-                    // ver caso del profesional => tiene q coincidir con el profesional de la agenda destino
+                    (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional'
+                        && profesionalOrigen && profesionalDestino && profesionalOrigen === profesionalDestino)
                 );
         }).length > 0;
     }
