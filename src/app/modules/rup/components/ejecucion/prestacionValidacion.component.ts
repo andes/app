@@ -24,7 +24,7 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
-    agenda: any;
+    idAgenda: any;
     ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -85,7 +85,7 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         this.route.params.subscribe(params => {
             let id = params['id'];
-            this.agenda = this.servicioAgenda.getById(params['agenda']).subscribe(agenda => agenda);
+            this.idAgenda = localStorage.getItem('agenda');
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
                     this.inicializar(id);
@@ -237,17 +237,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         };
 
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
-
-
-                        if (this.prestacion.ejecucion.registros.find(x => x.concepto.conceptId === '397710003')) {
-                            let cambios = {
-
-                            };
-                            this.servicioAgenda.patch(this.agenda, cambios).subscribe(noAsistio => {
-
-                            })
-                        }
-
 
                         this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                     }, (err) => {

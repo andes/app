@@ -284,7 +284,8 @@ export class PuntoInicioComponent implements OnInit {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', prestacion.id, this.agendaSeleccionada]);
+
+                    this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');
                 });
@@ -332,8 +333,9 @@ export class PuntoInicioComponent implements OnInit {
 
 
     routeTo(action, id) {
-        let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : { id: null };
-        this.router.navigate(['rup/' + action + '/', id, { agenda: agenda.id }]);
+        let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
+        localStorage.setItem('idAgenda', agenda.id);
+        this.router.navigate(['rup/' + action + '/', id]);
     }
 
 
