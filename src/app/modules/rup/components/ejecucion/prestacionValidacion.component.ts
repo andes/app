@@ -196,14 +196,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
-                        // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-                        // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-                        // if (indexDiagnosticoPrincipal > -1) {
-                        //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-                        //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-                        //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-                        // }
-
                         this.prestacion.ejecucion.registros.forEach(registro => {
                             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                                 registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
@@ -212,11 +204,14 @@ export class PrestacionValidacionComponent implements OnInit {
                         // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                         });
+
+                        // Chequear si es posible asignar turno a los planes generados
                         if (prestacion.solicitadas) {
                             this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
                         }
                         this.diagnosticoReadonly = true;
 
+                        // cargar los conceptos mas frecuentes por profesional y tipo de prestación
                         // Se copian los registros de la ejecución actual, para agregarle la frecuencia
                         let registros = this.prestacion.ejecucion.registros;
                         let registrosFrecuentes = [];
@@ -239,8 +234,13 @@ export class PrestacionValidacionComponent implements OnInit {
                             organizacion: this.prestacion.solicitud.organizacion,
                             frecuentes: registrosFrecuentes
                         };
-
                         this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
+
+                        // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
+                        if (this.prestacion.solicitud.turno) {
+                            this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                        }
+
 
                         this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                     }, (err) => {

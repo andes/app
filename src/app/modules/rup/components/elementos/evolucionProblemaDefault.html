@@ -2,9 +2,9 @@
     <div class="row">
         <div class="col-12">
             <small *ngIf="hallazgoOrigen" class="badge badge-info">
-                    Originado con la transformación de:
-                    <strong>{{ hallazgoOrigen.nombre }}</strong>
-                </small>
+                Originado con la transformación de:
+                <strong>{{ hallazgoOrigen.nombre }}</strong>
+            </small>
         </div>
     </div>
     <div class="row">&nbsp;</div>
@@ -30,8 +30,10 @@
             <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
+                        (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
+                        [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
@@ -63,7 +65,8 @@
                 {{ unaEvolucion.fechaCarga | fecha }}
             </div>
             <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
+                    (click)="cambiarEvolucion('+') "></plex-button>
                 <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
             </div>
         </div>
@@ -88,23 +91,24 @@
             <div class="row no-gutters">
                 <div class="col">
                     <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
+                    <small class="badge badge-info" *ngIf="registro.esPrimeraVez">Primera vez</small>
                     <small class="badge badge-success">
-                    <ng-container *ngIf="hallazgoHudsCompleto">
+                        <ng-container *ngIf="hallazgoHudsCompleto">
                             {{ hallazgoHudsCompleto.evoluciones[0].estado }}
-                    </ng-container>
-                    <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
+                        </ng-container>
+                        <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
                             {{ registro.valor.estado }}
-                    </ng-container>
-                    <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
-                        {{ registro.evoluciones[0].estado }}
-                </ng-container>
+                        </ng-container>
+                        <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
+                            {{ registro.evoluciones[0].estado }}
+                        </ng-container>
                     </small>
                     <small *ngIf="hallazgoOrigen" class="badge badge-info">
                         Originado con la transformación de:
                         <strong>{{ hallazgoOrigen.nombre }}</strong>
                     </small>
                     <small *ngIf="registro.transformado" class="badge badge-info">
-                       Transformado en:
+                        Transformado en:
                         <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : '' }}</strong>
                     </small>
                 </div>

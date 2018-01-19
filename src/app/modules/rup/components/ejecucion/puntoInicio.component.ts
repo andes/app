@@ -89,7 +89,7 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria'],
+                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
                 tieneTurnosAsignados: true,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
