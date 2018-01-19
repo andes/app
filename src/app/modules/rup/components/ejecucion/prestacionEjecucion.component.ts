@@ -116,6 +116,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
+            let idAgenda = params['agenda'];
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -127,7 +128,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
-                            this.router.navigate(['/rup/validacion/', this.prestacion.id]);
+                            this.router.navigate(['/rup/validacion/', this.prestacion.id, { agenda: idAgenda }]);
                         } else {
                             // Carga la información completa del paciente
                             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
