@@ -26,6 +26,9 @@
 </header>
 
 <div class="row lista-turnos" *ngIf="showData">
+    <div class="col-12 text-center">
+        <plex-button type="default" icon="mdi mdi-email-outline" (click)="notificar()" title="Enviar un mensaje al paciente"></plex-button>
+    </div>
     <div class="col-12">
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->

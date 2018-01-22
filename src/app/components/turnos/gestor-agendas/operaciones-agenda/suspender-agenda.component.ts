@@ -75,58 +75,20 @@ export class SuspenderAgendaComponent implements OnInit {
     }
 
 
-    enviarSms() {
+    notificar() {
         // Se envían SMS sólo en Producción
         // if (environment.production === true) {
-        // for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+        for (let x = 0; x < this.seleccionadosSMS.length; x++) {
 
-        //     let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-        //     let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-        //     let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
-        //     this.send(this.seleccionadosSMS[x].paciente, mensaje);
-        // };
+            let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+            let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+            let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+            this.send(this.seleccionadosSMS[x].paciente, mensaje);
+        };
         // } else {
         //     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
         // }
 
-        let turno;
-        for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-            let idTurno = this.seleccionadosSMS[x].id;
-            this.turnos.filter(function (el, index, arr) {
-                if (el.id === idTurno) {
-                    turno = el;
-                }
-            });
-
-            turno.smsVisible = true;
-            turno.smsLoader = true;
-
-            // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
-            if (this.seleccionadosSMS[x].paciente && this.seleccionadosSMS[x].paciente.id) {
-
-                this.smsService.enviarSms(this.seleccionadosSMS[x].paciente.telefono).subscribe(
-                    resultado => {
-                        turno = this.seleccionadosSMS[x];
-
-                        if (resultado === '0') {
-                            turno.smsEnviado = true;
-                            turno.smsNoEnviado = false;
-                            turno.smsLoader = false;
-                        } else {
-                            turno.smsEnviado = false;
-                            turno.smsNoEnviado = true;
-                            turno.smsLoader = false;
-                        }
-
-                    },
-                    err => {
-                        if (err) {
-                            console.log(err);
-                        }
-                    }
-                );
-            }
-        }
     }
 
     send(paciente: any, mensaje) {
