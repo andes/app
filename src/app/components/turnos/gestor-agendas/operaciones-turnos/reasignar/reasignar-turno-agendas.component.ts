@@ -88,7 +88,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         if (this.agendaSeleccionada.estado === 'publicada' && this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
             this.agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-            // Si no es del dia, chequeo el estado para definir el tipo de turno
+        // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
             if (this.agendaSeleccionada.estado === 'publicada' && bloque.restantesProgramados > 0) {
                 tipoTurno = 'programado';
