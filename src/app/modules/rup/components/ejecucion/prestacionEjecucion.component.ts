@@ -671,18 +671,19 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
 
-            if (this.prestacion.ejecucion.registros.find(x => x.concepto.conceptId === '397710003')) {
+            // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
+            if (this.idAgenda && this.prestacion.ejecucion.registros.filter(x => this.servicioPrestacion.conceptosNoConcurrio.find(y => y === x.concepto.conceptId)).length > 0) {
+
+                // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios = {
                     op: 'noAsistio',
                     turnos: [this.prestacion.solicitud.turno]
                 };
-                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe(noAsistio => {
-                    console.log(noAsistio);
-                    // this.plex.toast('info', 'Se registró que el paciente no concurrió', 'Información', 300);
-                });
+
+                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
             }
 
-            // actualizamos las prestaciones de la HUDS
+            // Actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });

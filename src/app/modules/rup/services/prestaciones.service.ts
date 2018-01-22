@@ -12,6 +12,7 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -19,6 +20,10 @@ export class PrestacionesService {
         Antecedentes_Personales_procedimientos: '1911000013100',
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
+
+    public conceptosNoConcurrio = [
+        '397710003'
+    ];
 
     public conceptosTurneables: any[];
 
