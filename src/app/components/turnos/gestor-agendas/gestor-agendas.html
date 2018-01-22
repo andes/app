@@ -138,7 +138,7 @@
                     </div>
                     <!-- Panel Suspender Turno -->
                     <div *ngIf="showSuspenderAgenda || showSuspendida">
-                        <suspenderAgenda [agenda]="agenda" (cancelaSuspenderAgenda)="cerrarSuspenderTurno($event)">
+                        <suspenderAgenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno($event)">
                         </suspenderAgenda>
                     </div>
 
