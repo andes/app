@@ -333,8 +333,10 @@ export class PuntoInicioComponent implements OnInit {
 
 
     routeTo(action, id) {
-        let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
-        localStorage.setItem('idAgenda', agenda.id);
+        if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
+            let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
+            localStorage.setItem('idAgenda', agenda.id);
+        }
         this.router.navigate(['rup/' + action + '/', id]);
     }
 
