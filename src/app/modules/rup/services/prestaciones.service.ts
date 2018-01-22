@@ -12,6 +12,7 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -19,6 +20,13 @@ export class PrestacionesService {
         Antecedentes_Personales_procedimientos: '1911000013100',
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
+
+    // Ids de conceptos que refieren que un paciente no concurrió a la consulta
+    // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
+    public conceptosNoConcurrio = [
+        '397710003',
+        '281399006'
+    ];
 
     public conceptosTurneables: any[];
 

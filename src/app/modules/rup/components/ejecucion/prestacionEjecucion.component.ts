@@ -12,6 +12,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 
@@ -23,6 +24,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
+    idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
 
     // prestacion actual en ejecucion
@@ -101,6 +103,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
         private servicioPaciente: PacienteService,
+        private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService) { }
 
     /**
@@ -119,6 +122,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
+            this.idAgenda = localStorage.getItem('idAgenda');
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -673,7 +677,19 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
 
-            // actualizamos las prestaciones de la HUDS
+            // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
+            if (this.idAgenda && this.prestacion.ejecucion.registros.filter(x => this.servicioPrestacion.conceptosNoConcurrio.find(y => y === x.concepto.conceptId)).length > 0) {
+
+                // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
+                let cambios = {
+                    op: 'noAsistio',
+                    turnos: [this.prestacion.solicitud.turno]
+                };
+
+                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+            }
+
+            // Actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });

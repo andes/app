@@ -24,6 +24,7 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+    idAgenda: any;
     ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -86,6 +87,7 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         this.route.params.subscribe(params => {
             let id = params['id'];
+            this.idAgenda = localStorage.getItem('agenda');
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
                     this.inicializar(id);
