@@ -110,23 +110,13 @@ export class PrestacionValidacionComponent implements OnInit {
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
 
-            // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-            // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-            // if (indexDiagnosticoPrincipal > -1) {
-            //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-            //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-            //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-            // }
-
             // Busca el elementoRUP que implementa esta prestación
             this.elementoRUPprestacion = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
-                        this.cargaPlan(prestacionSolicitud, conceptosTurneables);
-                    });
+                this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
+                    this.cargaPlan(prestacionSolicitud);
                 });
 
                 this.diagnosticoReadonly = true;
@@ -189,63 +179,62 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-                this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
-                    let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+                // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
+                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
-                    this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
-                        this.prestacion = prestacion;
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                    this.prestacion = prestacion;
 
-                        this.prestacion.ejecucion.registros.forEach(registro => {
-                            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
-                            }
-                        });
-                        // actualizamos las prestaciones de la HUDS
-                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        });
-
-                        // Chequear si es posible asignar turno a los planes generados
-                        if (prestacion.solicitadas) {
-                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                         }
-                        this.diagnosticoReadonly = true;
-
-                        // cargar los conceptos mas frecuentes por profesional y tipo de prestación
-                        // Se copian los registros de la ejecución actual, para agregarle la frecuencia
-                        let registros = this.prestacion.ejecucion.registros;
-                        let registrosFrecuentes = [];
-
-                        registros.forEach(x => {
-                            registrosFrecuentes.push({
-                                concepto: x.concepto,
-                                frecuencia: 1
-                            });
-                        });
-
-                        let frecuentesProfesional = {
-                            profesional: {
-                                id: this.auth.profesional.id,
-                                nombre: this.auth.profesional.nombre,
-                                apellido: this.auth.profesional.apellido,
-                                documento: this.auth.profesional.documento
-                            },
-                            tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
-                            organizacion: this.prestacion.solicitud.organizacion,
-                            frecuentes: registrosFrecuentes
-                        };
-                        this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
-
-                        // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                        if (this.prestacion.solicitud.turno) {
-                            this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
-                        }
-
-
-                        this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                     });
+                    // actualizamos las prestaciones de la HUDS
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        // Chequear si es posible asignar turno a los planes generados
+                        let prestacionesSolicitadas = this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id);
+                        if (prestacionesSolicitadas) {
+                            this.cargaPlan(prestacionesSolicitadas);
+                        }
+                    });
+
+                    this.diagnosticoReadonly = true;
+
+                    // cargar los conceptos mas frecuentes por profesional y tipo de prestación
+                    // Se copian los registros de la ejecución actual, para agregarle la frecuencia
+                    let registros = this.prestacion.ejecucion.registros;
+                    let registrosFrecuentes = [];
+
+                    registros.forEach(x => {
+                        registrosFrecuentes.push({
+                            concepto: x.concepto,
+                            frecuencia: 1
+                        });
+                    });
+
+                    let frecuentesProfesional = {
+                        profesional: {
+                            id: this.auth.profesional.id,
+                            nombre: this.auth.profesional.nombre,
+                            apellido: this.auth.profesional.apellido,
+                            documento: this.auth.profesional.documento
+                        },
+                        tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
+                        organizacion: this.prestacion.solicitud.organizacion,
+                        frecuentes: registrosFrecuentes
+                    };
+                    this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
+
+                    // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
+                    if (this.prestacion.solicitud.turno) {
+                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                    }
+
+
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
             }
         });
@@ -316,10 +305,9 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
-
+    cargaPlan(prestacionesSolicitadas) {
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
-            return conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
+            return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
@@ -361,10 +349,10 @@ export class PrestacionValidacionComponent implements OnInit {
     defualtDiagnosticoPrestacion() {
         let count = 0;
         // for (let elemento of this.prestacion.ejecucion.registros) {
-            let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
-            if (items.length === 1) {
-                items[0].esDiagnosticoPrincipal = true;
-            }
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+        if (items.length === 1) {
+            items[0].esDiagnosticoPrincipal = true;
+        }
 
         // }
     }
@@ -536,7 +524,7 @@ export class PrestacionValidacionComponent implements OnInit {
      * busca los grupos de la busqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
      */
-    matchinBusquedaGuiada (concept) {
+    matchinBusquedaGuiada(concept) {
         let results = [];
         this.grupos_guida.forEach(data => {
             if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
