@@ -224,6 +224,9 @@ import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.compo
 import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
 import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
+// REPORTES
+import { ReporteC2Component } from './components/reportes/reporteC2.component';
+
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
@@ -337,6 +340,7 @@ let RUPComponentsArray = [
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
+        ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent,
         ResumenComponent,
