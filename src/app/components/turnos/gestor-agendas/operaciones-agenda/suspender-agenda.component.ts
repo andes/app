@@ -8,11 +8,11 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 
 @Component({
-    selector: 'suspendida',
-    templateUrl: 'suspendida.html'
+    selector: 'suspenderAgenda',
+    templateUrl: 'suspenderAgenda.html'
 })
 
-export class SuspendidaComponent implements OnInit {
+export class SuspenderAgendaComponent implements OnInit {
 
 
     @Input() agenda: IAgenda;

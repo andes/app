@@ -138,8 +138,8 @@
                     </div>
                     <!-- Panel Suspender Turno -->
                     <div *ngIf="showSuspenderAgenda || showSuspendida">
-                        <suspendida [agenda]="agenda" (cancelaSuspenderAgenda)="cerrarSuspenderTurno($event)">
-                        </suspendida>
+                        <suspenderAgenda [agenda]="agenda" (cancelaSuspenderAgenda)="cerrarSuspenderTurno($event)">
+                        </suspenderAgenda>
                     </div>
 
                     <!-- FUNCINALIDAD REASIGNACION AUTOMATICA QUEDA AFUERA DEL RELEASE DOMUYO -->
