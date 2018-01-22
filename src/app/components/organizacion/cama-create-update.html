@@ -1,0 +1,43 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <div class="row">
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.sector" name="sector" label="Sector" placeholder="Sector" [autoFocus]="autofocus" required></plex-text>
+                </div>
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.habitacion" name="habitacion" label="Habitacion" placeholder="Habitacion" required></plex-text>
+                </div>
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.numero" name="numero" label="Numero" placeholder="Numero" required></plex-text>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-8">
+                    <plex-select name="servicio" (getData)="loadServicios($event)" [(ngModel)]="cama.servicio" label="Servicio">
+                    </plex-select>
+                </div>
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.tipoCama" name="tipoCama" label="Tipo de cama" placeholder="Tipo de cama" required></plex-text>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <plex-select name="equipamiento" (getData)="loadEquipamientos()" [(ngModel)]="cama.equipamiento" label="Equipamiento">
+                    </plex-select>
+                </div>
+            </div>
+
+        </plex-box>
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="cancel()">
+            </plex-button>
+            <plex-button label="Guardar" icon="content-save" type="primary" (click)="save()" validateForm="true">
+            </plex-button>
+        </div>
+    </footer>
+</form>
