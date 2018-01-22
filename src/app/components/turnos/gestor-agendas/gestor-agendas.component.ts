@@ -62,7 +62,6 @@ export class GestorAgendasComponent implements OnInit {
     agendasSeleccionadas: IAgenda[] = [];
     turnosSeleccionados: ITurno[] = [];
 
-    public showSuspendida = false;
     public showGestorAgendas = true;
     public showTurnos = false;
     public showReasignarTurno = false;
@@ -78,7 +77,7 @@ export class GestorAgendasComponent implements OnInit {
     public showRevisionAgenda = false;
     public showListadoTurnos = false;
     public showCarpetas = false;
-    public showSuspenderTurnos = false;
+    public showSuspenderAgenda = false;
     public agendas: any = [];
     public agenda: any = {};
     public modelo: any = {};
@@ -428,7 +427,7 @@ export class GestorAgendasComponent implements OnInit {
 
         this.showBotonesAgenda = false;
         this.showTurnos = false;
-        this.showSuspendida = false; // Por default no mostramos el panel de agenda suspendida
+        this.showSuspenderAgenda = false; // Por default no mostramos el panel de agenda suspendida
         this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             // Actualizo la agenda local
             agenda = ag;
@@ -441,7 +440,7 @@ export class GestorAgendasComponent implements OnInit {
 
             if (!multiple) {
                 if (ag.estado === 'suspendida') {
-                    this.showSuspendida = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
+                    this.showSuspenderAgenda = true; // Mostramos los pacientes y sus teléfonos de la agenda suspendida
                 }
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
@@ -470,14 +469,17 @@ export class GestorAgendasComponent implements OnInit {
                 this.showListadoTurnos = false;
                 this.showBotonesAgenda = true;
 
-                if (this.hayAgendasSuspendidas()) {
-                    // this.showGestorAgendas = false;
-                    this.showReasignarTurnoAutomatico = true;
-                    //   this.showSuspenderTurnos = true;
-                    // this.agendasSeleccionadas[0] = ag;
-                } else {
+                if (!this.hayAgendasSuspendidas() && !this.showSuspenderAgenda) {
                     this.showTurnos = true;
                 }
+                // if (this.hayAgendasSuspendidas() && this.showSuspenderAgenda) {
+                // this.showGestorAgendas = false;
+                // this.showReasignarTurnoAutomatico = true; -->funcion comentada queda fuera del release
+                //   this.showSuspenderTurnos = true;
+                // this.agendasSeleccionadas[0] = ag;
+                // } else {
+                //     this.showTurnos = true;
+                // }
             }
 
         });
@@ -525,7 +527,6 @@ export class GestorAgendasComponent implements OnInit {
 
     actualizarEstadoEmit(estado) {
         // Se suspende una agenda completa
-        // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
         if (estado === 'suspendida') {
             this.showTurnos = false;
             this.showEditarAgenda = false;
@@ -535,13 +536,7 @@ export class GestorAgendasComponent implements OnInit {
             this.showReasignarTurnoAgendas = false;
             this.showReasignarTurnoAutomatico = false;
             this.showRevisionAgenda = false;
-            this.showSuspenderTurnos = true;
-
-            this.agendasSeleccionadas[0].bloques.forEach(bloque => {
-                bloque.turnos.forEach(turno => {
-                    this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
-                });
-            });
+            this.showSuspenderAgenda = true;
         } else {
             this.showTurnos = false;
             this.showEditarAgenda = false;
@@ -558,15 +553,17 @@ export class GestorAgendasComponent implements OnInit {
         this.loadAgendas();
 
         this.agendasSeleccionadas = temporal;
-        this.agendasSeleccionadas.forEach((as) => {
-            if (this.agendasSeleccionadas.length === 1) {
-                this.verAgenda(as, false, null);
-            } else {
-                this.verAgenda(as, true, null);
-            }
-        });
+        if (!this.showSuspenderAgenda) {
+            this.agendasSeleccionadas.forEach((as) => {
+                if (this.agendasSeleccionadas.length === 1) {
+                    this.verAgenda(as, false, null);
+                } else {
+                    this.verAgenda(as, true, null);
+                }
+            });
+        }
 
-        if (this.agendasSeleccionadas.length === 1) {
+        if (this.agendasSeleccionadas.length === 1 && !this.showSuspenderAgenda) {
             this.showTurnos = true;
         }
     }
@@ -598,7 +595,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     cerrarSuspenderTurno() {
-        this.showSuspenderTurnos = false;
+        this.showSuspenderAgenda = false;
         this.showClonar = false;
         this.showDarTurnos = false;
         this.showEditarAgenda = false;
