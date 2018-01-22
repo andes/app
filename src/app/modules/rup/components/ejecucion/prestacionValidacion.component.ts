@@ -12,6 +12,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
+import { DocumentosService } from './../../../../services/documentos.service';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -72,7 +73,8 @@ export class PrestacionValidacionComponent implements OnInit {
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService) {
+        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
+        private servicioDocumentos: DocumentosService) {
     }
 
     ngOnInit() {
@@ -513,7 +515,10 @@ export class PrestacionValidacionComponent implements OnInit {
             x.icon = 'down';
         });
         setTimeout(() => {
-            window.print();
+            this.servicioDocumentos.descargar(window.document.body.toString()).subscribe(x => {
+                console.log(x);
+            });
+            // window.print();
         });
     }
 
