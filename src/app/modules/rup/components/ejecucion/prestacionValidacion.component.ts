@@ -229,7 +229,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                    if (this.prestacion.solicitud.turno) {
+                    if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
                         this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
                     }
 

@@ -656,8 +656,6 @@ export class PrestacionesService {
         } else {
             return null;
         }
-
-
     }
 
     /**
@@ -676,6 +674,24 @@ export class PrestacionesService {
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
+    }
+
+    /**
+     * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
+     *
+     * @param {any} prestacion prestación en ejecución
+     * @returns  {boolean}
+     * @memberof BuscadorComponent
+     */
+    public prestacionPacienteAusente(prestacion) {
+        let filtroRegistros = null;
+        filtroRegistros = prestacion.ejecucion.registros.filter(x => this.conceptosNoConcurrio.find(y => y === x.concepto.conceptId));
+        if (filtroRegistros && filtroRegistros.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**

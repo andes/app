@@ -676,10 +676,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
-            if (this.idAgenda && this.prestacion.ejecucion.registros.filter(x => this.servicioPrestacion.conceptosNoConcurrio.find(y => y === x.concepto.conceptId)).length > 0) {
-
+            if (this.idAgenda && this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios = {
                     op: 'noAsistio',
@@ -1013,7 +1011,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * busca los grupos de la busqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
      */
-    matchinBusquedaGuiada (concept) {
+    matchinBusquedaGuiada(concept) {
         let results = [];
         this.grupos_guida.forEach(data => {
             if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
