@@ -14,3 +14,10 @@ $invert: #002738;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
 $rup_colors: ( problema: $problema, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto, invert: $invert, todos: $todos, otro: $otro);
+//TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
+.badge-success,
+.badge-validada,
+.badge-info {
+    font-weight: normal !important;
+    border: 1px solid !important;
+}

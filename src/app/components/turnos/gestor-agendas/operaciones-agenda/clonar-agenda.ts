@@ -65,8 +65,9 @@ export class ClonarAgendaComponent implements OnInit {
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
         };
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
-        let agendas = this.agendas;
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            this.agendas = agendas;
+        });
         this.cargarCalendario();
     }
 
@@ -146,7 +147,7 @@ export class ClonarAgendaComponent implements OnInit {
                     let actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                    band = band && ((originalIni < actualIni && actualIni < originalFin) || (originalIni < actualFin && actualFin < originalFin));
+                    band = band && ((originalIni <= actualIni && actualIni <= originalFin) || (originalIni <= actualFin && actualFin <= originalFin));
                     return band;
                 }
             );
