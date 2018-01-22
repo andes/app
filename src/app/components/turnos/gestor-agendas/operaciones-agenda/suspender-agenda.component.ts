@@ -4,8 +4,9 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { EstadosAgenda } from './../../enums';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-
-
+import { environment } from './../../../../environment';
+import * as moment from 'moment';
+import { SmsService } from './../../../../services/turnos/sms.service';
 
 @Component({
     selector: 'suspender-agenda',
@@ -13,13 +14,15 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 })
 
 export class SuspenderAgendaComponent implements OnInit {
+    resultado: String;
+    seleccionadosSMS = [];
 
 
     @Input() agenda: IAgenda;
     @Output() returnSuspenderAgenda = new EventEmitter<boolean>();
 
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService) { }
+    constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService) { }
 
     public motivoSuspensionSelect = { select: null };
     public motivoSuspension: { id: number; nombre: string; }[];
@@ -71,4 +74,126 @@ export class SuspenderAgendaComponent implements OnInit {
         this.returnSuspenderAgenda.emit(true);
     }
 
+
+    enviarSms() {
+        // Se envían SMS sólo en Producción
+        // if (environment.production === true) {
+        // for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+
+        //     let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+        //     let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+        //     let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+        //     this.send(this.seleccionadosSMS[x].paciente, mensaje);
+        // };
+        // } else {
+        //     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+        // }
+
+        let turno;
+        for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+            let idTurno = this.seleccionadosSMS[x].id;
+            this.turnos.filter(function (el, index, arr) {
+                if (el.id === idTurno) {
+                    turno = el;
+                }
+            });
+
+            turno.smsVisible = true;
+            turno.smsLoader = true;
+
+            // Siempre chequear que exista el id de paciente, porque puede haber una key "paciente" vacía
+            if (this.seleccionadosSMS[x].paciente && this.seleccionadosSMS[x].paciente.id) {
+
+                this.smsService.enviarSms(this.seleccionadosSMS[x].paciente.telefono).subscribe(
+                    resultado => {
+                        turno = this.seleccionadosSMS[x];
+
+                        if (resultado === '0') {
+                            turno.smsEnviado = true;
+                            turno.smsNoEnviado = false;
+                            turno.smsLoader = false;
+                        } else {
+                            turno.smsEnviado = false;
+                            turno.smsNoEnviado = true;
+                            turno.smsLoader = false;
+                        }
+
+                    },
+                    err => {
+                        if (err) {
+                            console.log(err);
+                        }
+                    }
+                );
+            }
+        }
+    }
+
+    send(paciente: any, mensaje) {
+        let smsParams = {
+            telefono: paciente.telefono,
+            mensaje: mensaje,
+        };
+        this.smsService.enviarSms(smsParams).subscribe(
+            sms => {
+                if (sms === '0') {
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                } else {
+                    this.plex.toast('danger', 'ERROR: SMS no enviado');
+                }
+            },
+            err => {
+                if (err) {
+                    this.plex.toast('danger', 'ERROR: Servicio caído');
+
+                }
+            });
+    }
+
+    smsEnviado(turno) {
+        let ind = this.seleccionadosSMS.indexOf(turno);
+        if (ind >= 0) {
+            if (this.seleccionadosSMS[ind].smsEnviado === undefined) {
+                return 'no enviado';
+            } else {
+                if (this.seleccionadosSMS[ind].smsEnviado === true) {
+                    return 'enviado';
+                } else {
+                    return 'pendiente';
+                }
+            }
+        } else {
+            return 'no seleccionado';
+        }
+    }
+    seleccionarTurno(turno) {
+        let indice = this.seleccionadosSMS.indexOf(turno);
+        if (indice === -1) {
+            if (turno.paciente && turno.paciente.id) {
+                this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+            }
+        } else {
+            this.seleccionadosSMS.splice(indice, 1);
+            this.seleccionadosSMS = [...this.seleccionadosSMS];
+        }
+    }
+    estaSeleccionado(turno) {
+        if (this.seleccionadosSMS.indexOf(turno) >= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    fueEnviado(turno) {
+        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'enviado';
+    }
+
+    estaPendiente(turno) {
+        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'pendiente';
+    }
+
+    tienePaciente(turno) {
+        return turno.paciente != null && turno.paciente.id != null;
+    }
 }

@@ -46,10 +46,24 @@
             </table>
             <table class="table table-striped">
                 <tbody>
-                    <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover">
+                    <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
+                        <!-- Check de turno seleccionado -->
+                        <td>
+                            <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">
+                                <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
+                                <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
+                                <i *ngIf="estaPendiente(turno)">Pendiente</i>
+                            </span>
+                            <span *ngIf="!turno.paciente?.id">-</span>
+                            <span *ngIf="!estaSeleccionado(turno) && turno.paciente?.id">
+                                <i class="mdi mdi-checkbox-blank-outline"></i>
+                            </span>
+                        </td>
+                        <!-- Hora turno -->
                         <td>
                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                         </td>
+                        <!-- Teléfono del paciente, si tiene -->
                         <td>
                             <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
                             </small>
@@ -62,6 +76,8 @@
                                 </ng-template>
                             </small>
                         </td>
+
+                        <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
                             <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
                                 title="Ya reasignado" titlePosition="left">

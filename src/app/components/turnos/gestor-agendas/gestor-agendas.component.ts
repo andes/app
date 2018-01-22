@@ -221,12 +221,11 @@ export class GestorAgendasComponent implements OnInit {
                 let count = 0;
                 agenda.bloques.forEach(bloque => {
                     bloque.turnos.forEach(turno => {
-
                         // Cuenta la cantidad de turnos suspendidos (no reasignados) con paciente en cada agenda
-                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida')) && (!turno.reasignado || !turno.reasignado.siguiente)) {
+                        if ((turno.paciente && turno.paciente.id) && ((turno.estado === 'suspendido') || (agenda.estado === 'suspendida'))
+                            && (!turno.reasignado || !turno.reasignado.siguiente)) {
                             count++;
                         }
-
                     });
                 });
                 this.turnosSuspendidos = [...this.turnosSuspendidos, {
