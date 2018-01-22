@@ -429,6 +429,7 @@ export class GestorAgendasComponent implements OnInit {
         if (!this.showSuspenderAgenda) {
             this.showBotonesAgenda = false;
             this.showTurnos = false;
+            this.showSuspendida = false;
             this.serviceAgenda.getById(agenda.id).subscribe(ag => {
                 // Actualizo la agenda local
                 agenda = ag;
@@ -549,12 +550,10 @@ export class GestorAgendasComponent implements OnInit {
             this.showRevisionAgenda = false;
         }
 
-        let temporal = this.agendasSeleccionadas;
-
-        this.loadAgendas();
-
-        this.agendasSeleccionadas = temporal;
         if (!this.showSuspenderAgenda) {
+            let temporal = this.agendasSeleccionadas;
+            this.loadAgendas();
+            this.agendasSeleccionadas = temporal;
             this.agendasSeleccionadas.forEach((as) => {
                 if (this.agendasSeleccionadas.length === 1) {
                     this.verAgenda(as, false, null);
@@ -562,10 +561,10 @@ export class GestorAgendasComponent implements OnInit {
                     this.verAgenda(as, true, null);
                 }
             });
-        }
 
-        if (this.agendasSeleccionadas.length === 1 && !this.showSuspenderAgenda) {
-            this.showTurnos = true;
+            if (this.agendasSeleccionadas.length === 1) {
+                this.showTurnos = true;
+            }
         }
     }
 

@@ -14,7 +14,6 @@ import { EstadosAgenda } from './../../enums';
 export class SuspendidaComponent implements OnInit {
 
     @Input() agenda: IAgenda;
-    @Input() cerrar: boolean;
     @Output() cancelaSuspenderAgenda = new EventEmitter<boolean>();
 
     constructor(public plex: Plex) { }
@@ -24,31 +23,23 @@ export class SuspendidaComponent implements OnInit {
     public estadosAgenda = EstadosAgenda;
     public ag;
     public showData = false;
-    public showConfirmar = true;
+    public showConfirmar = false;
     public turnos = [];
     ngOnInit() {
-        if (this.cerrar) {
-            this.cancelar();
-        } else {
-            this.motivoSuspension = [{
-                id: 1,
-                nombre: 'edilicia'
-            }, {
-                id: 2,
-                nombre: 'profesional'
-            },
-            {
-                id: 3,
-                nombre: 'organizacion'
-            }];
-            this.motivoSuspensionSelect.select = this.motivoSuspension[1];
+        this.motivoSuspension = [{
+            id: 1,
+            nombre: 'edilicia'
+        }, {
+            id: 2,
+            nombre: 'profesional'
+        },
+        {
+            id: 3,
+            nombre: 'organizacion'
+        }];
+        this.motivoSuspensionSelect.select = this.motivoSuspension[1];
 
-            this.confirmar();
-        }
-    }
-
-    confirmar() {
-        this.showConfirmar = true;
+        (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;
     }
 
     suspenderTurno() {
@@ -61,4 +52,5 @@ export class SuspendidaComponent implements OnInit {
         this.showData = false;
         this.cancelaSuspenderAgenda.emit(true);
     }
+
 }
