@@ -137,7 +137,7 @@
                             (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                     </div>
                     <!-- Panel Suspender Turno -->
-                    <div *ngIf="showSuspenderAgenda">
+                    <div *ngIf="showSuspenderAgenda || showSuspendida">
                         <suspendida [agenda]="agenda" (cancelaSuspenderAgenda)="cerrarSuspenderTurno($event)">
                         </suspendida>
                     </div>
