@@ -53,9 +53,13 @@
                         <td>
                             <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
                             </small>
-                            <small>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.telefono !== ''">
+                            <small *ngIf="turno?.paciente?.id">
+                                <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
                                     <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                                <ng-template #noTelefono>
+                                    <br>
+                                    <span>Sin teléfono registrado</span>
+                                </ng-template>
                             </small>
                         </td>
                         <td>
