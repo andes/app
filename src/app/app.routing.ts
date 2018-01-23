@@ -61,7 +61,7 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
-  { path: 'tm/organizacion/cama/:id', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/:id/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },

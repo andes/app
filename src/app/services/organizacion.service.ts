@@ -3,6 +3,7 @@ import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
+import { ICama } from '../interfaces/ICama';
 
 @Injectable()
 export class OrganizacionService {
@@ -30,7 +31,7 @@ export class OrganizacionService {
      * Save. Si le organizacion por parametro tiene id hace put y sino hace post
      *
      * @param {IOrganizacion} organizacion guarda una organizacion
-     * @returns {Observable<IOrganizacion>} retorna un obervable
+     * @returns {Observable<IOrganizacion>} retorna un observable
      *
      * @memberof OrganizacionService
      */
@@ -59,5 +60,17 @@ export class OrganizacionService {
     enable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         establecimiento.activo = true;
         return this.save(establecimiento);
+    }
+
+    /**
+     * @param cama recibe una cama para agregar a la organizacion
+     * @param id es el id de la organizacion
+     */
+    addCama(id, cama: ICama): Observable<ICama> {
+        let dto: any = {
+            op: 'newCama',
+            newCama: cama
+        };
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas' , dto);
     }
 }

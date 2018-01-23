@@ -27,6 +27,7 @@
               <th>Complejidad</th>
               <th>Habilitado</th>
               <th>Actualizar</th>
+              <th>Agregar cama</th>
             </tr>
           </thead>
           <tbody>
@@ -41,6 +42,10 @@
               </td>
               <td>
                 <plex-button type="primary" label="Actualizar" (click)="onEdit(organizacion)">
+                </plex-button>
+              </td>
+              <td>
+                <plex-button type="primary" label="Agregar Cama" (click)="routeCama(organizacion.id)">
                 </plex-button>
               </td>
             </tr>
