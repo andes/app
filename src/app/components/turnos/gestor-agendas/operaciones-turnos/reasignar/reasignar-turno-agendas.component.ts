@@ -78,7 +78,6 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
-
         let turno = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno];
         let turnoSiguiente = this.agendasSimilares[indiceAgenda].bloques[indiceBloque].turnos[indiceTurno + 1];
         let bloque = this.agendasSimilares[indiceAgenda].bloques[indiceBloque];
@@ -86,21 +85,22 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         let tipoTurno;
 
         // Si la agenda es del día
-        if (this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
+        if (this.agendaSeleccionada.estado === 'publicada' && this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
             this.agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-            // Si no es del dia, chequeo el estado para definir el tipo de turno
+        // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
-
-            tipoTurno = turno.tipoTurno !== null ? turno.tipoTurno : 'sin-tipo';
-
-            // if (this.agendaSeleccionada.estado === 'disponible') {
-            //     tipoTurno = 'gestion';
-            // }
-
-            // if (this.agendaSeleccionada.estado === 'publicada') {
-            //     tipoTurno = 'programado';
-            // }
+            if (this.agendaSeleccionada.estado === 'publicada' && bloque.restantesProgramados > 0) {
+                tipoTurno = 'programado';
+            } else {
+                if (bloque.restantesGestion > 0 && this.turnoSeleccionado.tipoTurno === 'gestion') {
+                    tipoTurno = 'gestion';
+                } else {
+                    if (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional') {
+                        tipoTurno = 'profesional';
+                    }
+                }
+            }
         }
 
         // Creo el Turno nuevo
@@ -174,10 +174,10 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
                     if (this.esTurnoDoble(turnoReasignado)) {
                         let patch: any = {
                             op: 'darTurnoDoble',
-                            turnos: [turnoSiguiente.id]
+                            turnos: [turnoSiguiente._id]
                         };
                         // Patchea el turno doble
-                        this.serviceAgenda.patchMultiple(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
+                        this.serviceAgenda.patch(this.agendaSeleccionada._id, patch).subscribe((agendaActualizada) => {
                             if (agendaActualizada) {
                                 this.plex.toast('info', 'Se reasignó un turno doble');
                             }
@@ -220,10 +220,16 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
             });
     }
 
-    hayTurnosDisponibles(agenda: IAgenda) {
+    hayTurnosDisponibles(agenda: any) {
+        let profesionalOrigen = this.agendaAReasignar.profesionales.length > 0 ? this.agendaAReasignar.profesionales[0].id : null;
+        let profesionalDestino = agenda.profesionales.length > 0 ? agenda.profesionales[0]._id : null;
         return agenda.bloques.filter(bloque => {
             return (bloque.restantesDelDia > 0 && moment(bloque.horaInicio).isSame(this.hoy, 'day')) ||
-                   (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day'));
+                (bloque.restantesProgramados > 0 && moment(bloque.horaInicio).isAfter(this.hoy, 'day') ||
+                    (bloque.restantesGestion > 0 && this.turnoSeleccionado.tipoTurno === 'gestion') ||
+                    (bloque.restantesProfesional > 0 && this.turnoSeleccionado.tipoTurno === 'profesional'
+                        && profesionalOrigen && profesionalDestino && profesionalOrigen === profesionalDestino)
+                );
         }).length > 0;
     }
 

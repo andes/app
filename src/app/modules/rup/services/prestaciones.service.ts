@@ -12,6 +12,7 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -19,6 +20,13 @@ export class PrestacionesService {
         Antecedentes_Personales_procedimientos: '1911000013100',
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
+
+    // Ids de conceptos que refieren que un paciente no concurrió a la consulta
+    // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
+    public conceptosNoConcurrio = [
+        '397710003',
+        '281399006'
+    ];
 
     public conceptosTurneables: any[];
 
@@ -559,8 +567,7 @@ export class PrestacionesService {
         return this.post(prestacion);
     }
 
-    validarPrestacion(prestacion, planes, conceptosTurneables): Observable<any> {
-
+    validarPrestacion(prestacion, planes): Observable<any> {
         let planesCrear = [];
         if (planes.length) {
 
@@ -580,7 +587,7 @@ export class PrestacionesService {
 
                     // Controlemos que se trata de una prestación turneable.
                     // Solo creamos prestaciones pendiente para conceptos turneables
-                    let existeConcepto = conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
@@ -635,6 +642,23 @@ export class PrestacionesService {
     }
 
     /**
+     * Devuelve un listado de prestaciones planificadas desde una prestación origen
+     *
+     * @param {any} idPrestacion id de la prestacion origen
+     * @returns  {array} listado de prestaciones planificadas
+     * @memberof BuscadorComponent
+     */
+    public getPlanes(idPrestacion, idPaciente) {
+        let prestacionPlanes = [];
+        if (this.cache[idPaciente]) {
+            prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+            return prestacionPlanes;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Devuelve si un concepto es turneable o no.
      * Se fija en la variable conceptosTurneables inicializada en OnInit
      *
@@ -650,6 +674,24 @@ export class PrestacionesService {
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
+    }
+
+    /**
+     * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
+     *
+     * @param {any} prestacion prestación en ejecución
+     * @returns  {boolean}
+     * @memberof BuscadorComponent
+     */
+    public prestacionPacienteAusente(prestacion) {
+        let filtroRegistros = null;
+        filtroRegistros = prestacion.ejecucion.registros.filter(x => this.conceptosNoConcurrio.find(y => y === x.concepto.conceptId));
+        if (filtroRegistros && filtroRegistros.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     /**
