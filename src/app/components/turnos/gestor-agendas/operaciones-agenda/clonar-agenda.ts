@@ -24,7 +24,7 @@ export class ClonarAgendaComponent implements OnInit {
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
     public autorizado = false;
-    public agendasFiltradas: any[] = []; // Las agendas que hay en el día
+    public agendasFiltradas: any[] = []; // Las agendas que hay en el día seleccionado para clonar
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
@@ -206,30 +206,11 @@ export class ClonarAgendaComponent implements OnInit {
                 }
                 let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
                 return band;
+            } else {
+                return true; // para no descartar las agendas detectadas con conflicto previamente.
             }
         });
 
-        // this.agendasFiltradas.forEach((agenda, index) => {
-        //     if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
-        //         if (agenda.profesionales.length > 0) {
-        //             if (agenda.profesionales.map(elem => { return elem.id; }).some
-        //                 (v => { return this.agenda.profesionales.map(elem => { return elem.id; }).includes(v); })) {
-        //                 agenda.conflictoProfesional = 1;
-        //                 dia.estado = 'conflicto';
-        //             }
-        //         }
-        //         if (agenda.espacioFisico && this.agenda.espacioFisico) {
-        //             if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
-        //                 agenda.conflictoEF = 1;
-        //                 dia.estado = 'conflicto';
-        //             }
-        //         }
-        //         if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
-        //             this.agendasFiltradas.splice(index, 1);
-        //             this.seleccionados.push(dia.fecha.getTime());
-        //         }
-        //     }
-        // });
     }
 
     redirect(pagina: string) {
