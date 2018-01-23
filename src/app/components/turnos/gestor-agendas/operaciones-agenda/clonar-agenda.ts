@@ -24,13 +24,19 @@ export class ClonarAgendaComponent implements OnInit {
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
     public autorizado = false;
-    public agendasFiltradas: any[] = []; // Las agendas que hay en el día seleccionado para clonar
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
     private _agenda: any;
     private estado: Estado = 'noSeleccionado';
+    /**
+     * Días seleccionados del calendario para la clonación. SIN CONFLICTOS
+     * @private
+     * @type {any[]}
+     * @memberof ClonarAgendaComponent
+     */
     private seleccionados: any[] = [];
+    public agendasFiltradas: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
@@ -156,6 +162,7 @@ export class ClonarAgendaComponent implements OnInit {
                 if (filtro.length === 0) {
                     this.seleccionados.push(dia.fecha.getTime());
                 } else {
+                    // contatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         if (aux.indexOf(fil.id) < 0) {
@@ -170,7 +177,7 @@ export class ClonarAgendaComponent implements OnInit {
                 }
             } else {
                 if (this.original !== true) {
-                    if (dia.estado !== 'conflicto') { // Agendas en conflicto nunca llegan al array seleccionados
+                    if (dia.estado !== 'conflicto') { // Días con agendas en conflicto nunca llegan al array seleccionados
                         let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                         this.seleccionados.splice(i, 1);
                     }
@@ -188,9 +195,8 @@ export class ClonarAgendaComponent implements OnInit {
     }
     // Verifica si existen conflictos con las agendas existentes en ese dia
     /**
-     * Para cada día seleccionado en el calendario, verifica entre las agendas filtradas
-     * si existen agendas en él que provoquen conflictos al clonar.
-     * 
+     * Verifica entre las agendas filtradas si existen conflictos de profesional o espacio físico.
+     *
      * @param {*} dia
      * @memberof ClonarAgendaComponent
      */
