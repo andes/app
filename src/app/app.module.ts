@@ -236,6 +236,9 @@ import { routing, appRoutingProviders } from './app.routing';
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
+// Mapa de camas
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -356,7 +359,9 @@ let RUPComponentsArray = [
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
-        TabComponent
+        TabComponent,
+        MapaDeCamasComponent,
+        CamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

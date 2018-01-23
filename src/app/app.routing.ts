@@ -59,6 +59,7 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -95,6 +96,9 @@ const appRoutes: Routes = [
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
+
+  // Mapa de camas
+  { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
