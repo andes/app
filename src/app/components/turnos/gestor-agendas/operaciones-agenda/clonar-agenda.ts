@@ -187,7 +187,13 @@ export class ClonarAgendaComponent implements OnInit {
         }
     }
     // Verifica si existen conflictos con las agendas existentes en ese dia
-    // no se asignan agendas en conflicto al array "seleccionados"
+    /**
+     * Para cada día seleccionado en el calendario, verifica entre las agendas filtradas
+     * si existen agendas en él que provoquen conflictos al clonar.
+     * 
+     * @param {*} dia
+     * @memberof ClonarAgendaComponent
+     */
     verificarConflictos(dia: any) {
         this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
@@ -207,7 +213,7 @@ export class ClonarAgendaComponent implements OnInit {
                 let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
                 return band;
             } else {
-                return true; // para no descartar las agendas detectadas con conflicto previamente.
+                return true; // para no descartar las agendas ya existentes en la colección;
             }
         });
 
