@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
+import { Plex, SelectEvent } from '@andes/plex';
 
 @Component({
     selector: 'app-mapa-de-camas',
@@ -12,8 +12,33 @@ import { Plex } from '@andes/plex';
 })
 export class MapaDeCamasComponent implements OnInit {
 
+    // listado de camas de la organizacion
     public camas = [];
-    public estadoServicio;
+    // copia de las camas
+    public camasCopy = [];
+
+    // estado de las camas de la organizacion
+    public estadoServicio: any = {};
+
+    // filtros para el mapa de cama
+    public filtros: any = {
+        camas: null,
+        habitacion: null,
+        oxigeno: false,
+        desinfectada: null,
+        tipoCama: false,
+        nombre: null,
+        estado: null,
+        servicio: null,
+        sector: null,
+        opciones: {
+            sectores: [],
+            habitaciones: [],
+            estados: []
+        }
+    };
+
+    //
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router) { }
@@ -25,7 +50,13 @@ export class MapaDeCamasComponent implements OnInit {
         this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe( camas => {
             this.camas = camas;
 
+            // creamos el estado del servicio. TODO: ¿verificar por servicio en el que está el profesional logueado?
             this.estadoServicio = this.getEstadoServicio(camas);
+            // creamos copia para reestablecer luego de los filtros
+            this.camasCopy = JSON.parse(JSON.stringify(this.camas));
+
+            // seteamos las opciones para los filtros del mapa de camas
+            this.setOpcionesFiltros();
         }, (err) => {
             if (err) {
                 this.plex.info('danger', err, 'Error');
@@ -102,7 +133,7 @@ export class MapaDeCamasComponent implements OnInit {
                     'refsetIds': []
                 },
                 'id': '5a675108ff89743ab80d1484',
-                'paciente':  {
+                'paciente': {
                     'id': '5a675108ff89743ab80d1455',
                     'nombre': 'Manuel',
                     'apellido': 'Urbano Stordeur',
@@ -133,44 +164,113 @@ export class MapaDeCamasComponent implements OnInit {
 
         ];
 
+        console.log(this.auth);
         this.estadoServicio = this.getEstadoServicio(this.camas);
+        this.camasCopy = JSON.parse(JSON.stringify(this.camas));
+
+        this.setOpcionesFiltros();
+
+        console.log(this.filtros.opciones);
+    }
+
+    /**
+     * Limpiamos los filtros del mapa de camas
+     *
+     * @memberof MapaDeCamasComponent
+     */
+    public limpiarFiltros() {
+        this.filtros.habitacion = null;
+        this.filtros.oxigeno = false;
+        this.filtros.desinfectada = false;
+        this.filtros.tipoCama = false;
+        this.filtros.nombre = null;
+        this.filtros.estado = null;
+        this.filtros.servicio = null;
+        this.filtros.sector = null;
+
+        this.camas = this.camasCopy;
+    }
+
+    public setOpcionesFiltros() {
+        if (!this.camas) {
+            return;
+        }
+
+        // asignamos los sectores para los filtros
+        this.camas.forEach(cama => {
+            if (cama.sector && this.filtros.opciones.sectores.indexOf(cama.sector) === -1) {
+                this.filtros.opciones.sectores.push({'id' : cama.sector, 'nombre': cama.sector});
+            }
+
+            if (cama.habitacion && this.filtros.opciones.habitaciones.indexOf(cama.habitacion) === -1) {
+                this.filtros.opciones.habitaciones.push({'id' : cama.habitacion, 'nombre': cama.habitacion});
+            }
+
+            if (cama.ultimoEstado && this.filtros.opciones.estados.indexOf(cama.ultimoEstado.estado) === -1) {
+                this.filtros.opciones.estados.push({'id' : cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado});
+            }
+
+            // TODO: Definir filtros para tipo de cama, oxigeno, etc.
+        });
+    }
+
+    public filtrar() {
+        const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
+
+        let _desinfectada = (this.filtros.desinfectada) ? false : null;
+
+        this.camas = this.camasCopy.filter( (i) => {
+
+            return (
+                // (!this.filtros.oxigeno || (this.filtros.oxigeno && i.oxigeno)) &&
+
+                // (_desinfectada === null || (!_desinfectada && !i.desinfectada)) &&
+                // (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama === this.filtros.tipoCama)) &&
+                (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
+                (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado)) &&
+                (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
+                (!this.filtros.servicio || !this.filtros.servicio.id || (this.filtros.servicio && i.servicio && i.servicio.id === this.filtros.servicio.id)) &&
+                (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
+
+            );
+        });
     }
 
     public getEstadoServicio(camas) {
-        const ocupadas = camas.filter(function(i){
+        const ocupadas = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'ocupada');
         });
 
         // ocupacion
-        const bloqueadas = camas.filter(function(i){
+        const bloqueadas = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'bloqueada');
         });
 
-        const descontaminacion = camas.filter(function(i){
+        const descontaminacion = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'desocupada' && !i.desinfectada);
         });
 
-        const reparacion = camas.filter(function(i){
+        const reparacion = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'reparacion');
         });
 
         // disponibles
-        const desocupadas = camas.filter(function(i){
+        const desocupadas = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'desocupada');
         });
 
-        const desocupadasOxigeno = camas.filter(function(i){
+        const desocupadasOxigeno = camas.filter(function (i) {
             return (i.ultimoEstado.estado === 'desocupada' && i.oxigeno);
         });
 
         return {
-            'total' : camas.length,
-            'ocupadas' : ocupadas.length,
-            'desocupadas' : desocupadas.length,
-            'descontaminacion' : descontaminacion.length,
-            'reparacion' : reparacion.length,
-            'bloqueadas' : bloqueadas.length,
-            'desocupadasOxigeno' : desocupadasOxigeno.length
+            'total': camas.length,
+            'ocupadas': ocupadas.length,
+            'desocupadas': desocupadas.length,
+            'descontaminacion': descontaminacion.length,
+            'reparacion': reparacion.length,
+            'bloqueadas': bloqueadas.length,
+            'desocupadasOxigeno': desocupadasOxigeno.length
         };
     }
 }
