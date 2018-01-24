@@ -29,7 +29,12 @@ export class TurnoService {
 
     put(turno: any): Observable<any> {
         if (turno.idAgenda) {
-            return this.server.put(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno);
+            return this.server.put(this.turnoUrl + '/turno/', turno);
         }
     }
+
+    patch(data: any): Observable<any[]> {
+        return this.server.get(this.turnoUrl + '/turno/' + data.idTurno + data.idBloque + data.idAgenda, data);
+    }
+
 }

@@ -50,18 +50,6 @@
             <table class="table table-striped">
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
-                        <!-- Check de turno seleccionado -->
-                        <td>
-                            <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">
-                                <i *ngIf="turno.paciente?.id && !fueEnviado(turno) && !estaPendiente(turno)" class="mdi mdi-checkbox-marked"></i>
-                                <i *ngIf="fueEnviado(turno)" class="mdi mdi-check-circle text-success"></i>
-                                <i *ngIf="estaPendiente(turno)">Pendiente</i>
-                            </span>
-                            <span *ngIf="!turno.paciente?.id">-</span>
-                            <span *ngIf="!estaSeleccionado(turno) && turno.paciente?.id">
-                                <i class="mdi mdi-checkbox-blank-outline"></i>
-                            </span>
-                        </td>
                         <!-- Hora turno -->
                         <td>
                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
@@ -78,6 +66,13 @@
                                     <span>Sin teléfono registrado</span>
                                 </ng-template>
                             </small>
+                        </td>
+                        <td>
+                            <span *ngIf="turno.avisoSuspension">
+                                <i *ngIf="turno.avisoSuspension === 'no enviado'" class="mdi mdi-message-alert text-danger" title="SMS no enviado"></i>
+                                <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
+                                <i *ngIf="turno.avisoSuspension ==='pendiente'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
+                            </span>
                         </td>
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->

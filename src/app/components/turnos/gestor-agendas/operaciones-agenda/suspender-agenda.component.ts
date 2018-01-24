@@ -7,7 +7,7 @@ import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { environment } from './../../../../environment';
 import * as moment from 'moment';
 import { SmsService } from './../../../../services/turnos/sms.service';
-
+import { TurnoService } from './../../../../services/turnos/turno.service'
 @Component({
     selector: 'suspender-agenda',
     templateUrl: 'suspender-agenda.html'
@@ -22,7 +22,7 @@ export class SuspenderAgendaComponent implements OnInit {
     @Output() returnSuspenderAgenda = new EventEmitter<boolean>();
 
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService) { }
+    constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
 
     public motivoSuspensionSelect = { select: null };
     public motivoSuspension: { id: number; nombre: string; }[];
@@ -83,7 +83,8 @@ export class SuspenderAgendaComponent implements OnInit {
             let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
             let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
             let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
-            this.send(this.seleccionadosSMS[x].paciente, mensaje);
+            this.seleccionadosSMS[x].smsEnviado = 'pendiente';
+            this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
         };
         // } else {
         //     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
@@ -91,23 +92,38 @@ export class SuspenderAgendaComponent implements OnInit {
 
     }
 
-    send(paciente: any, mensaje) {
+    send(turno: any, mensaje) {
         let smsParams = {
-            telefono: paciente.telefono,
+            telefono: turno.paciente.telefono,
             mensaje: mensaje,
         };
+        let idBloque;
+        this.agenda.bloques.forEach(element => {
+            let indice = element.turnos.findIndex(t => {
+                return (t.id === turno.id);
+            });
+            if (indice !== -1) {
+                idBloque = element.id;
+            }
+        });
         this.smsService.enviarSms(smsParams).subscribe(
             sms => {
                 if (sms === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
-                } else {
-                    this.plex.toast('danger', 'ERROR: SMS no enviado');
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + turno.paciente.nombreCompleto);
+                    let data = {
+                        idAgenda: this.agenda.id,
+                        idBloque: idBloque,
+                        idTurno: turno.id,
+                        avisoSuspension: 'enviado'
+                    };
+                    this.turnosService.patch(data).subscribe(resultado => {
+                        console.log(resultado);
+                    });
                 }
             },
             err => {
                 if (err) {
                     this.plex.toast('danger', 'ERROR: Servicio caído');
-
                 }
             });
     }
@@ -145,14 +161,6 @@ export class SuspenderAgendaComponent implements OnInit {
         } else {
             return false;
         }
-    }
-
-    fueEnviado(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'enviado';
-    }
-
-    estaPendiente(turno) {
-        return this.estaSeleccionado(turno) && turno.paciente && turno.paciente.id && this.smsEnviado(turno) === 'pendiente';
     }
 
     tienePaciente(turno) {
