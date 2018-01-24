@@ -26,6 +26,10 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
+    getCamas(id: String): Observable<ICama> {
+        return this.server.get(this.organizacionUrl + '/' + id + '/camas', null);
+    }
+
 
     /**
      * Save. Si le organizacion por parametro tiene id hace put y sino hace post
@@ -73,4 +77,5 @@ export class OrganizacionService {
         };
         return this.server.patch(this.organizacionUrl + '/' + id + '/camas' , dto);
     }
+
 }
