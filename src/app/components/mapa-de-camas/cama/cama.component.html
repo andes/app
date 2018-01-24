@@ -106,8 +106,9 @@
                 </div>
 
                 <div class="col-6 float-right text-right">
+                    <!-- plex dropdown agrega por default el recuadro, quitar por css -->
                     <button class="btn btn-default " *ngIf="cama?.paciente?.id">
-                        <i plex-actions="actions"></i>
+                        <plex-dropdown label="" icon="dots-vertical" [items]="opcionesDropdown"></plex-dropdown>
                     </button>
 
                     <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(cama.idInternacion)" *ngIf="cama.idInternacion">

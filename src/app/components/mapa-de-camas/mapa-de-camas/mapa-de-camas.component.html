@@ -8,8 +8,10 @@
                         <div class="page-title float-left">Mapa de camas</div>
                     </div>
 
+                    <hr />
+
                     <div class="row">
-                       <div class="col-2">
+                        <div class="col-2">
                             <h4>
                                 Estado del servicio >
                             </h4>
@@ -66,86 +68,96 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-lg-12">
+                    <hr />
+
+
+                    <div class="row" *ngIf="camas">
+                        <div class="col-lg-1">
                             <h5>
                                 <i class="fa fa-filter"> </i> Filtros
                             </h5>
                         </div>
+                        <div class="col-lg-11" *ngIf="camas">
+                            <div class="row">
+
+                                <div class="col-sm-3 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <label for="filtros-nombre">Nombre paciente / N. documento</label>
+                                        <input type="text" class="form-control" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento" (keyup)="filtrar()" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-2 col-lg-2 col-xl-1">
+                                    <plex-select [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()"></plex-select>
+                                </div>
+
+                                <!--
+                                <div class="col-sm-3 col-lg-3 col-xl-2">
+                                    <div class="form-group">
+                                        <select label="Servicio" [(ngModel)]="filter.servicio" ="(item.nombre) for item in servicios"></select>
+                                    </div>
+                                </div>
+                                -->
+
+                                <div class="col-sm-2 col-lg-2 col-xl-1">
+                                    <plex-select [(ngModel)]="filtros.habitacion" name="habitacion" [data]="filtros.opciones.habitaciones" label="Habitación" (change)="filtrar()"></plex-select>
+                                </div>
+
+                                <!--
+                                <div class="col-sm-2 col-lg-2 col-xl-1">
+                                    <div class="form-group">
+                                        <select [(ngModel)]="filter.tipoCama" id="filter-tipo-cama" class="form-control" label="Tipo de cama" >
+                                            <option value="">Todas</option>
+                                            <option ng-repeat="tipoCama in tipoCamas" value="{{tipoCama}}">{{tipoCama}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                -->
+
+                                <div class="col-sm-2 col-lg-3 col-xl-1">
+                                    <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"></plex-select>
+                                </div>
+
+                                <!--
+                                <div class="col-sm-2 col-lg-2 col-xl-1">
+                                    <div class="form-group">
+                                        <br/>
+                                        <input type="checkbox" [(ngModel)]="filter.desinfectada" label="Sin desinfectar" ="checkbox">
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-2 col-lg-2 col-xl-1">
+                                    <div class="form-group">
+                                        <br/>
+                                        <input type="checkbox" [(ngModel)]="filter.oxigeno" label="Oxígeno" ="checkbox">
+                                    </div>
+                                </div>
+                                -->
+
+                                <div class="col-sm-3 col-lg-3 col-xl-2">
+                                    <div class="form-group mt-3">
+                                        <br />
+                                        <button type="button" class="btn btn-primary" (click)="limpiarFiltros()">
+                                            Limpiar filtros
+                                        </button>
+
+                                        <button class="btn btn-default layout-view tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}" title="Vista de grilla">
+                                            <i class="mdi mdi-grid"></i>
+                                        </button>
+
+                                        <button class="btn btn-default layout-view tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}" title="Vista de lista">
+                                            <i class="mdi mdi-view-list"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
                     </div>
 
-                    <div class="row" *ngIf="camas">
-                        <div class="col-sm-3 col-lg-3 col-xl-2">
-                            <div class="form-group">
-                                <label for="filtros-nombre">Nombre paciente / N. documento</label>
-                                <input type="text" class="form-control" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento" (keyup)="filtrar()" />
-                            </div>
-                        </div>
-                        <div class="col-sm-2 col-lg-2 col-xl-1">
-                            <plex-select [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()"></plex-select>
-                        </div>
 
-                        <!--
-                        <div class="col-sm-3 col-lg-3 col-xl-2">
-                            <div class="form-group">
-                                <select label="Servicio" [(ngModel)]="filter.servicio" ="(item.nombre) for item in servicios"></select>
-                            </div>
-                        </div>
-                        -->
-
-                        <div class="col-sm-2 col-lg-2 col-xl-1">
-                            <plex-select [(ngModel)]="filtros.habitacion" name="habitacion" [data]="filtros.opciones.habitaciones" label="Habitación" (change)="filtrar()"></plex-select>
-                        </div>
-
-                        <!--
-                        <div class="col-sm-2 col-lg-2 col-xl-1">
-                            <div class="form-group">
-                                <select [(ngModel)]="filter.tipoCama" id="filter-tipo-cama" class="form-control" label="Tipo de cama" >
-                                    <option value="">Todas</option>
-                                    <option ng-repeat="tipoCama in tipoCamas" value="{{tipoCama}}">{{tipoCama}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        -->
-
-                        <div class="col-sm-2 col-lg-3 col-xl-1">
-                            <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"></plex-select>
-                        </div>
-
-                        <!--
-                        <div class="col-sm-2 col-lg-2 col-xl-1">
-                            <div class="form-group">
-                                <br/>
-                                <input type="checkbox" [(ngModel)]="filter.desinfectada" label="Sin desinfectar" ="checkbox">
-                            </div>
-                        </div>
-
-                        <div class="col-sm-2 col-lg-2 col-xl-1">
-                            <div class="form-group">
-                                <br/>
-                                <input type="checkbox" [(ngModel)]="filter.oxigeno" label="Oxígeno" ="checkbox">
-                            </div>
-                        </div>
-                        -->
-
-                        <div class="col-sm-3 col-lg-3 col-xl-2">
-                            <div class="form-group mt-3">
-                                <br />
-                                <button type="button" class="btn btn-primary" (click)="limpiarFiltros()">
-                                    Limpiar filtros
-                                </button>
-
-                                <button class="btn btn-default layout-view tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}" title="Vista de grilla">
-                                    <i class="mdi mdi-grid"></i>
-                                </button>
-
-                                <button class="btn btn-default layout-view tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}" title="Vista de lista">
-                                    <i class="mdi mdi-view-list"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                    </div>
+                    <hr />
                 </header>
 
                 <div class="row" >

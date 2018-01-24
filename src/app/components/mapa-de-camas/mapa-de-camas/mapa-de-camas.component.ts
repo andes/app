@@ -38,8 +38,6 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    //
-
     constructor(private auth: Auth, private plex: Plex,
         private router: Router) { }
 
@@ -164,13 +162,10 @@ export class MapaDeCamasComponent implements OnInit {
 
         ];
 
-        console.log(this.auth);
         this.estadoServicio = this.getEstadoServicio(this.camas);
         this.camasCopy = JSON.parse(JSON.stringify(this.camas));
 
         this.setOpcionesFiltros();
-
-        console.log(this.filtros.opciones);
     }
 
     /**

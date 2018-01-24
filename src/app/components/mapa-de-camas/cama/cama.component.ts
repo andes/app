@@ -12,9 +12,35 @@ export class CamaComponent implements OnInit {
 
     @Input() cama: any;
 
+    // opciones dropdown cama internada
+    public opcionesDropdown: any = [];
+
     constructor(private plex: Plex) { }
 
     ngOnInit() {
+        this.opcionesDropdown = [
+            {
+                label: 'Valoración inicial enfermería',
+                handler: (() => {
+                    // this.verValoracionInicial(scope.cama.idInternacion);
+                    alert('TODO');
+                })
+            },
+            {
+                label: 'Valoración inicial médica',
+                handler: (() => {
+                    // this.verValoracionMedica(scope.cama.idInternacion);
+                    alert('TODO');
+                })
+            },
+            {
+                label: 'Desocupar cama',
+                handler: (() => {
+                    // this.egresarPaciente(scope.cama);
+                    alert('TODO');
+                })
+            }
+        ];
     }
 
     public cambiarEstado(cama, estado) {
