@@ -45,6 +45,7 @@ import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
+import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -322,7 +323,7 @@ let RUPComponentsArray = [
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
