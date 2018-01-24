@@ -165,12 +165,12 @@
                         </div>
                         <h4 class="text-center">Última evolución</h4>
 
-                        <span *ngIf="cama.ultimaEvolucion.texto.length >= 80">
-                            <!-- {{cama.ultimaEvolucion.texto | limitTo: 80}} -->
+                        <span *ngIf="cama?.ultimaEvolucion?.texto.length >= 80">
+                            <!-- {{cama?.ultimaEvolucion?.texto | limitTo: 80}} -->
                             ...
                         </span>
-                        <span *ngIf="cama.ultimaEvolucion.texto.length < 80">
-                            <!-- {{cama.ultimaEvolucion.texto}} -->
+                        <span *ngIf="cama?.ultimaEvolucion?.texto.length < 80">
+                            <!-- {{cama?.ultimaEvolucion?.texto}} -->
                         </span>
 
                         <p *ngIf="cama.ultimaEvolucion.createdBy">
@@ -260,13 +260,15 @@
 
             <!-- Enviar a reparar una cama -->
             <div *ngIf="cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'desocupada'">
-                <form name="reparacionForm">
+                <form #formReparacion="ngForm">
                     <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
 
                         <div class="main">
                             <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
                             <div class="form-group">
-                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" plex required ng-model="cama.$motivo"></textarea>
+                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" required [(ngModel)]="cama.$motivo" name="motivoReparacion" id="motivoReparacion" #motivoReparacion="ngModel"></textarea>
+
+                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique motivo por el cual envía a reparación la cama</div>
                             </div>
 
                         </div>
@@ -284,7 +286,7 @@
 
                         <div class="col-6">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success tips form-control" title="Enviar a reparar" plex-submit="reparacionForm.$valid && cambiarEstado(cama, 'reparacion')">
+                                <button type="submit" class="btn btn-success tips form-control" title="Enviar a reparar" (click)="reparacionForm.$valid && cambiarEstado(cama, 'reparacion')"  [disabled]="!formReparacion.form.valid">
                                     <i class="mdi mdi-check"></i>
                                 </button>
                             </div>
@@ -296,39 +298,41 @@
 
             <!-- Confirmar reparacion completa de una cama -->
             <div *ngIf="cama.$action && cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'reparacion'">
-                <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
-                    <div class="main">
-                        <p class="text-center">
-                            ¿La cama ha sido reparada?
-                        </p>
-                    </div>
-                </div>
-                <div class="footer with-buttons row">
-
-                    <div class="col-6">
-                        <div class="form-group">
-
-                            <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
-                                <i class="mdi mdi-close"></i>
-                            </button>
+                <form #formReparada="ngForm">
+                    <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+                        <div class="main">
+                            <p class="text-center">
+                                ¿La cama ha sido reparada?
+                            </p>
                         </div>
                     </div>
+                    <div class="footer with-buttons row">
 
-                    <div class="col-6">
-                        <div class="form-group">
-                            <button class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
-                                <i class="mdi mdi-check"></i>
-                            </button>
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
             <!-- Enviar a desinfectar una cama -->
             <div *ngIf="cama.$action == 'desinfectar' && cama.ultimoEstado.estado == 'desocupada'">
                 <div class="content" [ngClass]="{'desinfectar': cama.$action == 'desinfectar' }">
-                    <form name="desinfeccionForm">
+                    <form #desinfeccionForm="ngForm">
 
                         <div class="main">
                             ¿Confirmar desinfección de cama?
@@ -348,7 +352,7 @@
 
                     <div class="col-6">
                         <div class="form-group">
-                            <button class="btn btn-success tipos form-control" title="Si" (click)="desinfeccionForm.$valid && cambiarEstado(cama, 'desinfectada')">
+                            <button type="submit" class="btn btn-success tipos form-control" title="Si" (click)="cambiarEstado(cama, 'desinfectada')">
                                 <i class="mdi mdi-check"></i>
                             </button>
                         </div>
@@ -357,14 +361,17 @@
             </div>
 
             <!-- Bloquear una cama -->
+
             <div *ngIf="cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'desocupada'">
-                <form name="bloquearForm">
+                <form #formBloqueo="ngForm">
                     <div class="content" [ngClass]="{'bloquear': cama.$action == 'bloquear' }">
 
                         <div class="main">
                             <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
                             <div class="form-group">
-                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual bloquea la cama?" plex required ng-model="cama.$motivo"></textarea>
+                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual bloquea la cama?" required [(ngModel)]="cama.$motivo" name="motivoBloqueo" id="motivoBloqueo" #motivoBloqueo="ngModel"></textarea>
+
+                                <div [hidden]="motivoBloqueo.valid || (motivoBloqueo.pristine && !formBloqueo.submitted)" class="alert alert-danger">Indique motivo por el cual bloquea la cama</div>
                             </div>
 
                         </div>
@@ -382,7 +389,7 @@
 
                         <div class="col-6">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success tips form-control" title="Bloquear cama" plex-submit="bloquearForm.$valid && cambiarEstado(cama, 'bloqueada')">
+                                <button type="submit" class="btn btn-success tips form-control" title="Bloquear cama" (click)="formBloqueo.valid && cambiarEstado(cama, 'bloqueada')" [disabled]="!formBloqueo.form.valid">
                                     <i class="mdi mdi-check"></i>
                                 </button>
                             </div>
@@ -394,33 +401,35 @@
 
             <!-- Confirmar desbloqueo de una cama -->
             <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
-                <div class="content" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
-                    <div class="main">
-                        <p class="text-center">
-                            ¿Desbloquear la cama?
-                        </p>
-                    </div>
-                </div>
-                <div class="footer with-buttons row">
-
-                    <div class="col-6">
-                        <div class="form-group">
-
-                            <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
-                                <i class="mdi mdi-close"></i>
-                            </button>
+                <form #formDesbloqueo="ngForm">
+                    <div class="content" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
+                        <div class="main">
+                            <p class="text-center">
+                                ¿Desbloquear la cama?
+                            </p>
                         </div>
                     </div>
+                    <div class="footer with-buttons row">
 
-                    <div class="col-6">
-                        <div class="form-group">
-                            <button class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
-                                <i class="mdi mdi-check"></i>
-                            </button>
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
-                </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
             </div>
 
             <!-- Ver cama bloqueadea -->

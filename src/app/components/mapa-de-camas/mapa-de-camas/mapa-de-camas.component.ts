@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-mapa-de-camas',
@@ -11,13 +14,23 @@ export class MapaDeCamasComponent implements OnInit {
 
     public camas = [];
 
-    constructor(private auth: Auth) { }
+    constructor(private auth: Auth, private plex: Plex,
+        private router: Router) { }
 
     ngOnInit() {
         // verificar permisos
         // buscar camas para la organización
-
-
+        /* DECOMENTAR
+        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe( camas => {
+            this.camas = camas;
+        }, (err) => {
+            if (err) {
+                this.plex.info('danger', err, 'Error');
+                this.router.navigate(['/']);
+            }
+        });
+        */
+        /* borrar este */
         this.camas = [
             {
                 '_id': '5a67166a732831242c94336b',
@@ -96,6 +109,23 @@ export class MapaDeCamasComponent implements OnInit {
                     'fechaNacimiento': new Date(1986, 4, 23, 10, 50, 0).toISOString()
                 }
 
+            },
+            {
+                '_id': '5a67166a732831242c94336b',
+                'sector': 1,
+                'habitacion': 525,
+                'numero': 1,
+                'ultimoEstado': {
+                    'estado': 'desocupada'
+                },
+                'equipamiento': [],
+                'tipoCama': {
+                    'refsetIds': []
+                },
+                'servicio': {
+                    'refsetIds': []
+                },
+                'id': '5a67166a732831242c94336b'
             }
         ];
     }
