@@ -123,7 +123,7 @@ export class MapaDeCamasComponent implements OnInit {
                 'numero': 99,
                 '_id': '5a675108ff89743ab80d1484',
                 'ultimoEstado': {
-                    'estado': 'desocupada'
+                    'estado': 'ocupada'
                 },
                 'equipamiento': [],
                 'tipoCama': {
@@ -211,6 +211,11 @@ export class MapaDeCamasComponent implements OnInit {
             }
 
             // TODO: Definir filtros para tipo de cama, oxigeno, etc.
+
+            // ordenamos las opciones utilizando el desaconsejado metodo sort() :D
+            if (this.filtros.opciones.sectores) { this.filtros.opciones.sectores.sort((a, b) => a.id - b.id); }
+            if (this.filtros.opciones.habitaciones) { this.filtros.opciones.habitaciones.sort((a, b) => a.id - b.id); }
+            if (this.filtros.opciones.estados) { this.filtros.opciones.estados.sort((a, b) => a.id - b.id); }
         });
     }
 
@@ -227,7 +232,7 @@ export class MapaDeCamasComponent implements OnInit {
                 // (_desinfectada === null || (!_desinfectada && !i.desinfectada)) &&
                 // (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama === this.filtros.tipoCama)) &&
                 (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
-                (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado)) &&
+                (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
                 (!this.filtros.servicio || !this.filtros.servicio.id || (this.filtros.servicio && i.servicio && i.servicio.id === this.filtros.servicio.id)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
