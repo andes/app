@@ -13,6 +13,7 @@ import { Plex } from '@andes/plex';
 export class MapaDeCamasComponent implements OnInit {
 
     public camas = [];
+    public estadoServicio;
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router) { }
@@ -23,6 +24,8 @@ export class MapaDeCamasComponent implements OnInit {
         /* DECOMENTAR
         this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe( camas => {
             this.camas = camas;
+
+            this.estadoServicio = this.getEstadoServicio(camas);
         }, (err) => {
             if (err) {
                 this.plex.info('danger', err, 'Error');
@@ -127,7 +130,47 @@ export class MapaDeCamasComponent implements OnInit {
                 },
                 'id': '5a67166a732831242c94336b'
             }
+
         ];
+
+        this.estadoServicio = this.getEstadoServicio(this.camas);
     }
 
+    public getEstadoServicio(camas) {
+        const ocupadas = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'ocupada');
+        });
+
+        // ocupacion
+        const bloqueadas = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'bloqueada');
+        });
+
+        const descontaminacion = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'desocupada' && !i.desinfectada);
+        });
+
+        const reparacion = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'reparacion');
+        });
+
+        // disponibles
+        const desocupadas = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'desocupada');
+        });
+
+        const desocupadasOxigeno = camas.filter(function(i){
+            return (i.ultimoEstado.estado === 'desocupada' && i.oxigeno);
+        });
+
+        return {
+            'total' : camas.length,
+            'ocupadas' : ocupadas.length,
+            'desocupadas' : desocupadas.length,
+            'descontaminacion' : descontaminacion.length,
+            'reparacion' : reparacion.length,
+            'bloqueadas' : bloqueadas.length,
+            'desocupadasOxigeno' : desocupadasOxigeno.length
+        };
+    }
 }
