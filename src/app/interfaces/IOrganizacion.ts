@@ -1,3 +1,4 @@
+import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.interface';
 import { ITipoEstablecimiento } from './ITipoEstablecimiento';
 import { IUbicacion } from './IUbicacion';
 import { IContacto } from './IContacto';
@@ -30,4 +31,5 @@ export interface IOrganizacion {
     activo: Boolean;
     fechaAlta: Date;
     fechaBaja: Date;
+    servicios: [ISnomedConcept];
 }

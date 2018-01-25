@@ -1,4 +1,3 @@
-import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -13,6 +12,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 
 @Component({
@@ -88,6 +88,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public conceptosTurneables: any[];
 
+    // Listado de grupos de la busqueda guiada
+    public grupos_guida: any[] = [];
+
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
 
@@ -124,7 +127,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
@@ -148,6 +150,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
 
                         }
+                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+                            this.grupos_guida = grupos;
+                        });
+
                     }, (err) => {
                         if (err) {
                             this.plex.info('danger', err, 'Error');
@@ -847,6 +853,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
+        // Limpiar los valores observados al iniciar la ejecución
+        // Evita que se autocompleten valores de una consulta anterior
+        this.conceptObserverService.destroy();
         // this.registrosHuds = registrosHuds;
     }
 
@@ -982,6 +991,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.collapse = !this.collapse;
             }
         });
+    }
+
+    /**
+     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * @param {IConcept} concept
+     */
+    matchinBusquedaGuiada (concept) {
+        let results = [];
+        this.grupos_guida.forEach(data => {
+            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
+                results.push(data);
+            }
+        });
+        return results;
     }
 
     // eliminaTodosLosRegistros() {
