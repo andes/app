@@ -3,6 +3,8 @@ import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
+import { ICama } from '../interfaces/ICama';
+import { ICamaEstado } from '../interfaces/ICamaEstado';
 
 @Injectable()
 export class OrganizacionService {
@@ -25,12 +27,16 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
+    getCamas(id: String): Observable<ICama> {
+        return this.server.get(this.organizacionUrl + '/' + id + '/camas', null);
+    }
+
 
     /**
      * Save. Si le organizacion por parametro tiene id hace put y sino hace post
      *
      * @param {IOrganizacion} organizacion guarda una organizacion
-     * @returns {Observable<IOrganizacion>} retorna un obervable
+     * @returns {Observable<IOrganizacion>} retorna un observable
      *
      * @memberof OrganizacionService
      */
@@ -60,4 +66,35 @@ export class OrganizacionService {
         establecimiento.activo = true;
         return this.save(establecimiento);
     }
+
+    /**
+     * @param cama recibe una cama para agregar a la organizacion
+     * @param id es el id de la organizacion
+     */
+    addCama(id, cama: ICama): Observable<ICama> {
+        let dto: any = {
+            op: 'newCama',
+            newCama: cama
+        };
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas', dto);
+    }
+
+    /**
+    * @param idcama recibe un id de una cama para agregar a la organizacion
+    * @param options opciones para el patch
+    * @param id es el id de la organizacion
+    */
+    patch(id, idcama, options): Observable<any> {
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, options);
+    }
+
+    NewEstado(id, idcama, estado: ICamaEstado): Observable<any> {
+        let dto: any = {
+            op: 'estado',
+            estado: estado.estado,
+            objEstado: estado
+        };
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, dto);
+    }
+
 }
