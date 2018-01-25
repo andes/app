@@ -36,7 +36,9 @@ export class MapaDeCamasComponent implements OnInit {
         opciones: {
             sectores: [],
             habitaciones: [],
-            estados: []
+            estados: [],
+            servicios: [],
+            tiposCamas: []
         }
     };
 
@@ -80,10 +82,16 @@ export class MapaDeCamasComponent implements OnInit {
                 },
                 'equipamiento': [],
                 'tipoCama': {
-                    'refsetIds': []
+                    fsn: 'cama pediátrica (objeto físico)',
+                    term: 'cama pediátrica',
+                    conceptId: '80278003',
+                    semanticTag: 'objeto físico'
                 },
                 'servicio': {
-                    'refsetIds': []
+                    fsn: 'servicio de neurocirugía (calificador)',
+                    term: 'servicio de neurocirugía',
+                    conceptId: '310159002',
+                    semanticTag: 'calificador'
                 },
                 'id': '5a67166a732831242c94336b'
             },
@@ -100,7 +108,10 @@ export class MapaDeCamasComponent implements OnInit {
                     'refsetIds': []
                 },
                 'servicio': {
-                    'refsetIds': []
+                    fsn: 'servicio de neurocirugía (calificador)',
+                    term: 'servicio de neurocirugía',
+                    conceptId: '310159002',
+                    semanticTag: 'calificador'
                 },
                 'id': '5a672e92cd3d664344180b3b'
             },
@@ -114,10 +125,16 @@ export class MapaDeCamasComponent implements OnInit {
                 },
                 'equipamiento': [],
                 'tipoCama': {
-                    'refsetIds': []
+                    fsn: 'cama pediátrica (objeto físico)',
+                    term: 'cama pediátrica',
+                    conceptId: '80278003',
+                    semanticTag: 'objeto físico'
                 },
                 'servicio': {
-                    'refsetIds': []
+                    fsn: 'servicio de cirugía dental general (calificador)',
+                    term: 'servicio de cirugía dental general',
+                    conceptId: '310144008',
+                    semanticTag: 'calificador'
                 },
                 'id': '5a67508fff89743ab80d13f8'
             },
@@ -131,10 +148,16 @@ export class MapaDeCamasComponent implements OnInit {
                 },
                 'equipamiento': [],
                 'tipoCama': {
-                    'refsetIds': []
+                    fsn: 'cama de aire fluidizada (objeto físico)',
+                    term: 'cama de aire fluidizada',
+                    conceptId: '468992006',
+                    semanticTag: 'objeto físico'
                 },
                 'servicio': {
-                    'refsetIds': []
+                    fsn: 'servicio de cirugía dental general (calificador)',
+                    term: 'servicio de cirugía dental general',
+                    conceptId: '310144008',
+                    semanticTag: 'calificador'
                 },
                 'id': '5a675108ff89743ab80d1484',
                 'paciente': {
@@ -157,18 +180,25 @@ export class MapaDeCamasComponent implements OnInit {
                     'estado': 'desocupada'
                 },
                 'equipamiento': [],
-                'tipoCama': {
-                    'refsetIds': []
-                },
+                'tipoCama':
+                    {
+                        fsn: 'cuna (objeto físico)',
+                        term: 'cuna',
+                        conceptId: '7406005',
+                        semanticTag: 'objeto físico'
+                    },
                 'servicio': {
-                    'refsetIds': []
+                    fsn: 'servicio de cirugía dental general (calificador)',
+                    term: 'servicio de cirugía dental general',
+                    conceptId: '310144008',
+                    semanticTag: 'calificador'
                 },
                 'id': '5a67166a732831242c94336b'
             }
 
         ];
 
-        this.organizacionesService.getEstadoServicio(this.camas).subscribe( estado => {
+        this.organizacionesService.getEstadoServicio(this.camas).subscribe(estado => {
             this.estadoServicio = estado;
         });
 
@@ -203,42 +233,54 @@ export class MapaDeCamasComponent implements OnInit {
         // asignamos los sectores para los filtros
         this.camas.forEach(cama => {
             if (cama.sector && this.filtros.opciones.sectores.indexOf(cama.sector) === -1) {
-                this.filtros.opciones.sectores.push({'id' : cama.sector, 'nombre': cama.sector});
+                this.filtros.opciones.sectores.push({ 'id': cama.sector, 'nombre': cama.sector });
             }
 
             if (cama.habitacion && this.filtros.opciones.habitaciones.indexOf(cama.habitacion) === -1) {
-                this.filtros.opciones.habitaciones.push({'id' : cama.habitacion, 'nombre': cama.habitacion});
+                this.filtros.opciones.habitaciones.push({ 'id': cama.habitacion, 'nombre': cama.habitacion });
             }
 
             if (cama.ultimoEstado && this.filtros.opciones.estados.indexOf(cama.ultimoEstado.estado) === -1) {
-                this.filtros.opciones.estados.push({'id' : cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado});
+                this.filtros.opciones.estados.push({ 'id': cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado });
             }
 
-            // TODO: Definir filtros para tipo de cama, oxigeno, etc.
+            if (cama.servicio && this.filtros.opciones.servicios.indexOf(cama.servicio.conceptId) === -1) {
+                this.filtros.opciones.servicios.push({ 'id': cama.servicio.conceptId, 'nombre': cama.servicio.term });
+            }
+
+            if (cama.tipoCama && this.filtros.opciones.tiposCamas.indexOf(cama.tipoCama.conceptId) === -1) {
+                this.filtros.opciones.tiposCamas.push({ 'id': cama.tipoCama.conceptId, 'nombre': cama.tipoCama.term });
+            }
+
+            // TODO: Definir filtros para , oxigeno, etc.
 
             // ordenamos las opciones utilizando el desaconsejado metodo sort() :D
             if (this.filtros.opciones.sectores) { this.filtros.opciones.sectores.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.habitaciones) { this.filtros.opciones.habitaciones.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.estados) { this.filtros.opciones.estados.sort((a, b) => a.id - b.id); }
+            if (this.filtros.opciones.servicios) { this.filtros.opciones.servicios.sort((a, b) => a.term - b.term); }
+            if (this.filtros.opciones.tiposCamas) { this.filtros.opciones.tiposCamas.sort((a, b) => a.term - b.term); }
         });
     }
 
     public filtrar() {
+        debugger;
+
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
 
         let _desinfectada = (this.filtros.desinfectada) ? false : null;
 
-        this.camas = this.camasCopy.filter( (i) => {
+        this.camas = this.camasCopy.filter((i) => {
 
             return (
                 // (!this.filtros.oxigeno || (this.filtros.oxigeno && i.oxigeno)) &&
 
                 // (_desinfectada === null || (!_desinfectada && !i.desinfectada)) &&
-                // (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama === this.filtros.tipoCama)) &&
+                (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
                 (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
-                (!this.filtros.servicio || !this.filtros.servicio.id || (this.filtros.servicio && i.servicio && i.servicio.id === this.filtros.servicio.id)) &&
+                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.servicio && i.servicio.conceptId === this.filtros.servicio.id)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
 
             );

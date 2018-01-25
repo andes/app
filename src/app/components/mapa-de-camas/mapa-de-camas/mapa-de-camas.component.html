@@ -90,28 +90,19 @@
                                     <plex-select [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()"></plex-select>
                                 </div>
 
-                                <!--
                                 <div class="col-sm-3 col-lg-3 col-xl-2">
                                     <div class="form-group">
-                                        <select label="Servicio" [(ngModel)]="filter.servicio" ="(item.nombre) for item in servicios"></select>
+                                        <plex-select [(ngModel)]="filtros.servicio" nmae="servicio" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"></plex-select>
                                     </div>
                                 </div>
-                                -->
 
                                 <div class="col-sm-2 col-lg-2 col-xl-1">
                                     <plex-select [(ngModel)]="filtros.habitacion" name="habitacion" [data]="filtros.opciones.habitaciones" label="Habitación" (change)="filtrar()"></plex-select>
                                 </div>
 
-                                <!--
-                                <div class="col-sm-2 col-lg-2 col-xl-1">
-                                    <div class="form-group">
-                                        <select [(ngModel)]="filter.tipoCama" id="filter-tipo-cama" class="form-control" label="Tipo de cama" >
-                                            <option value="">Todas</option>
-                                            <option ng-repeat="tipoCama in tipoCamas" value="{{tipoCama}}">{{tipoCama}}</option>
-                                        </select>
-                                    </div>
+                                <div class="col-sm-2 col-lg-3 col-xl-2">
+                                    <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"></plex-select>
                                 </div>
-                                -->
 
                                 <div class="col-sm-2 col-lg-3 col-xl-1">
                                     <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"></plex-select>
@@ -133,7 +124,7 @@
                                 </div>
                                 -->
 
-                                <div class="col-sm-3 col-lg-3 col-xl-2">
+                                <div class="col-sm-3 col-lg-3 col-xl-3">
                                     <div class="form-group mt-3">
                                         <br />
                                         <button type="button" class="btn btn-primary" (click)="limpiarFiltros()">
