@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 
+import { OrganizacionService } from '../../../services/organizacion.service';
+
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -39,7 +41,8 @@ export class MapaDeCamasComponent implements OnInit {
     };
 
     constructor(private auth: Auth, private plex: Plex,
-        private router: Router) { }
+        private router: Router,
+        private organizacionesService: OrganizacionService) { }
 
     ngOnInit() {
         // verificar permisos
@@ -48,6 +51,9 @@ export class MapaDeCamasComponent implements OnInit {
         this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe( camas => {
             this.camas = camas;
 
+            this.organizacionesService.getEstadoServicio(camas).subscribe( estado = {
+                this.estadoServicio = estado;
+            });
             // creamos el estado del servicio. TODO: ¿verificar por servicio en el que está el profesional logueado?
             this.estadoServicio = this.getEstadoServicio(camas);
             // creamos copia para reestablecer luego de los filtros
@@ -162,7 +168,10 @@ export class MapaDeCamasComponent implements OnInit {
 
         ];
 
-        this.estadoServicio = this.getEstadoServicio(this.camas);
+        this.organizacionesService.getEstadoServicio(this.camas).subscribe( estado => {
+            this.estadoServicio = estado;
+        });
+
         this.camasCopy = JSON.parse(JSON.stringify(this.camas));
 
         this.setOpcionesFiltros();
@@ -234,43 +243,5 @@ export class MapaDeCamasComponent implements OnInit {
 
             );
         });
-    }
-
-    public getEstadoServicio(camas) {
-        const ocupadas = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'ocupada');
-        });
-
-        // ocupacion
-        const bloqueadas = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'bloqueada');
-        });
-
-        const descontaminacion = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'desocupada' && !i.desinfectada);
-        });
-
-        const reparacion = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'reparacion');
-        });
-
-        // disponibles
-        const desocupadas = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'desocupada');
-        });
-
-        const desocupadasOxigeno = camas.filter(function (i) {
-            return (i.ultimoEstado.estado === 'desocupada' && i.oxigeno);
-        });
-
-        return {
-            'total': camas.length,
-            'ocupadas': ocupadas.length,
-            'desocupadas': desocupadas.length,
-            'descontaminacion': descontaminacion.length,
-            'reparacion': reparacion.length,
-            'bloqueadas': bloqueadas.length,
-            'desocupadasOxigeno': desocupadasOxigeno.length
-        };
     }
 }
