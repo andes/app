@@ -117,10 +117,11 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
-                    this.cargaPlan(prestacionSolicitud);
+                this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
+                    if (prestacionesSolicitadas) {
+                        this.cargaPlan(prestacionesSolicitadas);
+                    }
                 });
-
                 this.diagnosticoReadonly = true;
             }
 
@@ -181,6 +182,11 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+
+                // cargar los conceptos mas frecuentes por profesional y tipo de prestación
+                // Se copian los registros de la ejecución actual, para agregarle la frecuencia
+                let registros = this.prestacion.ejecucion.registros;
+
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
@@ -193,40 +199,13 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                     });
                     // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        // Chequear si es posible asignar turno a los planes generados
-                        let prestacionesSolicitadas = this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id);
+                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
                             this.cargaPlan(prestacionesSolicitadas);
                         }
                     });
 
                     this.diagnosticoReadonly = true;
-
-                    // cargar los conceptos mas frecuentes por profesional y tipo de prestación
-                    // Se copian los registros de la ejecución actual, para agregarle la frecuencia
-                    let registros = this.prestacion.ejecucion.registros;
-                    let registrosFrecuentes = [];
-
-                    registros.forEach(x => {
-                        registrosFrecuentes.push({
-                            concepto: x.concepto,
-                            frecuencia: 1
-                        });
-                    });
-
-                    let frecuentesProfesional = {
-                        profesional: {
-                            id: this.auth.profesional.id,
-                            nombre: this.auth.profesional.nombre,
-                            apellido: this.auth.profesional.apellido,
-                            documento: this.auth.profesional.documento
-                        },
-                        tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
-                        organizacion: this.prestacion.solicitud.organizacion,
-                        frecuentes: registrosFrecuentes
-                    };
-                    this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
@@ -283,8 +262,13 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     turnoDado(e) {
-        // recargamos
-        this.inicializar(this.prestacion.id);
+        // actualizamos las prestaciones de la HUDS
+        this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
+            if (prestacionesSolicitadas) {
+                this.cargaPlan(prestacionesSolicitadas);
+            }
+            this.showDarTurnos = false;
+        });
     }
 
     tienePermisos(tipoPrestacion) {
@@ -420,7 +404,6 @@ export class PrestacionValidacionComponent implements OnInit {
         this.prestacion.ejecucion.registros[a] = this.prestacion.ejecucion.registros.splice(b, 1, this.prestacion.ejecucion.registros[a])[0];
         return this;
     }
-
 
 
     hayRegistros(tipos: any[], tipo: any = null) {

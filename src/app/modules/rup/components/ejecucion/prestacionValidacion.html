@@ -310,5 +310,5 @@
 </footer>
 
 <!-- Calendario para dar turnos autocitados -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="turnoDado($event)" [pacienteSeleccionado]="paciente"
-    [solicitudPrestacion]="solicitudTurno" (cancelarDarTurno)="showDarTurnos = false"></dar-turnos>
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)" [pacienteSeleccionado]="paciente"
+    [solicitudPrestacion]="solicitudTurno"></dar-turnos>
