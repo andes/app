@@ -29,8 +29,12 @@
 
             <div class="row">
                 <div class="col-12">
-                    <plex-select name="equipamiento" (getData)="loadEquipamientos()" [(ngModel)]="cama.equipamiento" label="Equipamiento">
-                    </plex-select>
+                    <label>Equipamiento</label>
+                    <select disabled style="width: 100%;">
+                        <option value="1">equipamiento</option>
+                    </select>
+                    <!-- <plex-select  name="equipamiento" (getData)="loadEquipamientos()" [(ngModel)]="cama.equipamiento" label="Equipamiento">
+                    </plex-select> -->
                 </div>
             </div>
 
@@ -40,6 +44,7 @@
         <div class="text-right">
             <plex-button label="Cancelar" type="danger" (click)="cancel()">
             </plex-button>
+
             <plex-button label="Guardar" type="primary" (click)="save($event)" validateForm="true">
             </plex-button>
         </div>

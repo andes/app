@@ -49,10 +49,16 @@ export class CamasComponent implements OnInit {
         this.camaSeleccion = null;
         this.createUpdate = true;
     }
-    /*recibe el evento que emite el componente create-update
-    cama al cancelar para que se muestre la lista de camas de nuevo.
+    /*Recibe el evento que emite el componente create-update
+    cama al cancelar para que se muestre la lista de camas de nuevo o bien si
+    se guardo devuelve el objeto para actualizar el listado.
     */
-    cancelCama($event) {
-        this.createUpdate = $event;
+    createUpdateCama($event) {
+        if ($event) {
+           this.camas.push($event);
+           this.createUpdate = false;
+        } else {
+            this.createUpdate = $event;
+        }
     }
 }

@@ -22,6 +22,7 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'organizacion-create-update',
@@ -125,7 +126,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private BarrioService: BarrioService,
         private tipoEstablecimientoService: TipoEstablecimientoService,
         public plex: Plex, private server: Server,
-        public snomed: SnomedService
+        public snomed: SnomedService,
+        private router: Router,
     ) { }
 
     ngOnInit() {
@@ -286,5 +288,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             });
             $event.callback(this.servicios);
         });
+    }
+    routeCama() {
+        this.router.navigate(['/tm/organizacion/' + this.seleccion.id + '/cama']);
     }
 }

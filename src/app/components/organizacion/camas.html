@@ -12,7 +12,7 @@
                         <th>Habitacion</th>
                         <th>Estado</th>
                         <th>Servicio</th>
-                        <th>Editar</th>
+                        <th>Editar cama</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,18 +27,26 @@
                             {{cama.servicio.term}}
                         </td>
                         <td>
-                            <plex-button type="primary" label="Editar" (click)="Update(cama)">
+                            <plex-button type="primary" label="Editar cama" (click)="Update(cama)">
                             </plex-button>
                         </td>
                     </tr>
                 </tbody>
             </table>
+            <div *ngIf="camas && camas.length === 0">
+                <p class="text-left">
+                    No hay camas disponibles.
+                    <a href="javascript: void(0);" (click)="Create()">
+                        Agregar cama
+                    </a>
+                </p>
+            </div>
         </plex-box>
     </section>
 
     <footer *ngIf="!createUpdate">
         <div class="text-right">
-            <plex-button label="Cancelar" type="danger" (click)="cancel()">
+            <plex-button label="Vover al listado de organizaciones" type="danger" (click)="cancel()">
             </plex-button>
             <plex-button label="Crear una cama" type="primary" (click)="Create()">
             </plex-button>
@@ -47,7 +55,7 @@
 
     <!-- <section > -->
     <!-- <plex-box *ngIf="createUpdate"> -->
-    <cama-create-update *ngIf="createUpdate" [idOrganizacion]="idOrganizacion" [camaSeleccion]="camaSeleccion" (showCama)="cancelCama($event)"></cama-create-update>
+    <cama-create-update *ngIf="createUpdate" [idOrganizacion]="idOrganizacion" [camaSeleccion]="camaSeleccion" (showCama)="createUpdateCama($event)"></cama-create-update>
     <!-- </plex-box> -->
     <!-- </section> -->
 </div>

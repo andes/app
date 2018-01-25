@@ -12,7 +12,7 @@ import { query } from '@angular/core/src/animation/dsl';
 export class CamaCreateUpdateComponent implements OnInit {
     @Input('idOrganizacion') idOrganizacion;
     @Input('camaSeleccion') camaSeleccion;
-    @Output() showCama: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() showCama: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     public organizacion: any;
@@ -76,6 +76,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                 operacion.subscribe(result => {
                     if (result) {
                         this.plex.alert('Los datos se actualizaron correctamente');
+                        this.showCama.emit(result);
                     } else {
                         this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
                     }
@@ -85,14 +86,12 @@ export class CamaCreateUpdateComponent implements OnInit {
                 operacion.subscribe(result => {
                     if (result) {
                         this.plex.alert('La cama se creo correctamente');
+                        this.showCama.emit(result);
                     } else {
                         this.plex.alert('ERROR: Ocurrio un problema al crear la cama');
                     }
                 });
             }
-            this.cancel();
-            // TODO: Ver que faltaria rellamar para que
-            // se vea el listado de camas actualizado
         }
     }
 
