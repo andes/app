@@ -18,9 +18,10 @@ export class MapaDeCamasComponent implements OnInit {
     public camas = [];
     // copia de las camas
     public camasCopy = [];
-
     // estado de las camas de la organizacion
     public estadoServicio: any = {};
+    // tipo de vista del mapa de camas
+    public layout: string = 'grid';
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -264,7 +265,6 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     public filtrar() {
-        debugger;
 
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
 

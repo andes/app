@@ -72,12 +72,7 @@
 
 
                     <div class="row" *ngIf="camas">
-                        <div class="col-lg-1">
-                            <h5>
-                                <i class="fa fa-filter"> </i> Filtros
-                            </h5>
-                        </div>
-                        <div class="col-lg-11" *ngIf="camas">
+                        <div class="col-lg-12" *ngIf="camas">
                             <div class="row">
 
                                 <div class="col-sm-3 col-lg-3 col-xl-2">
@@ -87,7 +82,7 @@
                                     </div>
                                 </div>
                                 <div class="col-sm-2 col-lg-2 col-xl-1">
-                                    <plex-select [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()"></plex-select>
+                                    <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()"></plex-select>
                                 </div>
 
                                 <div class="col-sm-3 col-lg-3 col-xl-2">
@@ -125,17 +120,16 @@
                                 -->
 
                                 <div class="col-sm-3 col-lg-3 col-xl-3">
-                                    <div class="form-group mt-3">
-                                        <br />
-                                        <button type="button" class="btn btn-primary" (click)="limpiarFiltros()">
+                                    <div class="btn-group col mt-4" role="group" aria-label="Botonera principal">
+                                        <button type="button" class="btn btn-primary btn-block" (click)="limpiarFiltros()">
                                             Limpiar filtros
                                         </button>
 
-                                        <button class="btn btn-default layout-view tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}" title="Vista de grilla">
+                                        <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}" title="Vista de grilla">
                                             <i class="mdi mdi-grid"></i>
                                         </button>
 
-                                        <button class="btn btn-default layout-view tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}" title="Vista de lista">
+                                        <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}" title="Vista de lista">
                                             <i class="mdi mdi-view-list"></i>
                                         </button>
                                     </div>
