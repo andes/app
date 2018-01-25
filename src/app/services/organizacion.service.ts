@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { environment } from '../../environments/environment';
 import { ICama } from '../interfaces/ICama';
+import { ICamaEstado } from '../interfaces/ICamaEstado';
 
 @Injectable()
 export class OrganizacionService {
@@ -75,7 +76,25 @@ export class OrganizacionService {
             op: 'newCama',
             newCama: cama
         };
-        return this.server.patch(this.organizacionUrl + '/' + id + '/camas' , dto);
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas', dto);
+    }
+
+    /**
+    * @param idcama recibe un id de una cama para agregar a la organizacion
+    * @param options opciones para el patch
+    * @param id es el id de la organizacion
+    */
+    patch(id, idcama, options): Observable<any> {
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, options);
+    }
+
+    NewEstado(id, idcama, estado: ICamaEstado): Observable<any> {
+        let dto: any = {
+            op: 'estado',
+            estado: estado.estado,
+            objEstado: estado
+        };
+        return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, dto);
     }
 
 }

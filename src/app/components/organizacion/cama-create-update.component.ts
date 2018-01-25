@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CamaCreateUpdateComponent implements OnInit {
     @Input('idOrganizacion') idOrganizacion;
     @Input('camaSeleccion') camaSeleccion;
-    @Output() showCama: EventEmitter < boolean > = new EventEmitter < boolean > ();
+    @Output() showCama: EventEmitter<boolean> = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     public organizacion: any;
@@ -54,18 +54,33 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     save($event) {
         if ($event.formValid) {
-            this.cama.servicio = this.cama.servicio.concepto;
-            let operacion = this.OrganizacionService.addCama(this.organizacion.id, this.cama);
-            operacion.subscribe(result => {
-                if (result) {
-                    this.plex.alert('Los datos se actualizaron correctamente');
-                    // this.data.emit(result);
-                } else {
-                    this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
-                }
-            });
+            if (this.cama.servicio) {
+                this.cama.servicio = this.cama.servicio.concepto;
+            }
+            if (this.cama.id) {
+                let options: any = {
+                    op: 'editCama',
+                    editCama: this.cama,
+                };
+                let operacion = this.OrganizacionService.patch(this.organizacion.id, this.cama.id, options);
+                operacion.subscribe(result => {
+                    if (result) {
+                        this.plex.alert('Los datos se actualizaron correctamente');
+                    } else {
+                        this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
+                    }
+                });
+            } else {
+                let operacion = this.OrganizacionService.addCama(this.organizacion.id, this.cama);
+                operacion.subscribe(result => {
+                    if (result) {
+                        this.plex.alert('La cama se creo correctamente');
+                    } else {
+                        this.plex.alert('ERROR: Ocurrio un problema al crear la cama');
+                    }
+                });
+            }
         }
-
     }
 
     cancel() {
