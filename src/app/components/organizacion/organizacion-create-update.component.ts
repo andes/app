@@ -44,7 +44,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     private barrioNulleado = null;
     public servicios: any;
     // con esta query de snomed trae todos los servicios.
-    private expression = '<<310138009';
+    private expression = '<<224891009';
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -97,7 +97,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         direccion: this.direccion,
     };
 
-    organizacionModel: IOrganizacion = {
+    organizacionModel: any = {
         id: null,
         codigo: {
             sisa: '',

@@ -22,7 +22,8 @@
                     </plex-select>
                 </div>
                 <div class="col-4">
-                    <plex-text [(ngModel)]="cama.tipoCama" name="tipoCama" label="Tipo de cama" placeholder="Tipo de cama" required></plex-text>
+                    <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" [(ngModel)]="cama.tipoCama" label="Tipo de cama">
+                    </plex-select>
                 </div>
             </div>
 
