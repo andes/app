@@ -1,6 +1,8 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
+import { Auth } from '@andes/auth';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'app-cama',
@@ -11,11 +13,12 @@ import { setTimeout } from 'timers';
 export class CamaComponent implements OnInit {
 
     @Input() cama: any;
+    @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
 
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
 
-    constructor(private plex: Plex) { }
+    constructor(private plex: Plex, private auth: Auth, private serviceOrganizacion: OrganizacionService) { }
 
     ngOnInit() {
         this.opcionesDropdown = [
@@ -44,8 +47,13 @@ export class CamaComponent implements OnInit {
     }
 
     public cambiarEstado(cama, estado) {
-        /*
-        this.organizacionesService.cambiarEstado(this.auth.organizacion.id, cama.id).then(cama => {
+        let dto = {
+            estado: estado,
+            observaciones: cama.$motivo
+        };
+
+        this.serviceOrganizacion.NewEstado(this.auth.organizacion.id, cama.id, dto).subscribe(camaActualizada => {
+            cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
             switch (estado) {
@@ -74,10 +82,11 @@ export class CamaComponent implements OnInit {
             // rotamos card
             setTimeout(() => {
                 cama.$rotar = false;
+
+                this.evtCama.emit(cama);
             }, 100);
         }, (err) => {
             this.plex.info('danger', err, 'Error');
         });
-        */
     }
 }

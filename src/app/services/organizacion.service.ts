@@ -27,7 +27,7 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
-    getCamas(id: String): Observable<ICama> {
+    getCamas(id: String): Observable<ICama[]> {
         return this.server.get(this.organizacionUrl + '/' + id + '/camas', null);
     }
 
@@ -88,12 +88,12 @@ export class OrganizacionService {
         return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, options);
     }
 
-    NewEstado(id, idcama, estado: ICamaEstado): Observable<any> {
+    NewEstado(id, idcama, estado): Observable<any> {
         let dto: any = {
             op: 'estado',
-            estado: estado.estado,
-            objEstado: estado
+            estado: estado
         };
+
         return this.server.patch(this.organizacionUrl + '/' + id + '/camas/' + idcama, dto);
     }
 

@@ -9,7 +9,13 @@ export interface ICama {
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc
     // ultimo estado de la cama
-    ultimoEstado: String;
+    ultimoEstado: {
+        idCama: String;
+        estado: String;
+        paciente: IPaciente;
+        idInternacion: String;
+        observaciones: String;
+    };
     paciente: IPaciente;
     idInternacion: String;
     observaciones: String;
