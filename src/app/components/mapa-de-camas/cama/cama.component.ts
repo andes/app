@@ -82,7 +82,7 @@ export class CamaComponent implements OnInit {
             // rotamos card
             setTimeout(() => {
                 cama.$rotar = false;
-
+                cama.$motivo = '';
                 this.evtCama.emit(cama);
             }, 100);
         }, (err) => {
