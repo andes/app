@@ -144,6 +144,7 @@ export class SuspenderAgendaComponent implements OnInit {
             return 'no seleccionado';
         }
     }
+
     seleccionarTurno(turno) {
         let indice = this.seleccionadosSMS.indexOf(turno);
         if (indice === -1) {
@@ -155,6 +156,7 @@ export class SuspenderAgendaComponent implements OnInit {
             this.seleccionadosSMS = [...this.seleccionadosSMS];
         }
     }
+    // para setear el checkbox de seleccion de c/ turno
     estaSeleccionado(turno) {
         if (this.seleccionadosSMS.indexOf(turno) >= 0) {
             return true;
