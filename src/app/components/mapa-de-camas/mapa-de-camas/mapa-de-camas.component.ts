@@ -51,10 +51,10 @@ export class MapaDeCamasComponent implements OnInit {
     ngOnInit() {
         // verificar permisos
         // buscar camas para la organización
-        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe( camas => {
+        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe(camas => {
             this.camas = camas;
 
-            this.organizacionesService.getEstadoServicio(camas).subscribe( estado => {
+            this.organizacionesService.getEstadoServicio(camas).subscribe(estado => {
                 this.estadoServicio = estado;
             });
 
@@ -69,143 +69,6 @@ export class MapaDeCamasComponent implements OnInit {
                 this.router.navigate(['/']);
             }
         });
-
-        /* borrar este */
-
-        // this.camas = [
-        //     {
-        //         '_id': '5a67166a732831242c94336b',
-        //         'sector': 44,
-        //         'habitacion': 45,
-        //         'numero': 44,
-        //         'ultimoEstado': {
-        //             'estado': 'desocupada'
-        //         },
-        //         'equipamiento': [],
-        //         'tipoCama': {
-        //             fsn: 'cama pediátrica (objeto físico)',
-        //             term: 'cama pediátrica',
-        //             conceptId: '80278003',
-        //             semanticTag: 'objeto físico'
-        //         },
-        //         'servicio': {
-        //             fsn: 'servicio de neurocirugía (calificador)',
-        //             term: 'servicio de neurocirugía',
-        //             conceptId: '310159002',
-        //             semanticTag: 'calificador'
-        //         },
-        //         'id': '5a67166a732831242c94336b'
-        //     },
-        //     {
-        //         'numero': 44,
-        //         'habitacion': 44,
-        //         'sector': 44,
-        //         '_id': '5a672e92cd3d664344180b3b',
-        //         'ultimoEstado': {
-        //             'estado': 'bloqueada'
-        //         },
-        //         'equipamiento': [],
-        //         'tipoCama': {
-        //             'refsetIds': []
-        //         },
-        //         'servicio': {
-        //             fsn: 'servicio de neurocirugía (calificador)',
-        //             term: 'servicio de neurocirugía',
-        //             conceptId: '310159002',
-        //             semanticTag: 'calificador'
-        //         },
-        //         'id': '5a672e92cd3d664344180b3b'
-        //     },
-        //     {
-        //         'sector': 89,
-        //         'habitacion': 89,
-        //         'numero': 89,
-        //         '_id': '5a67508fff89743ab80d13f8',
-        //         'ultimoEstado': {
-        //             'estado': 'reparacion'
-        //         },
-        //         'equipamiento': [],
-        //         'tipoCama': {
-        //             fsn: 'cama pediátrica (objeto físico)',
-        //             term: 'cama pediátrica',
-        //             conceptId: '80278003',
-        //             semanticTag: 'objeto físico'
-        //         },
-        //         'servicio': {
-        //             fsn: 'servicio de cirugía dental general (calificador)',
-        //             term: 'servicio de cirugía dental general',
-        //             conceptId: '310144008',
-        //             semanticTag: 'calificador'
-        //         },
-        //         'id': '5a67508fff89743ab80d13f8'
-        //     },
-        //     {
-        //         'sector': 99,
-        //         'habitacion': 99,
-        //         'numero': 99,
-        //         '_id': '5a675108ff89743ab80d1484',
-        //         'ultimoEstado': {
-        //             'estado': 'ocupada'
-        //         },
-        //         'equipamiento': [],
-        //         'tipoCama': {
-        //             fsn: 'cama de aire fluidizada (objeto físico)',
-        //             term: 'cama de aire fluidizada',
-        //             conceptId: '468992006',
-        //             semanticTag: 'objeto físico'
-        //         },
-        //         'servicio': {
-        //             fsn: 'servicio de cirugía dental general (calificador)',
-        //             term: 'servicio de cirugía dental general',
-        //             conceptId: '310144008',
-        //             semanticTag: 'calificador'
-        //         },
-        //         'id': '5a675108ff89743ab80d1484',
-        //         'paciente': {
-        //             'id': '5a675108ff89743ab80d1455',
-        //             'nombre': 'Manuel',
-        //             'apellido': 'Urbano Stordeur',
-        //             'documento': '31965283',
-        //             'telefono': '2994185878',
-        //             'sexo': 'masculino',
-        //             'fechaNacimiento': new Date(1986, 4, 23, 10, 50, 0).toISOString()
-        //         }
-
-        //     },
-        //     {
-        //         '_id': '5a67166a732831242c94336b',
-        //         'sector': 1,
-        //         'habitacion': 525,
-        //         'numero': 1,
-        //         'ultimoEstado': {
-        //             'estado': 'desocupada'
-        //         },
-        //         'equipamiento': [],
-        //         'tipoCama':
-        //             {
-        //                 fsn: 'cuna (objeto físico)',
-        //                 term: 'cuna',
-        //                 conceptId: '7406005',
-        //                 semanticTag: 'objeto físico'
-        //             },
-        //         'servicio': {
-        //             fsn: 'servicio de cirugía dental general (calificador)',
-        //             term: 'servicio de cirugía dental general',
-        //             conceptId: '310144008',
-        //             semanticTag: 'calificador'
-        //         },
-        //         'id': '5a67166a732831242c94336b'
-        //     }
-
-        // ];
-
-        // this.organizacionesService.getEstadoServicio(this.camas).subscribe(estado => {
-        //     this.estadoServicio = estado;
-        // });
-
-        // this.camasCopy = JSON.parse(JSON.stringify(this.camas));
-
-        // this.setOpcionesFiltros();
     }
 
     /**
@@ -226,6 +89,13 @@ export class MapaDeCamasComponent implements OnInit {
         this.camas = this.camasCopy;
     }
 
+    /**
+     * Creamos las opciones de los filtros en base a las características
+     * que traigan las camas para armar el mapa de camas
+     * @param {any} camas
+     * @returns
+     * @memberof MapaDeCamasComponent
+     */
     public setOpcionesFiltros(camas) {
         if (!camas) {
             return;
@@ -253,7 +123,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.filtros.opciones.servicios.push({ 'id': cama.servicio.conceptId, 'nombre': cama.servicio.term });
             }
 
-            existe = this.filtros.opciones.tiposCamas.find(tipoCama  => tipoCama.id === cama.tipoCama.conceptId);
+            existe = this.filtros.opciones.tiposCamas.find(tipoCama => tipoCama.id === cama.tipoCama.conceptId);
             if (cama.tipoCama && !existe) {
                 this.filtros.opciones.tiposCamas.push({ 'id': cama.tipoCama.conceptId, 'nombre': cama.tipoCama.term });
             }
@@ -269,6 +139,11 @@ export class MapaDeCamasComponent implements OnInit {
         });
     }
 
+    /**
+     * Aplicar filtros al mapa de camas
+     *
+     * @memberof MapaDeCamasComponent
+     */
     public filtrar() {
 
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
@@ -292,8 +167,15 @@ export class MapaDeCamasComponent implements OnInit {
         });
     }
 
+    /**
+     * Actualizar cama del array a mostrar en el mapa de camas
+     * Metodo que se ejecuta luego que el EventEmitter de CamasComponent
+     * devuelve la cama modificada
+     * @param {any} e EventEmmiter result
+     * @param {any} index Indice de la cama en el array de camas
+     * @memberof MapaDeCamasComponent
+     */
     public updateCama(e, index) {
-        console.log(e, index);
         this.camas[index] = e;
     }
 }

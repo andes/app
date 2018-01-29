@@ -46,6 +46,25 @@ export class CamaComponent implements OnInit {
         ];
     }
 
+    /**
+     * Buscar un paciente para internar.
+     *
+     * @param {any} cama Cama en la cual se va a internar el paciente.
+     * @memberof CamaComponent
+     */
+    public buscarPaciente(cama) {
+        if (cama.ultimoEstado.estado !== 'desinfectada') {
+            this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
+        }
+
+        // buscar paciente
+
+        // cambiar el estado a la cama
+
+        // emitir cama modificada
+        // this.evtCama.emit(cama);
+    }
+
     public cambiarEstado(cama, estado) {
         let dto = {
             estado: estado,
@@ -81,8 +100,11 @@ export class CamaComponent implements OnInit {
 
             // rotamos card
             setTimeout(() => {
+                // rotamos cama
                 cama.$rotar = false;
+                // limpiar motivo por el cual se cambio el estado
                 cama.$motivo = '';
+                // emitimos la cama modificada
                 this.evtCama.emit(cama);
             }, 100);
         }, (err) => {
