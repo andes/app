@@ -13,7 +13,7 @@
                 <div class="alert alert-default mb-0">
                     <!--Header pequeño-->
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col">
                             {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
                             'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
                             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
@@ -26,8 +26,14 @@
 </header>
 
 <div class="row lista-turnos" *ngIf="showData">
-    <div class="col-12 text-center">
-        <plex-button type="default" icon="mdi mdi-email-outline" (click)="notificar()" title="Enviar un mensaje al paciente"></plex-button>
+    <div class="col-2 text-center">
+        <i *ngIf="todosSeleccionados" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos"
+            titlePosition="right"></i>
+        <i *ngIf="!todosSeleccionados" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"
+            titlePosition="right"></i>
+    </div>
+    <div class="col-10 text-center">
+        <plex-button type="default" icon="mdi mdi-email-outline" (click)="notificar()" title="Enviar un mensaje al paciente" titlePosition="left"></plex-button>
     </div>
     <div class="col-12">
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
@@ -73,7 +79,7 @@
                             </small>
                         </td>
                         <td>
-                            <span *ngIf="turno.avisoSuspension">
+                            <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension">
                                 <i *ngIf="turno.avisoSuspension === 'no enviado'" class="mdi mdi-message-alert text-danger" title="SMS no enviado"></i>
                                 <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
                                 <i *ngIf="turno.avisoSuspension ==='pendiente'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>

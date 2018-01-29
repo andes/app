@@ -16,7 +16,7 @@ import { TurnoService } from './../../../../services/turnos/turno.service'
 export class SuspenderAgendaComponent implements OnInit {
     resultado: String;
     seleccionadosSMS = [];
-
+    todosSeleccionados = false;
 
     @Input() agenda: IAgenda;
     @Output() returnSuspenderAgenda = new EventEmitter<boolean>();
@@ -147,6 +147,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
     seleccionarTurno(turno) {
         let indice = this.seleccionadosSMS.indexOf(turno);
+        this.todosSeleccionados = false;
         if (indice === -1) {
             if (turno.paciente && turno.paciente.id) {
                 this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
@@ -163,6 +164,19 @@ export class SuspenderAgendaComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    seleccionarTodos() {
+        this.seleccionadosSMS = [];
+        this.agenda.bloques.forEach(bloque => {
+            bloque.turnos.forEach(turno => {
+                if (turno.paciente && turno.paciente.telefono) {
+                    this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+                }
+            });
+        });
+        this.todosSeleccionados = true;
+
     }
 
     tienePaciente(turno) {
