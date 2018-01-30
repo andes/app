@@ -61,12 +61,13 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
         let params = {
-            fechaDesde: this.inicioAgenda,
+            fechaDesde: this.today,
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
         };
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
-        let agendas = this.agendas;
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            this.agendas = agendas;
+        });
         this.cargarCalendario();
     }
 
@@ -121,6 +122,12 @@ export class ClonarAgendaComponent implements OnInit {
         this.actualizar();
     }
 
+    /**
+     * Función disparada al picar sobre un dia del calendario.
+     *
+     * @param {*} dia
+     * @memberof ClonarAgendaComponent
+     */
     public seleccionar(dia: any) {
         let mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
         if (dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
@@ -137,12 +144,10 @@ export class ClonarAgendaComponent implements OnInit {
             let filtro = this.agendas.filter(
                 function (actual) {
                     let actualIni = moment(actual.horaInicio).format('HH:mm');
-                    let actualFin = moment(actual.horaInicio).format('HH:mm');
+                    let actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                    band = band &&
-                        ((originalIni <= actualIni && actualIni <= originalFin)
-                            || (originalIni <= actualFin && actualFin <= originalFin));
+                    band = band && ((originalIni <= actualIni && actualIni <= originalFin) || (originalIni <= actualFin && actualFin <= originalFin));
                     return band;
                 }
             );
@@ -193,7 +198,7 @@ export class ClonarAgendaComponent implements OnInit {
                         dia.estado = 'conflicto';
                     }
                 }
-                if (agenda.espacioFisico) {
+                if (agenda.espacioFisico && this.agenda.espacioFisico) {
                     if (agenda.espacioFisico.id === this.agenda.espacioFisico.id) {
                         agenda.conflictoEF = 1;
                         dia.estado = 'conflicto';

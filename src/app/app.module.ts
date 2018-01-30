@@ -31,8 +31,6 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
-import { ChartsModule } from 'ng2-charts';
-import { DragScrollModule } from 'angular2-drag-scroll';
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -97,6 +95,9 @@ import { SisaService } from './services/fuentesAutenticas/servicioSisa.service';
 import { SintysService } from './services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service';
 
+// RUP
+import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -153,6 +154,7 @@ import { ActivarAppComponent } from './components/turnos/dashboard/activar-app.c
 import { SolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/solicitud-turno-ventanilla.component';
 import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dashboard/solicitud-turno-ventanilla/lista-solicitud-turno-ventanilla.component';
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
+import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
 
 // ... RUP
@@ -161,6 +163,8 @@ import { ElementosRUPService } from './modules/rup/services/elementosRUP.service
 import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.component';
 import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
+import { AdjuntosService } from './modules/rup/services/adjuntos.service';
+
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { SnomedBuscarComponent } from './components/snomed/snomed-buscar.component';
@@ -168,6 +172,8 @@ import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.com
 import { PrestacionValidacionComponent } from './modules/rup/components//ejecucion/prestacionValidacion.component';
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
@@ -188,9 +194,15 @@ import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elem
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
-
-import { TabsComponent} from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
+import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
+import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
+import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
+import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
+import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
+import { InformesComponent } from './modules/rup/components/elementos/informe.component';
+import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -212,104 +224,65 @@ import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.compo
 import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
 import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
-
-export const RUP_ELEMENTS: any[] = [
-    { component: BuscadorComponent, key: 'BuscadorComponent' },
-    { component: FrecuenciaCardiacaComponent, key: 'FrecuenciaCardiacaComponent' },
-    { component: FrecuenciaRespiratoriaComponent, key: 'FrecuenciaRespiratoriaComponent' },
-    { component: HeaderPacienteComponent, key: 'HeaderPacienteComponent' },
-    { component: HudsBusquedaComponent, key: 'HudsBusquedaComponent' },
-    { component: IndiceDeMasaCorporalComponent, key: 'IndiceDeMasaCorporalComponent' },
-    { component: NuevaEvolucionProblemaComponent, key: 'NuevaEvolucionProblemaComponent' },
-    { component: ObservacionesComponent, key: 'ObservacionesComponent' },
-    { component: PesoComponent, key: 'PesoComponent' },
-    { component: PrestacionCrearComponent, key: 'PrestacionCrearComponent' },
-    { component: PrestacionEjecucionComponent, key: 'PrestacionEjecucionComponent' },
-    { component: PrestacionValidacionComponent, key: 'PrestacionValidacionComponent' },
-    { component: PuntoInicioComponent, key: 'PuntoInicioComponent' },
-    { component: ResumenComponent, key: 'ResumenComponent' },
-    { component: SaturacionOxigenoComponent, key: 'SaturacionOxigenoComponent' },
-    { component: SignosVitalesComponent, key: 'SignosVitalesComponent' },
-    { component: SnomedBuscarComponent, key: 'SnomedBuscarComponent' },
-    { component: SolicitudPrestacionDefaultComponent, key: 'SolicitudPrestacionDefaultComponent' },
-    { component: TallaComponent, key: 'TallaComponent' },
-    { component: TemperaturaComponent, key: 'TemperaturaComponent' },
-    { component: TensionArterialComponent, key: 'TensionArterialComponent' },
-    { component: TensionDiastolicaComponent, key: 'TensionDiastolicaComponent' },
-    { component: TensionSistolicaComponent, key: 'TensionSistolicaComponent' },
-    { component: AutocitadoComponent, key: 'AutocitadoComponent' },
-    { component: ObesidadComponent, key: 'ObesidadComponent'},
-    { component: HipertensionArterialComponent, key: 'HipertensionArterialComponent'}
-
-];
-
-// let temp = RUP_ELEMENTS.map((i) => i.component);
-const RUP_COMPONENTS = [
-    BuscadorComponent,
-    EvolucionProblemaDefaultComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    HeaderPacienteComponent,
-    HudsBusquedaComponent,
-    IndiceDeMasaCorporalComponent,
-    NuevaEvolucionProblemaComponent,
-    ObservacionesComponent,
-    PesoComponent,
-    PrestacionCrearComponent,
-    PrestacionEjecucionComponent,
-    PrestacionValidacionComponent,
-    PuntoInicioComponent,
-    ResumenComponent,
-    SaturacionOxigenoComponent,
-    SignosVitalesComponent,
-    SnomedBuscarComponent,
-    SolicitudPrestacionDefaultComponent,
-    TallaComponent,
-    TemperaturaComponent,
-    TensionArterialComponent,
-    TensionDiastolicaComponent,
-    TensionSistolicaComponent,
-    AutocitadoComponent,
-    ObesidadComponent,
-    HipertensionArterialComponent
-];
+// REPORTES
+import { ReporteC2Component } from './components/reportes/reporteC2.component';
 
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
 
 
+// Libs
+// import { ChartModule } from 'angular2-chartjs';
+import { ChartsModule } from 'ng2-charts';
+
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
-// export let RUPRegistry = {
-//     'PesoComponent': PesoComponent,
-//     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
-//     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
-//     'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
-//     'ObservacionesComponent': ObservacionesComponent,
-//     'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
-//     'SignosVitalesComponent': SignosVitalesComponent,
-//     'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
-//     'TallaComponent': TallaComponent,
-//     'TemperaturaComponent': TemperaturaComponent,
-//     'TensionArterialComponent': TensionArterialComponent,
-//     'TensionDiastolicaComponent': TensionDiastolicaComponent,
-//     'TensionSistolicaComponent': TensionSistolicaComponent,
-//     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
-//     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
-//     'AutocitadoComponent': AutocitadoComponent,
-//     'ObesidadComponent': ObesidadComponent,
-//     'HipertensionArterialComponent' : HipertensionArterialComponent,
-// };
+export let RUPRegistry = {
+    'PesoComponent': PesoComponent,
+    'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
+    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+    'InformesComponent': InformesComponent,
+    'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
+    'ObservacionesComponent': ObservacionesComponent,
+    'SaturacionOxigenoComponent': SaturacionOxigenoComponent,
+    'SignosVitalesComponent': SignosVitalesComponent,
+    'SolicitudPrestacionDefaultComponent': SolicitudPrestacionDefaultComponent,
+    'TallaComponent': TallaComponent,
+    'TemperaturaComponent': TemperaturaComponent,
+    'TensionArterialComponent': TensionArterialComponent,
+    'TensionDiastolicaComponent': TensionDiastolicaComponent,
+    'TensionSistolicaComponent': TensionSistolicaComponent,
+    'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
+    'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
+    'AutocitadoComponent': AutocitadoComponent,
+    'ObesidadComponent': ObesidadComponent,
+    'HipertensionArterialComponent': HipertensionArterialComponent,
+    'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
+    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
+    'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
+    'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
+    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent
+};
 
 let RUPComponentsArray = [
-    PesoComponent,
+    AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
+    FiltradoGlomerularComponent,
+    FrecuenciaCardiacaComponent,
+    FrecuenciaRespiratoriaComponent,
+    HipertensionArterialComponent,
     IndiceDeMasaCorporalComponent,
+    InformesComponent,
     NuevaEvolucionProblemaComponent,
+    ObesidadComponent,
     ObservacionesComponent,
+    PesoComponent,
+    RegistrarMedicamentoDefaultComponent,
+    RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
+    SeguimientoDelPesoComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
@@ -317,18 +290,11 @@ let RUPComponentsArray = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    FrecuenciaCardiacaComponent,
-    FrecuenciaRespiratoriaComponent,
-    AutocitadoComponent,
-    ObesidadComponent,
-    HipertensionArterialComponent,
+    AdjuntarDocumentoComponent
 ];
-
-export let RUPRegistry = {};
-
-for (let key in RUPComponentsArray) {
-    RUPRegistry[RUPComponentsArray[key].name] = RUPComponentsArray[key];
-}
+// for (let key in RUPRegistry) {
+//     RUPComponentsArray.push(RUPRegistry[key]);
+// }
 
 // Main module
 @NgModule({
@@ -343,8 +309,7 @@ for (let key in RUPComponentsArray) {
         routing,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
-        }),
-        DragScrollModule
+        })
     ],
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
@@ -375,7 +340,8 @@ for (let key in RUPComponentsArray) {
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
-        ListarTurnosComponent,
+        ReporteC2Component,
+        ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent,
         ResumenComponent,
         PrestacionCrearComponent,
@@ -385,6 +351,8 @@ for (let key in RUPComponentsArray) {
         HeaderPacienteComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
+        VistaHudsComponent,
+        HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
@@ -422,6 +390,7 @@ for (let key in RUPComponentsArray) {
         Server,
         SmsService,
         PrestacionesService,
+        AdjuntosService,
         TipoPrestacionService,
         ElementosRUPService,
         ConceptObserverService,
@@ -437,7 +406,8 @@ for (let key in RUPComponentsArray) {
         AnsesService,
         LogPacienteService,
         UsuarioService,
-        PermisosService
+        PermisosService,
+        FrecuentesProfesionalService
 
     ]
 })

@@ -1,14 +1,23 @@
 @import 'node_modules/@andes/plex/src/lib/css/variables';
 // Variables
-$problemas: #f1930d;
-$trastorno: #d9534f;
-$hallazgos: #d9534f;
-$procedimientos: #92278E;
-$planes: #0070ba;
-$lista-problemas: "hallazgo",
-"trastorno",
-"situacion";
-$selector: ();
-$lista-procedimientos: "procedimiento",
-"entidad";
-$selector2: ();
+$problema: #f1930d; // deprecated
+$trastorno: #ff4a1a;
+$hallazgo: #f4a03b;
+$procedimiento: #92278e;
+$plan: #0070cc;
+// $productos: #ef0993;
+$producto: #00bcb4;
+$adjunto: #b9c512;
+$todos: #111;
+$otro: #b9c512;
+$invert: #002738;
+// definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
+// la interpolacion del string a una variable directamente
+$rup_colors: ( problema: $problema, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto, invert: $invert, todos: $todos, otro: $otro);
+//TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
+.badge-success,
+.badge-validada,
+.badge-info {
+    font-weight: normal !important;
+    border: 1px solid !important;
+}

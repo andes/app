@@ -1,3 +1,270 @@
+@import '../variables';
+// TODO: Crear paquete NPM con las fonts
+@import '../../assets/font.css';
+$rotate: -90deg;
+.rup-card {
+    &:not(.mini) {
+        border: 2px solid #ccc;
+    }
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    transition: 200ms all;
+    -webkit-transition: 200ms all;
+    &.mini {
+        margin-bottom: 2px;
+        .rup-header {
+            .icon-rup {
+                border-right: 2px solid #ccc;
+            }
+            .actions {
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
+            }
+            .rup-border {
+                width: 100%;
+                border-top: 2px solid #ccc;
+                border-bottom: 2px solid #ccc;
+                border-right: 2px solid #ccc;
+            }
+        }
+        &:hover {
+            background: #eee;
+        }
+        .rup-border {
+            &:hover {
+                background: #eee;
+                border-right: 2px solid $blue;
+                border-bottom: 2px solid $blue;
+                border-top: 2px solid $blue;
+            }
+        }
+        @each $tag,
+        $color in $rup_colors {
+            &.#{$tag} {
+                &:hover,
+                &.active {
+                    box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+                    .rup-header {
+                        .icon-rup {
+                            background: $color;
+                            i {
+                                color: white;
+                            }
+                        }
+                    }
+                }
+                .rup-header {
+                    .icon-rup {
+                        border: 2px solid $color;
+                        background: white;
+                        i {
+                            color: $color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    @each $tag,
+    $color in $rup_colors {
+        &.#{$tag}:not(.mini) {
+            &:hover {
+                border-left: 2px solid $color;
+                border-right: 2px solid $color;
+                border-bottom: 2px solid $color;
+                border-top: 2px solid $color;
+                box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
+            }
+            .rup-header,
+            .rup-header .icon-rup,
+            .rup-body .legend,
+            .rup-footer .type {
+                background: $color;
+            }
+            .rup-header .icon-rup {
+                border-bottom: 1px solid $color;
+                mix-blend-mode: hard-light;
+            }
+        }
+    }
+    .rup-header {
+        text-transform: capitalize;
+        display: flex;
+        .icon-rup,
+        .title,
+        .actions {
+            padding: 5px;
+        }
+        .btn-icon-rup {
+            line-height: 1.3em;
+        }
+        .icon-rup {
+            font-size: 1.2rem;
+            width: 55px;
+            text-align: center;
+            i {
+                color: white;
+                font-size: 2.5rem;
+                line-height: 30px;
+            }
+        }
+        .title {
+            font-size: 1.3em;
+            -ms-flex-preferred-size: 0;
+            flex-basis: 0;
+            -webkit-box-flex: 1;
+            -ms-flex-positive: 1;
+            flex-grow: 1;
+            max-width: 100%;
+            background: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            display: inline-grid;
+            .vinculadoCon {
+                display: inline-flex;
+            }
+        }
+        .actions {
+            background: white;
+            margin-left: auto;
+            .btn {
+                margin: 0 5px;
+            }
+            .btn:first-child {
+                margin-right: 0;
+            }
+        }
+    }
+    .rup-body {
+        display: flex;
+        min-height: 160px;
+        .legend {
+            padding: 5px;
+            font-size: 1.2rem;
+            width: 55px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            span {
+                display: block;
+                text-transform: uppercase;
+                -ms-transform: rotate($rotate);
+                -moz-transform: rotate($rotate);
+                -webkit-transform: rotate($rotate);
+                transform: rotate($rotate);
+                font-size: 0.9rem;
+                margin-bottom: 50px;
+                color: white;
+                min-width: 120px;
+            }
+        }
+        .content {
+            margin: 0;
+            padding: 10px 20px;
+            flex: 1;
+            border-top: 1px solid #666;
+        }
+    }
+    .rup-footer {
+        padding: 0;
+        display: flex;
+        .type {
+            width: 55px;
+        }
+    }
+    &:hover {
+        .rup-header {
+            .rup-icon {
+                i {
+                    transition: 200ms all;
+                    -webkit-transition: 200ms all;
+                }
+            }
+        }
+    }
+}
+
+.text-secondary {
+    color: #818182 !important;
+}
+
+
+/* drag and drop */
+
+.drag-handle {
+    cursor: -webkit-grab;
+    color: white;
+}
+
+.drag-over-border {
+    border: $red dashed 2px;
+}
+
+.droppable.drag-target-border,
+.drag-target-border {
+    border: $dark-grey dashed 2px;
+}
+
+.droppable {
+    width: 100%;
+    height: auto;
+    border: 2px dashed $dark-grey;
+    padding: 10px 0;
+    margin: 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+    color: $dark-grey;
+}
+
+.drop-area {
+    min-height: 50px;
+    p {
+        font-size: 20px;
+        margin: 0;
+        text-align: center;
+    }
+}
+
+.spin-in::before {
+    -webkit-transform: rotate(180deg);
+    -moz-transform: rotate(180deg);
+    -o-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg);
+    transition: all 200ms;
+}
+
+.spin-out::before {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+    transition: all 200ms;
+}
+
+.drop-posicion {
+    background: $light-grey;
+    color: $dark-grey;
+    padding: 5px;
+    border: 2px dashed white;
+    margin: 5px 0;
+    text-align: center;
+    .drop-posicion-hover {
+        border: 2px dashed $dark-grey;
+    }
+}
+
+
+/* fin drag & drop */
+
+
+/* elemento rup solo lectura */
+
 .readonly {
     font-size: 16px;
     span {
@@ -8,6 +275,82 @@
     }
 }
 
-.text-secondary {
-    color: #818182 !important;
+
+/* fin elemento rup solo lectura */
+
+// BUTTONS
+@each $tag,
+$color in $rup_colors {
+    .btn-#{$tag} {
+        color: $color;
+        border-color: $color;
+        background: white;
+    }
+    .btn-#{$tag}:hover,
+    .btn-#{$tag}:focus,
+    .btn-#{$tag}:active,
+    .btn-#{$tag}.active,
+    .open .dropdown-toggle.btn-#{$tag} {
+        // color: white;
+        // border-color: $hallazgos;
+    }
+    .btn-#{$tag}:active,
+    .btn-#{$tag}.active,
+    .open .dropdown-toggle.btn-#{$tag} {
+        color: white;
+        background-color: $color;
+        background-image: none;
+    }
+    .btn-#{$tag}.disabled,
+    .btn-#{$tag}[disabled] {
+        background-color: #eee;
+        border-color: #ccc;
+        color: #ccc;
+    }
 }
+
+// BADGES
+@each $tag,
+$color in $rup_colors {
+    .badge-#{$tag} {
+        font-weight: normal;
+        text-transform: uppercase;
+        color: $color;
+        border: 1px solid $color;
+        &:focus {
+            outline: 0;
+        }
+        &.active {
+            background-color: $color;
+            mix-blend-mode: hard-light;
+        }
+    }
+}
+
+.input-group-addon {
+    input {
+        text-align: right;
+    }
+}
+
+.form-group>label {
+    margin-bottom: 0 !important;
+}
+
+.indicacion-default {
+    textarea {
+        height: 108px !important;
+    }
+}
+
+.anteriores {
+    width: 100%;
+    div {
+        border: 1px solid #ccc;
+    }
+}
+
+// Debería ser global (Plex)
+// .bg-inverse {
+//     background-color: #002738 !important;
+// }

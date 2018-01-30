@@ -76,6 +76,7 @@ export class GestorAgendasComponent implements OnInit {
     public showAgregarSobreturno = false;
     public showRevisionAgenda = false;
     public showListadoTurnos = false;
+    public showCarpetas = false;
     public showSuspenderTurnos = false;
     public agendas: any = [];
     public agenda: any = {};
@@ -96,6 +97,7 @@ export class GestorAgendasComponent implements OnInit {
     public btnCrearAgendas = false;
 
     public permisos: any;
+    public prestacionesPermisos = [];
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -115,6 +117,8 @@ export class GestorAgendasComponent implements OnInit {
     ngOnInit() {
         this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
         this.autorizado = this.auth.getPermissions('turnos:agenda:?').length > 0;
+        this.prestacionesPermisos = this.auth.getPermissions('turnos:planificarAgenda:prestacion:?');
+
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
             this.redirect('inicio');
@@ -135,6 +139,9 @@ export class GestorAgendasComponent implements OnInit {
             espacioFisico: '',
             estado: ''
         };
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
+        }
 
         // Por defecto cargar/mostrar agendas de hoy
         this.hoy = true;
@@ -143,7 +150,7 @@ export class GestorAgendasComponent implements OnInit {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).endOf('day');
 
         // Iniciamos la búsqueda
         this.parametros = {
@@ -155,20 +162,27 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-        if (tipo === 'fecha') {
-            let fechaDesde = moment(value).startOf('day');
-            let fechaHasta = moment(value).endOf('day');
-            if (fechaDesde.isValid() || fechaHasta.isValid()) {
-                this.parametros = {
-                    fechaDesde: fechaDesde.isValid() ? this.fechaDesde : moment().format(),
-                    fechaHasta: fechaHasta.isValid() ? this.fechaHasta : moment().format(),
-                    organizacion: this.auth.organizacion._id
-                };
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
+            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
+        }
+        if (tipo === 'fechaDesde') {
+            let fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaDesde.isValid()) {
+                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
+            }
+        }
+        if (tipo === 'fechaHasta') {
+            let fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaHasta.isValid()) {
+                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
             }
         }
         if (tipo === 'prestaciones') {
             if (value.value !== null) {
                 this.parametros['idTipoPrestacion'] = value.value.id;
+                delete this.parametros['tipoPrestaciones'];
             } else {
                 this.parametros['idTipoPrestacion'] = '';
             }
@@ -197,7 +211,6 @@ export class GestorAgendasComponent implements OnInit {
 
         // Completo params con la info que ya tengo
         this.getAgendas(this.parametros);
-
     };
 
     getAgendas(params: any) {
@@ -248,7 +261,9 @@ export class GestorAgendasComponent implements OnInit {
             idProfesional: '',
             idEspacioFisico: ''
         };
-
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+            params['tipoPrestaciones'] = this.prestacionesPermisos;
+        }
         this.getAgendas(params);
 
     }
@@ -287,8 +302,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showClonar = true;
     }
 
-    // vuelve al gestor luego de alguna operación
-    // en el caso de sobreturno emite la agendaModificada, para refrescar la agenda automáticamente.
+    // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
     volverAlGestor(agendModificada) {
         if (agendModificada.id) { // vuelve de dar sobreturno
             this.verAgenda(this.agendasSeleccionadas[0], false, null);
@@ -304,6 +318,7 @@ export class GestorAgendasComponent implements OnInit {
         this.showReasignarTurno = false;
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
+        this.showCarpetas = false;
         this.loadAgendas();
     }
 
@@ -328,13 +343,13 @@ export class GestorAgendasComponent implements OnInit {
         this.editaAgenda = agenda;
 
         if (this.editaAgenda.estado === 'planificacion') {
-            this.showGestorAgendas = false;
             this.showEditarAgenda = true;
+            this.showGestorAgendas = false;
             this.showEditarAgendaPanel = false;
         } else {
             this.showGestorAgendas = true;
-            this.showEditarAgenda = false;
             this.showEditarAgendaPanel = true;
+            this.showEditarAgenda = false;
             this.showTurnos = false;
         }
         this.showAgregarNotaAgenda = false;
@@ -350,9 +365,15 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadPrestaciones(event) {
-        this.servicioPrestacion.get({
-            turneable: 1
-        }).subscribe(event.callback);
+        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
+            this.servicioPrestacion.get({
+                id: this.prestacionesPermisos
+            }).subscribe(event.callback);
+        } else {
+            this.servicioPrestacion.get({
+                turneable: 1
+            }).subscribe(event.callback);
+        }
     }
 
     loadProfesionales(event) {
@@ -370,7 +391,7 @@ export class GestorAgendasComponent implements OnInit {
         if (event.query) {
             let query = {
                 edificio: event.query,
-                // organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(listaEdificios => {
                 event.callback(listaEdificios);
@@ -386,7 +407,7 @@ export class GestorAgendasComponent implements OnInit {
         if (event.query) {
             let query = {
                 nombre: event.query,
-                // organizacion: this.auth.organizacion._id
+                organizacion: this.auth.organizacion.id
             };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
                 if (this.modelo.espacioFisico) {
@@ -412,15 +433,18 @@ export class GestorAgendasComponent implements OnInit {
             agenda = ag;
             // Actualizo la agenda global (modelo)
             this.agenda = ag;
+            if (this.showEditarAgendaPanel && agenda.estado !== 'publicada' && agenda.estado !== 'disponible' && agenda.estado !== 'planificacion') {
+                this.plex.info('danger', '', 'No es posible editar la agenda seleccionada.', 3000);
+                return;
+            }
 
             if (!multiple) {
                 this.agendasSeleccionadas = [];
                 this.agendasSeleccionadas = [...this.agendasSeleccionadas, ag];
             } else {
-                let index;
-                if (this.estaSeleccionada(agenda)) {
+                let index = this.estaSeleccionada(agenda);
+                if (index >= 0) {
                     agenda.agendaSeleccionadaColor = 'success';
-                    index = this.agendasSeleccionadas.indexOf(agenda);
                     this.agendasSeleccionadas.splice(index, 1);
                     this.agendasSeleccionadas = [...this.agendasSeleccionadas];
                 } else {
@@ -462,7 +486,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     estaSeleccionada(agenda: any) {
-        return this.agendasSeleccionadas.find(x => x.id === agenda._id);
+        return this.agendasSeleccionadas.findIndex(x => x.id === agenda._id);
     }
 
     setColorEstadoAgenda(agenda) {
@@ -495,7 +519,6 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     actualizarEstadoEmit(estado) {
-
         // Se suspende una agenda completa
         // Se muestra la lista de pacientes y opción de enviarles SMS a discreción
         if (estado === 'suspendida') {
@@ -555,6 +578,11 @@ export class GestorAgendasComponent implements OnInit {
     listarTurnos(agenda) {
         this.showGestorAgendas = false;
         this.showListadoTurnos = true;
+    }
+
+    listarCarpetas(agenda) {
+        this.showGestorAgendas = false;
+        this.showCarpetas = true;
     }
 
     // Devuelve la duración (HH:mm) de una agenda

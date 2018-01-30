@@ -211,10 +211,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     };
 
     // PARA LA APP MOBILE
-    /**
-     * [TODO] showMobile: Agregado para que compile con AOT
-     * Cambio de private a public
-     */
     public showMobile = false;
 
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
@@ -507,7 +503,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
             let operacionPac: Observable < IPaciente > ;
             // generamos pacientes temporales a partir de las nuevas relaciones
-            await this.crearTemporales(pacienteGuardar);
+            if (pacienteGuardar.documento) {
+                await this.crearTemporales(pacienteGuardar);
+            }
             operacionPac = this.pacienteService.save(pacienteGuardar);
             operacionPac.subscribe(result => {
                 if (result) {
@@ -527,12 +525,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                 this.pacienteService.patch(rel.referencia, {
                                     'op': 'deleteRelacion',
                                     'dto': dto
-                                }).subscribe(result2 => {
-                                });
+                                }).subscribe(result2 => {});
                             }
                         });
                     }
-
                     // agregamos las relaciones opuestas
                     if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
                         pacienteGuardar.relaciones.forEach(rel => {
@@ -546,14 +542,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                 referencia: pacienteGuardar.id,
                                 nombre: pacienteGuardar.nombre,
                                 apellido: pacienteGuardar.apellido,
-                                documento: pacienteGuardar.documento
+                                documento: pacienteGuardar.documento ? pacienteGuardar.documento : ''
                             };
                             if (rel.referencia) {
                                 this.pacienteService.patch(rel.referencia, {
                                     'op': 'updateRelacion',
                                     'dto': dto
-                                }).subscribe(result2 => {
-                                });
+                                }).subscribe(result2 => {});
                             }
                         });
                     }
@@ -722,12 +717,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     preSave(valid) {
         if (valid.formValid) {
-            this.disableGuardar = true;
-            this.verificaPacienteRepetido().then((resultado) => {
-                if (!resultado) {
-                    this.save(valid);
-                }
-            });
+            if (this.pacienteModel.documento) {
+                this.verificaPacienteRepetido().then((resultado) => {
+                    if (!resultado) {
+                        this.save(valid);
+                        this.disableGuardar = true;
+                    };
+                });
+            } else {
+                this.save(valid);
+                this.disableGuardar = true;
+            }
         } else {
             this.plex.alert('Debe completar los datos obligatorios');
         }

@@ -1,3 +1,4 @@
+import { ITurno } from './ITurno';
 import { ITipoPrestacion } from './../ITipoPrestacion';
 import { IBloque } from './IBloque';
 
@@ -34,6 +35,7 @@ export interface IAgenda {
     bloques: IBloque[];
     estado: String;
     prePausada: String;
+    sobreturnos?: ITurno[];
     turnosDisponibles: number; // Virtual
     turnosRestantesDelDia: number; // Virtual
     turnosRestantesProgramados: number; // Virtual

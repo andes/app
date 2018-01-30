@@ -1,4 +1,4 @@
-<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="Talla" suffix="cm" min="1" max="240">
+<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="Talla" suffix="cm" required="true" min="1" max="240">
 </plex-float>
 
 <p *ngIf="soloValores" class="readonly">

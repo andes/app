@@ -43,11 +43,6 @@ export class ActivarAppComponent implements OnInit, OnChanges {
     public email: String = '';
     public message: String = '';
     public hideButton = false;
-
-    /**
-     * [TODO] hideButtonResend: Agregado para que compile con AOT
-     * Cambio de private a public
-     */
     public hideButtonResend = true;
 
     // Inicialización

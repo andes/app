@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import * as moment from 'moment';
 
 // Interfaces
 import { IPaciente } from './../../../interfaces/IPaciente';
@@ -38,13 +39,9 @@ export class TurnosPacienteComponent implements OnInit {
 
     @Input('paciente')
     set paciente(value: IPaciente) {
-        this._paciente = value;
         if (value) {
-            let datosTurno = { pacienteId: this._paciente.id };
-
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos;
-            });
+            this._paciente = value;
+            this.getTurnosPaciente(this._paciente);
         }
     }
     get paciente(): IPaciente {
@@ -57,22 +54,43 @@ export class TurnosPacienteComponent implements OnInit {
     ngOnInit() {
     }
 
+    getTurnosPaciente(paciente) {
+        if (paciente.id) {
+            let datosTurno = { pacienteId: paciente.id };
+            // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
+            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+                this.turnosPaciente = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+                });
+            });
+        }
+    }
+
     eventosTurno(turno, operacion) {
         let mensaje = '';
         let tipoToast = 'info';
         let patch: any = {
             op: operacion,
-            turnos: [turno],
-            'idTurno': turno._id
+            turnos: [turno._id],
+            // 'idTurno': turno._id
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(turno.agenda_id, patch).subscribe(resultado => {
-            let agenda = resultado;
+        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
 
+            let agenda = resultado;
             let datosTurno = { pacienteId: this._paciente.id };
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos;
+                this.turnosPaciente = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+                });
+                // this.turnosPaciente = turnos;
                 switch (operacion) {
                     case 'darAsistencia':
                         mensaje = 'Se registro la asistencia del paciente';
@@ -81,8 +99,6 @@ export class TurnosPacienteComponent implements OnInit {
                     case 'sacarAsistencia':
                         mensaje = 'Se registro la inasistencia del paciente';
                         tipoToast = 'warning';
-                        break;
-                    case 'liberarTurno':
                         break;
                 }
                 if (mensaje !== '') {
@@ -96,7 +112,7 @@ export class TurnosPacienteComponent implements OnInit {
     liberarTurno(turno) {
         this.turnosSeleccionados = [turno];
         this.serviceAgenda.getById(turno.agenda_id).subscribe(resultado => {
-            this.agenda = resultado;
+            this.agenda = resultado; // obtiene la agenda para enviarla al componente liberar-turno
             this.showLiberarTurno = true;
         });
     }
@@ -104,8 +120,9 @@ export class TurnosPacienteComponent implements OnInit {
     cancelaLiberarTurno() {
         this.showLiberarTurno = false;
     }
-    saveLiberarTurno(agenda: any) {
-        this.eventosTurno(this.turnosSeleccionados[0], 'liberarTurno');
+
+    saveLiberarTurno(agenda: any, pac) {
+        this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
 }

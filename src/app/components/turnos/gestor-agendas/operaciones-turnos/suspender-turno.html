@@ -18,8 +18,9 @@
             {{turno.horaInicio | date: 'H:mm'}} hs
         </div>
         <div class="col-7 text-center">
-            <span *ngIf="turno.paciente?.id">{{turno.paciente | paciente}}</span>
-            <span *ngIf="!turno.paciente?.id">sin paciente asignado</span>
+            <span *ngIf="turno.paciente?.id">{{turno.paciente | paciente}} {{turno.estado}}</span>
+            <span *ngIf="!turno.paciente?.id && turno.estado !== 'turnoDoble'">sin paciente asignado</span>
+            <span *ngIf="turno.estado === 'turnoDoble'">turno doble</span>
         </div>
         <div class="col-3 text-center" (click)="seleccionarTurno(turno)">
             <span *ngIf="turno.paciente?.id && estaSeleccionado(turno)">

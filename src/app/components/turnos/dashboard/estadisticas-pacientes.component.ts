@@ -17,11 +17,6 @@ import { LogPacienteService } from '../../../services/logPaciente.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
-
-    /**
-     * [TODO] _paciente: Agregado para que compile con AOT
-     * Revisar en el HTML porque no usa 'paciente' en vez de '_paciente'.
-     */
     public _paciente: IPaciente;
     @Input('paciente')
     set paciente(value: any) {

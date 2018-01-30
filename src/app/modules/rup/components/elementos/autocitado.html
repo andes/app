@@ -1,7 +1,12 @@
-<div *ngIf="!soloValores">
-    <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.motivo"></plex-text>
-    <plex-select [(ngModel)]="registro.valor.prestacionSolicitada" name="nombrePrestacion" label="Prestación a Solicictar" [data]="tiposPrestacion"
-        labelField="term">
+<div *ngIf="!soloValores && registro.valor">
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.prestacionSolicitada" name="nombrePrestacion" required="true" label="Prestación a Solicitar" [data]="tiposPrestacion" labelField="term" (change)="cambiarNombre()">
     </plex-select>
-    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.indicaciones"></plex-text>
+    <plex-text label="Motivo" multiline="true" autoFocus="1" required="true" [(ngModel)]="registro.valor.solicitudPrestacion.motivo"></plex-text>
 </div>
+
+<p *ngIf="soloValores" class="readonly">
+    <span>Motivo</span>
+    <ng-container>
+        {{ registro.valor.solicitudPrestacion.motivo || '(no registrado)' }}
+    </ng-container>
+</p>

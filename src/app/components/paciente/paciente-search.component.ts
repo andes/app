@@ -204,7 +204,11 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     /**
      * Busca paciente cada vez que el campo de busca cambia su valor
      */
-    public buscar() {
+    public buscar($event) {
+        /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
+        if ($event.type) {
+            return;
+        }
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
@@ -277,17 +281,20 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                                     };
                                     if (pacienteEncontrado) {
                                         this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
-                                        this.seleccionarPaciente(pacienteEncontrado);
+                                        this.seleccionarPaciente(pacienteEncontrado.paciente ? pacienteEncontrado.paciente : pacienteEncontrado);
                                     } else {
                                         if (this.pacientesSimilares[0].match >= 0.94) {
                                             this.logService.post('mpi', 'macheoAlto', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                             //
                                             // Actualizamos los datos del paciente con los datos obtenidos del DNI
                                             //
-                                            this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
-                                            this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
-                                            this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
-                                            this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            if (!(this.pacientesSimilares[0].paciente.estado === 'validado')) {
+
+                                                this.pacientesSimilares[0].paciente.nombre = pacienteEscaneado.nombre;
+                                                this.pacientesSimilares[0].paciente.apellido = pacienteEscaneado.apellido;
+                                                this.pacientesSimilares[0].paciente.documento = pacienteEscaneado.documento;
+                                                this.pacientesSimilares[0].paciente.fechaNacimiento = pacienteEscaneado.fechaNacimiento;
+                                            }
                                             this.seleccionarPaciente(this.pacientesSimilares[0].paciente);
                                         } else {
                                             if (this.pacientesSimilares[0].match >= 0.80 && this.pacientesSimilares[0].match < 0.94) {

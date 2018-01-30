@@ -1,84 +1,108 @@
 @import '../variables';
-//
-.rup-card {
-    width: 100%;
-    display: flex;
-    border: 1px solid #ccc;
-    margin-bottom: 10px;
-}
-
-.rup-card .type {
-    padding: 5px;
-    width: 20px;
-    float: left;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.rup-card .type i {
-    color: white;
-}
-
-.rup-card .rup-content {
-    margin: 0;
-    width: 100%;
-}
-
-.rup-card .rup-content .rup-body {
-    padding: 15px;
-}
-
-.rup-card .rup-content .header {
-    padding: 5px 15px;
-    text-transform: capitalize;
-    border-bottom: 1px solid #ccc;
-}
-
-.rup-card .rup-content .header .title {
-    display: inline-flex;
-}
-
-.rup-card .rup-content .header .actions {
-    float: right!important;
-}
-
-.rup-card .rup-content .rup-footer {
-    padding: 5px 15px;
-}
-
-.prestaciones {
-    background-color: $planes;
-}
-
-.planes {
-    background-color: $planes;
-}
-
-.problemas {
-    background-color: $problemas;
-}
-
-.procedimientos {
-    background-color: $procedimientos;
-}
-
-@each $item in $lista-problemas {
-    $selector: $selector, unquote('.#{$item}');
-}
-
-#{$selector} {
-    background-color: $problemas;
-  }
-  
-  @each $item in $lista-procedimientos {
-      $selector2: $selector2, unquote('.#{$item}');
-  }
-  
-  #{$selector2} {
-      background-color: $procedimientos;
+// TODO: Crear paquete NPM con las fonts
+@media print {
+    @import '../../assets/font.css';
+    * {
+        -webkit-print-color-adjust: exact !important;
+        /* Chrome, Safari */
+        color-adjust: exact !important;
+        /*Firefox*/
     }
+}
 
-  .plan {
-    background-color: $planes;
- }
+.type.prestacion {
+    background-color: $plan;
+}
+
+.type.hallazgo,
+.type.situación {
+    background-color: $problema;
+}
+
+.type.trastorno {
+    background-color: $trastorno;
+}
+
+.type.procedimiento,
+.type.entidad.observable,
+.régimen\/tratamiento {
+    background-color: $procedimiento;
+}
+
+.type.plan {
+    background-color: $plan;
+}
+
+.type.producto {
+    background-color: $producto;
+}
+
+.type.elemento.de.registro {
+    background-color: $adjunto;
+}
+
+.bg-invert {
+    background-color: $invert !important;
+}
+
+.btn-orden {
+    height: 28px;
+    width: 28px;
+    i {
+        position: relative;
+        left: -3px;
+        top: -6px;
+    }
+}
+
+// Resetea algunas reglas de .badge
+.badge {
+    border: 1px solid;
+    padding: 3px;
+}
+
+.titulo-hallazgos~.titulo-hallazgos {
+    display: none;
+}
+
+.titulo-trastornos~.titulo-trastornos {
+    display: none;
+}
+
+.titulo-procedimientos~.titulo-procedimientos {
+    display: none;
+}
+
+.titulo-planes~.titulo-planes {
+    display: none;
+}
+
+.titulo-productos~.titulo-productos {
+    display: none;
+}
+
+.imprimir {
+    display: none;
+}
+
+.titulo-adjuntos~.titulo-adjuntos {
+    display: none;
+}
+
+.titulo-consulta {
+    font-weight: 400;
+    color: black;
+    .consulta {
+        color: $blue;
+    }
+}
+
+.diagnostico-principal,
+.primera-vez {
+    line-height: 36px;
+    vertical-align: middle;
+    display: inline-flex;
+    span {
+        margin-left: 10px;
+    }
+}

@@ -27,6 +27,7 @@ export class ReasignarTurnoComponent implements OnInit {
     showReasignarTurno: boolean;
     agendasSimilares: IAgenda[];
     agendaDestino: any = {};
+    smsActivo = false;
 
     private _agendaAReasignar: any;
 
@@ -67,7 +68,6 @@ export class ReasignarTurnoComponent implements OnInit {
     actualizar() {
         this.serviceAgenda.getById(this.agendaAReasignar.id).subscribe(agendaActualizada => {
             this.agendaAReasignar = agendaActualizada;
-            // this.seleccionarTurno(this.agendaAReasignar.bloques[0].turnos[0], this.agendaAReasignar.bloques[0], false);
         });
     }
 
@@ -76,7 +76,6 @@ export class ReasignarTurnoComponent implements OnInit {
     }
 
     seleccionarTurno(turno, bloque, multiple = false) {
-
         if (!multiple) {
             this.turnosSeleccionados = [];
             this.turnosSeleccionados = [...this.turnosSeleccionados, turno];
@@ -93,14 +92,6 @@ export class ReasignarTurnoComponent implements OnInit {
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
-
-        // if (this.turnosSeleccionados.length < this.agendaAReasignar.turnos.length) {
-        //     this.todos = false;
-        // }
-
-        // if (this.turnosSeleccionados.length === this.agendaAReasignar.turnos.length) {
-        //     this.todos = true;
-        // }
 
         let idAgenda, idBloque, idTurno;
 

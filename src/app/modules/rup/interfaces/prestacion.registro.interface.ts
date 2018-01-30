@@ -20,6 +20,8 @@ export class IPrestacionRegistro {
     // Indica los id de otros registros dentro array 'registros' de la prestación
     relacionadoCon: any[];
     esDiagnosticoPrincipal: Boolean;
+    // Indica si este registro es valido (no vacio)
+    valido: Boolean;
 
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
@@ -30,8 +32,11 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
-        elementoRUP.requeridos.forEach((item) => {
-            this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
-        });
+        if (elementoRUP.requeridos) {
+            elementoRUP.requeridos.forEach((item) => {
+                this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
+            });
+        }
+
     };
 };

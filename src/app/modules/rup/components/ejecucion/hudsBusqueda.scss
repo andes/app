@@ -1,4 +1,71 @@
-@import '../variables';
+@import '../core/rup';
+.text-problemas {
+    color: $problema;
+}
+
+.text-productos {
+    color: $producto;
+}
+
+// .border-hallazgo {
+//     border-color: $problemas;
+// }
+.text-planes {
+    color: $plan;
+}
+
+.border-planes {
+    border-color: $plan;
+}
+
+.borde-prestaciones input,
+.borde-prestaciones input:focus {
+    border-color: $dark-blue;
+}
+
+.borde-prestaciones input,
+.borde-prestaciones input:focus {
+    border-color: $dark-blue;
+    background-color: $dark-blue;
+    color: white;
+}
+
+// .prestaciones {
+//     background-color: $dark-blue;
+// }
+.borde-planes input,
+.borde-planes input:focus {
+    border-color: $plan;
+    background-color: $plan !important;
+    background-color: $plan;
+    color: white;
+}
+
+// .planes {
+//     background-color: $planes;
+// }
+.borde-problemas input,
+.borde-problemas input:focus {
+    border-color: $problema;
+    background-color: $problema !important;
+    background-color: $problema;
+    color: white;
+}
+
+// .problemas {
+//     background-color: $problemas;
+// }
+.borde-procedimientos input,
+.borde-procedimientos input:focus {
+    border-color: $procedimiento;
+    background-color: $procedimiento !important;
+    background-color: $procedimiento;
+    color: white;
+}
+
+// .procedimientos {
+//     background-color: $procedimientos;
+// }
 .vista-titulo {
     padding-top: 1em;
     font-size: 1.4em;
@@ -40,6 +107,6 @@
 
 .menu-huds {
     .btn {
-        width: 49.5%;
+        width: 32.5%;
     }
 }

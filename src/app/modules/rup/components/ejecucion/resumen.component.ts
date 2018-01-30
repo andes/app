@@ -16,6 +16,7 @@ export class ResumenComponent implements OnInit {
 
     public prestacion: any;
     public prestacionesPendientes: IPrestacion[] = [];
+    public listaProblemas = []; // Agrego esta propiedad que no estaba definida
 
     /**
      * [TODO] listaProblemas: Agregado para que compile con AOT

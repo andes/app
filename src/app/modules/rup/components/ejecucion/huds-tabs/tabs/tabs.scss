@@ -10,6 +10,12 @@
             min-width: 170px;
             width: auto;
             white-space: normal;
+            /* scroll bars */
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 0px;
+                background: transparent;
+            }
             &:hover {
                 background: #fefefe;
             }
@@ -18,7 +24,7 @@
                 text-decoration: none;
                 color: black;
                 display: inline-block;
-                width: 100%;
+                width: 85%;
                 height: 100%;
                 text-transform: capitalize;
             }
@@ -32,6 +38,7 @@
             &.hallazgos a,
             &.procedimientos a,
             &.planes a,
+            &.productos a,
             &.prestacion a {
                 color: white;
             }
@@ -48,10 +55,10 @@
                 background-color: $trastorno;
             }
             &.hallazgos {
-                background-color: $hallazgos;
+                background-color: $hallazgo;
             }
             &.procedimientos {
-                background-color: $procedimientos;
+                background-color: $procedimiento;
             }
             &.planes,
             &.prestacion,
@@ -67,22 +74,21 @@
             {
                 background-color: rgba(0, 112, 186, 1);
             }
-        }
-        &.draggable {
-            overflow: auto;
-            &::-webkit-scrollbar {
-                width: 0px;
-                background: transparent;
+            &.productos {
+                background-color: $producto;
             }
         }
         &.fixed {
-            padding-left: 170px;
+            padding-left: 200px;
             li:first-child {
-                margin-left: -170px;
-                width: 170px;
+                margin-left: -200px;
+                width: 200px;
                 position: fixed;
                 -webkit-box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
                 box-shadow: 10px 0 5px -2px rgba(51, 51, 51, 0.15);
+                min-height: 46px;
+                height: 100%;
+                max-height: 70px;
             }
         }
     }

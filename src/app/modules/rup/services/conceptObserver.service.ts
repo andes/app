@@ -37,4 +37,14 @@ export class ConceptObserverService {
       this.observers[concepto.conceptId].next(registro);
     }
   }
+
+  /**
+   * Limpia los observers para que no aparezcan valores los valores en una consulta nueva
+   *
+   */
+
+  public destroy() {
+    this.observers = {};
+  }
+
 };

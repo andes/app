@@ -4,4 +4,5 @@ export interface ISnomedConcept {
     term: string;
     fsn: string;
     semanticTag: string;
+    refsetIds?: string[];
 };

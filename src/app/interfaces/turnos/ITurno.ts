@@ -1,6 +1,6 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
 
-// Recordar actualizar Schema!
+// TODO: Recordar actualizar Schema!
 export interface ITurno {
     id: String;
     horaInicio: Date;
@@ -11,7 +11,9 @@ export interface ITurno {
         nombre: String,
         apellido: String,
         documento: String,
+        fechaNacimiento: Date,
         telefono: String,
+        sexo: String
     };
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;

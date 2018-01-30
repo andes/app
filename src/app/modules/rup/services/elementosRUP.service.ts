@@ -21,6 +21,8 @@ export class ElementosRUPService {
     private defaults: IElementosRUPCache = {};
     // Precalcula los elementos default para solicitudes
     private defaultsParaSolicitud: IElementosRUPCache = {};
+
+    private cacheBusquedaGuidada: any = {};
     // Indica que el servicio está listo para usarse.
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
@@ -129,6 +131,21 @@ export class ElementosRUPService {
             } else {
                 return this.defaults[concepto.semanticTag];
             }
+        }
+    }
+
+    /**
+     * Metodo get. Trae el objeto elementoRup.
+     * @param {any} params Opciones de busqueda
+     */
+    guiada (id): Observable<IElementoRUP[]> {
+        if (this.cacheBusquedaGuidada[id]) {
+            return new Observable((observer) => {
+                observer.next(this.cacheBusquedaGuidada[id]);
+                observer.complete();
+            })
+        } else {
+            return this.server.get(url + '/' + id + '/guiada', { showError: true });
         }
     }
 }
