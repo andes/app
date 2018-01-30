@@ -38,6 +38,7 @@
                             -->
                         </div>
                     </div>
+
                     <div class="col-paciente">
 
                         <div>
@@ -45,7 +46,7 @@
 
                                 <i class="icono-paciente {{cama.paciente | iconoCama}} tips" *ngIf="cama?.paciente?.id" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'evolucion'" ></i>
 
-                                <button type="button" class="btn btn-buscar-paciente  grow tips" title="Agregar paciente en cama" (click)="buscarPaciente(cama); cama.$action = 'internacion'" *ngIf="!cama?.paciente?.id && cama.ultimoEstado.estado == 'desocupada'">
+                                <button type="button" class="btn btn-buscar-paciente  grow tips" title="Agregar paciente en cama" (click)="buscarPaciente(cama); cama.$action = 'internacion'" *ngIf="!cama?.paciente?.id && (cama.ultimoEstado.estado == 'desinfectada' || cama.ultimoEstado.estado == 'desocupada')">
                                     <i class="mdi mdi-hotel agregar"></i>
                                 </button>
 
@@ -247,6 +248,7 @@
                                 En reparación desde:
                                 <br/>
                                 {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy | persona}}
                                 <br/><br/>
                             </h3>
                             <div class="motivo-reparacion">
@@ -443,6 +445,7 @@
                                 Bloqueada desde:
                                 <br/>
                                 {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy | persona}}
                                 <br/><br/>
                             </h3>
                             <div class="motivo-reparacion">
