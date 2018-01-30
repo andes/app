@@ -6,13 +6,13 @@
         <header>
             <div class="row">
                 <div class="col-9" *ngIf="prestacion?.solicitud">
-                    <div class="page-title titulo-consulta">
+                    <div class="page-title titulo-consulta" id="pageHeader">
                         <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
                         <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/M/yyyy'}}</span>
 
-                        <div class="float-right mr-2">
+                        <div class="float-right mr-2 menu-info">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
-                                (click)="mostrarDatosSolicitud(true)"></plex-button>
+                                (click)="mostrarDatosSolicitud(true)" id="datosSolicitud"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
                                 <plex-button type="warning" icon="printer mdi-14px" class="float-right ml-1" title="Imprimir Resumen" titlePosition="left"
@@ -60,9 +60,9 @@
         </header>
         <div class="row no-gutters">
             <div class="col titulos">
-
+                <!-- <object data="/assets/logo-andes.svg"></object> -->
                 <!-- div de la info de la solicitud -->
-                <div [hidden]="!showDatosSolicitud" class="mb-2">
+                <div [hidden]="!showDatosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
                         <div class="col">
                             <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
@@ -122,7 +122,7 @@
                         </div>
                     </ng-container>
 
-                    <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                    <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
