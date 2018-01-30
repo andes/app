@@ -33,8 +33,8 @@ export class TurnoService {
         }
     }
 
-    patch(data: any): Observable<any[]> {
-        return this.server.get(this.turnoUrl + '/turno/' + data.idTurno + data.idBloque + data.idAgenda, data);
+    patch(idAgenda, idBloque, idTurno, data: any): Observable<any[]> {
+        return this.server.patch(this.turnoUrl + '/turno/' + idTurno + '/' + idBloque + '/' + idAgenda, data);
     }
 
 }
