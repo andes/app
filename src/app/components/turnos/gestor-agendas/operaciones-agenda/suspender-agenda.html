@@ -57,7 +57,7 @@
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                         <!-- Checkbox seleccion -->
-                        <td>
+                        <td *ngIf="turno?.paciente?.id">
                             <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
                             <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
                         </td>
@@ -80,9 +80,9 @@
                         </td>
                         <td>
                             <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension">
-                                <i *ngIf="turno.avisoSuspension === 'no enviado'" class="mdi mdi-message-alert text-danger" title="SMS no enviado"></i>
+                                <i *ngIf="turno.avisoSuspension === 'fallido'" class="mdi mdi-message-alert text-danger" title="SMS fallido"></i>
                                 <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
-                                <i *ngIf="turno.avisoSuspension ==='pendiente'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
+                                <i *ngIf="turno.avisoSuspension ==='no enviado'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
                             </span>
                         </td>
 

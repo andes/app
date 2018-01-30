@@ -30,6 +30,12 @@ export class SuspenderAgendaComponent implements OnInit {
     public ag;
     public showData = false;
     public showConfirmar = false;
+
+    /**
+     * Array con todos los turnos de la agenda.
+     * 
+     * @memberof SuspenderAgendaComponent
+     */
     public turnos = [];
     ngOnInit() {
         this.motivoSuspension = [{
@@ -46,6 +52,13 @@ export class SuspenderAgendaComponent implements OnInit {
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
 
         (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;
+        this.agenda.bloques.forEach(bloque => {
+            bloque.turnos.forEach(turno => {
+                if (turno.paciente && turno.paciente.id) {
+                    this.turnos.push(turno);
+                }
+            });
+        });
     }
 
     suspenderAgenda() {
@@ -77,18 +90,18 @@ export class SuspenderAgendaComponent implements OnInit {
 
     notificar() {
         // Se envían SMS sólo en Producción
-        // if (environment.production === true) {
-        for (let x = 0; x < this.seleccionadosSMS.length; x++) {
+        if (environment.production === true) {
+            for (let x = 0; x < this.seleccionadosSMS.length; x++) {
 
-            let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-            let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-            let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
-            this.seleccionadosSMS[x].smsEnviado = 'pendiente';
-            this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
-        };
-        // } else {
-        //     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-        // }
+                let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+                let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+                let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+                this.seleccionadosSMS[x].smsEnviado = 'pendiente';
+                this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
+            };
+        } else {
+            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+        }
 
     }
 
@@ -111,38 +124,27 @@ export class SuspenderAgendaComponent implements OnInit {
                 if (sms === '0') {
                     this.plex.toast('info', 'Se envió SMS al paciente ' + turno.paciente.nombreCompleto);
                     let data = {
-                        idAgenda: this.agenda.id,
-                        idBloque: idBloque,
-                        idTurno: turno.id,
                         avisoSuspension: 'enviado'
                     };
-                    this.turnosService.patch(data).subscribe(resultado => {
-                        console.log(resultado);
+                    this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
+                        turno.avisoSuspension = 'enviado';
                     });
                 }
             },
             err => {
                 if (err) {
                     this.plex.toast('danger', 'ERROR: Servicio caído');
+                    let data = {
+                        idAgenda: this.agenda.id,
+                        idBloque: idBloque,
+                        idTurno: turno.id,
+                        avisoSuspension: 'fallido'
+                    };
+                    this.turnosService.patch(this.agenda.id, idBloque, turno.id, data).subscribe(resultado => {
+                        turno.avisoSuspension = 'fallido';
+                    });
                 }
             });
-    }
-
-    smsEnviado(turno) {
-        let ind = this.seleccionadosSMS.indexOf(turno);
-        if (ind >= 0) {
-            if (this.seleccionadosSMS[ind].smsEnviado === undefined) {
-                return 'no enviado';
-            } else {
-                if (this.seleccionadosSMS[ind].smsEnviado === true) {
-                    return 'enviado';
-                } else {
-                    return 'pendiente';
-                }
-            }
-        } else {
-            return 'no seleccionado';
-        }
     }
 
     seleccionarTurno(turno) {
@@ -167,15 +169,19 @@ export class SuspenderAgendaComponent implements OnInit {
     }
 
     seleccionarTodos() {
-        this.seleccionadosSMS = [];
-        this.agenda.bloques.forEach(bloque => {
-            bloque.turnos.forEach(turno => {
-                if (turno.paciente && turno.paciente.telefono) {
-                    this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
-                }
+        if (this.seleccionadosSMS.length < this.turnos.length) {
+            this.seleccionadosSMS = [];
+            this.agenda.bloques.forEach(bloque => {
+                bloque.turnos.forEach(turno => {
+                    if (turno.paciente && turno.paciente.telefono) {
+                        this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+                    }
+                });
             });
-        });
-        this.todosSeleccionados = true;
+            this.todosSeleccionados = true;
+        } else {
+            this.seleccionadosSMS = [];
+        }
 
     }
 
