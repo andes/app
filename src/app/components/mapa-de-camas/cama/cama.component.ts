@@ -67,6 +67,7 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
+            idCama: cama.id,
             estado: estado,
             observaciones: cama.$motivo
         };
