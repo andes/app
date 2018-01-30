@@ -92,12 +92,13 @@ export class SuspenderAgendaComponent implements OnInit {
         // Se envían SMS sólo en Producción
         if (environment.production === true) {
             for (let x = 0; x < this.seleccionadosSMS.length; x++) {
-
-                let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
-                let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
-                this.seleccionadosSMS[x].smsEnviado = 'pendiente';
-                this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
+                if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
+                    let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
+                    let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
+                    let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+                    this.seleccionadosSMS[x].smsEnviado = 'pendiente';
+                    this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
+                }
             };
         } else {
             this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
