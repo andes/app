@@ -248,7 +248,7 @@
                                 En reparación desde:
                                 <br/>
                                 {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
-                                <br />enviada por {{cama.ultimoEstado.createdBy | persona}}
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
                                 <br/><br/>
                             </h3>
                             <div class="motivo-reparacion">
@@ -445,7 +445,7 @@
                                 Bloqueada desde:
                                 <br/>
                                 {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
-                                <br />enviada por {{cama.ultimoEstado.createdBy | persona}}
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
                                 <br/><br/>
                             </h3>
                             <div class="motivo-reparacion">
