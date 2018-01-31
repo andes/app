@@ -24,7 +24,7 @@ export class ClonarAgendaComponent implements OnInit {
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
     public autorizado = false;
-    public agendasFiltradas: any[] = []; // Las agendas que hay en el día
+    public agendasFiltradas: any[] = []; // Las agendas que hay en el día seleccionado para clonar
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
@@ -151,7 +151,6 @@ export class ClonarAgendaComponent implements OnInit {
                     return band;
                 }
             );
-            // Mostrar las agendas que coincidan con los profesionales de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
                 if (filtro.length === 0) {
@@ -165,6 +164,9 @@ export class ClonarAgendaComponent implements OnInit {
                         }
                     });
                     this.verificarConflictos(dia);
+                    if (dia.estado !== 'conflicto') {
+                        this.seleccionados.push(dia.fecha.getTime());
+                    }
                 }
             } else {
                 if (this.original !== true) {
@@ -185,11 +187,15 @@ export class ClonarAgendaComponent implements OnInit {
         }
     }
     // Verifica si existen conflictos con las agendas existentes en ese dia
-    // no se asignan agendas en conflicto al array "seleccionados"
+    /**
+     * Para cada día seleccionado en el calendario, verifica entre las agendas filtradas
+     * si existen agendas en él que provoquen conflictos al clonar.
+     * 
+     * @param {*} dia
+     * @memberof ClonarAgendaComponent
+     */
     verificarConflictos(dia: any) {
-
-        this.agendasFiltradas.forEach((agenda, index) => {
-
+        this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales.length > 0) {
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
@@ -204,12 +210,13 @@ export class ClonarAgendaComponent implements OnInit {
                         dia.estado = 'conflicto';
                     }
                 }
-                if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
-                    this.agendasFiltradas.splice(index, 1);
-                    this.seleccionados.push(dia.fecha.getTime());
-                }
+                let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
+                return band;
+            } else {
+                return true; // para no descartar las agendas ya existentes en la colección;
             }
         });
+
     }
 
     redirect(pagina: string) {
@@ -234,7 +241,7 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        if (this.seleccionados.length > 1) {
+        if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
                 if (conf) {
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original
