@@ -25,10 +25,12 @@ export class CamaCreateUpdateComponent implements OnInit {
         servicio: null,
         tipoCama: null,
         equipamiento: [], // falta definir
-        ultimoEstado: null,
-        paciente: null,
-        idInternacion: null, // falta definir
-        observaciones: null
+        ultimoEstado: {
+            estado: 'desocupada',
+            paciente: null,
+            idInternacion: null, //Falta definir
+            observaciones: null
+        }
     };
 
     constructor(
