@@ -23,6 +23,7 @@ import { PacienteSearchComponent } from './components/paciente/paciente-search.c
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
+import { CamasComponent } from './components/organizacion/camas.component';
 import { InicioComponent } from './components/inicio/inicio.component';
 import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
@@ -59,10 +60,12 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/:id/cama', component: CamasComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
@@ -95,6 +98,9 @@ const appRoutes: Routes = [
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
+
+  // Mapa de camas
+  { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },

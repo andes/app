@@ -45,6 +45,7 @@ import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
+import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -109,6 +110,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { CamaCreateUpdateComponent } from './components/organizacion/cama-create-update.component';
+import { CamasComponent } from './components/organizacion/camas.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
@@ -236,6 +239,9 @@ import { routing, appRoutingProviders } from './app.routing';
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
+// Mapa de camas
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -314,12 +320,13 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
+        CamaCreateUpdateComponent,CamasComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -356,7 +363,9 @@ let RUPComponentsArray = [
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
-        TabComponent
+        TabComponent,
+        MapaDeCamasComponent,
+        CamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

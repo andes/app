@@ -1,0 +1,465 @@
+<div class="cama-container manual-flip animate-repeat" [ngClass]="{'hover': cama.$rotar }" >
+    <div class="cama">
+        <div class="front {{cama.ultimoEstado.estado}}">
+
+            <div class="header">
+                <div class="numero-habitacion">
+                    {{cama.habitacion}}
+                    /
+                    {{cama.numero}}
+                </div>
+            </div>
+
+            <div class="content">
+
+                <div class="main cama">
+                    <div class="col-indicadores text-left">
+                        <div *ngIf="cama.idInternacion">
+                            <br class="mdi" /> <!-- Fake para que me genere espacio en la columna -->
+
+                            <!--
+                            <a href ng-show="cama.$news.valor > 0" (click)="verNews(cama.idInternacion)" >
+                                <span class="tips label label-{{cama.$news.clase}}" title="Ver detalle news score {{cama.$news.valor}}">N {{cama.$news.valor}}</span>
+                            </a>
+                            -->
+
+                            <!--
+                            <i *ngIf="cama.indicadores.fiebre" class="mdi mdi-thermometer {{cama.indicadores.fiebre.clase}}" title="{{cama.indicadores.fiebre.valor}}º C"></i>
+                            <i *ngIf="cama.indicadores.riesgoCaidas" class="mdi mdi-alert tips {{cama.indicadores.riesgoCaidas.clase}}" title="Riesgo de caídas {{cama.indicadores.riesgoCaidas.indicador}}"></i>
+                            <i *ngIf="cama.indicadores.valoracionDolor" class="mdi  tips {{cama.indicadores.valoracionDolor.clase}}" title="Valoración del dolor {{cama.indicadores.valoracionDolor.indicador}}">D</i>
+                            <i *ngIf="cama.indicadores.glasgow" class="mdi  tips {{cama.indicadores.glasgow.clase}}" title="Glasgow {{cama.indicadores.glasgow.indicador}}">G</i>
+                            <i *ngIf="cama.indicadores.flebitis" class="mdi  tips {{cama.indicadores.flebitis.clase}}" title="Flebitis {{cama.indicadores.flebitis.indicador}}">F</i>
+                            <i *ngIf="cama.indicadores.upp" class="mdi  tips {{cama.indicadores.upp.clase}}" title="Ulceras por presión {{cama.indicadores.upp.indicador}}">UPP</i>
+                            <span *ngIf="cama.indicadores.aislamiento && cama.indicadores.aislamiento.length">
+                                <div ng-repeat="a in cama.indicadores.aislamiento">
+                                    <span class="tips label label-{{a.clase}}" title="Aislamiento {{a.indicador}} desde {{a.fecha}}">{{a.indicador}}</span>
+                                </div>
+                            </span>
+                            -->
+                        </div>
+                    </div>
+
+                    <div class="col-paciente">
+
+                        <div>
+                            <div class="icon">
+
+                                <i class="icono-paciente {{cama.paciente | iconoCama}} tips" *ngIf="cama?.paciente?.id" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'evolucion'" ></i>
+
+                                <button type="button" class="btn btn-buscar-paciente  grow tips" title="Agregar paciente en cama" (click)="buscarPaciente(cama); cama.$action = 'internacion'" *ngIf="!cama?.paciente?.id && (cama.ultimoEstado.estado == 'desinfectada' || cama.ultimoEstado.estado == 'desocupada')">
+                                    <i class="mdi mdi-hotel agregar"></i>
+                                </button>
+
+                                <div *ngIf="!cama?.paciente?.id && cama.ultimoEstado.estado == 'bloqueada'">
+                                    <button type="button" class="btn btn-bloqueada  tips" title="Cama bloqueada" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'estado_bloqueada'">
+                                        <i class="mdi mdi-block-helper"></i>
+                                    </button>
+
+                                    <h5>
+                                        Cama bloqueada
+                                    </h5>
+                                </div>
+
+                                <div *ngIf="cama.ultimoEstado.estado == 'reparacion'" >
+                                    <button class="btn btn-bloqueada  reparacion tips" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'enviada_reparacion'" title="Cama en reparación">
+                                        <i class="mdi mdi-wrench"></i>
+                                    </button>
+
+                                    <h5>
+                                        Cama en reparación
+                                    </h5>
+                                </div>
+                            </div>
+
+                            <div *ngIf="cama?.paciente?.apellido">
+                                <h3 class="name">
+                                    {{cama.paciente | paciente}}
+                                </h3>
+                                <p class="profession">
+                                    <!-- <span *ngIf="cama.$internacion.ingreso.diagnosticoPresuntivo">
+                                        {{cama.$internacion.ingreso.diagnosticoPresuntivo}}
+                                        <br />
+                                    </span> -->
+                                    {{cama.paciente | edad}}
+                                    /
+                                    {{cama.paciente.documento}}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="footer row">
+                <div class="col-3 text-left float-left">
+                    <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
+                        O
+                        <sub>2</sub>
+                    </div>
+                </div>
+
+                <div class="col-3 text-left float-left">
+                    <button type="button" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desinfectar'" *ngIf="!cama.desinfectada && cama.ultimoEstado.estado != 'reparacion' && cama.ultimoEstado.estado != 'bloqueada'">
+                        <i class="mdi mdi-bug"></i>
+                    </button>
+
+                </div>
+
+                <div class="col-6 float-right text-right">
+                    <!-- plex dropdown agrega por default el recuadro, quitar por css -->
+                    <button class="btn btn-default " *ngIf="cama?.paciente?.id">
+                        <plex-dropdown label="" icon="dots-vertical" [items]="opcionesDropdown"></plex-dropdown>
+                    </button>
+
+                    <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(cama.idInternacion)" *ngIf="cama.idInternacion">
+                        <i class="mdi mdi-eye "></i>
+                    </button>
+
+                    <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'" *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'desocupada'">
+                        <!-- <i class="mdi mdi-block-helper-helper"></i> -->
+                        <i class="mdi mdi-lock"></i>
+                    </button>
+                    <button class="btn btn-success  tips" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'" *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada'">
+                        <!-- <i class="mdi mdi-reload"></i> -->
+                        <i class="mdi mdi-lock-open-outline"></i>
+                    </button>
+
+                    <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama?.paciente?.id && (cama.ultimoEstado.estado == 'desocupada' && cama.ultimoEstado.estado != 'reparacion')">
+                        <i class="mdi mdi-wrench"></i>
+                    </button>
+                    <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
+                        <i class="mdi mdi-wrench"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="back">
+            <div class="header">
+                <div class="float-left">
+                    <div class="numero-habitacion">
+                        {{cama.habitacion}}
+                        /
+                        {{cama.numero}}
+                    </div>
+                </div>
+                <div class="float-right">
+                    <button class="btn btn-default  float-right" ng-show="cama?.paciente?.id || (cama.$action == 'enviada_reparacion' || cama.$action == 'estado_bloqueada')" (click)="cama.$rotar = !cama.$rotar">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Ultima evolucion / Evolucionar -->
+            <div *ngIf="cama.$action && cama.$action == 'evolucion'">
+                <div class="content" [ngClass]="{'evolucion': cama.$action == 'evolucion' }">
+                    <div class="main ">
+                        <div *ngIf="cama?.paciente?.apellido">
+                            <h3 class="name dorso">
+                                {{cama.paciente | paciente}}
+                            </h3>
+                            <p class="gris">
+                                <span *ngIf="cama.$internacion.ingreso.diagnosticoPresuntivo">
+                                    {{cama.$internacion.ingreso.diagnosticoPresuntivo}}
+                                </span>
+                            </p>
+                        </div>
+                        <h4 class="text-center">Última evolución</h4>
+
+                        <span *ngIf="cama?.ultimaEvolucion?.texto.length >= 80">
+                            <!-- {{cama?.ultimaEvolucion?.texto | limitTo: 80}} -->
+                            ...
+                        </span>
+                        <span *ngIf="cama?.ultimaEvolucion?.texto.length < 80">
+                            <!-- {{cama?.ultimaEvolucion?.texto}} -->
+                        </span>
+
+                        <p *ngIf="cama.ultimaEvolucion.createdBy">
+                            <i class="fa fa-user-md"></i>
+                            <!-- {{cama.ultimaEvolucion.createdBy.name}}
+                            {{cama.ultimaEvolucion.createdAt | fromNow}}
+                            <br/>
+                            ({{cama.ultimaEvolucion.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}
+                            hs) -->
+
+                            <!-- <br/>
+                            La próxima evolución deberá realizarse el dd/MM/yyyy a las HH:mm -->
+                        </p>
+
+                        <p *ngIf="!cama.ultimaEvolucion.createdBy" class="text-center">
+                            Aún no se ha cargado ninguna evolución.
+                            <br/><br/>
+
+                            <button class="btn btn-primary col-lg-12" title="Evolucionar" (click)="evolucionarPaciente(cama)" *ngIf="cama?.paciente?.id">
+                                Cargar evolución
+                            </button>
+                        </p>
+                    </div>
+
+                </div>
+                <div class="footer row">
+                    <div class="col-3 text-left float-left">
+                        <!-- <div class="stacked-icon oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno"> -->
+                        <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
+                            O
+                            <sub>2</sub>
+                        </div>
+                    </div>
+
+                    <div class="col-3 text-left float-left">
+                        <button type="button" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desinfectar'" *ngIf="!cama.desinfectada && cama.ultimoEstado.estado != 'reparacion'">
+                            <i class="mdi mdi-bug"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="col-6 float-right text-right">
+                        <!-- <button class="btn btn-default " *ngIf="cama?.paciente?.id">
+                            <i plex-actions="actions"></i>
+                        </button> -->
+
+
+                        <button class="btn btn-default " title="Ver indicaciones" (click)="verInternacion(cama.idInternacion, 5)" *ngIf="cama.idInternacion">
+                            <i class="mdi mdi-book-open"></i>
+                        </button>
+
+                        <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(cama.idInternacion)" *ngIf="cama.idInternacion">
+                            <i class="mdi mdi-eye"></i>
+                        </button>
+
+                        <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama?.paciente?.id && (cama.ultimoEstado.estado == 'desocupada' && cama.ultimoEstado.estado != 'reparacion')">
+                            <i class="mdi mdi-wrench"></i>
+                        </button>
+                        <button class="btn btn-default " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama?.paciente?.id && (cama.ultimoEstado.estado == 'desocupada' && cama.ultimoEstado.estado == 'reparacion')">
+                            <i class="mdi mdi-wrench"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ver cama enviada a reparacion -->
+            <div *ngIf="cama.$action == 'enviada_reparacion' && cama.ultimoEstado.estado == 'reparacion'">
+                <div class="content">
+
+                    <div class="main">
+                        <div *ngIf="!cama?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
+                            <h3 class="name reparacion">
+                                En reparación desde:
+                                <br/>
+                                {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
+                                <br/><br/>
+                            </h3>
+                            <div class="motivo-reparacion">
+                                {{cama.ultimoEstado.motivo}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Enviar a reparar una cama -->
+            <div *ngIf="cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'desocupada'">
+                <form #formReparacion="ngForm">
+                    <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+
+                        <div class="main">
+                            <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
+                            <div class="form-group">
+                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" required [(ngModel)]="cama.$motivo" name="motivoReparacion" id="motivoReparacion" #motivoReparacion="ngModel"></textarea>
+
+                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique motivo por el cual envía a reparación la cama</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="footer row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success tips form-control" title="Enviar a reparar" (click)="cambiarEstado(cama, 'reparacion')"  [disabled]="!formReparacion.form.valid">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Confirmar reparacion completa de una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'reparacion'">
+                <form #formReparada="ngForm">
+                    <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+                        <div class="main">
+                            <p class="text-center">
+                                ¿La cama ha sido reparada?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="footer with-buttons row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Enviar a desinfectar una cama -->
+            <div *ngIf="cama.$action == 'desinfectar' && cama.ultimoEstado.estado == 'desocupada'">
+                <div class="content" [ngClass]="{'desinfectar': cama.$action == 'desinfectar' }">
+                    <form #desinfeccionForm="ngForm">
+
+                        <div class="main">
+                            ¿Confirmar desinfección de cama?
+                        </div>
+
+                    </form>
+                </div>
+                <div class="footer row">
+                    <div class="col-6">
+                        <div class="form-group">
+
+                            <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                <i class="mdi mdi-close"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-success tipos form-control" title="Si" (click)="cambiarEstado(cama, 'desinfectada')">
+                                <i class="mdi mdi-check"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bloquear una cama -->
+
+            <div *ngIf="cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'desocupada'">
+                <form #formBloqueo="ngForm">
+                    <div class="content" [ngClass]="{'bloquear': cama.$action == 'bloquear' }">
+
+                        <div class="main">
+                            <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
+                            <div class="form-group">
+                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual bloquea la cama?" required [(ngModel)]="cama.$motivo" name="motivoBloqueo" id="motivoBloqueo" #motivoBloqueo="ngModel"></textarea>
+
+                                <div [hidden]="motivoBloqueo.valid || (motivoBloqueo.pristine && !formBloqueo.submitted)" class="alert alert-danger">Indique motivo por el cual bloquea la cama</div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="footer row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No bloquear cama">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success tips form-control" title="Bloquear cama" (click)="formBloqueo.valid && cambiarEstado(cama, 'bloqueada')" [disabled]="!formBloqueo.form.valid">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Confirmar desbloqueo de una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
+                <form #formDesbloqueo="ngForm">
+                    <div class="content" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
+                        <div class="main">
+                            <p class="text-center">
+                                ¿Desbloquear la cama?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="footer with-buttons row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Ver cama bloqueadea -->
+            <div *ngIf="cama.$action == 'estado_bloqueada' && cama.ultimoEstado.estado == 'bloqueada'">
+                <div class="content">
+
+                    <div class="main">
+                        <div *ngIf="!cama?.paciente?.id && cama.ultimoEstado.estado == 'bloqueada'">
+                            <h3 class="name reparacion">
+                                Bloqueada desde:
+                                <br/>
+                                {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy  'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
+                                <br/><br/>
+                            </h3>
+                            <div class="motivo-reparacion">
+                                {{cama.ultimoEstado.motivo}}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
