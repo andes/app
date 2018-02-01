@@ -20,6 +20,10 @@ export class AgendaService {
         return this.server.get(this.agendaUrl + '/candidatas', { params: params, showError: true });
     }
 
+    findDiagnosticos(params: any): Observable<any> {
+        return this.server.get(this.agendaUrl + '/diagnosticos', { params: params, showError: true });
+    }
+
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
     }
@@ -34,6 +38,10 @@ export class AgendaService {
 
     patchMultiple(id: String, params: any): Observable<IAgenda> {
         return this.server.patch(this.agendaUrl + '/' + id + '/multiple', params);
+    }
+
+    patchCodificarTurno(params: any): Observable<IAgenda> {
+        return this.server.patch(this.agendaUrl, params);
     }
 
     save(agenda: IAgenda): Observable<IAgenda> {

@@ -1,57 +1,52 @@
-import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation } from '@angular/core';
-import { SnomedService } from './../../services/term/snomed.service';
-import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
-
+import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
+import { ISubscription } from 'rxjs/Subscription';
+
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+
+import { SnomedService } from './../../services/term/snomed.service';
+import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
+import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
+
+import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'snomed-buscar',
     templateUrl: 'snomed-buscar.component.html',
-    // creamos un handler para cuando se realiza un click
-    host: {
-        '(document:click)': 'handleClick($event)'
-    },
-    // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None,
     styleUrls: [
         'snomed-buscar.scss'
     ]
 })
 
-export class SnomedBuscarComponent implements OnInit, OnChanges {
-    // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
-    @Input() _draggable: Boolean = false;
-    @Input() _dragScope: String;
-    @Input() _dragOverClass: String = 'drag-over-border';
-    // @Input() _dragData: String;
+export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
 
+    public conceptosTurneables: any[];
     // searchTermInput: Acá podemos enviarle como input un string
     // para que busque en SNOMED. ATENCION: al mandar este input se oculta
     // el text field para ingresar la busqueda a mano
     @Input() searchTermInput: String;
-
     // tipo de busqueda a realizar por: problemas / procedimientos /
     @Input() tipoBusqueda: String;
-
-    // Outputs de los eventos drag start y drag end
-    @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
-    @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
-
     // output de informacion que devuelve el componente
-    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
+    // Output que devuelve los resultados de la busqueda
+    @Output() _resultados: EventEmitter<any> = new EventEmitter<any>();
+
+    // TODO _tengoResultado y loadin no son lo mismo???
 
     // Output de un boolean para indicar cuando se tienen resultados de
     // busqueda o no.
     @Output() _tengoResultado: EventEmitter<any> = new EventEmitter<any>();
+    // boolean para indicar si esta cargando o no
+    @Output() loading: EventEmitter<any> = new EventEmitter<any>();
 
-    // cerrar si cliqueo fuera de los resultados
-    // private closeListAfterClick: Boolean = false;
     private timeoutHandle: number;
 
     // En caso de querer ocultar el input de busqueda y solo utilizar el valor de searchTerm
     @Input() hideSearchInput: Boolean = false;
+    @Input() autofocus: Boolean = true;
 
     // termino a buscar en SNOMED
     public searchTerm: String = '';
@@ -59,27 +54,23 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // ocultar lista cuando no hay resultados
     public hideLista: Boolean = false;
 
-    public resultados = [];
-    public elementRef;
-
-    // boolean para indicar si esta cargando o no
-    public loading = false;
-
-    private dragAndDrop = false;
-
     private cachePrestacionesTurneables = null;
 
-    /*
-    // Tipo de busqueda: hallazgos y trastornos / antecedentes / anteced. familiares
-    public tipoBusqueda: String = '';
-    */
+    // ultima request que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
-    // inyectamos servicio de snomed, plex y tambien ElementRef
-    // ElementRef lo utilizo para tener informacion del
-    // html del codigo de este componente en el DOM
-    constructor(private SNOMED: SnomedService, private plex: Plex,
-        myElement: ElementRef, public servicioTipoPrestacion: TipoPrestacionService) {
-        this.elementRef = myElement;
+    constructor(private SNOMED: SnomedService,
+        private auth: Auth,
+        private plex: Plex,
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioPrestacion: PrestacionesService) {
+    }
+
+    /* limpiamos la request que se haya ejecutado */
+    ngOnDestroy() {
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
     }
 
     ngOnInit() {
@@ -89,6 +80,11 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // iniciar busqueda manual
             this.busquedaManual();
         }
+
+        // Se traen los Conceptos Turneables para poder quitarlos de la lista de Procedimientos
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
 
         // Trae las prestaciones turneables y la guarda en memoria para luego
         // filtrar los resultados de las busquedas
@@ -102,7 +98,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             });
         }
     }
-
 
     ngOnChanges(changes: any) {
         // si paso como un Input el string a buscar mediante la variable searchTermInput
@@ -118,7 +113,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
     // Si ese Input() no viene definido usa uno propio este componente
     busquedaManual() {
         // ocultamos el campo input para buscar
-        // this.hideSearchInput = true;
 
         // asignamos el texto a buscar
         this.searchTerm = this.searchTermInput;
@@ -130,14 +124,6 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
 
         // ejecutamos busqueda por la serpiendte de snomed ... sssss &#128013;
         this.buscar();
-    }
-
-    dragStart(e) {
-        this._onDragStart.emit(e);
-    }
-
-    dragEnd(e) {
-        this._onDragEnd.emit(e);
     }
 
     /**
@@ -160,7 +146,12 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             window.clearTimeout(this.timeoutHandle);
         }
 
-        if (this.searchTerm) {
+        if (this.searchTerm && this.searchTerm !== '') {
+
+            if (this.searchTerm.match(/^\s{1,}/)) {
+                this.searchTerm = '';
+                return;
+            };
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);
@@ -178,12 +169,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
             // seteamos un timeout de 3 segundos luego que termino de escribir
             // para poder realizar la busqueda
             this.timeoutHandle = window.setTimeout(() => {
-                this.timeoutHandle = null;
-                this.loading = true;
-                this.resultados = [];
-
-                // alert(this.tipoBusqueda + " / " + search);
-
+                this.loading.emit(true);
                 // buscamos
                 let apiMethod;
 
@@ -191,13 +177,19 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                     case 'problemas':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['hallazgo', 'trastorno']
+                            semanticTag: ['hallazgo', 'trastorno', 'situación']
                         });
                         break;
                     case 'procedimientos':
                         apiMethod = this.SNOMED.get({
                             search: search,
-                            semanticTag: ['procedimiento', 'entidad observable']
+                            semanticTag: ['procedimiento', 'entidad observable', 'régimen/tratamiento']
+                        });
+                        break;
+                    case 'planes':
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['procedimiento', 'régimen/tratamiento']
                         });
                         break;
                     case 'productos':
@@ -213,75 +205,59 @@ export class SnomedBuscarComponent implements OnInit, OnChanges {
                         });
                         break;
                     default:
-                        apiMethod = this.SNOMED.get(query);
+                        apiMethod = this.SNOMED.get({
+                            search: search,
+                            semanticTag: ['hallazgo', 'trastorno', 'procedimiento', 'entidad observable', 'producto', 'situación', 'régimen/tratamiento', 'elemento de registro']
+                        });
                         break;
                 }
+
                 let idTimeOut = this.timeoutHandle;
-                apiMethod.subscribe(resultados => {
+
+                if (this.lastRequest) {
+                    this.lastRequest.unsubscribe();
+                }
+
+                this.lastRequest = apiMethod.subscribe(resultados => {
+
                     if (idTimeOut === this.timeoutHandle) {
-                        this.loading = false;
-                        this.resultados = resultados;
+
+                        // Para evitar que se oculte la lista de resultados
+                        this.loading.emit(false);
+                        this._resultados.emit(this.formatearResultados(resultados));
                     }
 
-                    // if (this.tipoBusqueda === 'procedimientos') {
-                    //     // Filtrar de los resultado las prestaciones turneables
-                    //     this.resultados = this.resultados.filter(concepto => {
-                    //         return this.cachePrestacionesTurneables.findIndex(c => c.conceptId === concepto.conceptId) <= -1;
-                    //     });
-                    // }
-
                 }, err => {
-                    this.loading = false;
-                    // this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
+                    this.loading.emit(false);
+                    this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
                 });
 
-            }, 300);
+            }, 600);
         } else {
-            this.resultados = [];
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+                this.loading.emit(false);
+
+                this._resultados.emit(this.formatearResultados());
+            }
+
             this._tengoResultado.emit(false);
         }
     }
 
     /**
-     * Handler para cuando se ejecuta un click en el documento.
-     * @param event  Click event
-     * @returns      Void
+     * Creamos un objeto de resultados a devolver que contiene 'term' que es el string con el que busco
+     * y despues 'items' que es un array de resultados de conceptos de SNOMED
+     *
+     * @param {any} resultados Array de resultados de SNOMED
+     * @returns Object
+     * @memberof SnomedBuscarComponent
      */
-    handleClick(event): void {
-        // buscamos que elemento fue clickeado
-        let clickedComponent = event.target;
-
-        // creamos una bandera para saber si pertenece a este componente
-        let inside = false;
-
-        // loopeamos
-        do {
-            // si hice click dentro del codigo html del componente
-            // entonces indico que estoy adentro (inside = true)
-            // y no oculto la lista de resultados
-            if (clickedComponent === this.elementRef.nativeElement) {
-                inside = true;
-
-                this.hideLista = false;
-            }
-
-            // info de que componente hice clic
-            clickedComponent = clickedComponent.parentNode;
-        } while (clickedComponent);
-
-        // si no estamos en el componente, limpiamos lista de problemas
-        if (!inside && !this._draggable) {
-            this.resultados = [];
-            this.hideLista = true;
-            // this.searchTerm = '';
-        }
+    formatearResultados(resultados = []) {
+        return {
+            term: this.searchTerm,
+            items: resultados,
+        };
     }
-
-    // si hago clic en un concepto, entonces lo devuelvo
-    seleccionarConcepto(concepto) {
-        this.resultados = [];
-        this.searchTerm = '';
-        this.evtData.emit(concepto);
-    }
-
 }

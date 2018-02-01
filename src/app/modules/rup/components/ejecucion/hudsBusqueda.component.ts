@@ -21,7 +21,10 @@ export class HudsBusquedaComponent implements OnInit {
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
-
+    /**
+    * Variable por parametro para mostrar o no todo lo relacionado a emitir conceptos
+    */
+    @Input() emitirConceptos = true;
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
@@ -29,7 +32,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Vista actual
      */
-    public vista: 'destacados' | 'problemas' | 'hallazgos' | 'prestaciones' = 'hallazgos';
+    public vista = 'hallazgos';
     /**
      * Listado de prestaciones validadas
      */
@@ -43,6 +46,11 @@ export class HudsBusquedaComponent implements OnInit {
      * Listado de todos los hallazgos
      */
     public hallazgosCronicos: any = [];
+
+    /**
+     * Listado de todos los medicamentos
+     */
+    public medicamentos: any = [];
 
 
     /**
@@ -58,8 +66,7 @@ export class HudsBusquedaComponent implements OnInit {
     /**
      * Listado de todos los registros de la HUDS seleccionados
      */
-    public registrosHuds: any = [];
-
+    @Input() registrosHuds: any = [];
 
     /**
      * Devuelve un elemento seleccionado que puede ser
@@ -86,10 +93,11 @@ export class HudsBusquedaComponent implements OnInit {
     ngOnInit() {
         if (this.paciente) {
             this.listarPrestaciones();
-            this.listarProblemasCronicos();
-            // this.listarHallazgos();
-            this.listarHallazgosNoActivos();
-            this.listarProblemasActivos();
+            // this.listarProblemasCronicos();
+            this.listarHallazgos();
+            // this.listarHallazgosNoActivos();
+            // this.listarProblemasActivos();
+            // this.listarMedicamentos();
         }
     }
 
@@ -127,12 +135,19 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+    devolverMedicamento(medicamento) {
+        let resultado = {
+            tipo: 'medicamento',
+            data: medicamento
+        };
+        this.evtData.emit(resultado);
+    }
 
     devolverRegistrosHuds(registro, tipo) {
         let index;
-        if (tipo === 'hallazgo') {
+        if (tipo === 'hallazgo' || tipo === 'medicamento') {
             index = this.registrosHuds.findIndex(r => {
-                return (r.tipo === 'hallazgo' && r.data.concepto.id === registro.concepto.id);
+                return ((r.tipo === 'hallazgo' || r.tipo === 'medicamento') && r.data.concepto.id === registro.concepto.id);
             });
 
             switch (registro.concepto.semanticTag) {
@@ -140,8 +155,23 @@ export class HudsBusquedaComponent implements OnInit {
                 case 'trastorno':
                     registro.class = 'problemas';
                     break;
+                case 'producto':
+                    registro.class = 'productos';
             }
         } else if (tipo === 'prestacion') {
+            // Se populan las relaciones usando el _id
+            if (registro.ejecucion.registros) {
+                registro.ejecucion.registros.forEach(reg => {
+                    if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                        if (typeof reg.relacionadoCon[0] === 'string') {
+                            reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            });
+                        }
+                    }
+                });
+            }
+
             index = this.registrosHuds.findIndex(r => {
                 return (r.tipo === 'prestacion' && r.data.id === registro.id);
             });
@@ -162,7 +192,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.registrosHuds.splice(index, 1);
         }
 
-        this.evtHuds.emit(this.registrosHuds);
+        this.evtHuds.emit(elemento);
 
     }
 
@@ -176,20 +206,24 @@ export class HudsBusquedaComponent implements OnInit {
     listarHallazgos() {
         this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
             this.hallazgos = hallazgos;
+            this.listarProblemasCronicos();
+            this.listarHallazgosNoActivos();
+            this.listarProblemasActivos();
+            this.listarMedicamentos();
         });
     }
 
     // Trae los problemas activos NO activos
     listarHallazgosNoActivos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
+        // this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(listaHallazgos => {
 
-            this.hallazgosNoActivos = listaHallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
-            this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
-                if (element.evoluciones[0].idRegistroGenerado) {
-                    element['transformado'] = listaHallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
-                } return element;
-            });
+        this.hallazgosNoActivos = this.hallazgos.filter(h => h.evoluciones[0].estado !== 'activo');
+        this.hallazgosNoActivos = this.hallazgosNoActivos.map(element => {
+            if (element.evoluciones[0].idRegistroGenerado) {
+                element['transformado'] = this.hallazgos.find(h => h.evoluciones[0].idRegistro === element.evoluciones[0].idRegistroGenerado);
+            } return element;
         });
+        // });
     }
 
     // Trae los problemas crónicos (por SNOMED refsetId)
@@ -206,12 +240,19 @@ export class HudsBusquedaComponent implements OnInit {
 
     // Trae los problemas activos NO crónicos
     listarProblemasActivos() {
-        this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
-            this.problemasActivos = hallazgos.filter((hallazgo) => {
-                if (hallazgo.evoluciones[0].estado === 'activo') {
-                    return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
-                }
-            });
+        // this.servicioPrestacion.getByPacienteHallazgo(this.paciente.id, true).subscribe(hallazgos => {
+        this.problemasActivos = this.hallazgos.filter((hallazgo) => {
+            if (hallazgo.evoluciones[0].estado === 'activo') {
+                return (hallazgo.concepto && hallazgo.concepto.refsetIds && hallazgo.concepto.refsetIds.find(cronico => cronico === this.servicioPrestacion.refsetsIds.cronico)) ? false : hallazgo;
+            }
+        });
+        // });
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarMedicamentos() {
+        this.servicioPrestacion.getByPacienteMedicamento(this.paciente.id, true).subscribe(medicamentos => {
+            this.medicamentos = medicamentos;
         });
     }
 
@@ -242,7 +283,7 @@ export class HudsBusquedaComponent implements OnInit {
         for (let i = 0; i < this.registrosHuds.length; i++) {
             const _registro = this.registrosHuds[i].data;
 
-            if (tipo === 'hallazgo' && _registro.concepto.conceptId === registro.concepto.conceptId) {
+            if (tipo === 'hallazgo' && _registro.concepto && _registro.concepto.conceptId === registro.concepto.conceptId) {
                 return true;
             } else if (tipo === 'prestacion' && _registro.id === registro.id) {
                 return true;

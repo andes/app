@@ -10,10 +10,15 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
 import { RUPRegistry } from '../../../../app.module';
-
+import { AdjuntosService } from '../../services/adjuntos.service';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
     selector: 'rup',
-    styleUrls: ['rup.scss'],
+    styleUrls: [
+        'rup.scss',
+        // TODO: Crear package NPM con las fonts
+        // '../../assets/font.css'
+    ],
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
@@ -66,6 +71,8 @@ export class RUPComponent implements OnInit {
         public servicioTipoPrestacion: TipoPrestacionService,
         public auth: Auth,
         public serviceProfesional: ProfesionalService,
+        public adjuntosService: AdjuntosService,
+        public sanitazer: DomSanitizer
     ) { }
 
     ngOnInit() {

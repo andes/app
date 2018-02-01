@@ -39,10 +39,6 @@ export class PanelAgendaComponent implements OnInit {
 
     public alertas: any[] = [];
 
-    /**
-     * [TODO] espaciosList: Agregado para que compile con AOT
-     * Cambio de private a public
-     */
     public espaciosList = [];
 
     constructor(
@@ -150,28 +146,25 @@ export class PanelAgendaComponent implements OnInit {
     }
 
     loadEspacios(event) {
-        // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-        // this.servicioEspacioFisico.get({}).subscribe(event.callback);
-
+        let query = {};
         let listaEspaciosFisicos = [];
         if (event.query) {
-            let query = {
-                nombre: event.query,
-                // organizacion: this.auth.organizacion._id
-            };
+            query['nombre'] = event.query;
+            query['organizacion'] = this.auth.organizacion.id;
+
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                if (this.agenda.espacioFisico) {
-                    listaEspaciosFisicos = resultado ? this.agenda.espacioFisico.concat(resultado) : this.agenda.espacioFisico;
+                if (this.agenda.espacioFisico && this.agenda.espacioFisico.id) {
+                    listaEspaciosFisicos = this.agenda.espacioFisico ? this.agenda.espacioFisico.concat(resultado) : resultado;
                 } else {
                     listaEspaciosFisicos = resultado;
                 }
                 this.espaciosList = listaEspaciosFisicos;
                 event.callback(listaEspaciosFisicos);
             });
+
         } else {
             event.callback(this.agenda.espacioFisico || []);
         }
-
     }
 
     espaciosChange(agenda) {
@@ -228,7 +221,7 @@ export class PanelAgendaComponent implements OnInit {
             // Loop profesionales
             if (this.agenda.profesionales) {
                 this.agenda.profesionales.forEach((profesional, index) => {
-                    this.serviceAgenda.get({'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
+                    this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
                         // Hay problemas de solapamiento?
                         let agendasConSolapamiento = agendas.filter(agenda => {
                             return agenda.id !== this.agenda.id || !this.agenda.id; // Ignorar agenda actual

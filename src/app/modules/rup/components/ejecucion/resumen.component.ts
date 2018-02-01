@@ -16,11 +16,7 @@ export class ResumenComponent implements OnInit {
 
     public prestacion: any;
     public prestacionesPendientes: IPrestacion[] = [];
-
-    /**
-     * [TODO] listaProblemas: Agregado para que compile con AOT
-     */
-    public listaProblemas: any[] = [];
+    public listaProblemas = []; // Agrego esta propiedad que no estaba definida
 
     // Para cargar Indicadores
     // public prestacionPeso: IPrestacionPaciente = null;

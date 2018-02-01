@@ -17,6 +17,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
     @Input() agenda: IAgenda;
     @Input() turnosSeleccionados: ITurno[];
+    @Input() accion: any;
 
     @Output() saveSuspenderTurno = new EventEmitter<IAgenda>();
     @Output() reasignarTurnoSuspendido = new EventEmitter<boolean>();
@@ -54,10 +55,12 @@ export class SuspenderTurnoComponent implements OnInit {
         }];
 
         this.motivoSuspensionSelect.select = this.motivoSuspension[1];
-        this.turnos.forEach((turno) => {
-            this.seleccionarTurno(turno);
-        });
+        // Comentamos la selección automatica de los pacientes para enviar SMS por sugerencia de QA
+        // this.turnos.forEach((turno) => {
+        //     this.seleccionarTurno(turno);
+        // });
     }
+
 
     seleccionarTurno(turno) {
         let indice = this.seleccionadosSMS.indexOf(turno);
@@ -97,14 +100,23 @@ export class SuspenderTurnoComponent implements OnInit {
             return;
         }
 
-        let patch: any = {
-            op: 'suspenderTurno',
-            turnos: this.turnos,
-            motivoSuspension: this.motivoSuspensionSelect.select.nombre
-        };
+        let patch: any;
+        if (this.accion === 'suspenderTurno') {
+            patch = {
+                op: this.accion,
+                turnos: this.turnos.map((resultado) => {return resultado.id; }),
+                motivoSuspension: this.motivoSuspensionSelect.select.nombre
+            };
+        } else {
+            patch = {
+                op: this.accion,
+                estado: this.accion
+            };
+        }
+
 
         // Patchea los turnosSeleccionados (1 o más)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(
 
             resultado => {
                 this.agenda = resultado;

@@ -12,11 +12,10 @@ import * as moment from 'moment';
 
 export class BotonesAgendaComponent implements OnInit {
 
-    // @Input() turnosSuspendidos: any[];
-
     @Output() clonarEmit = new EventEmitter<boolean>();
     @Output() editarAgendaEmit = new EventEmitter<IAgenda>();
     @Output() listarTurnosEmit = new EventEmitter<IAgenda>();
+    @Output() listarCarpetasEmit = new EventEmitter<boolean>();
     @Output() actualizarEstadoEmit = new EventEmitter<string>();
     @Output() agregarNotaAgendaEmit = new EventEmitter<boolean>();
     @Output() agregarSobreturnoEmit = new EventEmitter<boolean>();
@@ -71,42 +70,16 @@ export class BotonesAgendaComponent implements OnInit {
                 'estado': estado
             };
 
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+            this.serviceAgenda.patch(agenda.id, patch).subscribe((resultado: any) => {
                 // Si son múltiples, esperar a que todas se actualicen
+                agenda.estado = resultado.estado;
                 if (alertCount === 0) {
                     if (this.cantidadSeleccionadas === 1) {
-
-                        if (estado === 'prePausada' && agenda.prePausada === 'publicada') {
-                            this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
-                                if (!confirmado) {
-                                    return false;
-                                }
-                                this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                this.actualizarEstadoEmit.emit(estado);
-                            });
-                        } else {
-                            this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                            this.actualizarEstadoEmit.emit(estado);
-                        }
-
-
+                        this.plex.toast('success', 'Información', 'La agenda cambió el estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(estado);
                     } else {
-                        if (estado === 'prePausada') {
-                            this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado');
-                        } else {
-                            if (estado === 'prePausada' && agenda.prePausada === 'publicada') {
-                                this.plex.confirm('¿Publicar Agendas?').then((confirmado) => {
-                                    if (!confirmado) {
-                                        return false;
-                                    }
-                                    this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                    this.actualizarEstadoEmit.emit(estado);
-                                });
-                            } else {
-                                this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
-                                this.actualizarEstadoEmit.emit(estado);
-                            }
-                        }
+                        this.plex.toast('success', 'Información', 'Las agendas cambiaron de estado a ' + (estado !== 'prePausada' ? estado : agenda.prePausada));
+                        this.actualizarEstadoEmit.emit(estado);
                     }
                     alertCount++;
                 }
@@ -116,7 +89,6 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Actualiza estado de las Agendas seleccionadas
     actualizarEstado(estado) {
-
         switch (estado) {
             case 'publicada':
                 this.plex.confirm('¿Publicar Agenda?').then((confirmado) => {
@@ -128,13 +100,14 @@ export class BotonesAgendaComponent implements OnInit {
                 });
                 break;
             case 'suspendida':
-                this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
-                    if (!confirmado) {
-                        return false;
-                    } else {
-                        this.confirmarEstado(estado);
-                    }
-                });
+                // this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
+                //     if (!confirmado) {
+                //         return false;
+                //     } else {
+                //         this.confirmarEstado(estado);
+                //     }
+                // });
+                this.actualizarEstadoEmit.emit(estado);
                 break;
             case 'borrada':
                 this.plex.confirm('¿Borrar Agenda?').then((confirmado) => {
@@ -196,6 +169,8 @@ export class BotonesAgendaComponent implements OnInit {
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
             listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
+            // Imprimir pdf carpetas
+            listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
         };
     }
 
@@ -210,9 +185,11 @@ export class BotonesAgendaComponent implements OnInit {
     hayTurnosSuspendidos() {
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
-                    if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
-                        return true;
+                if (this.agendasSeleccionadas[x].bloques[y].turnos) {
+                    for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
+                        if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -221,7 +198,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'asistenciaCerrada' || agenda.estado === 'codificada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'pendienteAuditoria' || agenda.estado === 'codificada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
@@ -252,7 +229,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'codificada' || agenda.estado === 'asistenciaCerrada';
+            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'codificada' || agenda.estado === 'pendienteAuditoria';
         }).length <= 0;
     }
 
@@ -268,33 +245,35 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     puedoRevisar() {
-        return true; // TODO: descomentar
-        // let today = new Date();
-        // today.setHours(0, 0, 0, 0);
-        // return this.agendasSeleccionadas.filter((agenda) => {
-        //     return (agenda.nominalizada && agenda.estado !== 'codificada' && moment(agenda.horaInicio).format() <= moment(today).format());
-        // }).length > 0;
+        let agenda = this.agendasSeleccionadas[0];
+        return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
+        // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
     }
 
-    // TODO: Verificar que las agendas seleccionadas tengan al menos un turno asignado
+    puedoImprimirCarpetas() {
+        return this.agendasSeleccionadas.filter((agenda) => {
+            return agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+        }).length <= 0;
+    }
+
+    // Verifica que las agendas seleccionadas tengan al menos un turno de acceso directo poder para publicar la agenda
     haySoloTurnosReservados() {
+        let band = false;
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                if (this.agendasSeleccionadas[x].bloques[y].reservadoProfesional > 0 && this.agendasSeleccionadas[x].bloques[y].reservadoGestion > 0) {
-                    if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
-                        // No se puede Publicar
-                        return false;
-                    }
+                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
+                    band = false || band;
+                } else {
+                    band = true;
                 }
             }
         }
         if (this.agendasSeleccionadas.length > 0) {
-            return true;
+            return band;
         } else {
             return false;
         }
     }
-
 
     // Botón editar agenda
     editarAgenda() {
@@ -327,6 +306,10 @@ export class BotonesAgendaComponent implements OnInit {
 
     listarTurnos() {
         this.listarTurnosEmit.emit(this.agendasSeleccionadas[0]);
+    }
+
+    listarCarpetas() {
+        this.listarCarpetasEmit.emit(true);
     }
 
     cancelar() {

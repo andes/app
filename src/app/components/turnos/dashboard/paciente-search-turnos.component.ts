@@ -27,9 +27,9 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     get resultadoCreateUpdate(): any {
         return this.resultado;
     }
-    @Output() sinResultados: EventEmitter < any > = new EventEmitter < any > ();
-    @Output() operacion: EventEmitter < any > = new EventEmitter < any > ();
-    @Output() createUpdate: EventEmitter < any > = new EventEmitter < any > ();
+    @Output() sinResultados: EventEmitter<any> = new EventEmitter<any>();
+    @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
+    @Output() createUpdate: EventEmitter<any> = new EventEmitter<any>();
 
     pacienteSeleccionado = null;
 
@@ -55,14 +55,18 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
 
     public seleccionarPaciente(paciente: any) {
         super.seleccionarPaciente(paciente);
-        if (this.esEscaneado) {
-            this.sinResultados.emit(false);
-        }
+        this.resultado = [paciente];
+        this.sinResultados.emit(false);
     }
 
-    public buscar() {
+    public buscar($event) {
+        /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
+        if ($event.type) {
+            return;
+        }
+
         this.pacienteSeleccionado = null;
-        super.buscar();
+        super.buscar({});
         if (!this.resultado || this.resultado.length === 0) {
             this.mostrarNuevo = true;
             this.sinResultados.emit(true);

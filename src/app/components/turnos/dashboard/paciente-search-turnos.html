@@ -3,7 +3,7 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <plex-text [(ngModel)]="textoLibre" (change)="buscar()" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
+                <plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
                     placeholder="Ingrese un paciente o escanee un DNI">
                 </plex-text>
                 <!--Loader-->

@@ -51,9 +51,14 @@ import { PrestacionValidacionComponent } from './modules/rup/components/ejecucio
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { AuditoriaPrestacionPacienteComponent } from './components/auditoria/prestacionPaciente/auditoria-prestacionPaciente.component';
+import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
 // USUARIO
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
+
+// REPORTES
+import { ReporteC2Component } from './components/reportes/reporteC2.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -78,6 +83,7 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
+  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
@@ -87,21 +93,17 @@ const appRoutes: Routes = [
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/auditoriaRUP', component: AuditoriaPrestacionPacienteComponent, canActivate: [RoutingGuard] },
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
+  // Reportes
+  { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'clonarAgenda', component: ClonarAgendaComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'gestor_agendas', component: GestorAgendasComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'panelEspacio', component: PanelEspacioComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'agendas', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  /* ELIMINAR ==> */ { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },

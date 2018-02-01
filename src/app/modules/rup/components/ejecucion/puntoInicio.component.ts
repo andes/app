@@ -1,3 +1,4 @@
+import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -10,6 +11,7 @@ import { EstadosAgenda } from './../../../../components/turnos/enums';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 
 @Component({
@@ -47,6 +49,7 @@ export class PuntoInicioComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
+        public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -86,28 +89,24 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada'],
-                tieneTurnosAsignados: true
+                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
+                tieneTurnosAsignados: true,
+                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
             // Prestaciones
             this.servicioPrestacion.get({
-                fechaDesde: this.fecha,
+                fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
-                organizacion: this.auth.organizacion.id
+                organizacion: this.auth.organizacion.id,
+                sinEstado: 'modificada'
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
-                // this.auth.getPermissions('rup:tipoPrestacion:?')
+                // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
 
             if (this.agendas.length) {
-                this.agendaSeleccionada = this.agendas[0];
-            }
-
-            if (this.agendas.length) {
-                // this.agendaSeleccionada = this.agendas[0];
-
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
                     agenda['cantidadTurnos'] = 0;
@@ -123,21 +122,39 @@ export class PuntoInicioComponent implements OnInit {
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
                         });
                     });
+
+                    // busquemos si hy sobreturnos para vincularlos con la prestacion correspondiente
+                    if (agenda.sobreturnos) {
+                        agenda.sobreturnos.forEach(sobreturno => {
+                            let indexPrestacion = this.prestaciones.findIndex(prestacion => {
+                                return (prestacion.solicitud.turno && prestacion.solicitud.turno === sobreturno.id);
+                            });
+                            // asignamos la prestacion al turno
+                            sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                        });
+                    }
                 });
 
             }
 
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
-
-            // buscamos las que estan fuera de agenda para poder listarlas
-            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno));
+            // buscamos las que estan fuera de agenda para poder listarlas:
+            // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
+            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
+                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
+                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
             this.prestacionesOriginales = JSON.parse(JSON.stringify(this.fueraDeAgenda));
-            // this.mostrarTurnoPendiente(this.fueraDeAgenda);
+            this.mostrarTurnoPendiente(this.fueraDeAgenda);
             // filtramos los resultados
             this.filtrar();
+
+            if (this.agendas.length) {
+                this.agendaSeleccionada = this.agendas[0];
+            }
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
             if (this.agendaSeleccionada) {
@@ -159,7 +176,7 @@ export class PuntoInicioComponent implements OnInit {
      */
     filtrar() {
         // filtrar solo por las prestaciones que el profesional tenga disponibles
-
+        this.agendaSeleccionada = null;
         this.agendas = JSON.parse(JSON.stringify(this.agendasOriginales));
         // this.agendas = this.agendasOriginales;
         this.fueraDeAgenda = this.prestacionesOriginales;
@@ -169,12 +186,6 @@ export class PuntoInicioComponent implements OnInit {
             this.agendas = this.agendas.filter(agenda => {
                 return (agenda.profesionales.find(profesional => {
                     return (profesional.id === this.auth.profesional.id);
-                }));
-            });
-        } else {
-            this.agendas = this.agendas.filter(agenda => {
-                return (agenda.profesionales.find(profesional => {
-                    return (profesional.id !== this.auth.profesional.id);
                 }));
             });
         }
@@ -201,7 +212,7 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos el paciente en los turnos fuera de agenda
             if (this.fueraDeAgenda) {
                 let _turnos = this.fueraDeAgenda.filter(p => {
-                    return (p.tipoPrestacion && p.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
+                    return (p.solicitud.tipoPrestacion && p.solicitud.tipoPrestacion.conceptId === this.prestacionSeleccion.conceptId);
                 });
 
                 this.fueraDeAgenda = _turnos;
@@ -262,12 +273,19 @@ export class PuntoInicioComponent implements OnInit {
     crearPrestacion() {
         this.router.navigate(['/rup/crear']);
     }
+    /**
+    * Navega para ver seleccionar un paciente y ver la huds
+    */
+    verHuds() {
+        this.router.navigate(['/rup/buscaHuds']);
+    }
 
     iniciarPrestacion(paciente, snomedConcept, turno) {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
+
+                    this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');
                 });
@@ -295,10 +313,17 @@ export class PuntoInicioComponent implements OnInit {
         return total;
     }
 
-    tienePermisos(tipoPrestacion) {
+    tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
+        // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
+        // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
+        if (prestacion) {
+            if (prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
+                return null;
+            }
+        }
         return existe;
     }
 
@@ -308,51 +333,55 @@ export class PuntoInicioComponent implements OnInit {
 
 
     routeTo(action, id) {
+        if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
+            let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
+            localStorage.setItem('idAgenda', agenda.id);
+        }
         this.router.navigate(['rup/' + action + '/', id]);
+    }
+
+
+    // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
+    comprobarPrestacionesPendientes(unaPrestacion) {
+        if (unaPrestacion.id && unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
+            let registropendiente = unaPrestacion.ejecucion.registros.filter(registro => registro.esSolicitud && registro.valor && registro.valor.autocitado);
+            if (registropendiente && registropendiente.length > 0) {
+                this.servicioPrestacion.get({ idPrestacionOrigen: unaPrestacion.id }).subscribe(prestacionesPaciente => {
+                    prestacionesPaciente.forEach(elemento => {
+                        if (elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
+                            && !elemento.solicitud.turno) {
+                            unaPrestacion.turnosPedientes = true;
+                        }
+                    });
+                });
+            }
+        }
     }
 
 
     // Recibe un array o un objeto lo recorre y busca los planes que estan pendientes..
     mostrarTurnoPendiente(prestaciones) {
-        // let _prestaciones = prestaciones.filter(p => {
-        //     // filtramos todas las prestaciones que:
-        //     // 1) esten validadas
-        //     // 2) que sean planes y sean autocitados
-        //     let registropendiente = p.ejecucion.registros.filter(registro => registro.valor.solicitudPrestacion &&
-        //         registro.valor.solicitudPrestacion.autocitado
-        //     );
-        //     if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
-        //     ) {
-        //         return p;
-        //     };
-        // });
-        // if (Array.isArray(_prestaciones)) {
-        //     _prestaciones.forEach(unaPrestacion => {
-        //         if (unaPrestacion.estados[unaPrestacion.estados.length - 1].tipo === 'validada') {
-        //             this.servicioPrestacion.get({ idOrigen: unaPrestacion.paciente.id }).subscribe(prestacionesPaciente => {
-        //                 prestacionesPaciente.forEach(elemento => {
-        //                     if (elemento.solicitud.prestacionOrigen === unaPrestacion.id
-        //                         && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-        //                         && !elemento.solicitud.turno) {
-        //                         unaPrestacion.turnosPedientes = true;
-        //                     }
-        //                 });
-        //             });
-        //         }
-        //     });
-        // } else { // TODO revisar si entra alguna vez al else
-        //     if (prestaciones.estados[prestaciones.estados.length - 1].tipo === 'validada') {
-        //         this.servicioPrestacion.get({ idOrigen: prestaciones.paciente.id }).subscribe(prestacionesPaciente => {
-        //             prestacionesPaciente.forEach(elemento => {
-        //                 if (elemento.solicitud.prestacionOrigen === prestaciones.id
-        //                     && elemento.estados[elemento.estados.length - 1].tipo === 'pendiente'
-        //                     && !elemento.solicitud.turno) {
-        //                     prestaciones.turnosPedientes = true;
-        //                 }
-        //             });
-        //         });
-        //     }
-        // }
+        if (prestaciones) {
+            if (Array.isArray(prestaciones)) {
+                let _prestaciones = prestaciones.filter(p => {
+                    // filtramos todas las prestaciones que:
+                    // 1) esten validadas
+                    // 2) que sean planes y sean autocitados
+                    let registropendiente = p.ejecucion.registros.filter(registro => registro.esSolicitud && registro.valor &&
+                        registro.valor.autocitado
+                    );
+                    if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
+                    ) {
+                        return p;
+                    };
+                });
+                _prestaciones.forEach(unaPrestacion => {
+                    this.comprobarPrestacionesPendientes(unaPrestacion);
+                });
+            } else { // ingresa cuando lo llamo con una prestacion
+                this.comprobarPrestacionesPendientes(prestaciones);
+            }
+        }
         return prestaciones;
     }
 }

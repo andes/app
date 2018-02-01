@@ -51,4 +51,8 @@
         <plex-button icon="mdi mdi-printer" (click)="listarTurnos()" title="Imprimir">
         </plex-button>
     </span>
+    <span *ngIf="vistaBotones.listarCarpetas">
+        <plex-button icon="mdi mdi-folder-account" (click)="listarCarpetas()" title="Imprimir carpetas">
+        </plex-button>
+    </span>
 </div>
