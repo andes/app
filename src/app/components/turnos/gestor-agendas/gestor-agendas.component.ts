@@ -593,7 +593,7 @@ export class GestorAgendasComponent implements OnInit {
         return horas + (horas === 1 ? ' hora ' : ' horas ') + (minutos > 0 ? minutos + ' minutos' : '');
     }
 
-    cerrarSuspenderTurno() {
+    cerrarSuspenderTurno(agenda) {
         this.showSuspenderAgenda = false;
         this.showSuspendida = false;
         this.showClonar = false;
@@ -606,7 +606,9 @@ export class GestorAgendasComponent implements OnInit {
         this.showReasignarTurnoAutomatico = true;
         this.showListadoTurnos = false;
         this.showAgregarNotaAgenda = false;
-        this.loadAgendas();
+        if (agenda) {
+            this.getAgendas(this.parametros);
+        }
     }
 
 }
