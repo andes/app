@@ -77,8 +77,8 @@ export class SuspenderAgendaComponent implements OnInit {
             // Si son múltiples, esperar a que todas se actualicen
             this.agenda.estado = resultado.estado;
             this.plex.toast('success', 'Información', 'La agenda cambió el estado a Suspendida');
+            this.returnSuspenderAgenda.emit(this.agenda);
         });
-        this.returnSuspenderAgenda.emit(this.agenda);
     }
 
     cancelar() {
