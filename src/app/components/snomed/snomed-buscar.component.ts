@@ -257,7 +257,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
     formatearResultados(resultados = []) {
         return {
             term: this.searchTerm,
-            items: resultados
-        }
+            items: resultados,
+        };
     }
 }

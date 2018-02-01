@@ -42,6 +42,7 @@ export class ListarTurnosComponent implements OnInit {
     autorizado = false;
     showListarTurnos = true;
     turnosAsignados = [];
+    public idOrganizacion = this.auth.organizacion.id;
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public auth: Auth) { }
 
