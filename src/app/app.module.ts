@@ -50,6 +50,7 @@ import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
+import { OcupacionService } from './services/ocupacion/ocupacion.service';
 import { ProfesionalService } from './services/profesional.service';
 import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
@@ -320,7 +321,7 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        CamaCreateUpdateComponent,CamasComponent,
+        CamaCreateUpdateComponent, CamasComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
@@ -378,6 +379,7 @@ let RUPComponentsArray = [
         Auth,
         RoutingGuard,
         OrganizacionService,
+        OcupacionService,
         ProvinciaService,
         TipoEstablecimientoService,
         EspecialidadService,
