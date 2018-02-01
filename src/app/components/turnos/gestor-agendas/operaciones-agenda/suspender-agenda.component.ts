@@ -19,7 +19,7 @@ export class SuspenderAgendaComponent implements OnInit {
     todosSeleccionados = false;
 
     @Input() agenda: IAgenda;
-    @Output() returnSuspenderAgenda = new EventEmitter<boolean>();
+    @Output() returnSuspenderAgenda = new EventEmitter<any>();
 
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
@@ -78,13 +78,13 @@ export class SuspenderAgendaComponent implements OnInit {
             this.agenda.estado = resultado.estado;
             this.plex.toast('success', 'Información', 'La agenda cambió el estado a Suspendida');
         });
-        this.returnSuspenderAgenda.emit(true);
+        this.returnSuspenderAgenda.emit(this.agenda);
     }
 
     cancelar() {
         this.showConfirmar = false;
         this.showData = false;
-        this.returnSuspenderAgenda.emit(true);
+        this.returnSuspenderAgenda.emit(null);
     }
 
 
