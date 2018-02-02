@@ -19,6 +19,8 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    puedeRegistrarAsistencia: boolean;
+    puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
 
@@ -52,8 +54,8 @@ export class TurnosPacienteComponent implements OnInit {
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
-        let puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia:').length > 0;
-        let puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno:').length > 0;
+        this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
+        this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
     }
 
     getTurnosPaciente(paciente) {
