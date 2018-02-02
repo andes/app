@@ -17,6 +17,8 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
+    public nota: any;
+    public lenNota = 140;
     changeCarpeta: boolean;
     carpetaEfector: any;
     private _agenda: any;
@@ -197,7 +199,8 @@ export class AgregarSobreturnoComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento,
                 sexo: this.paciente.sexo,
                 telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores
+                carpetaEfectores: this.paciente.carpetaEfectores,
+                nota: this.nota
             };
 
             // Si cambió el teléfono lo actualizo en el MPI
@@ -278,6 +281,13 @@ export class AgregarSobreturnoComponent implements OnInit {
             return null;
         }
     }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
+    }
+
 
     cancelar() {
         if (!this._revision) {

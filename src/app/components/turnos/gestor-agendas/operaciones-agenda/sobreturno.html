@@ -62,6 +62,9 @@
                         name="telefono"></plex-phone>
                     <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                 </div>
+                <div class="col-4">
+                    <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()"></plex-text>
+                </div>
             </div>
 
             <div *ngIf="paciente" class="row">
