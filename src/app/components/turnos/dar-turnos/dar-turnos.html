@@ -265,6 +265,8 @@
                                                     name="turnoTipoPrestacion"></plex-select>
                                                 <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                                 <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
+                                                </plex-text>
                                             </div>
                                         </div>
                                         <hr>
