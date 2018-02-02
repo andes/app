@@ -12,7 +12,8 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 
 @Component({
-    templateUrl: 'prestacionCrear.html'
+    templateUrl: 'prestacionCrear.html',
+    styleUrls: ['prestacionCrear.scss']
 })
 export class PrestacionCrearComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
@@ -26,6 +27,7 @@ export class PrestacionCrearComponent implements OnInit {
     // Paciente sleccionado
     public paciente: IPaciente;
     public buscandoPaciente = false;
+    public btnCancelarLabel = 'CANCELAR';
 
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -64,9 +66,8 @@ export class PrestacionCrearComponent implements OnInit {
     /**
      * Guarda la prestación
      */
-    guardar() {
-        if (!this.paciente) {
-            this.plex.info('warning', 'Debe seleccionar un paciente');
+    guardar(formValid) {
+        if (!this.paciente || !formValid) {
             return;
         }
 
@@ -86,10 +87,10 @@ export class PrestacionCrearComponent implements OnInit {
                 tipoPrestacion: conceptoSnomed,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
@@ -169,10 +170,10 @@ export class PrestacionCrearComponent implements OnInit {
                     prestacionOrigen: null,
                     // profesional logueado
                     profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                        {
+                            id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                            apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                        },
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
                 },

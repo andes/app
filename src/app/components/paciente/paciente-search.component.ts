@@ -10,7 +10,7 @@ import { LogService } from './../../services/log.service';
 @Component({
     selector: 'pacientesSearch',
     templateUrl: 'paciente-search.html',
-    styleUrls: ['paciente-search.css']
+    styleUrls: ['paciente-search.scss']
 })
 
 export class PacienteSearchComponent implements OnInit, OnDestroy {
@@ -40,6 +40,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      * Indica si muestra el panel lateral en la selección de pacientes
      */
     @Input() modoCompleto = true;
+    /**
+     * Label del botón "cancelar"
+     */
+    @Input() btnCancelarLabel = 'Cancelar';
     /**
      * Indica si quiere bloquear la modificación del paciente una vez seleccionado
      */

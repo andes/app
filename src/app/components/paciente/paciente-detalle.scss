@@ -1,3 +1,8 @@
-img {
+.img-thumbnail-normal {
     max-height: 200px;
+}
+
+.img-thumbnail-small {
+    width: 80px;
+    height: auto;
 }
