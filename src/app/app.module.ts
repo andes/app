@@ -123,6 +123,7 @@ import { PacienteCreateUpdateComponent } from './components/paciente/paciente-cr
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
+import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -208,7 +209,7 @@ import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
-
+import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -272,7 +273,9 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent
+    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
+    'IngresoInternacionComponent': IngresoInternacionComponent,
+
 };
 
 let RUPComponentsArray = [
@@ -299,7 +302,8 @@ let RUPComponentsArray = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    AdjuntarDocumentoComponent
+    AdjuntarDocumentoComponent,
+    IngresoInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -359,6 +363,7 @@ let RUPComponentsArray = [
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
         HeaderPacienteComponent,
+        PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
