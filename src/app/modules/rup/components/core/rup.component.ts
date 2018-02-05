@@ -12,6 +12,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { RUPRegistry } from '../../../../app.module';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SnomedService } from '../../../../services/term/snomed.service';
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -72,7 +73,8 @@ export class RUPComponent implements OnInit {
         public auth: Auth,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
-        public sanitazer: DomSanitizer
+        public sanitazer: DomSanitizer,
+        public snomedService: SnomedService
     ) { }
 
     ngOnInit() {

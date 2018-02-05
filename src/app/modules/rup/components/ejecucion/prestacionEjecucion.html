@@ -171,7 +171,7 @@
 
                                                     <!-- RUP Loader  (change)="prestacionChanged()"-->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false"></rup>
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
 
                                                 </div>
                                             </div>

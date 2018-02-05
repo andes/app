@@ -28,7 +28,7 @@ export class CamaCreateUpdateComponent implements OnInit {
         ultimoEstado: {
             estado: 'desocupada',
             paciente: null,
-            idInternacion: null, //Falta definir
+            idInternacion: null, // Falta definir
             observaciones: null
         }
     };
