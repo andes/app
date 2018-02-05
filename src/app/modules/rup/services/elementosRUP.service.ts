@@ -143,7 +143,7 @@ export class ElementosRUPService {
             return new Observable((observer) => {
                 observer.next(this.cacheBusquedaGuidada[id]);
                 observer.complete();
-            })
+            });
         } else {
             return this.server.get(url + '/' + id + '/guiada', { showError: true });
         }
