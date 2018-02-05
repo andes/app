@@ -146,7 +146,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.paciente.carpetaEfectores.push(this.carpetaEfector);
                     this.changeCarpeta = true;
                 }
             });
