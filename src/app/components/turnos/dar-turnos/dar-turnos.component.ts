@@ -620,7 +620,7 @@ export class DarTurnosComponent implements OnInit {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
-                    this.carpetaEfector = carpeta;
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.changeCarpeta = true;
                 }
             });
