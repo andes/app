@@ -193,7 +193,7 @@
                             <span *ngIf="turnoSeleccionado.paciente.documento === ''"> Sin documento (temporal)</span>
                             <span *ngIf="turnoSeleccionado.paciente.fechaNacimiento !== null">| Edad: {{ turnoSeleccionado.paciente | edad }}</span>
                             <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.sexo">| Sexo: {{ turnoSeleccionado.paciente | sexo }}</span>
-                            <span *ngIf="turno?.paciente?.id && turno?.paciente?.edad">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
+                            <span *ngIf="turnoSeleccionado?.paciente?.id && turnoSeleccionado?.paciente?.edad">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</span>
                         </small>
                     </div>
                 </div>
@@ -263,10 +263,10 @@
                                             <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null">
                                                 <plex-button icon="mdi mdi-check" title="Aprobar" (click)="aprobar(i)"></plex-button>
                                             </td>
-                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == diagnostico.codificacionProfesional">
+                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria && diagnostico.codificacionAuditoria.codigo === diagnostico.codificacionProfesional.codigo">
                                                 <span class="badge-success">Aprobado</span>
                                             </td>
-                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria != null && diagnostico.codificacionAuditoria != diagnostico.codificacionProfesional">
+                                            <td *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria && diagnostico.codificacionAuditoria != null && diagnostico.codificacionAuditoria.codigo !== diagnostico.codificacionProfesional.codigo">
                                                 <span class="badge-success">Reparado</span>
                                             </td>
                                             <td *ngIf="existeCodificacionProfesional">

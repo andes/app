@@ -31,6 +31,8 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { DocumentosService } from './services/documentos.service';
+
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -45,10 +47,12 @@ import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
+import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
+import { OcupacionService } from './services/ocupacion/ocupacion.service';
 import { ProfesionalService } from './services/profesional.service';
 import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
@@ -109,6 +113,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { CamaCreateUpdateComponent } from './components/organizacion/cama-create-update.component';
+import { CamasComponent } from './components/organizacion/camas.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
@@ -224,6 +230,9 @@ import { UsuarioCreateComponent } from './components/usuario/usuarioCreate.compo
 import { UsuarioUpdateComponent } from './components/usuario/usuarioUpdate.component';
 import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.component';
 
+// REPORTES
+import { ReporteC2Component } from './components/reportes/reporteC2.component';
+
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
@@ -234,6 +243,9 @@ import { routing, appRoutingProviders } from './app.routing';
 import { ChartsModule } from 'ng2-charts';
 import {PopoverModule} from "ngx-popover";
 
+// Mapa de camas
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -313,12 +325,13 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
+        CamaCreateUpdateComponent, CamasComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -339,6 +352,7 @@ let RUPComponentsArray = [
         PacienteSearchTurnosComponent, TurnosPacienteComponent, DashboardCodificacionComponent,
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
+        ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent,
         ResumenComponent,
@@ -354,7 +368,9 @@ let RUPComponentsArray = [
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
-        TabComponent
+        TabComponent,
+        MapaDeCamasComponent,
+        CamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -367,6 +383,7 @@ let RUPComponentsArray = [
         Auth,
         RoutingGuard,
         OrganizacionService,
+        OcupacionService,
         ProvinciaService,
         TipoEstablecimientoService,
         EspecialidadService,
@@ -405,7 +422,8 @@ let RUPComponentsArray = [
         LogPacienteService,
         UsuarioService,
         PermisosService,
-        FrecuentesProfesionalService
+        FrecuentesProfesionalService,
+        DocumentosService
 
     ]
 })

@@ -49,8 +49,12 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente) {
-        this.paciente = paciente;
-        this.buscandoPaciente = false;
+        if (paciente.id) {
+            this.paciente = paciente;
+            this.buscandoPaciente = false;
+        } else {
+            this.plex.alert('El paciente debe ser registrado en MPI');
+        }
     }
 
     onPacienteCancel() {

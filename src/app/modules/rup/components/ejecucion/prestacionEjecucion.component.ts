@@ -1,4 +1,3 @@
-import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -13,6 +12,8 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
@@ -24,6 +25,7 @@ import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionEjecucionComponent implements OnInit {
+    idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
 
     // prestacion actual en ejecucion
@@ -88,8 +90,14 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public sinonimos: ITipoPrestacion[] = [];
 
+    public conceptosTurneables: any[];
+
+    // Listado de grupos de la busqueda guiada
+    public grupos_guida: any[] = [];
+
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -97,6 +105,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         private router: Router, private route: ActivatedRoute,
         public servicioTipoPrestacion: TipoPrestacionService,
         private servicioPaciente: PacienteService,
+        private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService) { }
 
     /**
@@ -115,6 +124,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.route.params.subscribe(params => {
             let id = params['id'];
+            this.idAgenda = localStorage.getItem('idAgenda');
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -123,7 +133,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-
                         // Si la prestación está validad, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
@@ -151,6 +160,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                             })
 
                         }
+                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+                            this.grupos_guida = grupos;
+                        });
+
                     }, (err) => {
                         if (err) {
                             this.plex.info('danger', err, 'Error');
@@ -158,6 +171,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                     });
                 }
+            });
+
+            // Se traen los Conceptos Turneables para poder quitarlos de la lista de procedimientos
+            this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+                this.conceptosTurneables = conceptosTurneables;
             });
         });
     }
@@ -664,8 +682,18 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
+            if (this.idAgenda && this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+                // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
+                let cambios = {
+                    op: 'noAsistio',
+                    turnos: [this.prestacion.solicitud.turno]
+                };
 
-            // actualizamos las prestaciones de la HUDS
+                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+            }
+
+            // Actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
@@ -845,7 +873,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     agregarListadoHuds(registrosHuds) {
-        this.registrosHuds = registrosHuds;
+        // Limpiar los valores observados al iniciar la ejecución
+        // Evita que se autocompleten valores de una consulta anterior
+        this.conceptObserverService.destroy();
+        // this.registrosHuds = registrosHuds;
     }
 
     // Actualiza ambas columnas de registros según las relaciones
@@ -953,6 +984,26 @@ export class PrestacionEjecucionComponent implements OnInit {
         return false;
     }
 
+
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
     registrosColapsados() {
         this.prestacion.ejecucion.registros.forEach(registro => {
             let unRegistro = this.itemsRegistros[registro.id].collapse;
@@ -960,6 +1011,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.collapse = !this.collapse;
             }
         });
+    }
+
+    /**
+     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * @param {IConcept} concept
+     */
+    matchinBusquedaGuiada(concept) {
+        let results = [];
+        this.grupos_guida.forEach(data => {
+            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
+                results.push(data);
+            }
+        });
+        return results;
     }
 
     // eliminaTodosLosRegistros() {
@@ -971,4 +1036,5 @@ export class PrestacionEjecucionComponent implements OnInit {
     //         return false;
     //     });
     // }
+
 }

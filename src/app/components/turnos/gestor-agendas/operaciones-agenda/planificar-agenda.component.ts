@@ -514,12 +514,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     aproximar(date: Date) {
         let m = date.getMinutes();
-        let remaider = m % 15;
+        let remaider = m % 5;
         if (remaider !== 0) {
-            if (remaider < 7) {
+            if (remaider < 3) {
                 date.setMinutes(m - remaider);
             } else {
-                date.setMinutes(m + (15 - remaider));
+                date.setMinutes(m + (5 - remaider));
             }
         }
     }

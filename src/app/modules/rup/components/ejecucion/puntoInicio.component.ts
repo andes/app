@@ -97,7 +97,7 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
-                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria'],
+                estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
                 tieneTurnosAsignados: true,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
@@ -106,16 +106,9 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
-                // filtrar por las prestaciones permitidas,
-                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
-            }),
-            // Prestaciones en estado Pendientes con un turno asignado
-            this.servicioPrestacion.get({
-                tieneTurno: 'si',
-                estado: 'pendiente',
-                organizacion: this.auth.organizacion.id,
-                // filtrar por las prestaciones permitidas,
-                tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
+                sinEstado: 'modificada'
+                // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
+                // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
             this.agendas = data[0];
@@ -308,7 +301,8 @@ export class PuntoInicioComponent implements OnInit {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-                    this.router.navigate(['/rup/ejecucion', prestacion.id]);
+
+                    this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');
                 });
@@ -385,6 +379,10 @@ export class PuntoInicioComponent implements OnInit {
 
 
     routeTo(action, id) {
+        if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
+            let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
+            localStorage.setItem('idAgenda', agenda.id);
+        }
         this.router.navigate(['rup/' + action + '/', id]);
     }
 

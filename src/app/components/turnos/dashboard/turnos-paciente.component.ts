@@ -74,14 +74,14 @@ export class TurnosPacienteComponent implements OnInit {
         let tipoToast = 'info';
         let patch: any = {
             op: operacion,
-            turnos: [turno],
-            'idTurno': turno._id
+            turnos: [turno._id],
+            // 'idTurno': turno._id
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(turno.agenda_id, patch).subscribe(resultado => {
-            let agenda = resultado;
+        this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
 
+            let agenda = resultado;
             let datosTurno = { pacienteId: this._paciente.id };
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {

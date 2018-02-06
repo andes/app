@@ -16,57 +16,79 @@
 }
 
 .menu-buscador {
+    .container-filtros {
+        width: 100%;
+        overflow: scroll;
+        position: relative;
+        height: 105px;
+        margin: 10px 0;
+    }
     .filtros {
         align-items: center;
         height: 40px;
     }
     .botones-filtros {
-        // border-bottom: 1px solid #bbbbbb;
+        list-style: none;
+        margin: 0 1px 0 0;
+        padding: 0;
+        display: flex;
+        li {
+            min-width: 100px;
+            position: relative;
+            margin-right: 2px;
+            button {
+                text-overflow: ellipsis;
+                white-space: normal;
+                /* width: 99%; */
+                /* height: 1.5rem; */
+                font-size: 0.7rem;
+                /* position: absolute; */
+                text-align: center;
+                padding: 7px 5px;
+                display: block;
+                border-width: 2px;
+                min-height: 91px;
+                i {
+                    font-size: 3rem;
+                    display: block;
+                }
+                &[disabled] {
+                    cursor: not-allowed;
+                    filter: alpha(opacity=65);
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                    opacity: .65;
+                } // fix a mano para el boton btn-otro para que entre el texto en los filtros
+                &.btn-otro {
+                    padding-top: 0;
+                    padding-bottom: 0;
+                    i {
+                        font-size: 2.8rem;
+                    }
+                }
+            }
+            .badge {
+                display: inline-block;
+                top: 0;
+                right: 0;
+                position: absolute;
+                text-align: left;
+                padding: 3px;
+                font-size: 0.7rem;
+                z-index: 1000;
+            }
+        }
     }
-    button {
-        &.procedimientos {
-            // width: 118%;
-        }
-        &.planes {
-            // width: 81%;
-            // margin-left: 15px !important;
-        }
-        &.productos {
-            // width: 96%;
-            // margin-left: 1px !important;
-        }
-        &[disabled] {
-            cursor: not-allowed;
-            filter: alpha(opacity=65);
-            -webkit-box-shadow: none;
-            box-shadow: none;
-            opacity: .65;
-        }
-        width: 99%;
-        height: 1.5rem;
-        font-size: 0.6rem;
-        // border: none;
-        // background-color: #dddddd;
-        // cursor: pointer;
-        position: absolute;
-        text-align: left;
-        padding: 7px 5px;
-        /////////////////////
-        // top: 0;
-        // right: 2px;
-        // position: absolute;
-        // text-align: left;
-        // padding: 5px;
-        // z-index: 1000;
-    }
-    .badge {
-        display: inline-block;
-        top: 0;
-        right: 2px;
-        position: absolute;
-        text-align: left;
+}
+
+.busqueda-guiada {
+    .grupo {
+        border: 2px solid #ccc;
         padding: 5px;
-        z-index: 1000;
+        margin-bottom: 2px;
+        .conceptos {
+            margin: 10px 0;
+        }
     }
 }
 
@@ -84,14 +106,32 @@ $color in $rup_colors {
         background-color: $color;
     }
 }
+
 @media (max-width: 1600px) {
-  .botoneraPrincipal{
+    .botoneraPrincipal {
         display: block;
         & button {
-            display: inline-block;
             width: 50%;
             float: left;
             border: 1px solid white;
         }
     }
+}
+
+.rup-card.mini .rup-header {
+    .title {
+        color: black;
+        font-size: 0.9rem;
+        line-height: 1.2rem;
+    }
+    .sugerido {
+        font-weight: 400;
+        font-size: 0.8rem;
+        float: left;
+    }
+}
+
+.rup-header .float-right {
+    // Fix desfasaje de height en badges
+    line-height: 1em;
 }

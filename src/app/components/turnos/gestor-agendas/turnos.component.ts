@@ -110,18 +110,13 @@ export class TurnosComponent implements OnInit {
         this.turnosSeleccionados.sort((a, b) => {
             return (a.horaInicio.getTime() > b.horaInicio.getTime() ? 1 : (b.horaInicio.getTime() > a.horaInicio.getTime() ? -1 : 0));
         });
-
-
         if (this.turnosSeleccionados.length < this.turnos.length) {
             this.todos = false;
         }
-
         if (this.turnosSeleccionados.length === this.turnos.length) {
             this.todos = true;
         }
-
         this.cantSel = this.turnosSeleccionados.length;
-
         this.actualizarBotones();
     }
 
@@ -314,11 +309,11 @@ export class TurnosComponent implements OnInit {
     eventosTurno(operacion) {
         let patch: any = {
             op: operacion,
-            turnos: this.turnosSeleccionados
+            turnos: this.turnosSeleccionados.map((resultado) => { return resultado.id; })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => {
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
             this.agenda = resultado;
         });
 
@@ -369,12 +364,11 @@ export class TurnosComponent implements OnInit {
 
         let patch: any = {
             op: operacion,
-            turnos: turnosActualizar
+            turnos: turnosActualizar.map((resultado) => { return resultado.id; })
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
-        this.serviceAgenda.patchMultiple(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
-
+        this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => { this.agenda = resultado; });
         // Reset botones y turnos seleccionados
         this.turnosSeleccionados = [];
         this.actualizarBotones();
@@ -406,13 +400,9 @@ export class TurnosComponent implements OnInit {
     }
 
     enviarSMS() {
-
         let turno;
-
         for (let x = 0; x < this.turnosSeleccionados.length; x++) {
-
             let idTurno = this.turnosSeleccionados[x].id;
-
             this.turnos.filter(function (el, index, arr) {
                 if (el.id === idTurno) {
                     turno = el;

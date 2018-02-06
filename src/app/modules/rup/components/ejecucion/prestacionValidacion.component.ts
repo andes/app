@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -12,6 +13,10 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
+import { DocumentosService } from './../../../../services/documentos.service';
+import { saveAs } from 'file-saver';
+import * as moment from 'moment';
+import 'rxjs/Rx';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -24,6 +29,7 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+    idAgenda: any;
     ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
@@ -61,9 +67,10 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
+    public grupos_guida: any[] = [];
+
     tipoOrden: any[] = null;
     arrayTitulos: any[] = [];
-
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -71,7 +78,9 @@ export class PrestacionValidacionComponent implements OnInit {
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService) {
+        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
+        private servicioDocumentos: DocumentosService,
+        private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
@@ -84,6 +93,7 @@ export class PrestacionValidacionComponent implements OnInit {
         }
         this.route.params.subscribe(params => {
             let id = params['id'];
+            this.idAgenda = localStorage.getItem('agenda');
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
                     this.inicializar(id);
@@ -113,14 +123,16 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
-                        this.cargaPlan(prestacionSolicitud, conceptosTurneables);
-                    });
+                this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
+                    this.cargaPlan(prestacionSolicitud);
                 });
 
                 this.diagnosticoReadonly = true;
             }
+
+            this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+                this.grupos_guida = grupos;
+            });
 
             // Carga la información completa del paciente
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
@@ -146,7 +158,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
 
             });
-
+            this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
             this.armarRelaciones(this.registrosOrdenados);
             // this.reordenarRelaciones();
@@ -175,55 +187,62 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-                this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
-                    // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
-                    let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
+                // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
+                let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
-                    this.servicioPrestacion.validarPrestacion(this.prestacion, planes, conceptosTurneables).subscribe(prestacion => {
-                        this.prestacion = prestacion;
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                    this.prestacion = prestacion;
 
-                        this.prestacion.ejecucion.registros.forEach(registro => {
-                            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
-                            }
-                        });
-                        // actualizamos las prestaciones de la HUDS
-                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        });
-                        if (prestacion.solicitadas) {
-                            this.cargaPlan(prestacion.solicitadas, conceptosTurneables);
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                         }
-                        this.diagnosticoReadonly = true;
-
-                        // Se copian los registros de la ejecución actual, para agregarle la frecuencia
-                        let registros = this.prestacion.ejecucion.registros;
-                        let registrosFrecuentes = [];
-
-                        registros.forEach(x => {
-                            registrosFrecuentes.push({
-                                concepto: x.concepto,
-                                frecuencia: 1
-                            });
-                        });
-
-                        let frecuentesProfesional = {
-                            profesional: {
-                                id: this.auth.profesional.id,
-                                nombre: this.auth.profesional.nombre,
-                                apellido: this.auth.profesional.apellido,
-                                documento: this.auth.profesional.documento
-                            },
-                            tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
-                            organizacion: this.prestacion.solicitud.organizacion,
-                            frecuentes: registrosFrecuentes
-                        };
-
-                        this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
-
-                        this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                     });
+                    // actualizamos las prestaciones de la HUDS
+                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        // Chequear si es posible asignar turno a los planes generados
+                        let prestacionesSolicitadas = this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id);
+                        if (prestacionesSolicitadas) {
+                            this.cargaPlan(prestacionesSolicitadas);
+                        }
+                    });
+
+                    this.diagnosticoReadonly = true;
+
+                    // cargar los conceptos mas frecuentes por profesional y tipo de prestación
+                    // Se copian los registros de la ejecución actual, para agregarle la frecuencia
+                    let registros = this.prestacion.ejecucion.registros;
+                    let registrosFrecuentes = [];
+
+                    registros.forEach(x => {
+                        registrosFrecuentes.push({
+                            concepto: x.concepto,
+                            frecuencia: 1
+                        });
+                    });
+
+                    let frecuentesProfesional = {
+                        profesional: {
+                            id: this.auth.profesional.id,
+                            nombre: this.auth.profesional.nombre,
+                            apellido: this.auth.profesional.apellido,
+                            documento: this.auth.profesional.documento
+                        },
+                        tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
+                        organizacion: this.prestacion.solicitud.organizacion,
+                        frecuentes: registrosFrecuentes
+                    };
+                    this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
+
+                    // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
+                    if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                    }
+
+
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
             }
         });
@@ -235,24 +254,34 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
 
-                // hacemos el patch y luego creamos los planes
-                let cambioEstado: any = {
-                    op: 'romperValidacion',
-                    estado: { tipo: 'ejecucion' }
-                };
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
 
-                // Vamos a cambiar el estado de la prestación a ejecucion
-                this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-                    this.prestacion = prestacion;
+                // Guardamos la prestacion copia
+                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
 
-                    // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                    let prestacionModificada = prestacionClonada;
+
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                        });
+
+                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });
-
-                    this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                 });
             }
 
@@ -284,21 +313,12 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDarTurnos = true;
     }
 
-    /**
-     * Revisamos entre las solicitudes a futuro generadas si es posible asignar un turno
-     * para autocitaciones
-     * @memberof PrestacionValidacionComponent
-     */
-    cargaPlan(prestacionesSolicitadas, conceptosTurneables) {
+    cargaPlan(prestacionesSolicitadas) {
         let prestacionesPermitidas = this.auth.getPermissions('rup:tipoPrestacion:?');
-        // Nos quedamos con los tipos de prestacion de las prestaciones solicitadas
-        // solo aquellas para las que tiene permisos
-        prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => {
-            if (prestacionesPermitidas.find(pp => pp === ps.solicitud.tipoPrestacion.conceptId)) {
-                return ps;
-            }
+
+        let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
+            return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
-        let tiposPrestaciones = prestacionesSolicitadas.map(ps => ps.solicitud.tipoPrestacion);
 
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
@@ -337,6 +357,17 @@ export class PrestacionValidacionComponent implements OnInit {
     diagnosticoPrestacion(elem) {
         this.prestacion.ejecucion.registros.map(reg => reg.esDiagnosticoPrincipal = false);
         elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
+    }
+
+    defualtDiagnosticoPrestacion() {
+        let count = 0;
+        // for (let elemento of this.prestacion.ejecucion.registros) {
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+        if (items.length === 1) {
+            items[0].esDiagnosticoPrincipal = true;
+        }
+
+        // }
     }
 
     primeraVez(elem) {
@@ -493,15 +524,107 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
+    private descargarArchivo(data: any, headers: any): void {
+
+        let blob = new Blob([data], headers);
+        saveAs(blob, 'rup.pdf');
+    }
+
     imprimirResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
         setTimeout(() => {
-            window.print();
+
+            let content = '';
+            let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
+            let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
+
+            // Cada logo va a quedar generada como base64 desde la API:
+            // <img src="data:image/png;base64,..." style="float: left;">
+            // <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+            // <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+
+            const header = `
+                <header id="pageHeader" style="background-color: rgba(0,0,0,0.1); font-size: 10px; height: 40px !important; padding-top: 8px; padding-left:5px;">
+                    <div class="col-4 m-0 p-0">
+                        <!--logoAndes-->
+                        <div class="logo p-2" style="float: left; padding: 5px;">
+                            <!--logotipoAndes-->
+                        </div>
+                    </div>
+                    <div class="col-8 m-0 p-0">
+                        <div class="organizacion" style="position: relative; top: 17px;">${this.auth.organizacion.nombre}</div>
+                    </div>
+                </header>
+                <div>
+                    ${headerPrestacion.innerHTML}
+                    ${datosSolicitud.innerHTML}
+                </div>
+            `;
+
+            content += header;
+            content += `
+            <div class="paciente">
+                <b>Paciente:</b> ${this.paciente.apellido},  ${this.paciente.nombre} - 
+                ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
+            </div>
+            `;
+
+            // agregamos prestaciones
+            let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
+
+            const total = elementosRUP.length;
+            for (let i = 0; i < total; i++) {
+                content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
+            }
+
+            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
+            // content = this.sanitizer.sanitize(1, content);
+
+            // Enviar las hojas de estilos en el payload? <_<
+            // let cssFiles = Object.keys(document.styleSheets);
+
+            // content += '<style>';
+
+            // Leer las hojas de estilo rendereadas por Angular
+            // for (let fkey in cssFiles) {
+            //     let cssKeys = document.styleSheets[fkey];
+
+            //     for (let key in cssKeys) {
+            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
+            //         content += document.styleSheets[fkey].ownerNode.textContent;
+            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
+            //     }
+            // }
+
+            // content += '</style>';
+
+            this.servicioDocumentos.descargar(content).subscribe(data => {
+                if (data) {
+                    // Generar descarga como PDF
+                    this.descargarArchivo(data, { type: 'application/pdf' });
+                } else {
+                    // Fallback a impresión normal desde el navegador
+                    window.print();
+                }
+            });
         });
     }
 
+    /**
+     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * @param {IConcept} concept
+     */
+    matchinBusquedaGuiada(concept) {
+        let results = [];
+        this.grupos_guida.forEach(data => {
+            if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
+                results.push(data);
+            }
+        });
+        return results;
+    }
 
 }
 

@@ -150,7 +150,7 @@ export class GestorAgendasComponent implements OnInit {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
         this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).startOf('day');
+        this.fechaHasta = moment(this.fechaHasta).endOf('day');
 
         // Iniciamos la búsqueda
         this.parametros = {
@@ -165,12 +165,17 @@ export class GestorAgendasComponent implements OnInit {
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones && this.prestaciones.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
-        if (tipo === 'fecha') {
-            let fechaDesde = moment(value).startOf('day');
-            let fechaHasta = moment(value).endOf('day');
-            if (fechaDesde.isValid() || fechaHasta.isValid()) {
-                this.parametros['fechaDesde'] = fechaDesde.isValid() ? this.fechaDesde : moment().format();
-                this.parametros['fechaHasta'] = fechaHasta.isValid() ? this.fechaHasta : moment().format();
+        if (tipo === 'fechaDesde') {
+            let fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaDesde.isValid()) {
+                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
+            }
+        }
+        if (tipo === 'fechaHasta') {
+            let fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaHasta.isValid()) {
+                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
                 this.parametros['organizacion'] = this.auth.organizacion._id;
             }
         }
@@ -206,7 +211,6 @@ export class GestorAgendasComponent implements OnInit {
 
         // Completo params con la info que ya tengo
         this.getAgendas(this.parametros);
-
     };
 
     getAgendas(params: any) {

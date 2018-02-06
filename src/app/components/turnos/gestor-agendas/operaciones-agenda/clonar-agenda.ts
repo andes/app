@@ -24,13 +24,19 @@ export class ClonarAgendaComponent implements OnInit {
     @Output() volverAlGestor = new EventEmitter<boolean>();
     @HostBinding('class.plex-layout') layout = true;
     public autorizado = false;
-    public agendasFiltradas: any[] = []; // Las agendas que hay en el día
     public today = new Date();
     public fecha: Date;
     public calendario: any = [];
     private _agenda: any;
     private estado: Estado = 'noSeleccionado';
+    /**
+     * Días seleccionados del calendario para la clonación. SIN CONFLICTOS
+     * @private
+     * @type {any[]}
+     * @memberof ClonarAgendaComponent
+     */
     private seleccionados: any[] = [];
+    public agendasFiltradas: any[] = [];
     private agendas: IAgenda[] = []; // Agendas del mes seleccionado
     private inicioMesMoment: moment.Moment;
     private inicioMesDate;
@@ -61,12 +67,13 @@ export class ClonarAgendaComponent implements OnInit {
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
         let params = {
-            fechaDesde: this.inicioAgenda,
+            fechaDesde: this.today,
             fechaHasta: this.finMesDate,
             organizacion: this.auth.organizacion.id
         };
-        this.serviceAgenda.get(params).subscribe(agendas => { this.agendas = agendas; });
-        let agendas = this.agendas;
+        this.serviceAgenda.get(params).subscribe(agendas => {
+            this.agendas = agendas;
+        });
         this.cargarCalendario();
     }
 
@@ -121,6 +128,12 @@ export class ClonarAgendaComponent implements OnInit {
         this.actualizar();
     }
 
+    /**
+     * Función disparada al picar sobre un dia del calendario.
+     *
+     * @param {*} dia
+     * @memberof ClonarAgendaComponent
+     */
     public seleccionar(dia: any) {
         let mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
         if (dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
@@ -137,21 +150,19 @@ export class ClonarAgendaComponent implements OnInit {
             let filtro = this.agendas.filter(
                 function (actual) {
                     let actualIni = moment(actual.horaInicio).format('HH:mm');
-                    let actualFin = moment(actual.horaInicio).format('HH:mm');
+                    let actualFin = moment(actual.horaFin).format('HH:mm');
                     band = actual.estado !== 'suspendida';
                     band = band && moment(dia.fecha).isSame(moment(actual.horaInicio), 'day');
-                    band = band &&
-                        ((originalIni <= actualIni && actualIni <= originalFin)
-                            || (originalIni <= actualFin && actualFin <= originalFin));
+                    band = band && ((originalIni <= actualIni && actualIni <= originalFin) || (originalIni <= actualFin && actualFin <= originalFin));
                     return band;
                 }
             );
-            // Mostrar las agendas que coincidan con los profesionales de la agenda seleccionada en ese dia
             if (dia.estado === 'noSeleccionado' && this.original !== true) {
                 dia.estado = 'seleccionado';
                 if (filtro.length === 0) {
                     this.seleccionados.push(dia.fecha.getTime());
                 } else {
+                    // contatenamos en agendasFiltradas las agendas del nuevo día seleccionado y luego verificamos conflictos
                     filtro.forEach((fil) => {
                         let aux = this.agendasFiltradas.map(elem => { return elem.id; });
                         if (aux.indexOf(fil.id) < 0) {
@@ -160,10 +171,13 @@ export class ClonarAgendaComponent implements OnInit {
                         }
                     });
                     this.verificarConflictos(dia);
+                    if (dia.estado !== 'conflicto') {
+                        this.seleccionados.push(dia.fecha.getTime());
+                    }
                 }
             } else {
                 if (this.original !== true) {
-                    if (dia.estado !== 'conflicto') { // Agendas en conflicto nunca llegan al array seleccionados
+                    if (dia.estado !== 'conflicto') { // Días con agendas en conflicto nunca llegan al array seleccionados
                         let i: number = this.seleccionados.indexOf(dia.fecha.getTime());
                         this.seleccionados.splice(i, 1);
                     }
@@ -180,11 +194,14 @@ export class ClonarAgendaComponent implements OnInit {
         }
     }
     // Verifica si existen conflictos con las agendas existentes en ese dia
-    // no se asignan agendas en conflicto al array "seleccionados"
+    /**
+     * Verifica entre las agendas filtradas si existen conflictos de profesional o espacio físico.
+     *
+     * @param {*} dia
+     * @memberof ClonarAgendaComponent
+     */
     verificarConflictos(dia: any) {
-
-        this.agendasFiltradas.forEach((agenda, index) => {
-
+        this.agendasFiltradas = this.agendasFiltradas.filter((agenda) => {
             if (moment(dia.fecha).isSame(moment(agenda.horaInicio), 'day')) {
                 if (agenda.profesionales.length > 0) {
                     if (agenda.profesionales.map(elem => { return elem.id; }).some
@@ -199,12 +216,13 @@ export class ClonarAgendaComponent implements OnInit {
                         dia.estado = 'conflicto';
                     }
                 }
-                if (agenda.conflictoEF !== 1 && agenda.conflictoProfesional !== 1) {
-                    this.agendasFiltradas.splice(index, 1);
-                    this.seleccionados.push(dia.fecha.getTime());
-                }
+                let band = (agenda.conflictoEF === 1 || agenda.conflictoProfesional === 1) ? true : false;
+                return band;
+            } else {
+                return true; // para no descartar las agendas ya existentes en la colección;
             }
         });
+
     }
 
     redirect(pagina: string) {
@@ -229,7 +247,7 @@ export class ClonarAgendaComponent implements OnInit {
     }
 
     public clonar() {
-        if (this.seleccionados.length > 1) {
+        if (this.seleccionados.length > 1) { // >1 porque el primer elemento es la agenda original
             this.plex.confirm('¿Está seguro que desea realizar la clonación?').then(conf => {
                 if (conf) {
                     this.seleccionados.splice(0, 1); // saco el primer elemento que es la agenda original

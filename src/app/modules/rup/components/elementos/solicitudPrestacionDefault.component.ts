@@ -16,17 +16,17 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 solicitudPrestacion: {}
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
-        }
+         }
     }
 
     loadProfesionales(event) {
-        if (event.query) {
+        if (event && event.query) {
             let query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            let callback = (this.registro.valor.profesionales) ? this.registro.valor.profesionales : null;
+            let callback = (this.registro.valor.solicitudPrestacion && this.registro.valor.solicitudPrestacion.profesionales) ? this.registro.valor.solicitudPrestacion.profesionales : null;
             event.callback(callback);
         }
 

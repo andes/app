@@ -1,0 +1,332 @@
+/*
+******************************
+** MAPA DE CAMAS
+******************************
+*/
+
+
+/* estado del servicio */
+
+.estado-servicio {
+    h4 {
+        display: inline-block;
+        font-weight: bold;
+        font-size: 22px;
+    }
+    span {
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    span.estado {
+        text-transform: uppercase;
+        color: #aaa;
+        font-size: 20px;
+    }
+}
+
+.cama-container {
+    margin: 10px 0 20px 0;
+    -webkit-perspective: 800px;
+    -moz-perspective: 800px;
+    -o-perspective: 800px;
+    perspective: 800px;
+    min-height: 390px;
+    width: 100%;
+
+    .cama {
+        -webkit-transition: -webkit-transform .5s;
+        -moz-transition: -moz-transform .5s;
+        -o-transition: -o-transform .5s;
+        transition: transform .5s;
+        -webkit-transform-style: preserve-3d;
+        -moz-transform-style: preserve-3d;
+        -o-transform-style: preserve-3d;
+        transform-style: preserve-3d;
+        position: relative;
+        background: #FFF;
+        border-radius: 4px;
+        color: #444;
+        /*margin-right: 16px;*/
+        .col-indicadores {
+            width: 10%;
+            margin-right: 2%;
+            float: left;
+        }
+        .col-paciente {
+            width: 90%;
+            margin: 0 auto;
+        }
+        .footer,
+        .motto,
+        .profession {
+            color: #999;
+            text-align: center;
+        }
+        .back,
+        .front {
+            -webkit-backface-visibility: hidden;
+            -moz-backface-visibility: hidden;
+            -o-backface-visibility: hidden;
+            backface-visibility: hidden;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-color: #FFF;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
+
+            min-height: 390px;
+            width: 100%;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+        .front {
+            z-index: 2;
+            .bloqueada {
+                background: rgba(249, 249, 249, 0.5);
+            }
+        }
+        .back {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+            z-index: 3;
+
+
+            .content.reparacion .footer .col-left::after {
+                border-right: 0 none;
+            }
+
+            .footer {
+
+                .col-left::after {
+                    float: right;
+                    content: " ";
+                    border-right: 1px dashed #ccc;
+                }
+                .with-buttons {
+                    padding: 7px 0;
+                    .form-group {
+                        margin-bottom: 5px;
+                    }
+                }
+            }
+
+        }
+        .cover {
+            /*height: 105px;*/
+            overflow: hidden;
+            border-radius: 4px 4px 0 0;
+        }
+        .content {
+            background-color: rgba(0, 0, 0, 0);
+            box-shadow: none;
+            padding: 20px 15px;
+            min-height: 275px;
+            /*min-height: 265px;*/
+            .content .footer {
+                padding: 0;
+                margin: 0;
+            }
+
+            .content .footer .col-left {
+                padding-left: 0;
+            }
+
+            .content .footer .col-right {
+                padding-left: 0;
+                padding-right: 0;
+            }
+        }
+        .name {
+            color: #000;
+            font-size: 18px;
+            line-height: 28px;
+            margin: 10px 0 0;
+            text-align: center;
+        }
+        .name.dorso {
+            color: #000;
+            font-size: 18px;
+            line-height: 22px;
+            margin: 10px 0 0;
+            text-align: left;
+        }
+        .name.reparacion {
+            font-size: 18px;
+        }
+        h5 {
+            margin: 5px 0;
+            font-weight: 400;
+            line-height: 20px;
+        }
+        .profession {
+            margin-bottom: 20px;
+        }
+        .footer {
+            border-top: 1px solid #EEE;
+            margin: 0;
+            padding: 10px 0;
+            /*margin: 30px 0 0;
+            padding: 10px 0 0;*/
+        }
+        .header {
+            /*padding: 15px 20px;*/
+            padding: 10px 0 0 10px;
+            height: 60px;
+        }
+
+
+
+        .icon {
+            text-align: center;
+
+            .mdi.agregar, .mdi {
+                font-size: 160px;
+            }
+
+            .reparacion {
+                font-size: 100px;
+                cursor: pointer;
+            }
+            .icono-paciente {
+                font-size: 100px;
+                cursor: pointer;
+            }
+        }
+
+
+        .rounded-background {
+            border-radius: 18px;
+            color: white;
+            padding: 5px;
+            width: 32px;
+        }
+
+        .numero-habitacion-header {
+            background: #f4f4f4;
+            color: #000;
+            font-weight: bold;
+            padding: 5px 10px;
+            font-size: 15px;
+        }
+
+        .btn-buscar-paciente {
+            background: white;
+            .agregar {
+                background: white;
+                color: #5F90A7;
+            }
+        }
+
+        .btn-bloqueada {
+            padding: 0;
+            background: transparent;
+        }
+
+
+        .grow {
+            padding: 0;
+            transition: all .2s ease-in-out;
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+    }
+}
+
+
+@media screen and (-ms-high-contrast:active),
+(-ms-high-contrast:none) {
+    .back,
+    .front {
+        -ms-backface-visibility: visible;
+        backface-visibility: visible;
+    }
+    .back {
+        visibility: hidden;
+        -ms-transition: all .2s cubic-bezier(.92, .01, .83, .67);
+        transition:  all .2s cubic-bezier(.92, .01, .83, .67);
+    }
+    .front {
+        z-index: 4;
+    }
+    .cama-container.manual-flip.hover .back,
+    .cama-container:not(.manual-flip):hover .back {
+        z-index: 5;
+        visibility: visible;
+    }
+}
+
+.cama-container.hover.manual-flip .cama, .cama-container:not(.manual-flip):hover .cama {
+    -webkit-transform: rotateY(180deg);
+    -moz-transform: rotateY(180deg);
+    -o-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+.cama-container.static.hover .cama, .cama-container.static:hover .cama {
+    -webkit-transform: none;
+    -moz-transform: none;
+    -o-transform: none;
+    transform: none;
+}
+
+.cama-container:hover .cama .front,
+.cama-container:hover .cama .back {
+    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    -webkit-transition: all 0.3s ease-out;
+    -o-transition: all 0.3s ease-out;
+    -moz-transition: all 0.3s ease-out;
+    -ms-transition: all 0.3s ease-out;
+    -kthtml-transition: all 0.3s ease-out;
+    transition: all 0.3s ease-out;
+}
+
+
+
+
+
+
+
+/* varios */
+
+.numero-habitacion {
+    background: #f4f4f4;
+    color: #000;
+    font-weight: bold;
+    padding: 10px 15px;
+    font-size: 20px;
+    display: inline-block;
+}
+
+.bg-oxigeno {
+    background-color: #5bc0de;
+}
+
+.oxigeno {
+    color: #5bc0de;
+}
+
+/* vista de lista  para el mapa de camas */
+
+.list .icono-paciente {
+    font-size: 45px;
+}
+
+.list .numero-habitacion {
+    font-size: 15px;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+.list .name {
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.list .profession {
+    margin: 5px 0;
+}

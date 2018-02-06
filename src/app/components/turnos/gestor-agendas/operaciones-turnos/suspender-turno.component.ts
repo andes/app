@@ -104,7 +104,7 @@ export class SuspenderTurnoComponent implements OnInit {
         if (this.accion === 'suspenderTurno') {
             patch = {
                 op: this.accion,
-                turnos: this.turnos,
+                turnos: this.turnos.map((resultado) => {return resultado.id; }),
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
             };
         } else {

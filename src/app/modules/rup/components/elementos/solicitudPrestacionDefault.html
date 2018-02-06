@@ -1,21 +1,29 @@
 <ng-container *ngIf="!soloValores && registro?.valor?.solicitudPrestacion">
     <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
-    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones"
-        name="indicaciones"></plex-text>
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
-        labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
+    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones"></plex-text>
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
     </plex-select>
 </ng-container>
-
-<div *ngIf="soloValores">
-    <div *ngIf="registro?.valor?.solicitudPrestacion?.profesionales">
+<div class="row" *ngIf="soloValores">
+    <div class="col-12 readonly">
         <p>
-            <b>Profesional/es:</b>
+            <span>Profesional/es</span>
             <br>
-            <span *ngFor="let profesional of registro.valor.solicitudPrestacion.profesionales">
-                {{profesional.apellido}}, {{profesional.nombre}}
-                <br>
+            <span *ngIf="registro.valor.solicitudPrestacion.profesionales && registro.valor.solicitudPrestacion.profesionales.length <= 0">
+                    (no especificado)
             </span>
+            <span *ngFor="let profesional of registro.valor.solicitudPrestacion.profesionales">
+                            {{profesional.apellido}}, {{profesional.nombre}}
+                            <br>
+                        </span>
+        </p>
+        <p>
+            <span>Motivo</span>
+            <br> {{ registro.valor.solicitudPrestacion.motivo || '(no definido)' }}
+        </p>
+        <p>
+            <span>Indicaciones</span>
+            <br> {{ registro.valor.solicitudPrestacion.indicaciones || '(ninguna)'}}
         </p>
     </div>
 </div>

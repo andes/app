@@ -12,6 +12,7 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -20,7 +21,21 @@ export class PrestacionesService {
         Antecedentes_Personales_hallazgos: '1901000013103'
     };
 
-    constructor(private server: Server, public auth: Auth) { }
+    // Ids de conceptos que refieren que un paciente no concurrió a la consulta
+    // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
+    public conceptosNoConcurrio = [
+        '397710003',
+        '281399006'
+    ];
+
+    public conceptosTurneables: any[];
+
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
+
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
+    }
 
     /**
      * Metodo get. Trae lista de objetos prestacion.
@@ -65,13 +80,13 @@ export class PrestacionesService {
             opt = {
                 params: {
                     'idPaciente': idPaciente,
-                    'ordenFecha': true
+                    'ordenFecha': true,
+                    'sinEstado': 'modificada'
                 },
                 options: {
                     showError: true
                 }
             };
-
             return this.server.get(this.prestacionesUrl, opt).map(data => {
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
@@ -250,7 +265,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getByPacienteMedicamento(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente, false).map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -408,20 +423,27 @@ export class PrestacionesService {
         return this.server.get(url, opt);
     }
 
-    getRegistrosEjecucion(idPaciente: string, conceptIds: any[]) {
+    /**
+     * Buscar en la HUDS de un paciente los registros que coincidan con los conceptIds
+     *
+     * @param {string} idPaciente Paciente a buscar
+     * @param {any[]} conceptIds Array de conceptId de SNOMED que deseo buscar
+     * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
+     * @memberof PrestacionesService
+     */
+    getRegistrosHuds(idPaciente: string, conceptIds: any[]) {
         let opt = {
             params: {
-                'idPaciente': idPaciente,
-                'ordenFechaEjecucion': true,
-                'conceptsIdEjecucion': conceptIds,
+                'conceptIds': conceptIds,
             },
             options: {
                 showError: true
             }
         };
 
-        return this.server.get(this.prestacionesUrl, opt);
+        return this.server.get(this.prestacionesUrl + '/huds/' + idPaciente, opt);
     }
+
     /**
      * Metodo post. Inserta un objeto nuevo.
      * @param {any} prestacion Recibe solicitud RUP con paciente
@@ -542,35 +564,41 @@ export class PrestacionesService {
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
         let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
-
         return this.post(prestacion);
     }
 
-    validarPrestacion(prestacion, planes, conceptosTurneables): Observable<any> {
+    validarPrestacion(prestacion, planes): Observable<any> {
         let planesCrear = [];
         if (planes.length) {
 
             planes.forEach(plan => {
-                // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
-                // que prestacion quiere solicitar debo hacer ese cambio
-                let conceptoSolicitud = plan.concepto;
-                if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
-                    conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
-                }
 
-                // Controlemos que se trata de una prestación turneable.
-                // Solo creamos prestaciones pendiente para conceptos turneables
-                let existeConcepto = conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
-                if (existeConcepto) {
-                    // creamos objeto de prestacion
-                    let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
-                    // asignamos la prestacion de origen
-                    nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+                // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
+                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
 
-                    // agregamos los registros en la solicitud
-                    nuevaPrestacion.solicitud.registros.push(plan);
+                if (!existePrestacion) {
 
-                    planesCrear.push(nuevaPrestacion);
+                    // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
+                    // que prestacion quiere solicitar debo hacer ese cambio
+                    let conceptoSolicitud = plan.concepto;
+                    if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
+                        conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
+                    }
+
+                    // Controlemos que se trata de una prestación turneable.
+                    // Solo creamos prestaciones pendiente para conceptos turneables
+                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                    if (existeConcepto) {
+                        // creamos objeto de prestacion
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                        // asignamos la prestacion de origen
+                        nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                        // agregamos los registros en la solicitud
+                        nuevaPrestacion.solicitud.registros.push(plan);
+
+                        planesCrear.push(nuevaPrestacion);
+                    }
                 }
             });
 
@@ -596,9 +624,142 @@ export class PrestacionesService {
             return this.patch(prestacion.id, dto);
         }
 
+    }
+    /**
+    * Metodo clonar. Inserta una copia de una prestacion.
+    * @param {any} prestacionCopia Recibe una copia de una prestacion
+    */
+    clonar(prestacionCopia: any, estado: any): Observable<any> {
 
+        // Agregamos el estado de la prestacion copiada.
+        prestacionCopia.estados.push(estado);
 
+        // Eliminamos los id de la prestacion
+        delete prestacionCopia.id;
+        delete prestacionCopia._id;
 
+        return this.server.post(this.prestacionesUrl, prestacionCopia);
+    }
 
+    /**
+     * Devuelve un listado de prestaciones planificadas desde una prestación origen
+     *
+     * @param {any} idPrestacion id de la prestacion origen
+     * @returns  {array} listado de prestaciones planificadas
+     * @memberof BuscadorComponent
+     */
+    public getPlanes(idPrestacion, idPaciente) {
+        let prestacionPlanes = [];
+        if (this.cache[idPaciente]) {
+            prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+            return prestacionPlanes;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Devuelve si un concepto es turneable o no.
+     * Se fija en la variable conceptosTurneables inicializada en OnInit
+     *
+     * @param {any} concepto Concepto SNOMED a verificar si esta en el array de conceptosTurneables
+     * @returns  boolean TRUE/FALSE si es turneable o no
+     * @memberof BuscadorComponent
+     */
+    public esTurneable(concepto) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
+        });
+    }
+
+    /**
+     * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
+     *
+     * @param {any} prestacion prestación en ejecución
+     * @returns  {boolean}
+     * @memberof BuscadorComponent
+     */
+    public prestacionPacienteAusente(prestacion) {
+        let filtroRegistros = null;
+        filtroRegistros = prestacion.ejecucion.registros.filter(x => this.conceptosNoConcurrio.find(y => y === x.concepto.conceptId));
+        if (filtroRegistros && filtroRegistros.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * Determina la clase a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+        *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Clase a ser utilizado para estilizar las cards de RUP
+     * @memberof PrestacionesService
+     */
+    public getCssClass(conceptoSNOMED, filtroActual: null) {
+        let clase = conceptoSNOMED.semanticTag;
+
+        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            clase = 'plan';
+        } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
+            clase = 'regimen';
+        } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {
+            clase = 'elementoderegistro';
+        }
+
+        return clase;
+    }
+
+    /**
+     * Determina el icono a utilizar segun sematicTag de un concepto de SNOMED o si es turneable
+     *
+     * @param {any} conceptoSNOMED Concepto SNOMED a determinar tipo de icono
+     * @param {null} filtroActual Si estoy desde el buscador puedo indicar en que filtro estoy parado
+     * @returns string Icono a ser utilizado por la font de RUP
+     * @memberof PrestacionesService
+     */
+    public getIcon(conceptoSNOMED, filtroActual: null) {
+        let icon = conceptoSNOMED.semanticTag;
+
+        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+            icon = 'plan';
+        } else {
+            switch (conceptoSNOMED.semanticTag) {
+                case 'hallazgo':
+                case 'situación':
+                    icon = 'hallazgo';
+                    break;
+
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+
+                case 'procedimiento':
+                case 'entidad observable':
+                case 'régimen/tratamiento':
+                    icon = 'procedimiento';
+                    break;
+                case 'trastorno':
+                    icon = 'trastorno';
+                    break;
+                case 'producto':
+                    icon = 'producto';
+                    break;
+
+                case 'elemento de registro':
+                    icon = 'elementoderegistro';
+                    break;
+            }
+        }
+
+        return icon;
     }
 }
