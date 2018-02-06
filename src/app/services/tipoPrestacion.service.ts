@@ -18,9 +18,11 @@ export class TipoPrestacionService {
      */
     get(params: any): Observable<ITipoPrestacion[]> {
         // params['refsetId'] = '1661000013109';
-        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true }).map(concepto => {
+        return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true }).map(conceptos => {
             let salida = [];
-            concepto.forEach(element => {
+            let preferido;
+            conceptos.forEach(element => {
+                preferido = conceptos.find(x => x.conceptId === element.conceptId && x.acceptability.conceptId === '900000000000548007');
                 salida.push({
                     id: element.conceptId,
                     conceptId: element.conceptId,
@@ -28,11 +30,45 @@ export class TipoPrestacionService {
                     fsn: element.fsn,
                     semanticTag: element.semanticTag,
                     nombre: element.term,
-                    acceptability: element.acceptability
+                    acceptability: element.acceptability,
+                    // nombrePreferido: (element.acceptability && element.acceptability.conceptId && element.acceptability.conceptId === '900000000000548007') ? '' : '(' + preferido.term + ')'
+                    preferido: preferido.term !== element.term ? '(' + preferido.term + ' ★)' : '★'
                 });
             });
+
+            // const groupedObj = salida.reduce((prev, cur) => {
+            //     if (!prev[String(cur.conceptId)]) {
+            //         prev[String(cur.conceptId)] = [cur];
+            //     } else {
+            //         prev[String(cur.conceptId)].push(cur);
+            //     }
+            //     return prev;
+            // }, {});
+
+            // salida = Object.keys(groupedObj)
+            //     .map(c => {
+            //         return groupedObj[c]
+            //     }).reverse();
+
+
+            // salida.sort((a, b) => {
+            //     if (b.id === a.id) {
+            //         if (a.acceptability.conceptId === '900000000000548007') {
+            //             return -1;
+            //         }
+            //         if (b.acceptability.conceptId === '900000000000548007') {
+            //             return 1;
+            //         }
+            //     } else {
+            //         return 0;
+            //     }
+            // })
+
+
             return salida;
         });
+
+        // return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true });
     }
     /**
      * Metodo getById. Trae el objeto tipoPrestacion por su Id.
@@ -70,10 +106,10 @@ export class TipoPrestacionService {
         return this.put(tipoPrestacion);
     }
 
-    searchPreferido (concept: ITipoPrestacion, prestaciones: ITipoPrestacion[]) {
+    searchPreferido(concept: ITipoPrestacion, prestaciones: ITipoPrestacion[]) {
         let data = prestaciones.filter(item => {
             return item.conceptId === concept.conceptId && item.acceptability.conceptId === '900000000000548007';
         });
-        return data.length > 0 ? data [0] : null;
+        return data.length > 0 ? data[0] : null;
     }
 }

@@ -9,5 +9,5 @@ export interface ITipoPrestacion {
         conceptId: String,
         preferredTerm: String
     };
-    preferido?: String;
+    preferido?: any;
 }

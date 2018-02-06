@@ -51,6 +51,7 @@ export class PlanificarAgendaComponent implements OnInit {
     showBloque = true;
     showMapaEspacioFisico = false;
     prestacionesPermitidas: ITipoPrestacion[];
+    prestacionesAux: ITipoPrestacion[];
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -81,11 +82,22 @@ export class PlanificarAgendaComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({}).subscribe((data) => {
-            let dataF = data.filter(x => {
+
+            this.prestacionesPermitidas = data.filter(x => {
                 return this.auth.check('turnos:planificarAgenda:prestacion:' + x.id);
             });
-            this.prestacionesPermitidas = dataF;
-            event.callback(dataF);
+
+            if (this.modelo && this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length > 0) {
+                // Se filtran los sinónimos de la prestación seleccionada
+                this.prestacionesPermitidas = this.prestacionesPermitidas.filter(x => {
+                    return this.modelo.tipoPrestaciones.find(y => y.conceptId !== x.conceptId);
+                });
+                // Se evita que la prestación seleccionada caiga en la volteada
+                this.prestacionesPermitidas = [this.prestacionesPermitidas, ...this.modelo.tipoPrestaciones];
+            }
+
+            event.callback(this.prestacionesPermitidas);
+
         });
     }
 
@@ -108,16 +120,6 @@ export class PlanificarAgendaComponent implements OnInit {
         }
     }
 
-
-    // loadServicios(event) {
-    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
-    //         let servicios = respuesta.map((ef) => {
-    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
-    //         });
-    //         event.callback(servicios);
-    //     });
-    // }
-
     loadEdificios(event) {
         this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
@@ -131,10 +133,6 @@ export class PlanificarAgendaComponent implements OnInit {
             event.callback(sectores);
         });
     }
-    // loadEspacios(event) {
-    //     // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
-    // }
 
     /**
      * filtro espacios fisicos
@@ -301,12 +299,28 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     cambioPrestaciones() {
-        this.modelo.tipoPrestaciones.forEach((item) => {
-            let preferido = this.servicioTipoPrestacion.searchPreferido(item, this.prestacionesPermitidas);
-            if (!item.preferido && preferido && preferido.term !== item.term) {
-                item.preferido = preferido.term;
-            }
-        });
+
+        // this.modelo.tipoPrestaciones.forEach((item) => {
+        //     let preferido = this.servicioTipoPrestacion.searchPreferido(item, this.prestacionesPermitidas);
+        //     if (!item.preferido && preferido && preferido.term !== item.term) {
+        //         item.preferido = true;
+        //     }
+        // });
+
+
+        // if (this.modelo && this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length > 0) {
+        //     this.prestacionesPermitidas = this.prestacionesPermitidas.filter(x => {
+        //         return this.modelo.tipoPrestaciones.find(y => y.conceptId !== x.conceptId);
+        //     });
+        // }
+
+        console.log(this.modelo.tipoPrestaciones);
+        console.log(this.modelo.tipoPrestaciones);
+        console.log(this.modelo.tipoPrestaciones.length === this.prestacionesPermitidas.length);
+
+
+
+
         if (this.modelo.bloques.length === 0) {
             this.addBloque();
             this.bloqueActivo = 0;
