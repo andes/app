@@ -534,6 +534,10 @@ export class DarTurnosComponent implements OnInit {
                 this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
                 this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
             }
+            if (this.opciones.tipoPrestacion) {
+                this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
+                this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
+            }
             this.habilitarTurnoDoble();
             this.estadoT = 'confirmacion';
         } else {
