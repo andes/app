@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 import { ICama } from '../../../interfaces/ICama';
 
 @Component({
@@ -46,15 +46,15 @@ export class MapaDeCamasComponent implements OnInit {
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router,
-        private organizacionesService: OrganizacionService) { }
+        private camasService: CamasService) { }
 
     ngOnInit() {
         // verificar permisos
         // buscar camas para la organización
-        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe(camas => {
+        this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
             this.camas = camas;
 
-            this.organizacionesService.getEstadoServicio(camas).subscribe(estado => {
+            this.camasService.getEstadoServicio(camas).subscribe(estado => {
                 this.estadoServicio = estado;
             });
 

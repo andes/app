@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } fro
 import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     selector: 'app-cama',
@@ -18,7 +18,7 @@ export class CamaComponent implements OnInit {
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
 
-    constructor(private plex: Plex, private auth: Auth, private serviceOrganizacion: OrganizacionService) { }
+    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService) { }
 
     ngOnInit() {
         this.opcionesDropdown = [
@@ -72,7 +72,7 @@ export class CamaComponent implements OnInit {
             observaciones: cama.$motivo
         };
 
-        this.serviceOrganizacion.NewEstado(this.auth.organizacion.id, cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
@@ -94,7 +94,7 @@ export class CamaComponent implements OnInit {
                     } else {
                         msg = ' desocupada';
                     }
-                break;
+                    break;
             }
 
             this.plex.toast('success', 'Cama ' + msg, 'Cambio estado');
