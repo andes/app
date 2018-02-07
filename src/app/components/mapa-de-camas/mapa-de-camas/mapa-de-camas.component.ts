@@ -117,10 +117,9 @@ export class MapaDeCamasComponent implements OnInit {
             if (cama.ultimoEstado && !existe) {
                 this.filtros.opciones.estados.push({ 'id': cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado });
             }
-
-            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.servicio.conceptId);
-            if (cama.servicio && !existe) {
-                this.filtros.opciones.servicios.push({ 'id': cama.servicio.conceptId, 'nombre': cama.servicio.term });
+            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId);
+            if (cama.unidadesOrganizativas.length && !existe) {
+                this.filtros.opciones.servicios.push({ 'id': cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId, 'nombre': cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.term });
             }
 
             existe = this.filtros.opciones.tiposCamas.find(tipoCama => tipoCama.id === cama.tipoCama.conceptId);
