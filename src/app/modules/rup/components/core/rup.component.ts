@@ -12,6 +12,8 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { RUPRegistry } from '../../../../app.module';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -69,7 +71,8 @@ export class RUPComponent implements OnInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth,
+        public auth: Auth, public ocupacionService: OcupacionService,
+        public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer
