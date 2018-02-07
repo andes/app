@@ -63,6 +63,7 @@ export class AuditoriaComponent implements OnInit {
     showAuditoria2 = false;
     showAuditoria = true;
     pacTemporales = [];
+    public panelIndex = 0;
     private datosFA: any;
 
 
@@ -88,8 +89,13 @@ export class AuditoriaComponent implements OnInit {
                 this.pacTemporales = resultado;
             }
         });
+
+        this.pacienteService.getAuditoria({
+            
+        })
     }
 
+    
     onSelect(paciente: any): void {
         this.checkMpi = false;
         this.listaCandidatos = null;
@@ -165,7 +171,6 @@ export class AuditoriaComponent implements OnInit {
                 let data: any = resultado.filter(paciente => paciente.id !== pacienteSeleccionado.id);
                 let datos = [];
                 data.forEach(elem => {
-                  debugger;
                   if (elem.paciente.activo) {
                     datos.push(elem);
                   };

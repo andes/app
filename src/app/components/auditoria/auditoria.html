@@ -5,8 +5,8 @@
     </div> -->
         <div class="col-6">
             <plex-box>
-                <plex-tabs>
-                    <plex-tab label="Temporales a auditar últimas 24 hrs." icon="account">
+                <plex-tabs [activeIndex]="panelIndex">
+                    <plex-tab label="Temporales pendientes de auditoría." (click)="panelIndex = 0" icon="account">
                         <plex-loader *ngIf="loading"></plex-loader>
                         <table *ngIf="pacTemporales" class="table table-striped">
                             <thead>
@@ -43,12 +43,46 @@
                             </tbody>
                         </table>
                     </plex-tab>
-                    <plex-tab label="Buscador de temporales" icon="account">
+                    <plex-tab label="Pacientes con vinculaciones" (click) = "panelIndex = 1" icon="account">
+                            <plex-loader *ngIf="loading"></plex-loader>
+                            <table *ngIf="pacVinculados" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Estado</th>
+                                        <th>Documento</th>
+                                        <th>Apellido y Nombre</th>
+                                        <th>Fecha de Nacimiento</th>
+                                        <th>Sexo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover" *ngFor="let paciente of pacVinculados" (click)="onSelect(paciente)">
+                                        <td>
+                                            <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                            <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
+                                            <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
+                                        </td>
+                                        <td>{{paciente | paciente}}</td>
+                                        <td>
+                                            <span *ngIf="paciente.fechaNacimiento !== null">
+                                                {{paciente.fechaNacimiento | fecha}}
+                                                <br> {{paciente | edad}}
+                                            </span>
+                                            <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
+                                                Sin fecha de nacimiento
+                                            </span>
+                                        </td>
+                                        <td>{{paciente | sexo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                     </plex-tab>
                 </plex-tabs>
             </plex-box>
         </div>
-
         <div class="col" *ngIf="mostrarPaciente">
             <plex-box>
                 <div class="panel panel-default">

@@ -243,7 +243,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         escaneado: true
                     }).subscribe(resultado => {
                         this.loading = false;
-                        this.resultado = resultado;
+                        this.resultado = resultado.filter(elem => elem.activo);
                         this.esEscaneado = true;
                         // Encontramos un matcheo al 100%
                         if (resultado.length) {
@@ -324,7 +324,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                         cadenaInput: this.textoLibre
                     }).subscribe(resultado => {
                         this.loading = false;
-                        this.resultado = resultado;
+                        this.resultado = resultado.filter(elem => elem.activo);
                         this.esEscaneado = false;
                         this.mostrarNuevo = this.auth.check('mpi:nuevoPaciente');
                     }, (err) => {
