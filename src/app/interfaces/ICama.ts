@@ -1,23 +1,22 @@
 import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.interface';
 import { IPaciente } from './IPaciente';
+import { ICamaEstado } from './ICamaEstado';
 
 export interface ICama {
-    sector: Number;
-    habitacion: Number;
-    numero: Number;
-    servicio: ISnomedConcept;
+    id: String;
+    organizacion: {
+        id: String,
+        nombre: String
+    };
+    sector: String;
+    habitacion: String;
+    numero: String;
+    esCensable: Boolean;
+    unidadOrganizativa: [ISnomedConcept];
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc
     // ultimo estado de la cama
-    ultimoEstado: {
-        idCama: String;
-        estado: String;
-        paciente: IPaciente;
-        idInternacion: String;
-        observaciones: String;
-    };
-    paciente: IPaciente;
-    idInternacion: String;
-    observaciones: String;
+    ultimoEstado: ICamaEstado;
+    estados: [ICamaEstado];
 }
 

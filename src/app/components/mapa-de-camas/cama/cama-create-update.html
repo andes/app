@@ -6,26 +6,35 @@
             </header>
             <div class="row">
                 <div class="col-4">
-                    <plex-int [(ngModel)]="cama.sector" name="sector" label="Sector" placeholder="Sector" [autoFocus]="autofocus" required></plex-int>
+                    <plex-text [(ngModel)]="cama.sector" name="sector" label="Sector" placeholder="Sector" [autoFocus]="autofocus"></plex-text>
                 </div>
                 <div class="col-4">
-                    <plex-int [(ngModel)]="cama.habitacion" name="habitacion" label="Habitacion" placeholder="Habitacion" required></plex-int>
+                    <plex-text [(ngModel)]="cama.habitacion" name="habitacion" label="Habitacion" placeholder="Habitacion"></plex-text>
                 </div>
                 <div class="col-4">
-                    <plex-int [(ngModel)]="cama.numero" name="numero" label="Numero" placeholder="Numero" required></plex-int>
+                    <plex-text [(ngModel)]="cama.numero" name="numero" label="Numero" placeholder="Numero" required></plex-text>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-8">
-                    <plex-select name="servicio" (getData)="loadServicios($event)" [(ngModel)]="cama.servicio" label="Servicio">
+                <div class="col-4">
+                    <plex-select name="servicio" (getData)="loadServicios($event)" idField="term" labelField="term" [(ngModel)]="unidadOrganizativa"
+                        label="Servicio">
                     </plex-select>
                 </div>
                 <div class="col-4">
-                    <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" [(ngModel)]="cama.tipoCama" label="Tipo de cama">
+                    <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term" [(ngModel)]="cama.tipoCama"
+                        label="Tipo de cama">
                     </plex-select>
                 </div>
+                <div class="col-4">
+                    <span class="mt-2">
+                        <plex-bool type="slide" [(ngModel)]="cama.esCensable" label="Es censable" name="censable"></plex-bool>
+                    </span>
+
+                </div>
             </div>
+
 
             <div class="row">
                 <div class="col-12">

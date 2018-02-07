@@ -113,8 +113,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-import { CamaCreateUpdateComponent } from './components/organizacion/cama-create-update.component';
-import { CamasComponent } from './components/organizacion/camas.component';
+import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
+import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
@@ -246,6 +246,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -324,7 +325,7 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        CamaCreateUpdateComponent, CamasComponent,
+        CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
@@ -423,7 +424,8 @@ let RUPComponentsArray = [
         UsuarioService,
         PermisosService,
         FrecuentesProfesionalService,
-        DocumentosService
+        DocumentosService,
+        CamasService
 
     ]
 })
