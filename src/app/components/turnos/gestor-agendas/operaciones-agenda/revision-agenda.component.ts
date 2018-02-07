@@ -108,6 +108,7 @@ export class RevisionAgendaComponent implements OnInit {
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
             fechaNacimiento: this.paciente.fechaNacimiento,
+            sexo: this.paciente.sexo,
             telefono: telefono,
             carpetaEfectores: this.paciente.carpetaEfectores
         };
