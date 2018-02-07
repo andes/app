@@ -17,9 +17,14 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 })
 
 export class AgregarSobreturnoComponent implements OnInit {
-    @HostBinding('class.plex-layout') layout = true;
+    public nota: any;
+    public lenNota = 140;
+    changeCarpeta: boolean;
+    carpetaEfector: any;
     private _agenda: any;
     private _revision: any;
+
+    @HostBinding('class.plex-layout') layout = true;
 
     @Input('agenda')
     set agenda(value: any) {
@@ -72,6 +77,14 @@ export class AgregarSobreturnoComponent implements OnInit {
     ngOnInit() {
         this.inicio = new Date(this.hoy.setHours(this.agenda.horaInicio.getHours(), this.agenda.horaInicio.getMinutes(), 0, 0));
         this.fin = new Date(this.hoy.setHours(this.agenda.horaFin.getHours(), this.agenda.horaFin.getMinutes(), 0, 0));
+
+        this.carpetaEfector = {
+            organizacion: {
+                _id: this.auth.organizacion.id,
+                nombre: this.auth.organizacion.nombre
+            },
+            nroCarpeta: ''
+        };
     }
 
     buscarPaciente() {
@@ -99,6 +112,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(this.paciente);
+                    this.obtenerCarpetaPaciente();
                     this.showSobreturno = true;
                     this.pacientesSearch = false;
                     window.setTimeout(() => this.pacientesSearch = false, 100);
@@ -113,6 +127,43 @@ export class AgregarSobreturnoComponent implements OnInit {
             this.showCreateUpdate = true;
         }
     }
+
+    // Operaciones con carpetaPaciente
+
+    // Se busca el número de carpeta de la Historia Clínica en papel del paciente
+    // a partir del documento y del efector
+    obtenerCarpetaPaciente() {
+        let indiceCarpeta = -1;
+        if (this.paciente.carpetaEfectores.length > 0) {
+            // Filtro por organizacion
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+            }
+        }
+        if (indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                    this.changeCarpeta = true;
+                }
+            });
+        }
+    }
+
+    actualizarCarpetaPaciente() {
+        this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(resultadoCarpeta => {
+        });
+    }
+
+    // Se ejecuta al modificar el campo NroCarpeta
+    cambiarCarpeta() {
+        this.changeCarpeta = true;
+    }
+
+    //////
+
 
     verificarTelefono(paciente: IPaciente) {
         // se busca entre los contactos si tiene un celular
@@ -133,6 +184,13 @@ export class AgregarSobreturnoComponent implements OnInit {
 
         if ($event.formValid) {
 
+            let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+            } else {
+                this.paciente.carpetaEfectores.push(this.carpetaEfector);
+            }
+
             let pacienteSave = {
                 id: this.paciente.id,
                 documento: this.paciente.documento,
@@ -141,8 +199,9 @@ export class AgregarSobreturnoComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento,
                 sexo: this.paciente.sexo,
                 telefono: this.telefono,
+                carpetaEfectores: this.paciente.carpetaEfectores,
+                nota: this.nota
             };
-
             // Si cambió el teléfono lo actualizo en el MPI
             if (this.cambioTelefono) {
                 let nuevoCel = {
@@ -194,7 +253,10 @@ export class AgregarSobreturnoComponent implements OnInit {
 
             this.serviceAgenda.patch(this.agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'Información', 'El sobreturno se guardó correctamente');
-                this.volverAlGestor.emit(true);
+                if (this.changeCarpeta) {
+                    this.actualizarCarpetaPaciente();
+                }
+                this.volverAlGestor.emit(this.agenda);
                 this.volverRevision.emit(true);
             });
         } else {
@@ -218,6 +280,13 @@ export class AgregarSobreturnoComponent implements OnInit {
             return null;
         }
     }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
+    }
+
 
     cancelar() {
         if (!this._revision) {

@@ -46,7 +46,7 @@
                         <tr>
                             <th>Hora Turno</th>
                             <th>DNI | Nro. Carpeta</th>
-                            <th>Obra Social</th>
+                            <!-- <th>Obra Social</th> -->
                             <th>Apellidos y Nombres</th>
                             <th>Fecha Nacimiento</th>
                             <th>Sexo</th>
@@ -81,7 +81,8 @@
                                     <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
                             </td>
-                            <td></td>
+                            <!-- OBRA SOCIAL -->
+                            <!-- <td></td> -->
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
@@ -113,6 +114,20 @@
                             <th colspan="14">&raquo; Sobreturnos
                             </th>
                         </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>DNI | Nro. Carpeta</th>
+                            <!-- <th>Obra Social</th> -->
+                            <th>Apellidos y Nombres</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Diagnóstico</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                            <!--<th>Resolución en el efector</th>
+                                                    <th>Otros</th>-->
+                        </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let sobreturno of agenda.sobreturnos; let i=index">
@@ -129,19 +144,22 @@
                                         <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
                                     </small>
                                 </span>
-                                <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0 && sobreturno.paciente.carpetaEfectores[0]?.nroCarpeta">
+                                <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                     <small> | </small>
-                                    <small *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
+                                    <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
+                                        <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
+                                    </span>
                                     <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
                             </td>
-                            <td></td>
+                            <!-- OBRA SOCIAL -->
+                            <!-- <td></td> -->
                             <td>
                                 <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
                                 <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
-                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.edad">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
                             </td>
                             <td>
                                 <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{ sobreturno.paciente | sexo }}</small>
