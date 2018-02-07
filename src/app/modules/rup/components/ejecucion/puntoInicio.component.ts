@@ -38,6 +38,7 @@ export class PuntoInicioComponent implements OnInit {
     // estados a utilizarse en la agenda
     public estadosAgenda = EstadosAgenda;
 
+    public index: any = 0;
 
     // FILTROS
     private agendasOriginales: any = [];
@@ -383,6 +384,51 @@ export class PuntoInicioComponent implements OnInit {
             }
         }
         return prestaciones;
+    }
+
+
+    llamar(bloqueI, turnoI) {
+        console.log(this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI])
+        console.log(this.agendaSeleccionada)
+        const turnoLlamado = this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI];
+        let turnoProximo = {
+            horaInicio: turnoLlamado.horaInicio,
+            paciente: turnoLlamado.paciente,
+            horaLlamada: new Date(),
+            profesional: this.agendaSeleccionada.profesionales[0],
+            tipoPrestacion: turnoLlamado.tipoPrestacion,
+            espacioFisico: this.agendaSeleccionada.espacioFisico
+        };
+
+        console.log(turnoProximo)
+    }
+
+    llamarProximo(bloqueI) {
+        let aLlamar = [];
+        const proximo = this.agendaSeleccionada.bloques[0].turnos;
+        proximo.forEach(element => {
+            if (element.estado === 'asignado') {
+
+                aLlamar.push(element);
+            }
+
+        });
+        console.log(aLlamar[this.index])
+        if(this.index < aLlamar.length) {
+            this.index++;
+            console.log(this.index)
+        }
+
+        // let turnoProximo = {
+        //     horaInicio: turnoLlamado.horaInicio,
+        //     paciente: turnoLlamado.paciente,
+        //     horaLlamada: new Date(),
+        //     profesional: this.agendaSeleccionada.profesionales[0],
+        //     tipoPrestacion: turnoLlamado.tipoPrestacion,
+        //     espacioFisico: this.agendaSeleccionada.espacioFisico
+        // };
+
+        // console.log(turnoProximo)
     }
 }
 
