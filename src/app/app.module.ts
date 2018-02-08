@@ -31,6 +31,8 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { DocumentosService } from './services/documentos.service';
+
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -111,8 +113,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-import { CamaCreateUpdateComponent } from './components/organizacion/cama-create-update.component';
-import { CamasComponent } from './components/organizacion/camas.component';
+import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
+import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 // ... MPI
@@ -121,6 +123,7 @@ import { PacienteCreateUpdateComponent } from './components/paciente/paciente-cr
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
+import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -160,6 +163,7 @@ import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dash
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
+import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
 
 // ... RUP
 import { RUPComponent } from './modules/rup/components/core/rup.component';
@@ -207,7 +211,7 @@ import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
-
+import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -244,7 +248,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
-
+import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -273,7 +277,9 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent
+    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
+    'IngresoInternacionComponent': IngresoInternacionComponent,
+
 };
 
 let RUPComponentsArray = [
@@ -301,7 +307,8 @@ let RUPComponentsArray = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    AdjuntarDocumentoComponent
+    AdjuntarDocumentoComponent,
+    IngresoInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -325,7 +332,7 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
-        CamaCreateUpdateComponent, CamasComponent,
+        CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
@@ -340,6 +347,7 @@ let RUPComponentsArray = [
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         CarpetaPacienteComponent,
+        ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
@@ -361,6 +369,7 @@ let RUPComponentsArray = [
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
         HeaderPacienteComponent,
+        PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
@@ -422,7 +431,9 @@ let RUPComponentsArray = [
         LogPacienteService,
         UsuarioService,
         PermisosService,
-        FrecuentesProfesionalService
+        FrecuentesProfesionalService,
+        DocumentosService,
+        CamasService
 
     ]
 })

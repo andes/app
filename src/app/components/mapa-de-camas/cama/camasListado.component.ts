@@ -1,13 +1,13 @@
 import { HostBinding, Component, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
     selector: 'camas',
-    templateUrl: 'camas.html'
+    templateUrl: 'camasListado.html'
 })
-export class CamasComponent implements OnInit {
+export class CamasListadoComponent implements OnInit {
     idOrganizacion: any;
     camaSeleccion: any;
 
@@ -17,7 +17,7 @@ export class CamasComponent implements OnInit {
     public createUpdate = false;
     constructor(
         public plex: Plex,
-        public OrganizacionService: OrganizacionService,
+        public camasService: CamasService,
         private route: ActivatedRoute,
         private router: Router
     ) { }
@@ -25,7 +25,7 @@ export class CamasComponent implements OnInit {
     ngOnInit() {
         this.route.params.subscribe(params => {
             this.idOrganizacion = params['id'];
-            this.OrganizacionService.getCamas(this.idOrganizacion).subscribe(camas => {
+            this.camasService.getCamas({ idOrganizacion: this.idOrganizacion }).subscribe(camas => {
                 this.camas = camas;
             });
         });
