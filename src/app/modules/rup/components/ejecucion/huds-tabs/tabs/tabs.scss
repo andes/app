@@ -33,49 +33,45 @@
                 border-top-color: black;
                 border-left-color: transparent;
             }
-            &.problemas a,
-            &.trastornos a,
-            &.hallazgos a,
-            &.procedimientos a,
-            &.planes a,
-            &.productos a,
-            &.prestacion a {
+            &.trastorno a,
+            &.hallazgo a,
+            &.procedimiento a,
+            &.plan a,
+            &.producto a,
+            &.prestacion a,
+            &.elemento.de.registro a {
                 color: white;
             }
-            &.problemas {
-                background-color: rgba(240, 173, 78, 0.9);
-                /*background-color: $problemas;*/
-                border-color: #cc9344;
-            }
-            &.problemas:hover,
-            &.problemas.active {
-                background-color: rgba(240, 173, 78, 1);
-            }
-            &.trastornos {
+            &.trastorno {
                 background-color: $trastorno;
             }
-            &.hallazgos {
+            &.hallazgo {
                 background-color: $hallazgo;
             }
-            &.procedimientos {
+            &.procedimiento,
+            .entidad.observable,
+            .régimen\/tratamiento {
                 background-color: $procedimiento;
             }
-            &.planes,
+            &.plan,
             &.prestacion,
-            {
+                {
                 border-color: #055e98;
                 /*background-color: $planes;*/
                 background-color: rgba(0, 112, 186, 0.9);
             }
-            &.planes:hover,
+            &.plan:hover,
             &.prestacion:hover,
-            &.planes.active,
+            &.plan.active,
             &.prestacion.active,
-            {
+                {
                 background-color: rgba(0, 112, 186, 1);
             }
-            &.productos {
+            &.producto {
                 background-color: $producto;
+            }
+            &.elemento.de.registro {
+                background-color: $adjunto;
             }
         }
         &.fixed {

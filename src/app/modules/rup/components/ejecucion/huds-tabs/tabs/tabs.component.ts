@@ -10,8 +10,8 @@ import { TabComponent } from './tab.component';
       <ul class="nav nav-tabs" (scroll)="onScrollTabs($event)">
         <li *ngFor="let tab of tabs; let i = index" (click)="selectTab(tab)" [class.active]="tab.active" [class]="tab.class" >
         
-        <button class="btn btn-danger btn-sm float-right"(click)="cerrarTab(i - 1)" *ngIf="options?.canClose && options.canClose === true && options?.tabFixed && options.tabFixed === true && i !== 0">X</button>
-        <button class="btn btn-danger btn-sm float-right p-0"(click)="cerrarTab(i)" *ngIf="options?.canClose && options.canClose === true && !options?.tabFixed"><i class="mdi mdi-close"></i></button>  
+        <button class="btn btn-danger btn-sm float-right"(click)="cerrarTab(i - 1)" *ngIf="options?.canClose && options.canClose === true && options?.tabFixed && options.tabFixed === true && i !== 0">✖</button>
+        <button class="btn btn-danger btn-sm float-right p-0"(click)="cerrarTab(i)" *ngIf="options?.canClose && options.canClose === true && !options?.tabFixed">✖</button>  
 
         <a href="javascript:void(0)" *ngIf="options.trim" title="{{tab.tabTitle}}">
             {{ (tab.tabTitle.length > options.trim) ? (tab.tabTitle | slice:0:options.trim) + '...' : (tab.tabTitle) }} {{i > 0 && !hayMismoNombre(tab.tabTitle) ? '(' + i + ')' : ''}}
