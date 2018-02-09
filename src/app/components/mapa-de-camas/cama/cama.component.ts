@@ -53,8 +53,8 @@ export class CamaComponent implements OnInit {
      * @memberof CamaComponent
      */
     public buscarPaciente(cama) {
-        if (cama.ultimoEstado.estado !== 'desinfectada') {
-            this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
+        if (cama.ultimoEstado.estado !== 'disponible') {
+            this.plex.info('warning', 'Debe preparar la cama antes de poder internar un paciente', 'Error');
         }
 
         // buscar paciente
@@ -67,9 +67,10 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            idCama: cama.id,
+            fecha: null,
             estado: estado,
-            observaciones: cama.$motivo
+            observaciones: cama.$motivo,
+            paciente: null
         };
 
         this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
@@ -80,8 +81,8 @@ export class CamaComponent implements OnInit {
                 case 'reparacion':
                     msg = ' enviada a reparación';
                     break;
-                case 'desinfectada':
-                    msg = ' desinfectada';
+                case 'disponible':
+                    msg = ' disponible';
                     break;
                 case 'bloqueada':
                     msg = ' bloqueada';
@@ -92,7 +93,7 @@ export class CamaComponent implements OnInit {
                     } else if (cama.$action === 'bloquear') {
                         msg = ' desbloqueada';
                     } else {
-                        msg = ' desocupada';
+                        msg = 'En preparacion';
                     }
                     break;
             }
