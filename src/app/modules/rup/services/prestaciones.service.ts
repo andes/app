@@ -262,9 +262,9 @@ export class PrestacionesService {
 
 
     /**
-     * 
-     * @param idPaciente 
-     * @param soloValidados 
+     *
+     * @param idPaciente
+     * @param soloValidados
      */
     getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
         return this.getByPaciente(idPaciente).map(prestaciones => {
@@ -297,9 +297,9 @@ export class PrestacionesService {
         });
     }
     /**
-     * 
-     * @param idPaciente 
-     * @param soloValidados 
+     *
+     * @param idPaciente
+     * @param soloValidados
      */
     getByPacienteElementosRegistro(idPaciente: any, soloValidados?: boolean) {
         return this.getByPaciente(idPaciente).map(prestaciones => {
