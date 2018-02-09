@@ -1,11 +1,8 @@
 <section>
     <div *ngIf="showAuditoria" class="row">
-        <!-- <div class="col">
-        <pacientesSearch [hideFooter]="true" [modoCompleto]="false" [bloquearCreate]="true" (selected)='onSelect($event)'></pacientesSearch>
-    </div> -->
         <div class="col-6">
             <plex-box>
-                <plex-tabs [activeIndex]="panelIndex">
+                <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)" >
                     <plex-tab label="Temporales pendientes de auditoría." (click)="panelIndex = 0" icon="account">
                         <plex-loader *ngIf="loading"></plex-loader>
                         <table *ngIf="pacTemporales" class="table table-striped">
@@ -43,7 +40,7 @@
                             </tbody>
                         </table>
                     </plex-tab>
-                    <plex-tab label="Pacientes con vinculaciones" (click) = "panelIndex = 1" icon="account">
+                    <plex-tab label="Pacientes con vinculaciones" (click)="panelIndex = 1" icon="account">
                             <plex-loader *ngIf="loading"></plex-loader>
                             <table *ngIf="pacVinculados" class="table table-striped">
                                 <thead>
@@ -56,7 +53,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="hover" *ngFor="let paciente of pacVinculados" (click)="onSelect(paciente)">
+                                    <tr class="hover" *ngFor="let paciente of pacVinculados" (click)="onSelectVinculados(paciente)">
                                         <td>
                                             <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
                                             <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
@@ -135,10 +132,11 @@
                                 <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi" icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
                                 <plex-button *ngIf="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi" label="Validar fuentes auténticas" icon="account-convert" type="primary" (click)="validar()"></plex-button>
                                 <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary" (click)="verDuplicados()"></plex-button>
+                                <plex-button *ngIf="enableVinculados" label="Pacientes vincualdos" icon="account-multiple-plus" type="primary" (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
                             <br>
                             <br>
                             <!--Tabla de resultados por SimpleQuery -->
-                            <div *ngIf="listaCandidatos && listaCandidatos.length">
+                            <div *ngIf="listaCandidatos && listaCandidatos.length && panelIndex === 0">
                                 <legend>Listado de pacientes candidatos</legend>
                             <table class="table">
                                 <tbody>
