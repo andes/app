@@ -17,7 +17,7 @@
 
 .menu-buscador {
     .container-filtros {
-        width: 100%;
+        width: 103%;
         overflow: scroll;
         position: relative;
         height: auto;
@@ -34,7 +34,7 @@
         padding: 0;
         display: flex;
         li {
-            min-width: 56px;
+            min-width: 54px;
             height: 60px;
             position: relative; // margin-right: 2px;
             button {
@@ -42,7 +42,7 @@
                 white-space: normal;
                 /* width: 99%; */
                 /* height: 1.5rem; */
-                font-size: 0.55rem;
+                font-size: 0.525rem;
                 /* position: absolute; */
                 text-align: center;
                 padding: 7px 5px;
