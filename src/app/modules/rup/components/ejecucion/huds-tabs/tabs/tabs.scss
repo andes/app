@@ -36,6 +36,8 @@
             &.trastorno a,
             &.hallazgo a,
             &.procedimiento a,
+            &.entidad.observable a,
+            &.régimen\/tratamiento a,
             &.plan a,
             &.producto a,
             &.prestacion a,
@@ -49,8 +51,8 @@
                 background-color: $hallazgo;
             }
             &.procedimiento,
-            .entidad.observable,
-            .régimen\/tratamiento {
+            &.entidad.observable,
+            &.régimen\/tratamiento {
                 background-color: $procedimiento;
             }
             &.plan,
