@@ -76,6 +76,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
+import { ArancelamientoService } from './services/arancelamiento.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -413,6 +414,7 @@ let RUPComponentsArray = [
         PrestacionesService,
         AdjuntosService,
         TipoPrestacionService,
+        ArancelamientoService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
