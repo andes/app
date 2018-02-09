@@ -215,7 +215,31 @@
             background: white;
             .agregar {
                 background: white;
+                color: rgb(101, 167, 95);
+            }
+        }
+
+        .btn-desocupada {
+            background: white;
+            .agregar {
+                background: white;
                 color: #5F90A7;
+            }
+        }
+
+        .btn-ocupada{
+            background: white;
+            color:rgb(107, 124, 123);
+            .mdi {
+                font-size: 120px;
+            }
+        }
+
+        .btn-preparacion {
+            background: white;
+            .agregar {
+                background: white;
+                color: rgb(201, 201, 201);
             }
         }
 

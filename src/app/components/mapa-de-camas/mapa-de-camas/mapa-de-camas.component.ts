@@ -159,9 +159,8 @@ export class MapaDeCamasComponent implements OnInit {
                 (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
-                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.servicio && i.servicio.conceptId === this.filtros.servicio.id)) &&
+                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.unidadesOrganizativas.length && i.unidadesOrganizativas[i.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
-
             );
         });
     }
