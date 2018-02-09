@@ -12,6 +12,8 @@ import { Plex } from '@andes/plex';
 import { FinanciadorService } from '../../../../../services/financiador.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
+import { SnomedService } from '../../../../../services/term/snomed.service';
+import { take } from 'rxjs/operator/take';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -22,6 +24,9 @@ export class IniciarInternacionComponent implements OnInit {
 
     public ocupaciones = [];
     public obrasSociales = [];
+    public situacionesLaborales = [];
+    public nivelesInstruccion = [{ id: 'primario completo', nombre: 'Primario completo' },
+    { id: 'secundario completo', nombre: 'Secundario completo' }, { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
     public origenHospitalizacion = [{ id: 'ambulatorio', nombre: 'Ambulatorio' },
     { id: 'emergencia', nombre: 'Emergencia' }, { id: 'consultorio externo', nombre: 'Consultorio externo' },
     { id: 'derivación', nombre: 'Derivación' }];
@@ -56,6 +61,7 @@ export class IniciarInternacionComponent implements OnInit {
         private servicioPrestacion: PrestacionesService,
         public financiadorService: FinanciadorService,
         public ocupacionService: OcupacionService,
+        public snomedService: SnomedService,
         private location: Location) { }
 
     ngOnInit() {
@@ -74,6 +80,11 @@ export class IniciarInternacionComponent implements OnInit {
         // Se cargan los combos
         this.financiadorService.get().subscribe(resultado => {
             this.obrasSociales = resultado;
+        });
+
+        this.snomedService.get({ refsetId: '200000000' }).subscribe(resultado => {
+            debugger;
+            this.situacionesLaborales = resultado;
         });
 
 
@@ -138,7 +149,9 @@ export class IniciarInternacionComponent implements OnInit {
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(null, snomedConcept);
         nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
+        // el concepto snomed del tipo de prestacion para la internacion
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
+
         this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
         delete this.informeIngreso.horaIngreso;
         let nuevaPrestacion;
@@ -170,9 +183,19 @@ export class IniciarInternacionComponent implements OnInit {
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            // TODO: ACTUALIZAR EL PACIENTE Y 
-
-            this.router.navigate(['/rup/ejecucion', prestacion.id]);
+            // vamos a actualizar el estado de la cama
+            let dto = {
+                fecha: this.informeIngreso.fechaIngreso,
+                estado: 'ocupada',
+                observaciones: '',
+                idInternacion: prestacion.id,
+                paciente: this.paciente
+            };
+            debugger;
+            this.camasService.NewEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                // this.router.navigate(['/rup/ejecucion', prestacion.id]);
+                this.plex.info('danger', 'Internación creada');
+            });
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
         });

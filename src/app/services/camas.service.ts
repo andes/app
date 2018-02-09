@@ -41,8 +41,8 @@ export class CamasService {
 
     NewEstado(idcama, estado): Observable<any> {
         let dto: any = {
-            op: 'ultimoEstado',
-            ultimoEstado: estado
+            op: 'estado',
+            estado: estado
         };
 
         return this.server.patch(this.camasUrl + '/' + idcama, dto);

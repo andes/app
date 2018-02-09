@@ -47,6 +47,35 @@
     </div>
 </div>
 
-<ng-container *ngIf="soloValores">
+<ng-container *ngIf="soloValores && registro.valor.informeIngreso">
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Ocupación habitual</label>
+            <span>{{registro.valor.informeIngreso.ocupacionHabitual.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Obra social</label>
+            <span>{{registro.valor.informeIngreso.obraSocial.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Situación laboral</label>
+            <span>{{registro.valor.informeIngreso.situacionLaboral.term }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Nivel instrucción</label>
+            <span>{{registro.valor.informeIngreso.nivelInstruccion.nombre }}</span>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Fecha Ingreso</label>
+            <span>{{registro.valor.informeIngreso.fechaIngreso | date }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Origen hospitalización</label>
+            <span>{{registro.valor.informeIngreso.origen.nombre }}</span>
+        </div>
+    </div>
 
 </ng-container>

@@ -30,6 +30,18 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-6" *ngIf="situacionesLaborales">
+                            <plex-select label="Situación laboral" [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral" [data]="situacionesLaborales"
+                                placeholder="Seleccione..." labelField="term" idField="term">
+                            </plex-select>
+                        </div>
+                        <div class="col-6">
+                            <plex-select [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+                                placeholder="Seleccione..." label="Nivel instrucción">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-4">
                             <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus" name="fechaIngreso"
                                 label="Fecha Ingreso">
