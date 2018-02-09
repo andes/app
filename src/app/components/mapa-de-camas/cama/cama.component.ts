@@ -54,25 +54,32 @@ export class CamaComponent implements OnInit {
      * @memberof CamaComponent
      */
     public iniciarPrestacion(cama) {
-        // if (cama.ultimoEstado.estado !== 'desinfectada') {
-        //     this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
-        // } else {
-        this.router.navigate(['rup/internacion/crear', cama.id]);
-        // }
 
-        // buscar paciente
+        if (cama.ultimoEstado.estado !== 'disponible') {
+            this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
+        } else {
+            this.router.navigate(['rup/internacion/crear', cama.id]);
+        }
+    }
 
-        // cambiar el estado a la cama
-
-        // emitir cama modificada
-        // this.evtCama.emit(cama);
+    /**
+     * Visualizar internacion
+     *
+     * @param {any} cama Cama en la cual se encuentra internado el paciente.
+     * @memberof CamaComponent
+     */
+    public verPrestacion(cama) {
+        if (cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.idInternacion) {
+            this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
+        }
     }
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            idCama: cama.id,
+            fecha: null,
             estado: estado,
-            observaciones: cama.$motivo
+            observaciones: cama.$motivo,
+            paciente: null
         };
 
         this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
@@ -83,8 +90,8 @@ export class CamaComponent implements OnInit {
                 case 'reparacion':
                     msg = ' enviada a reparación';
                     break;
-                case 'desinfectada':
-                    msg = ' desinfectada';
+                case 'disponible':
+                    msg = ' disponible';
                     break;
                 case 'bloqueada':
                     msg = ' bloqueada';
@@ -95,7 +102,7 @@ export class CamaComponent implements OnInit {
                     } else if (cama.$action === 'bloquear') {
                         msg = ' desbloqueada';
                     } else {
-                        msg = ' desocupada';
+                        msg = 'En preparacion';
                     }
                     break;
             }
