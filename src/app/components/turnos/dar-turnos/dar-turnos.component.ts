@@ -43,7 +43,6 @@ export class DarTurnosComponent implements OnInit {
     public nota = '';
     public changeCarpeta = false;
     hideDarTurno: boolean;
-    changeCarpeta = false;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
