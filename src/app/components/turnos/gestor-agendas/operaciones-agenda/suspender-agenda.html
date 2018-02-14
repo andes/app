@@ -57,7 +57,7 @@
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                         <!-- Checkbox seleccion -->
-                        <td *ngIf="turno?.paciente?.id">
+                        <td *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && !turno.reasignado?.siguiente">
                             <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
                             <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
                         </td>
@@ -88,10 +88,7 @@
 
                         <!-- Badge que indica si el turno está reasignado a otra agenda -->
                         <td>
-                            <small *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente" class="badge badge-info float-right"
-                                title="Ya reasignado" titlePosition="left">
-                                <i class="mdi mdi-account-check"></i>
-                            </small>
+                            <span class="badge-info float-right" *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</span>
                         </td>
                     </tr>
                 </tbody>
