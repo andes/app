@@ -274,10 +274,11 @@
             <div class="col text-right">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)"
+                <plex-button *ngIf="!hideGuardar && !alertas.length && form.valid" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)"
                     title="Guardar">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
+                <plex-button *ngIf="!hideGuardar &&!alertas.length && form.valid" label="Guardar y clonar" validateForm="true" type="primary"
+                    (click)="onSave($event, true)">
                 </plex-button>
             </div>
         </div>

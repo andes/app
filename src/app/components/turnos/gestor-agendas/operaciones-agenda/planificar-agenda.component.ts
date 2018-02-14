@@ -21,6 +21,7 @@ import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
     ]
 })
 export class PlanificarAgendaComponent implements OnInit {
+    hideGuardar: boolean;
     subscriptionID: any;
     espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
@@ -733,6 +734,7 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
+        this.hideGuardar = true;
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
@@ -848,7 +850,9 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.showAgenda = false;
                     this.volverAlGestor.emit(true);
                 }
-            });
+                this.hideGuardar = false;
+            },
+                (err) => { this.hideGuardar = false; });
         } else {
             this.plex.alert('Debe completar los datos requeridos');
         }
