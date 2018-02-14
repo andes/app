@@ -270,7 +270,7 @@
                                             </div>
                                         </div>
                                         <hr>
-                                        <footer *ngIf="estadoT === 'confirmacion'" class="row">
+                                        <footer *ngIf="!hideDarTurno && estadoT === 'confirmacion'" class="row">
                                             <div class="col acciones-dar-turno">
                                                 <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
                                                 <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>

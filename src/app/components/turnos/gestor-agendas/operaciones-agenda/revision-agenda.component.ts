@@ -108,6 +108,7 @@ export class RevisionAgendaComponent implements OnInit {
             apellido: this.paciente.apellido,
             nombre: this.paciente.nombre,
             fechaNacimiento: this.paciente.fechaNacimiento,
+            sexo: this.paciente.sexo,
             telefono: telefono,
             carpetaEfectores: this.paciente.carpetaEfectores
         };
@@ -247,7 +248,6 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.agenda.sobreturnos) {
             listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
-        // turnoSinVerificar = this.turnos.find(t => {
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
@@ -277,7 +277,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
-                ((t.asistencia && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
+                ((t.asistencia === 'asistio' && !t.diagnostico.codificaciones[0] || (t.diagnostico.codificaciones[0] && !t.diagnostico.codificaciones[0].codificacionAuditoria
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });

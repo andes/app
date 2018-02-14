@@ -1,0 +1,80 @@
+<form class="plex-layout">
+    <div id="printpage" *ngIf="showForm">
+        <section>
+            <plex-box>
+                <!--Header de listado de Turnos-->
+                <header>
+                    <div class="row">
+                        <div class="col">
+                            <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
+                            <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+                        </div>
+                    </div>
+
+                </header>
+                <div class="row">
+                    <div class="col">
+                        <label>Paciente </label>{{turnoSeleccionado.paciente | paciente}}
+                    </div>
+                    <div class="col">
+                        <label>Nro. Carpeta </label>{{turnoSeleccionado.carpetaEfectores?.nroCarpeta}}
+                    </div>
+                    <div class="col">
+                        <label>Edad </label>{{turnoSeleccionado.paciente | edad}}
+                    </div>
+                    <div class="col">
+                        <label>DNI </label>{{turnoSeleccionado.paciente.documento}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <label>Obra social </label>{{obraSocial}}
+                    </div>
+                    <div class="col">
+                        <label>Código </label>{{codigoOs}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col">
+                        <label>Prestación </label>420101
+                    </div>
+                    <div class="col">
+                        <label>Efector </label>{{efector}}
+                    </div>
+                    <div class="col">
+                        <label>Fecha y hora </label> {{ turnoSeleccionado.horaInicio | date: 'EEE' | uppercase }} {{ turnoSeleccionado.horaInicio
+                        | date: 'dd/MM/yyyy'}}, {{ turnoSeleccionado.horaInicio | date: 'HH:mm'}}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Diagnóstico </label>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <label>Firma </label>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+
+            </plex-box>
+        </section>
+    </div>
+
+</form>

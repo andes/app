@@ -42,6 +42,8 @@ export class DarTurnosComponent implements OnInit {
     public lenNota = 140;
     public nota = '';
     public changeCarpeta = false;
+    hideDarTurno: boolean;
+    changeCarpeta = false;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
@@ -622,7 +624,7 @@ export class DarTurnosComponent implements OnInit {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
-                    this.carpetaEfector = carpeta;
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.changeCarpeta = true;
                 }
             });
@@ -723,6 +725,7 @@ export class DarTurnosComponent implements OnInit {
      */
     darTurno() {
         if (this.turnoTipoPrestacion) {
+            this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
 
@@ -766,7 +769,7 @@ export class DarTurnosComponent implements OnInit {
                         this.agenda = null;
                         this.actualizar('');
                         this.plex.toast('info', 'El turno se asignó correctamente');
-
+                        this.hideDarTurno = false;
 
                         // Enviar SMS sólo en Producción
                         if (environment.production === true) {
@@ -816,6 +819,7 @@ export class DarTurnosComponent implements OnInit {
 
                         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
                     }, (err) => {
+                        this.hideDarTurno = false;
                         // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
                         // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
                         if (err && (err === 'noDisponible')) {

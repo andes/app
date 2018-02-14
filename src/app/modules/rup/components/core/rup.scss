@@ -43,6 +43,14 @@ $rotate: -90deg;
         }
         @each $tag,
         $color in $rup_colors {
+            .rup-border-#{$tag} {
+                &:hover {
+                    background: #eee;
+                    border-right: 2px solid $color;
+                    border-bottom: 2px solid $color;
+                    border-top: 2px solid $color;
+                }
+            }
             &.#{$tag} {
                 &:hover,
                 &.active {
@@ -192,7 +200,6 @@ $rotate: -90deg;
     color: #818182 !important;
 }
 
-
 /* drag and drop */
 
 .drag-handle {
@@ -259,9 +266,7 @@ $rotate: -90deg;
     }
 }
 
-
 /* fin drag & drop */
-
 
 /* elemento rup solo lectura */
 
@@ -274,7 +279,6 @@ $rotate: -90deg;
         font-size: 14px;
     }
 }
-
 
 /* fin elemento rup solo lectura */
 

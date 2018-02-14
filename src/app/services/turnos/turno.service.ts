@@ -32,4 +32,9 @@ export class TurnoService {
             return this.server.put(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno);
         }
     }
+
+    patch(idAgenda, idBloque, idTurno, data: any): Observable<any[]> {
+        return this.server.patch(this.turnoUrl + '/turno/' + idTurno + '/' + idBloque + '/' + idAgenda, data);
+    }
+
 }
