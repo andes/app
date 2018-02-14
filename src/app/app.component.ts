@@ -53,6 +53,10 @@ export class AppComponent {
             accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
         }
 
+        if (this.auth.getPermissions('reportes:?').length > 0) {
+            accessList.push({ label: 'REPORTES', icon: 'file-chart', route: '/reportes' });
+        }
+
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
         accessList.forEach((permiso) => {

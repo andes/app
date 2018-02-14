@@ -36,6 +36,18 @@
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="!denied" class="row mt-4">
+                <div *ngIf="mapaDeCamas" class="col-4">
+                    <div class="boton color-amarillo" routerLink="/mapa-de-camas">
+                        <i class="icono mdi mdi-hotel"></i>
+                        <div class="titulo">Acosta2</div>
+                        <div class="subtitulo">Mapa de camas</div>
+                        <div class="detalle">Vea el estado del mapa de camas<br />de los distintos servicios de la organización</div>
+                    </div>
+                </div>
+            </div>
+
             <div *ngIf="denied" class="row">
                 <div class="col">
                     <div class="boton color-amarillo" >

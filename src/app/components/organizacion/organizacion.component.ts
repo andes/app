@@ -2,6 +2,7 @@ import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { Router } from '@angular/router';
 
 const limit = 25;
 
@@ -25,7 +26,9 @@ export class OrganizacionComponent implements OnInit {
     tengoDatos = true;
     checked = true;
 
-    constructor(private formBuilder: FormBuilder, private organizacionService: OrganizacionService) { }
+    constructor(private formBuilder: FormBuilder,
+        private organizacionService: OrganizacionService,
+        private router: Router) { }
 
     ngOnInit() {
         this.searchForm = this.formBuilder.group({
@@ -103,5 +106,8 @@ export class OrganizacionComponent implements OnInit {
             this.loadDatos(true);
             this.loader = true;
         }
+    }
+    routeCama(id) {
+        this.router.navigate(['/tm/organizacion/' + id + '/cama']);
     }
 }

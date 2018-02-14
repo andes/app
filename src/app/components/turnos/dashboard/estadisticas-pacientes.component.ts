@@ -23,7 +23,6 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.turnosOtorgados = 0;
         this.inasistencias = 0;
         this.anulaciones = 0;
-        // this._paciente = value;
         this.pacienteSeleccionado = value;
         this._paciente = value;
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
