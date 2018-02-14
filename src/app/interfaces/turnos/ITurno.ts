@@ -38,4 +38,12 @@ export interface ITurno {
         nroCarpeta: string
     }];
     nota: String;
+    motivoSuspension: {
+        type: String,
+        enum: ['edilicia', 'profesional', 'organizacion', 'agendaSuspendida']
+    },
+    avisoSuspension: {
+        type: String,
+        enum: ['pendiente', 'no enviado', 'enviado', 'fallido']
+    },
 }
