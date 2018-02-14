@@ -14,6 +14,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
@@ -29,6 +30,9 @@ import 'rxjs/Rx';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+
+    private slug = new Slug('default'); // this will use 'default' keymap
+
     idAgenda: any;
     ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
@@ -524,13 +528,7 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
-    private descargarArchivo(data: any, headers: any): void {
-
-        let blob = new Blob([data], headers);
-        saveAs(blob, 'rup.pdf');
-    }
-
-    imprimirResumen() {
+    descargarResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -610,6 +608,12 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             });
         });
+    }
+
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term) + '-' + moment().toISOString() + '.pdf';
+        saveAs(blob, nombreArchivo);
     }
 
     /**

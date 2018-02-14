@@ -13,10 +13,11 @@
                         <div class="float-right mr-2 menu-info">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                                 (click)="mostrarDatosSolicitud(true)" id="datosSolicitud"></plex-button>
-                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"
+                                id="datosSolicitud"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
                                 <plex-button type="warning" icon="printer mdi-14px" class="float-right ml-1" title="Imprimir Resumen" titlePosition="left"
-                                    (click)="imprimirResumen()"></plex-button>
+                                    (click)="descargarResumen()"></plex-button>
                             </ng-container>
                         </div>
                     </div>
