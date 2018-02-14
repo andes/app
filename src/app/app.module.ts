@@ -370,8 +370,8 @@ let RUPComponentsArray = [
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
-        
-      erPacienteComponent,
+
+        HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
