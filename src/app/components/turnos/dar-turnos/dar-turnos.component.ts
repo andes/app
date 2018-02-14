@@ -39,8 +39,10 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 })
 
 export class DarTurnosComponent implements OnInit {
+    public lenNota = 140;
+    public nota = '';
+    public changeCarpeta = false;
     hideDarTurno: boolean;
-    changeCarpeta = false;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
@@ -756,7 +758,8 @@ export class DarTurnosComponent implements OnInit {
                         idBloque: this.bloque.id,
                         paciente: pacienteSave,
                         tipoPrestacion: this.turnoTipoPrestacion,
-                        tipoTurno: this.tiposTurnosSelect
+                        tipoTurno: this.tiposTurnosSelect,
+                        nota: this.nota
                     };
 
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
@@ -990,6 +993,12 @@ export class DarTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.mostrarCalendario = false;
         this.pacientesSearch = true;
+    }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
     }
 
     cancelar() {
