@@ -83,7 +83,6 @@ export class IniciarInternacionComponent implements OnInit {
         });
 
         this.snomedService.get({ refsetId: '200000000' }).subscribe(resultado => {
-            debugger;
             this.situacionesLaborales = resultado;
         });
 
@@ -132,7 +131,6 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar() {
-        debugger;
         if (!this.paciente) {
             this.plex.info('warning', 'Debe seleccionar un paciente');
             return;
@@ -191,10 +189,8 @@ export class IniciarInternacionComponent implements OnInit {
                 idInternacion: prestacion.id,
                 paciente: this.paciente
             };
-            debugger;
             this.camasService.NewEstado(this.cama.id, dto).subscribe(camaActualizada => {
-                // this.router.navigate(['/rup/ejecucion', prestacion.id]);
-                this.plex.info('danger', 'Internación creada');
+                this.router.navigate(['rup/internacion/ver', prestacion.id]);
             });
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');

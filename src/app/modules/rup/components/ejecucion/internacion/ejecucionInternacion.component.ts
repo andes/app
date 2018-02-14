@@ -106,7 +106,7 @@ export class EjecucionInternacionComponent implements OnInit {
      * Vuelve a la página anterior
      */
     cancelar() {
-        this.location.back();
+        this.router.navigate(['mapa-de-camas']);
     }
 
 
