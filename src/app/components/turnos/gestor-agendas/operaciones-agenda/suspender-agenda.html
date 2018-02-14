@@ -79,7 +79,7 @@
                             </small>
                         </td>
                         <td>
-                            <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension">
+                            <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
                                 <i *ngIf="turno.avisoSuspension === 'fallido'" class="mdi mdi-message-alert text-danger" title="SMS fallido"></i>
                                 <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
                                 <i *ngIf="turno.avisoSuspension ==='no enviado'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
