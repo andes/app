@@ -152,8 +152,10 @@ export class SuspenderAgendaComponent implements OnInit {
         let indice = this.seleccionadosSMS.indexOf(turno);
         this.todosSeleccionados = false;
         if (indice === -1) {
-            if (turno.paciente && turno.paciente.id) {
-                this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+            if (!(turno.reasignado && turno.reasignado.siguiente)) {
+                if (turno.paciente && turno.paciente.id && turno.paciente.telefono && turno.paciente.telefono !== '') {
+                    this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+                }
             }
         } else {
             this.seleccionadosSMS.splice(indice, 1);
@@ -174,8 +176,10 @@ export class SuspenderAgendaComponent implements OnInit {
             this.seleccionadosSMS = [];
             this.agenda.bloques.forEach(bloque => {
                 bloque.turnos.forEach(turno => {
-                    if (turno.paciente && turno.paciente.telefono) {
-                        this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+                    if (!(turno.reasignado && turno.reasignado.siguiente)) {
+                        if (turno.paciente && turno.paciente.telefono && turno.paciente.telefono !== '') {
+                            this.seleccionadosSMS = [...this.seleccionadosSMS, turno];
+                        }
                     }
                 });
             });
