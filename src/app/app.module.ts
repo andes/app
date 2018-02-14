@@ -163,7 +163,9 @@ import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dash
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
+import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
+
 
 // ... RUP
 import { RUPComponent } from './modules/rup/components/core/rup.component';
@@ -184,6 +186,7 @@ import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
+import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
@@ -252,6 +255,7 @@ import { CamasService } from './services/camas.service';
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
 export let RUPRegistry = {
+    'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
@@ -281,6 +285,7 @@ export let RUPRegistry = {
 };
 
 let RUPComponentsArray = [
+    SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
     FiltradoGlomerularComponent,
@@ -359,12 +364,13 @@ let RUPComponentsArray = [
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
-        MapaEspacioFisicoComponent,
+        MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
+
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
