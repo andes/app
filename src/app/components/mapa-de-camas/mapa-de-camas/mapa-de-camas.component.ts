@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 import { ICama } from '../../../interfaces/ICama';
 
 @Component({
@@ -46,15 +46,15 @@ export class MapaDeCamasComponent implements OnInit {
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router,
-        private organizacionesService: OrganizacionService) { }
+        private camasService: CamasService) { }
 
     ngOnInit() {
         // verificar permisos
         // buscar camas para la organización
-        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe(camas => {
+        this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
             this.camas = camas;
 
-            this.organizacionesService.getEstadoServicio(camas).subscribe(estado => {
+            this.camasService.getEstadoServicio(camas).subscribe(estado => {
                 this.estadoServicio = estado;
             });
 
@@ -117,10 +117,9 @@ export class MapaDeCamasComponent implements OnInit {
             if (cama.ultimoEstado && !existe) {
                 this.filtros.opciones.estados.push({ 'id': cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado });
             }
-
-            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.servicio.conceptId);
-            if (cama.servicio && !existe) {
-                this.filtros.opciones.servicios.push({ 'id': cama.servicio.conceptId, 'nombre': cama.servicio.term });
+            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId);
+            if (cama.unidadesOrganizativas.length && !existe) {
+                this.filtros.opciones.servicios.push({ 'id': cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId, 'nombre': cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.term });
             }
 
             existe = this.filtros.opciones.tiposCamas.find(tipoCama => tipoCama.id === cama.tipoCama.conceptId);
@@ -160,9 +159,8 @@ export class MapaDeCamasComponent implements OnInit {
                 (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
-                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.servicio && i.servicio.conceptId === this.filtros.servicio.id)) &&
+                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.unidadesOrganizativas.length && i.unidadesOrganizativas[i.unidadesOrganizativas.length - 1].unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
-
             );
         });
     }

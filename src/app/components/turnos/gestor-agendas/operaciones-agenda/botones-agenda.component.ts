@@ -100,13 +100,6 @@ export class BotonesAgendaComponent implements OnInit {
                 });
                 break;
             case 'suspendida':
-                // this.plex.confirm('¿Suspender Agenda?').then((confirmado) => {
-                //     if (!confirmado) {
-                //         return false;
-                //     } else {
-                //         this.confirmarEstado(estado);
-                //     }
-                // });
                 this.actualizarEstadoEmit.emit(estado);
                 break;
             case 'borrada':
@@ -144,7 +137,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
             editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
-            suspenderAgenda: (this.cantidadSeleccionadas > 0 && this.puedoSuspender() && puedeSuspender),
+            suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
             pasarDisponibleAgenda: (this.cantidadSeleccionadas > 0 && this.puedoDisponer() && puedeHabilitar),
             // Se pueden publicar todas las agendas que estén en estado planificacion, o si estado disponible y no tiene *sólo* turnos reservados
@@ -246,8 +239,8 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoRevisar() {
         let agenda = this.agendasSeleccionadas[0];
-        return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
-        // return ((agenda.estado === 'planificacion' || agenda.estado !== 'suspendida') && moment(agenda.horaInicio).isBefore(moment(new Date), 'day'));
+        // return (agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada');
+        return ((agenda.estado === 'pendienteAsistencia' || agenda.estado === 'pendienteAuditoria' || agenda.estado === 'publicada' || agenda.estado === 'auditada') && moment(agenda.horaFin).isBefore(moment(new Date())));
     }
 
     puedoImprimirCarpetas() {

@@ -1,7 +1,7 @@
 import { IPaciente } from './IPaciente';
 
 export interface ICamaEstado {
-    idCama: String;
+    fechas: Date;
     estado: String;
     paciente: IPaciente;
     idInternacion: String;

@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } fro
 import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     selector: 'app-cama',
@@ -18,7 +18,7 @@ export class CamaComponent implements OnInit {
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
 
-    constructor(private plex: Plex, private auth: Auth, private serviceOrganizacion: OrganizacionService) { }
+    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService) { }
 
     ngOnInit() {
         this.opcionesDropdown = [
@@ -53,8 +53,8 @@ export class CamaComponent implements OnInit {
      * @memberof CamaComponent
      */
     public buscarPaciente(cama) {
-        if (cama.ultimoEstado.estado !== 'desinfectada') {
-            this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
+        if (cama.ultimoEstado.estado !== 'disponible') {
+            this.plex.info('warning', 'Debe preparar la cama antes de poder internar un paciente', 'Error');
         }
 
         // buscar paciente
@@ -67,12 +67,13 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            idCama: cama.id,
+            fecha: null,
             estado: estado,
-            observaciones: cama.$motivo
+            observaciones: cama.$motivo,
+            paciente: null
         };
 
-        this.serviceOrganizacion.NewEstado(this.auth.organizacion.id, cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
@@ -80,8 +81,8 @@ export class CamaComponent implements OnInit {
                 case 'reparacion':
                     msg = ' enviada a reparación';
                     break;
-                case 'desinfectada':
-                    msg = ' desinfectada';
+                case 'disponible':
+                    msg = ' disponible';
                     break;
                 case 'bloqueada':
                     msg = ' bloqueada';
@@ -92,9 +93,9 @@ export class CamaComponent implements OnInit {
                     } else if (cama.$action === 'bloquear') {
                         msg = ' desbloqueada';
                     } else {
-                        msg = ' desocupada';
+                        msg = 'En preparacion';
                     }
-                break;
+                    break;
             }
 
             this.plex.toast('success', 'Cama ' + msg, 'Cambio estado');

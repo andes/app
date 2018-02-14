@@ -20,6 +20,7 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
     ]
 })
 export class PlanificarAgendaComponent implements OnInit {
+    hideGuardar: boolean;
     subscriptionID: any;
     espaciosList: any[];
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
@@ -491,12 +492,12 @@ export class PlanificarAgendaComponent implements OnInit {
 
     aproximar(date: Date) {
         let m = date.getMinutes();
-        let remaider = m % 15;
+        let remaider = m % 5;
         if (remaider !== 0) {
-            if (remaider < 7) {
+            if (remaider < 3) {
                 date.setMinutes(m - remaider);
             } else {
-                date.setMinutes(m + (15 - remaider));
+                date.setMinutes(m + (5 - remaider));
             }
         }
     }
@@ -710,6 +711,7 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     onSave($event, clonar) {
+        this.hideGuardar = true;
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
@@ -825,7 +827,9 @@ export class PlanificarAgendaComponent implements OnInit {
                     this.showAgenda = false;
                     this.volverAlGestor.emit(true);
                 }
-            });
+                this.hideGuardar = false;
+            },
+                (err) => { this.hideGuardar = false; });
         } else {
             this.plex.alert('Debe completar los datos requeridos');
         }
