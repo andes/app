@@ -92,22 +92,22 @@
                         <i class="mdi mdi-eye"></i>
                     </button>
                     <!-- bloquear cama -->
-                    <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'"
+                    <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                         *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
                         <i class="mdi mdi-lock"></i>
                     </button>
                     <!-- Desbloquear cama -->
-                    <button class="btn btn-success  tips" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'"
+                    <button class="btn btn-success  tips" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                         *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada'">
                         <i class="mdi mdi-lock-open-outline"></i>
                     </button>
                     <!-- enviar a reparacion -->
-                    <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'"
+                    <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion' ; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion') || cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-wrench"></i>
                     </button>
                     <!-- Confirmar reparacion -->
-                    <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'"
+                    <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
                         <i class="mdi mdi-wrench"></i>
                     </button>

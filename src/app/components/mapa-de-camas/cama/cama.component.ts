@@ -21,13 +21,10 @@ export class CamaComponent implements OnInit {
 
 
     public estadoDesbloqueo: String = 'desocupada';
-    public fecha;
+    public fecha = new Date();
     constructor(private plex: Plex, private auth: Auth, private camasService: CamasService) { }
 
     ngOnInit() {
-        this.fecha = new Date();
-        this.fecha = moment(this.fecha);
-
         this.opcionesDropdown = [
             {
                 label: 'Valoración inicial enfermería',
@@ -119,5 +116,8 @@ export class CamaComponent implements OnInit {
         }, (err) => {
             this.plex.info('danger', err, 'Error');
         });
+    }
+    SetFecha() {
+        this.fecha = new Date();
     }
 }
