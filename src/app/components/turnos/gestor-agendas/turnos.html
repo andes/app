@@ -201,7 +201,6 @@
                     </tr>
                 </tbody>
             </table>
-
         </ng-container>
         <!--Sobreturnos-->
         <table class="table table-striped">
@@ -221,7 +220,7 @@
                         <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <small *ngIf="sobreturno?.paciente?.id" [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{ sobreturno.paciente | paciente }}
+                        <small *ngIf="sobreturno?.paciente?.id" [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{ sobreturno. | paciente }}
                             <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
                         </small>
                         <small>
@@ -260,7 +259,6 @@
                         <small *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
                             <popover-audit placement="left" [data]="sobreturno"></popover-audit>
                         </small>
-
                     </td>
                 </tr>
             </tbody>
