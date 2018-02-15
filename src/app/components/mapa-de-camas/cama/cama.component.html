@@ -92,22 +92,22 @@
                         <i class="mdi mdi-eye"></i>
                     </button>
                     <!-- bloquear cama -->
-                    <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'"
+                    <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                         *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
                         <i class="mdi mdi-lock"></i>
                     </button>
                     <!-- Desbloquear cama -->
-                    <button class="btn btn-success  tips" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'"
+                    <button class="btn btn-success  tips" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                         *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada'">
                         <i class="mdi mdi-lock-open-outline"></i>
                     </button>
                     <!-- enviar a reparacion -->
-                    <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'"
+                    <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion' ; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion') || cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-wrench"></i>
                     </button>
                     <!-- Confirmar reparacion -->
-                    <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'"
+                    <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
                         <i class="mdi mdi-wrench"></i>
                     </button>
@@ -215,7 +215,10 @@
             <div *ngIf="cama.$action == 'reparacion' && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
                 <form #formReparacion="ngForm">
                     <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
-
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
                         <div class="main">
                             <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
                             <div class="form-group">
@@ -226,7 +229,6 @@
                             </div>
 
                         </div>
-
                     </div>
                     <div class="footer row">
 
@@ -255,6 +257,10 @@
             <div *ngIf="cama.$action && cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'reparacion'">
                 <form #formReparada="ngForm">
                     <div class="content" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
                         <div class="main">
                             <p class="text-center">
                                 ¿La cama ha sido reparada?
@@ -288,11 +294,13 @@
             <div *ngIf="cama.$action == 'preparar' && cama.ultimoEstado.estado == 'desocupada'">
                 <div class="content" [ngClass]="{'preparar': cama.$action == 'preparar' }">
                     <form #desinfeccionForm="ngForm">
-
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
                         <div class="main">
                             ¿Confirmar preparacion de la cama?
                         </div>
-
                     </form>
                 </div>
                 <div class="footer row">
@@ -319,7 +327,10 @@
             <div *ngIf="cama.$action == 'bloquear' && (cama.ultimoEstado.estado == 'desocupada' || cama.ultimoEstado.estado == 'disponible')">
                 <form #formBloqueo="ngForm">
                     <div class="content" [ngClass]="{'bloquear': cama.$action == 'bloquear' }">
-
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
                         <div class="main">
                             <!-- <textarea rows="8" name="motivo_{{$index}}" class="form-control" placeholder="¿Motivo de reparación?" plex ng-required="true" ng-model="cama.$motivo"></textarea> -->
                             <div class="form-group">
@@ -359,10 +370,31 @@
             <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
                 <form #formDesbloqueo="ngForm">
                     <div class="content" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
                         <div class="main">
                             <p class="text-center">
                                 ¿Desbloquear la cama?
                             </p>
+                        </div>
+                        <div>
+                            <p class="text-center">
+                                Estado luego del desbloqueo:
+                            </p>
+                            <label class="custom-control custom-radio">
+                                <input class="custom-control-input" name="radioConceptos" value="desocupada" [(ngModel)]="estadoDesbloqueo" type="radio">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"> Para desinfectar</span>
+                            </label>
+
+                            <label class="custom-control custom-radio">
+                                <input class="custom-control-input" name="radioConceptos" value="disponible" [(ngModel)]="estadoDesbloqueo" type="radio"
+                                    checked>
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"> Disponible</span>
+                            </label>
                         </div>
                     </div>
                     <div class="footer with-buttons row">
@@ -378,7 +410,7 @@
 
                         <div class="col-6">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, 'desocupada')">
+                                <button type="submit" class="btn btn-success tips form-control" title="Si" (click)="cambiarEstado(cama, estadoDesbloqueo)">
                                     <i class="mdi mdi-check"></i>
                                 </button>
                             </div>
