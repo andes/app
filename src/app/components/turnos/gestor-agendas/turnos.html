@@ -220,7 +220,7 @@
                         <strong *ngIf="sobreturno">{{ sobreturno.horaInicio | date: 'HH:mm' }}</strong>
                     </td>
                     <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <small *ngIf="sobreturno?.paciente?.id" [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{ sobreturno. | paciente }}
+                        <small *ngIf="sobreturno?.paciente?.id" [ngClass]="{'text-danger' : sobreturno?.estado === 'suspendido'}">{{ sobreturno.paciente | paciente }}
                             <span class="text-danger" *ngIf="sobreturno?.estado === 'suspendido'">(suspendido)</span>
                         </small>
                         <small>
