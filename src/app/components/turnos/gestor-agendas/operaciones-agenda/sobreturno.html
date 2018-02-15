@@ -65,17 +65,24 @@
                     </header>
                     <!--Agenda seleccionada-->
                     <div class="text-center">
-                        <h4>Hora Agenda</h4>
+
+                        <h4>
+                            <span class="mdi mdi-calendar-today">Hora Agenda </span>
+                        </h4>
                         <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
                             <div> {{ [agenda.estado].nombre }}</div>
                         </span>
                         <br>
-                        <h4>Prestación</h4>
+                        <h4>
+                            <span class="mdi mdi-hospital">Prestación </span>
+                        </h4>
                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                             {{ tipoPrestacion.nombre }}
                         </div>
                         <br>
-                        <h4>Profesional</h4>
+                        <h4>
+                            <span class="mdi mdi-account">Profesional </span>
+                        </h4>
                         <div *ngFor="let profesional of agenda.profesionales let i = index">
                             {{profesional | profesional}}
                         </div>
