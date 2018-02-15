@@ -18,7 +18,9 @@ export class PrestacionesService {
         // programable: '1661000013109',
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103'
+        Antecedentes_Personales_hallazgos: '1901000013103',
+        situacionLaboral: '200000000',
+        nivelEstudios: '3'
     };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta

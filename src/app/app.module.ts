@@ -214,6 +214,9 @@ import { InformesComponent } from './modules/rup/components/elementos/informe.co
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
+import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -310,7 +313,9 @@ let RUPComponentsArray = [
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    IngresoInternacionComponent
+    IngresoInternacionComponent,
+    IniciarInternacionComponent,
+    EjecucionInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);

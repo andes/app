@@ -20,12 +20,12 @@
                             <!-- Iconos con sus acciones -->
                             <div class="icon">
                                 <!-- disponible -->
-                                <button type="button" class="btn btn-buscar-paciente  grow tips" title="Agregar paciente en cama" (click)="buscarPaciente(cama); cama.$action = 'internacion'"
+                                <button type="button" class="btn btn-buscar-paciente  grow tips" title="Agregar paciente en cama" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
                                     *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible'">
                                     <i class="mdi mdi-hotel agregar"></i>
                                 </button>
                                 <!-- Desocupada -->
-                                <button type="button" class="btn btn-desocupada  grow tips" title="Cama desocupada" (click)="buscarPaciente(cama); cama.$action = 'internacion'"
+                                <button type="button" class="btn btn-desocupada  grow tips" title="Cama desocupada" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
                                     *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'desocupada'">
                                     <i class="mdi mdi-hotel agregar"></i>
                                 </button>
@@ -88,7 +88,7 @@
                 </div>
                 <!-- Ver internacion -->
                 <div class="col-6 float-right text-right">
-                    <button class="btn btn-default" title="Ver internacion" *ngIf="cama.ultimoEstado?.paciente?.id">
+                    <button class="btn btn-default" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
                         <i class="mdi mdi-eye"></i>
                     </button>
                     <!-- bloquear cama -->

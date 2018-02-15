@@ -141,4 +141,9 @@ export class PacienteDetalleActualizarComponent implements OnInit {
         this.paciente.contacto.push(nuevoContacto);
     }
 
+
+    actualizarPaciente() {
+
+    }
+
 }
