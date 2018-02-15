@@ -4,6 +4,7 @@ import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { CamasService } from '../../../services/camas.service';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-cama',
@@ -19,6 +20,9 @@ export class CamaComponent implements OnInit {
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
 
+
+    public estadoDesbloqueo: String = 'desocupada';
+    public fecha = new Date();
     constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router) { }
 
     ngOnInit() {
@@ -76,7 +80,7 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            fecha: null,
+            fecha: this.fecha,
             estado: estado,
             observaciones: cama.$motivo,
             paciente: null
@@ -121,5 +125,8 @@ export class CamaComponent implements OnInit {
         }, (err) => {
             this.plex.info('danger', err, 'Error');
         });
+    }
+    SetFecha() {
+        this.fecha = new Date();
     }
 }

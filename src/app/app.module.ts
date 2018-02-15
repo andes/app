@@ -163,7 +163,9 @@ import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dash
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
+import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
+
 
 // ... RUP
 import { RUPComponent } from './modules/rup/components/core/rup.component';
@@ -367,12 +369,13 @@ let RUPComponentsArray = [
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
-        MapaEspacioFisicoComponent,
+        MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
+
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
