@@ -303,8 +303,8 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
-    volverAlGestor(agendModificada) {
-        if (agendModificada.id) { // vuelve de dar sobreturno
+    volverAlGestor(agendaModificada) {
+        if (agendaModificada && agendaModificada.id) {
             this.verAgenda(this.agendasSeleccionadas[0], false, null);
         }
         this.showGestorAgendas = true;
