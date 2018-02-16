@@ -292,7 +292,11 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     saveAgregarNotaAgenda() {
-        this.loadAgendas();
+        if (this.parametros) {
+            this.getAgendas(this.parametros);
+        } else {
+            this.loadAgendas();
+        }
         this.showTurnos = true;
         this.showAgregarNotaAgenda = false;
     }
@@ -319,7 +323,11 @@ export class GestorAgendasComponent implements OnInit {
         this.showReasignarTurnoAutomatico = false;
         this.showListadoTurnos = false;
         this.showCarpetas = false;
-        this.loadAgendas();
+        if (this.parametros) {
+            this.getAgendas(this.parametros);
+        } else {
+            this.loadAgendas();
+        }
     }
 
     reasignaTurno(reasTurno) {
@@ -549,6 +557,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showRevisionAgenda = false;
         }
 
+        let temporal = this.agendasSeleccionadas;
+
+        if (this.parametros) {
+            this.getAgendas(this.parametros);
+        } else {
+            this.loadAgendas();
+        }
         if (!this.showSuspenderAgenda) {
             let temporal = this.agendasSeleccionadas;
             this.loadAgendas();
