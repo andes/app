@@ -121,8 +121,16 @@
                                                                     <b>Con llave</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td> -->
-                                                            <td>Profesional</td>
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun"></ng-container>
+                                                            <ng-template #profesionalComun>
+                                                                <td>Profesional</td>
+                                                            </ng-template>
+                                                            <ng-template #profesionalSolicitud>
+                                                                <td>
+                                                                    <b>Profesional</b>
+                                                                </td>
+                                                            </ng-template>
+                                                            <!-- <td>Profesional</td> -->
 
                                                         </tr>
                                                     </thead>
@@ -139,7 +147,16 @@
                                                                     <b>{{countBloques[indiceBloque]?.gestion}}</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <td>{{countBloques[indiceBloque]?.profesional}}</td>
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitudValor else profesionalComunValor"></ng-container>
+                                                            <ng-template #profesionalComunValor>
+                                                                <td>{{countBloques[indiceBloque]?.profesional}}</td>
+                                                            </ng-template>
+                                                            <ng-template #profesionalSolicitudValor>
+                                                                <td>
+                                                                    <b>{{countBloques[indiceBloque]?.profesional}}</b>
+                                                                </td>
+                                                            </ng-template>
+                                                            <!-- <td>{{countBloques[indiceBloque]?.profesional}}</td> -->
 
                                                         </tr>
                                                     </tbody>
