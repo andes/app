@@ -24,7 +24,7 @@ export class DocumentosService {
         });
 
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
+        return this.http.post(this.pdfURL + '/pdf', { modulo: 'rup', html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -32,7 +32,6 @@ export class DocumentosService {
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
         return Observable.throw(errMsg);
     }
     protected extractData(res: Response) {
