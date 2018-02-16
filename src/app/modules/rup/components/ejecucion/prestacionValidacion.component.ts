@@ -544,17 +544,6 @@ export class PrestacionValidacionComponent implements OnInit {
             // <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
 
             const header = `
-                <header id="pageHeader" style="background-color: rgba(0,0,0,0.1); font-size: 10px; height: 40px !important; padding-top: 8px; padding-left:5px;">
-                    <div class="col-4 m-0 p-0">
-                        <!--logoAndes-->
-                        <div class="logo p-2" style="float: left; padding: 5px;">
-                            <!--logotipoAndes-->
-                        </div>
-                    </div>
-                    <div class="col-8 m-0 p-0">
-                        <div class="organizacion" style="position: relative; top: 17px;">${this.auth.organizacion.nombre}</div>
-                    </div>
-                </header>
                 <div>
                     ${headerPrestacion.innerHTML}
                     ${datosSolicitud.innerHTML}
@@ -580,24 +569,6 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            // Enviar las hojas de estilos en el payload? <_<
-            // let cssFiles = Object.keys(document.styleSheets);
-
-            // content += '<style>';
-
-            // Leer las hojas de estilo rendereadas por Angular
-            // for (let fkey in cssFiles) {
-            //     let cssKeys = document.styleSheets[fkey];
-
-            //     for (let key in cssKeys) {
-            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
-            //         content += document.styleSheets[fkey].ownerNode.textContent;
-            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
-            //     }
-            // }
-
-            // content += '</style>';
-
             this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
@@ -612,7 +583,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term) + '-' + moment().toISOString() + '.pdf';
+        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
         saveAs(blob, nombreArchivo);
     }
 
