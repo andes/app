@@ -2,7 +2,7 @@ import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, Host
 import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-import { SisaService } from './../../../services/fuentesAutenticas/servicioSisa.service'
+import { SisaService } from './../../../services/fuentesAutenticas/servicioSisa.service';
 
 @Component({
     selector: 'arancelamiento-form',

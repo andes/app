@@ -244,7 +244,7 @@ import { routing, appRoutingProviders } from './app.routing';
 // Libs
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
-import {PopoverModule} from "ngx-popover";
+import { PopoverModule } from 'ngx-popover';
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
