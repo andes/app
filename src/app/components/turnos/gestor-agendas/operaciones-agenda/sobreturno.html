@@ -7,14 +7,14 @@
                     <header>
                         <div class="page-title">Agregar Sobreturno</div>
                     </header>
-                    <span *ngIf="showSobreturno">
+                    <span *ngIf="showSobreturno && paciente">
                         <div *ngIf="paciente?.id" class="row">
                             <div class="col">
                                 <label>Paciente</label>
                                 <div>{{paciente | paciente}}</div>
                             </div>
                         </div>
-                        <div *ngIf="paciente" class="row">
+                        <div class="row">
                             <div class="col">
                                 <plex-phone *ngIf="paciente" label="Verifique el número telefónico:" [(ngModel)]="telefono" (change)="cambioTelefono=true"
                                     name="telefono"></plex-phone>
@@ -24,14 +24,14 @@
                                 <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()"></plex-text>
                             </div>
                         </div>
-                        <div *ngIf="paciente" class="row">
+                        <div class="row" *ngIf="agenda.tipoPrestaciones.length > 1">
                             <div class="col">
                                 <plex-select [(ngModel)]="tipoPrestacion" name="tipoPrestacion" label="Tipo de prestación" [data]="agenda.tipoPrestaciones"
                                     placeholder="Seleccione el tipo de prestación" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
-                        <div *ngIf="paciente" class="row">
+                        <div class="row">
                             <div class="col-3">
                                 <plex-datetime type="time" [(ngModel)]="horaTurno" [min]="inicio" [max]="fin" [required]="true" name="horaTurno" label="Hora Turno">
                                 </plex-datetime>
