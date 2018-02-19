@@ -15,7 +15,7 @@
                                 (click)="mostrarDatosSolicitud(true)" id="datosSolicitud"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"
                                 id="datosSolicitud"></plex-button>
-                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
+                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && puedeDescargarPDF">
                                 <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
                                     (click)="descargarResumen()"></plex-button>
                             </ng-container>

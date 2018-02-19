@@ -31,6 +31,7 @@ import 'rxjs/Rx';
 })
 export class PrestacionValidacionComponent implements OnInit {
 
+    puedeDescargarPDF: boolean;
     private slug = new Slug('default'); // this will use 'default' keymap
 
     idAgenda: any;
@@ -95,6 +96,7 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
+        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
