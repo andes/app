@@ -86,7 +86,7 @@ export class CamaComponent implements OnInit {
             paciente: null
         };
 
-        this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
