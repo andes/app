@@ -31,7 +31,7 @@
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-8' : 'col-4'}}">
                                 <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
-                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                    idField="term" name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
                             <div class="{{showEditarAgendaPanel && agendasSeleccionadas?.length === 1 ? 'col-4' : 'col-2'}} text-right">

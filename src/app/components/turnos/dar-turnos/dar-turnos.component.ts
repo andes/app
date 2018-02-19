@@ -253,7 +253,7 @@ export class DarTurnosComponent implements OnInit {
         if (search.tipoPrestacion || search.profesional) {
             let index = this.busquedas.findIndex(
                 item => (item.profesional && search.profesional ? item.profesional._id === search.profesional._id : search.profesional === null) &&
-                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
+                    (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion.conceptId === search.tipoPrestacion.conceptId : search.tipoPrestacion === null)
             );
             if (index < 0) {
                 this.busquedas.push(search);
@@ -294,7 +294,7 @@ export class DarTurnosComponent implements OnInit {
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
-                idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : ''),
+                idTipoPrestacion: (this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.conceptId : ''),
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
@@ -397,7 +397,7 @@ export class DarTurnosComponent implements OnInit {
                 this.alternativas = [];
 
                 // Tipo de Prestación, para poder filtrar las agendas
-                let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
+                let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.conceptId : '';
 
                 // Se filtran los bloques segun el filtro tipoPrestacion
                 this.bloques = this.agenda.bloques.filter(
@@ -510,7 +510,7 @@ export class DarTurnosComponent implements OnInit {
                         if (this.opciones.tipoPrestacion || this.opciones.profesional) {
                             this.serviceAgenda.get({
                                 fechaDesde: moment(this.agenda.horaInicio).add(1, 'day').toDate(),
-                                idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : null,
+                                idTipoPrestacion: this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.conceptId : null,
                                 idProfesional: this.opciones.profesional ? this.opciones.profesional.id : null,
                                 estados: ['disponible', 'publicada']
                             }).subscribe(alternativas => {
@@ -673,7 +673,7 @@ export class DarTurnosComponent implements OnInit {
                 });
             });
             this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
-                return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
+                return this.permisos.indexOf(ultimo.tipoPrestacion.conceptId) >= 0;
             });
         });
 
@@ -957,7 +957,7 @@ export class DarTurnosComponent implements OnInit {
         let listaEspera: any;
         let operacion: Observable<IListaEspera>;
         let datosPrestacion = !this.opciones.tipoPrestacion ? null : {
-            id: this.opciones.tipoPrestacion.id,
+            id: this.opciones.tipoPrestacion.conceptId,
             nombre: this.opciones.tipoPrestacion.nombre
         };
         let datosProfesional = !this.opciones.profesional ? null : {

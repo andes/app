@@ -14,6 +14,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
@@ -29,6 +30,9 @@ import 'rxjs/Rx';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
+
+    private slug = new Slug('default'); // this will use 'default' keymap
+
     idAgenda: any;
     ordenSeleccionado: string;
     @HostBinding('class.plex-layout') layout = true;
@@ -314,9 +318,12 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas) {
+        let prestacionesPermitidas = this.auth.getPermissions('rup:tipoPrestacion:?');
+
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
@@ -325,13 +332,15 @@ export class PrestacionValidacionComponent implements OnInit {
             }
         });
 
+        // buscamos agendas disponibles o publicadas donde este el profesional e incluyan
+        // los tipos de prestaciones solicitadas
         if (tiposPrestaciones && tiposPrestaciones.length > 0) {
-            // let filtroPretaciones = tiposPrestaciones.map(c => c.id);
             this.servicioAgenda.get({
                 fechaDesde: new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada'],
-                profesionales: [this.auth.profesional.id]
+                profesionales: [this.auth.profesional.id],
+                tipoPrestaciones: prestacionesPermitidas
             }).subscribe(agendas => {
                 // Buscar agendas con bloques donde "restantesProfesional" > 0
                 agendas = agendas.filter(a => a.bloques.find(b => b.restantesProfesional > 0));
@@ -519,13 +528,7 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
-    private descargarArchivo(data: any, headers: any): void {
-
-        let blob = new Blob([data], headers);
-        saveAs(blob, 'rup.pdf');
-    }
-
-    imprimirResumen() {
+    descargarResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -605,6 +608,12 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             });
         });
+    }
+
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term) + '-' + moment().toISOString() + '.pdf';
+        saveAs(blob, nombreArchivo);
     }
 
     /**

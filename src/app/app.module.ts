@@ -250,6 +250,7 @@ import { routing, appRoutingProviders } from './app.routing';
 // Libs
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
+import {PopoverModule} from "ngx-popover";
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -333,6 +334,7 @@ let RUPComponentsArray = [
         Ng2DragDropModule,
         ChartsModule,
         routing,
+        PopoverModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })

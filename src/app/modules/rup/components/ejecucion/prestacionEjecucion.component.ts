@@ -15,6 +15,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -87,6 +88,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
+    public sinonimos: ITipoPrestacion[] = [];
 
     public conceptosTurneables: any[];
 
@@ -152,6 +154,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     }
                                 }
                             }
+
+                            this.servicioTipoPrestacion.get({ conceptsIds: [this.prestacion.solicitud.tipoPrestacion.conceptId] }).subscribe(sinonimos => {
+                                this.sinonimos = sinonimos;
+                            });
 
                         }
                         this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {

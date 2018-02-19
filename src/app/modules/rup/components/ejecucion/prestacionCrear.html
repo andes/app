@@ -10,8 +10,7 @@
                         <legend>Datos principales</legend>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
                         </plex-datetime>
-                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term"
-                            [data]="tiposPrestacion" [required]="true">
+                        <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term" [data]="tiposPrestacion" idField="term" [required]="true">
                         </plex-select>
                     </fieldset>
                 </div>
@@ -40,5 +39,4 @@
 </form>
 
 <!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>

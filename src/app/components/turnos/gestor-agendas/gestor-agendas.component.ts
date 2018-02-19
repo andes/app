@@ -163,7 +163,7 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     refreshSelection(value, tipo) {
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones && this.prestaciones.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
         }
         if (tipo === 'fechaDesde') {
@@ -375,7 +375,7 @@ export class GestorAgendasComponent implements OnInit {
     loadPrestaciones(event) {
         if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
             this.servicioPrestacion.get({
-                id: this.prestacionesPermisos
+                conceptsIds: this.prestacionesPermisos
             }).subscribe(event.callback);
         } else {
             this.servicioPrestacion.get({

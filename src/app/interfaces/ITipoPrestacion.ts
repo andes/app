@@ -4,4 +4,10 @@ export interface ITipoPrestacion {
     term: String;
     fsn: String;
     semanticTag: String;
+    nombre: String;
+    acceptability?: {
+        conceptId: String,
+        preferredTerm: String
+    };
+    preferido?: any;
 }

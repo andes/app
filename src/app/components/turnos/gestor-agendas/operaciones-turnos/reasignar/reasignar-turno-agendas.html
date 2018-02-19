@@ -103,7 +103,7 @@
                                 <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre'] }}</p>
                                 <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
                                 <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
-                                    <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.id)">
+                                    <div *ngIf="existePrestacion(bloque, turnoSeleccionado.tipoPrestacion.conceptId)">
                                         <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
                                             <div *ngIf="bloque.descripcion && indiceTurno === 0">
                                                 Bloque

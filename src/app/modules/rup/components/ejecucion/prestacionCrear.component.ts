@@ -35,8 +35,15 @@ export class PrestacionCrearComponent implements OnInit {
         private location: Location) { }
 
     ngOnInit() {
+        if (this.auth.getPermissions('rup:?').length <= 0) {
+            this.location.back();
+        }
         // Carga tipos de prestaciones permitidas para el usuario
-        this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+        this.servicioTipoPrestacion.get({ conceptsIds: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
+
+            if (data && data.length <= 0) {
+                this.location.back();
+            }
             this.tiposPrestacion = data;
         });
     }
@@ -71,6 +78,10 @@ export class PrestacionCrearComponent implements OnInit {
         }
 
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
+        let preferido = this.servicioTipoPrestacion.searchPreferido(this.tipoPrestacionSeleccionada, this.tiposPrestacion);
+        if (preferido && preferido.term !== this.tipoPrestacionSeleccionada.term) {
+            this.tipoPrestacionSeleccionada.preferido = preferido.term;
+        }
         let nuevaPrestacion;
         nuevaPrestacion = {
             paciente: {
@@ -86,10 +97,10 @@ export class PrestacionCrearComponent implements OnInit {
                 tipoPrestacion: conceptoSnomed,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
@@ -169,10 +180,10 @@ export class PrestacionCrearComponent implements OnInit {
                     prestacionOrigen: null,
                     // profesional logueado
                     profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                        {
+                            id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                            apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                        },
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
                 },

@@ -142,7 +142,7 @@
                                         <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                             <br />
                                             <span class="badge " [ngClass]="{'badge-success': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada',
-                                                'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion'}">
+                                                'badge-warning': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion', 'badge-info': turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente'}">
                                                 {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo}}
                                             </span>
                                             <br />
@@ -197,7 +197,6 @@
                                             </plex-button>
 
                                             <plex-button *ngIf="agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
-
                                                 label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion)"
