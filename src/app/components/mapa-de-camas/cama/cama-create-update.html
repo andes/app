@@ -1,0 +1,63 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <header>
+                <div class="page-title">Editar cama</div>
+            </header>
+            <div class="row">
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.sector" name="sector" label="Sector" placeholder="Sector" [autoFocus]="autofocus"></plex-text>
+                </div>
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.habitacion" name="habitacion" label="Habitacion" placeholder="Habitacion"></plex-text>
+                </div>
+                <div class="col-4">
+                    <plex-text [(ngModel)]="cama.numero" name="numero" label="Numero" placeholder="Numero" required></plex-text>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-4">
+                    <plex-select name="servicio" (getData)="loadServicios($event)" idField="term" labelField="term" [(ngModel)]="unidadOrganizativa"
+                        label="Servicio">
+                    </plex-select>
+                </div>
+                <div class="col-4">
+                    <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term" [(ngModel)]="cama.tipoCama"
+                        label="Tipo de cama">
+                    </plex-select>
+                </div>
+                <div class="col-4">
+                    <span class="mt-2">
+                        <plex-bool type="slide" [(ngModel)]="cama.esCensable" label="Es censable" name="censable"></plex-bool>
+                    </span>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-control">
+                        <label>Equipamiento</label>
+                        <select disabled class="form-group disabled">
+                            <option value="1">equipamiento</option>
+                        </select>
+                        <!-- <plex-select  name="equipamiento" (getData)="loadEquipamientos()" [(ngModel)]="cama.equipamiento" label="Equipamiento">
+                        </plex-select> -->
+                    </div>
+                </div>
+            </div>
+
+        </plex-box>
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" type="danger" (click)="cancel()">
+            </plex-button>
+
+            <plex-button label="Guardar" type="primary" (click)="save($event)" validateForm="true">
+            </plex-button>
+        </div>
+    </footer>
+</form>

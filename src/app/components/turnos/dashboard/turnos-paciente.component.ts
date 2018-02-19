@@ -19,6 +19,8 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    puedeRegistrarAsistencia: boolean;
+    puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
 
@@ -27,7 +29,7 @@ export class TurnosPacienteComponent implements OnInit {
     tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente = [];
     turnosSeleccionados: any[] = [];
-
+    showPuntoInicio = true;
 
     @Input('operacion')
     set operacion(value: string) {
@@ -47,11 +49,19 @@ export class TurnosPacienteComponent implements OnInit {
     get paciente(): IPaciente {
         return this._paciente;
     }
+    @Output() showArancelamientoForm = new EventEmitter<any>();
+
 
     // Inicialización
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
+        this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
+        this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
+    }
+
+    printArancelamiento(turno) {
+        this.showArancelamientoForm.emit(turno);
     }
 
     getTurnosPaciente(paciente) {

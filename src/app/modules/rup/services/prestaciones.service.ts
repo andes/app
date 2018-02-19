@@ -18,7 +18,9 @@ export class PrestacionesService {
         // programable: '1661000013109',
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103'
+        Antecedentes_Personales_hallazgos: '1901000013103',
+        situacionLaboral: '200000000',
+        nivelEstudios: '3'
     };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
@@ -259,6 +261,78 @@ export class PrestacionesService {
         });
     }
 
+
+
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'entidad observable' || registro.concepto.semanticTag === 'régimen/tratamiento')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteElementosRegistro(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'elemento de registro')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
 
     /**
      * Metodo getByPacienteMedicamento lista todos los medicamentos registrados del paciente

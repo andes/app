@@ -1,10 +1,10 @@
-<div class="row mt-1">
+<!-- <div class="row mt-1">
     <div class="col">
 
         <div class="menu-huds">
 
             <span>
-                <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgos')" [ngClass]="{'active': vista === 'hallazgos'}">
+                <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgo')" [ngClass]="{'active': vista === 'hallazgo'}">
                     <span>HALLAZGOS</span>
                 </button>
             </span>
@@ -14,23 +14,143 @@
                 </button>
             </span>
             <span>
-                <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('medicamentos')" [ngClass]="{'active': vista === 'medicamentos'}">
+                <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('productos')" [ngClass]="{'active': vista === 'productos'}">
                     <span>MEDICAMENTOS</span>
                 </button>
             </span>
 
         </div>
     </div>
+</div> -->
+<!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
+    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar> -->
+
+<!-- <div class="buscador">
+    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
+</div> -->
+
+<!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
+<div class="menu-buscador">
+    <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
+
+    <!-- Botones filtros -->
+    <ng-container>
+
+        <ng-container>
+            <div class="container-filtros">
+                <ul class="botones-filtros">
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
+
+                        <button (click)="filtroBuscador('todos')" [ngClass]="{'active': filtroActual === 'todos'}" [disabled]="getCantidadResultados('todos') === 0"
+                            class="btn btn-block p-0 btn-todos">
+                            <i class="icon icon-rup-semantic-todos"></i>
+                            ACTIVOS
+                        </button>
+                    </li>
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right" [ngClass]="{'active': filtroActual === 'hallazgo'}">{{ getCantidadResultados('hallazgo')}}</small>
+
+                        <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}" [disabled]="getCantidadResultados('hallazgo') === 0"
+                            class="btn btn-block p-0 btn-hallazgo">
+                            <i class="icon icon-rup-semantic-hallazgo"></i>
+                            HALLAZGOS
+                        </button>
+                    </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right" [ngClass]="{'active': filtroActual === 'trastorno'}">{{ getCantidadResultados('trastorno')}}</small>
+
+                        <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}" [disabled]="getCantidadResultados('trastorno') === 0"
+                            class="btn btn-block p-0 btn-trastorno">
+                            <i class="icon icon-rup-semantic-trastorno"></i>
+                            TRASTORNOS
+                        </button>
+                    </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('procedimiento')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimiento'}">{{ getCantidadResultados('procedimiento')}}</small>
+
+                        <button (click)="filtroBuscador('procedimiento')" [ngClass]="{'active': filtroActual === 'procedimiento'}" [disabled]="getCantidadResultados('procedimiento') === 0"
+                            class="btn btn-block p-0 btn-procedimiento">
+                            <i class="icon icon-rup-semantic-procedimiento"></i>
+                            PROC.
+                        </button>
+                    </li>
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
+
+                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
+                            [disabled]="getCantidadResultados('planes') === 0">
+                            <i class="icon icon-rup-semantic-plan"></i>
+                            PLANES
+                        </button>
+                    </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right" [ngClass]="{'active': filtroActual === 'producto'}">{{ getCantidadResultados('producto')}}</small>
+
+                        <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}" [disabled]="getCantidadResultados('producto') === 0"
+                            class="btn btn-block p-0 btn-producto">
+                            <i class="icon icon-rup-semantic-producto"></i>
+                            PRODUCTOS
+                        </button>
+                    </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
+
+                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" [disabled]="getCantidadResultados('otros') === 0"
+                            class="btn btn-block p-0 btn-otro">
+                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                            ELEM. REG.
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+
+        <div>
+            <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
+            <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
+
+            <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
+                <!-- <ng-container *ngIf="searchTerm">
+                    No se han encontrado resultados.
+                </ng-container> -->
+
+                <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
+
+                <p class="text-center" *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes')">
+                    Intentar con el
+                    <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
+                </p>
+            </ng-container>
+        </div>
+    </ng-container>
 </div>
 <div class="row huds-busqueda">
     <div class="col">
 
         <!-- Vista: Hallazgos -->
-        <ng-container *ngIf="vista === 'hallazgos'">
+        <ng-container *ngIf="filtroActual === 'hallazgo' || filtroActual === 'situacion' || filtroActual === 'trastorno' || filtroActual === 'todos'">
 
             <!-- HALLAZGOS CRÓNICOS ONLY -->
-            <div class="vista-titulo">Hallazgos crónicos</div>
-            <ul *ngIf="hallazgosCronicos" class="conceptos list-unstyled">
+            <div *ngIf="filtroActual === 'trastorno' || filtroActual === 'todos'" class="vista-titulo">
+                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's crónicos' : 'Crónicos'}}
+                <div *ngIf="hallazgosCronicos.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'crónicos')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa', 'crónicos')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros('crónicos')">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+            <ul *ngIf="hallazgosCronicos && colapsadoCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li>
                         <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
@@ -48,8 +168,7 @@
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
                                     </div>
                                 </ng-container>
-                                <div class="rup-border">
-
+                                <div class="rup-border rup-border-hallazgo">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(hallazgo, 'hallazgo')">
                                             <div class="p-0 pl-2">
@@ -68,8 +187,8 @@
                                                     <small class="badge badge-success text-default p-1">{{ hallazgo.evoluciones[0].estado }}</small>
                                                 </ng-container>
 
-                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(hallazgo)" title="Agregar a la consulta"
-                                                    titlePosition="left">
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(hallazgo, 'hallazgo')"
+                                                    title="Agregar a la consulta" titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
                                                 </button>
 
@@ -82,11 +201,24 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="hallazgosCronicos.length === 0">No hay problemas crónicos</div>
+            <div *ngIf="filtroActual === 'trastorno' && hallazgosCronicos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : '' }} crónicos</div>
 
             <!-- HALLAZGOS ACTIVOS ONLY -->
-            <div class="vista-titulo">Hallazgos activos</div>
-            <ul *ngIf="problemasActivos" class="conceptos list-unstyled">
+            <div class="vista-titulo">
+                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's activos' : 'Activos'}}
+                <div *ngIf="problemasActivos.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'activos')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa', 'activos')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros('activos')">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+            <ul *ngIf="problemasActivos && colapsadoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
                     <li>
 
@@ -104,7 +236,7 @@
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
                                 </ng-container>
-                                <div class="rup-border">
+                                <div class="rup-border rup-border-hallazgo">
 
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
@@ -137,14 +269,26 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="problemasActivos.length === 0">No hay problemas activos</div>
+            <div *ngIf="problemasActivos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : '' }} activos</div>
 
             <!-- OTROS HALLAZGOS -->
-            <div class="vista-titulo">Otros Hallazgos</div>
-            <ul *ngIf="hallazgosNoActivos" class="conceptos list-unstyled">
+            <div class="vista-titulo">
+                Otros {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's' : '' }}
+                <div *ngIf="hallazgosNoActivos.length > 0" class="float-right">
+                    <button class="btn btn-sm p-0" (click)="ordenarRegistros('fecha', 'otros')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa', 'otros')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros('otros')">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+            <ul *ngIf="hallazgosNoActivos && colapsadoOtros" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
                     <li>
-
                         <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
 
@@ -160,7 +304,7 @@
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
                                 </ng-container>
-                                <div class="rup-border">
+                                <div class="rup-border rup-border-hallazgo">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
                                             <div class="p-0 pl-2">
@@ -194,21 +338,97 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="hallazgosNoActivos.length === 0">No hay otros problemas</div>
+            <div *ngIf="hallazgosNoActivos.length === 0">No hay otros {{filtroActual !== 'todos' ? filtroActual + 's' : '' }}</div>
         </ng-container>
 
+        <!-- Vista: PROCEDIMIENTOS -->
+        <ng-container *ngIf="filtroActual === 'procedimiento'">
+            <div class="vista-titulo">Procedimientos
+                <div *ngIf="procedimientos.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
 
-        <!-- Vista: prestaciones -->
-        <ng-container *ngIf="vista === 'prestaciones'">
-            <div class="vista-titulo">Prestaciones</div>
-
-            <ul *ngIf="prestaciones" class="hover conceptos list-unstyled">
-                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
+            <ul *ngIf="procedimientos && colapsado" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let procedimiento of procedimientos; let iPrestacion = index">
                     <li>
-                        <div class="rup-card mini plan" [ngClass]="{'active': estaEnTabs(prestacion, 'prestacion')}" (click)="devolverRegistrosHuds(prestacion, 'prestacion')">
+                        <div class="rup-card mini procedimiento" [ngClass]="{'active': estaEnTabs(procedimiento, 'hallazgo')}" (click)="devolverRegistrosHuds(procedimiento, 'hallazgo')">
                             <div class="rup-header">
 
-                                <div class="rup-border">
+                                <div class="rup-border rup-border-procedimiento">
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+
+                                            <div class="row m-0 p-0">
+
+                                                <div class="col-2 icon-rup drag-handle">
+                                                    <i class="icon icon-rup-semantic-plan"></i>
+                                                </div>
+                                                <div class="col p-0 pl-2 float-left">
+                                                    {{ procedimiento.concepto.term }}
+
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <div class="sugerido">
+                                                                <small>Creada: {{ procedimiento.createdAt | fecha }}</small>
+                                                                <br>
+                                                                <small>Profesional: {{ procedimiento.createdBy.nombreCompleto}}</small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
+                                                <!-- <small class="badge badge-{{procedimiento.estados[procedimiento.estados.length - 1].tipo}} text-default p-1">{{procedimiento.estados[procedimiento.estados.length - 1].tipo}} </small> -->
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </li>
+                </ng-container>
+            </ul>
+        </ng-container>
+
+        <!-- Vista: PLANES -->
+        <ng-container *ngIf="filtroActual === 'planes'">
+            <div *ngIf="prestaciones.length > 0" class="vista-titulo">Planes
+                <div class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <ul *ngIf="prestaciones && colapsado" class="hover conceptos list-unstyled">
+                <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
+                    <li>
+                        <div class="rup-card mini plan" [ngClass]="{'active': estaEnTabs(prestacion, 'plan')}" (click)="devolverRegistrosHuds(prestacion, 'prestacion')">
+                            <div class="rup-header">
+
+                                <div class="rup-border rup-border-plan">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
 
@@ -253,43 +473,132 @@
             </ul>
         </ng-container>
 
-        <!-- Vista: medicamentos -->
-        <ng-container *ngIf="vista === 'medicamentos'">
-            <div class="vista-titulo">Medicamentos</div>
+        <!-- Vista: PRODUCTOS -->
+        <ng-container *ngIf="filtroActual === 'producto'">
+            <div class="vista-titulo">Productos
+                <div *ngIf="productos.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
 
-            <div *ngIf="medicamentos" class="conceptos list-unstyled">
-                <ul *ngIf="medicamentos" class="conceptos list-unstyled">
-                    <ng-container *ngFor="let medicamento of medicamentos; let iCronico = index">
+            <ul *ngIf="productos && colapsado" class="conceptos hover list-unstyled">
+                <ng-container *ngFor="let producto of productos; let iCronico = index">
 
+                    <li>
+
+                        <div class="rup-card mini producto" [ngClass]="{'active': estaEnTabs(producto, 'hallazgo')}">
+                            <div class="rup-header">
+                                <div class="rup-border rup-border-producto">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-10 p-0 m-0">
+                                            <div class="row m-0 p-0">
+
+                                                <ng-container *ngIf="emitirConceptos">
+                                                    <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': producto, 'huds': true}"
+                                                        (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                        <i class="icon icon-rup-semantic-producto"></i>
+                                                    </div>
+                                                </ng-container>
+                                                <ng-container *ngIf="!emitirConceptos">
+                                                    <div class="icon-rup">
+                                                        <i class="icon icon-rup-semantic-producto"></i>
+                                                    </div>
+                                                </ng-container>
+
+                                                <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(producto, 'hallazgo')">
+                                                    {{ producto.concepto.term }}
+
+                                                    <div class="row p-0 m-0">
+                                                        <div class="col-10 p-0 m-0">
+                                                            <ng-container *ngIf="producto.evoluciones">
+                                                                <small class="sugerido">último registro: {{ producto.evoluciones[0].fechaCarga |
+                                                                    fecha }}
+                                                                </small>
+                                                            </ng-container>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="col-2 p-0 m-0">
+                                            <div class="p-0 pt-1 pr-1 float-right">
+                                                <ng-container *ngIf="producto.evoluciones">
+                                                    <small class="badge badge-success text-default p-1">{{ producto.evoluciones[producto.evoluciones.length-1].estado }}
+                                                    </small>
+                                                </ng-container>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </li>
+                </ng-container>
+            </ul>
+            <div *ngIf="productos.length === 0">No hay medicamentos registrados</div>
+        </ng-container>
+
+
+        <!-- Vista: ELEMENTOS DE REGISTRO -->
+        <ng-container *ngIf="filtroActual === 'otros'">
+            <div class="vista-titulo">Elementos de Registro
+                <div *ngIf="elementosRegistro.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="elementosRegistro && colapsado" class="conceptos hover list-unstyled">
+                <ul class="conceptos list-unstyled">
+                    <ng-container *ngFor="let elementoRegistro of elementosRegistro; let iCronico = index">
                         <li>
-                            <div class="rup-card mini producto" [ngClass]="{'active': estaEnTabs(medicamento, 'medicamento')}">
+
+                            <div class="rup-card mini elementoderegistro" [ngClass]="{'active': estaEnTabs(elementoRegistro, 'hallazgo')}">
                                 <div class="rup-header">
-                                    <div class="rup-border">
+                                    <div class="rup-border rup-border-elementoderegistro">
 
                                         <div class="row p-0 m-0 border-secondary border-left-0">
                                             <div class="col-10 p-0 m-0">
                                                 <div class="row m-0 p-0">
 
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'medicamento','data': medicamento, 'huds': true}"
+                                                        <div class="icon-rup " draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-                                                            <i class="icon icon-rup-semantic-producto"></i>
+                                                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
                                                         <div class="icon-rup">
-                                                            <i class="icon icon-rup-semantic-producto"></i>
+                                                            <i class="icon icon-rup-semantic-elementoderegistro"></i>
                                                         </div>
                                                     </ng-container>
-
-                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(medicamento, 'medicamento')">
-                                                        {{ medicamento.concepto.term }}
+                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(elementoRegistro, 'hallazgo')">
+                                                        {{ elementoRegistro.concepto.term }}
 
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
-                                                                <ng-container *ngIf="medicamento.evoluciones">
-                                                                    <small class="sugerido">último registro: {{ medicamento.evoluciones[0].fechaCarga
-                                                                        | fecha }}
+                                                                <ng-container *ngIf="elementoRegistro">
+                                                                    <small class="sugerido">Creado: {{elementoRegistro.updatedAt | fecha:[]:true}}
                                                                     </small>
                                                                 </ng-container>
                                                             </div>
@@ -298,7 +607,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-2 p-0 m-0">
+                                            <!-- <div class="col-2 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <ng-container *ngIf="medicamento.evoluciones">
                                                         <small class="badge badge-success text-default p-1">{{ medicamento.evoluciones[medicamento.evoluciones.length-1].estado
@@ -310,7 +619,7 @@
                                                         <i class="mdi mdi-plus"></i>
                                                     </button>
                                                 </div>
-                                            </div>
+                                            </div> -->
 
                                         </div>
 
@@ -321,7 +630,7 @@
                         </li>
                     </ng-container>
                 </ul>
-                <div *ngIf="medicamentos.length === 0">No hay medicamentos registrados</div>
+                <div *ngIf="elementosRegistro.length === 0">No hay Elementos de registro registrados</div>
             </div>
         </ng-container>
     </div>

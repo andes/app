@@ -90,7 +90,9 @@
                             <div class="list-group">
                                 <div *ngFor="let unBloque of modelo.bloques; let i=index" class="list-group-item justify-content-between hover" [ngClass]="{active: i==bloqueActivo}"
                                     (click)="activarBloque(i)">
-                                    <div><span *ngIf="unBloque.horaInicio && unBloque.horaFin">{{unBloque.horaInicio | date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}</span></div>
+                                    <div>
+                                        <span *ngIf="unBloque.horaInicio && unBloque.horaFin">{{unBloque.horaInicio | date: 'HH:mm'}} a {{unBloque.horaFin | date: 'HH:mm'}}</span>
+                                    </div>
                                     <div *ngIf="unBloque.descripcion">{{unBloque.descripcion}}</div>
                                     <plex-button icon="delete" type="primary" (click)="deleteBloque(i)">
                                     </plex-button>
@@ -163,7 +165,8 @@
                                             <label>Del día</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" [required]="true" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )" name="accesoDirectoDelDia">
+                                            <plex-int [(ngModel)]="elementoActivo.accesoDirectoDelDia" [min]="0" [required]="true" (keyup)="cambiaCantTipo('accesoDirectoDelDia' )"
+                                                name="accesoDirectoDelDia">
                                             </plex-int>
                                         </div>
                                         <div class="col-4">
@@ -197,7 +200,8 @@
                                             <label>Con llave</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" [required]="true" (keyup)="cambiaCantTipo('reservadoGestion')" name="reservadoGestion">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoGestion" [min]="0" [required]="true" (keyup)="cambiaCantTipo('reservadoGestion')"
+                                                name="reservadoGestion">
                                             </plex-int>
                                         </div>
                                         <div class="col-4">
@@ -211,7 +215,8 @@
                                             <label class="no-wrap">Para profesional</label>
                                         </div>
                                         <div class="col-4">
-                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" [required]="true"  (keyup)="cambiaCantTipo('reservadoProfesional')" name="reservadoProfesional">
+                                            <plex-int [(ngModel)]="elementoActivo.reservadoProfesional" [min]="0" [required]="true" (keyup)="cambiaCantTipo('reservadoProfesional')"
+                                                name="reservadoProfesional">
                                             </plex-int>
                                         </div>
                                         <div class=" col-4 ">
@@ -269,10 +274,11 @@
             <div class="col text-right">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)"
+                <plex-button *ngIf="!hideGuardar && !alertas.length && form.valid" label="Guardar" validateForm="true" type="success" (click)="onSave($event, false)"
                     title="Guardar">
                 </plex-button>
-                <plex-button *ngIf="!alertas.length && form.valid" label="Guardar y clonar" validateForm="true" type="primary" (click)="onSave($event, true)">
+                <plex-button *ngIf="!hideGuardar &&!alertas.length && form.valid" label="Guardar y clonar" validateForm="true" type="primary"
+                    (click)="onSave($event, true)">
                 </plex-button>
             </div>
         </div>

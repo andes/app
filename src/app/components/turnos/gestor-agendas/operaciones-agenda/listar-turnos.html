@@ -9,7 +9,7 @@
                             <div class="col">
                                 <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio |
                                 date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date:
-                                'HH:mm'}} hs ({{ agenda.estado }})
+                                'HH:mm'}} hs
                             </div>
                             <div class="col">
                                 <label>Tipos de prestación</label>
@@ -35,7 +35,7 @@
                 </header>
                 <!--Listado de turnos-->
                 <!--Turnos-->
-                <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table table-striped">
+                <table *ngFor="let bloque of agenda.bloques | sortBloques" class="table-bordered">
                     <thead>
                         <tr>
                             <th colspan="14">&raquo; Bloque
@@ -46,7 +46,7 @@
                         <tr>
                             <th>Hora Turno</th>
                             <th>DNI | Nro. Carpeta</th>
-                            <th>Obra Social</th>
+                            <!-- <th>Obra Social</th> -->
                             <th>Apellidos y Nombres</th>
                             <th>Fecha Nacimiento</th>
                             <th>Sexo</th>
@@ -54,8 +54,8 @@
                             <th>Primera Vez</th>
                             <th>Ulterior</th>
                             <th>C2</th>
-                            <th>Resolución en el efector</th>
-                            <th>Otros</th>
+                            <!--<th>Resolución en el efector</th>
+                            <th>Otros</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -73,13 +73,16 @@
                                         <span *ngIf="turno.paciente.documento === ''">Sin documento (temporal)</span>
                                     </small>
                                 </span>
-                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0 && turno.paciente.carpetaEfectores[0]?.nroCarpeta">
+                                <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores?.length > 0">
                                     <small> | </small>
-                                    <small *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                        <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
+                                    </span>
                                     <small *ngIf="turno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
                             </td>
-                            <td></td>
+                            <!-- OBRA SOCIAL -->
+                            <!-- <td></td> -->
                             <td>
                                 <small *ngIf="turno?.paciente?.id">{{ turno.paciente | paciente }}</small>
                                 <small [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</small>
@@ -91,25 +94,39 @@
                             <td>
                                 <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
                             </td>
-                            <td style="width:250px"></td>
+                            <td style="width:350px"></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>
+                            <!--<td>
                                 <div *ngIf="turno?.paciente?.id" class="badge">SI</div>
                                 <div *ngIf="turno?.paciente?.id" class="badge">NO</div>
                             </td>
-                            <td></td>
+                            <td></td>-->
                         </tr>
                     </tbody>
                 </table>
                 <!--Listado de sobreturnos-->
                 <!--Turnos-->
-                <table *ngIf="agenda.sobreturnos.length > 0" class="table table-striped">
+                <table *ngIf="agenda.sobreturnos.length > 0" class="table-bordered">
                     <thead>
                         <tr>
                             <th colspan="14">&raquo; Sobreturnos
                             </th>
+                        </tr>
+                        <tr>
+                            <th>Hora Turno</th>
+                            <th>DNI | Nro. Carpeta</th>
+                            <!-- <th>Obra Social</th> -->
+                            <th>Apellidos y Nombres</th>
+                            <th>Fecha Nacimiento</th>
+                            <th>Sexo</th>
+                            <th>Diagnóstico</th>
+                            <th>Primera Vez</th>
+                            <th>Ulterior</th>
+                            <th>C2</th>
+                            <!--<th>Resolución en el efector</th>
+                                                    <th>Otros</th>-->
                         </tr>
                     </thead>
                     <tbody>
@@ -127,36 +144,39 @@
                                         <span *ngIf="sobreturno.paciente.documento === ''">Sin documento (temporal)</span>
                                     </small>
                                 </span>
-                                <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0 && sobreturno.paciente.carpetaEfectores[0]?.nroCarpeta">
+                                <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                     <small> | </small>
-                                    <small *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">{{carpeta.nroCarpeta}}</small>
+                                    <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
+                                        <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
+                                    </span>
                                     <small *ngIf="sobreturno.tipoTurno === 'profesional'" class="text-danger">(autocitado)</small>
                                 </span>
                             </td>
-                            <td></td>
+                            <!-- OBRA SOCIAL -->
+                            <!-- <td></td> -->
                             <td>
                                 <small *ngIf="sobreturno?.paciente?.id">{{ sobreturno.paciente | paciente }}</small>
                                 <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                             </td>
                             <td>
-                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.edad">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
                             </td>
                             <td>
                                 <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{ sobreturno.paciente | sexo }}</small>
                             </td>
-                            <td style="width:250px"></td>
+                            <td style="width:350px"></td>
                             <td></td>
                             <td></td>
                             <td></td>
-                            <td>
+                            <!--<td>
                                 <div *ngIf="sobreturno?.paciente?.id" class="badge">SI</div>
                                 <div *ngIf="sobreturno?.paciente?.id" class="badge">NO</div>
                             </td>
-                            <td></td>
+                            <td></td>-->
                         </tr>
                     </tbody>
                 </table>
-                <div class="row observaciones">
+                <!--<div class="row observaciones">
                     <div class="col-4">
                         <label>Observación de la consulta</label>
                         <br> &nbsp;
@@ -178,7 +198,7 @@
                         <hr> C:
                         <hr>
                     </div>
-                </div>
+                </div>-->
                 <br>
                 <div class="row">
                     <div class="col-8">
