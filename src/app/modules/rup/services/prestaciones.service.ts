@@ -642,9 +642,9 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-        let planesCrear = [];
+        let planesCrear = undefined;
         if (planes.length) {
-
+            planesCrear = [];
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
@@ -664,7 +664,7 @@ export class PrestacionesService {
                     let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
@@ -675,28 +675,28 @@ export class PrestacionesService {
                     }
                 }
             });
-
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                ...(planesCrear.length) && { planes: planesCrear },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
-
-
-        } else {
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
         }
+        // hacemos el patch y luego creamos los planes
+        let dto: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' },
+            ...(planesCrear && planesCrear.length) && { planes: planesCrear },
+            registros: prestacion.ejecucion.registros,
+            registrarFrecuentes: true
+        };
+        return this.patch(prestacion.id, dto);
+
+
+        // } else {
+        //     // hacemos el patch y luego creamos los planes
+        //     let dto: any = {
+        //         op: 'estadoPush',
+        //         estado: { tipo: 'validada' },
+        //         registros: prestacion.ejecucion.registros
+        //     };
+
+        //     return this.patch(prestacion.id, dto);
+        // }
 
     }
     /**
@@ -719,17 +719,21 @@ export class PrestacionesService {
      * Devuelve un listado de prestaciones planificadas desde una prestación origen
      *
      * @param {any} idPrestacion id de la prestacion origen
-     * @returns  {array} listado de prestaciones planificadas
+     * @param {any} idPaciente id del paciente
+     * @param {boolean} recarga forzar la recarga de la prestaciones (ante algún cambio)
+     * @returns  {array} listado de prestaciones planificadas en una prestación
      * @memberof BuscadorComponent
      */
-    public getPlanes(idPrestacion, idPaciente) {
-        let prestacionPlanes = [];
-        if (this.cache[idPaciente]) {
-            prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
-            return prestacionPlanes;
-        } else {
-            return null;
-        }
+    public getPlanes(idPrestacion, idPaciente, recarga = false) {
+        return this.getByPaciente(idPaciente, recarga).map(listadoPrestaciones => {
+            let prestacionPlanes = [];
+            if (this.cache[idPaciente]) {
+                prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+                return prestacionPlanes;
+            } else {
+                return null;
+            }
+        });
     }
 
     /**

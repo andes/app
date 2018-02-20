@@ -80,6 +80,8 @@ export class DarTurnosComponent implements OnInit {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
+    // usamos este output para volver al componente de validacion de rup
+    @Output() volverValidacion = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
     private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
@@ -791,6 +793,7 @@ export class DarTurnosComponent implements OnInit {
                                 idTurno: this.turno.id
                             };
                             this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                                this.volverValidacion.emit(prestacion);
                             });
                         }
 
