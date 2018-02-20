@@ -13,6 +13,7 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
+import { TurneroService } from '../../../../services/turnero.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -51,7 +52,8 @@ export class PuntoInicioComponent implements OnInit {
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
-        public servicioTipoPrestacion: TipoPrestacionService) { }
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioTurnero: TurneroService) { }
 
     ngOnInit() {
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
@@ -73,6 +75,14 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
+        let datosPantalla = {
+            pantalla: 'pantalla_1',
+            prestaciones : ['268565007', '32132', '231321']
+        }
+        this.servicioTurnero.getTurno(datosPantalla).subscribe(turno => {
+            console.log("socket");
+            console.log(turno);
+          });
     }
 
     redirect(pagina: string) {
@@ -388,8 +398,7 @@ export class PuntoInicioComponent implements OnInit {
 
 
     llamar(bloqueI, turnoI) {
-        console.log(this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI])
-        console.log(this.agendaSeleccionada)
+
         const turnoLlamado = this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI];
         let turnoProximo = {
             horaInicio: turnoLlamado.horaInicio,
@@ -400,23 +409,31 @@ export class PuntoInicioComponent implements OnInit {
             espacioFisico: this.agendaSeleccionada.espacioFisico
         };
 
-        console.log(turnoProximo)
+        this.servicioTurnero.post(turnoProximo).subscribe()
+
     }
 
     llamarProximo(bloqueI) {
-        let aLlamar = [];
+        let turnosSinAtender = [];
         const proximo = this.agendaSeleccionada.bloques[0].turnos;
         proximo.forEach(element => {
-            if (element.estado === 'asignado') {
-
-                aLlamar.push(element);
+            if (element.estado === 'asignado' && !element.asistencia) {
+                turnosSinAtender.push(element);
             }
 
         });
-        console.log(aLlamar[this.index])
-        if(this.index < aLlamar.length) {
+        if (this.index < turnosSinAtender.length) {
+            let turnoProximo = {
+                horaInicio: turnosSinAtender[this.index].horaInicio,
+                paciente: turnosSinAtender[this.index].paciente,
+                horaLlamada: new Date(),
+                profesional: this.agendaSeleccionada.profesionales[0],
+                tipoPrestacion: turnosSinAtender[this.index].tipoPrestacion,
+                espacioFisico: this.agendaSeleccionada.espacioFisico
+            };
+
+            this.servicioTurnero.post(turnoProximo).subscribe()
             this.index++;
-            console.log(this.index)
         }
 
         // let turnoProximo = {

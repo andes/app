@@ -47,6 +47,8 @@
         "ng2-charts": "^1.6.0",
         "ng2-drag-drop": "^1.5.1",
         "rxjs": "^5.4.2",
+        "socket.io": "^2.0.4",
+        "socket.io-client": "^2.0.4",
         "zone.js": "^0.8.14"
     },
     "devDependencies": {

@@ -152,7 +152,7 @@
                                             </span>
                                             <br />
                                         </div>
-                                        <plex-button *ngIf="turno.paciente?.id" icon="mdi mdi-bell-ring-outline" type="primary" (click)="llamar(bloqueI,turnoI)">
+                                        <plex-button *ngIf="turno.paciente?.id &&  !turno.prestacion" icon="mdi mdi-bell-ring-outline" type="primary" (click)="llamar(bloqueI,turnoI)">
                                         </plex-button>
                                     </td>
                                     <td>

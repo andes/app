@@ -102,6 +102,10 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 
+// turnero
+import { TurneroService } from './services/turnero.service';
+
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -421,7 +425,8 @@ let RUPComponentsArray = [
         UsuarioService,
         PermisosService,
         FrecuentesProfesionalService,
-        DocumentosService
+        DocumentosService,
+        TurneroService
 
     ]
 })
