@@ -140,6 +140,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.filtrarResultados('sugeridos');
 
             this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
+            // seteamos el tipo de búsqueda actual como sugeridos
+            this.busquedaActual = 'sugeridos';
+        } else {
+            this.busquedaActual = 'buscadorBasico';
+            // this.setTipoBusqueda('buscadorBasico');
         }
 
         const query = {
@@ -163,9 +168,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
             }
         });
-
-        // seteamos el tipo de búsqueda actual como sugeridos
-        this.busquedaActual = 'sugeridos';
 
         // inicializamos el filtro actual para los hallazgos
         this.filtroActual = 'todos';
