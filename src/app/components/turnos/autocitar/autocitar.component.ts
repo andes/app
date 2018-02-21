@@ -14,7 +14,6 @@ import * as moment from 'moment';
     templateUrl: 'autocitar.html'
 })
 
-
 export class AutocitarTurnoAgendasComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
@@ -33,9 +32,11 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     // Autorizado?
     public autorizado = false;
 
+    // Muestra / oculta lista de turnos
+    public agendasExpandidas: any[] = [];
 
     constructor(public router: Router, public auth: Auth, public plex: Plex, public servicioTurno: TurnoService) {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
     ngOnInit() {
@@ -47,6 +48,10 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
         if (this.agendasAutocitar && this.agendasAutocitar.length > 0) {
             this.showListaAgendas = true;
         }
+    }
+
+    toggleExpandir(index) {
+        this.agendasExpandidas[index] = !this.agendasExpandidas[index];
     }
 
     seleccionarCandidata(indiceTurno, indiceBloque, indiceAgenda) {
@@ -92,7 +97,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
                 // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
                 // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
                 this.servicioTurno.save(datosTurnoNuevo).subscribe(resultado => {
-                    this.plex.toast('info', 'Turno asigando correctamente', 'Autocitación');
+                    this.plex.toast('success', 'Turno asigando correctamente', 'Autocitación', 3000);
+                    this.cancelarEmitter.emit(true);
                 });
             });
 

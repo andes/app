@@ -26,7 +26,7 @@
                             </div>
                             <hr>
                             <h5>
-                                Seleccione un horario en una agenda para dar el turno:
+                                Expanda una agenda y seleccione un horario para dar el turno:
                             </h5>
 
                             <!-- El turno -->
@@ -41,13 +41,18 @@
                                     <div *ngIf="agendasAutocitar && agendasAutocitar.length > 0" class="col">
                                         <div class="card">
                                             <div class="card-block">
-                                                <h5 class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }} de {{ agenda.horaInicio
-                                                    | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm' }} hs</h5>
+                                                <b class="card-title">Agenda: {{ agenda.horaInicio | date: 'dd/MM/yyyy' }}
+                                                    <br>{{ agenda.horaInicio | date: 'HH:mm' }} a {{ agenda.horaFin | date: 'HH:mm'
+                                                    }} hs</b>
                                                 <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre']
                                                     }}
                                                 </p>
+                                                <br>
+                                                <button class="btn btn-sm btn-primary" (click)="toggleExpandir(indiceAgenda)">
+                                                    <i class="mdi mdi-calendar-clock"></i> ver horarios
+                                                </button>
                                                 <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
-                                                <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
+                                                <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index" [ngClass]="{'d-none': !agendasExpandidas[indiceAgenda]}">
                                                     <div>
                                                         <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">
                                                             <div *ngIf="bloque.descripcion && indiceTurno === 0">
