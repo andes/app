@@ -92,7 +92,7 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
                 // Guardo el Turno nuevo en la Agenda seleccionada como destino (PATCH)
                 // y guardo los datos del turno "viejo/suspendido" en la nueva para poder referenciarlo
                 this.servicioTurno.save(datosTurnoNuevo).subscribe(resultado => {
-                    this.plex.toast('info', 'Turno asigando correctamente', '');
+                    this.plex.toast('info', 'Turno asigando correctamente', 'Autocitación');
                 });
             });
 
