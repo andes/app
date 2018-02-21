@@ -24,12 +24,27 @@ export class IniciarInternacionComponent implements OnInit {
 
     public ocupaciones = [];
     public obrasSociales = [];
-    public situacionesLaborales = [];
-    public nivelesInstruccion = [{ id: 'primario completo', nombre: 'Primario completo' },
-    { id: 'secundario completo', nombre: 'Secundario completo' }, { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
-    public origenHospitalizacion = [{ id: 'ambulatorio', nombre: 'Ambulatorio' },
-    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'consultorio externo', nombre: 'Consultorio externo' },
-    { id: 'derivación', nombre: 'Derivación' }];
+    public origenHospitalizacion = [{ id: 'consultorio externo', nombre: 'Consultorio externo' },
+    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'traslado', nombre: 'Traslado' },
+    { id: 'sala de parto', nombre: 'Sala de parto' }, { id: 'otro', nombre: 'Otro' }];
+    public nivelesInstruccion = [{ id: 'primario incompleto', nombre: 'Primario incompleto' }, { id: 'primario completo', nombre: 'Primario completo' },
+    { id: 'secundario incompleto', nombre: 'Secundario incompleto' }, { id: 'secundario completo', nombre: 'Secundario completo' },
+    { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
+    { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
+    { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
+    { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
+    { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
+    { id: 'Polimodal completo', nombre: 'Polimodal completo' },
+    { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
+    { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
+    public situacionesLaborales = [{ id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
+    { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
+    { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }];
+    public pacienteAsociado = [{ id: 'Obra Social', nombre: 'Obra Social' },
+    { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
+    { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
+    { id: 'Mas de uno', nombre: 'Mas de uno' }, { id: 'Ninguno', nombre: 'Ninguno' }];
+
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
@@ -81,12 +96,6 @@ export class IniciarInternacionComponent implements OnInit {
         this.financiadorService.get().subscribe(resultado => {
             this.obrasSociales = resultado;
         });
-
-        this.snomedService.get({ refsetId: '200000000' }).subscribe(resultado => {
-            this.situacionesLaborales = resultado;
-        });
-
-
     }
 
     onPacienteSelected(paciente: IPaciente) {

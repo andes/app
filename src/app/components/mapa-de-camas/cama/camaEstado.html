@@ -1,0 +1,24 @@
+<div class="row">
+    <div class="col-4">
+        <plex-select name="servicio" [required]="true" (getData)="loadServicios($event)" idField="term" labelField="term" [(ngModel)]="estado.unidadOrganizativa"
+            label="Unidad organizativa" (change)="onchange()">
+        </plex-select>
+    </div>
+    <div class="col-4">
+        <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)" idField="term" labelField="term"
+            [(ngModel)]="estado.especialidades" label="Especialidad/es" (change)="onchange()">
+        </plex-select>
+    </div>
+    <div class="col-4">
+        <plex-select name="genero" (getData)="loadGenero($event)" idField="term" labelField="term" (change)="onchange()" [(ngModel)]="estado.genero"
+            label="Genero">
+        </plex-select>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <span class="mt-2">
+            <plex-bool type="slide" [(ngModel)]="estado.esCensable" (change)="onchange()" label="Es censable" name="censable"></plex-bool>
+        </span>
+    </div>
+</div>

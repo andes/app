@@ -18,23 +18,26 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     public organizacion: any;
     public unidadOrganizativa = null;
-    // con esta query de snomed trae todos los tipos de cama.
-    private expression = '<<229772003';
+
     public cama: any = {
         organizacion: null,
         sector: null,
         habitacion: null,
-        numero: null,
-        unidadesOrganizativas: null,
+        nombre: null,
         tipoCama: null,
-        equipamiento: [], // falta definir
+        equipamiento: [],
+        estados: []
+    };
+
+    public estado = {
+        fecha: new Date(),
+        estado: 'desocupada',
+        unidadOrganizativa: null,
+        especialidades: null,
         esCensable: true,
-        ultimoEstado: {
-            estado: 'desocupada',
-            paciente: null,
-            idInternacion: null, // Falta definir
-            observaciones: null
-        }
+        genero: null,
+        paciente: null,
+        idInternacion: null
     };
 
     constructor(
@@ -53,21 +56,21 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     save($event) {
+        debugger;
         if ($event.formValid) {
+
+            // cargamos el estado de la cama
+            if (this.cama.estados && (this.cama.estados.length > 0)) {
+                this.cama.estados.push(this.estado);
+            } else {
+                this.cama.estados = [this.estado];
+            }
+
             this.cama.organizacion = {
                 id: this.organizacion.id,
                 _id: this.organizacion.id,
                 nombre: this.organizacion.nombre
             };
-            if (this.unidadOrganizativa) {
-                // this.cama.servicio = this.cama.servicio.concepto;
-                this.cama.unidadesOrganizativas = [{
-                    fecha: new Date(),
-                    esPrestamo: false,
-                    unidadOrganizativa: this.unidadOrganizativa,
-                    observaciones: null
-                }];
-            }
 
             let operacion = this.CamaService.addCama(this.cama);
             operacion.subscribe(result => {
@@ -90,18 +93,28 @@ export class CamaCreateUpdateComponent implements OnInit {
         $event.callback(servicios);
     }
 
-    loadTipoDeCama($event) {
-        this.snomed.getQuery({ expression: this.expression }).subscribe(result => {
+    loadEspecialidades($event) {
+        let servicios = this.organizacion.servicios;
+        $event.callback(servicios);
+    }
+
+    loadGenero($event) {
+        // buscamos los conceptos de genero femenino o masculino
+        this.snomed.getQuery({ expression: '703118005 OR 703117000' }).subscribe(result => {
             $event.callback(result);
         });
     }
 
-    loadEquipamientos() {
-        /**
-         * aca van los equipamientos ver si van a salir de un refset o de una query
-         * Una vez definido armar el servicio para cargar el select
-         */
+    loadTipoDeCama($event) {
+        this.snomed.getQuery({ expression: '^2051000013106' }).subscribe(result => {
+            $event.callback(result);
+        });
+    }
 
+    loadEquipamientos($event) {
+        this.snomed.getQuery({ expression: '^2061000013108' }).subscribe(result => {
+            $event.callback(result);
+        });
     }
 
 }

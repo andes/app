@@ -1,42 +1,47 @@
 <div *ngIf="!soloValores && registro">
     <paciente-detalle-actualizar [paciente]="paciente"></paciente-detalle-actualizar>
     <div class="row">
-        <div class="col-6">
-            <plex-select label="Ocupación habitual" [(ngModel)]="registro.valor.InformeIngreso.ocupacionHabitual" name="InformeIngreso.ocupacionHabitual"
+        <div class="col-4">
+            <plex-select label="Ocupación habitual" [(ngModel)]="registro.valor.informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
                 [data]="ocupaciones" placeholder="Seleccione..." labelField="nombre">
             </plex-select>
         </div>
-        <div class="col-6">
-            <plex-select [required]="true" [(ngModel)]="registro.valor.InformeIngreso.obraSocial" name="InformeIngreso.obraSocial" [data]="obrasSociales"
+        <div class="col-4">
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
+                placeholder="Seleccione..." label="Asociado a">
+            </plex-select>
+        </div>
+        <div class="col-4">
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.obraSocial" name="obraSocial" [data]="obrasSociales"
                 placeholder="Seleccione..." label="Obra Social">
             </plex-select>
         </div>
     </div>
-    <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
-        <div class="row" [ngClass]="{'d-flex justify-content-end': soloValores}">
-            <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-                <div *ngIf="item.elementoRUP" class="col{{'-' + item.style.columns}}">
-                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                        [soloValores]="soloValores" (change)="emitChange()">
-                    </rup>
-                </div>
-            </ng-container>
+    <div class="row">
+        <div class="col-6" *ngIf="situacionesLaborales">
+            <plex-select label="Situación laboral" [(ngModel)]="registro.valor.informeIngreso.situacionLaboral" name="situacionLaboral"
+                [data]="situacionesLaborales" placeholder="Seleccione..." labelField="term" idField="term">
+            </plex-select>
         </div>
-    </ng-container>
+        <div class="col-6">
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+                placeholder="Seleccione..." label="Nivel instrucción">
+            </plex-select>
+        </div>
+    </div>
 
     <div class="row">
         <div class="col-4">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.InformeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus"
+            <plex-datetime type="date" [(ngModel)]="registro.valor.informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus"
                 name="registro.InformeIngreso.fechaIngreso" label="Fecha Ingreso">
             </plex-datetime>
         </div>
         <div class="col-4">
-            <plex-datetime type="time" [(ngModel)]="registro.valor.InformeIngreso.horaIngreso" [required]="true" name="registro.InformeIngreso.horaIngreso"
-                label="Hora Ingreso">
+            <plex-datetime type="time" [(ngModel)]="registro.valor.informeIngreso.horaIngreso" [required]="true" name="horaIngreso" label="Hora Ingreso">
             </plex-datetime>
         </div>
         <div class="col-4">
-            <plex-select [required]="true" [(ngModel)]="registro.valor.InformeIngreso.origen" name="InformeIngreso.origen" [data]="origenHospitalizacion"
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.origen" name="InformeIngreso.origen" [data]="origenHospitalizacion"
                 placeholder="Seleccione..." label="Origen hospitalización">
             </plex-select>
         </div>

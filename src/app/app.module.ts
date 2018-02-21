@@ -254,6 +254,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -388,7 +389,8 @@ let RUPComponentsArray = [
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
-        CamaComponent
+        CamaComponent,
+        CamaEstadoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

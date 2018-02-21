@@ -21,14 +21,6 @@
                         <td>{{cama.sector}}</td>
                         <td>{{cama.habitacion}}</td>
                         <td>
-                            {{cama.ultimoEstado.estado}}
-                        </td>
-                        <td>
-                            <ng-container *ngIf="cama.unidadesOrganizativas && cama.unidadesOrganizativas.length">
-                                {{cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.term }}
-                            </ng-container>
-                        </td>
-                        <td>
                             <plex-button type="primary" label="Editar cama" (click)="Update(cama)">
                             </plex-button>
                         </td>
