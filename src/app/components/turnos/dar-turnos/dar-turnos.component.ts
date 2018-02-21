@@ -38,8 +38,10 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 })
 
 export class DarTurnosComponent implements OnInit {
+    public lenNota = 140;
+    public nota = '';
+    public changeCarpeta = false;
     hideDarTurno: boolean;
-    changeCarpeta = false;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
@@ -77,6 +79,8 @@ export class DarTurnosComponent implements OnInit {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
+    // usamos este output para volver al componente de validacion de rup
+    @Output() volverValidacion = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
     private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
@@ -534,6 +538,10 @@ export class DarTurnosComponent implements OnInit {
                 this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
                 this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
             }
+            if (this.opciones.tipoPrestacion) {
+                this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
+                this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
+            }
             this.habilitarTurnoDoble();
             this.estadoT = 'confirmacion';
         } else {
@@ -755,7 +763,8 @@ export class DarTurnosComponent implements OnInit {
                         idBloque: this.bloque.id,
                         paciente: pacienteSave,
                         tipoPrestacion: this.turnoTipoPrestacion,
-                        tipoTurno: this.tiposTurnosSelect
+                        tipoTurno: this.tiposTurnosSelect,
+                        nota: this.nota
                     };
 
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
@@ -783,6 +792,7 @@ export class DarTurnosComponent implements OnInit {
                                 idTurno: this.turno.id
                             };
                             this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                                this.volverValidacion.emit(prestacion);
                             });
                         }
 
@@ -989,6 +999,12 @@ export class DarTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.mostrarCalendario = false;
         this.pacientesSearch = true;
+    }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
     }
 
     cancelar() {

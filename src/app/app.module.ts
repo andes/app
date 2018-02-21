@@ -76,6 +76,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
+import { ArancelamientoService } from './services/arancelamiento.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -163,8 +164,10 @@ import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dash
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
+import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
+
 
 // ... RUP
 import { RUPComponent } from './modules/rup/components/core/rup.component';
@@ -213,6 +216,9 @@ import { InformesComponent } from './modules/rup/components/elementos/informe.co
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
+import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -309,7 +315,9 @@ let RUPComponentsArray = [
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
-    IngresoInternacionComponent
+    IngresoInternacionComponent,
+    IniciarInternacionComponent,
+    EjecucionInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -363,12 +371,13 @@ let RUPComponentsArray = [
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
-        MapaEspacioFisicoComponent,
+        MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
+
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
@@ -417,6 +426,7 @@ let RUPComponentsArray = [
         PrestacionesService,
         AdjuntosService,
         TipoPrestacionService,
+        ArancelamientoService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,

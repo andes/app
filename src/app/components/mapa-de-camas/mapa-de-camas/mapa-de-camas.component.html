@@ -77,7 +77,7 @@
 
                                 <div class="col-sm-3 col-lg-3 col-xl-2">
                                     <div class="form-group">
-                                        <label for="filtros-nombre">Nombre paciente / N. documento</label>
+                                        <label for="filtros-nombre">Paciente</label>
                                         <input type="text" class="form-control" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
                                             (keyup)="filtrar()" />
                                     </div>
@@ -125,12 +125,12 @@
                                 -->
 
                                 <div class="col-sm-3 col-lg-3 col-xl-3">
-                                    <div class="btn-group col mt-4" role="group" aria-label="Botonera principal">
+                                    <div class="btn-group col mt-5" role="group" aria-label="Botonera principal">
                                         <button type="button" class="btn btn-primary btn-block" (click)="limpiarFiltros()">
                                             Limpiar filtros
                                         </button>
 
-                                        <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}"
+                                        <!-- <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}"
                                             title="Vista de grilla">
                                             <i class="mdi mdi-grid"></i>
                                         </button>
@@ -138,7 +138,7 @@
                                         <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}"
                                             title="Vista de lista">
                                             <i class="mdi mdi-view-list"></i>
-                                        </button>
+                                        </button> -->
                                     </div>
                                 </div>
                             </div>
