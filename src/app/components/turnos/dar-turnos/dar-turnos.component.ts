@@ -11,6 +11,7 @@ import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
+import { ObraSocialService } from './../../../services/obraSocial.service';
 
 // Interfaces
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
@@ -151,6 +152,7 @@ export class DarTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacionPaciente: PrestacionesService,
+        public servicioOS: ObraSocialService,
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
@@ -931,6 +933,7 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
+
                 });
         } else {
             this.seleccion = paciente;
