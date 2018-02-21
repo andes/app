@@ -1,4 +1,5 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
+import { IObraSocial } from './../IObraSocial';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
@@ -14,6 +15,11 @@ export interface ITurno {
         fechaNacimiento: Date,
         telefono: String,
         sexo: String
+        carpetaEfectores: [{
+            organizacion: string,
+            nroCarpeta: string
+        }],
+        obraSocial: IObraSocial
     };
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: String;
