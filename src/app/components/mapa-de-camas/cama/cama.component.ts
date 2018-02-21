@@ -79,11 +79,16 @@ export class CamaComponent implements OnInit {
     }
 
     public cambiarEstado(cama, estado) {
+        debugger;
         let dto = {
             fecha: this.fecha,
             estado: estado,
-            observaciones: cama.$motivo,
-            paciente: null
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
         };
 
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {

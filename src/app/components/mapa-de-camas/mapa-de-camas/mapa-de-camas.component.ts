@@ -52,7 +52,6 @@ export class MapaDeCamasComponent implements OnInit {
         // verificar permisos
         // buscar camas para la organización
         this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
-            debugger;
             this.camas = camas;
 
             this.camasService.getEstadoServicio(camas).subscribe(estado => {

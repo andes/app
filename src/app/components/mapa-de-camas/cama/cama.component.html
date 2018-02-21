@@ -118,16 +118,16 @@
         <div class="back">
             <!-- Header del back de las tarjetas -->
             <div class="header">
+                <!-- <div class="float-right">
+                    <button class="btn btn-sm btn-default float-right" ng-show="cama.ultimoEstado?.paciente?.id || (cama.$action == 'enviada_reparacion' || cama.$action == 'estado_bloqueada')"
+                        (click)="cama.$rotar = !cama.$rotar">
+                        <i class="mdi mdi-close"></i>
+                    </button>
+                </div> -->
                 <div class="float-left">
                     <div class="numero-habitacion">
                         {{cama.habitacion}} / {{cama.nombre}}
                     </div>
-                </div>
-                <div class="float-right">
-                    <button class="btn btn-default  float-right" ng-show="cama.ultimoEstado?.paciente?.id || (cama.$action == 'enviada_reparacion' || cama.$action == 'estado_bloqueada')"
-                        (click)="cama.$rotar = !cama.$rotar">
-                        <i class="mdi mdi-close"></i>
-                    </button>
                 </div>
             </div>
             <!-- Ultima evolucion / Evolucionar -->
