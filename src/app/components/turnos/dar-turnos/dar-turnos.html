@@ -82,17 +82,20 @@
                                     <!--Header agenda-->
                                     <div class="pt-3 text-center">
                                         <div>Agenda seleccionada</div>
+                                        <!-- Botones para ver más agendas -->
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-left" class="text-lg" title="Agenda anterior" (click)="verAgenda('izq')"></plex-button>
                                         <!-- <span>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}}</span> -->
                                         <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
                                             <div class="badge badge-{{ estadosAgenda[agenda.estado].class }}">
                                                 {{ estadosAgenda[agenda.estado].nombre }}</div>
                                         </span>
-
                                         <plex-button *ngIf="agendas.length > 1" type="link" icon="chevron-right" class="text-lg" title="Agenda siguiente" (click)="verAgenda('der')"></plex-button>
+                                        <!-- /Botones para ver más agendas -->
+                                        <!-- Listado de prestaciones -->
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
                                             {{ tipoPrestacion.nombre }}
                                         </div>
+                                        <!-- Listado de profesionales -->
                                         <div *ngFor="let profesional of agenda.profesionales let i = index">
                                             {{profesional | profesional}}
                                         </div>
@@ -100,7 +103,7 @@
                                     <!-- Tiene turnos disponibles -->
                                     <ng-container *ngIf="estadoT === 'seleccionada'">
                                         <!--Lista de turnos, bloque por bloque-->
-                                        <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index">
+                                        <div *ngFor="let bloque of bloques; let indiceBloque = index">
                                             <div *ngIf="tieneTurnos(bloque)">
                                                 <div *ngIf="bloque.descripcion">
                                                     <span>Bloque: {{bloque.descripcion}}</span>
@@ -265,6 +268,8 @@
                                                     name="turnoTipoPrestacion"></plex-select>
                                                 <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                                 <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
+                                                <plex-text label="Observaciones" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
+                                                </plex-text>
                                             </div>
                                         </div>
                                         <hr>
