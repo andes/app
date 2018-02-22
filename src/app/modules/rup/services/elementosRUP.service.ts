@@ -30,7 +30,20 @@ export class ElementosRUPService {
 
     public coleccionRetsetId = {
         '224362002': {
+            titulo: 'Resultado',
             refsetId: '224891009',
+            tipoSelect: 'radio',
+            multiple: false
+        },
+        '2111000013109': {
+            titulo: 'Resultado',
+            refsetId: '2281000013105',
+            tipoSelect: 'radio',
+            multiple: false
+        },
+        '2101000013106': {
+            titulo: 'Resultado',
+            refsetId: '2281000013105',
             tipoSelect: 'radio',
             multiple: false
         },
