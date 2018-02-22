@@ -2,32 +2,33 @@ import { ITipoPrestacion } from './../ITipoPrestacion';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
-    id: String;
+    id: string;
     horaInicio: Date;
-    estado: String;
-    asistencia: String;
+    estado: string;
+    asistencia: string;
     paciente: {
-        id: String,
-        nombre: String,
-        apellido: String,
-        documento: String,
+        id: string,
+        nombre: string,
+        apellido: string,
+        alias: string,
+        documento: string,
         fechaNacimiento: Date,
-        telefono: String,
-        sexo: String
+        telefono: string,
+        sexo: string
     };
     tipoPrestacion: ITipoPrestacion;
-    idPrestacionPaciente: String;
-    tipoTurno: String;
+    idPrestacionPaciente: string;
+    tipoTurno: string;
     reasignado: {
         anterior: {
-            idAgenda: String,
-            idBloque: String,
-            idTurno: String
+            idAgenda: string,
+            idBloque: string,
+            idTurno: string
         }
         siguiente: {
-            idAgenda: String,
-            idBloque: String,
-            idTurno: String
+            idAgenda: string,
+            idBloque: string,
+            idTurno: string
         }
     };
     carpetaEfectores?: [{
@@ -37,13 +38,13 @@ export interface ITurno {
         },
         nroCarpeta: string
     }];
-    nota: String;
+    nota: string;
     motivoSuspension: {
-        type: String,
+        type: string,
         enum: ['edilicia', 'profesional', 'organizacion', 'agendaSuspendida']
     },
     avisoSuspension: {
-        type: String,
+        type: string,
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido']
     },
 }

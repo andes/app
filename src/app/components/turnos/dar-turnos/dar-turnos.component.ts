@@ -745,6 +745,7 @@ export class DarTurnosComponent implements OnInit {
                         documento: this.paciente.documento,
                         apellido: this.paciente.apellido,
                         nombre: this.paciente.nombre,
+                        alias: this.paciente.alias,
                         fechaNacimiento: this.paciente.fechaNacimiento,
                         sexo: this.paciente.sexo,
                         telefono: this.telefono,
