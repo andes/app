@@ -11,7 +11,7 @@
         padding-top: 0;
     }
     // table {
-    //     // page-break-after: always;
+    //      page-break-after: always;
     // }
     th {
         font-size: 1rem;
@@ -32,4 +32,9 @@
         color: #333333;
         border: 1px solid rgba(0, 0, 0, 0.69);
     }
+    .page-break {page-break-before:always}
+}
+
+@media all {
+	.page-break	{ display: none; }
 }
