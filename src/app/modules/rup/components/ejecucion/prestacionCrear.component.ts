@@ -78,9 +78,9 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     cancelarAutocitar() {
-        console.log('cancelado!');
         this.showAutocitar = false;
         this.paciente = null;
+        this.onReturn();
     }
 
     /**
