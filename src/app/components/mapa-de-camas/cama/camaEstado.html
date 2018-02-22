@@ -1,5 +1,16 @@
 <div class="row">
     <div class="col-4">
+        <label>Sector: </label>{{ cama.sector}}
+    </div>
+    <div class="col-4">
+        <label>Habitación: </label>{{ cama.habitacion}}
+    </div>
+    <div class="col-4">
+        <label>Nombre: </label>{{ cama.nombre}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-4">
         <plex-select name="servicio" [required]="true" (getData)="loadServicios($event)" idField="term" labelField="term" [(ngModel)]="estado.unidadOrganizativa"
             label="Unidad organizativa" (change)="onchange()">
         </plex-select>

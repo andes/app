@@ -56,7 +56,6 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     save($event) {
-        debugger;
         if ($event.formValid) {
 
             // cargamos el estado de la cama

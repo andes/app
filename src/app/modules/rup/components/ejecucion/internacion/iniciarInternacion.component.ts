@@ -14,6 +14,7 @@ import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.se
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -61,6 +62,7 @@ export class IniciarInternacionComponent implements OnInit {
     public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
+    public organizacion = null;
 
     public informeIngreso = {
         fechaIngreso: new Date(),
@@ -74,6 +76,7 @@ export class IniciarInternacionComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
         private servicioPrestacion: PrestacionesService,
+        private organizacionService: OrganizacionService,
         public financiadorService: FinanciadorService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
@@ -85,6 +88,11 @@ export class IniciarInternacionComponent implements OnInit {
             this.camasService.getCama(id).subscribe(cama => {
                 this.cama = cama;
             });
+
+            this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+                this.organizacion = organizacion;
+            });
+
         });
 
         // Cargamos todas las ocupaciones
@@ -161,46 +169,30 @@ export class IniciarInternacionComponent implements OnInit {
 
         this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
         delete this.informeIngreso.horaIngreso;
-        let nuevaPrestacion;
-        nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-                fecha: this.informeIngreso.fechaIngreso,
-                tipoPrestacion: conceptoSnomed,
-                // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
-            },
-            ejecucion: {
-                fecha: this.informeIngreso.fechaIngreso,
-                registros: [nuevoRegistro],
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-            },
-            estados: {
-                fecha: this.informeIngreso.fechaIngreso,
-                tipo: 'ejecucion'
-            }
-        };
-
+        // creamos la prestacion de internacion y agregamos el registro de ingreso
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', this.informeIngreso.fechaIngreso);
+        nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             // vamos a actualizar el estado de la cama
             let dto = {
                 fecha: this.informeIngreso.fechaIngreso,
                 estado: 'ocupada',
-                observaciones: '',
-                idInternacion: prestacion.id,
-                paciente: this.paciente
+                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                esCensable: this.cama.ultimoEstado.esCensable,
+                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                paciente: this.paciente,
+                idInternacion: prestacion.id
             };
-            this.camasService.NewEstado(this.cama.id, dto).subscribe(camaActualizada => {
+
+            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                 this.router.navigate(['rup/internacion/ver', prestacion.id]);
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
             });
+
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
         });

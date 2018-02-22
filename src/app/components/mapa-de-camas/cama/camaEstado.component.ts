@@ -38,8 +38,8 @@ export class CamaEstadoComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (this.cama.estados && (this.cama.estados.lenght > 0)) {
-            this.estado = this.cama.estados[this.cama.estados.lenght - 1];
+        if (this.cama.estados && (this.cama.estados.length > 0)) {
+            this.estado = this.cama.estados[this.cama.estados.length - 1];
         }
     }
 
@@ -49,22 +49,25 @@ export class CamaEstadoComponent implements OnInit {
     }
 
     loadEspecialidades($event) {
-        this.snomed.getQuery({ expression: '^2051000013106' }).subscribe(result => {
-            $event.callback(result);
-        });
+        let servicios = this.organizacion.servicios;
+        $event.callback(servicios);
     }
 
     loadGenero($event) {
-        this.snomed.getQuery({ expression: '^2051000013106' }).subscribe(result => {
+        // buscamos los conceptos de genero femenino o masculino
+        this.snomed.getQuery({ expression: '703118005 OR 703117000' }).subscribe(result => {
             $event.callback(result);
         });
     }
 
     onchange() {
         if (this.cama.estados && (this.cama.estados.lenght > 0)) {
-            this.cama.estados[this.cama.estados.lenght - 1] = this.estado;
+            this.cama.estados.push(this.estado);
+            this.cama.ultimoEstado = this.estado;
+
         } else {
             this.cama.estados = [this.estado];
+            this.cama.ultimoEstado = this.estado;
         }
 
     }

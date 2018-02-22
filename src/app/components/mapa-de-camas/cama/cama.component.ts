@@ -79,7 +79,6 @@ export class CamaComponent implements OnInit {
     }
 
     public cambiarEstado(cama, estado) {
-        debugger;
         let dto = {
             fecha: this.fecha,
             estado: estado,

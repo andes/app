@@ -73,22 +73,16 @@
 
             <!-- Botonera del frente de las card -->
             <div class="footer row">
-                <div class="col-3 text-left float-left">
-                    <!-- TODO: Como vamos a mostrar el equipamiento de las camas -->
-                    <!-- <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
-                                O
-                                <sub>2</sub>
-                        </div> -->
-                </div>
-                <div class="col-3 text-left float-left">
+                <!-- Ver internacion -->
+                <div class="col-12 text-right">
                     <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
                         *ngIf="cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-bug"></i>
                     </button>
-                </div>
-                <!-- Ver internacion -->
-                <div class="col-6 float-right text-right">
                     <button class="btn btn-default" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
+                        <i class="mdi mdi-eye"></i>
+                    </button>
+                    <button class="btn btn-default" title="Desocupar Cama" (click)="desocuparCama(cama)" *ngIf="cama.ultimoEstado?.id">
                         <i class="mdi mdi-eye"></i>
                     </button>
                     <!-- bloquear cama -->
@@ -146,27 +140,10 @@
 
                 </div>
                 <div class="footer row">
-                    <div class="col-3 text-left float-left">
-                        <!-- <div class="stacked-icon oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno"> -->
-                        <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
-                            O
-                            <sub>2</sub>
-                        </div>
-                    </div>
-
-                    <div class="col-3 text-left float-left">
-                        <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                            *ngIf="!cama.desinfectada && cama.ultimoEstado.estado != 'reparacion' && cama.ultimoEstado.estado != 'ocupada'">
-                            <i class="mdi mdi-bug"></i>
+                    <div class="col-12 text-right">
+                        <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
+                            <i class="mdi mdi-close"></i>
                         </button>
-
-                    </div>
-
-                    <div class="col-6 float-right text-right">
-                        <!-- <button class="btn btn-default " *ngIf="cama.ultimoEstado?.paciente?.id">
-                            <i plex-actions="actions"></i>
-                        </button> -->
-
 
                         <button class="btn btn-default " title="Ver indicaciones" (click)="verInternacion(cama.idInternacion, 5)" *ngIf="cama.idInternacion">
                             <i class="mdi mdi-book-open"></i>
