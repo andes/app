@@ -28,6 +28,9 @@ export class ElementosRUPService {
     public ready = new BehaviorSubject<boolean>(false);
 
     /**
+     * Este objeto se llena con el valor de params de un elementoRUP,
+     * según cómo esté definido en la colección dentro de sus "requeridos"
+     * Su estructura es
      * 'conceptId': {
             titulo: 'My título',
             refsetId: 'conceptId',
@@ -35,32 +38,7 @@ export class ElementosRUPService {
             multiple: true | false
         }
      */
-    public coleccionRetsetId = {
-        '224362002': {
-            titulo: 'Resultado',
-            refsetId: '224891009',
-            tipoSelect: 'radio',
-            multiple: false
-        },
-        '2111000013109': {
-            titulo: 'Seleccione un resultado:',
-            refsetId: '2281000013105',
-            tipoSelect: 'select',
-            multiple: false
-        },
-        '2101000013106': {
-            titulo: 'Seleccione un resultado:',
-            refsetId: '2281000013105',
-            tipoSelect: 'select',
-            multiple: false
-        },
-        '371580005': {
-            titulo: 'Seleccione algún antecedente:',
-            refsetId: '2121000013101',
-            tipoSelect: 'select',
-            multiple: true
-        },
-    };
+    public coleccionRetsetId = {};
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP

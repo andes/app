@@ -146,6 +146,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.mostrarDatosEnEjecucion();
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
                                     if (!registoExiste) {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
