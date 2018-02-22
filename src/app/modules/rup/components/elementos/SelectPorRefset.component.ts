@@ -8,10 +8,13 @@ import { RUPComponent } from './../core/rup.component';
 export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
     public conceptos: any[];
+
+    // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
+    public unique: number = new Date().getTime();
+
     ngOnInit() {
         if (this.params) {
-            this.snomedService.getQuery({ expression: '<<' + this.params.refsetId }).subscribe(resultado => {
-                // console.log(resultado);
+            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptos = resultado;
             });
         }
