@@ -126,7 +126,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
-
             if (this.frecuentesTipoPrestacion.length > 0) {
                 this.results.sugeridos['todos'] = [];
 
@@ -139,6 +138,10 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.filtrarResultados('sugeridos');
 
                 this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
+                // seteamos el tipo de búsqueda actual como sugeridos
+                this.busquedaActual = 'sugeridos';
+            } else {
+                this.busquedaActual = 'buscadorBasico';
             }
 
             const query = {
@@ -163,13 +166,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 }
             });
 
-            // seteamos el tipo de búsqueda actual como sugeridos
-            this.busquedaActual = 'sugeridos';
+
 
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
         });
-
 
     }
 

@@ -1,4 +1,3 @@
-import { log } from 'util';
 import { environment } from './../../../environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
