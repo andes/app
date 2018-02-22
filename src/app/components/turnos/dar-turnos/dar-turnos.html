@@ -255,8 +255,17 @@
                                         </div>
                                         <div class="row">
                                             <div class="col">
+                                                <div *ngIf="obraSocialPaciente">
+                                                    <label>Obra Social </label>
+                                                    <div>{{obraSocialPaciente.nombre}}</div>
+                                                    <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
                                                 <div *ngIf="permitirTurnoDoble">
-                                                    <label>Turno doble: </label>
+                                                    <label>Turno doble </label>
                                                     <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
                                                 </div>
                                             </div>

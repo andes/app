@@ -127,6 +127,7 @@ export class DarTurnosComponent implements OnInit {
     permitirTurnoDoble = false;
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
+    motivoConsulta: string;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -769,9 +770,9 @@ export class DarTurnosComponent implements OnInit {
                         paciente: pacienteSave,
                         tipoPrestacion: this.turnoTipoPrestacion,
                         tipoTurno: this.tiposTurnosSelect,
-                        nota: this.nota
+                        nota: this.nota,
+                        motivoConsulta: this.motivoConsulta
                     };
-
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                         this.estadoT = 'noSeleccionada';
                         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
