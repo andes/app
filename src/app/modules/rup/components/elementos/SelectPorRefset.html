@@ -1,7 +1,6 @@
-<ng-container *ngIf="params && params.tipoSelect === 'select'">
-    <span>{{ params.titulo }}</span>
+<ng-container *ngIf="conceptos.length > 0 && params && params.tipoSelect === 'select'">
     <plex-select *ngIf="!soloValores" [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
-        (change)="emitChange()">
+        (change)="emitChange()" [required]="true" label="{{ params.titulo }}">
     </plex-select>
 </ng-container>
 

@@ -27,7 +27,14 @@ export class ElementosRUPService {
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
 
-
+    /**
+     * 'conceptId': {
+            titulo: 'My título',
+            refsetId: 'conceptId',
+            tipoSelect: 'radio' | 'select',
+            multiple: true | false
+        }
+     */
     public coleccionRetsetId = {
         '224362002': {
             titulo: 'Resultado',
@@ -36,16 +43,22 @@ export class ElementosRUPService {
             multiple: false
         },
         '2111000013109': {
-            titulo: 'Resultado',
+            titulo: 'Seleccione un resultado:',
             refsetId: '2281000013105',
-            tipoSelect: 'radio',
+            tipoSelect: 'select',
             multiple: false
         },
         '2101000013106': {
-            titulo: 'Resultado',
+            titulo: 'Seleccione un resultado:',
             refsetId: '2281000013105',
-            tipoSelect: 'radio',
+            tipoSelect: 'select',
             multiple: false
+        },
+        '371580005': {
+            titulo: 'Seleccione algún antecedente:',
+            refsetId: '2121000013101',
+            tipoSelect: 'select',
+            multiple: true
         },
     };
 

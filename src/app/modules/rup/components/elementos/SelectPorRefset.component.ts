@@ -7,7 +7,7 @@ import { RUPComponent } from './../core/rup.component';
 })
 export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
-    public conceptos: any[];
+    public conceptos: any[] = [];
 
     // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
     public unique: number = new Date().getTime();
