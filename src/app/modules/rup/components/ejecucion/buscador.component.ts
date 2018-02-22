@@ -126,49 +126,51 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
-        });
 
-        if (this.frecuentesTipoPrestacion.length > 0) {
-            this.results.sugeridos['todos'] = [];
+            if (this.frecuentesTipoPrestacion.length > 0) {
+                this.results.sugeridos['todos'] = [];
 
-            this.frecuentesTipoPrestacion.forEach(element => {
-                if (this.results.sugeridos['todos'].indexOf(element) === -1) {
-                    this.results.sugeridos['todos'].push(element);
+                this.frecuentesTipoPrestacion.forEach(element => {
+                    if (this.results.sugeridos['todos'].indexOf(element) === -1) {
+                        this.results.sugeridos['todos'].push(element);
+                    }
+                });
+                // filtramos los resultados
+                this.filtrarResultados('sugeridos');
+
+                this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
+            }
+
+            const query = {
+                'idProfesional': this.auth.profesional.id,
+                'tipoPrestacion': this.conceptoFrecuente.conceptId,
+                'idOrganizacion': this.auth.organizacion.id,
+            };
+
+            this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
+                // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
+                if (resultados && resultados.length) {
+                    const frecuentesProfesional = resultados[0].frecuentes.map(res => {
+                        let concepto = res.concepto;
+                        concepto.frecuencia = res.frecuencia;
+                        return concepto;
+                    });
+
+                    this.results['misFrecuentes']['todos'] = frecuentesProfesional;
+                    this.filtrarResultados('misFrecuentes');
+
+                    this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
                 }
             });
-            // filtramos los resultados
-            this.filtrarResultados('sugeridos');
 
-            this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
-        }
+            // seteamos el tipo de búsqueda actual como sugeridos
+            this.busquedaActual = 'sugeridos';
 
-        const query = {
-            'idProfesional': this.auth.profesional.id,
-            'tipoPrestacion': this.conceptoFrecuente.conceptId,
-            'idOrganizacion': this.auth.organizacion.id,
-        };
-
-        this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
-            // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
-            if (resultados && resultados.length) {
-                const frecuentesProfesional = resultados[0].frecuentes.map(res => {
-                    let concepto = res.concepto;
-                    concepto.frecuencia = res.frecuencia;
-                    return concepto;
-                });
-
-                this.results['misFrecuentes']['todos'] = frecuentesProfesional;
-                this.filtrarResultados('misFrecuentes');
-
-                this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
-            }
+            // inicializamos el filtro actual para los hallazgos
+            this.filtroActual = 'todos';
         });
 
-        // seteamos el tipo de búsqueda actual como sugeridos
-        this.busquedaActual = 'sugeridos';
 
-        // inicializamos el filtro actual para los hallazgos
-        this.filtroActual = 'todos';
     }
 
     /**
