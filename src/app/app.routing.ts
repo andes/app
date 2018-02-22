@@ -61,6 +61,8 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -91,6 +93,8 @@ const appRoutes: Routes = [
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/crear', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/ver/:id', component: EjecucionInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },

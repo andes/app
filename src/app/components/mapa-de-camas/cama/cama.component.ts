@@ -3,6 +3,8 @@ import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { CamasService } from '../../../services/camas.service';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
 
 @Component({
     selector: 'app-cama',
@@ -18,7 +20,10 @@ export class CamaComponent implements OnInit {
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
 
-    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService) { }
+
+    public estadoDesbloqueo: String = 'desocupada';
+    public fecha = new Date();
+    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router) { }
 
     ngOnInit() {
         this.opcionesDropdown = [
@@ -52,28 +57,36 @@ export class CamaComponent implements OnInit {
      * @param {any} cama Cama en la cual se va a internar el paciente.
      * @memberof CamaComponent
      */
-    public buscarPaciente(cama) {
+    public iniciarPrestacion(cama) {
+
         if (cama.ultimoEstado.estado !== 'disponible') {
-            this.plex.info('warning', 'Debe preparar la cama antes de poder internar un paciente', 'Error');
+            this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
+        } else {
+            this.router.navigate(['rup/internacion/crear', cama.id]);
         }
+    }
 
-        // buscar paciente
-
-        // cambiar el estado a la cama
-
-        // emitir cama modificada
-        // this.evtCama.emit(cama);
+    /**
+     * Visualizar internacion
+     *
+     * @param {any} cama Cama en la cual se encuentra internado el paciente.
+     * @memberof CamaComponent
+     */
+    public verPrestacion(cama) {
+        if (cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.idInternacion) {
+            this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
+        }
     }
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            fecha: null,
+            fecha: this.fecha,
             estado: estado,
             observaciones: cama.$motivo,
             paciente: null
         };
 
-        this.camasService.NewEstado(cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
@@ -112,5 +125,8 @@ export class CamaComponent implements OnInit {
         }, (err) => {
             this.plex.info('danger', err, 'Error');
         });
+    }
+    SetFecha() {
+        this.fecha = new Date();
     }
 }
