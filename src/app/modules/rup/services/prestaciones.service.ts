@@ -687,16 +687,6 @@ export class PrestacionesService {
         return this.patch(prestacion.id, dto);
 
 
-        // } else {
-        //     // hacemos el patch y luego creamos los planes
-        //     let dto: any = {
-        //         op: 'estadoPush',
-        //         estado: { tipo: 'validada' },
-        //         registros: prestacion.ejecucion.registros
-        //     };
-
-        //     return this.patch(prestacion.id, dto);
-        // }
 
     }
     /**
@@ -839,5 +829,21 @@ export class PrestacionesService {
         }
 
         return icon;
+    }
+
+    /*******
+     * INTERNACION
+     */
+
+    /**
+    * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
+    *
+    * @param {any} paciente id del paciente en internacion
+    * @returns  {array} listado de internaciones en ejecucion sin ocupar una cama
+    * @memberof BuscadorComponent
+    */
+    public internacionesPendientesXPaciente(paciente) {
+
+
     }
 }

@@ -82,8 +82,9 @@
                     <button class="btn btn-default" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
                         <i class="mdi mdi-eye"></i>
                     </button>
-                    <button class="btn btn-default" title="Desocupar Cama" (click)="desocuparCama(cama)" *ngIf="cama.ultimoEstado?.id">
-                        <i class="mdi mdi-eye"></i>
+                    <button class="btn btn-default" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
+                        *ngIf="cama.ultimoEstado?.idInternacion">
+                        <i class="mdi mdi-close-box"></i>
                     </button>
                     <!-- bloquear cama -->
                     <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
@@ -124,6 +125,9 @@
                     </div>
                 </div>
             </div>
+
+
+
             <!-- Ultima evolucion / Evolucionar -->
             <div *ngIf="cama.$action && cama.$action == 'evolucion'">
                 <div class="content" [ngClass]="{'evolucion': cama.$action == 'evolucion' }">
@@ -221,6 +225,43 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success tips form-control" title="Enviar a reparar" (click)="cambiarEstado(cama, 'reparacion')"
                                     [disabled]="!formReparacion.form.valid">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Desocupar una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'desocupar' && cama.ultimoEstado.estado == 'ocupada'">
+                <form #formReparada="ngForm">
+                    <div class="content" [ngClass]="{'reparacion': cama.$action == 'desocupar' }">
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
+                        <div class="main">
+                            <p class="text-center">
+                                ¿Está seguro que desea desocupar la cama?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="footer with-buttons row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-success tips form-control" title="Si" (click)="desocuparCama(cama, 'desocupada')">
                                     <i class="mdi mdi-check"></i>
                                 </button>
                             </div>

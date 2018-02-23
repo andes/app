@@ -130,6 +130,39 @@ export class CamaComponent implements OnInit {
             this.plex.info('danger', err, 'Error');
         });
     }
+
+    public desocuparCama(cama) {
+        let dto = {
+            fecha: this.fecha,
+            estado: 'desocupada',
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: null,
+            idInternacion: null
+        };
+
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+            cama.ultimoEstado = camaActualizada.ultimoEstado;
+
+
+            this.plex.toast('success', 'Cama desocupada', 'Cambio estado');
+
+            // rotamos card
+            setTimeout(() => {
+                // rotamos cama
+                cama.$rotar = false;
+                // limpiar motivo por el cual se cambio el estado
+                cama.$motivo = '';
+                // emitimos la cama modificada
+                this.evtCama.emit(cama);
+            }, 100);
+        }, (err) => {
+            this.plex.info('danger', err, 'Error');
+        });
+    }
+
     SetFecha() {
         this.fecha = new Date();
     }
