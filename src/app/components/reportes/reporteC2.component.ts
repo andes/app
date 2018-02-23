@@ -40,6 +40,9 @@ export class ReporteC2Component implements OnInit {
     public totalMasculino = 0;
     public totalFemenino = 0;
     public totalOtro = 0;
+    public listaPacientes = false;
+    public diagnostico;
+    public seleccionada = [];
 
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
@@ -56,23 +59,25 @@ export class ReporteC2Component implements OnInit {
     }
 
     public imprimir() {
-        this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
-            this.diagnosticos = diagnosticos;
-            this.totalConsultas = this.diagnosticos.map(elem => { return elem.total; }).reduce(this.add, 0);
-            this.totalMenor1 = this.diagnosticos.map(elem => { return elem.sumaMenor1; }).reduce(this.add, 0);
-            this.total1 = this.diagnosticos.map(elem => { return elem.suma1; }).reduce(this.add, 0);
-            this.total24 = this.diagnosticos.map(elem => { return elem.suma24; }).reduce(this.add, 0);
-            this.total59 = this.diagnosticos.map(elem => { return elem.suma59; }).reduce(this.add, 0);
-            this.total1014 = this.diagnosticos.map(elem => { return elem.suma1014; }).reduce(this.add, 0);
-            this.total1524 = this.diagnosticos.map(elem => { return elem.suma1524; }).reduce(this.add, 0);
-            this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
-            this.total3544 = this.diagnosticos.map(elem => { return elem.suma3544; }).reduce(this.add, 0);
-            this.total4564 = this.diagnosticos.map(elem => { return elem.suma4564; }).reduce(this.add, 0);
-            this.totalMayor65 = this.diagnosticos.map(elem => { return elem.sumaMayor65; }).reduce(this.add, 0);
-            this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
-            this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
-            this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
-        });
+        if (this.parametros['horaInicio'] && this.parametros['horaFin']) {
+            this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
+                this.diagnosticos = diagnosticos;
+                this.totalConsultas = this.diagnosticos.map(elem => { return elem.total; }).reduce(this.add, 0);
+                this.totalMenor1 = this.diagnosticos.map(elem => { return elem.sumaMenor1; }).reduce(this.add, 0);
+                this.total1 = this.diagnosticos.map(elem => { return elem.suma1; }).reduce(this.add, 0);
+                this.total24 = this.diagnosticos.map(elem => { return elem.suma24; }).reduce(this.add, 0);
+                this.total59 = this.diagnosticos.map(elem => { return elem.suma59; }).reduce(this.add, 0);
+                this.total1014 = this.diagnosticos.map(elem => { return elem.suma1014; }).reduce(this.add, 0);
+                this.total1524 = this.diagnosticos.map(elem => { return elem.suma1524; }).reduce(this.add, 0);
+                this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
+                this.total3544 = this.diagnosticos.map(elem => { return elem.suma3544; }).reduce(this.add, 0);
+                this.total4564 = this.diagnosticos.map(elem => { return elem.suma4564; }).reduce(this.add, 0);
+                this.totalMayor65 = this.diagnosticos.map(elem => { return elem.sumaMayor65; }).reduce(this.add, 0);
+                this.totalMasculino = this.diagnosticos.map(elem => { return elem.sumaMasculino; }).reduce(this.add, 0);
+                this.totalFemenino = this.diagnosticos.map(elem => { return elem.sumaFemenino; }).reduce(this.add, 0);
+                this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
+            });
+        }
     }
 
     add(a, b) {
@@ -92,5 +97,19 @@ export class ReporteC2Component implements OnInit {
                 this.parametros['horaFin'] = horaFin.isValid() ? horaFin.toDate() : moment().format();
             }
         }
-    };
+        this.imprimir();
+    }
+
+    datosPacientes(indice) {
+        this.diagnostico = this.diagnosticos[indice];
+        for (let i = 0; i < this.seleccionada.length; i++) {
+            this.seleccionada[i] = false;
+        }
+        if (this.diagnostico.ficha !== null) {
+            this.seleccionada[indice] = true;
+            this.listaPacientes = true;
+        } else {
+            this.listaPacientes = false;
+        }
+    }
 }
