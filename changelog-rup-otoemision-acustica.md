@@ -1,4 +1,4 @@
-# Change log RUP - 2018-02-22
+# Change log RUP - 2018-02-23
 ## Implementa Prestación: "SCREENING DE OTOEMISIÓN ACUSTICA NEONATAL (PROCEDIMIENTO)"
 
 ## Para que funcione, además de configurar los permisos requeridos, se deben ejecutar las siguientes queries:
@@ -139,6 +139,15 @@ db.getCollection("elementosRUP").insert({
             ],
             "conceptId": "113028003",
             "term": "examen de garganta, nariz y oído"
+        },
+        {
+            "fsn" : "prueba de emisión otoacústica, normal (hallazgo)",
+            "term" : "prueba de emisión otoacústica, normal",
+            "conceptId" : "394891000",
+            "semanticTag" : "hallazgo",
+            "refsetIds" : [
+                "900000000000497000"
+            ]
         }
     ]
 });
