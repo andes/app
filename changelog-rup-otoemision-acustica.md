@@ -8,8 +8,8 @@
 // Concepto 1
 db.getCollection("conceptoTurneable").insert({
     "conceptId": "2091000013100",
-    "term": "screening de otoemisión acustica neonatal (procedimiento)",
-    "fsn": "screening de otoemisión acustica neonatal (procedimiento)",
+    "term": "screening de otoemisión acústica neonatal (procedimiento)",
+    "fsn": "screening de otoemisión acústica neonatal (procedimiento)",
     "semanticTag": "procedimiento"
 })
 // Concepto 2
@@ -35,13 +35,13 @@ db.getCollection("elementosRUP").insert({
     },
     "conceptos": [
         {
-            "fsn": "screening de otoemisión acustica neonatal (procedimiento)",
+            "fsn": "screening de otoemisión acústica neonatal (procedimiento)",
             "semanticTag": "procedimiento",
             "refsetIds": [
                 ""
             ],
             "conceptId": "2091000013100",
-            "term": "screening de otoemisión acustica neonatal"
+            "term": "screening de otoemisión acústica neonatal"
         }
     ],
     "requeridos": [
