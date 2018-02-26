@@ -1,0 +1,36 @@
+<ng-container *ngIf="params && params.tipoSelect === 'select'">
+
+    <plex-select *ngIf="!soloValores" [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
+        (change)="emitChange()">
+    </plex-select>
+</ng-container>
+
+<ng-container *ngIf="conceptos && params && params.tipoSelect === 'radio'">
+
+    <ng-container *ngFor="let concepto of conceptos, let i = index">
+
+        <label class="custom-control custom-radio">
+            <ng-container *ngIf="registro.valor && registro.valor.concepto.conceptId === concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio" checked>
+            </ng-container>
+            <ng-container *ngIf="registro.valor?.concepto.conceptId !== concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio">
+            </ng-container>
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"> {{concepto.term}}</span>
+        </label>
+    </ng-container>
+</ng-container>
+
+<p *ngIf="soloValores" class="readonly">
+    <ng-container *ngIf="registro.valor.length > 0">
+        <ng-container *ngFor="let valor of registro.valor let i = index">
+            {{valor.concepto.term}}
+        </ng-container>
+    </ng-container>
+    <ng-container *ngIf="registro.valor && !registro.valor.length">
+        {{registro.valor.concepto.term}}
+    </ng-container>
+</p>

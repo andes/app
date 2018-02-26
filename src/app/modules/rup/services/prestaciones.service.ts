@@ -18,7 +18,9 @@ export class PrestacionesService {
         // programable: '1661000013109',
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103'
+        Antecedentes_Personales_hallazgos: '1901000013103',
+        situacionLaboral: '200000000',
+        nivelEstudios: '3'
     };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
@@ -259,6 +261,78 @@ export class PrestacionesService {
         });
     }
 
+
+
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'entidad observable' || registro.concepto.semanticTag === 'régimen/tratamiento')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteElementosRegistro(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'elemento de registro')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
 
     /**
      * Metodo getByPacienteMedicamento lista todos los medicamentos registrados del paciente
@@ -568,9 +642,9 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-        let planesCrear = [];
+        let planesCrear = undefined;
         if (planes.length) {
-
+            planesCrear = [];
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
@@ -591,7 +665,7 @@ export class PrestacionesService {
                     let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
@@ -602,28 +676,28 @@ export class PrestacionesService {
                     }
                 }
             });
-
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                ...(planesCrear.length) && { planes: planesCrear },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
-
-
-        } else {
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
         }
+        // hacemos el patch y luego creamos los planes
+        let dto: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' },
+            ...(planesCrear && planesCrear.length) && { planes: planesCrear },
+            registros: prestacion.ejecucion.registros,
+            registrarFrecuentes: true
+        };
+        return this.patch(prestacion.id, dto);
+
+
+        // } else {
+        //     // hacemos el patch y luego creamos los planes
+        //     let dto: any = {
+        //         op: 'estadoPush',
+        //         estado: { tipo: 'validada' },
+        //         registros: prestacion.ejecucion.registros
+        //     };
+
+        //     return this.patch(prestacion.id, dto);
+        // }
 
     }
     /**
@@ -646,17 +720,21 @@ export class PrestacionesService {
      * Devuelve un listado de prestaciones planificadas desde una prestación origen
      *
      * @param {any} idPrestacion id de la prestacion origen
-     * @returns  {array} listado de prestaciones planificadas
+     * @param {any} idPaciente id del paciente
+     * @param {boolean} recarga forzar la recarga de la prestaciones (ante algún cambio)
+     * @returns  {array} listado de prestaciones planificadas en una prestación
      * @memberof BuscadorComponent
      */
-    public getPlanes(idPrestacion, idPaciente) {
-        let prestacionPlanes = [];
-        if (this.cache[idPaciente]) {
-            prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
-            return prestacionPlanes;
-        } else {
-            return null;
-        }
+    public getPlanes(idPrestacion, idPaciente, recarga = false) {
+        return this.getByPaciente(idPaciente, recarga).map(listadoPrestaciones => {
+            let prestacionPlanes = [];
+            if (this.cache[idPaciente]) {
+                prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+                return prestacionPlanes;
+            } else {
+                return null;
+            }
+        });
     }
 
     /**

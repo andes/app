@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -12,6 +13,10 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
+import { DocumentosService } from './../../../../services/documentos.service';
+import { saveAs } from 'file-saver';
+import * as moment from 'moment';
+import 'rxjs/Rx';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -67,14 +72,15 @@ export class PrestacionValidacionComponent implements OnInit {
     tipoOrden: any[] = null;
     arrayTitulos: any[] = [];
 
-
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService) {
+        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
+        private servicioDocumentos: DocumentosService,
+        private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
@@ -117,10 +123,11 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
-                    this.cargaPlan(prestacionSolicitud);
+                this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
+                    if (prestacionesSolicitadas) {
+                        this.cargaPlan(prestacionesSolicitadas);
+                    }
                 });
-
                 this.diagnosticoReadonly = true;
             }
 
@@ -181,6 +188,11 @@ export class PrestacionValidacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
+
+                // cargar los conceptos mas frecuentes por profesional y tipo de prestación
+                // Se copian los registros de la ejecución actual, para agregarle la frecuencia
+                let registros = this.prestacion.ejecucion.registros;
+
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
@@ -193,40 +205,13 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                     });
                     // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        // Chequear si es posible asignar turno a los planes generados
-                        let prestacionesSolicitadas = this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id);
+                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
                             this.cargaPlan(prestacionesSolicitadas);
                         }
                     });
 
                     this.diagnosticoReadonly = true;
-
-                    // cargar los conceptos mas frecuentes por profesional y tipo de prestación
-                    // Se copian los registros de la ejecución actual, para agregarle la frecuencia
-                    let registros = this.prestacion.ejecucion.registros;
-                    let registrosFrecuentes = [];
-
-                    registros.forEach(x => {
-                        registrosFrecuentes.push({
-                            concepto: x.concepto,
-                            frecuencia: 1
-                        });
-                    });
-
-                    let frecuentesProfesional = {
-                        profesional: {
-                            id: this.auth.profesional.id,
-                            nombre: this.auth.profesional.nombre,
-                            apellido: this.auth.profesional.apellido,
-                            documento: this.auth.profesional.documento
-                        },
-                        tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
-                        organizacion: this.prestacion.solicitud.organizacion,
-                        frecuentes: registrosFrecuentes
-                    };
-                    this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
@@ -283,8 +268,13 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     turnoDado(e) {
-        // recargamos
-        this.inicializar(this.prestacion.id);
+        // actualizamos las prestaciones de la HUDS
+        this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
+            if (prestacionesSolicitadas) {
+                this.cargaPlan(prestacionesSolicitadas);
+            }
+            this.showDarTurnos = false;
+        });
     }
 
     tienePermisos(tipoPrestacion) {
@@ -308,9 +298,11 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas) {
+        prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => ps.solicitud.registros[0].valor.solicitudPrestacion.autocitado);
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
             this.asignarTurno[idRegistro] = {};
@@ -422,7 +414,6 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
 
-
     hayRegistros(tipos: any[], tipo: any = null) {
         if (!tipo) {
             return this.prestacion.ejecucion.registros.filter(x => {
@@ -513,12 +504,91 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
+    private descargarArchivo(data: any, headers: any): void {
+
+        let blob = new Blob([data], headers);
+        saveAs(blob, 'rup.pdf');
+    }
+
     imprimirResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
         setTimeout(() => {
-            window.print();
+
+            let content = '';
+            let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
+            let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
+
+            // Cada logo va a quedar generada como base64 desde la API:
+            // <img src="data:image/png;base64,..." style="float: left;">
+            // <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+            // <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+
+            const header = `
+                <header id="pageHeader" style="background-color: rgba(0,0,0,0.1); font-size: 10px; height: 40px !important; padding-top: 8px; padding-left:5px;">
+                    <div class="col-4 m-0 p-0">
+                        <!--logoAndes-->
+                        <div class="logo p-2" style="float: left; padding: 5px;">
+                            <!--logotipoAndes-->
+                        </div>
+                    </div>
+                    <div class="col-8 m-0 p-0">
+                        <div class="organizacion" style="position: relative; top: 17px;">${this.auth.organizacion.nombre}</div>
+                    </div>
+                </header>
+                <div>
+                    ${headerPrestacion.innerHTML}
+                    ${datosSolicitud.innerHTML}
+                </div>
+            `;
+
+            content += header;
+            content += `
+            <div class="paciente">
+                <b>Paciente:</b> ${this.paciente.apellido},  ${this.paciente.nombre} - 
+                ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
+            </div>
+            `;
+
+            // agregamos prestaciones
+            let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
+
+            const total = elementosRUP.length;
+            for (let i = 0; i < total; i++) {
+                content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
+            }
+
+            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
+            // content = this.sanitizer.sanitize(1, content);
+
+            // Enviar las hojas de estilos en el payload? <_<
+            // let cssFiles = Object.keys(document.styleSheets);
+
+            // content += '<style>';
+
+            // Leer las hojas de estilo rendereadas por Angular
+            // for (let fkey in cssFiles) {
+            //     let cssKeys = document.styleSheets[fkey];
+
+            //     for (let key in cssKeys) {
+            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
+            //         content += document.styleSheets[fkey].ownerNode.textContent;
+            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
+            //     }
+            // }
+
+            // content += '</style>';
+
+            this.servicioDocumentos.descargar(content).subscribe(data => {
+                if (data) {
+                    // Generar descarga como PDF
+                    this.descargarArchivo(data, { type: 'application/pdf' });
+                } else {
+                    // Fallback a impresión normal desde el navegador
+                    window.print();
+                }
+            });
         });
     }
 
