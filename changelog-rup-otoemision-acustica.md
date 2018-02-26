@@ -178,10 +178,10 @@ db.getCollection("elementosRUP").insert({
             "conceptId": "2101000013106"
         },
         {
-            "fsn": "otoemisión acústica de oído derecho (entidad observable)",
-            "semanticTag": "entidad observable",
-            "term": "otoemisión acústica de oído derecho",
-            "conceptId": "2101000013106"
+            "fsn" : "otoemisión acústica de oído izquierdo (entidad observable)",
+            "semanticTag" : "entidad observable",
+            "conceptId" : "2111000013109",
+            "term" : "otoemisión acústica de oído izquierdo"
         }
     ],
     "requeridos": [],
