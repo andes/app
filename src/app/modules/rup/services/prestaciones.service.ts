@@ -19,6 +19,7 @@ export class PrestacionesService {
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
         Antecedentes_Personales_hallazgos: '1901000013103',
+        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
         situacionLaboral: '200000000',
         nivelEstudios: '3'
     };
@@ -781,7 +782,7 @@ export class PrestacionesService {
      * @returns string Clase a ser utilizado para estilizar las cards de RUP
      * @memberof PrestacionesService
      */
-    public getCssClass(conceptoSNOMED, filtroActual: null) {
+    public getCssClass(conceptoSNOMED, filtroActual) {
         let clase = conceptoSNOMED.semanticTag;
 
         // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))

@@ -146,6 +146,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.mostrarDatosEnEjecucion();
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
                                     if (!registoExiste) {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
@@ -175,16 +176,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     /**
-     * recorre los registros de una prestación que ya tiene registros en ejecucion
-     * y los carga el array itemsRegistros para colapsar y para los regsitros que se puedan relacionar (items).
+     * recorre los registros de una prestación que ya tiene registros en ejecución
+     * y los carga el array itemsRegistros para colapsar y para los registros que se puedan relacionar (items).
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
-            // recorremos los registros ya almacenados en la prestacion
+            // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
-                // Si el registro actual tiene registros vinvulados los "populamos"
+                // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                 }
