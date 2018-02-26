@@ -843,7 +843,8 @@ export class PrestacionesService {
     * @memberof BuscadorComponent
     */
     public internacionesPendientesXPaciente(paciente) {
+        let opt = { params: { estado: 'ejecucion' }, options: {} };
 
-
+        return this.server.get('/modules/rup/internaciones/' + paciente.id, opt);
     }
 }

@@ -108,8 +108,14 @@ export class IniciarInternacionComponent implements OnInit {
 
     onPacienteSelected(paciente: IPaciente) {
         if (paciente.id) {
-            this.paciente = paciente;
-            this.buscandoPaciente = false;
+            this.servicioPrestacion.internacionesPendientesXPaciente(paciente).subscribe(resultado => {
+                debugger;
+                console.log(resultado);
+            });
+
+
+            // this.paciente = paciente;
+            // this.buscandoPaciente = false;
         } else {
             this.plex.alert('El paciente debe ser registrado en MPI');
         }
