@@ -574,10 +574,11 @@ export class PrestacionesService {
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
-                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
-
+                let existePrestacion = null;
+                if (this.cache[prestacion.paciente.id]) {
+                    existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
+                }
                 if (!existePrestacion) {
-
                     // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
                     // que prestacion quiere solicitar debo hacer ese cambio
                     let conceptoSolicitud = plan.concepto;

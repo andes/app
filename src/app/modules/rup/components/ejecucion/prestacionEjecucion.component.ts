@@ -181,17 +181,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
-
-            // Mueve el registro que tenga esDiagnosticoPrincipal = true arriba de todo
-            // let indexDiagnosticoPrincipal = this.prestacion.ejecucion.registros.findIndex(reg => reg.esDiagnosticoPrincipal === true);
-            // if (indexDiagnosticoPrincipal > -1) {
-            //     let diagnosticoPrincipal = this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal];
-            //     this.prestacion.ejecucion.registros[indexDiagnosticoPrincipal] = this.prestacion.ejecucion.registros[0];
-            //     this.prestacion.ejecucion.registros[0] = diagnosticoPrincipal;
-            // }
-
-
-
             // recorremos los registros ya almacenados en la prestacion
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
@@ -202,7 +191,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             });
             this.armarRelaciones(this.prestacion.ejecucion.registros);
-
         }
     }
 
