@@ -216,6 +216,8 @@ import { InformesComponent } from './modules/rup/components/elementos/informe.co
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
+import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
+import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 
@@ -286,7 +288,8 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
-
+    'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
+    'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
 
 let RUPComponentsArray = [
@@ -316,6 +319,8 @@ let RUPComponentsArray = [
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
     IngresoInternacionComponent,
+    OtoemisionAcusticaDeOidoDerechoComponent,
+    OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent
 ];
