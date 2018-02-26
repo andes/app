@@ -118,6 +118,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
+import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
@@ -218,7 +219,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-
+import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -286,6 +287,7 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
+    'EgresoInternacionComponent': EgresoInternacionComponent
 
 };
 
@@ -317,7 +319,8 @@ let RUPComponentsArray = [
     AdjuntarDocumentoComponent,
     IngresoInternacionComponent,
     IniciarInternacionComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -444,7 +447,8 @@ let RUPComponentsArray = [
         PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
-        CamasService
+        CamasService,
+        ProcedimientosQuirurgicosService
 
     ]
 })
