@@ -351,7 +351,7 @@ export class PrestacionValidacionComponent implements OnInit {
     defualtDiagnosticoPrestacion() {
         let count = 0;
         // for (let elemento of this.prestacion.ejecucion.registros) {
-        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }

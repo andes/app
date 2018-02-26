@@ -187,7 +187,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
+                                        <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
                                                 title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}"
                                                 class="diagnostico-principal">Diagnóstico principal
