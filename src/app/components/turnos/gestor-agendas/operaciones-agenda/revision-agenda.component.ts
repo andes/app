@@ -164,6 +164,7 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoSeleccionado) {
             this.turnoSeleccionado.asistencia = asistencia.id;
         }
+        this.onSave();
     }
 
     asistenciaSeleccionada(asistencia) {
