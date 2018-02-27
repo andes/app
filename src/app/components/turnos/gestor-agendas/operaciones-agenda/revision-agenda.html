@@ -250,22 +250,22 @@
                                                 <tbody>
                                                     <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover row">
                                                         <td class="col-1">
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null" icon="mdi mdi-check" title="Aprobar"
-                                                                (click)="aprobar(i)"></plex-button>
+                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null" type="success" icon="mdi mdi-check"
+                                                                title="Aprobar" (click)="aprobar(i)"></plex-button>
+                                                        </td>
+                                                        <td class="col-1 ">
+                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null " type="danger" icon="mdi mdi-pencil"
+                                                                title="Reparar" (click)="mostrarReparo(i)"> </plex-button>
+                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria != null" type="info" icon="mdi mdi-refresh"
+                                                                title="Reestablecer" (click)="borrarReparo(i)"> </plex-button>
                                                         </td>
                                                         <td class="col-1">
                                                             <span class="badge-success" *ngIf="(existeCodificacionProfesional && diagnostico.codificacionAuditoria) && diagnostico.codificacionAuditoria.codigo
-                                            === diagnostico.codificacionProfesional.codigo">Aprobado</span>
+                                                                                                    === diagnostico.codificacionProfesional.codigo">Aprobado</span>
                                                         </td>
                                                         <td class="col-1">
                                                             <span class="badge-warning" *ngIf="(existeCodificacionProfesional && diagnostico.codificacionAuditoria) && diagnostico.codificacionAuditoria.codigo !==
-                                            diagnostico.codificacionProfesional.codigo">Reparado</span>
-                                                        </td>
-                                                        <td class="col-1 ">
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null " icon="mdi mdi-pencil" title="Reparar"
-                                                                (click)="mostrarReparo(i)"> </plex-button>
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria != null" icon="mdi mdi-refresh" title="Reestablecer"
-                                                                (click)="borrarReparo(i)"> </plex-button>
+                                                                                                    diagnostico.codificacionProfesional.codigo">Reparado</span>
                                                         </td>
                                                         <td class="col-4 " *ngIf="diagnostico.codificacionAuditoria == null">
                                                             <span *ngIf="diagnostico.codificacionProfesional != null"> {{diagnostico.codificacionProfesional.sinonimo}} </span>
