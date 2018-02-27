@@ -66,7 +66,6 @@ export class RevisionAgendaComponent implements OnInit {
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
-    reparo: any;
     paciente: IPaciente;
     turnoTipoPrestacion: any = null;
     pacientesSearch = false;
@@ -346,16 +345,15 @@ export class RevisionAgendaComponent implements OnInit {
         this.showReparo = true;
     }
 
-    repararDiagnostico() {
-        if (this.reparo) {
-            this.diagnosticos[this.indiceReparo].codificacionAuditoria = this.reparo;
+    repararDiagnostico(reparo) {
+        if (reparo) {
+            this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;
-            this.reparo = {};
         }
     }
 
     borrarReparo(index) {
-        this.diagnosticos[this.indiceReparo].codificacionAuditoria = null;
+        this.diagnosticos[index].codificacionAuditoria = null;
         this.showReparo = false;
     }
 
