@@ -250,39 +250,37 @@
                                                 <tbody>
                                                     <tr *ngFor="let diagnostico of diagnosticos; let i = index; " class="hover row">
                                                         <td class="col-1">
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null" type="success" icon="mdi mdi-check"
+                                                            <plex-button *ngIf="diagnostico.codificacionProfesional && !diagnostico.codificacionAuditoria" type="success" icon="mdi mdi-check"
                                                                 title="Aprobar" (click)="aprobar(i)"></plex-button>
                                                         </td>
                                                         <td class="col-1 ">
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria == null " type="danger" icon="mdi mdi-pencil"
+                                                            <plex-button *ngIf="diagnostico.codificacionProfesional && !diagnostico.codificacionAuditoria " type="danger" icon="mdi mdi-pencil"
                                                                 title="Reparar" (click)="mostrarReparo(i)"> </plex-button>
-                                                            <plex-button *ngIf="existeCodificacionProfesional && diagnostico.codificacionAuditoria != null" type="info" icon="mdi mdi-refresh"
+                                                            <plex-button *ngIf="diagnostico.codificacionProfesional && diagnostico.codificacionAuditoria" type="info" icon="mdi mdi-refresh"
                                                                 title="Reestablecer" (click)="borrarReparo(i)"> </plex-button>
                                                         </td>
                                                         <td class="col-1">
-                                                            <span class="badge-success" *ngIf="(existeCodificacionProfesional && diagnostico.codificacionAuditoria) && diagnostico.codificacionAuditoria.codigo
-                                                                                                    === diagnostico.codificacionProfesional.codigo">Aprobado</span>
+                                                            <span class="badge-success" *ngIf=" diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.codigo">Aprobado</span>
                                                         </td>
                                                         <td class="col-1">
-                                                            <span class="badge-warning" *ngIf="(existeCodificacionProfesional && diagnostico.codificacionAuditoria) && diagnostico.codificacionAuditoria.codigo !==
-                                                                                                    diagnostico.codificacionProfesional.codigo">Reparado</span>
+                                                            <span class="badge-warning" *ngIf=" diagnostico.codificacionAuditoria?.codigo !==diagnostico.codificacionProfesional?.codigo">Reparado</span>
                                                         </td>
-                                                        <td class="col-4 " *ngIf="diagnostico.codificacionAuditoria == null">
-                                                            <span *ngIf="diagnostico.codificacionProfesional != null"> {{diagnostico.codificacionProfesional.sinonimo}} </span>
+                                                        <td class="col-4 " *ngIf="!diagnostico.codificacionAuditoria">
+                                                            <span *ngIf="diagnostico.codificacionProfesional"> {{diagnostico.codificacionProfesional.sinonimo}} </span>
                                                         </td>
-                                                        <td class="col-4" *ngIf="diagnostico.codificacionAuditoria != null">
+                                                        <td class="col-4" *ngIf="diagnostico.codificacionAuditoria">
                                                             <span> {{diagnostico.codificacionAuditoria.sinonimo}} </span>
                                                         </td>
                                                         <td class="col-1">
                                                             <span *ngIf="i==0" class="badge-info">Principal</span>
                                                         </td>
                                                         <td class="col-1 ">
-                                                            <plex-button *ngIf="!existeCodificacionProfesional" icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
+                                                            <plex-button *ngIf="!diagnostico.codificacionProfesional" icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
                                                         </td>
-                                                        <td class="col-2" *ngIf="!existeCodificacionProfesional">
+                                                        <td class="col-2" *ngIf="!diagnostico.codificacionProfesional">
                                                             <plex-bool *ngIf="i==0" [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
                                                         </td>
-                                                        <td class="col-2" *ngIf="existeCodificacionProfesional">
+                                                        <td class="col-2" *ngIf="diagnostico.codificacionProfesional">
                                                             <span *ngIf="i==0 && diagnostico.primeraVez" class="badge-info">Primera vez</span>
                                                         </td>
                                                     </tr>
@@ -292,11 +290,8 @@
                                     </div>
                                 </div>
                                 <!-- Buscador de prestaciones cie10 -->
-                                <div class="row" *ngIf="!existeCodificacionProfesional">
-                                    <div class="col-2">
-                                        <plex-bool [(ngModel)]='turnoSeleccionado.diagnostico.ilegible' name="ilegible" label="Diagnóstico ilegible" (click)="marcarIlegible()"></plex-bool>
-                                    </div>
-                                    <div class="col-10" *ngIf="!turnoSeleccionado.diagnostico.ilegible">
+                                <div class="row">
+                                    <div class="col-10">
                                         <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)"></buscador-cie10>
                                     </div>
 
@@ -325,16 +320,7 @@
                         </div>
                     </div>
                     <!--/ CODIFICACION-->
-                    <br>
-
-                    <div class="row" *ngIf="!showReparo">
-                        <div class="col text-right">
-                            <plex-button label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
-                            <plex-button label="Guardar" type="success" (click)="onSave()"></plex-button>
-                        </div>
-                    </div>
                 </div>
-
             </plex-box>
         </div>
     </div>

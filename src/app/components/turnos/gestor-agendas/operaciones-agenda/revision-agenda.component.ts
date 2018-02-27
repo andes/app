@@ -156,8 +156,6 @@ export class RevisionAgendaComponent implements OnInit {
             this.pacientesSearch = false;
             if (turno.diagnostico.codificaciones && turno.diagnostico.codificaciones.length) {
                 this.diagnosticos = this.diagnosticos.concat(turno.diagnostico.codificaciones);
-                // Verificamos si existe alguna codificación de profesional.
-                this.existeCodificacionProfesional = (this.diagnosticos.filter(elem => elem.codificacionProfesional !== null)).length > 0 ? true : false;
             }
         }
     }
@@ -191,7 +189,7 @@ export class RevisionAgendaComponent implements OnInit {
         };
         nuevoDiagnostico.codificacionAuditoria = diagnostico;
         this.diagnosticos.push(nuevoDiagnostico);
-
+        console.log(this.diagnosticos)
     }
 
     borrarDiagnostico(index) {
@@ -203,17 +201,12 @@ export class RevisionAgendaComponent implements OnInit {
         if (index === 0) {
             this.plex.toast('warning', 'Información', 'El diagnostico principal fue eliminado');
         }
+        this.onSave();
     }
 
     aprobar(index) {
         this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
-    }
-
-
-    marcarIlegible() {
-        this.turnoSeleccionado.diagnostico.codificaciones[0].codificacionAuditoria = 'Ilegible';
-        this.turnoSeleccionado.diagnostico.codificaciones[0].primeraVez = false;
-        this.diagnosticos = [];
+        this.onSave();
     }
 
     cerrarAsistencia() {
@@ -309,10 +302,10 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                this.plex.toast('success', 'Información', 'El turno fue actualizado');
+                // this.plex.toast('success', 'Información', 'El turno fue actualizado');
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
-                this.turnoSeleccionado = null;
+                // this.turnoSeleccionado = null;
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');
@@ -350,11 +343,13 @@ export class RevisionAgendaComponent implements OnInit {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
             this.showReparo = false;
         }
+        this.onSave();
     }
 
     borrarReparo(index) {
         this.diagnosticos[index].codificacionAuditoria = null;
         this.showReparo = false;
+        this.onSave();
     }
 
     volverRevision() {
