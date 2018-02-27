@@ -278,7 +278,7 @@
                                                             <plex-button *ngIf="!diagnostico.codificacionProfesional" icon="delete" title="Eliminar" type="danger" (click)="borrarDiagnostico(i)"></plex-button>
                                                         </td>
                                                         <td class="col-2" *ngIf="!diagnostico.codificacionProfesional">
-                                                            <plex-bool *ngIf="i==0" [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
+                                                            <plex-bool *ngIf="i==0" (change)="onSave()" [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
                                                         </td>
                                                         <td class="col-2" *ngIf="diagnostico.codificacionProfesional">
                                                             <span *ngIf="i==0 && diagnostico.primeraVez" class="badge-info">Primera vez</span>
