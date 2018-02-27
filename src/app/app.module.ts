@@ -261,6 +261,10 @@ import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { SolicitudesComponent } from './components/prestamosHC/solicitudes/solicitudes.component';
+
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
@@ -394,7 +398,9 @@ let RUPComponentsArray = [
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
-        CamaComponent
+        CamaComponent,
+        PrestamosHcComponent,
+        SolicitudesComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
