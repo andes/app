@@ -16,16 +16,17 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from './../../../../services/term/cie10.service';
+import { ISubscription } from 'rxjs/Subscription';
 
 
 @Component({
     selector: 'revision-agenda',
     templateUrl: 'revision-agenda.html',
-    styleUrls: ['.././turnos.scss']
+    styleUrls: ['revision-agenda.scss']
 })
 
 export class RevisionAgendaComponent implements OnInit {
-    indiceReparo: any;
+
     @HostBinding('class.plex-layout') layout = true;
     private _agenda: any;
     // Parámetros
@@ -49,6 +50,14 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+    private timeoutHandle: number;
+    // ultima request que se almacena con el subscribe
+    private lastRequest: ISubscription;
+    private estadoPendienteAuditoria;
+    private estadoCodificado;
+
+    public searchTerm: String = '';
+    indiceReparo: any;
     public showReparo = false;
     existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
@@ -57,7 +66,6 @@ export class RevisionAgendaComponent implements OnInit {
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
-    nuevoCodigo: any;
     reparo: any;
     paciente: IPaciente;
     turnoTipoPrestacion: any = null;
@@ -67,8 +75,6 @@ export class RevisionAgendaComponent implements OnInit {
     public seleccion = null;
     public esEscaneado = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
-    private estadoPendienteAuditoria;
-    private estadoCodificado;
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
 
@@ -172,48 +178,21 @@ export class RevisionAgendaComponent implements OnInit {
         return (this.turnoSeleccionado === turno); // .indexOf(turno) >= 0;
     }
 
-    buscarCodificacion(event) {
-        let query = {
-            nombre: event.query
-        };
-        if (event.query) {
-            this.serviceCie10.get(query).subscribe((datos) => {
-                this.diagnosticos.forEach(elem => {
-                    let index = -1;
-                    if (this.nuevoCodigo) {
-                        index = datos.findIndex(item => item.codigo === elem.codificacionAuditoria.codigo);
-                    } else {
-                        index = datos.findIndex(item => item.codigo === elem.codificacionProfesional.codigo);
-                    }
-                    if (index >= 0) {
-                        datos.splice(index, 1);
-                    }
-                });
-
-                event.callback(datos);
-            });
-        } else {
-            event.callback([]);
-        }
-    }
     /**
      * El auditor agrega nuevos diagnósticos al turno en el momento de revisión
      * la codificaciónProfesional en estos casos debe ser siempre NULL
      *
      * @memberof RevisionAgendaComponent
      */
-    agregarDiagnostico() {
+    agregarDiagnostico(diagnostico) {
         let nuevoDiagnostico = {
             codificacionProfesional: null, // solamente obtenida de RUP o SIPS y definida por el profesional
             codificacionAuditoria: null,  // corresponde a la codificación establecida la instancia de revisión de agendas
             primeraVez: false
         };
-        if (this.nuevoCodigo) {
-            nuevoDiagnostico.codificacionAuditoria = this.nuevoCodigo;
-            delete nuevoDiagnostico.codificacionAuditoria.$order;
-            this.diagnosticos.push(nuevoDiagnostico);
-            this.nuevoCodigo = {};
-        }
+        nuevoDiagnostico.codificacionAuditoria = diagnostico;
+        this.diagnosticos.push(nuevoDiagnostico);
+
     }
 
     borrarDiagnostico(index) {
