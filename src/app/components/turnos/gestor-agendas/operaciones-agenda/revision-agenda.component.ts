@@ -190,7 +190,7 @@ export class RevisionAgendaComponent implements OnInit {
         };
         nuevoDiagnostico.codificacionAuditoria = diagnostico;
         this.diagnosticos.push(nuevoDiagnostico);
-        console.log(this.diagnosticos)
+        this.onSave();
     }
 
     borrarDiagnostico(index) {
