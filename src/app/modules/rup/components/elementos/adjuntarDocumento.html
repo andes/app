@@ -5,9 +5,9 @@
             <strong *ngIf="!soloValores">Cargar documentos</strong>
             <span *ngIf="!waiting && !soloValores">
                 <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()"></plex-button>
-                <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi AppMobile" (click)="fromMobile()"></plex-button>
+                <plex-button *ngIf="!waiting" class="btn-sm" type="primary" label="Desde mi App móvil" (click)="fromMobile()"></plex-button>
                 <span *ngIf="errorExt">
-                    <span class="badge-danger"> Archivo invalido </span>
+                    <span class="badge-danger"> Archivo inválido </span>
                 </span>
             </span>
             <span *ngIf="waiting">
