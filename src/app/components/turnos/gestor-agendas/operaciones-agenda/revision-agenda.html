@@ -288,18 +288,18 @@
                                             </table>
                                         </div>
                                     </div>
-                                </div>
-                                <!-- Buscador de prestaciones cie10 -->
-                                <div class="row">
-                                    <div class="col-10">
-                                        <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)"></buscador-cie10>
-                                    </div>
+                                    <!-- Buscador de prestaciones cie10 -->
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)"></buscador-cie10>
+                                        </div>
 
-                                    <hr>
+                                        <hr>
+                                    </div>
                                 </div>
 
                                 <!-- Reparo -->
-                                <div *ngIf="turnoSeleccionado && existeCodificacionProfesional && showReparo">
+                                <div *ngIf="turnoSeleccionado && diagnosticos[indiceReparo]?.codificacionProfesional && showReparo">
                                     <div class="row">
                                         <div class="col">
                                             <h5>codificación del profesional</h5> {{diagnosticos[indiceReparo].codificacionProfesional.sinonimo}}
