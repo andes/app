@@ -217,6 +217,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 
 
 // Llaves
@@ -390,7 +391,8 @@ let RUPComponentsArray = [
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
-        CamaEstadoComponent
+        CamaEstadoComponent,
+        OcuparCamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

@@ -58,6 +58,16 @@ export class IniciarInternacionComponent implements OnInit {
         conceptId: '32485007',
         term: 'internación'
     };
+
+    // armamos el registro para los datos del formulario de ingreso hospitalario
+    public snomedIngreso: any = {
+        fsn: 'documento de solicitud de admisión (elemento de registro)',
+        semanticTag: 'elemento de registro',
+        refsetIds: ['900000000000497000'],
+        conceptId: '721915006',
+        term: 'documento de solicitud de admisión'
+    };
+
     // Paciente sleccionado
     public paciente: IPaciente;
     public buscandoPaciente = false;
@@ -106,16 +116,39 @@ export class IniciarInternacionComponent implements OnInit {
         });
     }
 
+    buscarRegistroInforme(internacion) {
+        let registros = internacion.ejecucion.registros;
+        let informe = registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+        return informe;
+    }
+
     onPacienteSelected(paciente: IPaciente) {
+        debugger
         if (paciente.id) {
-            this.servicioPrestacion.internacionesPendientesXPaciente(paciente).subscribe(resultado => {
-                debugger;
-                console.log(resultado);
+            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
+                // Si el paciente ya tiene una internacion en ejecucion
+                if (resultado) {
+                    if (resultado.cama) {
+                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        this.router.navigate(['/mapa-de-camas']);
+                    } else {
+                        debugger;
+                        // y no esta ocupando cama lo pasamos directamente a ocupar una cama
+                        this.plex.alert('El paciente tiene una internación en ejecución');
+                        this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
+                    }
+                } else {
+                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
+                    this.servicioPrestacion.internacionesXPaciente(paciente, 'validada').subscribe(datosInternacion => {
+                        if (datosInternacion) {
+                            this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
+                        }
+                        this.paciente = paciente;
+                        this.buscandoPaciente = false;
+                    });
+                }
+                //
             });
-
-
-            // this.paciente = paciente;
-            // this.buscandoPaciente = false;
         } else {
             this.plex.alert('El paciente debe ser registrado en MPI');
         }
@@ -159,16 +192,9 @@ export class IniciarInternacionComponent implements OnInit {
             return;
         }
 
-        // armamos el registro para los datos del formulario de ingreso hospitalario
-        let snomedConcept: any = {
-            fsn: 'documento de solicitud de admisión (elemento de registro)',
-            semanticTag: 'elemento de registro',
-            refsetIds: ['900000000000497000'],
-            conceptId: '721915006',
-            term: 'documento de solicitud de admisión'
-        };
+
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(null, snomedConcept);
+        let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
         nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
         // el concepto snomed del tipo de prestacion para la internacion
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
@@ -176,7 +202,7 @@ export class IniciarInternacionComponent implements OnInit {
         this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
         delete this.informeIngreso.horaIngreso;
         // creamos la prestacion de internacion y agregamos el registro de ingreso
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', this.informeIngreso.fechaIngreso);
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {

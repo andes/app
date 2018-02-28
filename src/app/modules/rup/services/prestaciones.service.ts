@@ -549,7 +549,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: any = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -836,15 +836,15 @@ export class PrestacionesService {
      */
 
     /**
-    * Devuelve true si se cargo en la prestación algun concepto que representa la ausencia del paciente
+    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
     *
     * @param {any} paciente id del paciente en internacion
-    * @returns  {array} listado de internaciones en ejecucion sin ocupar una cama
+    * @param {any} estado estado de la internacion
+    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
     * @memberof BuscadorComponent
     */
-    public internacionesPendientesXPaciente(paciente) {
-        let opt = { params: { estado: 'ejecucion' }, options: {} };
-
-        return this.server.get('/modules/rup/internaciones/' + paciente.id, opt);
+    public internacionesXPaciente(paciente, estado) {
+        let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
+        return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
     }
 }
