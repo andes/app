@@ -1,0 +1,20 @@
+<!--Turnos-->
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha</th>
+        </tr>
+    </thead>
+    <tbody *ngFor="let turno of turnos">
+        <tr>
+            <td>
+                {{today | date: 'dd/mm/yyyy'}}
+            </td>
+            <td>
+                <plex-button type="primary" label="Prestar" (click)="prestar(turno)">
+                </plex-button>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

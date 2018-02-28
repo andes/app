@@ -1,0 +1,36 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <header>
+                <div class="clearfix">
+                    <div class="page-title float-left">Prestar HC</div>
+                </div>
+            </header>
+
+            <div class="row">
+                <div class="col-12">
+                    <plex-text label="Destino" [(ngModel)]="prestarHC.destino" name="destino" [required]="true" placeholder="Ingrese el destino...">
+                    </plex-text>
+                </div>
+                <div class="col-12">
+                    <plex-text label="Responsable" [(ngModel)]="prestarHC.responsable" name="responsable" [required]="true" placeholder="Ingrese un responsable...">
+                    </plex-text>
+                </div>
+                <div class="col-12">
+                    <plex-text label="Observaciones" [(ngModel)]="prestarHC.observaciones" name="observaciones" [required]="true" placeholder="Ingrese observaciones...">
+                    </plex-text>
+                </div>
+            </div>
+        </plex-box>
+
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" type="danger" (click)="cancel()">
+            </plex-button>
+
+            <plex-button label="Guardar" type="primary" (click)="save($event)" validateForm="true">
+            </plex-button>
+        </div>
+    </footer>
+</form>

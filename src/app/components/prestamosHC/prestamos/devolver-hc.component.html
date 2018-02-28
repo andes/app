@@ -1,0 +1,32 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <header>
+                <div class="clearfix">
+                    <div class="page-title float-left">Devolver HC</div>
+                </div>
+            </header>
+
+            <div class="row">
+                <div class="col-12">
+                    <plex-text label="Estado HC" [(ngModel)]="devolverHC.estado" name="estado" [required]="true" placeholder="Ingrese el estado de la HC...">
+                    </plex-text>
+                </div>
+                <div class="col-12">
+                    <plex-text label="Observaciones" [(ngModel)]="devolverrHC.observaciones" name="observaciones" [required]="true" placeholder="Ingrese observaciones...">
+                    </plex-text>
+                </div>
+            </div>
+        </plex-box>
+
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" type="danger" (click)="cancel()">
+            </plex-button>
+
+            <plex-button label="Guardar" type="primary" (click)="save($event)" validateForm="true">
+            </plex-button>
+        </div>
+    </footer>
+</form>

@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12">
+    <div class="col">
         <plex-box>
             <header>
                 <div class="clearfix">
@@ -8,13 +8,23 @@
             </header>
 
             <plex-tabs>
-                <!-- Contacto y Domicilios -->
                 <plex-tab label="Solicitudes HC">
-                    <app-solicitudes></app-solicitudes>
-                    <!-- <app-contacto-domicilios-profesional [profesional]="profesional"></app-contacto-domicilios-profesional> -->
+                    <app-listar-solicitudes (showPrestarEmit)="onShowPrestar($event)"></app-listar-solicitudes>
+                </plex-tab>
+
+                <plex-tab label="Préstamos HC">
+                    <!-- <app-listar-prestamos (showDevolverEmit)="onShowDevolver($event)"></app-listar-prestamos> -->
                 </plex-tab>
             </plex-tabs>
         </plex-box>
+    </div>
+
+    <div class="col-4" *ngIf="showPrestar">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <app-prestar-hc>
+            </app-prestar-hc>
+        </div>
     </div>
 
 </div>
