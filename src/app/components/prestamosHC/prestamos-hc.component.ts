@@ -10,15 +10,22 @@ import { PrestarHcComponent } from './solicitudes/prestar-hc.component';
 
 export class PrestamosHcComponent implements OnInit {
     showPrestar = false;
+    showDevolver = false;
 
     ngOnInit() {
 
     }
 
-    onShowPrestar($event) {
+    onShowPrestar(event) {
         debugger;
-
+        this.showDevolver = false;
         this.showPrestar = true;
+    }
+
+    onShowDevolver(event) {
+        debugger;
+        this.showPrestar = false;
+        this.showDevolver = true;
     }
 
     constructor() { }

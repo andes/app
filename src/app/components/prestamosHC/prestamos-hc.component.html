@@ -13,7 +13,11 @@
                 </plex-tab>
 
                 <plex-tab label="Préstamos HC">
-                    <!-- <app-listar-prestamos (showDevolverEmit)="onShowDevolver($event)"></app-listar-prestamos> -->
+                    <app-listar-prestamos (showDevolverEmit)="onShowDevolver($event)"></app-listar-prestamos>
+                </plex-tab>
+
+                <plex-tab label="Historial HC">
+
                 </plex-tab>
             </plex-tabs>
         </plex-box>
@@ -24,6 +28,14 @@
             <div class="clear"></div>
             <app-prestar-hc>
             </app-prestar-hc>
+        </div>
+    </div>
+
+    <div class="col-4" *ngIf="showDevolver">
+        <div class="panel panel-default">
+            <div class="clear"></div>
+            <app-devolver-hc>
+            </app-devolver-hc>
         </div>
     </div>
 

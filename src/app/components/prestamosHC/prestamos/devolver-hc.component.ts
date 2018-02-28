@@ -6,9 +6,8 @@ import { Component, OnInit } from '@angular/core';
 })
 
 export class DevolverHcComponent implements OnInit {
-    prestarHC: any = {
-        destino: '',
-        responsable: '',
+    devolverHC: any = {
+        estado: '',
         observaciones: ''
     }
 
