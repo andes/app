@@ -260,10 +260,10 @@
                                                                 title="Reestablecer" (click)="borrarReparo(i)"> </plex-button>
                                                         </td>
                                                         <td class="col-1">
-                                                            <span class="badge-success" *ngIf=" diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.codigo">Aprobado</span>
+                                                            <span class="badge-success" *ngIf=" diagnostico.codificacionAuditoria && diagnostico.codificacionProfesional && diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.codigo">Aprobado</span>
                                                         </td>
                                                         <td class="col-1">
-                                                            <span class="badge-warning" *ngIf=" diagnostico.codificacionAuditoria?.codigo !==diagnostico.codificacionProfesional?.codigo">Reparado</span>
+                                                            <span class="badge-warning" *ngIf=" diagnostico.codificacionAuditoria && diagnostico.codificacionProfesional && diagnostico.codificacionAuditoria?.codigo !== diagnostico.codificacionProfesional?.codigo">Reparado</span>
                                                         </td>
                                                         <td class="col-4 " *ngIf="!diagnostico.codificacionAuditoria">
                                                             <span *ngIf="diagnostico.codificacionProfesional"> {{diagnostico.codificacionProfesional.sinonimo}} </span>
