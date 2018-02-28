@@ -122,7 +122,12 @@ export class RevisionAgendaComponent implements OnInit {
             this.turnoSeleccionado.estado = estado;
         }
     }
-
+    /**
+     * Output de la búsqueda de paciente
+     * 
+     * @param {IPaciente} paciente 
+     * @memberof RevisionAgendaComponent
+     */
     onReturn(paciente: IPaciente): void {
         if (paciente.id) {
             this.paciente = paciente;
@@ -209,7 +214,11 @@ export class RevisionAgendaComponent implements OnInit {
         this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
         this.onSave();
     }
-
+    /**
+     * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
+     * 
+     * @memberof RevisionAgendaComponent
+     */
     cerrarAsistencia() {
         // Se verifica que todos los campos tengan asistencia chequeada
         let turnoSinVerificar = null;
@@ -235,7 +244,11 @@ export class RevisionAgendaComponent implements OnInit {
             });
         }
     }
-
+    /**
+     * Verifica que cada turno esté codificado y modifica el estado de la agenda si corresponde
+     * 
+     * @memberof RevisionAgendaComponent
+     */
     cerrarCodificacion() {
         // Se verifica que todos los campos tengan el diagnostico codificado
         let turnoSinCodificar = null;
@@ -338,7 +351,12 @@ export class RevisionAgendaComponent implements OnInit {
         this.indiceReparo = index;
         this.showReparo = true;
     }
-
+    /**
+     * Agrega el diagnóstico provisto por el revisor, y persiste el cambio automáticamente
+     * 
+     * @param {any} reparo 
+     * @memberof RevisionAgendaComponent
+     */
     repararDiagnostico(reparo) {
         if (reparo) {
             this.diagnosticos[this.indiceReparo].codificacionAuditoria = reparo;
