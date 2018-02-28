@@ -67,10 +67,10 @@
                     <div class="text-center">
 
                         <h4>
-                            <span class="mdi mdi-calendar-today">Hora Agenda </span>
+                            <span class="mdi mdi-calendar-today"> Hora Agenda </span>
                         </h4>
-                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }}
-                            <div> {{ [agenda.estado].nombre }}</div>
+                        <span>{{ agenda.horaInicio | date: 'EEE d MMM' }} | Inicio: {{ agenda.horaInicio | date: 'HH:mm' }} - Fin:
+                            {{ agenda.horaFin | date: 'HH:mm' }}
                         </span>
                         <br>
                         <h4>
