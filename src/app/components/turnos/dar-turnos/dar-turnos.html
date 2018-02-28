@@ -229,7 +229,7 @@
 
                                 <!--Confirmación del turno -->
                                 <ng-container *ngIf="estadoT === 'confirmacion'">
-                                    <h5 class="pt-3 text-center">Confirme los datos del turno</h5>
+                                    <!-- <h5 class="pt-3 text-center">Confirme los datos del turno</h5> -->
                                     <!--Header-->
                                     <div class="alert alert-default">
                                         <div class="row">
@@ -255,9 +255,17 @@
                                         </div>
                                         <div class="row">
                                             <div class="col">
+                                                <div *ngIf="obraSocialPaciente">
+                                                    <label>Obra Social </label>
+                                                    <div>{{obraSocialPaciente.nombre}}</div>
+                                                    <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
                                                 <div *ngIf="permitirTurnoDoble">
-                                                    <label>Turno doble: </label>
-                                                    <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
+                                                    <plex-bool label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
                                                 </div>
                                             </div>
                                         </div>
