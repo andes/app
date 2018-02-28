@@ -1,6 +1,7 @@
 <form>
     <div class="buscador">
-        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar ..." [autoFocus]="autofocus"></plex-text>
+        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar ..." [autoFocus]="autofocus"
+            label="Buscar prestación"></plex-text>
     </div>
     <table *ngIf="!hideLista" class="table table-bordered table-hover  table-sm ">
         <tbody>
