@@ -6,9 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 
 export class PrestarHcComponent implements OnInit {
-    // showPrestar = false;
-
-    @Input() carpeta : any;
+    @Input() prestar: any;
 
     prestarHC: any = {
         destino: '',
@@ -17,11 +15,13 @@ export class PrestarHcComponent implements OnInit {
     }
 
     ngOnInit() {
-
+        this.prestarHC.destino = this.prestar.datosPrestamo.turno.espacioFisico[0].nombre;
+        this.prestarHC.responsable = this.prestar.datosPrestamo.turno.profesional[0][0].apellido + ' ' + this.prestar.datosPrestamo.turno.profesional[0][0].apellido;
+        debugger;
     }
 
     save(event) {
-        event.     
+debugger;
     }
 
     cancel() {

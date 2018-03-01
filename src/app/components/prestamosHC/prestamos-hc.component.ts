@@ -12,6 +12,8 @@ export class PrestamosHcComponent implements OnInit {
     showPrestar = false;
     showDevolver = false;
 
+    prestar: any;
+
     ngOnInit() {
 
     }
@@ -26,6 +28,11 @@ export class PrestamosHcComponent implements OnInit {
         debugger;
         this.showPrestar = false;
         this.showDevolver = true;
+    }
+
+    onCarpetaPrestada(event) {
+        debugger;
+        this.prestar = event;
     }
 
     constructor() { }

@@ -14,6 +14,7 @@ export class ListarSolicitudesComponent implements OnInit {
     today = Date.now();
 
     @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
         this.getCarpetas();
@@ -33,6 +34,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
     prestar(turno) {
         this.showPrestarEmit.emit(true);
+        this.carpetaPrestadaEmit.emit(turno);
     }
 
     constructor(public prestamosService: PrestamosService) { }

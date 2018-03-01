@@ -9,7 +9,7 @@
 
             <plex-tabs>
                 <plex-tab label="Solicitudes HC">
-                    <app-listar-solicitudes (showPrestarEmit)="onShowPrestar($event)"></app-listar-solicitudes>
+                    <app-listar-solicitudes (showPrestarEmit)="onShowPrestar($event)" (carpetaPrestadaEmit)="onCarpetaPrestada($event)"></app-listar-solicitudes>
                 </plex-tab>
 
                 <plex-tab label="Préstamos HC">
@@ -26,7 +26,7 @@
     <div class="col-4" *ngIf="showPrestar">
         <div class="panel panel-default">
             <div class="clear"></div>
-            <app-prestar-hc  [prestar]="prestarHC" >
+            <app-prestar-hc  [prestar]="prestar" >
             </app-prestar-hc>
         </div>
     </div>
