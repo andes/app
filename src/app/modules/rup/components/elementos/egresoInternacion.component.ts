@@ -14,24 +14,17 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
         ],
         lugar: [{ id: 'domicilioParticular', nombre: 'Domicilio Particular' }, { id: 'viaPublico', nombre: 'Vía pública' },
         { id: 'lugarDetrabajo', nombre: 'Lugar de trabajo' }, { id: 'otro', nombre: 'otro' }, { id: 'seIgnora', nombre: 'Se ignora' }
-        ],
-        comoSeProdujo: [{ id: 'accidente', nombre: 'Accidente' }] // Definir.. son codigos CIE10
-
+        ]
     }
 
     ngOnInit() {
         let params;
-
-        // if (!this.registro.valor) {
-        this.registro.valor = {
-            InformeEgreso: {
-                causaExterna: {
-                    producida: {},
-                    lugar: {},
-                    comoSeProdujo: {}
+        if (!this.registro.valor) {
+            this.registro.valor = {
+                InformeEgreso: {
+                    causaExterna: {}
                 }
-            }
-            // };
+            };
         }
         // Cargamos todos los procedimientos.
         this.procedimientosQuirurgicosService.get(params).subscribe(rta => {
@@ -54,7 +47,19 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
                 event.callback(datos);
             });
         } else {
-            event.callback([]);
+            let callback = [];
+            if (this.registro.valor.InformeEgreso.diagnosticoPrincipal &&
+                this.registro.valor.InformeEgreso.otrosDiagnosticos &&
+                this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
+
+                callback = [this.registro.valor.InformeEgreso.diagnosticoPrincipal,
+                this.registro.valor.InformeEgreso.otrosDiagnosticos,
+                this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo
+                ];
+
+            }
+            event.callback(callback);
+
         }
     }
 

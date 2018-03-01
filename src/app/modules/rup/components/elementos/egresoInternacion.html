@@ -1,161 +1,250 @@
-<div class="row">
-    <div class="col-12">
-        <plex-select label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="InformeEgreso.procedimientoQuirurgico"
-            (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
-        </plex-select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="InformeEgreso.procedimientoQuirurgico"
-            (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
-        </plex-select>
-    </div>
-</div>
+<ng-container *ngIf="!soloValores">
+    <div class="row">
+        <div class="col-6">
+            <plex-select label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="diagnosticoPrincipal"
+                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
+            </plex-select>
+        </div>
 
-<div class="row" *ngIf="procedimientosQuirurgicos && procedimientosQuirurgicos.length > 0">
-    <div class="col-8">
-        <plex-select label="Procedimiento Quirurgico" [(ngModel)]="registro.valor.InformeEgreso.procedimientoQuirurgico" name="InformeEgreso.procedimientoQuirurgico"
-            [data]="procedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
-        </plex-select>
-    </div>
-    <div class="col-4">
-        <plex-datetime label="Fecha 1° procedimiento" type="date" [(ngModel)]="registro.valor.InformeEgreso.fechaPrimerProcedimiento">
-        </plex-datetime>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-4">
-        <label>Otras circunstancias que prolongan la internación</label>
-        <select disabled class="form-control disabled">
-            <option value="1">refset??</option>
-        </select>
-    </div>
-    <div class="col-4">
-        <label>Días de estada por otras circunstancias</label>
-        <input class="form-control" type="text" placeholder="" readonly>
-    </div>
-    <div class="col-4">
-        <label>Días de permiso de salida</label>
-        <input class="form-control" type="text" placeholder="" readonly>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-12">
-        <p class="title">
-            Causa externa de traumatismo, envenenamiento y otros efectos adversos
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-4">
-        <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producida" name="InformeEgreso.procedimientoQuirurgico"
-            [data]="causaExterna.producidaPor" placeholder="Seleccione..." labelField="nombre">
-        </plex-select>
-    </div>
-    <div class="col-4">
-        <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar" name="InformeEgreso.procedimientoQuirurgico"
-            [data]="causaExterna.lugar" placeholder="Seleccione..." labelField="nombre">
-        </plex-select>
-    </div>
-    <div class="col-4">
-        <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="InformeEgreso.procedimientoQuirurgico"
-            (getData)="codigoCIE10($event)" placeholder="Buscar..." labelField="nombre">
-        </plex-select>
-    </div>
-</div>
-<div class="row">
-    <div class="col-12">
-        <p class="title">
-            Datos del evento obstétrico
-        </p>
-    </div>
-</div>
-<div class="row">
-    <div class="col-3">
-        <plex-datetime label="Fecha terminación" type="date" [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo">
-        </plex-datetime>
-    </div>
-    <div class="col-3">
-        <plex-int label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional" placeholder=""></plex-int>
+        <div class="col-6">
+            <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
+                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
+            </plex-select>
+        </div>
     </div>
 
-    <div class="col-3">
-        <plex-int label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad" placeholder=""></plex-int>
+    <div class="row" *ngIf="procedimientosQuirurgicos && procedimientosQuirurgicos.length > 0">
+        <div class="col-8">
+            <plex-select label="Procedimiento Quirurgico" [(ngModel)]="registro.valor.InformeEgreso.procedimientoQuirurgico" name="InformeEgreso.procedimientoQuirurgico"
+                [data]="procedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
+            </plex-select>
+        </div>
+        <div class="col-4">
+            <plex-datetime label="Fecha 1° procedimiento" type="date" [(ngModel)]="registro.valor.InformeEgreso.fechaPrimerProcedimiento">
+            </plex-datetime>
+        </div>
     </div>
-    <div class="col-3">
-        <label>Tipo de parto</label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Simple</span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Multiple</span>
-        </label>
-    </div>
-</div>
 
-<div class="row">
-    <div class="col-3">
-        <plex-int label="Peso al nacer" [(ngModel)]="registro.valor.InformeEgreso.pesoAlNacer" placeholder=""></plex-int>
+    <div class="row">
+        <div class="col-4">
+            <label>Otras circunstancias que prolongan la internación</label>
+            <select disabled class="form-control disabled">
+                <option value="1">refset??</option>
+            </select>
+        </div>
+        <div class="col-4">
+            <label>Días de estada por otras circunstancias</label>
+            <input class="form-control" type="text" placeholder="" readonly>
+        </div>
+        <div class="col-4">
+            <label>Días de permiso de salida</label>
+            <input class="form-control" type="text" placeholder="" readonly>
+        </div>
     </div>
-    <div class="col-3">
-        <label>Condición al nacer</label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="condicionAlNacer" value="NacVivo" [(ngModel)]="registro.valor.InformeEgreso.condicionAlNacer"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Nac. vivo</span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="condicionAlNacer" value="defFetal" [(ngModel)]="registro.valor.InformeEgreso.condicionAlNacer"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Def. fetal</span>
-        </label>
+
+    <div class="row">
+        <div class="col-12">
+            <p class="block">
+                Causa externa de traumatismo, envenenamiento y otros efectos adversos
+            </p>
+        </div>
     </div>
-    <div class="col-3">
-        <label>Terminacón</label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Simple</span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Multiple</span>
-        </label>
+    <div class="row">
+        <div class="col-4">
+            <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
+                [data]="causaExterna.producidaPor" placeholder="Seleccione..." labelField="nombre">
+            </plex-select>
+        </div>
+        <div class="col-4">
+            <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar" name="lugar" [data]="causaExterna.lugar"
+                placeholder="Seleccione..." labelField="nombre">
+            </plex-select>
+        </div>
+        <div class="col-4">
+            <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
+                (getData)="codigoCIE10($event)" placeholder="Buscar..." labelField="nombre">
+            </plex-select>
+        </div>
     </div>
-    <div class="col-3">
-        <label>Sexo</label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Simple</span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Multiple</span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                type="radio">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"> Multiple</span>
-        </label>
+    <div class="row">
+        <div class="col-12">
+            <p class="title">
+                Datos del evento obstétrico
+            </p>
+        </div>
     </div>
-</div>
-{{registro.valor | json}}
+    <div class="row">
+        <div class="col-3">
+            <plex-datetime label="Fecha terminación" type="date" [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo">
+            </plex-datetime>
+        </div>
+        <div class="col-3">
+            <plex-int label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional" placeholder=""></plex-int>
+        </div>
+
+        <div class="col-3">
+            <plex-int label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad" placeholder=""></plex-int>
+        </div>
+        <div class="col-3">
+            <label>Tipo de parto</label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Simple</span>
+            </label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Multiple</span>
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-2">
+            <plex-int label="Peso al nacer" [(ngModel)]="registro.valor.InformeEgreso.pesoAlNacer" placeholder=""></plex-int>
+        </div>
+        <div class="col-3">
+            <label>Condición al nacer</label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="condicionAlNacer" value="NacVivo" [(ngModel)]="registro.valor.InformeEgreso.condicionAlNacer"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Nac. vivo</span>
+            </label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="condicionAlNacer" value="defFetal" [(ngModel)]="registro.valor.InformeEgreso.condicionAlNacer"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Def. fetal</span>
+            </label>
+        </div>
+        <div class="col-3">
+            <label>Terminación</label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="Terminacion" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.terminacion"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Vaginal</span>
+            </label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="Terminacion" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.terminacion"
+                    type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Cesária</span>
+            </label>
+        </div>
+        <div class="col-4">
+            <label>Sexo</label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="sexo" value="Masculino" [(ngModel)]="registro.valor.InformeEgreso.sexo" type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Masculino</span>
+            </label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="sexo" value="Femenino" [(ngModel)]="registro.valor.InformeEgreso.sexo" type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Femenino</span>
+            </label>
+            <label class="custom-control custom-radio">
+                <input class="custom-control-input" name="sexo" value="Indeterminado" [(ngModel)]="registro.valor.InformeEgreso.sexo" type="radio">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description"> Indeterminado</span>
+            </label>
+        </div>
+    </div>
+
+
+
+</ng-container>
+<ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Diagnostico Principal al egreso</label>
+            <span>{{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Otros Diagnósticos</label>
+            <span>{{registro.valor.InformeEgreso.otrosDiagnosticos.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Procedimiento Quirurgico</label>
+            <span>{{registro.valor.InformeEgreso.procedimientoQuirurgico.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Procedimiento Quirurgico</label>
+            <span>{{registro.valor.InformeEgreso.fechaPrimerProcedimiento | date }}</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <p class="title">
+                Causa externa de traumatismo, envenenamiento y otros efectos adversos
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Producido por</label>
+            <span>{{registro.valor.InformeEgreso.causaExterna.producidaPor.nombre}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Lugar donde ocurrio</label>
+            <span>{{registro.valor.InformeEgreso.causaExterna.lugar.nombre }}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Como se produjo</label>
+            <span>{{registro.valor.InformeEgreso.causaExterna.comoSeProdujo.nombre }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <p class="title">
+                Datos del evento obstétrico
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Fecha terminación</label>
+            <span>{{registro.valor.InformeEgreso.terminacionEmbarazo}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Edad gestacional</label>
+            <span>{{registro.valor.InformeEgreso.edadGestacional}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Paridad</label>
+            <span>{{registro.valor.InformeEgreso.paridad}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block"> Tipo de parto</label>
+            <span>{{registro.valor.InformeEgreso.tipoParto}}</span>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <label class="block">Peso al nacer</label>
+            <span>{{registro.valor.InformeEgreso.pesoAlNacer}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Condición al nacerl</label>
+            <span>{{registro.valor.InformeEgreso.condicionAlNacer}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block">Terminación</label>
+            <span>{{registro.valor.InformeEgreso.terminacion}}</span>
+        </div>
+        <div class="col-3">
+            <label class="block"> Sexo </label>
+            <span>{{registro.valor.InformeEgreso.sexo}}</span>
+        </div>
+
+    </div>
+
+</ng-container>
