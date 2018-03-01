@@ -14,6 +14,7 @@ import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.se
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -24,12 +25,27 @@ export class IniciarInternacionComponent implements OnInit {
 
     public ocupaciones = [];
     public obrasSociales = [];
-    public situacionesLaborales = [];
-    public nivelesInstruccion = [{ id: 'primario completo', nombre: 'Primario completo' },
-    { id: 'secundario completo', nombre: 'Secundario completo' }, { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
-    public origenHospitalizacion = [{ id: 'ambulatorio', nombre: 'Ambulatorio' },
-    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'consultorio externo', nombre: 'Consultorio externo' },
-    { id: 'derivación', nombre: 'Derivación' }];
+    public origenHospitalizacion = [{ id: 'consultorio externo', nombre: 'Consultorio externo' },
+    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'traslado', nombre: 'Traslado' },
+    { id: 'sala de parto', nombre: 'Sala de parto' }, { id: 'otro', nombre: 'Otro' }];
+    public nivelesInstruccion = [{ id: 'primario incompleto', nombre: 'Primario incompleto' }, { id: 'primario completo', nombre: 'Primario completo' },
+    { id: 'secundario incompleto', nombre: 'Secundario incompleto' }, { id: 'secundario completo', nombre: 'Secundario completo' },
+    { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
+    { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
+    { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
+    { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
+    { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
+    { id: 'Polimodal completo', nombre: 'Polimodal completo' },
+    { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
+    { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
+    public situacionesLaborales = [{ id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
+    { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
+    { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }];
+    public pacienteAsociado = [{ id: 'Obra Social', nombre: 'Obra Social' },
+    { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
+    { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
+    { id: 'Mas de uno', nombre: 'Mas de uno' }, { id: 'Ninguno', nombre: 'Ninguno' }];
+
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
@@ -42,10 +58,21 @@ export class IniciarInternacionComponent implements OnInit {
         conceptId: '32485007',
         term: 'internación'
     };
+
+    // armamos el registro para los datos del formulario de ingreso hospitalario
+    public snomedIngreso: any = {
+        fsn: 'documento de solicitud de admisión (elemento de registro)',
+        semanticTag: 'elemento de registro',
+        refsetIds: ['900000000000497000'],
+        conceptId: '721915006',
+        term: 'documento de solicitud de admisión'
+    };
+
     // Paciente sleccionado
     public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
+    public organizacion = null;
 
     public informeIngreso = {
         fechaIngreso: new Date(),
@@ -59,6 +86,7 @@ export class IniciarInternacionComponent implements OnInit {
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
         private servicioPrestacion: PrestacionesService,
+        private organizacionService: OrganizacionService,
         public financiadorService: FinanciadorService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
@@ -70,6 +98,11 @@ export class IniciarInternacionComponent implements OnInit {
             this.camasService.getCama(id).subscribe(cama => {
                 this.cama = cama;
             });
+
+            this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+                this.organizacion = organizacion;
+            });
+
         });
 
         // Cargamos todas las ocupaciones
@@ -81,18 +114,39 @@ export class IniciarInternacionComponent implements OnInit {
         this.financiadorService.get().subscribe(resultado => {
             this.obrasSociales = resultado;
         });
+    }
 
-        this.snomedService.get({ refsetId: '200000000' }).subscribe(resultado => {
-            this.situacionesLaborales = resultado;
-        });
-
-
+    buscarRegistroInforme(internacion) {
+        let registros = internacion.ejecucion.registros;
+        let informe = registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+        return informe;
     }
 
     onPacienteSelected(paciente: IPaciente) {
         if (paciente.id) {
-            this.paciente = paciente;
-            this.buscandoPaciente = false;
+            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
+                // Si el paciente ya tiene una internacion en ejecucion
+                if (resultado) {
+                    if (resultado.cama) {
+                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        this.router.navigate(['/mapa-de-camas']);
+                    } else {
+                        // y no esta ocupando cama lo pasamos directamente a ocupar una cama
+                        this.plex.alert('El paciente tiene una internación en ejecución');
+                        this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
+                    }
+                } else {
+                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
+                    this.servicioPrestacion.internacionesXPaciente(paciente, 'validada').subscribe(datosInternacion => {
+                        if (datosInternacion) {
+                            this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
+                        }
+                        this.paciente = paciente;
+                        this.buscandoPaciente = false;
+                    });
+                }
+                //
+            });
         } else {
             this.plex.alert('El paciente debe ser registrado en MPI');
         }
@@ -136,62 +190,39 @@ export class IniciarInternacionComponent implements OnInit {
             return;
         }
 
-        // armamos el registro para los datos del formulario de ingreso hospitalario
-        let snomedConcept: any = {
-            fsn: 'documento de solicitud de admisión (elemento de registro)',
-            semanticTag: 'elemento de registro',
-            refsetIds: ['900000000000497000'],
-            conceptId: '721915006',
-            term: 'documento de solicitud de admisión'
-        };
+
         // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(null, snomedConcept);
+        let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
         nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
         // el concepto snomed del tipo de prestacion para la internacion
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
 
         this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
         delete this.informeIngreso.horaIngreso;
-        let nuevaPrestacion;
-        nuevaPrestacion = {
-            paciente: this.paciente,
-            solicitud: {
-                fecha: this.informeIngreso.fechaIngreso,
-                tipoPrestacion: conceptoSnomed,
-                // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
-            },
-            ejecucion: {
-                fecha: this.informeIngreso.fechaIngreso,
-                registros: [nuevoRegistro],
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-            },
-            estados: {
-                fecha: this.informeIngreso.fechaIngreso,
-                tipo: 'ejecucion'
-            }
-        };
-
+        // creamos la prestacion de internacion y agregamos el registro de ingreso
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
+        nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             // vamos a actualizar el estado de la cama
             let dto = {
                 fecha: this.informeIngreso.fechaIngreso,
                 estado: 'ocupada',
-                observaciones: '',
-                idInternacion: prestacion.id,
-                paciente: this.paciente
+                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                esCensable: this.cama.ultimoEstado.esCensable,
+                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                paciente: this.paciente,
+                idInternacion: prestacion.id
             };
-            this.camasService.NewEstado(this.cama.id, dto).subscribe(camaActualizada => {
+
+            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                 this.router.navigate(['rup/internacion/ver', prestacion.id]);
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
             });
+
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
         });

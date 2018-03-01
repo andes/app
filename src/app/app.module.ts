@@ -76,7 +76,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
-import { ArancelamientoService } from './services/arancelamiento.service';
+import { ObraSocialService } from './services/obraSocial.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -217,9 +217,13 @@ import { InformesComponent } from './modules/rup/components/elementos/informe.co
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
+import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
+import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+
 
 // Llaves
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -256,6 +260,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -287,8 +292,9 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
-    'EgresoInternacionComponent': EgresoInternacionComponent
-
+    'EgresoInternacionComponent': EgresoInternacionComponent,
+    'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
+    'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
 
 let RUPComponentsArray = [
@@ -318,6 +324,8 @@ let RUPComponentsArray = [
     TensionSistolicaComponent,
     AdjuntarDocumentoComponent,
     IngresoInternacionComponent,
+    OtoemisionAcusticaDeOidoDerechoComponent,
+    OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent
@@ -392,7 +400,9 @@ let RUPComponentsArray = [
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
-        CamaComponent
+        CamaComponent,
+        CamaEstadoComponent,
+        OcuparCamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -429,7 +439,7 @@ let RUPComponentsArray = [
         PrestacionesService,
         AdjuntosService,
         TipoPrestacionService,
-        ArancelamientoService,
+        ObraSocialService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,

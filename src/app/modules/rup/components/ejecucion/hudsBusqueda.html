@@ -274,8 +274,9 @@
             <!-- OTROS HALLAZGOS -->
             <div class="vista-titulo">
                 Otros {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's' : '' }}
+                <span *ngIf="tipoOrden">filtro: {{tipoOrden[filtroActual]}}</span>
                 <div *ngIf="hallazgosNoActivos.length > 0" class="float-right">
-                    <button class="btn btn-sm p-0" (click)="ordenarRegistros('fecha', 'otros')">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'otros')">
                         <i class="mdi mdi-calendar-clock"></i>
                     </button>
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa', 'otros')">
