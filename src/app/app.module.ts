@@ -118,6 +118,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
+import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
@@ -220,6 +221,7 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/componen
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 
 
@@ -290,6 +292,7 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
+    'EgresoInternacionComponent': EgresoInternacionComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -324,7 +327,8 @@ let RUPComponentsArray = [
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -453,7 +457,8 @@ let RUPComponentsArray = [
         PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
-        CamasService
+        CamasService,
+        ProcedimientosQuirurgicosService
 
     ]
 })
