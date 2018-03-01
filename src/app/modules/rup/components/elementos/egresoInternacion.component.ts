@@ -15,7 +15,7 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
         lugar: [{ id: 'domicilioParticular', nombre: 'Domicilio Particular' }, { id: 'viaPublico', nombre: 'Vía pública' },
         { id: 'lugarDetrabajo', nombre: 'Lugar de trabajo' }, { id: 'otro', nombre: 'otro' }, { id: 'seIgnora', nombre: 'Se ignora' }
         ]
-    }
+    };
 
     ngOnInit() {
         let params;
