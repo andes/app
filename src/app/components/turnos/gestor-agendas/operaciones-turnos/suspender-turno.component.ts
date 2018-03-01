@@ -34,6 +34,8 @@ export class SuspenderTurnoComponent implements OnInit {
     public seleccionadosSMS = [];
     public suspendio = false;
 
+    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
+
     ngOnInit() {
 
         if (this.turnosSeleccionados.length < 0) {
@@ -104,7 +106,7 @@ export class SuspenderTurnoComponent implements OnInit {
         if (this.accion === 'suspenderTurno') {
             patch = {
                 op: this.accion,
-                turnos: this.turnos.map((resultado) => {return resultado.id; }),
+                turnos: this.turnos.map((resultado) => { return resultado.id; }),
                 motivoSuspension: this.motivoSuspensionSelect.select.nombre
             };
         } else {
@@ -236,5 +238,4 @@ export class SuspenderTurnoComponent implements OnInit {
         this.saveSuspenderTurno.emit(this.agenda);
     }
 
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
 }
