@@ -12,11 +12,11 @@
 
                         <div class="float-right mr-2 menu-info">
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
-                                (click)="mostrarDatosSolicitud(true)" id="datosSolicitud"></plex-button>
+                                (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
-                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
-                                <plex-button type="warning" icon="printer mdi-14px" class="float-right ml-1" title="Imprimir Resumen" titlePosition="left"
-                                    (click)="imprimirResumen()"></plex-button>
+                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && puedeDescargarPDF">
+                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
+                                    (click)="descargarResumen()"></plex-button>
                             </ng-container>
                         </div>
                     </div>
@@ -62,7 +62,7 @@
             <div class="col titulos">
                 <!-- <object data="/assets/logo-andes.svg"></object> -->
                 <!-- div de la info de la solicitud -->
-                <div [hidden]="!showDatosSolicitud" class="mb-2 datos-solicitud">
+                <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
                         <div class="col">
                             <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
@@ -170,10 +170,10 @@
                             </div>
 
                             <div class="content">
-                                <ng-container *ngIf="matchinBusquedaGuiada(elemento.concepto)">
+                                <ng-container *ngIf="enBusquedaGuiada(elemento.concepto)">
                                     <div class="row">
                                         <div class="col-12">
-                                            <span *ngFor="let rf of matchinBusquedaGuiada(elemento.concepto)" class="badge badge-danger">
+                                            <span *ngFor="let rf of enBusquedaGuiada(elemento.concepto)" class="badge badge-danger">
                                                 {{rf.nombre}}
                                             </span>
                                         </div>
