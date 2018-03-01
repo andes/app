@@ -123,7 +123,6 @@ export class IniciarInternacionComponent implements OnInit {
     }
 
     onPacienteSelected(paciente: IPaciente) {
-        debugger
         if (paciente.id) {
             this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion
@@ -132,7 +131,6 @@ export class IniciarInternacionComponent implements OnInit {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
                         this.router.navigate(['/mapa-de-camas']);
                     } else {
-                        debugger;
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
                         this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
