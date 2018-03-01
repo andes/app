@@ -177,11 +177,11 @@ export class PrestacionValidacionComponent implements OnInit {
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
         if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un diagnóstico principal', 'Diagnóstico principal', 1000);
+            this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un diagnóstico principal');
+            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -343,7 +343,7 @@ export class PrestacionValidacionComponent implements OnInit {
     defualtDiagnosticoPrestacion() {
         let count = 0;
         // for (let elemento of this.prestacion.ejecucion.registros) {
-        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }

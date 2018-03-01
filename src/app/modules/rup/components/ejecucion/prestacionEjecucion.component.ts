@@ -182,7 +182,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
-
             // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
