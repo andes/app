@@ -220,6 +220,7 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/componen
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 
 
 // Llaves
@@ -257,6 +258,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -394,7 +396,9 @@ let RUPComponentsArray = [
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
-        CamaComponent
+        CamaComponent,
+        CamaEstadoComponent,
+        OcuparCamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

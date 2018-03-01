@@ -550,7 +550,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: any = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -688,16 +688,6 @@ export class PrestacionesService {
         return this.patch(prestacion.id, dto);
 
 
-        // } else {
-        //     // hacemos el patch y luego creamos los planes
-        //     let dto: any = {
-        //         op: 'estadoPush',
-        //         estado: { tipo: 'validada' },
-        //         registros: prestacion.ejecucion.registros
-        //     };
-
-        //     return this.patch(prestacion.id, dto);
-        // }
 
     }
     /**
@@ -840,5 +830,22 @@ export class PrestacionesService {
         }
 
         return icon;
+    }
+
+    /*******
+     * INTERNACION
+     */
+
+    /**
+    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
+    *
+    * @param {any} paciente id del paciente en internacion
+    * @param {any} estado estado de la internacion
+    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
+    * @memberof BuscadorComponent
+    */
+    public internacionesXPaciente(paciente, estado) {
+        let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
+        return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
     }
 }
