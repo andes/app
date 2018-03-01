@@ -67,6 +67,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
+import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -461,8 +462,8 @@ let RUPComponentsArray = [
         PermisosService,
         FrecuentesProfesionalService,
         DocumentosService,
-        CamasService
-
+        CamasService,
+        PrestamosService
     ]
 })
 

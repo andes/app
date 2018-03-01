@@ -1,8 +1,8 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TurnoService } from './../../../services/turnos/turno.service';
-
-import { PrestarHcComponent } from './prestar-hc.component'; 
+// import { TurnoService } from './../../../services/turnos/turno.service';
+import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
+import { PrestarHcComponent } from './prestar-hc.component';
 
 @Component({
     selector: 'app-listar-solicitudes',
@@ -10,21 +10,27 @@ import { PrestarHcComponent } from './prestar-hc.component';
 })
 
 export class ListarSolicitudesComponent implements OnInit {
-    turnos: any[];
+    carpetas: any[];
     today = Date.now();
 
     @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     ngOnInit() {
-        this.getTurnos();
+        this.getCarpetas();
     }
 
-    getTurnos() {
-        let datosTurno = { estado: 'asignado', userName: '25334392', userDoc: '25334392' };
+    getCarpetas() {
+        debugger;
+        this.prestamosService.getCarpetas().subscribe(carpetas => {
+            debugger;
+            this.carpetas = carpetas;
+        });
+        // let datosTurno = { estado: 'asignado', userName: '25334392', userDoc: '25334392' };
 
-        this.turnoService.getTurnos(datosTurno).subscribe(turnos => {
-            this.turnos = turnos;
-        })
+        // this.turnoService.getTurnos(datosTurno).subscribe(turnos => {
+        //     this.turnos = turnos;
+        // })
+
     }
 
     prestar(turno) {
@@ -32,5 +38,5 @@ export class ListarSolicitudesComponent implements OnInit {
         this.showPrestarEmit.emit(true);
     }
 
-    constructor(public turnoService: TurnoService) { }
+    constructor(public prestamosService: PrestamosService) { }
 }

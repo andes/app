@@ -3,13 +3,18 @@
     <thead>
         <tr>
             <th>Fecha</th>
+            <th>Ubicación</th>
+            <th>Responsable</th>
+            <th>Historia Clínica</th>
         </tr>
     </thead>
-    <tbody *ngFor="let turno of turnos">
+    <tbody *ngFor="let carpeta of carpetas">
         <tr>
             <td>
                 {{today | date: 'dd/mm/yyyy'}}
             </td>
+            <td>carpeta.estado</td>
+            <td></td>
             <td>
                 <plex-button type="primary" label="Prestar" (click)="prestar(turno)">
                 </plex-button>
