@@ -1,4 +1,4 @@
-<ng-container *ngIf="!soloValores">
+<ng-container>
     <div class="row">
         <div class="col-6">
             <plex-select label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="diagnosticoPrincipal"
@@ -159,7 +159,7 @@
 
 
 </ng-container>
-<ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
+<!-- <ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
     <div class="row">
         <div class="col-3">
             <label class="block">Diagnostico Principal al egreso</label>
@@ -247,4 +247,4 @@
 
     </div>
 
-</ng-container>
+</ng-container> -->

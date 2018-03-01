@@ -32,13 +32,9 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
                 return { id: elem._id, nombre: elem.nombre };
             });
         });
-
-
     }
 
-
     codigoCIE10(event) {
-        console.log(event);
         let query = {
             nombre: event.query
         };

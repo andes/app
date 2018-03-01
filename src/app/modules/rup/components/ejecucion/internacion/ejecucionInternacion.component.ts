@@ -65,6 +65,13 @@ export class EjecucionInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         obraSocial: null
     };
+    public egreso = {
+        conceptId: "58000006",
+        term: "alta del paciente",
+        fsn: "alta del paciente (procedimiento)",
+        semanticTag: "procedimiento"
+    };
+    public soloValores = true;
 
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -87,6 +94,8 @@ export class EjecucionInternacionComponent implements OnInit {
             });
 
         });
+
+
     }
 
     inicializar(id) {
@@ -110,4 +119,34 @@ export class EjecucionInternacionComponent implements OnInit {
     }
 
 
+
+    ejecutarConcepto(snomedConcept, registroDestino = null) {
+        let resultado;
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+        // si estamos cargando un concepto para una transformación de hall
+        if (registoExiste) {
+            this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
+            return false;
+        }
+        this.soloValores = false;
+        resultado = this.cargarNuevoRegistro(snomedConcept);
+
+    }
+
+    cargarNuevoRegistro(snomedConcept, valor = null) {
+        // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+        let esSolicitud = false;
+
+        let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+        // armamos el elemento data a agregar al array de registros
+        let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+        nuevoRegistro['_id'] = nuevoRegistro.id;
+        nuevoRegistro.valor = valor;
+        // Agregamos al array de registros
+        this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
+        // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
+        return nuevoRegistro;
+    }
 }
