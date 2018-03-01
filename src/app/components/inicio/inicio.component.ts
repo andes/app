@@ -29,10 +29,11 @@ export class InicioComponent implements AfterViewInit {
     public mpi = '';
     public rup = '';
     public mapaDeCamas = '';
+    public solicitudes = '';
     public denied = false;
     public accessList: any = [];
 
-    constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) {}
+    constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {
@@ -60,8 +61,13 @@ export class InicioComponent implements AfterViewInit {
             }
 
             if (1 === 1) {
-            // if (this.auth.getPermissions('mapaDeCamas:?').length > 0) {
+                // if (this.auth.getPermissions('mapaDeCamas:?').length > 0) {
                 this.mapaDeCamas = 'mapaDeCamas';
+                this.denied = false;
+            }
+
+            if (1 === 1) {
+                this.solicitudes = 'solicitudes';
                 this.denied = false;
             }
 

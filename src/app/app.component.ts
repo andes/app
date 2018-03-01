@@ -54,8 +54,10 @@ export class AppComponent {
         }
 
         if (this.auth.getPermissions('reportes:?').length > 0) {
-            accessList.push({ label: 'REPORTES', icon: 'file-chart', route: '/reportes' });
+            accessList.push({ label: 'Reportes', icon: 'file-chart', route: '/reportes' });
         }
+
+        accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
 
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
