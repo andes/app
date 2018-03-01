@@ -14,6 +14,9 @@ export class SolicitudesComponent implements OnInit {
     public solicitudes = [];
     public fechaDesde: Date = new Date();
     public fechaHasta: Date = new Date();
+    public DT = [];
+    public Auditar = [];
+    public visualizar = [];
     constructor(private auth: Auth, private plex: Plex,
         private router: Router, public servicioPrestacion: PrestacionesService) { }
 
@@ -31,11 +34,54 @@ export class SolicitudesComponent implements OnInit {
         return this.solicitudes.findIndex(x => x.id === solicitud._id);
     }
 
-    seleccionar(solicitud) {
+    seleccionar(indice) {
+        let solicitud = this.solicitudes[indice];
+        for (let i = 0; i < this.solicitudes.length; i++) {
+            this.solicitudes[i].seleccionada = false;
+            this.DT[i] = false;
+            this.visualizar[i] = false;
+            this.Auditar[i] = false;
+        }
+        solicitud.seleccionada = true;
+        switch (solicitud.estados[solicitud.estados.length - 1].tipo) {
+            case 'pendiente':
+                this.Auditar[indice] = false;
+                if (solicitud.turno !== null) {
+                    this.visualizar[indice] = true;
+                } else {
+                    this.DT[indice] = true;
+                    this.visualizar[indice] = false;
+                }
+                break;
+            case 'pendiente auditoria':
+                this.DT[indice] = false;
+                this.visualizar[indice] = false;
+                this.Auditar[indice] = true;
+                if (solicitud.turno !== null) {
+                    this.visualizar[indice] = true;
+                } else {
+                    this.visualizar[indice] = false;
+                }
+                break;
+            default:
+                if (solicitud.turno !== null) {
+                    this.visualizar[indice] = true;
+                }
+                this.DT[indice] = false;
+                this.Auditar[indice] = false;
+                break;
+        }
+    }
+
+    darTurno() {
+        // Pasar filtros al calendario
+    }
+
+    auditar() {
+
     }
 
     cargarSolicitudes() {
-
         // Solicitudes que no tienen prestacionOrigen ni turno
         // Si tienen prestacionOrigen son generadas por RUP y no se listan
         // Si tienen turno, dejan de estar pendientes de turno y no se listan
@@ -52,7 +98,7 @@ export class SolicitudesComponent implements OnInit {
                 {
                     id: 1,
                     fecha: 'Mon Feb 26 2018 11:15:52 GMT-0300 (ART)',
-                    turno: '5a69ef990577c50523b9af7a',
+                    turno: null,
                     organizacionOrigen: {
                         id: '57f67d090166fa6aedb2f9fb',
                         nombre: 'HOSPITAL DE AREA CENTENARIO - DR. NATALIO BURD'
@@ -161,12 +207,65 @@ export class SolicitudesComponent implements OnInit {
                             idOrigenModifica: null
                         }
                     ]
+                },
+                {
+                    id: 3,
+                    fecha: 'Wed Feb 14 2018 11:15:52 GMT-0300 (ART)',
+                    turno: null,
+                    organizacionOrigen: {
+                        id: '57fcf037326e73143fb48c3a',
+                        nombre: 'CENTRO DE SALUD PROGRESO'
+                    },
+                    organizacionDestino: {
+                        id: '57e9670e52df311059bc8964',
+                        nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON'
+                    },
+                    profesionalOrigen: {
+                        documento: '22851614',
+                        apellido: 'GARCIA',
+                        nombre: 'ESTEBAN OSMAR',
+                        id: '58f74fd4d03019f919ea1298'
+                    },
+                    tipoPrestacion: {
+                        id: '598ca8375adc68e2a0c121e5',
+                        conceptId: '551000013105',
+                        term: 'consulta de salud mental',
+                        fsn: 'consulta de salud mental',
+                        semanticTag: 'procedimiento'
+                    },
+                    paciente: {
+                        id: '59e5e01b27b2173491bdfa50',
+                        documento: '93090185',
+                        apellido: 'PALACIOS SEGUEL',
+                        nombre: 'MYRIAN DEL TRANSITO',
+                        sexo: 'femenino',
+                        fechaNacimiento: '1954-08-15T00:00:00.000-03:00'
+                    },
+                    estados: [
+                        {
+                            createdBy: {
+                                organizacion: {
+                                    id: '57e9670e52df311059bc8964',
+                                    nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON',
+                                },
+                                documento: 18546703,
+                                username: 18546703,
+                                apellido: 'FONSECA',
+                                nombre: 'DOMINGA',
+                                nombreCompleto: 'DOMINGA FONSECA'
+                            },
+                            createdAt: '2018-02-28T14:59:16.212-03:00',
+                            tipo: 'pendiente auditoria',
+                            id: '5a96edf4fb83f14b3ba3224d',
+                            idOrigenModifica: null
+                        }
+                    ]
                 }
-            ];
+            ]
+            //     console.log('solicitudes ', this.solicitudes);
         }
         // this.servicioPrestacion.get(params).subscribe(resultado => {
         //     this.solicitudes = resultado;
-        //     console.log('solicitudes ', this.solicitudes);
         // }, err => {
         //     if (err) {
         //         console.log(err);
