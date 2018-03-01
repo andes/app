@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
     selector: 'app-prestar-hc',
@@ -7,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
 
 export class PrestarHcComponent implements OnInit {
     // showPrestar = false;
+
+    @Input() carpeta : any;
 
     prestarHC: any = {
         destino: '',
@@ -19,7 +21,7 @@ export class PrestarHcComponent implements OnInit {
     }
 
     save(event) {
-
+        event.     
     }
 
     cancel() {

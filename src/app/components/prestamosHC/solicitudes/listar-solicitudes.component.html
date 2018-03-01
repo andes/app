@@ -6,6 +6,7 @@
             <th>Ubicación</th>
             <th>Responsable</th>
             <th>Historia Clínica</th>
+            <th></th>
         </tr>
     </thead>
     <tbody *ngFor="let carpeta of carpetas">
@@ -13,8 +14,16 @@
             <td>
                 {{today | date: 'dd/mm/yyyy'}}
             </td>
-            <td>carpeta.estado</td>
-            <td></td>
+            <td>{{carpeta.estado}}</td>
+            <td>{{carpeta.datosPrestamo.turno.profesional[0][0].apellido}},
+                {{carpeta.datosPrestamo.turno.profesional[0][0].nombre}}</td>
+            <td>
+                <b>
+                    {{carpeta.datosPrestamo.turno.paciente.carpetaEfectores[0].nroCarpeta}} -   
+                    {{carpeta.datosPrestamo.turno.paciente.apellido}},
+                    {{carpeta.datosPrestamo.turno.paciente.nombre}}</b> <br/>
+                    Documento: <b>{{carpeta.datosPrestamo.turno.paciente.documento}}</b>
+                </td>    
             <td>
                 <plex-button type="primary" label="Prestar" (click)="prestar(turno)">
                 </plex-button>

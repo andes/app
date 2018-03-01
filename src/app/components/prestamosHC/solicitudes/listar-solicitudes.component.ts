@@ -20,9 +20,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     getCarpetas() {
-        debugger;
         this.prestamosService.getCarpetas().subscribe(carpetas => {
-            debugger;
             this.carpetas = carpetas;
         });
         // let datosTurno = { estado: 'asignado', userName: '25334392', userDoc: '25334392' };
@@ -34,7 +32,6 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     prestar(turno) {
-        debugger;
         this.showPrestarEmit.emit(true);
     }
 
