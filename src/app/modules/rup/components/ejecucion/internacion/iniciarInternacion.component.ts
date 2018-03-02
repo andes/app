@@ -94,11 +94,12 @@ export class IniciarInternacionComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            let id = params['id'];
-            this.camasService.getCama(id).subscribe(cama => {
-                this.cama = cama;
-            });
-
+            if (params && params['id']) {
+                let id = params['id'];
+                this.camasService.getCama(id).subscribe(cama => {
+                    this.cama = cama;
+                });
+            }
             this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
                 this.organizacion = organizacion;
             });
@@ -204,24 +205,29 @@ export class IniciarInternacionComponent implements OnInit {
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            // vamos a actualizar el estado de la cama
-            let dto = {
-                fecha: this.informeIngreso.fechaIngreso,
-                estado: 'ocupada',
-                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
-                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
-                esCensable: this.cama.ultimoEstado.esCensable,
-                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                paciente: this.paciente,
-                idInternacion: prestacion.id
-            };
+            debugger;
+            if (this.cama) {
+                // vamos a actualizar el estado de la cama
+                let dto = {
+                    fecha: this.informeIngreso.fechaIngreso,
+                    estado: 'ocupada',
+                    unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                    especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                    esCensable: this.cama.ultimoEstado.esCensable,
+                    genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                    paciente: this.paciente,
+                    idInternacion: prestacion.id
+                };
 
-            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
-                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                    this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                }, (err1) => {
+                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                });
+            } else {
                 this.router.navigate(['rup/internacion/ver', prestacion.id]);
-            }, (err1) => {
-                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-            });
+            }
 
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
