@@ -1,4 +1,4 @@
-import { environment } from './../../../environment';
+import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
