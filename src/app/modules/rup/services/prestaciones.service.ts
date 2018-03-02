@@ -633,6 +633,7 @@ export class PrestacionesService {
         }
 
         prestacion.paciente['_id'] = paciente.id;
+        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
 
         return prestacion;
     }

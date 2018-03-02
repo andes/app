@@ -128,7 +128,7 @@ export class EjecucionInternacionComponent implements OnInit {
 
 
 
-    ejecutarConcepto(snomedConcept, registroDestino = null) {
+    ejecutarConcepto(snomedConcept, soloValores = true) {
         let resultado;
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
@@ -138,7 +138,7 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        this.soloValores = false;
+        this.soloValores = soloValores;
         resultado = this.cargarNuevoRegistro(snomedConcept);
 
     }
