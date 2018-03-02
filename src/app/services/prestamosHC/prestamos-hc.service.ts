@@ -12,4 +12,12 @@ export class PrestamosService {
         debugger;
         return this.server.get(this.turnoUrl + '/prestamosHC');
     }
+
+    prestarCarpeta(params: any): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/prestarCarpeta', { params: params, showError: true });
+    }
+
+    // prestarCarpeta(carpeta): Observable<any[]> {
+    //     return this.server.get(this.turnoUrl + '/prestamosHC/prestarCarpeta', carpeta);
+    // }
 }

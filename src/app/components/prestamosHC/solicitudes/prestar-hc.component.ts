@@ -1,4 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
 
 @Component({
     selector: 'app-prestar-hc',
@@ -6,7 +7,24 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 
 export class PrestarHcComponent implements OnInit {
-    @Input() prestar: any;
+    private _carpeta: any;
+    prestamo: any;
+
+    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
+
+    @Input('prestar')
+    set prestar(value: any) {
+        this.prestamo = value;
+        debugger;
+        if (value && value.datosPrestamo && value.datosPrestamo.turno.profesional[0][0]) {
+            this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico[0].nombre;
+            this.prestarHC.responsable = value.datosPrestamo.turno.profesional[0][0].apellido + ', ' + value.datosPrestamo.turno.profesional[0][0].nombre;
+        }
+
+    }
+    get prestar(): any {
+        return this._carpeta;
+    }
 
     prestarHC: any = {
         destino: '',
@@ -15,16 +33,29 @@ export class PrestarHcComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.prestarHC.destino = this.prestar.datosPrestamo.turno.espacioFisico[0].nombre;
-        this.prestarHC.responsable = this.prestar.datosPrestamo.turno.profesional[0][0].apellido + ' ' + this.prestar.datosPrestamo.turno.profesional[0][0].apellido;
-        debugger;
+
     }
 
     save(event) {
-debugger;
+
+        event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
+        event.idTurno = this.prestamo.datosPrestamo.turno.id;
+        event.tipoPrestacion = this.prestamo.datosPrestamo.turno.conceptoTurneable[0];
+        event.profesional = this.prestamo.datosPrestamo.turno.profesional[0][0];
+        event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisico;
+        // this.prestarCarpeta(event);
+        debugger;
+        this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
+            this._carpeta = carpeta;
+            this.listaCarpetaEmit.emit(this._carpeta);
+        });
     }
 
     cancel() {
+
+    }
+
+    constructor(public prestamosService: PrestamosService) {
 
     }
 }
