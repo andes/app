@@ -66,11 +66,20 @@ export class EjecucionInternacionComponent implements OnInit {
         obraSocial: null
     };
     public egreso = {
-        conceptId: "58000006",
-        term: "alta del paciente",
-        fsn: "alta del paciente (procedimiento)",
-        semanticTag: "procedimiento"
+        conceptId: '58000006',
+        term: 'alta del paciente',
+        fsn: 'alta del paciente (procedimiento)',
+        semanticTag: 'procedimiento'
     };
+
+    public snomedPases = {
+        'fsn': 'estadía de internación (hallazgo)',
+        'semanticTag': 'procedimiento',
+        'conceptId': '308540004',
+        'term': 'estadía de internación',
+        'refsetIds': []
+    };
+
     public soloValores = true;
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -99,7 +108,6 @@ export class EjecucionInternacionComponent implements OnInit {
     }
 
     inicializar(id) {
-
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
@@ -120,7 +128,7 @@ export class EjecucionInternacionComponent implements OnInit {
 
 
 
-    ejecutarConcepto(snomedConcept, registroDestino = null) {
+    ejecutarConcepto(snomedConcept, soloValores = true) {
         let resultado;
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
@@ -130,7 +138,7 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        this.soloValores = false;
+        this.soloValores = soloValores;
         resultado = this.cargarNuevoRegistro(snomedConcept);
 
     }

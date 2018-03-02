@@ -633,6 +633,7 @@ export class PrestacionesService {
         }
 
         prestacion.paciente['_id'] = paciente.id;
+        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
 
         return prestacion;
     }
@@ -843,10 +844,22 @@ export class PrestacionesService {
     * @param {any} paciente id del paciente en internacion
     * @param {any} estado estado de la internacion
     * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
-    * @memberof BuscadorComponent
+    * @memberof PrestacionesService
     */
     public internacionesXPaciente(paciente, estado) {
         let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
         return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
+    }
+
+
+    /**
+   * Devuelve el listado de estados de la/s camas por las que paso la internación
+   *
+   * @param {any} idInternacion id de la intenacion
+   * @returns  {array} lista de camas-estados por los que paso la internación
+   * @memberof PrestacionesService
+   */
+    public getPasesInternacion(idInternacion) {
+        return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
     }
 }

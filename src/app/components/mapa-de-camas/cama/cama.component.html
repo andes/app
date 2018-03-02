@@ -79,10 +79,10 @@
                         *ngIf="cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-bug"></i>
                     </button>
-                    <button class="btn btn-default" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
+                    <button class="btn btn-default  tips" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
                         <i class="mdi mdi-eye"></i>
                     </button>
-                    <button class="btn btn-default" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
+                    <button class="btn btn-default  tips" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
                         *ngIf="cama.ultimoEstado?.idInternacion">
                         <i class="mdi mdi-close-box"></i>
                     </button>
