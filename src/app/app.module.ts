@@ -223,6 +223,7 @@ import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 
 
 // Llaves
@@ -293,6 +294,7 @@ export let RUPRegistry = {
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'EgresoInternacionComponent': EgresoInternacionComponent,
+    'PasesCamaComponent': PasesCamaComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -328,7 +330,8 @@ let RUPComponentsArray = [
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
-    EgresoInternacionComponent
+    EgresoInternacionComponent,
+    PasesCamaComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);

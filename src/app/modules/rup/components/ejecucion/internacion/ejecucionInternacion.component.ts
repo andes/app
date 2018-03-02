@@ -66,11 +66,20 @@ export class EjecucionInternacionComponent implements OnInit {
         obraSocial: null
     };
     public egreso = {
-        conceptId: "58000006",
-        term: "alta del paciente",
-        fsn: "alta del paciente (procedimiento)",
-        semanticTag: "procedimiento"
+        conceptId: '58000006',
+        term: 'alta del paciente',
+        fsn: 'alta del paciente (procedimiento)',
+        semanticTag: 'procedimiento'
     };
+
+    public snomedPases = {
+        'fsn': 'estadía de internación (hallazgo)',
+        'semanticTag': 'procedimiento',
+        'conceptId': '308540004',
+        'term': 'estadía de internación',
+        'refsetIds': []
+    };
+
     public soloValores = true;
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -99,7 +108,6 @@ export class EjecucionInternacionComponent implements OnInit {
     }
 
     inicializar(id) {
-
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
