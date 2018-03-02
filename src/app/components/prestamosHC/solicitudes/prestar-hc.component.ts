@@ -10,7 +10,7 @@ export class PrestarHcComponent implements OnInit {
     private _carpeta: any;
     prestamo: any;
 
-    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
+    // @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     @Input('prestar')
     set prestar(value: any) {
@@ -47,7 +47,7 @@ export class PrestarHcComponent implements OnInit {
         debugger;
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
-            this.listaCarpetaEmit.emit(this._carpeta);
+            // this.listaCarpetaEmit.emit(this._carpeta);
         });
     }
 
