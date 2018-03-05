@@ -139,7 +139,7 @@
                             </div>
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                     <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                 </small>
@@ -263,7 +263,6 @@
             <div class="row">
                 <div class="col-6"></div>
                 <div class="col-6 mt-5">
-                    ---------------------------------------------------
                 </div>
             </div>
             <div class="row">
