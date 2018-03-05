@@ -537,14 +537,17 @@ export class PrestacionValidacionComponent implements OnInit {
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
 
-            // Cada logo va a quedar generada como base64 desde la API:
-            // <img src="data:image/png;base64,..." style="float: left;">
-            // <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
-            // <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+            /**
+             * Cada logo va a quedar generado como base64 desde la API:
+             *
+             * <img src="data:image/png;base64,..." style="float: left;">
+             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+             * 
+             */
 
             const header = `
-                <div>
-                    ${headerPrestacion.innerHTML}
+                <div class="resumen-solicitud">
                     ${datosSolicitud.innerHTML}
                 </div>
             `;
