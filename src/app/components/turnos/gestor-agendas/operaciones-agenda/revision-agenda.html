@@ -239,11 +239,11 @@
                     <!--CODIFICACION-->
                     <div class="row">
                         <div class="col-12">
-                            <div *ngIf="turnoSeleccionado && turnoSeleccionado.asistencia == 'asistio'">
+                            <div *ngIf="turnoSeleccionado?.asistencia == 'asistio'">
                                 <h5>Codificación</h5>
                                 <hr>
                                 <!-- Listado de codificaciones seleccionadas -->
-                                <div *ngIf="diagnosticos.length>0 && !turnoSeleccionado.diagnostico.ilegible && !showReparo ">
+                                <div *ngIf="!showReparo">
                                     <div class="row">
                                         <div class="col-12">
                                             <table class="table table-striped">
@@ -309,7 +309,7 @@
                                     <!-- Búsqueda de prestaciones cie10 -->
                                     <div class="row">
                                         <div class="col-8">
-                                            Seleccionar código reparo
+                                            <Label text="Seleccionar código reparo" textWrap="true"></Label>
                                             <buscador-cie10 (seleccionEmit)="repararDiagnostico($event)"></buscador-cie10>
 
                                         </div>
