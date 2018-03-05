@@ -126,7 +126,7 @@ export class IniciarInternacionComponent implements OnInit {
     onPacienteSelected(paciente: IPaciente) {
         if (paciente.id) {
             this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion          
+                // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
@@ -205,7 +205,6 @@ export class IniciarInternacionComponent implements OnInit {
         nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            debugger;
             if (this.cama) {
                 // vamos a actualizar el estado de la cama
                 let dto = {
