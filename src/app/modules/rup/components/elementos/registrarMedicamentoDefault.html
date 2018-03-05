@@ -7,17 +7,20 @@
                 <div class="row no-gutters">
                     <div class="col-7">
                         <label for="">Cantidad</label>
-                        <plex-int *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad" name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
+                        <plex-int *ngIf="registro.valor" prefix="Cantidad" placeholder="Ingrese un valor entre 0 y 2000" [(ngModel)]="registro.valor.cantidad"
+                            name="cantidad" min="0" max="2000" (change)="emitChange()" required="true">
                         </plex-int>
                     </div>
                     <div class="col-5">
-                        <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades" [required]="true" (change)="formatearUnidad()">
+                        <plex-select *ngIf="registro.valor" class="unidades-tiempo" [(ngModel)]="registro.valor.unidad" name="unidad" [data]="unidades"
+                            [required]="true" (change)="formatearUnidad()">
                         </plex-select>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-                <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable" name="recetable" class="pb-1"></plex-bool>
+                <plex-bool *ngIf="registro.valor.recetable !== null" type="slide" [(ngModel)]="registro.valor.recetable" label="Recetable"
+                    name="recetable" class="pb-1"></plex-bool>
             </div>
         </div>
         <div class="row">
@@ -28,12 +31,14 @@
                         <plex-int [(ngModel)]="registro.valor.duracion.cantidad" name="inicioEstimadoUnidad" [required]="true" prefix="Durante" (change)="emitChange()"></plex-int>
                     </div>
                     <div class="col-5">
-                        <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo" [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
+                        <plex-select class="unidades-tiempo" *ngIf="!soloValores" [(ngModel)]="registro.valor.duracion.unidad" name="inicioEstimadoTiempo"
+                            [data]="unidadTiempo" [required]="true" (change)="formatearDuracion()"></plex-select>
                     </div>
                 </div>
             </div>
             <div class="col-4">
-                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados" [required]="true" (change)="formateaEstado()">
+                <plex-select *ngIf="registro.valor.estado" label="Estado" [(ngModel)]="registro.valor.estado" name="estado" [data]="estados"
+                    [required]="true" (change)="formateaEstado()">
                 </plex-select>
             </div>
         </div>
@@ -59,7 +64,8 @@
             {{ unaEvolucion.fechaCarga | fecha }}
         </div>
         <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+            <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
+                (click)="cambiarEvolucion('+') "></plex-button>
             <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
         </div>
     </div>
@@ -79,7 +85,12 @@
     </div>
 </ng-container>
 
-<ng-container *ngIf="soloValores ">
+<ng-container *ngIf="soloValores">
+    <div class="row">
+        <div class="col">
+            <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
+        </div>
+    </div>
     <div class="row readonly" *ngIf="!registro.evoluciones">
         <div class="col-4">
             <span>Estado</span> {{registro.valor.estado}}

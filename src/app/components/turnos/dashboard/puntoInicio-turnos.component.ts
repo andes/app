@@ -11,7 +11,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-import { AgendaService } from '../../../services/turnos/agenda.service';
+// import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
@@ -51,7 +51,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     constructor(
         public servicePaciente: PacienteService,
-        public servicioAgenda: AgendaService, public auth: Auth,
+        // public servicioAgenda: AgendaService,
+        public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
         private plex: Plex) { }

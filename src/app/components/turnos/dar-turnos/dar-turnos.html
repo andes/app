@@ -124,8 +124,16 @@
                                                                     <b>Con llave</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <!-- <td *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true"><b>Profesional</b></td> -->
-                                                            <td>Profesional</td>
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitud else profesionalComun"></ng-container>
+                                                            <ng-template #profesionalComun>
+                                                                <td>Profesional</td>
+                                                            </ng-template>
+                                                            <ng-template #profesionalSolicitud>
+                                                                <td>
+                                                                    <b>Profesional</b>
+                                                                </td>
+                                                            </ng-template>
+                                                            <!-- <td>Profesional</td> -->
 
                                                         </tr>
                                                     </thead>
@@ -142,7 +150,16 @@
                                                                     <b>{{countBloques[indiceBloque]?.gestion}}</b>
                                                                 </td>
                                                             </ng-template>
-                                                            <td>{{countBloques[indiceBloque]?.profesional}}</td>
+                                                            <ng-container *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true; then profesionalSolicitudValor else profesionalComunValor"></ng-container>
+                                                            <ng-template #profesionalComunValor>
+                                                                <td>{{countBloques[indiceBloque]?.profesional}}</td>
+                                                            </ng-template>
+                                                            <ng-template #profesionalSolicitudValor>
+                                                                <td>
+                                                                    <b>{{countBloques[indiceBloque]?.profesional}}</b>
+                                                                </td>
+                                                            </ng-template>
+                                                            <!-- <td>{{countBloques[indiceBloque]?.profesional}}</td> -->
 
                                                         </tr>
                                                     </tbody>
@@ -229,7 +246,7 @@
 
                                 <!--Confirmación del turno -->
                                 <ng-container *ngIf="estadoT === 'confirmacion'">
-                                    <h5 class="pt-3 text-center">Confirme los datos del turno</h5>
+                                    <!-- <h5 class="pt-3 text-center">Confirme los datos del turno</h5> -->
                                     <!--Header-->
                                     <div class="alert alert-default">
                                         <div class="row">
@@ -255,9 +272,17 @@
                                         </div>
                                         <div class="row">
                                             <div class="col">
+                                                <div *ngIf="obraSocialPaciente">
+                                                    <label>Obra Social </label>
+                                                    <div>{{obraSocialPaciente.nombre}}</div>
+                                                    <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
                                                 <div *ngIf="permitirTurnoDoble">
-                                                    <label>Turno doble: </label>
-                                                    <plex-bool [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
+                                                    <plex-bool label="Turno doble" [(ngModel)]='turnoDoble' name="turnoDoble"></plex-bool>
                                                 </div>
                                             </div>
                                         </div>

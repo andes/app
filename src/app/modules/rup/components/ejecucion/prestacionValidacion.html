@@ -190,10 +190,10 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
-                                        <ng-container *ngIf="(elemento.concepto.semanticTag === 'hallazgo' || elemento.concepto.semanticTag === 'trastorno' || elemento.concepto.semanticTag === 'situación')">
+                                        <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
-                                                title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como diagnóstico principal' : 'Diagnóstico principal'}}"
-                                                class="diagnostico-principal">Diagnóstico principal
+                                                title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como motivo de consulta principal' : 'Motivo de consulta principal'}}"
+                                                class="diagnostico-principal">Motivo de consulta principal
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                                 'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                                 'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
@@ -245,7 +245,7 @@
                                     <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
-                                            Diagnóstico principal
+                                            Motivo de consulta principal
                                         </small>
                                     </small>
                                 </div>
