@@ -15,25 +15,14 @@ import * as moment from 'moment';
 
 export class ListarTurnosComponent implements OnInit {
 
-    private _agenda;
-    @Input('agenda')
-    set agenda(value: any) {
-        this._agenda = value;
+    private _agendas;
+    @Input('agendas') // recibe un array de agendas
+    set agendas(value: any) {
+        this._agendas = value;
         let turnos = [];
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            turnos = turnos.concat(this.agenda.bloques[i].turnos);
-            // this.turnosAsignados = (this.agenda.bloques[i].turnos).filter((turno) => {
-        }
-        if (this.agenda.sobreturnos.length > 0) {
-            turnos = turnos.concat(this.agenda.sobreturnos);
-        }
-
-        this.turnosAsignados = (turnos).filter((turno) => {
-            return (turno.paciente && turno.paciente.id) && (turno.estado === 'asignado' || turno.estado === 'suspendido');
-        });
     }
-    get agenda(): any {
-        return this._agenda;
+    get agendas(): any {
+        return this._agendas;
     }
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
@@ -41,7 +30,7 @@ export class ListarTurnosComponent implements OnInit {
 
     autorizado = false;
     showListarTurnos = true;
-    turnosAsignados = [];
+    // turnosAsignados = [];
     public idOrganizacion = this.auth.organizacion.id;
 
     constructor(public plex: Plex, public servicePaciente: PacienteService, public auth: Auth) { }
