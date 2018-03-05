@@ -557,17 +557,13 @@ export class GestorAgendasComponent implements OnInit {
             this.showRevisionAgenda = false;
         }
 
-        let temporal = this.agendasSeleccionadas;
-
         if (this.parametros) {
             this.getAgendas(this.parametros);
         } else {
             this.loadAgendas();
         }
         if (!this.showSuspenderAgenda) {
-            let temporal = this.agendasSeleccionadas;
             this.loadAgendas();
-            this.agendasSeleccionadas = temporal;
             this.agendasSeleccionadas.forEach((as) => {
                 if (this.agendasSeleccionadas.length === 1) {
                     this.verAgenda(as, false, null);

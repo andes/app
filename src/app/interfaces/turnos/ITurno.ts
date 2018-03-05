@@ -42,9 +42,9 @@ export interface ITurno {
     motivoSuspension: {
         type: string,
         enum: ['edilicia', 'profesional', 'organizacion', 'agendaSuspendida']
-    },
+    };
     avisoSuspension: {
         type: string,
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido']
-    },
+    };
 }
