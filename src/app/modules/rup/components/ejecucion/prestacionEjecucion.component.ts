@@ -157,7 +157,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     if (!registoExiste) {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
-                                        // Expandir sólo si no tienen algún valor 
+                                        // Expandir sólo si no tienen algún valor
                                         this.itemsRegistros[registoExiste.id].collapse = true;
                                     }
                                 }

@@ -34,7 +34,7 @@ export class PrestacionValidacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    // tiene permisos para descargar? 
+    // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
 
     // Usa el keymap 'default'
@@ -543,7 +543,7 @@ export class PrestacionValidacionComponent implements OnInit {
              * <img src="data:image/png;base64,..." style="float: left;">
              * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
              * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
-             * 
+             *
              */
 
             const header = `
