@@ -25,10 +25,13 @@
 </ng-container>
 
 <p *ngIf="soloValores" class="readonly">
-    <ng-container *ngIf="registro.valor.length > 0">
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length > 1">
         <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">
             <li class="list-item">{{valor.concepto.term}}</li>
         </ul>
+    </ng-container>
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length === 1">
+        <p class="list-item-group" *ngFor="let valor of registro.valor let i = index">{{valor.concepto.term}}</p>
     </ng-container>
     <ng-container *ngIf="registro.valor && !registro.valor.length">
         {{registro.valor.concepto.term}}
