@@ -1,6 +1,21 @@
 <div>
-    <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
+    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event)" name="fechaDesde" label="Desde"
+        class="fechas">
+    </plex-datetime>
+    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event)" name="fechaHasta" label="Hasta"
+        class="fechas">
+    </plex-datetime>
+    
+    <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event)" (getData)="loadPrestaciones($event)"
         name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+    </plex-select>
+
+    <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event)" (getData)="loadEspaciosFisicos($event)"
+        name="espacioFisico" label="Espacio Físico" ngModelOptions="{standalone: true}">
+    </plex-select>
+
+    <plex-select [(ngModel)]="profesional" name="profesional" (getData)="loadProfesionales($event)" label="Profesional"
+        placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
     </plex-select>
 </div>
 
