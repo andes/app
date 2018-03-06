@@ -26,7 +26,10 @@ export class ListarSolicitudesComponent implements OnInit {
 
     public filters = {};
 
-    
+    public verPrestar: Boolean = false;
+    public verDevolver: Boolean = false;
+    public mostrarMasOpciones = false;
+
     @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
@@ -97,18 +100,18 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     loadEspaciosFisicos(event) {
-    console.log('loadEspaciosFisicos', this.auth.organizacion.id);
+        console.log('loadEspaciosFisicos', this.auth.organizacion.id);
         let query = {};
         let listaEspaciosFisicos = [];
         // if (event.query) {
-            // query['nombre'] = event.query;
-            query['nombre'] = '';
-            query['organizacion'] = this.auth.organizacion.id;
+        // query['nombre'] = event.query;
+        query['nombre'] = '';
+        query['organizacion'] = this.auth.organizacion.id;
 
-            this.servicioEspacioFisico.get(query).subscribe(resultado => {
-                event.callback(listaEspaciosFisicos);
-            });
-            
+        this.servicioEspacioFisico.get(query).subscribe(resultado => {
+            event.callback(listaEspaciosFisicos);
+        });
+
         // } else {
         //     event.callback(this.agenda.espacioFisico || []);
         // }
@@ -131,19 +134,23 @@ export class ListarSolicitudesComponent implements OnInit {
         this.showDevolverEmit.emit(false);
         this.showPrestarEmit.emit(true);
         this.carpetaPrestadaEmit.emit(turno);
+
+        this.verPrestar = true;
     }
 
     devolver(turno) {
         this.showPrestarEmit.emit(false);
         this.showDevolverEmit.emit(true);
         this.carpetaPrestadaEmit.emit(turno);
+
+        this.verDevolver = true;
     }
 
     constructor(
-        public prestamosService: PrestamosService, 
+        public prestamosService: PrestamosService,
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
-        public servicioProfesional : ProfesionalService,
+        public servicioProfesional: ProfesionalService,
         public auth: Auth) {
     }
 }
