@@ -14,6 +14,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
 import 'rxjs/Rx';
@@ -29,34 +30,57 @@ import 'rxjs/Rx';
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
-    idAgenda: any;
-    ordenSeleccionado: string;
+
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    // prestacion actual en ejecucion
-    public prestacion: any;
-    public registrosOriginales: any;
-    public paciente;
-    // array de elementos RUP que se pueden ejecutar
-    public elementosRUP: any[];
-    // elementoRUP de la prestacion actual
-    public elementoRUPprestacion: any;
-    /**
-     * Indica si muestra el calendario para dar turno autocitado
-     */
-    public showDarTurnos = false;
-    solicitudTurno;
-    public diagnosticoReadonly = false;
 
-    // array con los mapeos de snomed a cie10
+    // Tiene permisos para descargar?
+    public puedeDescargarPDF = false;
+
+    // Usa el keymap 'default'
+    private slug = new Slug('default');
+
+    // Id de la Agenda desde localStorage (revisar si aun hace falta)
+    public idAgenda: any;
+
+    // Orden en que se muestran los registros
+    public ordenSeleccionado: string;
+    public tipoOrden: any[] = null;
+
+    // Prestación actual en Ejecución
+    public prestacion: any;
+
+    public registrosOriginales: any;
+
+    // Paciente MPI
+    public paciente;
+
+    // Array de elementos RUP que se pueden ejecutar
+    public elementosRUP: any[];
+
+    // elementoRUP de la Prestación actual
+    public elementoRUPprestacion: any;
+
+    // Indica si muestra el calendario para dar turno autocitado
+    public showDarTurnos = false;
+
+    // Mostrar datos de la Solicitud "padre"?
+    public showDatosSolicitud = false;
+
+    // Datos de la Solicitud que se usará para dar un turno
+    public solicitudTurno;
+
+    // Si la Prestación está Validada ya no se podrá cambiar el motivo principal de la consulta
+    public motivoReadOnly = false;
+
+    // Array con los mapeos de snomed a cie10
     public codigosCie10 = {};
 
-    // array con los planes autocitados para dar turno
+    // Array con los planes autocitados para dar turno
     public prestacionesAgendas = [];
-    public asignarTurno = {};
 
-    // Datos de solicitud "padre"
-    public showDatosSolicitud = false;
+    // Array con los Planes que se van a guardar en los turnos
+    public asignarTurno = [];
 
     // Array para armar árbol de relaciones
     public relaciones: any[];
@@ -67,10 +91,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
-    public grupos_guida: any[] = [];
-
-    tipoOrden: any[] = null;
-    arrayTitulos: any[] = [];
+    // Array que guarda los grupos de conceptos en la Búsqueda Guiada
+    public gruposGuiada: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -91,6 +113,7 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
+        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -128,11 +151,11 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.cargaPlan(prestacionesSolicitadas);
                     }
                 });
-                this.diagnosticoReadonly = true;
+                this.motivoReadOnly = true;
             }
 
             this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
-                this.grupos_guida = grupos;
+                this.gruposGuiada = grupos;
             });
 
             // Carga la información completa del paciente
@@ -211,7 +234,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                     });
 
-                    this.diagnosticoReadonly = true;
+                    this.motivoReadOnly = true;
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
@@ -305,7 +328,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
-            this.asignarTurno[idRegistro] = {};
+            this.asignarTurno[idRegistro] = [];
             if (ps.solicitud.turno) {
                 this.asignarTurno[idRegistro] = ps;
             }
@@ -504,13 +527,7 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
-    private descargarArchivo(data: any, headers: any): void {
-
-        let blob = new Blob([data], headers);
-        saveAs(blob, 'rup.pdf');
-    }
-
-    imprimirResumen() {
+    descargarResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -520,25 +537,17 @@ export class PrestacionValidacionComponent implements OnInit {
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
 
-            // Cada logo va a quedar generada como base64 desde la API:
-            // <img src="data:image/png;base64,..." style="float: left;">
-            // <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
-            // <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+            /**
+             * Cada logo va a quedar generado como base64 desde la API:
+             *
+             * <img src="data:image/png;base64,..." style="float: left;">
+             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+             *
+             */
 
             const header = `
-                <header id="pageHeader" style="background-color: rgba(0,0,0,0.1); font-size: 10px; height: 40px !important; padding-top: 8px; padding-left:5px;">
-                    <div class="col-4 m-0 p-0">
-                        <!--logoAndes-->
-                        <div class="logo p-2" style="float: left; padding: 5px;">
-                            <!--logotipoAndes-->
-                        </div>
-                    </div>
-                    <div class="col-8 m-0 p-0">
-                        <div class="organizacion" style="position: relative; top: 17px;">${this.auth.organizacion.nombre}</div>
-                    </div>
-                </header>
-                <div>
-                    ${headerPrestacion.innerHTML}
+                <div class="resumen-solicitud">
                     ${datosSolicitud.innerHTML}
                 </div>
             `;
@@ -546,7 +555,7 @@ export class PrestacionValidacionComponent implements OnInit {
             content += header;
             content += `
             <div class="paciente">
-                <b>Paciente:</b> ${this.paciente.apellido},  ${this.paciente.nombre} - 
+                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
                 ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
             </div>
             `;
@@ -562,24 +571,6 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            // Enviar las hojas de estilos en el payload? <_<
-            // let cssFiles = Object.keys(document.styleSheets);
-
-            // content += '<style>';
-
-            // Leer las hojas de estilo rendereadas por Angular
-            // for (let fkey in cssFiles) {
-            //     let cssKeys = document.styleSheets[fkey];
-
-            //     for (let key in cssKeys) {
-            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
-            //         content += document.styleSheets[fkey].ownerNode.textContent;
-            //         // console.log(document.styleSheets[fkey].ownerNode.textContent);
-            //     }
-            // }
-
-            // content += '</style>';
-
             this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
@@ -592,13 +583,19 @@ export class PrestacionValidacionComponent implements OnInit {
         });
     }
 
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
+        saveAs(blob, nombreArchivo);
+    }
+
     /**
-     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
      */
-    matchinBusquedaGuiada(concept) {
+    enBusquedaGuiada(concept) {
         let results = [];
-        this.grupos_guida.forEach(data => {
+        this.gruposGuiada.forEach(data => {
             if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
                 results.push(data);
             }

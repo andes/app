@@ -550,7 +550,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: any = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -639,7 +639,7 @@ export class PrestacionesService {
     }
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
+        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
 
@@ -667,7 +667,7 @@ export class PrestacionesService {
                     let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
