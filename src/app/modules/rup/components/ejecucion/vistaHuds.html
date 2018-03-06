@@ -18,7 +18,8 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
-                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
+                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
@@ -29,7 +30,8 @@
                                             <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional }}
+                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
+                                            }}
                                         </div>
                                         <div class="col-12">
                                             <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre }}
@@ -53,10 +55,12 @@
                                                         </div>
                                                         <div class="actions">
                                                             <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-
                                                             <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                                                 <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                                                 + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                                            </small>
+                                                            <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
+                                                                Motivo de consulta principal
                                                             </small>
                                                         </div>
                                                     </div>
@@ -70,7 +74,8 @@
                                                             <div class="row">
 
                                                                 <div class="col-12">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="registro.data" [registro]="elemento" [soloValores]="true"></rup>
+                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="registro.data"
+                                                                        [registro]="elemento" [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -90,7 +95,8 @@
             <div class="col-4" *ngIf="paciente">
                 <plex-box>
                     <!-- HUDS [hudsBusqueda.component.ts] -->
-                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]="" [emitirConceptos]="false"></rup-hudsBusqueda>
+                    <rup-hudsBusqueda [registrosHuds]="registrosHuds" (evtHuds)="agregarListadoHuds($event)" [paciente]="paciente" [prestacionActual]=""
+                        [emitirConceptos]="false"></rup-hudsBusqueda>
                 </plex-box>
             </div>
 
