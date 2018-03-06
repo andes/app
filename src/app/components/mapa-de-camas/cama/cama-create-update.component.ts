@@ -70,9 +70,11 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     save($event) {
         if ($event.formValid) {
+            debugger;
             // cargamos el estado de la cama
             if (this.cama.estados && (this.cama.estados.length > 0)) {
-                if (JSON.stringify(this.cama.ultimoEstado) !== JSON.stringify(this.cama.estados)) {
+                if (JSON.stringify(this.cama.ultimoEstado) !== JSON.stringify(this.estado)) {
+
                     this.cama.estados.push(this.estado);
                 }
             } else {
@@ -84,13 +86,8 @@ export class CamaCreateUpdateComponent implements OnInit {
                 _id: this.organizacion.id,
                 nombre: this.organizacion.nombre
             };
-            let operacion;
-            if (!this.cama.id) {
-                operacion = this.CamaService.addCama(this.cama);
-            } else {
 
-            }
-
+            let operacion = this.CamaService.addCama(this.cama);
             operacion.subscribe(result => {
                 if (result) {
                     this.plex.alert('La cama se creo correctamente');
