@@ -17,7 +17,10 @@ export class PrestarHcComponent implements OnInit {
         this.prestamo = value;
         debugger;
         if (value && value.datosPrestamo && value.datosPrestamo.turno.profesional[0][0]) {
-            this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico[0].nombre;
+            if (value.datosPrestamo.turno.espacioFisico[0]) {
+                this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico[0].nombre;
+            }
+            
             this.prestarHC.responsable = value.datosPrestamo.turno.profesional[0][0].apellido + ', ' + value.datosPrestamo.turno.profesional[0][0].nombre;
         }
 
@@ -37,7 +40,6 @@ export class PrestarHcComponent implements OnInit {
     }
 
     save(event) {
-
         event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
         event.idTurno = this.prestamo.datosPrestamo.turno.id;
         event.tipoPrestacion = this.prestamo.datosPrestamo.turno.conceptoTurneable[0];

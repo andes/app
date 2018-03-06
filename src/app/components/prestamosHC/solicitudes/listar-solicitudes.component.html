@@ -1,4 +1,9 @@
-<!--Turnos-->
+<div>
+    <plex-select [(ngModel)]="prestaciones" (change)="refreshSelection($event,'prestaciones')" (getData)="loadPrestaciones($event)"
+        name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+    </plex-select>
+</div>
+
 <table class="table-bordered">
     <thead>
         <tr>
@@ -28,8 +33,12 @@
                 <br/> Documento:
                 <b>{{carpeta.datosPrestamo.turno.paciente.documento}}</b>
             </td>
-            <td>
+            <td *ngIf="carpeta.estado == 'En archivo'">
                 <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
+                </plex-button>
+            </td>
+            <td *ngIf="carpeta.estado == 'Prestada'">
+                <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
                 </plex-button>
             </td>
         </tr>

@@ -3,6 +3,7 @@ import { DatePipe } from '@angular/common';
 // import { TurnoService } from './../../../services/turnos/turno.service';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { PrestarHcComponent } from './prestar-hc.component';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 
 @Component({
     selector: 'app-listar-solicitudes',
@@ -11,9 +12,11 @@ import { PrestarHcComponent } from './prestar-hc.component';
 
 export class ListarSolicitudesComponent implements OnInit {
     carpetas: any[];
+    public prestacionesPermisos = [];
     today = Date.now();
 
     @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
@@ -32,10 +35,30 @@ export class ListarSolicitudesComponent implements OnInit {
 
     }
 
+    loadPrestaciones(event) {
+        if (this.prestacionesPermisos && this.prestacionesPermisos[0] !== '*') {
+            this.servicioPrestacion.get({
+                id: this.prestacionesPermisos
+            }).subscribe(event.callback);
+        } else {
+            this.servicioPrestacion.get({
+                turneable: 1
+            }).subscribe(event.callback);
+        }
+    }
+
     prestar(turno) {
+        this.showDevolverEmit.emit(false);
         this.showPrestarEmit.emit(true);
         this.carpetaPrestadaEmit.emit(turno);
     }
 
-    constructor(public prestamosService: PrestamosService) { }
+    devolver(turno) {
+        console.log('devolver carpeta')
+        this.showPrestarEmit.emit(false);
+        this.showDevolverEmit.emit(true);
+        this.carpetaPrestadaEmit.emit(turno);
+    }
+
+    constructor(public prestamosService: PrestamosService, public servicioPrestacion: TipoPrestacionService) { }
 }

@@ -9,8 +9,8 @@
 
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Estado HC" [(ngModel)]="devolverHC.estado" name="estado" [required]="true" placeholder="Ingrese el estado de la HC...">
-                    </plex-text>
+                    <plex-select label='Estado' [(ngModel)]="devolverHC.estado" name="nombre" [required]="true" placeholder="Seleccione un estado..." [data]="estadosDevolucion" >
+                    </plex-select>    
                 </div>
                 <div class="col-12">
                     <plex-text label="Observaciones" [(ngModel)]="devolverHC.observaciones" name="observaciones" [required]="true" placeholder="Ingrese observaciones...">
@@ -25,7 +25,7 @@
             <plex-button label="Cancelar" type="danger" (click)="cancel()">
             </plex-button>
 
-            <plex-button label="Guardar" type="primary" (click)="save($event)" validateForm="true">
+            <plex-button label="Guardar" type="primary" (click)="save(devolverHC)" validateForm="true">
             </plex-button>
         </div>
     </footer>

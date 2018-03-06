@@ -13,4 +13,5 @@ export class ArancelamientoService {
     get(dni: any): Observable<any> {
         return this.server.get(this.url + '/puco/' + dni);
     }
+    
 }

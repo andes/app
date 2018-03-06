@@ -9,7 +9,6 @@ export class PrestamosService {
     constructor(private server: Server) { }
 
     getCarpetas(): Observable<any[]> {
-        debugger;
         return this.server.get(this.turnoUrl + '/prestamosHC');
     }
 
@@ -17,7 +16,7 @@ export class PrestamosService {
         return this.server.post(this.turnoUrl + '/prestamosHC/prestarCarpeta', { params: params, showError: true });
     }
 
-    // prestarCarpeta(carpeta): Observable<any[]> {
-    //     return this.server.get(this.turnoUrl + '/prestamosHC/prestarCarpeta', carpeta);
-    // }
+    devolverCarpeta(carpeta): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpeta', carpeta);
+    }
 }
