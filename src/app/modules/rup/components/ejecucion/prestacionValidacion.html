@@ -191,6 +191,9 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
+                                            <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
+                                                Motivo de consulta principal
+                                            </small>
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
                                                 title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como motivo de consulta principal' : 'Motivo de consulta principal'}}"
                                                 class="diagnostico-principal">Motivo de consulta principal
@@ -255,36 +258,6 @@
                 </plex-box>
             </div>
         </div>
-        <!-- <div class="container imprimir mt-3" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
-            <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    Profesional:
-                    <b>{{ auth.usuario.nombreCompleto }}</b>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6 mt-5">
-                    ---------------------------------------------------
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    Efector:
-                    <b>{{ auth.organizacion.nombre }}</b>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    Fecha:
-                    <b>{{ (prestacion.updatedAt ? prestacion.updatedAt : prestacion.createdAt) | date: 'EEE dd/MM/yyyy'}}
-                    </b>
-                </div>
-            </div>
-        </div> -->
     </plex-box>
 </section>
 <footer *ngIf="prestacion && !showDarTurnos">
