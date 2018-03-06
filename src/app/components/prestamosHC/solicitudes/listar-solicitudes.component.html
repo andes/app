@@ -1,20 +1,20 @@
 <div>
-    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event)" name="fechaDesde" label="Desde"
+    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
         class="fechas">
     </plex-datetime>
-    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event)" name="fechaHasta" label="Hasta"
+    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
         class="fechas">
     </plex-datetime>
     
-    <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event)" (getData)="loadPrestaciones($event)"
+    <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
         name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
     </plex-select>
 
-    <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event)" (getData)="loadEspaciosFisicos($event)"
+    <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event, 'espacioFisico')" (getData)="loadEspaciosFisicos($event)"
         name="espacioFisico" label="Espacio Físico" ngModelOptions="{standalone: true}">
     </plex-select>
 
-    <plex-select [(ngModel)]="profesional" name="profesional" (getData)="loadProfesionales($event)" label="Profesional"
+    <plex-select [(ngModel)]="profesional" name="profesional"  (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)" label="Profesional"
         placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
     </plex-select>
 </div>
@@ -25,6 +25,8 @@
             <th>Fecha</th>
             <th>Ubicación</th>
             <th>Responsable</th>
+            <th>Ubicación</th>
+            <th>Prestación</th>
             <th>Historia Clínica</th>
             <th></th>
         </tr>
@@ -35,11 +37,15 @@
                 {{today | date: 'dd/mm/yyyy'}}
             </td>
             <td>{{carpeta.estado}}</td>
-            <!-- <td *ngIf="!carpeta.datosPrestamo.turno.profesional[0][0]; else prof">Sin Profesional
-            </td> -->
-             <td>
-            {{carpeta.datosPrestamo.turno.profesional[0][0]?.apellido}}, {{carpeta.datosPrestamo.turno.profesional[0][0]?.nombre}}
-            </td> 
+            <td>
+                {{carpeta.datosPrestamo.turno.profesional[0][0]?.apellido}}, {{carpeta.datosPrestamo.turno.profesional[0][0]?.nombre}}
+            </td>
+            <td>
+                {{carpeta.datosPrestamo.turno.espacioFisico[0]?.nombre}}
+            </td>
+            <td>
+                {{carpeta.datosPrestamo.turno.conceptoTurneable[0][0].term}}
+            </td>
             <td>
                 <b>
                     {{carpeta.datosPrestamo.turno.paciente.carpetaEfectores[0].nroCarpeta}} - {{carpeta.datosPrestamo.turno.paciente.apellido}},
