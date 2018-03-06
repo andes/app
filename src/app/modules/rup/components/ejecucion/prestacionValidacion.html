@@ -195,8 +195,7 @@
                                                 Motivo de consulta principal
                                             </small>
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
-                                                title="{{ !elemento.esDiagnosticoPrincipal ? 'Establecer como motivo de consulta principal' : 'Motivo de consulta principal'}}"
-                                                class="diagnostico-principal">Motivo de consulta principal
+                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">Motivo de consulta principal
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                                 'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                                 'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
