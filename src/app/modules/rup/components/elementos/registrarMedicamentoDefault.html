@@ -86,11 +86,11 @@
 </ng-container>
 
 <ng-container *ngIf="soloValores">
-    <div class="row">
+    <!-- <div class="row">
         <div class="col">
-            <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Diagnóstico principal</small>
+            <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small>
         </div>
-    </div>
+    </div> -->
     <div class="row readonly" *ngIf="!registro.evoluciones">
         <div class="col-4">
             <span>Estado</span> {{registro.valor.estado}}
