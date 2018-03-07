@@ -50,9 +50,9 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+    public cantidadTurnosAsignados: number;
     private timeoutHandle: number;
-    // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    private lastRequest: ISubscription; // ultima request que se almacena con el subscribe
     private estadoPendienteAuditoria;
     private estadoCodificado;
 
@@ -88,6 +88,23 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getCantidadTurnosAsignados();
+    }
+
+    private getCantidadTurnosAsignados() {
+        // verificamos la cant. de turnos asignados que tiene la agenda
+        let turnosAsignados = [];
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            turnosAsignados = turnosAsignados.concat(this.agenda.bloques[i].turnos);
+        }
+        if (this.agenda.sobreturnos) {
+            turnosAsignados = turnosAsignados.concat(this.agenda.sobreturnos);
+        }
+        turnosAsignados = turnosAsignados.filter(turno => {
+            return (turno.paciente && turno.paciente.id);
+        });
+        this.cantidadTurnosAsignados = turnosAsignados.length;
+        console.log(turnosAsignados);
     }
 
     buscarPaciente() {
@@ -148,6 +165,7 @@ export class RevisionAgendaComponent implements OnInit {
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
+        this.showReparo = false;
         if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
             this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
         } else { // para el caso de sobreturno, que no tiene bloques.
@@ -155,7 +173,6 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
-            this.showReparo = false;
         } else {
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
@@ -199,7 +216,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
-        if (this.diagnosticos[index].codificacionProfesional === null) {
+        if (!this.diagnosticos[index].codificacionProfesional.snomed.term) {
             this.diagnosticos.splice(index, 1);
         } else {
             this.diagnosticos[index].codificacionAuditoria = null;
@@ -211,7 +228,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     aprobar(index) {
-        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
+        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
         this.onSave();
     }
     /**
