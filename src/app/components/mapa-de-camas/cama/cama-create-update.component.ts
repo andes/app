@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SnomedService } from '../../../services/term/snomed.service';
 import { query } from '@angular/core/src/animation/dsl';
 import { OrganizacionService } from '../../../services/organizacion.service';
-
 @Component({
     selector: 'cama-create-update',
     templateUrl: 'cama-create-update.html'
@@ -74,7 +73,6 @@ export class CamaCreateUpdateComponent implements OnInit {
             // cargamos el estado de la cama
             if (this.cama.estados && (this.cama.estados.length > 0)) {
                 if (JSON.stringify(this.cama.ultimoEstado) !== JSON.stringify(this.estado)) {
-
                     this.cama.estados.push(this.estado);
                 }
             } else {
@@ -90,8 +88,15 @@ export class CamaCreateUpdateComponent implements OnInit {
             let operacion = this.CamaService.addCama(this.cama);
             operacion.subscribe(result => {
                 if (result) {
-                    this.plex.alert('La cama se creo correctamente');
-                    this.showCama.emit(result);
+                    if (this.cama.id) {
+                        this.plex.alert('Los datos de la cama se han actualizado correctamente correctamente');
+                        this.router.navigate(['/mapa-de-camas']);
+                        this.showCama.emit(result);
+                    } else {
+                        this.plex.alert('La cama se creo correctamente');
+                        this.showCama.emit(result);
+                    }
+
                 } else {
                     this.plex.alert('ERROR: Ocurrio un problema al crear la cama');
                 }
@@ -100,7 +105,12 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     cancel() {
-        this.showCama.emit(false);
+        if (this.cama.id) {
+            this.router.navigate(['/mapa-de-camas']);
+        } else {
+            this.showCama.emit(false);
+        }
+
     }
 
     loadServicios($event) {
