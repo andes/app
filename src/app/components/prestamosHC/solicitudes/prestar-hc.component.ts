@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'app-prestar-hc',
@@ -10,7 +11,7 @@ export class PrestarHcComponent implements OnInit {
     private _carpeta: any;
     prestamo: any;
 
-    // @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() cancelPrestarEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     @Input('prestar')
     set prestar(value: any) {
@@ -20,7 +21,7 @@ export class PrestarHcComponent implements OnInit {
             if (value.datosPrestamo.turno.espacioFisico[0]) {
                 this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico[0].nombre;
             }
-            
+
             this.prestarHC.responsable = value.datosPrestamo.turno.profesional[0][0].apellido + ', ' + value.datosPrestamo.turno.profesional[0][0].nombre;
         }
 
@@ -49,15 +50,19 @@ export class PrestarHcComponent implements OnInit {
         debugger;
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
+
+            this.plex.alert('La Carpeta se prestó correctamente');
+
+            this.cancelPrestarEmit.emit(false);
             // this.listaCarpetaEmit.emit(this._carpeta);
         });
     }
 
     cancel() {
-
+        this.cancelPrestarEmit.emit(false);
     }
 
-    constructor(public prestamosService: PrestamosService) {
+    constructor(public plex: Plex, public prestamosService: PrestamosService) {
 
     }
 }

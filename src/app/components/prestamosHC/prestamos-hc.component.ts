@@ -35,5 +35,13 @@ export class PrestamosHcComponent implements OnInit {
         this.prestar = event;
     }
 
+    onCancelPrestar(event) {
+        this.showPrestar = event;
+    }
+
+    onCancelDevolver(event) {
+        this.showDevolver = event;
+    }
+
     constructor() { }
 }
