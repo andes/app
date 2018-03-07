@@ -16,12 +16,22 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
         { id: 'lugarDetrabajo', nombre: 'Lugar de trabajo' }, { id: 'otro', nombre: 'otro' }, { id: 'seIgnora', nombre: 'Se ignora' }
         ]
     };
+    public procedimientosObstetricos = false;
+    public ExisteCausaExterna = false;
 
     ngOnInit() {
         let params;
         if (!this.registro.valor) {
             this.registro.valor = {
                 InformeEgreso: {
+                    nacimientos: [
+                        {
+                            pesoAlNacer: null,
+                            condicionAlNacer: null,
+                            terminacion: null,
+                            sexo: null
+                        }
+                    ],
                     causaExterna: {}
                 }
             };
@@ -56,6 +66,21 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
             }
             event.callback(callback);
 
+        }
+    }
+
+    addNacimiento() {
+        let nuevoNacimiento = Object.assign({}, {
+            pesoAlNacer: null,
+            condicionAlNacer: null,
+            terminacion: null,
+            sexo: null
+        });
+        this.registro.valor.InformeEgreso.nacimientos.push(nuevoNacimiento);
+    }
+    removeNacimiento(i) {
+        if (i > 0) {
+            this.registro.valor.InformeEgreso.nacimientos.splice(i, 1);
         }
     }
 

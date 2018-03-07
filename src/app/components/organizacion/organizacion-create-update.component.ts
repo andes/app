@@ -131,6 +131,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        debugger;
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
@@ -138,7 +139,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
-                if (resultado) {
+                if (resultado.servicios) {
                     Object.assign(this.organizacionModel, resultado);
                     // Lo mapeamos para que los tome el plex-select
                     this.serviciosSeleccionados = this.organizacionModel.servicios.map(function (obj) {
