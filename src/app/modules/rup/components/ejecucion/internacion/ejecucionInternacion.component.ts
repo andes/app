@@ -80,8 +80,6 @@ export class EjecucionInternacionComponent implements OnInit {
         'refsetIds': []
     };
 
-    public soloValores = true;
-
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -128,7 +126,7 @@ export class EjecucionInternacionComponent implements OnInit {
 
 
 
-    ejecutarConcepto(snomedConcept, soloValores = true) {
+    ejecutarConcepto(snomedConcept) {
         let resultado;
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
@@ -138,7 +136,6 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        this.soloValores = soloValores;
         resultado = this.cargarNuevoRegistro(snomedConcept);
 
     }
@@ -156,5 +153,19 @@ export class EjecucionInternacionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
+    }
+
+    guardarPrestacion() {
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+
+        let params: any = {
+            op: 'registros',
+            registros: registros
+        };
+
+        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            this.router.navigate(['mapa-de-camas']);
+        });
     }
 }

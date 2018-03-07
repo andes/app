@@ -20,6 +20,7 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
     public ExisteCausaExterna = false;
 
     ngOnInit() {
+        console.log(this.prestacion.ejecucion.registros[1].valor);
         let params;
         if (!this.registro.valor) {
             this.registro.valor = {

@@ -34,8 +34,14 @@
                                                     </span>
                                                 </div>
                                                 <div class="content">
-                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                                        [registro]="elemento" [soloValores]="soloValores"></rup>
+                                                    <ng-container *ngIf="elemento.concepto.conceptId == 721915006 || elemento.concepto.conceptId == 308540004">
+                                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                                            [registro]="elemento" [soloValores]="true"></rup>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="elemento.concepto.conceptId != 721915006">
+                                                        <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                                            [registro]="elemento" [soloValores]="false"></rup>
+                                                    </ng-container>
 
                                                 </div>
                                             </div>
@@ -182,7 +188,7 @@
                                         </div>
                                         <div class=" col-6 p-0 m-0 ">
                                             <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button (click)="ejecutarConcepto(egreso, false)" class="btn btn-sm btn-primary
+                                                <button (click)="ejecutarConcepto(egreso)" class="btn btn-sm btn-primary
                                                                 btn-icon-rup p-0 ">
                                                     <i class="mdi mdi-plus "></i>
                                                 </button>
@@ -202,8 +208,10 @@
 </section>
 <footer>
 
-    <div class="float-right">
-        <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
-        </plex-button>
-    </div>
+    <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success"
+        class="float-right"></plex-button>
+
+    <plex-button class="float-left" type="danger" label="CANCELAR" (click)="cancelar()">
+    </plex-button>
+
 </footer>
