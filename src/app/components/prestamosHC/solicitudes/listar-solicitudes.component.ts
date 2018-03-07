@@ -71,7 +71,7 @@ export class ListarSolicitudesComponent implements OnInit {
         if (filter === 'prestaciones') {
             if (value.value !== null) {
                 this.filters['idTipoPrestacion'] = value.value.id;
-                delete this.filters['tipoPrestaciones'];
+                delete this.filters['idTipoPrestaciones'];
             } else {
                 this.filters['idTipoPrestacion'] = '';
             }
@@ -86,9 +86,9 @@ export class ListarSolicitudesComponent implements OnInit {
         debugger;
         if (filter === 'espacioFisico') {
             if (value.value !== null) {
-                this.filters['espacioFisico'] = value.value.id;
+                this.filters['idEspacioFisico'] = value.value.id;
             } else {
-                this.filters['espacioFisico'] = '';
+                this.filters['idEspacioFisico'] = '';
             }
         }
 
