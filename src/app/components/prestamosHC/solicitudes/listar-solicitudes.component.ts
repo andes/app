@@ -115,13 +115,8 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
-<<<<<<< HEAD
-    loadEspaciosFisicos(event) {
-        console.log('loadEspaciosFisicos', this.auth.organizacion.id);
-=======
     loadEspacios(event) {
 
->>>>>>> 731e2a0528fab9dd8b483054b60fffcf348104bf
         let listaEspaciosFisicos = [];
         if (event.query) {
             let query = {
