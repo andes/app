@@ -23,7 +23,7 @@
 </div>
 <div class="row" *ngIf="mostrarMasOpciones">
     <div class="col-4">
-        <plex-select [(ngModel)]="espacioFisico" (change)="refreshSelection($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
+        <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
             label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio ? edificio.descripcion : '' + ')'"
             ngModelOptions="{standalone: true}">
         </plex-select>
@@ -39,9 +39,9 @@
     <thead>
         <tr>
             <th>Fecha</th>
-            <th>Ubicación</th>
+            <th>Estado</th>
             <th>Responsable</th>
-            <th>Ubicación</th>
+            <th>Destino</th>
             <th>Prestación</th>
             <th>Historia Clínica</th>
             <th></th>

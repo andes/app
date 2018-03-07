@@ -34,6 +34,8 @@ export class PrestamosHcComponent implements OnInit {
         debugger;
         this.prestar = event;
     }
-
+    onCarpeta(event){
+        console.log('onCarpeta', event);
+    }
     constructor() { }
 }

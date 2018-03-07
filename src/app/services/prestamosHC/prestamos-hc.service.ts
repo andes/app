@@ -17,6 +17,7 @@ export class PrestamosService {
     }
 
     devolverCarpeta(carpeta): Observable<any[]> {
+        console.log('deolverCarpeta')
         return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpeta', carpeta);
     }
 }

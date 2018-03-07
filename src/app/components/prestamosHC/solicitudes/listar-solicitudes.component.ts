@@ -25,8 +25,6 @@ export class ListarSolicitudesComponent implements OnInit {
     public today = Date.now();
 
     public filters = {};
-    public parametros;
-
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
@@ -36,20 +34,6 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
-        this.parametros = {
-            fechaDesde: '',
-            fechaHasta: '',
-            organizacion: '',
-            idTipoPrestacion: '',
-            idProfesional: '',
-            espacioFisico: '',
-            estado: ''
-        };
-
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
-        }
-
         this.getCarpetas({}, null);
     }
 
@@ -95,12 +79,6 @@ export class ListarSolicitudesComponent implements OnInit {
         this.prestamosService.getCarpetas(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
         });
-        // let datosTurno = { estado: 'asignado', userName: '25334392', userDoc: '25334392' };
-
-        // this.turnoService.getTurnos(datosTurno).subscribe(turnos => {
-        //     this.turnos = turnos;
-        // })
-
     }
 
     loadPrestaciones(event) {
@@ -136,53 +114,6 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
-    refreshSelection(value, tipo) {
-        debugger;
-        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.tipoPrestacion.length === 0) {
-            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
-        }
-        if (tipo === 'fechaDesde') {
-            let fechaDesde = moment(this.fechaDesde).startOf('day');
-            if (fechaDesde.isValid()) {
-                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
-            }
-        }
-        if (tipo === 'fechaHasta') {
-            let fechaHasta = moment(this.fechaHasta).endOf('day');
-            if (fechaHasta.isValid()) {
-                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
-                this.parametros['organizacion'] = this.auth.organizacion._id;
-            }
-        }
-        if (tipo === 'prestaciones') {
-            if (value.value !== null) {
-                this.parametros['idTipoPrestacion'] = value.value.id;
-                delete this.parametros['tipoPrestaciones'];
-            } else {
-                this.parametros['idTipoPrestacion'] = '';
-            }
-        }
-        if (tipo === 'profesionales') {
-            if (value.value !== null) {
-                this.parametros['idProfesional'] = value.value.id;
-            } else {
-                this.parametros['idProfesional'] = '';
-            }
-        }
-        if (tipo === 'espacioFisico') {
-            debugger;
-            if (value.value !== null) {
-                this.parametros['espacioFisico'] = value.value.id;
-            } else {
-                this.parametros['espacioFisico'] = '';
-            }
-        }
-
-        // Completo params con la info que ya tengo
-        // this.getCarpetas({}, this.parametros);
-    };
-
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
@@ -200,6 +131,7 @@ export class ListarSolicitudesComponent implements OnInit {
         this.showDevolverEmit.emit(false);
         this.showPrestarEmit.emit(true);
         this.carpetaPrestadaEmit.emit(turno);
+        
 
         this.verPrestar = true;
     }

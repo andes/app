@@ -11,7 +11,7 @@ import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.ser
 export class DevolverHcComponent implements OnInit {
     devolverHC: any = {
         estado: '',
-        observaciones: ''
+        observacionesDevolucion: ''
     }
     private _carpeta: any;
     prestamo: any;
@@ -34,10 +34,9 @@ export class DevolverHcComponent implements OnInit {
     save(event) {
         event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
         event.idTurno = this.prestamo.datosPrestamo.turno.id;
-        event.tipoPrestacion = this.prestamo.datosPrestamo.turno.conceptoTurneable[0];
-        event.profesional = this.prestamo.datosPrestamo.turno.profesional[0][0];
-        event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisico;
-        
+        event.tipoPrestacion = this.prestamo.datosPrestamo.turno.conceptoTurneable;
+        event.profesional = this.prestamo.datosPrestamo.turno.profesionales;
+        event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisicos;
         
         this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
