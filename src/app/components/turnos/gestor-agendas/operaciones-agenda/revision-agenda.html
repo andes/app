@@ -289,7 +289,7 @@
                                                             <plex-bool *ngIf="i==0" (change)="onSave()" [(ngModel)]='diagnostico.primeraVez' name="primeraVez" label="Primera Vez"></plex-bool>
                                                         </td>
                                                         <td class="col-2" *ngIf="diagnostico.codificacionProfesional.snomed.term">
-                                                            <span *ngIf="i==0 && diagnostico.primeraVez" class="badge-info">Primera vez</span>
+                                                            <span *ngIf="diagnostico.primeraVez" class="badge-info">Primera vez</span>
                                                         </td>
                                                     </tr>
                                                 </tbody>
