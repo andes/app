@@ -40,3 +40,29 @@ npm install
 ```bash
 ng serve
 ```
+
+
+## Docker
+
+### Build images
+
+```bash
+docker build -t andesnqn/app .
+```
+
+### Run images
+
+```bash
+docker run  -p  4002:4002  --rm --name andes_app andesnqn/app
+```
+
+### Run images for developtment
+
+```bash
+docker run -v  ${pwd}:/usr/src/app  -p  4200:4200   --rm --name andes_app andesnqn/app 
+
+docker stop andes_app
+
+docker exec andes_app npm install
+
+```
