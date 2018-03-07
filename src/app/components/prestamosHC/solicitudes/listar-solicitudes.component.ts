@@ -25,6 +25,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public today = Date.now();
 
     public filters = {};
+    public parametros;
 
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
@@ -35,6 +36,20 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     ngOnInit() {
+        this.parametros = {
+            fechaDesde: '',
+            fechaHasta: '',
+            organizacion: '',
+            idTipoPrestacion: '',
+            idProfesional: '',
+            espacioFisico: '',
+            estado: ''
+        };
+
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
+        }
+
         this.getCarpetas({}, null);
     }
 
@@ -68,6 +83,7 @@ export class ListarSolicitudesComponent implements OnInit {
                 this.filters['idProfesional'] = '';
             }
         }
+        debugger;
         if (filter === 'espacioFisico') {
             if (value.value !== null) {
                 this.filters['espacioFisico'] = value.value.id;
@@ -99,23 +115,73 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
-    loadEspaciosFisicos(event) {
-        console.log('loadEspaciosFisicos', this.auth.organizacion.id);
-        let query = {};
+    loadEspacios(event) {
+
         let listaEspaciosFisicos = [];
-        // if (event.query) {
-        // query['nombre'] = event.query;
-        query['nombre'] = '';
-        query['organizacion'] = this.auth.organizacion.id;
-
-        this.servicioEspacioFisico.get(query).subscribe(resultado => {
-            event.callback(listaEspaciosFisicos);
-        });
-
-        // } else {
-        //     event.callback(this.agenda.espacioFisico || []);
-        // }
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                organizacion: this.auth.organizacion.id
+            };
+            this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.espacioFisico.concat(resultado) : this.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
+                event.callback(listaEspaciosFisicos);
+            });
+        } else {
+            event.callback(this.espacioFisico || []);
+        }
     }
+
+    refreshSelection(value, tipo) {
+        debugger;
+        if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.tipoPrestacion.length === 0) {
+            this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
+        }
+        if (tipo === 'fechaDesde') {
+            let fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaDesde.isValid()) {
+                this.parametros['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
+            }
+        }
+        if (tipo === 'fechaHasta') {
+            let fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaHasta.isValid()) {
+                this.parametros['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
+                this.parametros['organizacion'] = this.auth.organizacion._id;
+            }
+        }
+        if (tipo === 'prestaciones') {
+            if (value.value !== null) {
+                this.parametros['idTipoPrestacion'] = value.value.id;
+                delete this.parametros['tipoPrestaciones'];
+            } else {
+                this.parametros['idTipoPrestacion'] = '';
+            }
+        }
+        if (tipo === 'profesionales') {
+            if (value.value !== null) {
+                this.parametros['idProfesional'] = value.value.id;
+            } else {
+                this.parametros['idProfesional'] = '';
+            }
+        }
+        if (tipo === 'espacioFisico') {
+            debugger;
+            if (value.value !== null) {
+                this.parametros['espacioFisico'] = value.value.id;
+            } else {
+                this.parametros['espacioFisico'] = '';
+            }
+        }
+
+        // Completo params con la info que ya tengo
+        // this.getCarpetas({}, this.parametros);
+    };
 
     loadProfesionales(event) {
         let listaProfesionales = [];
