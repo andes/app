@@ -1,4 +1,4 @@
-<ng-container>
+<ng-container *ngIf="!soloValores">
     <div class="row">
         <div class="col-4">
             <plex-datetime label="Fecha y hora " type="datetime" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso">
@@ -17,17 +17,27 @@
             </plex-select>
         </div>
     </div>
-    <div class="row" *ngIf="procedimientosQuirurgicos && procedimientosQuirurgicos.length > 0">
-        <div class="col-8">
-            <plex-select label="Procedimientos Quirúrgicos" [(ngModel)]="registro.valor.InformeEgreso.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
-                [multiple]="true" [data]="procedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
-            </plex-select>
+    <ng-container *ngIf="listaProcedimientosQuirurgicos && listaProcedimientosQuirurgicos.length > 0">
+        <div class="row" *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
+
+            <div class="col-8">
+                <plex-select label="Procedimientos Quirúrgicos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
+                    [data]="listaProcedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
+                </plex-select>
+            </div>
+            <div class="col-3">
+                <plex-datetime label="Fecha" type="date" [(ngModel)]="procedimiento.fecha">
+                </plex-datetime>
+            </div>
+            <div class="col-1 pt-4">
+                <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeProcedimiento(i)"></plex-button>
+            </div>
+
         </div>
-        <div class="col-4">
-            <plex-datetime label="Fecha 1° procedimiento" type="date" [(ngModel)]="registro.valor.InformeEgreso.fechaPrimerProcedimiento">
-            </plex-datetime>
-        </div>
-    </div>
+        <plex-button label="Agregar" type="primary btn-sm" icon="" (click)="addProcedimientoQuirurgico()"></plex-button>
+    </ng-container>
+
+
 
     <div class="row">
         <div class="col-12">
@@ -170,23 +180,39 @@
 
 
 </ng-container>
-<!-- <ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
+
+
+<ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
     <div class="row">
         <div class="col-3">
+            <label class="block">Fecha de egreso</label>
+            <span>{{registro.valor.InformeEgreso.fechaEgreso | date }}</span>
+        </div>
+
+        <div class="col-9">
             <label class="block">Diagnostico Principal al egreso</label>
-            <span>{{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre }}</span>
+            <span>{{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}</span>
         </div>
-        <div class="col-3">
+    </div>
+
+    <div class="row">
+        <div class="col-12">
             <label class="block">Otros Diagnósticos</label>
-            <span>{{registro.valor.InformeEgreso.otrosDiagnosticos.nombre }}</span>
+            <ul class="list-unstyled">
+                <li class="" *ngFor="let otroDiagnostico of registro.valor.InformeEgreso.otrosDiagnosticos">
+                    {{ otroDiagnostico.nombre }}
+                </li>
+            </ul>
         </div>
-        <div class="col-3">
-            <label class="block">Procedimiento Quirurgico</label>
-            <span>{{registro.valor.InformeEgreso.procedimientoQuirurgico.nombre }}</span>
-        </div>
-        <div class="col-3">
-            <label class="block">Procedimiento Quirurgico</label>
-            <span>{{registro.valor.InformeEgreso.fechaPrimerProcedimiento | date }}</span>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label class="block">Procedimientos Quirurgicos</label>
+            <ul class="list-unstyled">
+                <li class="" *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos">
+                    {{ procedimiento.procedimientosQuirurgicos.nombre }} | fecha: {{procedimiento.fecha | date}}
+                </li>
+            </ul>
         </div>
     </div>
 
@@ -199,19 +225,20 @@
     </div>
 
     <div class="row">
-        <div class="col-3">
+        <div class="col-4">
             <label class="block">Producido por</label>
             <span>{{registro.valor.InformeEgreso.causaExterna.producidaPor.nombre}}</span>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <label class="block">Lugar donde ocurrio</label>
             <span>{{registro.valor.InformeEgreso.causaExterna.lugar.nombre }}</span>
         </div>
-        <div class="col-3">
+        <div class="col-4">
             <label class="block">Como se produjo</label>
             <span>{{registro.valor.InformeEgreso.causaExterna.comoSeProdujo.nombre }}</span>
         </div>
     </div>
+
     <div class="row">
         <div class="col-12">
             <p class="title">
@@ -222,7 +249,7 @@
     <div class="row">
         <div class="col-3">
             <label class="block">Fecha terminación</label>
-            <span>{{registro.valor.InformeEgreso.terminacionEmbarazo}}</span>
+            <span>{{registro.valor.InformeEgreso.terminacionEmbarazo | date}}</span>
         </div>
         <div class="col-3">
             <label class="block">Edad gestacional</label>
@@ -238,24 +265,25 @@
         </div>
 
     </div>
-    <div class="row">
+
+    <div class="row" *ngFor="let unNacimiento of registro.valor.InformeEgreso.nacimientos">
         <div class="col-3">
             <label class="block">Peso al nacer</label>
-            <span>{{registro.valor.InformeEgreso.pesoAlNacer}}</span>
+            <span>{{unNacimiento.peso}}</span>
         </div>
         <div class="col-3">
             <label class="block">Condición al nacerl</label>
-            <span>{{registro.valor.InformeEgreso.condicionAlNacer}}</span>
+            <span>{{unNacimiento.condicionAlNacer}}</span>
         </div>
         <div class="col-3">
             <label class="block">Terminación</label>
-            <span>{{registro.valor.InformeEgreso.terminacion}}</span>
+            <span>{{unNacimiento.terminacion}}</span>
         </div>
         <div class="col-3">
             <label class="block"> Sexo </label>
-            <span>{{registro.valor.InformeEgreso.sexo}}</span>
+            <span>{{unNacimiento.sexo}}</span>
         </div>
 
     </div>
 
-</ng-container> -->
+</ng-container>

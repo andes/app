@@ -7,7 +7,7 @@ import { RUPComponent } from './../core/rup.component';
 })
 export class EgresoInternacionComponent extends RUPComponent implements OnInit {
 
-    public procedimientosQuirurgicos: any[];
+    public listaProcedimientosQuirurgicos: any[];
     public causaExterna = {
         producidaPor: [{ id: 'accidente', nombre: 'Accidente' }, { id: 'lesionAutoinfligida', nombre: 'Lesión autoinflingida' },
         { id: 'agresion', nombre: 'Agresión' }, { id: 'seIgnora', nombre: 'Se ignora' }
@@ -33,13 +33,19 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
                             sexo: null
                         }
                     ],
+                    procedimientosQuirurgicos: [
+                        {
+                            procedimiento: null,
+                            fecha: null
+                        }
+                    ],
                     causaExterna: {}
                 }
             };
         }
         // Cargamos todos los procedimientos.
         this.procedimientosQuirurgicosService.get(params).subscribe(rta => {
-            this.procedimientosQuirurgicos = rta.map(elem => {
+            this.listaProcedimientosQuirurgicos = rta.map(elem => {
                 return { id: elem._id, nombre: elem.nombre };
             });
         });
@@ -79,12 +85,27 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
         });
         this.registro.valor.InformeEgreso.nacimientos.push(nuevoNacimiento);
     }
+
     removeNacimiento(i) {
         if (i > 0) {
             this.registro.valor.InformeEgreso.nacimientos.splice(i, 1);
         }
     }
 
+
+    addProcedimientoQuirurgico() {
+        let nuevoProcedimiento = Object.assign({}, {
+            procedimiento: null,
+            fecha: null
+        });
+        this.registro.valor.InformeEgreso.procedimientosQuirurgicos.push(nuevoProcedimiento);
+    }
+
+    removeProcedimiento(i) {
+        if (i > 0) {
+            this.registro.valor.InformeEgreso.procedimientosQuirurgicos.splice(i, 1);
+        }
+    }
 }
 
 
