@@ -53,7 +53,7 @@ export class ListarSolicitudesComponent implements OnInit {
         if (filter === 'prestaciones') {
             if (value.value !== null) {
                 this.filters['idTipoPrestacion'] = value.value.id;
-                delete this.filters['tipoPrestaciones'];
+                delete this.filters['idTipoPrestaciones'];
             } else {
                 this.filters['idTipoPrestacion'] = '';
             }
@@ -67,9 +67,9 @@ export class ListarSolicitudesComponent implements OnInit {
         }
         if (filter === 'espacioFisico') {
             if (value.value !== null) {
-                this.filters['espacioFisico'] = value.value.id;
+                this.filters['idEspacioFisico'] = value.value.id;
             } else {
-                this.filters['espacioFisico'] = '';
+                this.filters['idEspacioFisico'] = '';
             }
         }
 
@@ -97,21 +97,24 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     loadEspaciosFisicos(event) {
-    console.log('loadEspaciosFisicos', this.auth.organizacion.id);
-        let query = {};
+        console.log('loadEspaciosFisicos', this.auth.organizacion.id);
         let listaEspaciosFisicos = [];
-        // if (event.query) {
-            // query['nombre'] = event.query;
-            query['nombre'] = '';
-            query['organizacion'] = this.auth.organizacion.id;
-
+        if (event.query) {
+            let query = {
+                nombre: event.query,
+                organizacion: this.auth.organizacion.id
+            };
             this.servicioEspacioFisico.get(query).subscribe(resultado => {
+                if (this.espacioFisico) {
+                    listaEspaciosFisicos = resultado ? this.espacioFisico.concat(resultado) : this.espacioFisico;
+                } else {
+                    listaEspaciosFisicos = resultado;
+                }
                 event.callback(listaEspaciosFisicos);
             });
-            
-        // } else {
-        //     event.callback(this.agenda.espacioFisico || []);
-        // }
+        } else {
+            event.callback(this.espacioFisico || []);
+        }
     }
 
     loadProfesionales(event) {
