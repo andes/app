@@ -104,7 +104,6 @@ export class RevisionAgendaComponent implements OnInit {
             return (turno.paciente && turno.paciente.id);
         });
         this.cantidadTurnosAsignados = turnosAsignados.length;
-        console.log(turnosAsignados);
     }
 
     buscarPaciente() {

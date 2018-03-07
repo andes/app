@@ -243,6 +243,15 @@
                                 <div *ngIf="!showReparo">
                                     <h5>Codificación</h5>
                                     <hr>
+                                    <!-- Buscador de prestaciones cie10 -->
+                                    <div class="row">
+                                        <div class="col-10">
+                                            <Label>Agregar diagnóstico</Label>
+                                            <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)"></buscador-cie10>
+                                        </div>
+
+                                    </div>
+                                    <hr>
                                     <!-- Listado de codificaciones seleccionadas -->
                                     <div class="row">
                                         <div class="col-12">
@@ -307,15 +316,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <!-- Buscador de prestaciones cie10 -->
-                                    <div class="row">
-                                        <div class="col-10">
-                                            <Label>Seleccionar código reparo Cie10</Label>
-                                            <buscador-cie10 (seleccionEmit)="agregarDiagnostico($event)"></buscador-cie10>
-                                        </div>
 
-                                        <hr>
-                                    </div>
                                 </div>
 
                                 <!-- Reparo -->
