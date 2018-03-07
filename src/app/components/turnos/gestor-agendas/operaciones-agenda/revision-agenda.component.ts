@@ -216,7 +216,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
-        if (!this.diagnosticos[index].codificacionProfesional.snomed.term) {
+        if (!this.diagnosticos[index].codificacionProfesional || (this.diagnosticos[index].codificacionProfesional && this.diagnosticos[index].codificacionProfesional.snomed && !this.diagnosticos[index].codificacionProfesional.snomed.term)) {
             this.diagnosticos.splice(index, 1);
         } else {
             this.diagnosticos[index].codificacionAuditoria = null;
