@@ -31,7 +31,7 @@ export let EstadosAgenda: IEnum = {
     },
     'auditada': {
         nombre: 'Auditada',
-        class: 'warning'
+        class: 'info'
     }
 };
 
