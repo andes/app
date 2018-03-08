@@ -140,6 +140,11 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     telefono: this.celular
                 };
                 this.appMobile.create(this.paciente.id, contacto).subscribe((datos) => {
+                    this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+                        if (resultado) {
+                            this.plex.toast('info', 'Datos del paciente actualizados');
+                        }
+                    });
                     if (datos.error) {
                         if (datos.error === 'email_not_found') {
                             this.plex.alert('El paciente no tiene asignado un email.');
