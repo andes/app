@@ -397,6 +397,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     this.celularAndes = data.account.telefono;
                 }
             });
+        } else {
+            this.checkPass = true;
+            this.activarApp = true;
         }
 
     }
@@ -861,6 +864,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     public buscar() {
         // Cancela la búsqueda anterior
+        debugger;
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
         }
@@ -871,7 +875,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         if (this.buscarPacRel && this.buscarPacRel.trim()) {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
-
                 // Si matchea una expresión regular, busca inmediatamente el paciente
                 let documentoEscaneado = this.comprobarDocumentoEscaneado();
                 if (documentoEscaneado) {
