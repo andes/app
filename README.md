@@ -56,7 +56,7 @@ docker build -t andesnqn/app .
 docker run  -p  4002:4002  --rm --name andes_app andesnqn/app
 ```
 
-### Run images for developtment
+### Run images for develop
 
 ```bash
 docker run -v  ${pwd}:/usr/src/app  -p  4200:4200   --rm --name andes_app andesnqn/app 
@@ -66,3 +66,4 @@ docker stop andes_app
 docker exec andes_app npm install
 
 ```
+
