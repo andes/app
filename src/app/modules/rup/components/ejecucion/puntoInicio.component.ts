@@ -48,6 +48,7 @@ export class PuntoInicioComponent implements OnInit {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
+    public mostrarBtnTurnero = false;
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -57,6 +58,9 @@ export class PuntoInicioComponent implements OnInit {
         public servicioTurnero: TurneroService) { }
 
     ngOnInit() {
+        if (this.auth.organizacion.id === '5a5e3f7e0bd5677324737244') {
+            this.mostrarBtnTurnero = true;
+        }
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');

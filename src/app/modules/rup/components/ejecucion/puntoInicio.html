@@ -106,9 +106,9 @@
             <plex-box>
                 <fieldset>
                     <legend>Detalle de la agenda
-                        <plex-button icon="mdi mdi-reload" *ngIf="agendaSeleccionada && volverALlamar !== false" type="primary " (click)='reLlamar(true)'  [disabled]="this.dniLlamado" class="float-right ml-1" ></plex-button>
+                        <plex-button icon="mdi mdi-reload" *ngIf="agendaSeleccionada && volverALlamar !== false && mostrarBtnTurnero === true" type="primary " (click)='reLlamar(true)'  [disabled]="this.dniLlamado" class="float-right ml-1" ></plex-button>
                         
-                        <plex-button icon="mdi mdi-bell-ring-outline" *ngIf="agendaSeleccionada" type="primary " (click)='llamarProximo()' label=' Proximo' class="float-right ml-1" ></plex-button>
+                        <plex-button icon="mdi mdi-bell-ring-outline" *ngIf="agendaSeleccionada && mostrarBtnTurnero === true" type="primary " (click)='llamarProximo()' label=' Proximo' class="float-right ml-1" ></plex-button>
                     </legend>
 
 
@@ -154,7 +154,7 @@
                                             </span>
                                             <br />
                                         </div>
-                                        <plex-button *ngIf="turno.paciente?.id &&  !turno.prestacion" icon="mdi mdi-bell-ring-outline" [disabled]="this.dniLlamado" type="primary" (click)="llamar(bloqueI,turnoI)">
+                                        <plex-button *ngIf="turno.paciente?.id &&  !turno.prestacion && mostrarBtnTurnero === true" icon="mdi mdi-bell-ring-outline" [disabled]="this.dniLlamado" type="primary" (click)="llamar(bloqueI,turnoI)">
                                         </plex-button>
                                     </td>
                                     <td>
