@@ -168,4 +168,60 @@ export class EjecucionInternacionComponent implements OnInit {
             this.router.navigate(['mapa-de-camas']);
         });
     }
+
+    validar() {
+
+        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+
+                let planes = [];
+
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
+            }
+        });
+
+    }
+
+    romperValidacion() {
+        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+
+                // Guardamos la prestacion copia
+                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+
+                    let prestacionModificada = prestacionClonada;
+
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+
+                        // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                    });
+                });
+            }
+
+        });
+    }
 }
