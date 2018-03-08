@@ -131,7 +131,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        debugger;
         this.tipoComunicacion = enumerados.getObjTipoComunicacion();
         this.tipoEstablecimientoService.get().subscribe(resultado => {
             this.tiposEstablecimiento = resultado;
