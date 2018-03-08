@@ -215,7 +215,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     public checkPass = false;
     public emailAndes: String = '';
     public messageApp: String = '';
-    public celularAndes: String= '';
+    public celularAndes: String = '';
     public activarApp = false;
 
     constructor(private formBuilder: FormBuilder, private _sanitizer: DomSanitizer,
@@ -378,7 +378,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.pacienteModel = Object.assign({}, this.seleccion);
         this.pacienteModel.genero = this.pacienteModel.genero ? this.pacienteModel.genero : this.pacienteModel.sexo;
 
-        //Se verifican los datos de la app mobile
+        // Se verifican los datos de la app mobile
         if (this.seleccion.id) {
             this.appMobile.check(this.seleccion.id).subscribe(data => {
                 if (!data.account) {
@@ -491,7 +491,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
             pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
             pacienteGuardar.estadoCivil = this.pacienteModel.estadoCivil ? ((typeof this.pacienteModel.estadoCivil === 'string')) ? this.pacienteModel.estadoCivil : (Object(this.pacienteModel.estadoCivil).id) : null;
             pacienteGuardar.genero = this.pacienteModel.genero ? ((typeof this.pacienteModel.genero === 'string')) ? this.pacienteModel.genero : (Object(this.pacienteModel.genero).id) : undefined;
-            
 
             pacienteGuardar.contacto.map(elem => {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
@@ -583,21 +582,23 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     this.plex.alert('Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile
-                    if (this.activarApp && this.emailAndes && this.celularAndes)
-                    this.appMobile.create(result.id, {email: this.emailAndes,
-                        telefono: this.celularAndes
-                    }).subscribe((datos) => {
-                        if (datos.error) {
-                            if (datos.error === 'email_not_found') {
-                                this.plex.alert('El paciente no tiene asignado un email.');
+                    if (this.activarApp && this.emailAndes && this.celularAndes) {
+                        this.appMobile.create(result.id, {
+                            email: this.emailAndes,
+                            telefono: this.celularAndes
+                        }).subscribe((datos) => {
+                            if (datos.error) {
+                                if (datos.error === 'email_not_found') {
+                                    this.plex.alert('El paciente no tiene asignado un email.');
+                                }
+                                if (datos.error === 'email_exists') {
+                                    this.plex.alert('El mail ingresado ya existe, ingrese otro email');
+                                }
+                            } else {
+                                this.plex.alert('Se ha enviado el código de activación al paciente');
                             }
-                            if (datos.error === 'email_exists') {
-                                this.plex.alert('El mail ingresado ya existe, ingrese otro email');
-                            }
-                        } else {
-                            this.plex.alert('Se ha enviado el código de activación al paciente');
-                        }
-                    });
+                        });
+                    }
 
                 } else {
                     this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
