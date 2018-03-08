@@ -25,7 +25,7 @@ rm -r node_modules
 ### Instalar angular-cli en forma global
 
 ```bash
-npm install -g @angular/cli@1.0.0-beta.32.3
+npm install -g @angular/cli@1.4.0
 ```
 
 ### Instalar dependencias
