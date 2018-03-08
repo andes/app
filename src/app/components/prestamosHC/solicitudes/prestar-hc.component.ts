@@ -54,15 +54,12 @@ export class PrestarHcComponent implements OnInit {
         
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
-<<<<<<< HEAD
             // this.listarComponent.getCarpetas('',{})
-=======
 
             this.plex.alert('La Carpeta se prestó correctamente');
 
             this.cancelPrestarEmit.emit(false);
             // this.listaCarpetaEmit.emit(this._carpeta);
->>>>>>> d3de0bfccc3323a76782bbc0e4ce0642608c62c9
         });
     }
 
