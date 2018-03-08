@@ -100,9 +100,9 @@
                                 <span *ngIf="turno && turno.nota">
                                     <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed">| Registrado por Profesional</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && (turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria)">| Auditado</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.asistencia == 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term">| Registrado por Profesional</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.asistencia && (turno.asistencia =='noAsistio'|| turno.asistencia=='sinDatos' ||  turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo) ">| Auditado</span>
 
                             </td>
                         </tr>
@@ -112,8 +112,7 @@
                 <table class="table table-striped">
                     <thead *ngIf="agenda.sobreturnos.length > 0">
                         <tr>
-                            <th colspan="4">Sobreturnos
-                            </th>
+                            <th colspan="4">Sobreturnos </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -145,8 +144,8 @@
                                 <span *ngIf="sobreturno && sobreturno.nota">
                                     <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
                                 </span>
-                                <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia === 'asistio' && sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria == null">| Asistencia Verificada</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria != null || (sobreturno?.asistencia && sobreturno?.asistencia !== 'asistio'))">| Auditado</span>
+                                <span [ngClass]="{'text-warning': true}" *ngIf="sobreturno?.asistencia && sobreturno?.asistencia == 'asistio' && !sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo">| Asistencia Verificada</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="sobreturno?.paciente?.id && (sobreturno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo || (sobreturno?.asistencia && sobreturno.asistencia =='noAsistio'|| sobreturno.asistencia=='sinDatos'))">| Auditado</span>
 
                             </td>
                         </tr>
