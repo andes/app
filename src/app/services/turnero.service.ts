@@ -15,31 +15,21 @@ export class TurneroService {
 
 
     get(params: any): Observable<any> {
-        return this.server.get(this.turneroUrl, {params: params, showError: true});
+        return this.server.get(this.turneroUrl, { params: params, showError: true });
     }
 
 
     post(turno): Observable<any> {
-        console.log(turno);
         this.socket.emit('proximoNumero', turno);
         return this.server.post(this.turneroUrl + 'insert', turno); // ...using post request
     }
 
-    getTurno(datos): any {
-        console.log(datos)
+    getTurno(datos?): any {
         let observable = new Observable(observer => {
-            
             this.socket = io(this.url);
-
-            
-// let's assume that the client page, once rendered, knows what room it wants to join
-var room = "pantalla1";
-
-this.socket.data = "hola";
-   // Connected, let's sign-up for to receive messages for this room
-   this.socket.emit('room', datos);
-
-
+            var room = 'pantalla1';
+            this.socket.data = 'hola';
+            this.socket.emit('room', datos);
             this.socket.on('muestraTurno', (data) => {
                 observer.next(data);
             });
@@ -50,24 +40,5 @@ this.socket.data = "hola";
         });
         return observable;
     }
-
-
-    // getTurno(datos): any {
-    //     console.log(datos)
-    //     let observable = new Observable(observer => {
-    //         this.socket = io(this.url);
-
-    //             this.socket.emit('datosPantalla', datos);
-
-    //         this.socket.on(datos.pantalla, (data) => {
-    //             observer.next(data);
-    //         });
-
-    //         return () => {
-    //             this.socket.disconnect();
-    //         };
-    //     });
-    //     return observable;
-    // }
 
 }

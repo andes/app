@@ -1,3 +1,4 @@
+
 <section>
     <div class="row">
         <div class="col-7">
@@ -105,8 +106,9 @@
             <plex-box>
                 <fieldset>
                     <legend>Detalle de la agenda
-
-                        <plex-button icon="mdi mdi-bell-ring-outline" *ngIf="agendaSeleccionada" type="primary " (click)='llamarProximo()' label=' Proximo' class="float-right"></plex-button>
+                        <plex-button icon="mdi mdi-reload" *ngIf="agendaSeleccionada && volverALlamar !== false" type="primary " (click)='reLlamar(true)'  [disabled]="this.dniLlamado" class="float-right ml-1" ></plex-button>
+                        
+                        <plex-button icon="mdi mdi-bell-ring-outline" *ngIf="agendaSeleccionada" type="primary " (click)='llamarProximo()' label=' Proximo' class="float-right ml-1" ></plex-button>
                     </legend>
 
 
@@ -140,7 +142,7 @@
                         </thead>
                         <tbody>
                             <ng-container *ngFor="let turno of bloque.turnos; let turnoI=index">
-                                <tr *ngIf="turno" class="hover">
+                                <tr *ngIf="turno" class="hover" [ngClass]="{'blink-5': turno.paciente && turno.paciente.documento === this.dniLlamado }">
                                     <td>
                                         <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
 
@@ -152,7 +154,7 @@
                                             </span>
                                             <br />
                                         </div>
-                                        <plex-button *ngIf="turno.paciente?.id &&  !turno.prestacion" icon="mdi mdi-bell-ring-outline" type="primary" (click)="llamar(bloqueI,turnoI)">
+                                        <plex-button *ngIf="turno.paciente?.id &&  !turno.prestacion" icon="mdi mdi-bell-ring-outline" [disabled]="this.dniLlamado" type="primary" (click)="llamar(bloqueI,turnoI)">
                                         </plex-button>
                                     </td>
                                     <td>

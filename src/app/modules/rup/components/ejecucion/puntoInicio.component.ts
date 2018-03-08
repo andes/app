@@ -17,7 +17,8 @@ import { TurneroService } from '../../../../services/turnero.service';
 
 @Component({
     selector: 'rup-puntoInicio',
-    templateUrl: 'puntoInicio.html'
+    templateUrl: 'puntoInicio.html',
+    styleUrls: ['./puntoInicio.component.css']
 })
 export class PuntoInicioComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
@@ -39,14 +40,14 @@ export class PuntoInicioComponent implements OnInit {
     // estados a utilizarse en la agenda
     public estadosAgenda = EstadosAgenda;
 
-    public index: any = 0;
-
+    public index = 0;
+    public dniLlamado = null;
+    public volverALlamar = false;
     // FILTROS
     private agendasOriginales: any = [];
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
-
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -75,14 +76,9 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
-        let datosPantalla = {
-            pantalla: 'pantalla_1',
-            prestaciones : ['268565007', '32132', '231321']
-        }
-        this.servicioTurnero.getTurno(datosPantalla).subscribe(turno => {
-            console.log("socket");
-            console.log(turno);
-          });
+        this.conexionPantalla();
+
+
     }
 
     redirect(pagina: string) {
@@ -274,6 +270,8 @@ export class PuntoInicioComponent implements OnInit {
 
         if (this.agendas.length) {
             this.agendaSeleccionada = this.agendas[0];
+            this.index = 0;
+            this.volverALlamar = false;
         }
 
     }
@@ -396,10 +394,24 @@ export class PuntoInicioComponent implements OnInit {
         return prestaciones;
     }
 
+    // TURNERO
+    conexionPantalla() {
+        let datosPantalla = {
+            pantalla: 'puntoInicio',
+            // prestaciones: ['268565007','32132', '231321']
+            prestaciones: []
+        };
+        this.servicioTurnero.getTurno(datosPantalla).subscribe(turno => {
+        });
 
+    }
+
+    // TURNERO
     llamar(bloqueI, turnoI) {
 
         const turnoLlamado = this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI];
+        this.dniLlamado = turnoLlamado.paciente.documento;
+        this.volverALlamar = true;
         let turnoProximo = {
             horaInicio: turnoLlamado.horaInicio,
             paciente: turnoLlamado.paciente,
@@ -409,11 +421,13 @@ export class PuntoInicioComponent implements OnInit {
             espacioFisico: this.agendaSeleccionada.espacioFisico
         };
 
-        this.servicioTurnero.post(turnoProximo).subscribe()
-
+        this.servicioTurnero.post(turnoProximo).subscribe();
+        setTimeout(() => {
+            this.dniLlamado = null;
+        }, 2200);
     }
-
-    llamarProximo(bloqueI) {
+    // TURNERO
+    llamarProximo() {
         let turnosSinAtender = [];
         const proximo = this.agendaSeleccionada.bloques[0].turnos;
         proximo.forEach(element => {
@@ -422,7 +436,10 @@ export class PuntoInicioComponent implements OnInit {
             }
 
         });
+
         if (this.index < turnosSinAtender.length) {
+            this.volverALlamar = true;
+            this.dniLlamado = turnosSinAtender[this.index].paciente.documento;
             let turnoProximo = {
                 horaInicio: turnosSinAtender[this.index].horaInicio,
                 paciente: turnosSinAtender[this.index].paciente,
@@ -432,21 +449,58 @@ export class PuntoInicioComponent implements OnInit {
                 espacioFisico: this.agendaSeleccionada.espacioFisico
             };
 
-            this.servicioTurnero.post(turnoProximo).subscribe()
+            this.servicioTurnero.post(turnoProximo).subscribe();
+
             this.index++;
+            setTimeout(() => {
+                this.dniLlamado = null;
+            }, 2200);
+
         }
 
-        // let turnoProximo = {
-        //     horaInicio: turnoLlamado.horaInicio,
-        //     paciente: turnoLlamado.paciente,
-        //     horaLlamada: new Date(),
-        //     profesional: this.agendaSeleccionada.profesionales[0],
-        //     tipoPrestacion: turnoLlamado.tipoPrestacion,
-        //     espacioFisico: this.agendaSeleccionada.espacioFisico
-        // };
-
-        // console.log(turnoProximo)
     }
+
+    // TURNERO
+    reLlamar() {
+        let turnosSinAtender = [];
+        const proximo = this.agendaSeleccionada.bloques[0].turnos;
+        proximo.forEach(element => {
+            if (element.estado === 'asignado' && !element.asistencia) {
+                turnosSinAtender.push(element);
+            }
+
+        });
+
+        if (this.index <= turnosSinAtender.length) {
+            let indexReLlamado;
+            if (this.index > 0) {
+                indexReLlamado = this.index - 1;
+
+            } else {
+                indexReLlamado = this.index;
+            }
+            this.dniLlamado = turnosSinAtender[indexReLlamado].paciente.documento;
+
+            let turnoProximo = {
+                horaInicio: turnosSinAtender[indexReLlamado].horaInicio,
+                paciente: turnosSinAtender[indexReLlamado].paciente,
+                horaLlamada: new Date(),
+                profesional: this.agendaSeleccionada.profesionales[0],
+                tipoPrestacion: turnosSinAtender[indexReLlamado].tipoPrestacion,
+                espacioFisico: this.agendaSeleccionada.espacioFisico
+            };
+
+            this.servicioTurnero.post(turnoProximo).subscribe();
+
+            setTimeout(() => {
+                this.dniLlamado = null;
+            }, 2200);
+
+
+        }
+
+    }
+
 }
 
 
