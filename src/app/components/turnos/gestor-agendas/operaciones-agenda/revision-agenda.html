@@ -293,14 +293,14 @@
                                                                 </span>
                                                                 <!-- Mostramos el mapeo de la codificación snomed -->
                                                                 <span *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
-                                                                    Mapeo Cie10 | {{diagnostico.codificacionProfesional.cie10.sinonimo}}
+                                                                    Mapeo Cie10 |({{diagnostico.codificacionProfesional.cie10.codigo}}) {{diagnostico.codificacionProfesional.cie10.sinonimo}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación reparada -->
                                                                 <span *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">
-                                                                    Reparo | {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                    Reparo | ({{diagnostico.codificacionAuditoria.codigo}}) {{diagnostico.codificacionAuditoria.sinonimo}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación cuando no hay diagnóstico del profesional -->
-                                                                <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.sinonimo"> Cie10 | {{diagnostico.codificacionAuditoria.sinonimo}}
+                                                                <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.sinonimo"> Cie10 | ({{diagnostico.codificacionAuditoria.codigo}}) {{diagnostico.codificacionAuditoria.sinonimo}}
                                                                 </span>
                                                             </div>
                                                         </td>
