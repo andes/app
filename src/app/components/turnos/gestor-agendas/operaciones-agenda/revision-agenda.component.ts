@@ -51,18 +51,14 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     public cantidadTurnosAsignados: number;
-    private timeoutHandle: number;
-    private lastRequest: ISubscription; // ultima request que se almacena con el subscribe
     private estadoPendienteAuditoria;
     private estadoCodificado;
 
-    public searchTerm: String = '';
     indiceReparo: any;
     public showReparo = false;
     existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
-    sobreturnos = [];
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
