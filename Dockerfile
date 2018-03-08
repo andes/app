@@ -1,11 +1,11 @@
 ARG NODE_VERSION=8.9-alpine
 FROM node:${NODE_VERSION}
 
-RUN npm install -g typescript @angular/cli@1.4.0 nodemon
+RUN npm install -g typescript nodemon
 
 WORKDIR /usr/src/app
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
 
@@ -13,5 +13,5 @@ COPY . .
 
 EXPOSE 4200
 
-CMD [ "ng", "serve", "--host",  "0.0.0.0"  ]
+CMD [ "npm", "run", "ng", "--", "serve", "--host",  "0.0.0.0"  ]
 

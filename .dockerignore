@@ -11,8 +11,6 @@ logs
 
 # Dependency directories
 node_modules
-typings
-typings/*
 .vscode
 
 Dockerfile
