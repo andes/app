@@ -499,12 +499,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos () {
         let valores = [];
+        console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item ) {
                 return false;
             } else {
-                valores.push(elem.valor)
+                valores.push(elem.valor);
             }
         }
         return true;
@@ -513,7 +514,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     async save(valid) {
         const repetidos = this.verificarContactosRepetidos();
         if (valid.formValid && repetidos) {
-            // Se agregan los contactos desde la app mobile
 
             let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
@@ -630,11 +630,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     }
 
                 } else {
-                    this.plex.alert('ERROR: Ocurrio un problema al actualizar los datos');
+                    this.plex.alert('ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
         } else {
-            this.plex.alert('Debe completar los datos obligatorios');
+            this.plex.alert('Debe completar los datos obligatorios. Verificar los contactos');
         }
     }
 
