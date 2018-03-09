@@ -1,21 +1,25 @@
 <ng-container *ngIf="!soloValores && registro?.valor?.solicitudPrestacion">
     <plex-text label="Motivo" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.motivo" name="motivo"></plex-text>
-    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones" name="indicaciones"></plex-text>
-    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
+    <plex-text label="Indicaciones" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.solicitudPrestacion.indicaciones"
+        name="indicaciones"></plex-text>
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionales" (getData)="loadProfesionales($event)" placeholder="Profesionales"
+        (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true" label="Profesional/es">
     </plex-select>
 </ng-container>
 <div class="row" *ngIf="soloValores">
     <div class="col-12 readonly">
+        <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small>
+        <br> -->
         <p>
             <span>Profesional/es</span>
             <br>
             <span *ngIf="registro.valor.solicitudPrestacion.profesionales && registro.valor.solicitudPrestacion.profesionales.length <= 0">
-                    (no especificado)
+                (no especificado)
             </span>
             <span *ngFor="let profesional of registro.valor.solicitudPrestacion.profesionales">
-                            {{profesional.apellido}}, {{profesional.nombre}}
-                            <br>
-                        </span>
+                {{profesional.apellido}}, {{profesional.nombre}}
+                <br>
+            </span>
         </p>
         <p>
             <span>Motivo</span>

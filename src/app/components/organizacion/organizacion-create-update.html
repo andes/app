@@ -165,14 +165,14 @@
                     </fieldset>
                     <fieldset>
                         <legend>Servicios</legend>
-                       
-                            <div class="row">
-                                <div class="col-6">
-                                    <plex-select [multiple]="true" name="servicios" (getData)=" getServicios($event)" [(ngModel)]="serviciosSeleccionados" label="Servicios:">
-                                    </plex-select>
-                                </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-select [multiple]="true" name="servicios" (getData)=" getServicios($event)" [(ngModel)]="serviciosSeleccionados" label="Servicios:">
+                                </plex-select>
                             </div>
-                        
+                        </div>
+
                     </fieldset>
 
                 </plex-box>
@@ -180,11 +180,17 @@
         </div>
     </section>
     <footer>
-        <div class="text-right">
-            <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="onCancel()">
-            </plex-button>
-            <plex-button label="Guardar" icon="content-save" type="primary" (click)="onSave($event)">
-            </plex-button>
+        <div class="row">
+            <div class="col-6 text-left">
+                <plex-button type="primary" label="Ver listado de camas" (click)="routeCama()">
+                </plex-button>
+            </div>
+            <div class="col-6 text-right">
+                <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="onCancel()">
+                </plex-button>
+                <plex-button label="Guardar" icon="content-save" type="primary" (click)="onSave($event)">
+                </plex-button>
+            </div>
         </div>
     </footer>
 </form>

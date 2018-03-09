@@ -16,7 +16,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 solicitudPrestacion: {}
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
-         }
+        }
     }
 
     loadProfesionales(event) {
@@ -30,5 +30,14 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             event.callback(callback);
         }
 
+    }
+
+
+    verificarAutocitacion() {
+        if (this.registro.valor.solicitudPrestacion.profesionales) {
+            if (this.registro.valor.solicitudPrestacion.profesionales.find(p => p.id === this.auth.profesional.id)) {
+                this.registro.valor.solicitudPrestacion['autocitado'] = true;
+            }
+        }
     }
 }

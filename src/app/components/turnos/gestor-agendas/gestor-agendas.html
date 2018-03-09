@@ -137,10 +137,9 @@
                             (showVistaTurnos)="showVistaTurnos($event)" [agendasSeleccionadas]="agendasSeleccionadas"></nota-agenda>
                     </div>
                     <!-- Panel Suspender Turno -->
-                    <div *ngIf="showSuspenderTurnos">
-                        <suspender-turno [agenda]="agenda" [accion]="'suspendida'" [turnosSeleccionados]="turnosSeleccionados" (saveSuspenderTurno)="cerrarSuspenderTurno($event)"
-                            (reasignarTurnoSuspendido)="reasignarTurnoSuspendido($event)" (cancelaSuspenderTurno)="cerrarSuspenderTurno($event)">
-                        </suspender-turno>
+                    <div *ngIf="showSuspenderAgenda || showSuspendida">
+                        <suspender-agenda [agenda]="agenda" (returnSuspenderAgenda)="cerrarSuspenderTurno(agenda)">
+                        </suspender-agenda>
                     </div>
 
                     <!-- FUNCINALIDAD REASIGNACION AUTOMATICA QUEDA AFUERA DEL RELEASE DOMUYO -->
@@ -176,7 +175,7 @@
     <reasignar-turno *ngIf="showReasignarTurno" [agendaAReasignar]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"
         class="plex-layout"></reasignar-turno>
     <reasignar-turno-agendas *ngIf="showReasignarTurnoAgendas" [agendasSimilares]="agendasSeleccionadas[0]"></reasignar-turno-agendas>
-    <listar-turnos *ngIf="showListadoTurnos" [agenda]="agendasSeleccionadas[0]" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
+    <listar-turnos *ngIf="showListadoTurnos" [agendas]="agendasSeleccionadas" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
     <listar-carpetas *ngIf="showCarpetas" [agendasSeleccionadas]="agendasSeleccionadas" (volverAlGestor)="volverAlGestor($event)"></listar-carpetas>
 
 </form>

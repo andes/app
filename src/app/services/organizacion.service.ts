@@ -25,15 +25,14 @@ export class OrganizacionService {
         return this.server.get(this.organizacionUrl + '/' + id, null);
     }
 
-
     /**
-     * Save. Si le organizacion por parametro tiene id hace put y sino hace post
-     *
-     * @param {IOrganizacion} organizacion guarda una organizacion
-     * @returns {Observable<IOrganizacion>} retorna un obervable
-     *
-     * @memberof OrganizacionService
-     */
+ * Save. Si le organizacion por parametro tiene id hace put y sino hace post
+ *
+ * @param {IOrganizacion} organizacion guarda una organizacion
+ * @returns {Observable<IOrganizacion>} retorna un observable
+ *
+ * @memberof OrganizacionService
+ */
     save(organizacion: IOrganizacion): Observable<IOrganizacion> {
         if (organizacion.id) {
             return this.server.put(this.organizacionUrl + '/' + organizacion.id, organizacion);
@@ -60,4 +59,6 @@ export class OrganizacionService {
         establecimiento.activo = true;
         return this.save(establecimiento);
     }
+
+
 }

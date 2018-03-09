@@ -1,3 +1,4 @@
+import { DomSanitizer } from '@angular/platform-browser';
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -12,6 +13,11 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
+import { DocumentosService } from './../../../../services/documentos.service';
+import { Slug } from 'ng2-slugify';
+import { saveAs } from 'file-saver';
+import * as moment from 'moment';
+import 'rxjs/Rx';
 
 @Component({
     selector: 'rup-prestacionValidacion',
@@ -24,34 +30,57 @@ import { FrecuentesProfesionalService } from './../../services/frecuentesProfesi
     encapsulation: ViewEncapsulation.None
 })
 export class PrestacionValidacionComponent implements OnInit {
-    idAgenda: any;
-    ordenSeleccionado: string;
+
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
-    // prestacion actual en ejecucion
-    public prestacion: any;
-    public registrosOriginales: any;
-    public paciente;
-    // array de elementos RUP que se pueden ejecutar
-    public elementosRUP: any[];
-    // elementoRUP de la prestacion actual
-    public elementoRUPprestacion: any;
-    /**
-     * Indica si muestra el calendario para dar turno autocitado
-     */
-    public showDarTurnos = false;
-    solicitudTurno;
-    public diagnosticoReadonly = false;
 
-    // array con los mapeos de snomed a cie10
+    // Tiene permisos para descargar?
+    public puedeDescargarPDF = false;
+
+    // Usa el keymap 'default'
+    private slug = new Slug('default');
+
+    // Id de la Agenda desde localStorage (revisar si aun hace falta)
+    public idAgenda: any;
+
+    // Orden en que se muestran los registros
+    public ordenSeleccionado: string;
+    public tipoOrden: any[] = null;
+
+    // Prestación actual en Ejecución
+    public prestacion: any;
+
+    public registrosOriginales: any;
+
+    // Paciente MPI
+    public paciente;
+
+    // Array de elementos RUP que se pueden ejecutar
+    public elementosRUP: any[];
+
+    // elementoRUP de la Prestación actual
+    public elementoRUPprestacion: any;
+
+    // Indica si muestra el calendario para dar turno autocitado
+    public showDarTurnos = false;
+
+    // Mostrar datos de la Solicitud "padre"?
+    public showDatosSolicitud = false;
+
+    // Datos de la Solicitud que se usará para dar un turno
+    public solicitudTurno;
+
+    // Si la Prestación está Validada ya no se podrá cambiar el motivo principal de la consulta
+    public motivoReadOnly = false;
+
+    // Array con los mapeos de snomed a cie10
     public codigosCie10 = {};
 
-    // array con los planes autocitados para dar turno
+    // Array con los planes autocitados para dar turno
     public prestacionesAgendas = [];
-    public asignarTurno = {};
 
-    // Datos de solicitud "padre"
-    public showDatosSolicitud = false;
+    // Array con los Planes que se van a guardar en los turnos
+    public asignarTurno = [];
 
     // Array para armar árbol de relaciones
     public relaciones: any[];
@@ -62,11 +91,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Orden de los registros en pantalla
     public ordenRegistros: any = '';
 
-    public grupos_guida: any[] = [];
-
-    tipoOrden: any[] = null;
-    arrayTitulos: any[] = [];
-
+    // Array que guarda los grupos de conceptos en la Búsqueda Guiada
+    public gruposGuiada: any[] = [];
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -74,7 +100,9 @@ export class PrestacionValidacionComponent implements OnInit {
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService) {
+        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
+        private servicioDocumentos: DocumentosService,
+        private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
@@ -85,6 +113,7 @@ export class PrestacionValidacionComponent implements OnInit {
         if (!this.auth.profesional) {
             this.redirect('inicio');
         }
+        this.puedeDescargarPDF = this.auth.getPermissions('descargas:?').length > 0;
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('agenda');
@@ -117,15 +146,16 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionSolicitud => {
-                    this.cargaPlan(prestacionSolicitud);
+                this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
+                    if (prestacionesSolicitadas) {
+                        this.cargaPlan(prestacionesSolicitadas);
+                    }
                 });
-
-                this.diagnosticoReadonly = true;
+                this.motivoReadOnly = true;
             }
 
             this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
-                this.grupos_guida = grupos;
+                this.gruposGuiada = grupos;
             });
 
             // Carga la información completa del paciente
@@ -170,17 +200,22 @@ export class PrestacionValidacionComponent implements OnInit {
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
         if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un diagnóstico principal', 'Diagnóstico principal', 1000);
+            this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un diagnóstico principal');
+            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
                 return false;
             } else {
+
+                // cargar los conceptos mas frecuentes por profesional y tipo de prestación
+                // Se copian los registros de la ejecución actual, para agregarle la frecuencia
+                let registros = this.prestacion.ejecucion.registros;
+
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
 
@@ -193,40 +228,13 @@ export class PrestacionValidacionComponent implements OnInit {
                         }
                     });
                     // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        // Chequear si es posible asignar turno a los planes generados
-                        let prestacionesSolicitadas = this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id);
+                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
                             this.cargaPlan(prestacionesSolicitadas);
                         }
                     });
 
-                    this.diagnosticoReadonly = true;
-
-                    // cargar los conceptos mas frecuentes por profesional y tipo de prestación
-                    // Se copian los registros de la ejecución actual, para agregarle la frecuencia
-                    let registros = this.prestacion.ejecucion.registros;
-                    let registrosFrecuentes = [];
-
-                    registros.forEach(x => {
-                        registrosFrecuentes.push({
-                            concepto: x.concepto,
-                            frecuencia: 1
-                        });
-                    });
-
-                    let frecuentesProfesional = {
-                        profesional: {
-                            id: this.auth.profesional.id,
-                            nombre: this.auth.profesional.nombre,
-                            apellido: this.auth.profesional.apellido,
-                            documento: this.auth.profesional.documento
-                        },
-                        tipoPrestacion: this.prestacion.solicitud.tipoPrestacion,
-                        organizacion: this.prestacion.solicitud.organizacion,
-                        frecuentes: registrosFrecuentes
-                    };
-                    this.frecuentesProfesionalService.updateFrecuentes(this.auth.profesional.id, frecuentesProfesional).subscribe(frecuentes => { });
+                    this.motivoReadOnly = true;
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
@@ -283,8 +291,13 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     turnoDado(e) {
-        // recargamos
-        this.inicializar(this.prestacion.id);
+        // actualizamos las prestaciones de la HUDS
+        this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
+            if (prestacionesSolicitadas) {
+                this.cargaPlan(prestacionesSolicitadas);
+            }
+            this.showDarTurnos = false;
+        });
     }
 
     tienePermisos(tipoPrestacion) {
@@ -308,12 +321,14 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     cargaPlan(prestacionesSolicitadas) {
+        prestacionesSolicitadas = prestacionesSolicitadas.filter(ps => ps.solicitud.registros[0].valor.solicitudPrestacion.autocitado);
         let tiposPrestaciones = prestacionesSolicitadas.map(ps => {
             return this.servicioPrestacion.conceptosTurneables.find(c => c.conceptId === ps.solicitud.tipoPrestacion.conceptId);
         });
+
         prestacionesSolicitadas.forEach(ps => {
             let idRegistro = ps.solicitud.registros[0].id;
-            this.asignarTurno[idRegistro] = {};
+            this.asignarTurno[idRegistro] = [];
             if (ps.solicitud.turno) {
                 this.asignarTurno[idRegistro] = ps;
             }
@@ -351,7 +366,7 @@ export class PrestacionValidacionComponent implements OnInit {
     defualtDiagnosticoPrestacion() {
         let count = 0;
         // for (let elemento of this.prestacion.ejecucion.registros) {
-        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación'].indexOf(elemento.concepto.semanticTag) >= 0);
+        let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }
@@ -420,7 +435,6 @@ export class PrestacionValidacionComponent implements OnInit {
         this.prestacion.ejecucion.registros[a] = this.prestacion.ejecucion.registros.splice(b, 1, this.prestacion.ejecucion.registros[a])[0];
         return this;
     }
-
 
 
     hayRegistros(tipos: any[], tipo: any = null) {
@@ -513,22 +527,75 @@ export class PrestacionValidacionComponent implements OnInit {
         return arr1.join('') === arr2.join('');
     }
 
-    imprimirResumen() {
+    descargarResumen() {
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
         setTimeout(() => {
-            window.print();
+
+            let content = '';
+            let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
+            let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
+
+            /**
+             * Cada logo va a quedar generado como base64 desde la API:
+             *
+             * <img src="data:image/png;base64,..." style="float: left;">
+             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+             *
+             */
+
+            const header = `
+                <div class="resumen-solicitud">
+                    ${datosSolicitud.innerHTML}
+                </div>
+            `;
+
+            content += header;
+            content += `
+            <div class="paciente">
+                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
+            </div>
+            `;
+
+            // agregamos prestaciones
+            let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
+
+            const total = elementosRUP.length;
+            for (let i = 0; i < total; i++) {
+                content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
+            }
+
+            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
+            // content = this.sanitizer.sanitize(1, content);
+
+            this.servicioDocumentos.descargar(content).subscribe(data => {
+                if (data) {
+                    // Generar descarga como PDF
+                    this.descargarArchivo(data, { type: 'application/pdf' });
+                } else {
+                    // Fallback a impresión normal desde el navegador
+                    window.print();
+                }
+            });
         });
     }
 
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
+        saveAs(blob, nombreArchivo);
+    }
+
     /**
-     * busca los grupos de la busqueda guiada a los que pertenece un concepto
+     * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
      */
-    matchinBusquedaGuiada(concept) {
+    enBusquedaGuiada(concept) {
         let results = [];
-        this.grupos_guida.forEach(data => {
+        this.gruposGuiada.forEach(data => {
             if (data.conceptIds.indexOf(concept.conceptId) >= 0) {
                 results.push(data);
             }
