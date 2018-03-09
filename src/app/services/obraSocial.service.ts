@@ -11,9 +11,9 @@ export class ObraSocialService {
     constructor(private server: Server) { }
     /**
      * Obtiene los datos de la obra social asociada a un paciente
-     * 
-     * @param {*} dni 
-     * @returns {Observable<any>} 
+     *
+     * @param {*} dni
+     * @returns {Observable<any>}
      * @memberof ObraSocialService
      */
     get(dni: any): Observable<any> {
