@@ -176,4 +176,9 @@ export class MapaDeCamasComponent implements OnInit {
     public updateCama(e, index) {
         this.camas[index] = e;
     }
+
+
+    public ingresarPaciente() {
+        this.router.navigate(['rup/internacion/crear']);
+    }
 }

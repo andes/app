@@ -13,7 +13,7 @@
                     <div class="row" *ngIf="estadoServicio && estadoServicio.total > 0">
                         <div class="col-2">
                             <h4>
-                                Estado del servicio >
+                                Estado del servicio
                             </h4>
                         </div>
                         <div class="col">
@@ -112,6 +112,9 @@
                                     <div class="btn-group col mt-5" role="group" aria-label="Botonera principal">
                                         <button type="button" class="btn btn-primary btn-block" (click)="limpiarFiltros()">
                                             Limpiar filtros
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-block" (click)="ingresarPaciente()">
+                                            Ingresar Paciente
                                         </button>
 
                                         <!-- <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}"
