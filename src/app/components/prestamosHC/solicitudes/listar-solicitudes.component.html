@@ -54,7 +54,8 @@
             </td>
             <td>{{carpeta.estado}}</td>
             <td>
-                {{ carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                {{ carpeta.datosPrestamo.turno.profesional | enumerar:['apellido','nombre'] }}
+                 <!-- {{ carpeta.datosPrestamo.turno.profesionales[0].apellido }}  -->
             </td>
             <td>
                 {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}}

@@ -9,7 +9,7 @@
 
             <plex-tabs>
                 <plex-tab label="Solicitudes HC">
-                    <app-listar-solicitudes (showPrestarEmit)="onShowPrestar($event)" (showDevolverEmit)="onShowDevolver($event)" (carpetaPrestadaEmit)="onCarpetaPrestada($event)"></app-listar-solicitudes>
+                    <app-listar-solicitudes [listaCarpetasInput]="listaCarpetas" (showPrestarEmit)="onShowPrestar($event)" (showDevolverEmit)="onShowDevolver($event)" (carpetaPrestadaEmit)="onCarpetaPrestada($event)"></app-listar-solicitudes>
                 </plex-tab>
 
                 <plex-tab label="Historial HC">
@@ -22,7 +22,7 @@
     <div class="col-4" *ngIf="showPrestar">
         <div class="panel panel-default">
             <div class="clear"></div>            
-            <app-prestar-hc [prestar]="prestar" (cancelPrestarEmit)="onCancelPrestar($event)" (carpetaEmit)="onCarpeta($event)">
+            <app-prestar-hc [prestar]="prestar" (cancelPrestarEmit)="onCancelPrestar($event)" (listaCarpetaEmit)="onCarpeta($event)" >
             </app-prestar-hc>
         </div>
     </div>

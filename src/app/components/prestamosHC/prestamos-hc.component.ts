@@ -14,6 +14,8 @@ export class PrestamosHcComponent implements OnInit {
 
     prestar: any;
 
+    listaCarpetas: any;
+
     ngOnInit() {
 
     }
@@ -34,8 +36,10 @@ export class PrestamosHcComponent implements OnInit {
         debugger;
         this.prestar = event;
     }
-    onCarpeta(event){
-        console.log('onCarpeta', event);
+
+    onCarpeta(event) {
+        debugger;
+        this.listaCarpetas = event;
     }
 
     onCancelPrestar(event) {

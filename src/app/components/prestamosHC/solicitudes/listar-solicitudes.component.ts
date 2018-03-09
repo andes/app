@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { PrestarHcComponent } from './prestar-hc.component';
@@ -15,7 +15,7 @@ import * as moment from 'moment';
 })
 
 export class ListarSolicitudesComponent implements OnInit {
-    public carpetas: any[];
+    public carpetas: any[] = [];
     public prestacionesPermisos = [];
     public espacioFisico = [];
     public tipoPrestacion: any;
@@ -28,6 +28,26 @@ export class ListarSolicitudesComponent implements OnInit {
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
+
+    public _listarCarpetas;
+
+    @Input('listaCarpetasInput')
+    set listaCarpetasInput(value: any) {
+        debugger;
+        if (value !== undefined) {
+
+            this.carpetas =  this.carpetas.filter(function(el) {
+                debugger;
+                return el.numero !== value.numero;
+            });
+
+            this.carpetas.push(value);
+        }
+
+    }
+    get listaCarpetasInput(): any {
+        return this._listarCarpetas;
+    }
 
     @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -77,6 +97,7 @@ export class ListarSolicitudesComponent implements OnInit {
         }
 
         this.prestamosService.getCarpetas(this.filters).subscribe(carpetas => {
+            debugger;
             this.carpetas = carpetas;
         });
     }
@@ -131,7 +152,7 @@ export class ListarSolicitudesComponent implements OnInit {
         this.showDevolverEmit.emit(false);
         this.showPrestarEmit.emit(true);
         this.carpetaPrestadaEmit.emit(turno);
-        
+
 
         this.verPrestar = true;
     }
@@ -149,6 +170,5 @@ export class ListarSolicitudesComponent implements OnInit {
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
-        public auth: Auth) {
-    }
+        public auth: Auth) { }
 }

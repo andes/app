@@ -12,6 +12,7 @@ export class PrestarHcComponent implements OnInit {
     prestamo: any;
 
     @Output() cancelPrestarEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     @Input('prestar')
     set prestar(value: any) {
@@ -25,7 +26,7 @@ export class PrestarHcComponent implements OnInit {
 
             this.prestarHC.responsable = '';
             value.datosPrestamo.turno.profesionales.forEach(profesional => {
-                this.prestarHC.responsable +=  profesional.apellido + ', ' + profesional.nombre + ' - ';    
+                this.prestarHC.responsable += profesional.apellido + ', ' + profesional.nombre + ' - ';
             });
             this.prestarHC.responsable = this.prestarHC.responsable.substring(0, this.prestarHC.responsable.length - 3);
         }
@@ -51,7 +52,7 @@ export class PrestarHcComponent implements OnInit {
         event.tipoPrestacion = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
         event.profesional = this.prestamo.datosPrestamo.turno.profesionales;
         event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisico;
-        
+
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
             // this.listarComponent.getCarpetas('',{})
@@ -59,7 +60,7 @@ export class PrestarHcComponent implements OnInit {
             this.plex.alert('La Carpeta se prestó correctamente');
 
             this.cancelPrestarEmit.emit(false);
-            // this.listaCarpetaEmit.emit(this._carpeta);
+            this.listaCarpetaEmit.emit(this._carpeta);
         });
     }
 
