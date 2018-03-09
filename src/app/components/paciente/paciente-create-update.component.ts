@@ -380,23 +380,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
         // Se verifican los datos de la app mobile
         if (this.seleccion.id) {
-            this.appMobile.check(this.seleccion.id).subscribe(data => {
-                if (!data.account) {
-                    // No posee cuenta
-                    this.checkPass = true;
-                    this.activarApp = true;
-                } else {
-                    if (!data.account.activacionApp) {
-                        this.messageApp = 'Cuenta pendiente de activacion';
-                        this.checkPass = true;
-                        this.activarApp = true;
-                    } else {
-                        this.messageApp = 'Cuenta ya activada';
-                    }
-                    this.emailAndes = data.account.email;
-                    this.celularAndes = data.account.telefono;
-                }
-            });
+            // this.appMobile.check(this.seleccion.id).subscribe(data => {
+            //     if (!data.account) {
+            //         // No posee cuenta
+            //         this.checkPass = true;
+            //         this.activarApp = true;
+            //     }
+            // });
         } else {
             this.checkPass = true;
             this.activarApp = true;
@@ -488,10 +478,41 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
+    onFocusout (type, value) {
+
+        let item = null;
+        for (let elem of this.pacienteModel.contacto) {
+            if (elem.tipo === type || elem.valor === value) {
+                item = elem;
+            }
+        }
+        if (!item) {
+            this.addContacto(type, value);
+        } else {
+            if (!item.valor) {
+                item.valor = value;
+            } else if (item.valor !== value) {
+                this.addContacto(type, value);
+            }
+        }
+    }
+
+    verificarContactosRepetidos () {
+        let valores = [];
+        for (let elem of this.pacienteModel.contacto) {
+            const item = valores.find(s => s === elem.valor);
+            if (item ) {
+                return false;
+            } else {
+                valores.push(elem.valor)
+            }
+        }
+        return true;
+    }
 
     async save(valid) {
-        if (valid.formValid) {
-
+        const repetidos = this.verificarContactosRepetidos();
+        if (valid.formValid && repetidos) {
             // Se agregan los contactos desde la app mobile
 
             let pacienteGuardar = Object.assign({}, this.pacienteModel);

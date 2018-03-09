@@ -72,11 +72,10 @@
                                 <legend>Datos de usuario de Andes</legend>
                                 <div class="row">
                                     <div class="col-4">
-                                        <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail"></plex-text>
+                                        <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail" (focusout)="onFocusout('email', emailAndes)"></plex-text>
                                     </div>
                                     <div class="col-4">
-                                            <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes" ></plex-phone>
-                                            
+                                        <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes" (focusout)="onFocusout('celular', celularAndes)" ></plex-phone>
                                     </div>
                                     <div class="col-4">
                                         <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
@@ -131,7 +130,7 @@
                                     </div>
                                 </div>
                             </fieldset>
-                          
+
                             <!-- DATOS DE DOMICILIO -->
                             <fieldset>
                                 <legend>Datos de domicilio</legend>
