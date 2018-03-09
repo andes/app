@@ -124,8 +124,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Output de la búsqueda de paciente
-     * 
-     * @param {IPaciente} paciente 
+     *
+     * @param {IPaciente} paciente
      * @memberof RevisionAgendaComponent
      */
     onReturn(paciente: IPaciente): void {
@@ -216,7 +216,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
-     * 
+     *
      * @memberof RevisionAgendaComponent
      */
     cerrarAsistencia() {
@@ -246,7 +246,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Verifica que cada turno esté codificado y modifica el estado de la agenda si corresponde
-     * 
+     *
      * @memberof RevisionAgendaComponent
      */
     cerrarCodificacion() {
@@ -353,8 +353,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Agrega el diagnóstico provisto por el revisor, y persiste el cambio automáticamente
-     * 
-     * @param {any} reparo 
+     *
+     * @param {any} reparo
      * @memberof RevisionAgendaComponent
      */
     repararDiagnostico(reparo) {
