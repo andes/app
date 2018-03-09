@@ -487,8 +487,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.pacienteModel.contacto = [this.contacto];
         }
     }
+
+
     async save(valid) {
         if (valid.formValid) {
+
+            // Se agregan los contactos desde la app mobile
+
             let pacienteGuardar = Object.assign({}, this.pacienteModel);
 
             pacienteGuardar.sexo = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
@@ -780,10 +785,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.plex.alert('Debe completar los datos obligatorios');
         }
     }
-    addContacto() {
+
+    addContacto(key, valor) {
         let nuevoContacto = Object.assign({}, {
-            tipo: 'celular',
-            valor: '',
+            tipo: key,
+            valor: valor,
             ranking: 0,
             activo: true,
             ultimaActualizacion: new Date()
