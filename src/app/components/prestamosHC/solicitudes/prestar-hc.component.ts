@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-prestar-hc',
@@ -17,7 +18,6 @@ export class PrestarHcComponent implements OnInit {
     @Input('prestar')
     set prestar(value: any) {
         this.prestamo = value;
-        debugger;
         if (value && value.datosPrestamo && value.datosPrestamo.turno.profesionales) {
 
             if (value.datosPrestamo.turno.espacioFisico) {
@@ -40,7 +40,7 @@ export class PrestarHcComponent implements OnInit {
         destino: '',
         responsable: '',
         observacionesPrestamo: ''
-    }
+    };
 
     ngOnInit() {
 
@@ -49,16 +49,14 @@ export class PrestarHcComponent implements OnInit {
     save(event) {
         event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
         event.idTurno = this.prestamo.datosPrestamo.turno.id;
-        event.tipoPrestacion = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
-        event.profesional = this.prestamo.datosPrestamo.turno.profesionales;
+        event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
+        event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
         event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisico;
+        event.organizacion = this.auth.organizacion;
 
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
-            // this.listarComponent.getCarpetas('',{})
-
             this.plex.alert('La Carpeta se prestó correctamente');
-
             this.cancelPrestarEmit.emit(false);
             this.listaCarpetaEmit.emit(this._carpeta);
         });
@@ -68,7 +66,7 @@ export class PrestarHcComponent implements OnInit {
         this.cancelPrestarEmit.emit(false);
     }
 
-    constructor(public plex: Plex, public prestamosService: PrestamosService) {
+    constructor(public plex: Plex, public prestamosService: PrestamosService, public auth: Auth) {
 
     }
 }

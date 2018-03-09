@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { enumToArray } from '../../../utils/enums';
 import { EstadosDevolucionCarpetas } from './../enums';
 import { PrestamosService } from '../../../services/prestamosHC/prestamos-hc.service';
+import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -11,6 +12,7 @@ import { Plex } from '@andes/plex';
 
 export class DevolverHcComponent implements OnInit {
     @Output() cancelDevolverEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     devolverHC: any = {
         estado: '',
@@ -28,7 +30,6 @@ export class DevolverHcComponent implements OnInit {
     @Input('devolver')
     set devolver(value: any) {
         this.prestamo = value;
-        debugger;
     }
     get devolver(): any {
         return this._carpeta;
@@ -37,17 +38,16 @@ export class DevolverHcComponent implements OnInit {
     save(event) {
         event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
         event.idTurno = this.prestamo.datosPrestamo.turno.id;
-        event.tipoPrestacion = this.prestamo.datosPrestamo.turno.conceptoTurneable;
-        event.profesional = this.prestamo.datosPrestamo.turno.profesionales;
+        event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
+        event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
         event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisicos;
+        event.organizacion = this.auth.organizacion;
         
         this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
-
             this.plex.alert('La Carpeta se devolvió correctamente');
-
             this.cancelDevolverEmit.emit(false);
-            // this.listaCarpetaEmit.emit(this._carpeta);
+            this.listaCarpetaEmit.emit(this._carpeta);
         });
     }
 
@@ -55,7 +55,7 @@ export class DevolverHcComponent implements OnInit {
         this.cancelDevolverEmit.emit(false);
     }
 
-    constructor(public plex: Plex, public prestamosService: PrestamosService) {
+    constructor(public plex: Plex, public prestamosService: PrestamosService, public auth: Auth) {
 
     }
-}   
+}

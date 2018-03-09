@@ -21,19 +21,16 @@ export class PrestamosHcComponent implements OnInit {
     }
 
     onShowPrestar(event) {
-        debugger;
         this.showDevolver = false;
         this.showPrestar = true;
     }
 
     onShowDevolver(event) {
-        debugger;
         this.showPrestar = false;
         this.showDevolver = true;
     }
 
     onCarpetaPrestada(event) {
-        debugger;
         this.prestar = event;
     }
 

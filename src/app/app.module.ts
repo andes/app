@@ -266,7 +266,6 @@ import { CamasService } from './services/camas.service';
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
-import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 
 export let RUPRegistry = {
@@ -406,7 +405,6 @@ let RUPComponentsArray = [
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         PrestarHcComponent,
-        ListarPrestamosComponent,
         DevolverHcComponent
     ],
     entryComponents: RUPComponentsArray,

@@ -22,9 +22,12 @@ export class ListarSolicitudesComponent implements OnInit {
     public profesional: any;
     public fechaDesde: any;
     public fechaHasta: any;
-    public today = Date.now();
+    public carpetaSeleccionada: any;
 
-    public filters = {};
+    public filters = {
+        organizacion: this.auth.organizacion._id
+    };
+
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
@@ -33,15 +36,13 @@ export class ListarSolicitudesComponent implements OnInit {
 
     @Input('listaCarpetasInput')
     set listaCarpetasInput(value: any) {
-        debugger;
         if (value !== undefined) {
-
+            let index = this.carpetas.map(function(carpeta) { return carpeta.datosPrestamo.turno.id; }).indexOf(value.datosPrestamo.turno.id);
+            
             this.carpetas =  this.carpetas.filter(function(el) {
-                debugger;
-                return el.numero !== value.numero;
+                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
             });
-
-            this.carpetas.push(value);
+            this.carpetas.splice(index,1,value);
         }
 
     }
@@ -62,14 +63,12 @@ export class ListarSolicitudesComponent implements OnInit {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaDesde.isValid()) {
                 this.filters['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
-                this.filters['organizacion'] = this.auth.organizacion._id;
             }
         }
         if (filter === 'fechaHasta') {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaHasta.isValid()) {
                 this.filters['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
-                this.filters['organizacion'] = this.auth.organizacion._id;
             }
         }
         if (filter === 'prestaciones') {
@@ -87,7 +86,6 @@ export class ListarSolicitudesComponent implements OnInit {
                 this.filters['idProfesional'] = '';
             }
         }
-        debugger;
         if (filter === 'espacioFisico') {
             if (value.value !== null) {
                 this.filters['idEspacioFisico'] = value.value.id;
@@ -97,7 +95,6 @@ export class ListarSolicitudesComponent implements OnInit {
         }
 
         this.prestamosService.getCarpetas(this.filters).subscribe(carpetas => {
-            debugger;
             this.carpetas = carpetas;
         });
     }
@@ -148,20 +145,19 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
-    prestar(turno) {
+    prestar(solicitudCarpeta) {
         this.showDevolverEmit.emit(false);
         this.showPrestarEmit.emit(true);
-        this.carpetaPrestadaEmit.emit(turno);
-
-
+        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+        this.carpetaSeleccionada = solicitudCarpeta;
         this.verPrestar = true;
     }
 
-    devolver(turno) {
+    devolver(solicitudCarpeta) {
         this.showPrestarEmit.emit(false);
         this.showDevolverEmit.emit(true);
-        this.carpetaPrestadaEmit.emit(turno);
-
+        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+        this.carpetaSeleccionada = solicitudCarpeta;
         this.verDevolver = true;
     }
 
@@ -170,5 +166,7 @@ export class ListarSolicitudesComponent implements OnInit {
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
-        public auth: Auth) { }
+        public auth: Auth) {
+
+    }
 }

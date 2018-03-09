@@ -30,7 +30,7 @@
     <div class="col-4" *ngIf="showDevolver">
         <div class="panel panel-default">
             <div class="clear"></div>
-            <app-devolver-hc [devolver]="prestar" (cancelDevolverEmit)="onCancelDevolver($event)">
+            <app-devolver-hc [devolver]="prestar" (cancelDevolverEmit)="onCancelDevolver($event)" (listaCarpetaEmit)="onCarpeta($event)">
             </app-devolver-hc>
         </div>
     </div>

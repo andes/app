@@ -24,7 +24,7 @@
 <div class="row" *ngIf="mostrarMasOpciones">
     <div class="col-4">
         <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
-            label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio ? edificio.descripcion : '' + ')'"
+            label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
             ngModelOptions="{standalone: true}">
         </plex-select>
     </div>
@@ -35,46 +35,45 @@
     </div>
 </div>
 
-<table class="table table-striped table-sm">
+<table class="table table-striped">
     <thead>
         <tr>
             <th>Fecha</th>
             <th>Estado</th>
-            <th>Responsable</th>
+            <th>    Responsables</th>
             <th>Destino</th>
-            <th>Prestación</th>
+            <th>Prestaciones</th>
             <th>Historia Clínica</th>
             <th></th>
         </tr>
     </thead>
-    <tbody *ngFor="let carpeta of carpetas">
-        <tr>
+    <tbody>
+        <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
             <td>
-                {{today | date: 'dd/mm/yyyy'}}
+                {{carpeta.fecha | date:'dd-MM-yyyy'}}
             </td>
             <td>{{carpeta.estado}}</td>
             <td>
-                {{ carpeta.datosPrestamo.turno.profesional | enumerar:['apellido','nombre'] }}
-                 <!-- {{ carpeta.datosPrestamo.turno.profesionales[0].apellido }}  -->
+                {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
             </td>
             <td>
-                {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}}
+                {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
             </td>
             <td>
-                {{ carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
+                {{carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
             </td>
             <td>
                 <b>
-                    {{carpeta.numero}} - {{carpeta.datosPrestamo.turno.paciente.apellido}},
-                    {{carpeta.datosPrestamo.turno.paciente.nombre}}
+                    {{carpeta.numero}} - {{carpeta.paciente.apellido}},
+                    {{carpeta.paciente.nombre}}
                 </b>
                 <br/> Documento:
-                <b>{{carpeta.datosPrestamo.turno.paciente.documento}}</b>
-            </td>
+                <b>{{carpeta.paciente.documento}}</b>
+            </td>   
             <td *ngIf="carpeta.estado == 'En archivo'">
                 <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
                 </plex-button>
-            </td>
+            </td>   
             <td *ngIf="carpeta.estado == 'Prestada'">
                 <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
                 </plex-button>
