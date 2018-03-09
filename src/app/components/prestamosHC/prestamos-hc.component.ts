@@ -34,11 +34,9 @@ export class PrestamosHcComponent implements OnInit {
         debugger;
         this.prestar = event;
     }
-<<<<<<< HEAD
     onCarpeta(event){
         console.log('onCarpeta', event);
     }
-=======
 
     onCancelPrestar(event) {
         this.showPrestar = event;
@@ -48,6 +46,5 @@ export class PrestamosHcComponent implements OnInit {
         this.showDevolver = event;
     }
 
->>>>>>> d3de0bfccc3323a76782bbc0e4ce0642608c62c9
     constructor() { }
 }

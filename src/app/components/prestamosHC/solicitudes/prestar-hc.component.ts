@@ -17,21 +17,11 @@ export class PrestarHcComponent implements OnInit {
     set prestar(value: any) {
         this.prestamo = value;
         debugger;
-<<<<<<< HEAD
         if (value && value.datosPrestamo && value.datosPrestamo.turno.profesionales) {
             
             if (value.datosPrestamo.turno.espacioFisico) {
                 this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico.nombre;
             }
-=======
-        if (value && value.datosPrestamo && value.datosPrestamo.turno.profesional[0][0]) {
-            if (value.datosPrestamo.turno.espacioFisico[0]) {
-                this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico[0].nombre;
-            }
-
-            this.prestarHC.responsable = value.datosPrestamo.turno.profesional[0][0].apellido + ', ' + value.datosPrestamo.turno.profesional[0][0].nombre;
-        }
->>>>>>> d3de0bfccc3323a76782bbc0e4ce0642608c62c9
 
             this.prestarHC.responsable = '';
             value.datosPrestamo.turno.profesionales.forEach(profesional => {
@@ -64,15 +54,11 @@ export class PrestarHcComponent implements OnInit {
         
         this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
             this._carpeta = carpeta;
-<<<<<<< HEAD
-            // this.listarComponent.getCarpetas('',{})
-=======
 
             this.plex.alert('La Carpeta se prestó correctamente');
 
             this.cancelPrestarEmit.emit(false);
             // this.listaCarpetaEmit.emit(this._carpeta);
->>>>>>> d3de0bfccc3323a76782bbc0e4ce0642608c62c9
         });
     }
 
