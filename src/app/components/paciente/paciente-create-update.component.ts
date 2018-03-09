@@ -864,7 +864,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     public buscar() {
         // Cancela la búsqueda anterior
-        debugger;
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
         }
