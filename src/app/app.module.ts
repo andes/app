@@ -102,7 +102,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
-
+import { InternacionService } from './modules/rup/services/internacion.service';
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -225,6 +225,7 @@ import { EjecucionInternacionComponent } from './modules/rup/components/ejecucio
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
+import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
 
 
 // Llaves
@@ -332,7 +333,8 @@ let RUPComponentsArray = [
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
-    PasesCamaComponent
+    PasesCamaComponent,
+    CensoDiarioComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -462,8 +464,8 @@ let RUPComponentsArray = [
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,
-        ProcedimientosQuirurgicosService
-
+        ProcedimientosQuirurgicosService,
+        InternacionService
     ]
 })
 

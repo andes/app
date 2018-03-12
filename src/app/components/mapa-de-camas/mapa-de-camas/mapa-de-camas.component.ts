@@ -181,4 +181,8 @@ export class MapaDeCamasComponent implements OnInit {
     public ingresarPaciente() {
         this.router.navigate(['rup/internacion/crear']);
     }
+
+    public censoDiario() {
+        this.router.navigate(['rup/internacion/censo']);
+    }
 }
