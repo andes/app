@@ -1,5 +1,4 @@
-import { log } from 'util';
-import { environment } from './../../../environment';
+import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
@@ -11,6 +10,7 @@ import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
+import { ObraSocialService } from './../../../services/obraSocial.service';
 
 // Interfaces
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
@@ -29,6 +29,7 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'dar-turnos',
@@ -39,7 +40,10 @@ import { TurnoService } from './../../../services/turnos/turno.service';
 })
 
 export class DarTurnosComponent implements OnInit {
-    changeCarpeta = false;
+    public lenNota = 140;
+    public nota = '';
+    public changeCarpeta = false;
+    hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     @Input('pacienteSeleccionado')
@@ -77,6 +81,8 @@ export class DarTurnosComponent implements OnInit {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
+    // usamos este output para volver al componente de validacion de rup
+    @Output() volverValidacion = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
     private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
@@ -87,7 +93,6 @@ export class DarTurnosComponent implements OnInit {
     public estadosAgenda = EstadosAgenda;
 
     estadoT: EstadosDarTurnos;
-
     turnoDoble = false;
     telefono: String = '';
     countBloques: any[];
@@ -120,6 +125,8 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
+    obraSocialPaciente: IObraSocial;
+    motivoConsulta: string;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -146,6 +153,7 @@ export class DarTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacionPaciente: PrestacionesService,
+        public servicioOS: ObraSocialService,
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
@@ -534,6 +542,10 @@ export class DarTurnosComponent implements OnInit {
                 this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
                 this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
             }
+            if (this.opciones.tipoPrestacion) {
+                this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
+                this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
+            }
             this.habilitarTurnoDoble();
             this.estadoT = 'confirmacion';
         } else {
@@ -721,6 +733,7 @@ export class DarTurnosComponent implements OnInit {
      */
     darTurno() {
         if (this.turnoTipoPrestacion) {
+            this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
 
@@ -736,10 +749,12 @@ export class DarTurnosComponent implements OnInit {
                         documento: this.paciente.documento,
                         apellido: this.paciente.apellido,
                         nombre: this.paciente.nombre,
+                        alias: this.paciente.alias,
                         fechaNacimiento: this.paciente.fechaNacimiento,
                         sexo: this.paciente.sexo,
                         telefono: this.telefono,
-                        carpetaEfectores: this.paciente.carpetaEfectores
+                        carpetaEfectores: this.paciente.carpetaEfectores,
+                        obraSocial: this.obraSocialPaciente
                     };
                     this.agenda = agd;
                     this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
@@ -754,16 +769,17 @@ export class DarTurnosComponent implements OnInit {
                         idBloque: this.bloque.id,
                         paciente: pacienteSave,
                         tipoPrestacion: this.turnoTipoPrestacion,
-                        tipoTurno: this.tiposTurnosSelect
+                        tipoTurno: this.tiposTurnosSelect,
+                        nota: this.nota,
+                        motivoConsulta: this.motivoConsulta
                     };
-
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                         this.estadoT = 'noSeleccionada';
                         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
                         this.agenda = null;
                         this.actualizar('');
                         this.plex.toast('info', 'El turno se asignó correctamente');
-
+                        this.hideDarTurno = false;
 
                         // Enviar SMS sólo en Producción
                         if (environment.production === true) {
@@ -782,6 +798,7 @@ export class DarTurnosComponent implements OnInit {
                                 idTurno: this.turno.id
                             };
                             this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                                this.volverValidacion.emit(prestacion);
                             });
                         }
 
@@ -813,6 +830,7 @@ export class DarTurnosComponent implements OnInit {
 
                         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
                     }, (err) => {
+                        this.hideDarTurno = false;
                         // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
                         // En este caso se trata de dar nuevamente un turno con el siguiente turno disponible con el mismo horario
                         if (err && (err === 'noDisponible')) {
@@ -918,6 +936,9 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
+                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                        this.obraSocialPaciente = resultado;
+                    });
                 });
         } else {
             this.seleccion = paciente;
@@ -987,6 +1008,12 @@ export class DarTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.mostrarCalendario = false;
         this.pacientesSearch = true;
+    }
+
+    verificarNota() {
+        if (this.nota && this.nota.length > this.lenNota) {
+            this.nota = this.nota.substring(0, this.lenNota);
+        }
     }
 
     cancelar() {

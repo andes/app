@@ -18,7 +18,10 @@ export class PrestacionesService {
         // programable: '1661000013109',
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
-        Antecedentes_Personales_hallazgos: '1901000013103'
+        Antecedentes_Personales_hallazgos: '1901000013103',
+        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
+        situacionLaboral: '200000000',
+        nivelEstudios: '3'
     };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
@@ -260,6 +263,78 @@ export class PrestacionesService {
     }
 
 
+
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'procedimiento' || registro.concepto.semanticTag === 'entidad observable' || registro.concepto.semanticTag === 'régimen/tratamiento')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
+    /**
+     *
+     * @param idPaciente
+     * @param soloValidados
+     */
+    getByPacienteElementosRegistro(idPaciente: any, soloValidados?: boolean) {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let registros = [];
+            if (soloValidados) {
+                prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            }
+            prestaciones.forEach(prestacion => {
+                if (prestacion.ejecucion) {
+
+                    let agregar = prestacion.ejecucion.registros
+                        .filter(registro =>
+                            registro.concepto.semanticTag === 'elemento de registro')
+                        .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+
+                    registros = [...registros, ...agregar];
+                }
+            });
+            let registroSalida = [];
+            // ordenamos los registro por fecha para que a evoluciones se generen correctamente
+            registros = registros.sort(
+                function (a, b) {
+                    a = a.createdAt;
+                    b = b.createdAt;
+                    return a - b;
+                });
+
+            this.cacheRegistros[idPaciente] = registros;
+            return registros;
+        });
+    }
+
     /**
      * Metodo getByPacienteMedicamento lista todos los medicamentos registrados del paciente
      * @param {String} idPaciente
@@ -475,7 +550,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -558,19 +633,20 @@ export class PrestacionesService {
         }
 
         prestacion.paciente['_id'] = paciente.id;
+        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
 
         return prestacion;
     }
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
+        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-        let planesCrear = [];
+        let planesCrear = undefined;
         if (planes.length) {
-
+            planesCrear = [];
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
@@ -591,7 +667,7 @@ export class PrestacionesService {
                     let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, conceptoSolicitud, 'validacion');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
@@ -602,28 +678,18 @@ export class PrestacionesService {
                     }
                 }
             });
-
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                ...(planesCrear.length) && { planes: planesCrear },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
-
-
-        } else {
-            // hacemos el patch y luego creamos los planes
-            let dto: any = {
-                op: 'estadoPush',
-                estado: { tipo: 'validada' },
-                registros: prestacion.ejecucion.registros
-            };
-
-            return this.patch(prestacion.id, dto);
         }
+        // hacemos el patch y luego creamos los planes
+        let dto: any = {
+            op: 'estadoPush',
+            estado: { tipo: 'validada' },
+            ...(planesCrear && planesCrear.length) && { planes: planesCrear },
+            registros: prestacion.ejecucion.registros,
+            registrarFrecuentes: true
+        };
+        return this.patch(prestacion.id, dto);
+
+
 
     }
     /**
@@ -646,17 +712,21 @@ export class PrestacionesService {
      * Devuelve un listado de prestaciones planificadas desde una prestación origen
      *
      * @param {any} idPrestacion id de la prestacion origen
-     * @returns  {array} listado de prestaciones planificadas
+     * @param {any} idPaciente id del paciente
+     * @param {boolean} recarga forzar la recarga de la prestaciones (ante algún cambio)
+     * @returns  {array} listado de prestaciones planificadas en una prestación
      * @memberof BuscadorComponent
      */
-    public getPlanes(idPrestacion, idPaciente) {
-        let prestacionPlanes = [];
-        if (this.cache[idPaciente]) {
-            prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
-            return prestacionPlanes;
-        } else {
-            return null;
-        }
+    public getPlanes(idPrestacion, idPaciente, recarga = false) {
+        return this.getByPaciente(idPaciente, recarga).map(listadoPrestaciones => {
+            let prestacionPlanes = [];
+            if (this.cache[idPaciente]) {
+                prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
+                return prestacionPlanes;
+            } else {
+                return null;
+            }
+        });
     }
 
     /**
@@ -703,7 +773,7 @@ export class PrestacionesService {
      * @returns string Clase a ser utilizado para estilizar las cards de RUP
      * @memberof PrestacionesService
      */
-    public getCssClass(conceptoSNOMED, filtroActual: null) {
+    public getCssClass(conceptoSNOMED, filtroActual) {
         let clase = conceptoSNOMED.semanticTag;
 
         // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
@@ -762,5 +832,34 @@ export class PrestacionesService {
         }
 
         return icon;
+    }
+
+    /*******
+     * INTERNACION
+     */
+
+    /**
+    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
+    *
+    * @param {any} paciente id del paciente en internacion
+    * @param {any} estado estado de la internacion
+    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
+    * @memberof PrestacionesService
+    */
+    public internacionesXPaciente(paciente, estado) {
+        let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
+        return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
+    }
+
+
+    /**
+   * Devuelve el listado de estados de la/s camas por las que paso la internación
+   *
+   * @param {any} idInternacion id de la intenacion
+   * @returns  {array} lista de camas-estados por los que paso la internación
+   * @memberof PrestacionesService
+   */
+    public getPasesInternacion(idInternacion) {
+        return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
     }
 }

@@ -1,0 +1,54 @@
+<div class="plex-layout">
+    <section *ngIf="!createUpdate">
+        <plex-box>
+            <header>
+                <div class="page-title">Listado de camas</div>
+            </header>
+            <table *ngIf="camas && camas.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Sector</th>
+                        <th>Habitacion</th>
+                        <th>Estado</th>
+                        <th>Unidad organizativa</th>
+                        <th>Especialidad</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="hover" *ngFor="let cama of camas">
+                        <td>{{cama.nombre}}</td>
+                        <td>{{cama.sector}}</td>
+                        <td>{{cama.habitacion}}</td>
+                        <td>{{cama.ultimoEstado.estado}}</td>
+                        <td>{{cama.ultimoEstado.unidadOrganizativa.term}}</td>
+                        <td>{{cama.ultimoEstado.especialidades[0]?.term}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="camas && camas.length === 0">
+                <p class="text-left">
+                    No hay camas disponibles.
+                    <a href="javascript: void(0);" (click)="Create()">
+                        Agregar cama
+                    </a>
+                </p>
+            </div>
+        </plex-box>
+    </section>
+
+    <footer *ngIf="!createUpdate">
+        <div class="text-right">
+            <plex-button label="Vover al listado de organizaciones" type="danger" (click)="cancel()">
+            </plex-button>
+            <plex-button label="Crear una cama" type="primary" (click)="Create()">
+            </plex-button>
+        </div>
+    </footer>
+
+    <!-- <section > -->
+    <!-- <plex-box *ngIf="createUpdate"> -->
+    <cama-create-update *ngIf="createUpdate" [idOrganizacion]="idOrganizacion" [camaSeleccion]="camaSeleccion" (showCama)="createUpdateCama($event)"></cama-create-update>
+    <!-- </plex-box> -->
+    <!-- </section> -->
+</div>

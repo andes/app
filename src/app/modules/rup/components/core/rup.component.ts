@@ -12,6 +12,11 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { RUPRegistry } from '../../../../app.module';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
+import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { Cie10Service } from '../../../../services/term/cie10.service';
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -69,10 +74,14 @@ export class RUPComponent implements OnInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth,
+        public auth: Auth, public ocupacionService: OcupacionService,
+        public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
-        public sanitazer: DomSanitizer
+        public sanitazer: DomSanitizer,
+        public snomedService: SnomedService,
+        public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
+        public Cie10Service: Cie10Service
     ) { }
 
     ngOnInit() {

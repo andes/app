@@ -270,8 +270,8 @@ export class PuntoInicioComponent implements OnInit {
     /**
      * Navega para crear una nueva prestación
      */
-    crearPrestacion() {
-        this.router.navigate(['/rup/crear']);
+    crearPrestacion(opcion: string): void {
+        this.router.navigate(['/rup/crear', opcion]);
     }
     /**
     * Navega para ver seleccionar un paciente y ver la huds

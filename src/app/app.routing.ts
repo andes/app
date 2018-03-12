@@ -59,10 +59,16 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/:id/cama', component: CamasListadoComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
@@ -87,7 +93,10 @@ const appRoutes: Routes = [
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/crear', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/ver/:id', component: EjecucionInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },
@@ -95,6 +104,9 @@ const appRoutes: Routes = [
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
+
+  // Mapa de camas
+  { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },

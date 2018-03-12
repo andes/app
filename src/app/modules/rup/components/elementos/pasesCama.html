@@ -1,0 +1,30 @@
+<p>
+    <span>Pases</span>
+</p>
+<div class="row">
+    <div class="col">
+        <table class="table">
+            <tr>
+                <th>Fecha</th>
+                <th>Cama</th>
+                <th>Unidad organizativa</th>
+                <th>Especialidad</th>
+            </tr>
+            <tr *ngFor="let pase of pases; let i=index">
+                <td>
+                    {{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}
+                </td>
+                <td>
+                    {{ pase.habitacion + '/' + pase.nombre }}
+                </td>
+                <td>
+                    {{ pase.estados.unidadOrganizativa.term }}
+                </td>
+                <td>
+                    {{ pase.estados.especialidades[0]?.term }}
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>

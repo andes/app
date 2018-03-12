@@ -50,10 +50,12 @@
                                     Acciones sobre los registros
                                 </div>
                                 <div class="col-3 float-right text-right panel-acciones">
-                                    <button *ngIf="collapse" title="Collapsar los registros" (click)="colapsarPrestaciones('collapse'); collapse = false;" class="btn btn-primary">
+                                    <button *ngIf="collapse" title="Collapsar los registros" titlePosition="left" (click)="colapsarPrestaciones('collapse'); collapse = false;"
+                                        class="btn btn-primary">
                                         <i class="mdi mdi-chevron-down" [ngClass]="{'spin' : !collapse}"></i>
                                     </button>
-                                    <button *ngIf="!collapse" title="Expandir los registros" (click)="colapsarPrestaciones(); collapse = true;" class="btn btn-primary">
+                                    <button *ngIf="!collapse" title="Expandir los registros" titlePosition="left" (click)="colapsarPrestaciones(); collapse = true;"
+                                        class="btn btn-primary">
                                         <i class="mdi mdi-chevron-left" [ngClass]="{'spin' : !collapse}"></i>
                                     </button>
                                     <!-- <a href="javascript:void(0);" title="Quitar todos los registros" (click)="eliminaTodosLosRegistros()" class="btn btn-danger desvincular float-right">
@@ -171,7 +173,7 @@
 
                                                     <!-- RUP Loader  (change)="prestacionChanged()"-->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false"></rup>
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
 
                                                 </div>
                                             </div>

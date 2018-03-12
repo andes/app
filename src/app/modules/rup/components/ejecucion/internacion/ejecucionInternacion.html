@@ -1,0 +1,209 @@
+<header *ngIf="prestacion">
+    <header-paciente *ngIf="paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="false" [paciente]="paciente"></header-paciente>
+</header>
+<section *ngIf="prestacion && paciente">
+    <div class="row">
+        <div class="col-8">
+            <plex-box>
+                <header>
+                    <div class="page-title">Internación</div>
+                </header>
+                <div class="row no-gutters">
+                    <div class="col titulos">
+                        <div *ngIf="paciente">
+                            <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
+                            <div class="row">
+                                <div class="col">
+                                    <ng-container *ngFor="let elemento of prestacion.ejecucion.registros; let i = index">
+                                        <div class="rup-card elementoderegistro elementoRup">
+                                            <div class="rup-header">
+                                                <div class="icon-rup drag-handle">
+                                                    <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? servicioPrestacion.getIcon(elemento.concepto, 'planes') : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                                </div>
+                                                <div class="title">
+                                                    <ng-container *ngIf="elemento?.nombre">
+                                                        {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                                    </ng-container>
+                                                </div>
+
+                                            </div>
+                                            <div class="rup-body">
+                                                <div class="legend">
+                                                    <span>
+                                                        {{elemento.concepto.semanticTag}}
+                                                    </span>
+                                                </div>
+                                                <div class="content">
+                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
+                                                        [registro]="elemento" [soloValores]="soloValores"></rup>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </plex-box>
+        </div>
+        <div class="col-4">
+            <plex-box>
+                <ul class="conceptos list-unstyled">
+                    <li>
+                        <div class="rup-card mini procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle p-0 pt-1">
+                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                                </div>
+
+                                <div class="rup-border">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-6 p-0 m-0">
+                                            <div class="p-0 pl-2">
+                                                <label>Pases de cama</label>
+                                            </div>
+                                        </div>
+                                        <div class=" col-6 p-0 m-0 ">
+                                            <div class="p-0 pt-1 pr-1 float-right ">
+                                                <button class="btn btn-sm btn-primary
+                                                btn-icon-rup p-0 " (click)="ejecutarConcepto(snomedPases)">
+                                                    <i class="mdi mdi-plus "></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rup-card mini procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle p-0 pt-1">
+                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                                </div>
+
+                                <div class="rup-border">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-6 p-0 m-0">
+                                            <div class="p-0 pl-2">
+                                                <label>Valoración Inicial Enfermería</label>
+                                            </div>
+                                        </div>
+                                        <div class=" col-6 p-0 m-0 ">
+                                            <div class="p-0 pt-1 pr-1 float-right ">
+                                                <button class="btn btn-sm btn-primary
+                                                    btn-icon-rup p-0 ">
+                                                    <i class="mdi mdi-plus "></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rup-card mini procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle p-0 pt-1">
+                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                                </div>
+
+                                <div class="rup-border">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-6 p-0 m-0">
+                                            <div class="p-0 pl-2">
+                                                <label>Valoración Inicial Médica</label>
+                                            </div>
+                                        </div>
+                                        <div class=" col-6 p-0 m-0 ">
+                                            <div class="p-0 pt-1 pr-1 float-right ">
+                                                <button class="btn btn-sm btn-primary
+                                                        btn-icon-rup p-0 ">
+                                                    <i class="mdi mdi-plus "></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rup-card mini procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle p-0 pt-1">
+                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                                </div>
+
+                                <div class="rup-border">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-6 p-0 m-0">
+                                            <div class="p-0 pl-2">
+                                                <label>Epicrisis</label>
+                                            </div>
+                                        </div>
+                                        <div class=" col-6 p-0 m-0 ">
+                                            <div class="p-0 pt-1 pr-1 float-right ">
+                                                <button class="btn btn-sm btn-primary
+                                                            btn-icon-rup p-0 ">
+                                                    <i class="mdi mdi-plus "></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="rup-card mini procedimiento">
+                            <div class="rup-header">
+                                <div class="icon-rup drag-handle p-0 pt-1">
+                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                                </div>
+
+                                <div class="rup-border">
+
+                                    <div class="row p-0 m-0 border-secondary border-left-0">
+                                        <div class="col-6 p-0 m-0">
+                                            <div class="p-0 pl-2">
+                                                <label>Egreso</label>
+                                            </div>
+                                        </div>
+                                        <div class=" col-6 p-0 m-0 ">
+                                            <div class="p-0 pt-1 pr-1 float-right ">
+                                                <button (click)="ejecutarConcepto(egreso, false)" class="btn btn-sm btn-primary
+                                                                btn-icon-rup p-0 ">
+                                                    <i class="mdi mdi-plus "></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </plex-box>
+        </div>
+    </div>
+
+
+</section>
+<footer>
+
+    <div class="float-right">
+        <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
+        </plex-button>
+    </div>
+</footer>

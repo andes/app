@@ -1,0 +1,92 @@
+<ng-container *ngIf="!soloValores && registro">
+    <div class="row">
+        <div class="col-6" *ngIf="situacionesLaborales">
+            <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="regitro.valor.informeIngreso.situacionLaboral" name="situacionLaboral"
+                [data]="situacionesLaborales" placeholder="Seleccione... ">
+            </plex-select>
+        </div>
+        <div class="col-6 ">
+            <plex-select [required]="true" label="Ocupación habitual " [(ngModel)]="regitro.valor.informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
+                [data]="ocupaciones" placeholder="Seleccione... " labelField="nombre">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-4 ">
+            <plex-select [required]="true" [(ngModel)]="regitro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+                placeholder="Seleccione..." label="Nivel instrucción">
+            </plex-select>
+        </div>
+        <div class="col-4 ">
+            <plex-select [required]="true " [(ngModel)]="regitro.valor.informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado "
+                placeholder="Seleccione... " label="Asociado a ">
+            </plex-select>
+        </div>
+        <div class="col-4 ">
+            <plex-select [(ngModel)]="regitro.valor.informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
+                label="Obra Social ">
+            </plex-select>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-4 ">
+            <plex-datetime type="date" [(ngModel)]="regitro.valor.informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
+                name="fechaIngreso " label="Fecha Ingreso">
+            </plex-datetime>
+        </div>
+        <div class="col-4 ">
+            <plex-datetime type="time" [(ngModel)]="regitro.valor.informeIngreso.horaIngreso " [required]="true" name="horaIngreso "
+                label="Hora Ingreso ">
+            </plex-datetime>
+        </div>
+        <div class="col-4 ">
+            <plex-select [required]="true " [(ngModel)]="regitro.valor.informeIngreso.origen " name="origen
+                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="regitro.valor.informeIngreso.motivo">
+            </plex-text>
+        </div>
+    </div>
+</ng-container>
+<ng-container *ngIf="soloValores && registro && registro.valor.informeIngreso">
+    <div class="row">
+        <div class="col-4" *ngIf="registro.valor.informeIngreso.ocupacionHabitual">
+            <label class="block">Ocupación habitual</label>
+            <span>{{registro.valor.informeIngreso.ocupacionHabitual.nombre }}</span>
+        </div>
+        <div class="col-4" *ngIf="registro.valor.informeIngreso.situacionLaboral">
+            <label class="block">Situación laboral</label>
+            <span>{{registro.valor.informeIngreso.situacionLaboral.nombre}}</span>
+        </div>
+        <div class="col-4" *ngIf="registro.valor.informeIngreso.nivelInstruccion">
+            <label class="block">Nivel instrucción</label>
+            <span>{{registro.valor.informeIngreso.nivelInstruccion.nombre }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label class="block">Asociado a</label>
+            <span *ngIf="registro.valor.informeIngreso.asociado">{{registro.valor.informeIngreso.asociado.nombre }}</span>
+        </div>
+        <div class="col-4">
+            <label class="block">Obra social</label>
+            <span *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial.nombre}}</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label class="block">Fecha Ingreso</label>
+            <span>{{registro.valor.informeIngreso.fechaIngreso | date }}</span>
+        </div>
+        <div class="col-4">
+            <label class="block">Origen hospitalización</label>
+            <span>{{registro.valor.informeIngreso.origen.nombre }}</span>
+        </div>
+    </div>
+
+</ng-container>

@@ -41,6 +41,8 @@ export class LiberarTurnoComponent implements OnInit {
         select: null
     };
 
+    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
+
     ngOnInit() {
         this.turnos = this.turnosSeleccionados;
         this.motivoLiberacionSelect.select = this.motivoLiberacion[1];
@@ -54,7 +56,7 @@ export class LiberarTurnoComponent implements OnInit {
         let alertCount = 0;
         let patch = {
             op: 'liberarTurno',
-            turnos: this.turnos.map((resultado) => {return resultado._id; })
+            turnos: this.turnos.map((resultado) => { return resultado._id; })
         };
         let mensaje = this.turnos.length === 1 ? 'El turno seleccionado fue liberado' : 'Los turnos seleccionados fueron liberados';
 
@@ -98,6 +100,4 @@ export class LiberarTurnoComponent implements OnInit {
         this.cancelaLiberarTurno.emit(true);
         this.turnos = [];
     }
-
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService) { }
 }

@@ -85,9 +85,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-    }
-
-    buscarPaciente() {
         this.showSobreturno = false;
         this.pacientesSearch = true;
     }
@@ -102,7 +99,8 @@ export class AgregarSobreturnoComponent implements OnInit {
                     this.verificarTelefono(pacienteMPI);
                 });
         } else {
-            this.buscarPaciente();
+            this.showSobreturno = false;
+            this.pacientesSearch = true;
         }
     }
 
@@ -199,8 +197,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 fechaNacimiento: this.paciente.fechaNacimiento,
                 sexo: this.paciente.sexo,
                 telefono: this.telefono,
-                carpetaEfectores: this.paciente.carpetaEfectores,
-                nota: this.nota
+                carpetaEfectores: this.paciente.carpetaEfectores
             };
             // Si cambió el teléfono lo actualizo en el MPI
             if (this.cambioTelefono) {
@@ -248,6 +245,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                     estado: 'asignado',
                     tipoPrestacion: this.tipoPrestacion,
                     paciente: pacienteSave,
+                    nota: this.nota
                 }
             };
 
