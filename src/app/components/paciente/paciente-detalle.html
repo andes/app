@@ -51,3 +51,9 @@
         <span>{{ paciente | sexo }}</span>
     </div>
 </div>
+<div class="row mb-1" *ngIf="paciente.cuil">
+    <div class="col">
+        <label>Cuil</label>
+        <span>{{ paciente.cuil }}</span>
+    </div>
+</div>
