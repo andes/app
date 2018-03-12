@@ -43,7 +43,30 @@ export class CensoDiarioComponent implements OnInit {
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getInfoCenso(params).subscribe(respuesta => {
+            console.log(22);
             this.listadoCenso = respuesta;
         });
     }
+
+    coso() {
+        console.log('coso!');
+        return true;
+    }
+
+    esIngreso(pases) {
+        // console.log('22');
+        if (pases && pases.length === 1) {
+            let fechaInicio = moment(this.fecha).startOf('day').toDate();
+            let fechaFin = moment(this.fecha).endOf('day').toDate();
+            if (pases[0].estados.fecha >= fechaInicio && pases[0].estados.fecha <= fechaFin) {
+                return true;
+            } else { return false; }
+        } else { return false; }
+        // return false;
+    }
+
+
+
+
+
 }

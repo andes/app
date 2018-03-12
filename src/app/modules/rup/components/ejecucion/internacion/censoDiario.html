@@ -16,7 +16,58 @@
     </div>
     <div class="row">
         <div class="col-12">
-            {{ listadoCenso | json }}
+
+            <table class="table" *ngIf="listadoCenso">
+                <thead>
+                    <tr>
+                        <th scope="col">Apellido y nombre</th>
+                        <th scope="col">Sector</th>
+                        <th scope="col">Cama</th>
+                        <th scope="col">Ingreso</th>
+                        <th scope="col">Pase de</th>
+                        <th scope="col">Egreso</th>
+                        <th scope="col">Pase a</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let censo of listadoCenso">
+                        <td>
+                            {{censo.ultimoEstado.paciente | paciente }}
+                        </td>
+                        <td>
+                            <span *ngIf="censo.cama.sector">
+                                {{censo.cama.sector }} |
+                            </span>
+                            <span *ngIf="censo.cama.habitacion">
+                                {{censo.cama.habitacion}}
+                            </span>
+                        </td>
+                        <td>
+                            {{censo.cama.nombre}}
+                        </td>
+                        <!-- <td>
+                            <div *ngIf="!esIngreso(censo.pases); else elseIngreso">
+                                si
+                            </div>
+                            <ng-template #elseIngreso>
+                                no
+                            </ng-template>
+                        </td> -->
+
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <!-- {{ listadoCenso | json }} -->
         </div>
     </div>
 </section>
+
+<!-- <div *ngIf="listadoCenso.length > 0 && !esIngreso(listadoCenso[0].pases)">
+    si
+</div> -->
+<div *ngIf="listadoCenso && listadoCenso.length">
+
+    {{ esIngreso(listadoCenso[0].pases) | json }}
+</div>
