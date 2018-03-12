@@ -16,8 +16,8 @@ export class AppComponent {
                 this.server.get('/core/status', { params: null, showError: false, showLoader: false })
                     .finally(() => this.initStatusCheck())
                     .subscribe(
-                    (data) => this.plex.updateAppStatus(data),
-                    (err) => this.plex.updateAppStatus({ API: 'Error' })
+                        (data) => this.plex.updateAppStatus(data),
+                        (err) => this.plex.updateAppStatus({ API: 'Error' })
                     );
             }, 2000);
         } else {
@@ -57,7 +57,9 @@ export class AppComponent {
             accessList.push({ label: 'Reportes', icon: 'file-chart', route: '/reportes' });
         }
 
-        accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
+        if (this.auth.getPermissions('solicitudes:?').length > 0) {
+            accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
+        }
 
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 

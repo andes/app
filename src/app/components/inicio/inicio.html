@@ -46,7 +46,7 @@
                         <div class="detalle">Vea el estado del mapa de camas<br />de los distintos servicios de la organización</div>
                     </div>
                 </div>
-                <div class="col-4">
+                <div *ngIf="solicitudes" class="col-4">
                     <div class="boton color-salmon" routerLink="/solicitudes">
                         <i class="icono mdi mdi-open-in-app"></i>
                         <div class="titulo">Solicitudes</div>

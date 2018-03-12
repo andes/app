@@ -66,7 +66,7 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (1 === 1) {
+            if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';
                 this.denied = false;
             }
