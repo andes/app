@@ -69,16 +69,19 @@
                                         <td *ngIf="solicitud.turno" class="text-right estado">turno asignado</td>
                                         <td style="text-align:center">
                                             <span *ngIf="DT[i]">
-                                                <plex-button icon="mdi mdi-calendar-plus" (click)="darTurno()" title="Dar Turno">
-                                                </plex-button>
+                                                <button class="btn btn-sm" (click)="darTurno()" title="Dar Turno">
+                                                    <span class="mdi mdi-calendar-plus"></span>
+                                                </button>
                                             </span>
                                             <span *ngIf="Auditar[i]">
-                                                <plex-button icon="mdi mdi-check" (click)="auditar()" title="Auditar Solicitud">
-                                                </plex-button>
+                                                <button class="btn btn-sm" (click)="auditar()" title="Auditar Solicitud">
+                                                    <span class="mdi mdi-check"></span>
+                                                </button>
                                             </span>
                                             <span *ngIf="visualizar[i]">
-                                                <plex-button icon="mdi mdi-eye" (click)="verTurno()" title="Ver Turno">
-                                                </plex-button>
+                                                <button class="btn btn-sm" (click)="verTurno()" title="Ver Turno">
+                                                    <span class="mdi mdi-eye"></span>
+                                                </button>
                                             </span>
                                         </td>
                                     </tr>
