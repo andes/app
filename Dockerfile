@@ -1,6 +1,8 @@
 ARG NODE_VERSION=8.9-alpine
 FROM node:${NODE_VERSION}
 
+ENV node_env=development
+
 RUN npm install -g typescript nodemon
 
 WORKDIR /usr/src/app
