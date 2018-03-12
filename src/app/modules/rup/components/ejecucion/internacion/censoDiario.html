@@ -1,0 +1,22 @@
+<section *ngIf="organizacion">
+    <div class="row">
+        <div class="col-4">
+            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
+            </plex-datetime>
+        </div>
+        <div class="col-6">
+            <plex-select name="servicio" [required]="true" [data]="organizacion.servicios" idField="term" labelField="term" [(ngModel)]="organizacionSeleccionada"
+                label="Unidad organizativa">
+            </plex-select>
+        </div>
+        <div class="col-2">
+            <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col-12">
+            {{ listadoCenso | json }}
+        </div>
+    </div>
+</section>
