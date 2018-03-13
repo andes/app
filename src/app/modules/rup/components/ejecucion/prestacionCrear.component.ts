@@ -168,6 +168,7 @@ export class PrestacionCrearComponent implements OnInit {
             this.servicioPrestacion.crearPrestacion(this.paciente, this.tipoPrestacionSeleccionada.id, 'solicitud', (new Date()), null);
             this.showAutocitar = true;
         });
+
         // }
 
         // let fechaDesde = moment(new Date()).startOf('day');
@@ -232,6 +233,7 @@ export class PrestacionCrearComponent implements OnInit {
                 this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
             }
         } else {
+            // TODO: REVISAR
             // Marcar la asistencia al turno
             if (unPacientePresente.estado !== 'Suspendido' && unPacientePresente.turno.asistencia !== 'asistio') {
                 let patch: any = {

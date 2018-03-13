@@ -4,7 +4,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { SnomedService } from './../../../../services/term/snomed.service';
 import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -102,7 +102,9 @@ export class PrestacionValidacionComponent implements OnInit {
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
         private servicioDocumentos: DocumentosService,
-        private sanitizer: DomSanitizer) {
+        private sanitizer: DomSanitizer,
+        // private zone: NgZone
+    ) {
     }
 
     ngOnInit() {
@@ -124,6 +126,9 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
+        // this.zone.runOutsideAngular(() => {
+        //     console.log(22);
+        // });
     }
 
     redirect(pagina: string) {
@@ -413,9 +418,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
 
-        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
         this.registrosOrdenados = relacionesOrdenadas;
-
     }
 
     reordenarRelaciones() {
@@ -540,9 +543,9 @@ export class PrestacionValidacionComponent implements OnInit {
             /**
              * Cada logo va a quedar generado como base64 desde la API:
              *
-             * <img src="data:image/png;base64,..." style="float: left;">
-             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
-             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
+             * <img src="data:image/png;base64,..." class="logoAndes">
+             * <img src="data:image/png;base64,..." class="logotipoAndes">
+             * <img src="data:image/png;base64,..." class="logoPDP">
              *
              */
 

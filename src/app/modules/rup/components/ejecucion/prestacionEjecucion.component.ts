@@ -87,7 +87,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     // el concepto que seleccionamos para eliminar lo guradamos aca.
     public conceptoAEliminar: any;
 
-
     public conceptosTurneables: any[];
 
     // Listado de grupos de la busqueda guiada
@@ -162,7 +161,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     }
                                 }
                             }
-
                         }
                         this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
                             this.grupos_guida = grupos;
@@ -657,6 +655,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
+
         // validamos antes de guardar
         if (!this.beforeSave()) {
             return;
@@ -669,13 +668,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
+        // this.prestacion.solicitud.organizacionDestino = { 
+        //     id: this.prestacion.solicitud.organizacionDestino.id, 
+        //     nombre: this.prestacion.solicitud.organizacionDestino.nombre
+        // };
+
         let params: any = {
             op: 'registros',
+            solicitud: this.prestacion.solicitud,
             registros: registros
         };
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
+
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
             if (this.idAgenda && this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
