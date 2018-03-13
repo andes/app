@@ -199,7 +199,6 @@
                                             <plex-button *ngIf="agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion"
                                                 label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno.id)"></plex-button>
 
-                                            <!-- {{turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo|json}} -->
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido'  && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'pendiente' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                                                 label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="ejecutarPrestacionPendiente(turno.prestacion.id,turno.paciente, turno.tipoPrestacion)"></plex-button>
 
