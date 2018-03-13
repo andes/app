@@ -55,6 +55,9 @@ import {
     PaisService
 } from './../../services/pais.service';
 import {
+    AnsesService,
+} from './../../services/fuentesAutenticas/servicioAnses.service';
+import {
     PacienteService
 } from './../../services/paciente.service';
 import * as enumerados from './../../utils/enumerados';
@@ -183,7 +186,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     pacienteModel: IPaciente = {
         id: null,
         documento: '',
-        cuil: '',
+        cuil: null,
         activo: true,
         estado: 'temporal',
         nombre: '',
@@ -226,6 +229,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private barrioService: BarrioService,
         private pacienteService: PacienteService,
         private parentescoService: ParentescoService,
+        private ansesService: AnsesService,
         public appMobile: AppMobileService,
         private financiadorService: FinanciadorService, public plex: Plex) { }
 
@@ -608,6 +612,18 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             }
                         });
                     }
+
+                    // Cuilifico el paciente si aún no pose cuil.
+                    if (!pacienteGuardar.cuil) {
+                         this.ansesService.get(pacienteGuardar).subscribe(rta => {
+                            if (rta && rta.cuil) {
+                                this.pacienteService.patch(pacienteGuardar.id, {
+                                    'op': 'updateCuil',
+                                    'cuil': rta.cuil
+                                }).subscribe(result2 => {});
+                            }
+                        });
+                    }
                     this.plex.alert('Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile
@@ -650,6 +666,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             apellido: pacienteOrigen.relaciones[i].apellido.toString(),
                             nombre: pacienteOrigen.relaciones[i].nombre.toString(),
                             documento: pacienteOrigen.relaciones[i].documento.toString(),
+                            cuil: null,
                             sexo: 'otro',
                             fechaNacimiento: '',
                             genero: 'otro',
