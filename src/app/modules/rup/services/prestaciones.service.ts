@@ -644,7 +644,9 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
+
         let planesCrear = undefined;
+
         if (planes.length) {
             planesCrear = [];
             planes.forEach(plan => {
@@ -664,12 +666,20 @@ export class PrestacionesService {
 
                     // Controlemos que se trata de una prestación turneable.
                     // Solo creamos prestaciones pendiente para conceptos turneables
-                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
-                    if (existeConcepto) {
+                    let turneable = this.conceptosTurneables.find(c => c.conceptId === plan.concepto.conceptId);
+                    if (turneable) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                        if (plan.valor.solicitudPrestacion.organizacionDestino) {
+                            nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
+                        }
+
+                        if (plan.valor.solicitudPrestacion.profesionalesDestino) {
+                            nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
+                        }
 
                         // agregamos los registros en la solicitud
                         nuevaPrestacion.solicitud.registros.push(plan);
@@ -688,8 +698,6 @@ export class PrestacionesService {
             registrarFrecuentes: true
         };
         return this.patch(prestacion.id, dto);
-
-
 
     }
     /**
