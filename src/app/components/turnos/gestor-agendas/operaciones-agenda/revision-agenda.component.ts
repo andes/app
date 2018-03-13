@@ -244,8 +244,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
-        if (!turnoSinVerificar) {
-            // TODO!!!
+        if (!turnoSinVerificar) { // Si todos los turnos están verificados..
             // Se cambia de estado la agenda a pendienteAuditoria
             let patch = {
                 'op': 'pendienteAuditoria',
@@ -254,6 +253,19 @@ export class RevisionAgendaComponent implements OnInit {
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
             });
+        } else {
+            // este caso se dá cuando se agregan sobreturnos desde la auditoria
+            // si hay algún turno sin verificar asistencia y la agenda ya está en otro estado, se vuelve a pendiente asisitencia
+            if (this.agenda.estado !== 'pendienteAsistencia') {
+                // Se cambia de estado la agenda a pendienteAuditoria
+                let patch = {
+                    'op': 'pendienteAsistencia',
+                    'estado': 'pendienteAsistencia'
+                };
+                this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
+                    this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Asistencia');
+                });
+            }
         }
     }
     /**
@@ -289,7 +301,6 @@ export class RevisionAgendaComponent implements OnInit {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
             });
         }
-
     }
 
     cancelar() {
@@ -328,10 +339,8 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                // this.plex.toast('success', 'Información', 'El turno fue actualizado');
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
-                // this.turnoSeleccionado = null;
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');
@@ -388,6 +397,7 @@ export class RevisionAgendaComponent implements OnInit {
         this.showRevisionAgenda = true;
         this.modoCompleto = true;
         this.refresh();
+        this.cerrarAsistencia();
     }
 
 }
