@@ -280,8 +280,10 @@
                                                             <span class="badge-success" *ngIf=" diagnostico.codificacionAuditoria && diagnostico.codificacionProfesional && diagnostico.codificacionAuditoria?.codigo === diagnostico.codificacionProfesional?.cie10?.codigo">Aprobado</span>
 
                                                             <span class="badge-warning" *ngIf="diagnostico.codificacionAuditoria?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.codificacionAuditoria?.codigo != diagnostico.codificacionProfesional?.cie10?.codigo">Reparado</span>
-
+                                                            <!-- La funcion codificarTurno establece que el diagnóstico principal siempre es el primero -->
                                                             <span *ngIf="i==0" class="badge-info">Principal</span>
+
+                                                            <span *ngIf="diagnostico.codificacionAuditoria?.c2 || diagnostico.codificacionProfesional?.cie10?.c2" class="badge-danger">C2</span>
                                                         </td>
                                                         <td>
                                                             <!-- Mostramos la codificación snomed hecha por profesional -->
