@@ -18,6 +18,10 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
+
+// Componentes Extras
+import { SugerenciasComponent } from './components/sugerencias/sugerencias.component';
+
 // ... Tablas Maestras
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
@@ -113,6 +117,9 @@ const appRoutes: Routes = [
 
   // Reportes
   { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
+
+  // Sugerencias
+  { path: 'sugerencias', component: SugerenciasComponent },
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

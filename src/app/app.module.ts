@@ -107,6 +107,11 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+
+// Sugerencias
+import { SugerenciasComponent } from './components/sugerencias/sugerencias.component';
+import { SugerenciasService } from './services/sendmailsugerencias.service'
+
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
@@ -375,6 +380,7 @@ let RUPComponentsArray = [
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
+        SugerenciasComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,
@@ -462,7 +468,8 @@ let RUPComponentsArray = [
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,
-        ProcedimientosQuirurgicosService
+        ProcedimientosQuirurgicosService,
+        SugerenciasService
 
     ]
 })
