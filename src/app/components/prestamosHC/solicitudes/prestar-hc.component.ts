@@ -13,7 +13,7 @@ export class PrestarHcComponent implements OnInit {
     prestamo: any;
 
     @Output() cancelPrestarEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     @Input('prestar')
     set prestar(value: any) {
@@ -58,7 +58,7 @@ export class PrestarHcComponent implements OnInit {
             this._carpeta = carpeta;
             this.plex.alert('La Carpeta se prestó correctamente');
             this.cancelPrestarEmit.emit(false);
-            this.listaCarpetaEmit.emit(this._carpeta);
+            this.carpetaPrestadaEmit.emit(this._carpeta);
         });
     }
 

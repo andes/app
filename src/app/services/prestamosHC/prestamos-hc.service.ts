@@ -8,8 +8,12 @@ export class PrestamosService {
 
     constructor(private server: Server) { }
 
-    getCarpetas(filtros): Observable<any[]> {
-        return this.server.post(this.turnoUrl + '/prestamosHC', filtros);
+    getCarpetasSolicitud(filtros): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/getCarpetasSolicitud', filtros);
+    }
+
+    getCarpetasPrestamo(filtros): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/getCarpetasPrestamo', filtros);
     }
 
     prestarCarpeta(carpeta: any): Observable<any[]> {

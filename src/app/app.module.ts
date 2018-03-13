@@ -265,6 +265,7 @@ import { CamasService } from './services/camas.service';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
+import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 
@@ -404,6 +405,7 @@ let RUPComponentsArray = [
         CamaComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
+        ListarPrestamosComponent,
         PrestarHcComponent,
         DevolverHcComponent
     ],

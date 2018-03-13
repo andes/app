@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
-import { PrestarHcComponent } from './prestar-hc.component';
+import { DevolverHcComponent } from './devolver-hc.component';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
@@ -12,11 +12,11 @@ import * as moment from 'moment';
 
 
 @Component({
-    selector: 'app-listar-solicitudes',
-    templateUrl: './listar-solicitudes.component.html'
+    selector: 'app-listar-prestamos',
+    templateUrl: './listar-prestamos.component.html'
 })
 
-export class ListarSolicitudesComponent implements OnInit {
+export class ListarPrestamosComponent implements OnInit {
     public carpetas: any[] = [];
     public prestacionesPermisos = [];
     public espacioFisico = [];
@@ -25,7 +25,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public fechaDesde: any;
     public fechaHasta: any;
     public estadosCarpeta = enumToArray(EstadosCarpetas);
-    public estado: any = this.estadosCarpeta[0];
+    // public estado: any = this.estadosCarpeta[0];
     public carpetaSeleccionada: any;
 
     public filters: any = {
@@ -35,16 +35,23 @@ export class ListarSolicitudesComponent implements OnInit {
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
-    
+    public showDevolver = false;
 
     public _listarCarpetas;
-    public showPrestar = false;
-    
+
+    @Input('listaCarpetasInput')
+    set listaCarpetasInput(value: any) {
+        if (value !== undefined) {
+            this.carpetas =  this.carpetas.filter(function(el) {
+                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
+            });
+        }
+    }
+
     get listaCarpetasInput(): any {
         return this._listarCarpetas;
     }
 
-    @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
 
@@ -60,14 +67,12 @@ export class ListarSolicitudesComponent implements OnInit {
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaDesde.isValid()) {
-                // this.filters['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
                 this.filters['fechaDesde'] = fechaDesde;
             }
         }
         if (filter === 'fechaHasta') {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaHasta.isValid()) {
-                // this.filters['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
                 this.filters['fechaHasta'] = fechaHasta;
             }
         }
@@ -98,7 +103,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.filters['estado'] = value.nombre;
         }
 
-        this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
+        this.prestamosService.getCarpetasPrestamo(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
         });
     }
@@ -154,34 +159,25 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     prestar(solicitudCarpeta) {
-        this.showPrestarEmit.emit(true);
+        this.showDevolverEmit.emit(false);
         this.carpetaPrestadaEmit.emit(solicitudCarpeta);
         this.carpetaSeleccionada = solicitudCarpeta;
         this.verPrestar = true;
     }
 
-    // devolver(solicitudCarpeta) {
-    //     this.showPrestarEmit.emit(false);
-    //     this.showDevolverEmit.emit(true);
-    //     this.carpetaPrestadaEmit.emit(solicitudCarpeta);
-    //     this.carpetaSeleccionada = solicitudCarpeta;
-    //     this.verDevolver = true;
-    // }
-
-    onShowPrestar(event) {
-        this.showPrestar = true;
+    devolver(solicitudCarpeta) {
+        this.showDevolverEmit.emit(true);
+        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+        this.carpetaSeleccionada = solicitudCarpeta;
+        this.verDevolver = true;
     }
 
-    onCancelPrestar(event) {
-        this.showPrestar = event;
+    onShowDevolver(event) {
+        this.showDevolver = true;
     }
 
-    onCarpeta(value) {
-        if (value !== undefined) {
-            this.carpetas =  this.carpetas.filter(function(el) {
-                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
-            });
-        }
+    onCancelDevolver(event) {
+        this.showDevolver = event;
     }
 
     constructor(

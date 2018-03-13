@@ -1,38 +1,15 @@
 <div class="row">
     <div class="col">
-        <plex-box>
-            <header>
-                <div class="clearfix">
-                    <div class="page-title float-left">Préstamos HC</div>
-                </div>
-            </header>
+        <plex-tabs>
+            <plex-tab label="Solicitudes de Carpetas">
+                <app-listar-solicitudes></app-listar-solicitudes>
+            </plex-tab>
+            <plex-tab label="Prestamos de Carpetas">
+                <app-listar-prestamos></app-listar-prestamos>
+            </plex-tab>
+            <plex-tab label="Historial de Prestamos">
 
-            <plex-tabs>
-                <plex-tab label="Solicitudes HC">
-                    <app-listar-solicitudes [listaCarpetasInput]="listaCarpetas" (showPrestarEmit)="onShowPrestar($event)" (showDevolverEmit)="onShowDevolver($event)" (carpetaPrestadaEmit)="onCarpetaPrestada($event)"></app-listar-solicitudes>
-                </plex-tab>
-
-                <plex-tab label="Historial HC">
-
-                </plex-tab>
-            </plex-tabs>
-        </plex-box>
+            </plex-tab>
+        </plex-tabs>
     </div>
-
-    <div class="col-4" *ngIf="showPrestar">
-        <div class="panel panel-default">
-            <div class="clear"></div>            
-            <app-prestar-hc [prestar]="prestar" (cancelPrestarEmit)="onCancelPrestar($event)" (listaCarpetaEmit)="onCarpeta($event)" >
-            </app-prestar-hc>
-        </div>
-    </div>
-
-    <div class="col-4" *ngIf="showDevolver">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <app-devolver-hc [devolver]="prestar" (cancelDevolverEmit)="onCancelDevolver($event)" (listaCarpetaEmit)="onCarpeta($event)">
-            </app-devolver-hc>
-        </div>
-    </div>
-
 </div>

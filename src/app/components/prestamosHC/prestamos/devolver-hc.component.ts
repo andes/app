@@ -36,7 +36,8 @@ export class DevolverHcComponent implements OnInit {
     }
 
     save(event) {
-        event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
+        debugger;
+        event.idAgenda = this.prestamo.datosPrestamo.agendaId;
         event.idTurno = this.prestamo.datosPrestamo.turno.id;
         event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
         event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;

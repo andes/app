@@ -4,9 +4,9 @@
             <plex-box>
                 <header>
                     <div class="clearfix">
-                        <div class="page-title float-left">Solicitudes de Carpetas</div>
+                        <div class="page-title float-left">Préstamos de Carpetas</div>
                     </div>
-                    <!-- Filtros -->                
+                    <!-- Filtros -->
                     <div class="row">
                         <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
                             <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
@@ -41,30 +41,27 @@
                                 label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
                             </plex-select>
                         </div>
-                        <div class="col-4">
-                            <plex-select label='Estado' [(ngModel)]="estado" name="nombre" (change)="getCarpetas($event,'estado')" [required]="true" placeholder="Seleccione un estado..." [data]="estadosCarpeta" >
-                            </plex-select>    
-                        </div>
                     </div>
                 </header>
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Fecha&nbsp;&nbsp; </th>
+                            <th>Prestamo</th>
                             <th>Carpeta</th>
                             <th>Paciente</th>
-                            <th>Destino</th>
+                            <th>Ubicación</th>
                             <th>Prestaciones</th>
                             <th>Responsables</th>
+                            <th>Observaciones</th>
                             <th></th>
-                        </tr>
+                        </tr>   
                     </thead>
                     <tbody *ngIf="carpetas.length">
                         <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
                             <td>
                                 {{carpeta.fecha | date:'dd-MM-yyyy'}}
                             </td>
-                            <td>{{carpeta.numero}}</td>
+                            <td>{{carpeta._id}}</td>
                             <td>
                                 <b>
                                     {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
@@ -80,6 +77,9 @@
                             <td>
                                 {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                             </td>
+                            <td>
+                                {{carpeta.datosPrestamo.observaciones}}
+                            </td>
                             <td *ngIf="carpeta.estado == 'En archivo'">
                                 <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
                                 </plex-button>
@@ -93,10 +93,9 @@
                 </table>
             </plex-box>
         </div>
-        <div class="col-4"  *ngIf="verPrestar" >
-            <div type="info">
-              <app-prestar-hc [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="onCancelPrestar($event)" (carpetaPrestadaEmit)="onCarpeta($event)" ></app-prestar-hc>
-            </div>
+        <div class="col-4" *ngIf="verDevolver">
+            <div class="clear"></div>
+            <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (listaCarpetaEmit)="onCarpeta($event)" ></app-devolver-hc>
         </div>
     </div>
 </section>
