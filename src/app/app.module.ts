@@ -113,6 +113,11 @@ import { CDAService } from './modules/rup/services/CDA.service';
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+
+// Sugerencias
+import { SugerenciasComponent } from './components/sugerencias/sugerencias.component';
+import { SugerenciasService } from './services/sendmailsugerencias.service';
+
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
@@ -424,6 +429,7 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
+        SugerenciasComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,
@@ -532,6 +538,7 @@ registerLocaleData(localeEs, 'es');
         PrestamosService,
         ProcedimientosQuirurgicosService,
         CDAService,
+        SugerenciasService
 
     ]
 })
