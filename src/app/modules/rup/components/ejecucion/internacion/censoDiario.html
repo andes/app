@@ -1,73 +1,68 @@
 <section *ngIf="organizacion">
-    <div class="row">
-        <div class="col-4">
-            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
-            </plex-datetime>
+    <plex-box>
+        <div class="row">
+            <div class="col-4">
+                <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
+                </plex-datetime>
+            </div>
+            <div class="col-4">
+                <plex-select name="servicio" [required]="true" [data]="organizacion.servicios" idField="term" labelField="term" [(ngModel)]="organizacionSeleccionada"
+                    label="Unidad organizativa">
+                </plex-select>
+            </div>
+            <div class="col-2">
+                <br>
+                <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
+            </div>
         </div>
-        <div class="col-6">
-            <plex-select name="servicio" [required]="true" [data]="organizacion.servicios" idField="term" labelField="term" [(ngModel)]="organizacionSeleccionada"
-                label="Unidad organizativa">
-            </plex-select>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col">
+                <table class="table" *ngIf="listadoCenso">
+                    <thead>
+                        <tr>
+                            <th>Apellido y nombre</th>
+                            <th>Sector</th>
+                            <th>Cama</th>
+                            <th>Ingreso</th>
+                            <th>Pase de</th>
+                            <th>Egreso</th>
+                            <th>Pase a</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let censo of listadoCenso">
+                            <td>
+                                {{censo.ultimoEstado.paciente | paciente }}
+                            </td>
+                            <td>
+                                <span *ngIf="censo.cama.sector">
+                                    {{censo.cama.sector }} /
+                                </span>
+                                <span *ngIf="censo.cama.habitacion">
+                                    {{censo.cama.habitacion}}
+                                </span>
+                            </td>
+                            <td>
+                                {{censo.cama.nombre}}
+                            </td>
+                            <td>
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.esIngreso; else elseIngreso">
+                                    si
+                                </div>
+                                <ng-template #elseIngreso>
+                                    no
+                                </ng-template>
+                            </td>
+                            <td>
+                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe }}
+                            </td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div class="col-2">
-            <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
-        </div>
-
-    </div>
-    <div class="row">
-        <div class="col-12">
-
-            <table class="table" *ngIf="listadoCenso">
-                <thead>
-                    <tr>
-                        <th scope="col">Apellido y nombre</th>
-                        <th scope="col">Sector</th>
-                        <th scope="col">Cama</th>
-                        <th scope="col">Ingreso</th>
-                        <th scope="col">Pase de</th>
-                        <th scope="col">Egreso</th>
-                        <th scope="col">Pase a</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let censo of listadoCenso">
-                        <td>
-                            {{censo.ultimoEstado.paciente | paciente }}
-                        </td>
-                        <td>
-                            <span *ngIf="censo.cama.sector">
-                                {{censo.cama.sector }} |
-                            </span>
-                            <span *ngIf="censo.cama.habitacion">
-                                {{censo.cama.habitacion}}
-                            </span>
-                        </td>
-                        <td>
-                            {{censo.cama.nombre}}
-                        </td>
-                        <!-- <td>
-                            <div *ngIf="!esIngreso(censo.pases); else elseIngreso">
-                                si
-                            </div>
-                            <ng-template #elseIngreso>
-                                no
-                            </ng-template>
-                        </td> -->
-
-                    </tr>
-                </tbody>
-            </table>
-
-
-            <!-- {{ listadoCenso | json }} -->
-        </div>
-    </div>
+    </plex-box>
 </section>
-
-<!-- <div *ngIf="listadoCenso.length > 0 && !esIngreso(listadoCenso[0].pases)">
-    si
-</div> -->
-<div *ngIf="listadoCenso && listadoCenso.length">
-
-    {{ esIngreso(listadoCenso[0].pases) | json }}
-</div>
