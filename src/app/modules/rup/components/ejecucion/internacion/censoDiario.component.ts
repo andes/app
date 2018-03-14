@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { InternacionService } from '../../../services/internacion.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import * as moment from 'moment';
+import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
@@ -44,16 +45,25 @@ export class CensoDiarioComponent implements OnInit {
         };
         this.servicioInternacion.getInfoCenso(params).subscribe(respuesta => {
             this.listadoCenso = respuesta;
+            console.log(respuesta, 'res - api');
+
             this.completarIngresosEgresos();
+
+            // Buscamos internaciones repertidas y solo dejamos la ultima. 
+            // Siempre que sean del mismo paciente.
+
         });
     }
 
     esIngreso(pases) {
-        if (pases && pases.length === 1) {
+        if (pases && pases.length >= 1) {
             let fechaInicio = moment(this.fecha).startOf('day').toDate();
             let fechaFin = moment(this.fecha).endOf('day').toDate();
             if (pases[0].estados.fecha >= fechaInicio && pases[0].estados.fecha <= fechaFin) {
-                return true;
+                if (pases[0].estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
+
+                    return true;
+                } else { return false; }
             } else { return false; }
         } else { return false; }
         // return false;
@@ -65,7 +75,26 @@ export class CensoDiarioComponent implements OnInit {
             let fechaFin = moment(this.fecha).endOf('day').toDate();
             let ultimoPase = pases[pases.length - 1];
             if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
-                return pases[pases.length - 2].estados.unidadOrganizativa.term;
+                if (pases[pases.length - 2].estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
+                    return pases[pases.length - 2].estados.unidadOrganizativa.term;
+                }
+            }
+        }
+        return '';
+    }
+
+    esPaseA(pases) {
+        if (pases && pases.length > 1) {
+            let fechaInicio = moment(this.fecha).startOf('day').toDate();
+            let fechaFin = moment(this.fecha).endOf('day').toDate();
+            let ultimoPase = pases[pases.length - 1];
+            let paseAnterior = pases[pases.length - 2];
+            if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
+                if (paseAnterior.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
+                    // if (pases[pases.length - 1].estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
+                    return pases[pases.length - 1].estados.unidadOrganizativa.term;
+                    // }
+                }
             }
         }
         return '';
@@ -74,17 +103,23 @@ export class CensoDiarioComponent implements OnInit {
 
     completarIngresosEgresos() {
         this.listadoCenso.forEach(censo => {
+            censo.pases = censo.pases.filter(p => { return p.estados.fecha <= moment(this.fecha).endOf('day').toDate(); });
+
+
+
             this.ingresoEgreso[censo.ultimoEstado.idInternacion] = {};
             this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso'] = this.esIngreso(censo.pases);
-            if (!this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso']) {
-                this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe'] = this.esPaseDe(censo.pases);
-            }
+            // if (!this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso']) {
+            this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe'] = this.esPaseDe(censo.pases);
+            this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseA'] = this.esPaseA(censo.pases);
+            //}
 
         });
+
+
     }
-
-
-
-
+    reseteaBusqueda() {
+        this.listadoCenso = [];
+    }
 
 }

@@ -2,12 +2,12 @@
     <plex-box>
         <div class="row">
             <div class="col-4">
-                <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
                 </plex-datetime>
             </div>
             <div class="col-4">
-                <plex-select name="servicio" [required]="true" [data]="organizacion.servicios" idField="term" labelField="term" [(ngModel)]="organizacionSeleccionada"
-                    label="Unidad organizativa">
+                <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.servicios" idField="term"
+                    labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
                 </plex-select>
             </div>
             <div class="col-2">
@@ -57,8 +57,13 @@
                             <td>
                                 {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe }}
                             </td>
-                            <td></td>
-                            <td></td>
+                            <td>
+
+                            </td>
+
+                            <td>
+                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseA }}
+                            </td>
                         </tr>
                     </tbody>
                 </table>
