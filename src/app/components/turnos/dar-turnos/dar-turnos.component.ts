@@ -870,7 +870,11 @@ export class DarTurnosComponent implements OnInit {
 
                 // "if 0 errores"
                 if (this.resultado === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                    if (paciente.alias) {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                    } else {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                    }
                 } else {
                     this.plex.toast('danger', 'ERROR: SMS no enviado');
                 }
