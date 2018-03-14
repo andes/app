@@ -12,7 +12,7 @@ import { Plex } from '@andes/plex';
 
 export class DevolverHcComponent implements OnInit {
     @Output() cancelDevolverEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
-    @Output() listaCarpetaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
 
     devolverHC: any = {
         estado: '',
@@ -36,20 +36,21 @@ export class DevolverHcComponent implements OnInit {
     }
 
     save(event) {
-        debugger;
-        event.idAgenda = this.prestamo.datosPrestamo.agendaId;
-        event.idTurno = this.prestamo.datosPrestamo.turno.id;
-        event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
-        event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
-        event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisicos;
-        event.organizacion = this.auth.organizacion;
-        
-        this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
-            this._carpeta = carpeta;
-            this.plex.alert('La Carpeta se devolvió correctamente');
-            this.cancelDevolverEmit.emit(false);
-            this.listaCarpetaEmit.emit(this._carpeta);
-        });
+        if(event.estado !== '') {
+            event.idAgenda = this.prestamo.datosPrestamo.agendaId;
+            event.idTurno = this.prestamo.datosPrestamo.turno.id;
+            event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
+            event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
+            event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisicos;
+            event.organizacion = this.auth.organizacion;
+            
+            this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
+                this._carpeta = carpeta;
+                this.plex.alert('La Carpeta se devolvió correctamente');
+                this.cancelDevolverEmit.emit(true);
+                this.carpetaDevueltaEmit.emit(this._carpeta);
+            });
+        }
     }
 
     cancel() {

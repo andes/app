@@ -25,35 +25,29 @@ export class ListarPrestamosComponent implements OnInit {
     public fechaDesde: any;
     public fechaHasta: any;
     public estadosCarpeta = enumToArray(EstadosCarpetas);
-    // public estado: any = this.estadosCarpeta[0];
     public carpetaSeleccionada: any;
 
     public filters: any = {
         organizacion: this.auth.organizacion._id
     };
 
-    public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
-    public showDevolver = false;
-
     public _listarCarpetas;
 
-    @Input('listaCarpetasInput')
-    set listaCarpetasInput(value: any) {
-        if (value !== undefined) {
-            this.carpetas =  this.carpetas.filter(function(el) {
-                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
-            });
+    @Input('recargar')
+    set recargar(value: any) {
+        if (value) {
+            this.getCarpetas({}, null);
         }
     }
 
-    get listaCarpetasInput(): any {
-        return this._listarCarpetas;
+    get recargar(): any {
+        return;
     }
 
-    @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     ngOnInit() {
         this.fechaDesde = new Date();
@@ -158,26 +152,28 @@ export class ListarPrestamosComponent implements OnInit {
         event.callback(listaEstados);
     }
 
-    prestar(solicitudCarpeta) {
-        this.showDevolverEmit.emit(false);
-        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
-        this.carpetaSeleccionada = solicitudCarpeta;
-        this.verPrestar = true;
-    }
-
     devolver(solicitudCarpeta) {
-        this.showDevolverEmit.emit(true);
-        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+        this.carpetaDevueltaEmit.emit(solicitudCarpeta);
         this.carpetaSeleccionada = solicitudCarpeta;
         this.verDevolver = true;
     }
 
     onShowDevolver(event) {
-        this.showDevolver = true;
+        this.verDevolver = true;
     }
 
     onCancelDevolver(event) {
-        this.showDevolver = event;
+        this.verDevolver = false;
+    }
+
+    onCarpeta(value) {
+        console.log(value);
+        if (value !== undefined) {
+            this.carpetas =  this.carpetas.filter(function(el) {
+                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
+            });
+            this.recargarSolicitudesEmit.emit(true);
+        }
     }
 
     constructor(

@@ -10,16 +10,21 @@ import { PrestarHcComponent } from './solicitudes/prestar-hc.component';
 
 export class PrestamosHcComponent implements OnInit {
 
-    prestar: any;
-
+    recargaPrestamos: any = false;
+    recargaSolicitudes: any = false;
     listaCarpetas: any;
+    // public recargarSolicitudes;
 
     ngOnInit() {
 
     }
 
-    onCarpetaPrestada(event) {
-        this.prestar = event;
+    recargarPrestamos(event) {
+        this.recargaPrestamos = true;
+    }
+
+    recargarSolicitudes(event) {
+        this.recargaSolicitudes = true;
     }
 
     constructor() { }

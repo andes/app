@@ -11,15 +11,15 @@
 
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Destino" [(ngModel)]="prestarHC.destino" name="destino" placeholder="Ingrese el destino..." >
+                    <plex-text label="Destino" [(ngModel)]="prestarHC.destino" name="destino" placeholder="Ingrese el destino..." [disabled]="true" >
                     </plex-text>
                 </div>
                 <div class="col-12">
-                    <plex-text label="Responsable" [(ngModel)]="prestarHC.responsable" name="responsable" [required]="true" placeholder="Ingrese un responsable..."  ng-disabled="true" >
+                    <plex-text label="Responsable" [(ngModel)]="prestarHC.responsable" name="responsable" [required]="true" placeholder="Ingrese un responsable..."  [disabled]="true" >
                     </plex-text>
                 </div>
                 <div class="col-12">
-                    <plex-text label="Observaciones" [(ngModel)]="prestarHC.observacionesPrestamo" name="observaciones" [required]="true" placeholder="Ingrese observaciones..." ng-disabled="true" >
+                    <plex-text label="Observaciones" [(ngModel)]="prestarHC.observacionesPrestamo" name="observaciones" placeholder="Ingrese observaciones..." >
                     </plex-text>
                 </div>
             </div>

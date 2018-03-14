@@ -1,11 +1,11 @@
 <div class="row">
     <div class="col">
         <plex-tabs>
-            <plex-tab label="Solicitudes de Carpetas">
-                <app-listar-solicitudes></app-listar-solicitudes>
+            <plex-tab label="Solicitudes de Carpetas" >
+                <app-listar-solicitudes [recargar]="recargaSolicitudes" (recargarPrestamosEmit)="recargarPrestamos($event)"></app-listar-solicitudes>
             </plex-tab>
-            <plex-tab label="Prestamos de Carpetas">
-                <app-listar-prestamos></app-listar-prestamos>
+            <plex-tab label="Prestamos de Carpetas" >
+                <app-listar-prestamos [recargar]="recargaPrestamos" (recargarSolicitudesEmit)="recargarSolicitudes($event)"></app-listar-prestamos>
             </plex-tab>
             <plex-tab label="Historial de Prestamos">
 

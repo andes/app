@@ -38,15 +38,25 @@ export class ListarSolicitudesComponent implements OnInit {
     
 
     public _listarCarpetas;
-    public showPrestar = false;
     
     get listaCarpetasInput(): any {
         return this._listarCarpetas;
     }
 
-    @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output() showDevolverEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Input('recargar')
+    set recargar(value: any) {
+        if (value) {
+            this.getCarpetas({}, null);
+        }
+    }
+
+    get recargar(): any {
+        return;
+    }
+    
+    // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
     ngOnInit() {
         this.fechaDesde = new Date();
@@ -60,14 +70,12 @@ export class ListarSolicitudesComponent implements OnInit {
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
             if (fechaDesde.isValid()) {
-                // this.filters['fechaDesde'] = fechaDesde.isValid() ? fechaDesde.toDate() : moment().format();
                 this.filters['fechaDesde'] = fechaDesde;
             }
         }
         if (filter === 'fechaHasta') {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
             if (fechaHasta.isValid()) {
-                // this.filters['fechaHasta'] = fechaHasta.isValid() ? fechaHasta.toDate() : moment().format();
                 this.filters['fechaHasta'] = fechaHasta;
             }
         }
@@ -154,26 +162,13 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     prestar(solicitudCarpeta) {
-        this.showPrestarEmit.emit(true);
         this.carpetaPrestadaEmit.emit(solicitudCarpeta);
         this.carpetaSeleccionada = solicitudCarpeta;
         this.verPrestar = true;
     }
 
-    // devolver(solicitudCarpeta) {
-    //     this.showPrestarEmit.emit(false);
-    //     this.showDevolverEmit.emit(true);
-    //     this.carpetaPrestadaEmit.emit(solicitudCarpeta);
-    //     this.carpetaSeleccionada = solicitudCarpeta;
-    //     this.verDevolver = true;
-    // }
-
-    onShowPrestar(event) {
-        this.showPrestar = true;
-    }
-
     onCancelPrestar(event) {
-        this.showPrestar = event;
+        this.verPrestar = false;
     }
 
     onCarpeta(value) {
@@ -181,6 +176,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.carpetas =  this.carpetas.filter(function(el) {
                 return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
             });
+            this.recargarPrestamosEmit.emit(true);
         }
     }
 

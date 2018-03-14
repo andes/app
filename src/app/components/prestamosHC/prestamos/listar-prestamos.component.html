@@ -95,7 +95,7 @@
         </div>
         <div class="col-4" *ngIf="verDevolver">
             <div class="clear"></div>
-            <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (listaCarpetaEmit)="onCarpeta($event)" ></app-devolver-hc>
+            <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (carpetaDevueltaEmit)="onCarpeta($event)" ></app-devolver-hc>
         </div>
     </div>
 </section>
