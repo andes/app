@@ -67,6 +67,16 @@ export class CamaComponent implements OnInit {
     }
 
     /**
+     * Editar una cama
+     *
+     * @param {any} cama Cama que se envia a editar
+     * @memberof CamaComponent
+     */
+    editarCama(cama) {
+        this.router.navigate(['tm/organizacion/cama', cama.id]);
+    }
+
+    /**
      * Visualizar internacion
      *
      * @param {any} cama Cama en la cual se encuentra internado el paciente.
@@ -82,8 +92,12 @@ export class CamaComponent implements OnInit {
         let dto = {
             fecha: this.fecha,
             estado: estado,
-            observaciones: cama.$motivo,
-            paciente: null
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
         };
 
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
@@ -126,6 +140,39 @@ export class CamaComponent implements OnInit {
             this.plex.info('danger', err, 'Error');
         });
     }
+
+    public desocuparCama(cama) {
+        let dto = {
+            fecha: this.fecha,
+            estado: 'desocupada',
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: null,
+            idInternacion: null
+        };
+
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+            cama.ultimoEstado = camaActualizada.ultimoEstado;
+
+
+            this.plex.toast('success', 'Cama desocupada', 'Cambio estado');
+
+            // rotamos card
+            setTimeout(() => {
+                // rotamos cama
+                cama.$rotar = false;
+                // limpiar motivo por el cual se cambio el estado
+                cama.$motivo = '';
+                // emitimos la cama modificada
+                this.evtCama.emit(cama);
+            }, 100);
+        }, (err) => {
+            this.plex.info('danger', err, 'Error');
+        });
+    }
+
     SetFecha() {
         this.fecha = new Date();
     }

@@ -7,30 +7,25 @@
             <table *ngIf="camas && camas.length" class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Numero</th>
+                        <th>Nombre</th>
                         <th>Sector</th>
                         <th>Habitacion</th>
                         <th>Estado</th>
-                        <th>Servicio</th>
-                        <th>Editar cama</th>
+                        <th>Unidad organizativa</th>
+                        <th>Especialidad</th>
+                        <th>&nbsp;</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr class="hover" *ngFor="let cama of camas">
-                        <td>{{cama.numero}}</td>
+                        <td>{{cama.nombre}}</td>
                         <td>{{cama.sector}}</td>
                         <td>{{cama.habitacion}}</td>
+                        <td>{{cama.ultimoEstado.estado}}</td>
+                        <td>{{cama.ultimoEstado.unidadOrganizativa.term}}</td>
+                        <td>{{cama.ultimoEstado.especialidades[0]?.term}}</td>
                         <td>
-                            {{cama.ultimoEstado.estado}}
-                        </td>
-                        <td>
-                            <ng-container *ngIf="cama.unidadesOrganizativas && cama.unidadesOrganizativas.length">
-                                {{cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.term }}
-                            </ng-container>
-                        </td>
-                        <td>
-                            <plex-button type="primary" label="Editar cama" (click)="Update(cama)">
-                            </plex-button>
+
                         </td>
                     </tr>
                 </tbody>

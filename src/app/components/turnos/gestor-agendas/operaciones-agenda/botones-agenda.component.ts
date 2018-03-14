@@ -161,7 +161,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Reasignar turnos
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
-            listarTurnos: (this.cantidadSeleccionadas === 1) && puedeImprimir,
+            listarTurnos: (this.cantidadSeleccionadas > 0) && puedeImprimir,
             // Imprimir pdf carpetas
             listarCarpetas: this.cantidadSeleccionadas > 0 && puedeImprimir && this.puedoImprimirCarpetas(),
         };

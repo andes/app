@@ -85,9 +85,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-    }
-
-    buscarPaciente() {
         this.showSobreturno = false;
         this.pacientesSearch = true;
     }
@@ -102,7 +99,8 @@ export class AgregarSobreturnoComponent implements OnInit {
                     this.verificarTelefono(pacienteMPI);
                 });
         } else {
-            this.buscarPaciente();
+            this.showSobreturno = false;
+            this.pacientesSearch = true;
         }
     }
 

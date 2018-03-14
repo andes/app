@@ -67,10 +67,13 @@ import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/:id/cama', component: CamasListadoComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
@@ -97,8 +100,10 @@ const appRoutes: Routes = [
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/ver/:id', component: EjecucionInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/validacion/:id', component: PrestacionValidacionComponent, canActivate: [RoutingGuard] },

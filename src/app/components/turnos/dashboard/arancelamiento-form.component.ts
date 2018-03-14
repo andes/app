@@ -2,7 +2,7 @@ import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, Host
 import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-import { ArancelamientoService } from './../../../services/arancelamiento.service';
+import { ObraSocialService } from './../../../services/obraSocial.service';
 
 @Component({
     selector: 'arancelamiento-form',
@@ -30,10 +30,10 @@ export class ArancelamientoFormComponent implements OnInit {
     @Output() volverAPuntoInicio: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;
 
-    constructor(public auth: Auth, public servicioArancelamiento: ArancelamientoService, public plex: Plex) { }
+    constructor(public auth: Auth, public servicioOS: ObraSocialService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioArancelamiento.get(this.turnoSeleccionado.paciente.documento).subscribe(resultado => {
+        this.servicioOS.get(this.turnoSeleccionado.paciente.documento).subscribe(resultado => {
             this.obraSocial = resultado.nombre;
             this.codigoOs = resultado.codigo;
             this.showForm = true;

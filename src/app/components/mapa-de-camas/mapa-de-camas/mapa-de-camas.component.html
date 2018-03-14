@@ -13,7 +13,7 @@
                     <div class="row" *ngIf="estadoServicio && estadoServicio.total > 0">
                         <div class="col-2">
                             <h4>
-                                Estado del servicio >
+                                Estado del servicio
                             </h4>
                         </div>
                         <div class="col">
@@ -108,26 +108,13 @@
                                         *ngIf="filtros.opciones.estados.length"></plex-select>
                                 </div>
 
-                                <!--
-                                <div class="col-sm-2 col-lg-2 col-xl-1">
-                                    <div class="form-group">
-                                        <br/>
-                                        <input type="checkbox" [(ngModel)]="filter.desinfectada" label="Sin desinfectar" ="checkbox">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-2 col-lg-2 col-xl-1">
-                                    <div class="form-group">
-                                        <br/>
-                                        <input type="checkbox" [(ngModel)]="filter.oxigeno" label="Oxígeno" ="checkbox">
-                                    </div>
-                                </div>
-                                -->
-
                                 <div class="col-sm-3 col-lg-3 col-xl-3">
                                     <div class="btn-group col mt-5" role="group" aria-label="Botonera principal">
                                         <button type="button" class="btn btn-primary btn-block" (click)="limpiarFiltros()">
                                             Limpiar filtros
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-block" (click)="ingresarPaciente()">
+                                            Ingresar Paciente
                                         </button>
 
                                         <!-- <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}"

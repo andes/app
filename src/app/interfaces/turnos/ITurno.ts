@@ -1,4 +1,5 @@
 import { ITipoPrestacion } from './../ITipoPrestacion';
+import { IObraSocial } from './../IObraSocial';
 
 // TODO: Recordar actualizar Schema!
 export interface ITurno {
@@ -13,8 +14,14 @@ export interface ITurno {
         alias: string,
         documento: string,
         fechaNacimiento: Date,
-        telefono: string,
-        sexo: string
+        telefono: String,
+        sexo: String,
+        carpetaEfectores: [{
+            organizacion: string,
+            nroCarpeta: string
+        }],
+        obraSocial: IObraSocial
+
     };
     tipoPrestacion: ITipoPrestacion;
     idPrestacionPaciente: string;
@@ -42,9 +49,9 @@ export interface ITurno {
     motivoSuspension: {
         type: string,
         enum: ['edilicia', 'profesional', 'organizacion', 'agendaSuspendida']
-    },
+    };
     avisoSuspension: {
         type: string,
         enum: ['pendiente', 'no enviado', 'enviado', 'fallido']
-    },
+    };
 }

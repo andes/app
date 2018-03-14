@@ -52,7 +52,7 @@ export class PlanificarAgendaComponent implements OnInit {
     showMapaEspacioFisico = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
-        public ServicioAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
+        public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:planificarAgenda:?').length > 0;
@@ -529,7 +529,7 @@ export class PlanificarAgendaComponent implements OnInit {
         // Verifica que ningún profesional de la agenda esté asignado a otra agenda en ese horario
         if (iniAgenda && finAgenda && this.modelo.profesionales) {
             this.modelo.profesionales.forEach((profesional, index) => {
-                this.ServicioAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+                this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, idProfesional: profesional.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                     subscribe(agendas => {
                         let agds = agendas.filter(agenda => {
                             return agenda.id !== this.modelo.id || !this.modelo.id;
@@ -546,7 +546,7 @@ export class PlanificarAgendaComponent implements OnInit {
         }
         // Verifica que el espacio fisico no esté ocupado en ese rango horario
         if (iniAgenda && finAgenda && this.modelo.espacioFisico) {
-            this.ServicioAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
+            this.serviceAgenda.get({ espacioFisico: this.modelo.espacioFisico.id, rango: true, desde: iniAgenda, hasta: finAgenda, estados: ['planificacion', 'disponible', 'publicada', 'pausada'] }).
                 subscribe(agendas => {
                     let agds = agendas.filter(agenda => {
                         return agenda.id !== this.modelo.id || !this.modelo.id;
@@ -815,7 +815,7 @@ export class PlanificarAgendaComponent implements OnInit {
                     return el.activo === true && delete el.$order;
                 });
             });
-            espOperation = this.ServicioAgenda.save(this.modelo);
+            espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
                 this.plex.toast('success', 'La agenda se guardó correctamente');
                 this.modelo.id = resultado.id;

@@ -10,9 +10,7 @@ export interface ICama {
     };
     sector: String;
     habitacion: String;
-    numero: String;
-    esCensable: Boolean;
-    unidadOrganizativa: [ISnomedConcept];
+    nombre: String;
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc
     // ultimo estado de la cama

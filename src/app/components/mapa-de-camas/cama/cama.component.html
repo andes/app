@@ -5,7 +5,7 @@
 
             <div class="header">
                 <div class="numero-habitacion">
-                    {{cama.habitacion}} / {{cama.numero}}
+                    {{cama.habitacion}} / {{cama.nombre}}
                 </div>
             </div>
             <div class="content">
@@ -73,23 +73,20 @@
 
             <!-- Botonera del frente de las card -->
             <div class="footer row">
-                <div class="col-3 text-left float-left">
-                    <!-- TODO: Como vamos a mostrar el equipamiento de las camas -->
-                    <!-- <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
-                                O
-                                <sub>2</sub>
-                        </div> -->
-                </div>
-                <div class="col-3 text-left float-left">
+
+                <div class="col-12 text-right">
+
                     <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
                         *ngIf="cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-bug"></i>
                     </button>
-                </div>
-                <!-- Ver internacion -->
-                <div class="col-6 float-right text-right">
-                    <button class="btn btn-default" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
+                    <!-- Ver internacion -->
+                    <button class="btn btn-default  tips" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
                         <i class="mdi mdi-eye"></i>
+                    </button>
+                    <button class="btn btn-default  tips" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
+                        *ngIf="cama.ultimoEstado?.idInternacion">
+                        <i class="mdi mdi-close-box"></i>
                     </button>
                     <!-- bloquear cama -->
                     <button class="btn btn-default  tips" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
@@ -111,6 +108,10 @@
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
                         <i class="mdi mdi-wrench"></i>
                     </button>
+                    <!-- Editar datos de la cama -->
+                    <button class="btn btn-default" title="Editar cama" (click)="editarCama(cama)">
+                        <i class="mdi mdi-mdi mdi-pencil"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -118,18 +119,21 @@
         <div class="back">
             <!-- Header del back de las tarjetas -->
             <div class="header">
-                <div class="float-left">
-                    <div class="numero-habitacion">
-                        {{cama.habitacion}} / {{cama.numero}}
-                    </div>
-                </div>
-                <div class="float-right">
-                    <button class="btn btn-default  float-right" ng-show="cama.ultimoEstado?.paciente?.id || (cama.$action == 'enviada_reparacion' || cama.$action == 'estado_bloqueada')"
+                <!-- <div class="float-right">
+                    <button class="btn btn-sm btn-default float-right" ng-show="cama.ultimoEstado?.paciente?.id || (cama.$action == 'enviada_reparacion' || cama.$action == 'estado_bloqueada')"
                         (click)="cama.$rotar = !cama.$rotar">
                         <i class="mdi mdi-close"></i>
                     </button>
+                </div> -->
+                <div class="float-left">
+                    <div class="numero-habitacion">
+                        {{cama.habitacion}} / {{cama.nombre}}
+                    </div>
                 </div>
             </div>
+
+
+
             <!-- Ultima evolucion / Evolucionar -->
             <div *ngIf="cama.$action && cama.$action == 'evolucion'">
                 <div class="content" [ngClass]="{'evolucion': cama.$action == 'evolucion' }">
@@ -146,27 +150,10 @@
 
                 </div>
                 <div class="footer row">
-                    <div class="col-3 text-left float-left">
-                        <!-- <div class="stacked-icon oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno"> -->
-                        <div class="rounded-background bg-oxigeno tips" *ngIf="cama.oxigeno" title="Cama con oxígeno">
-                            O
-                            <sub>2</sub>
-                        </div>
-                    </div>
-
-                    <div class="col-3 text-left float-left">
-                        <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                            *ngIf="!cama.desinfectada && cama.ultimoEstado.estado != 'reparacion' && cama.ultimoEstado.estado != 'ocupada'">
-                            <i class="mdi mdi-bug"></i>
+                    <div class="col-12 text-right">
+                        <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
+                            <i class="mdi mdi-close"></i>
                         </button>
-
-                    </div>
-
-                    <div class="col-6 float-right text-right">
-                        <!-- <button class="btn btn-default " *ngIf="cama.ultimoEstado?.paciente?.id">
-                            <i plex-actions="actions"></i>
-                        </button> -->
-
 
                         <button class="btn btn-default " title="Ver indicaciones" (click)="verInternacion(cama.idInternacion, 5)" *ngIf="cama.idInternacion">
                             <i class="mdi mdi-book-open"></i>
@@ -244,6 +231,43 @@
                             <div class="form-group">
                                 <button type="submit" class="btn btn-success tips form-control" title="Enviar a reparar" (click)="cambiarEstado(cama, 'reparacion')"
                                     [disabled]="!formReparacion.form.valid">
+                                    <i class="mdi mdi-check"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Desocupar una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'desocupar' && cama.ultimoEstado.estado == 'ocupada'">
+                <form #formReparada="ngForm">
+                    <div class="content" [ngClass]="{'reparacion': cama.$action == 'desocupar' }">
+                        <p>
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                        </p>
+                        <div class="main">
+                            <p class="text-center">
+                                ¿Está seguro que desea desocupar la cama?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="footer with-buttons row">
+
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <button class="btn btn-success tips form-control" title="Si" (click)="desocuparCama(cama, 'desocupada')">
                                     <i class="mdi mdi-check"></i>
                                 </button>
                             </div>

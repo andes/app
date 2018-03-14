@@ -27,14 +27,18 @@ export class ElementosRUPService {
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
 
-
-    public coleccionRetsetId = {
-        '224362002': {
-            refsetId: '224891009',
-            tipoSelect: 'radio',
-            multiple: false
-        },
-    };
+    /**
+     * Este objeto se llena con el valor de params de un elementoRUP,
+     * según cómo esté definido en la colección dentro de sus "requeridos"
+     * Su estructura es
+     * 'conceptId': {
+            titulo: 'My título',
+            refsetId: 'conceptId',
+            tipoSelect: 'radio' | 'select',
+            multiple: true | false
+        }
+     */
+    public coleccionRetsetId = {};
 
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP

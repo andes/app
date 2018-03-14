@@ -1,96 +1,108 @@
 <form *ngIf="!buscandoPaciente" class="plex-layout" #form="ngForm">
     <section>
-        <plex-box>
-            <header>
-                <div class="page-title">Iniciar Internación</div>
-            </header>
-            <div class="row">
-                <div class="col-6">
-                    <fieldset>
-                        <legend>Datos del paciente</legend>
-                        <plex-button *ngIf="!paciente" label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true"></plex-button>
-                        <paciente-detalle-actualizar *ngIf="paciente" [paciente]="paciente"></paciente-detalle-actualizar>
-
-                    </fieldset>
-                </div>
-                <div *ngIf="paciente" class="col-6">
-                    <fieldset>
-                        <legend>Datos de ingreso</legend>
-                    </fieldset>
-                    <div class="row">
-                        <div class="col-6">
-                            <plex-select label="Ocupación habitual" [(ngModel)]="informeIngreso.ocupacionHabitual" name="ocupacionHabitual" [data]="ocupaciones"
-                                placeholder="Seleccione..." labelField="nombre">
-                            </plex-select>
-                        </div>
-                        <div class="col-6">
-                            <plex-select [required]="true" [(ngModel)]="informeIngreso.obraSocial" name="obraSocial" [data]="obrasSociales" placeholder="Seleccione..."
-                                label="Obra Social">
-                            </plex-select>
+        <div class="row">
+            <div class="col-8">
+                <plex-box>
+                    <div class="row" *ngIf="!paciente">
+                        <div class="col">
+                            <fieldset>
+                                <legend>Datos del paciente</legend>
+                            </fieldset>
+                            <plex-button *ngIf="!paciente" label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true">
+                            </plex-button>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-6" *ngIf="situacionesLaborales">
-                            <plex-select label="Situación laboral" [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral" [data]="situacionesLaborales"
-                                placeholder="Seleccione..." labelField="term" idField="term">
-                            </plex-select>
+                    <div *ngIf="paciente">
+                        <fieldset>
+                            <legend>Datos de ingreso</legend>
+                        </fieldset>
+                        <div class="row">
+                            <div class="col-6" *ngIf="situacionesLaborales">
+                                <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
+                                    [data]="situacionesLaborales" placeholder="Seleccione... ">
+                                </plex-select>
+                            </div>
+                            <div class="col-6 ">
+                                <plex-select [required]="true" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
+                                    [data]="ocupaciones" placeholder="Seleccione... " labelField="nombre">
+                                </plex-select>
+                            </div>
                         </div>
-                        <div class="col-6">
-                            <plex-select [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
-                                placeholder="Seleccione..." label="Nivel instrucción">
-                            </plex-select>
+                        <div class="row ">
+                            <div class="col-4 ">
+                                <plex-select [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+                                    placeholder="Seleccione..." label="Nivel instrucción">
+                                </plex-select>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado " placeholder="Seleccione... "
+                                    label="Asociado a ">
+                                </plex-select>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select [(ngModel)]="informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
+                                    label="Obra Social ">
+                                </plex-select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-4">
-                            <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus" name="fechaIngreso"
-                                label="Fecha Ingreso">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-4">
-                            <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso" [required]="true" name="horaIngreso" label="Hora Ingreso">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-4">
-                            <plex-select [required]="true" [(ngModel)]="informeIngreso.origen" name="origen" [data]="origenHospitalizacion" placeholder="Seleccione..."
-                                label="Origen hospitalización">
-                            </plex-select>
-                        </div>
-                    </div>
-                    <div class="row" *ngIf="cama">
-                        <div class="col-4">
-                            <label class="block">Cama</label>
-                            <span>
-                                {{cama.numero}} - {{cama.habitacion ? 'Habitación: ' + cama.habitacion: ''}} - {{ cama.sector ? 'Sector: ' + cama.sector:
-                                ''}}
-                            </span>
-                        </div>
-                        <div class="col-4">
-                            <label class="block">Unidad organizativa</label>
-                            <span>{{cama.unidadesOrganizativas[cama.unidadesOrganizativas.length - 1].unidadOrganizativa.term}}</span>
-                        </div>
-                    </div>
 
-                </div>
-
-
+                        <div class="row ">
+                            <div class="col-4 ">
+                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
+                                    label="Fecha Ingreso">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
+                                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="informeIngreso.motivo">
+                                </plex-text>
+                            </div>
+                        </div>
+                        <div class="row">&nbsp;</div>
+                        <ng-container *ngIf="cama">
+                            <fieldset>
+                                <legend>Ocupar cama</legend>
+                            </fieldset>
+                            <cama-estado *ngIf="cama && organizacion" [cama]="cama" [organizacion]="organizacion"></cama-estado>
+                        </ng-container>
+                    </div>
+                </plex-box>
 
             </div>
-        </plex-box>
+            <div class="col-4">
+                <plex-box>
+                    <fieldset *ngIf="paciente">
+                        <legend>Datos del paciente</legend>
+                        <paciente-detalle-actualizar *ngIf="paciente" [paciente]="paciente"></paciente-detalle-actualizar>
+                    </fieldset>
+                </plex-box>
+            </div>
+        </div>
     </section>
+
 
     <!--Footer-->
     <footer *ngIf="!buscandoPaciente">
 
-        <div class="float-right">
-            <plex-button type="danger" label="CANCELAR" (click)="cancelar()">
+        <div class="float-right ">
+            <plex-button type="danger " label="CANCELAR " (click)="cancelar() ">
             </plex-button>
-            <plex-button label="INICIAR INTERNACION" *ngIf="paciente" validateForm="true" type="success" (click)="guardar()">
+            <plex-button label="INICIAR INTERNACION " *ngIf="paciente " validateForm="true " type="success " (click)="guardar() ">
             </plex-button>
         </div>
     </footer>
 </form>
 
 <!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="false"></pacientesSearch>
+<pacientesSearch *ngIf="buscandoPaciente " (selected)="onPacienteSelected($event) " (cancel)="onPacienteCancel()
+                                " [mostrarCancelar]="true " [modoCompleto]="true " [bloquearCreate]="false "></pacientesSearch>

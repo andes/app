@@ -1,4 +1,5 @@
 import { IPaciente } from './IPaciente';
+import { ISnomedConcept } from '../modules/rup/interfaces/snomed-concept.interface';
 
 export interface ICamaEstado {
     fechas: Date;
@@ -6,4 +7,8 @@ export interface ICamaEstado {
     paciente: IPaciente;
     idInternacion: String;
     observaciones: String;
+    unidadOrganizativa: ISnomedConcept;
+    especialidades: ISnomedConcept[];
+    esCensable: Boolean;
+    genero: ISnomedConcept;
 };

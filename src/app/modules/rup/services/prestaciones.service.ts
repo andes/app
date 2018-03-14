@@ -19,6 +19,7 @@ export class PrestacionesService {
         Antecedentes_Familiares: '1621000013103',
         Antecedentes_Personales_procedimientos: '1911000013100',
         Antecedentes_Personales_hallazgos: '1901000013103',
+        Antecedentes_Para_Estudios_Otoemision: '2121000013101',
         situacionLaboral: '200000000',
         nivelEstudios: '3'
     };
@@ -549,7 +550,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -632,12 +633,13 @@ export class PrestacionesService {
         }
 
         prestacion.paciente['_id'] = paciente.id;
+        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
 
         return prestacion;
     }
 
     crearPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', fecha: any = new Date(), turno: any = null): Observable<any> {
-        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, fecha, turno);
+        let prestacion = this.inicializarPrestacion(paciente, snomedConcept, momento, 'ambulatorio', fecha, turno);
         return this.post(prestacion);
     }
 
@@ -648,10 +650,11 @@ export class PrestacionesService {
             planes.forEach(plan => {
 
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
-                let existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
-
+                let existePrestacion = null;
+                if (this.cache[prestacion.paciente.id]) {
+                    existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
+                }
                 if (!existePrestacion) {
-
                     // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
                     // que prestacion quiere solicitar debo hacer ese cambio
                     let conceptoSolicitud = plan.concepto;
@@ -664,7 +667,7 @@ export class PrestacionesService {
                     let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
@@ -687,16 +690,6 @@ export class PrestacionesService {
         return this.patch(prestacion.id, dto);
 
 
-        // } else {
-        //     // hacemos el patch y luego creamos los planes
-        //     let dto: any = {
-        //         op: 'estadoPush',
-        //         estado: { tipo: 'validada' },
-        //         registros: prestacion.ejecucion.registros
-        //     };
-
-        //     return this.patch(prestacion.id, dto);
-        // }
 
     }
     /**
@@ -780,7 +773,7 @@ export class PrestacionesService {
      * @returns string Clase a ser utilizado para estilizar las cards de RUP
      * @memberof PrestacionesService
      */
-    public getCssClass(conceptoSNOMED, filtroActual: null) {
+    public getCssClass(conceptoSNOMED, filtroActual) {
         let clase = conceptoSNOMED.semanticTag;
 
         // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
@@ -839,5 +832,34 @@ export class PrestacionesService {
         }
 
         return icon;
+    }
+
+    /*******
+     * INTERNACION
+     */
+
+    /**
+    * Devuelve el la ultima internacion del paciente y la cama ocupada en caso que corresponda
+    *
+    * @param {any} paciente id del paciente en internacion
+    * @param {any} estado estado de la internacion
+    * @returns  {array} Ultima Internacion del paciente en el estado que ingresa por parametro
+    * @memberof PrestacionesService
+    */
+    public internacionesXPaciente(paciente, estado) {
+        let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
+        return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
+    }
+
+
+    /**
+   * Devuelve el listado de estados de la/s camas por las que paso la internación
+   *
+   * @param {any} idInternacion id de la intenacion
+   * @returns  {array} lista de camas-estados por los que paso la internación
+   * @memberof PrestacionesService
+   */
+    public getPasesInternacion(idInternacion) {
+        return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
     }
 }
