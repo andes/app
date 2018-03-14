@@ -85,7 +85,6 @@ export class AgregarSobreturnoComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        debugger
         this.showSobreturno = false;
         this.pacientesSearch = true;
         if (this.agenda.tipoPrestaciones.length === 1) {
