@@ -53,7 +53,7 @@ docker build -t andesnqn/app .
 ### Run images
 
 ```bash
-docker run  -p  4002:4002  --rm --name andes_app andesnqn/app
+docker run  -p  4200:4200  --rm --name andes_app andesnqn/app
 ```
 
 ### Run images for develop
