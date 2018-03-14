@@ -110,7 +110,7 @@
                                                                 type="info" icon="mdi mdi-refresh" title="Reestablecer" (click)="borrarReparo(i)">
                                                             </plex-button>
                                                         </td>
-                                                        <td class="text-center">
+                                                        <td>
                                                             <plex-bool *ngIf="!diagnostico.codificacionProfesional?.snomed?.term" (change)="onSave()" [(ngModel)]='diagnostico.primeraVez'></plex-bool>
                                                             <!-- Muestro primera vez solo para diagnosticos de profesional -->
                                                             <span class="badge-success" *ngIf="(diagnostico.codificacionProfesional?.snomed?.term && diagnostico.primeraVez && !(diagnostico.codificacionAuditoria)) || (diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo && diagnostico.codificacionProfesional?.snomed?.term && diagnostico.primeraVez)">
