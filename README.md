@@ -50,19 +50,21 @@ ng serve
 docker build -t andesnqn/app .
 ```
 
-### Run images
+### Run image in container
 
 ```bash
 docker run  -p  4200:4200  --rm --name andes_app andesnqn/app
 ```
 
-### Run images for develop
+### Run container for development
 
 ```bash
 docker run -v  ${pwd}:/usr/src/app  -p  4200:4200   --rm --name andes_app andesnqn/app 
 
+#Stop container
 docker stop andes_app
 
+#Run command in container
 docker exec andes_app npm install
 
 ```
