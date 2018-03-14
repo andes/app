@@ -96,4 +96,8 @@ export class OcuparCamaComponent implements OnInit {
         });
     }
 
+    cancelar() {
+        this.router.navigate(['/mapa-de-camas']);
+    }
+
 }
