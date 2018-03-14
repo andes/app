@@ -410,7 +410,7 @@ let RUPComponentsArray = [
         MapaDeCamasComponent,
         CamaComponent,
         // Solicitudes
-        SolicitudesComponent
+        SolicitudesComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
