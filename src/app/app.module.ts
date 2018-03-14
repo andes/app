@@ -227,7 +227,7 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 
 
-// Llaves
+// TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
@@ -264,6 +264,10 @@ import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/m
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
+
+// Solicitudes
+import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
@@ -405,6 +409,8 @@ let RUPComponentsArray = [
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        // Solicitudes
+        SolicitudesComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
