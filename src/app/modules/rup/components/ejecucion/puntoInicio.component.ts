@@ -48,7 +48,8 @@ export class PuntoInicioComponent implements OnInit {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
-    public mostrarBtnTurnero = false;
+    public mostrarBtnTurnero = true;
+    public ultimoLlamado;
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -424,7 +425,7 @@ export class PuntoInicioComponent implements OnInit {
             tipoPrestacion: turnoLlamado.tipoPrestacion,
             espacioFisico: this.agendaSeleccionada.espacioFisico
         };
-
+        this.ultimoLlamado = turnoProximo;
         this.servicioTurnero.post(turnoProximo).subscribe();
         setTimeout(() => {
             this.dniLlamado = null;
@@ -452,7 +453,7 @@ export class PuntoInicioComponent implements OnInit {
                 tipoPrestacion: turnosSinAtender[this.index].tipoPrestacion,
                 espacioFisico: this.agendaSeleccionada.espacioFisico
             };
-
+            this.ultimoLlamado = turnoProximo;
             this.servicioTurnero.post(turnoProximo).subscribe();
 
             this.index++;
@@ -466,44 +467,45 @@ export class PuntoInicioComponent implements OnInit {
 
     // TURNERO
     reLlamar() {
-        let turnosSinAtender = [];
-        const proximo = this.agendaSeleccionada.bloques[0].turnos;
-        proximo.forEach(element => {
-            if (element.estado === 'asignado' && !element.asistencia) {
-                turnosSinAtender.push(element);
-            }
+        // let turnosSinAtender = [];
+        // const proximo = this.agendaSeleccionada.bloques[0].turnos;
+        // proximo.forEach(element => {
+        //     if (element.estado === 'asignado' && !element.asistencia) {
+        //         turnosSinAtender.push(element);
+        //     }
 
-        });
+        // });
 
-        if (this.index <= turnosSinAtender.length) {
-            let indexReLlamado;
-            if (this.index > 0) {
-                indexReLlamado = this.index - 1;
+        // if (this.index <= turnosSinAtender.length) {
+        //     let indexReLlamado;
+        //     if (this.index > 0) {
+        //         indexReLlamado = this.index - 1;
 
-            } else {
-                indexReLlamado = this.index;
-            }
-            this.dniLlamado = turnosSinAtender[indexReLlamado].paciente.documento;
+        //     } else {
+        //         indexReLlamado = this.index;
+        //     }
+        //     this.dniLlamado = turnosSinAtender[indexReLlamado].paciente.documento;
 
-            let turnoProximo = {
-                horaInicio: turnosSinAtender[indexReLlamado].horaInicio,
-                paciente: turnosSinAtender[indexReLlamado].paciente,
-                horaLlamada: new Date(),
-                profesional: this.agendaSeleccionada.profesionales[0],
-                tipoPrestacion: turnosSinAtender[indexReLlamado].tipoPrestacion,
-                espacioFisico: this.agendaSeleccionada.espacioFisico
-            };
-
-            this.servicioTurnero.post(turnoProximo).subscribe();
+        //     let turnoProximo = {
+        //         horaInicio: turnosSinAtender[indexReLlamado].horaInicio,
+        //         paciente: turnosSinAtender[indexReLlamado].paciente,
+        //         horaLlamada: new Date(),
+        //         profesional: this.agendaSeleccionada.profesionales[0],
+        //         tipoPrestacion: turnosSinAtender[indexReLlamado].tipoPrestacion,
+        //         espacioFisico: this.agendaSeleccionada.espacioFisico
+        //     };
+        this.dniLlamado = this.ultimoLlamado.paciente.documento;
+            this.servicioTurnero.post(this.ultimoLlamado).subscribe();
 
             setTimeout(() => {
                 this.dniLlamado = null;
             }, 2200);
 
 
-        }
+
 
     }
+
 
 }
 
