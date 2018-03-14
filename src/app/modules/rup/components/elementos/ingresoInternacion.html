@@ -1,29 +1,29 @@
-<ng-container *ngIf="!soloValores && registro">
+<ng-container *ngIf="!soloValores && registro.valor">
     <div class="row">
         <div class="col-6" *ngIf="situacionesLaborales">
-            <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="regitro.valor.informeIngreso.situacionLaboral" name="situacionLaboral"
+            <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="registro.valor.informeIngreso.situacionLaboral" name="situacionLaboral"
                 [data]="situacionesLaborales" placeholder="Seleccione... ">
             </plex-select>
         </div>
         <div class="col-6 ">
-            <plex-select [required]="true" label="Ocupación habitual " [(ngModel)]="regitro.valor.informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
-                [data]="ocupaciones" placeholder="Seleccione... " labelField="nombre">
+            <plex-select [required]="true" label="Ocupación habitual " [(ngModel)]="registro.valor.informeIngreso.ocupacionHabitual"
+                name="ocupacionHabitual" [data]="ocupaciones" placeholder="Seleccione... " labelField="nombre">
             </plex-select>
         </div>
     </div>
     <div class="row ">
         <div class="col-4 ">
-            <plex-select [required]="true" [(ngModel)]="regitro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
                 placeholder="Seleccione..." label="Nivel instrucción">
             </plex-select>
         </div>
         <div class="col-4 ">
-            <plex-select [required]="true " [(ngModel)]="regitro.valor.informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado "
+            <plex-select [required]="true " [(ngModel)]="registro.valor.informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado "
                 placeholder="Seleccione... " label="Asociado a ">
             </plex-select>
         </div>
         <div class="col-4 ">
-            <plex-select [(ngModel)]="regitro.valor.informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
+            <plex-select [(ngModel)]="registro.valor.informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
                 label="Obra Social ">
             </plex-select>
         </div>
@@ -31,24 +31,24 @@
 
     <div class="row ">
         <div class="col-4 ">
-            <plex-datetime type="date" [(ngModel)]="regitro.valor.informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
+            <plex-datetime type="date" [(ngModel)]="registro.valor.informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
                 name="fechaIngreso " label="Fecha Ingreso">
             </plex-datetime>
         </div>
         <div class="col-4 ">
-            <plex-datetime type="time" [(ngModel)]="regitro.valor.informeIngreso.horaIngreso " [required]="true" name="horaIngreso "
+            <plex-datetime type="time" [(ngModel)]="registro.valor.informeIngreso.horaIngreso " [required]="true" name="horaIngreso "
                 label="Hora Ingreso ">
             </plex-datetime>
         </div>
         <div class="col-4 ">
-            <plex-select [required]="true " [(ngModel)]="regitro.valor.informeIngreso.origen " name="origen
+            <plex-select [required]="true " [(ngModel)]="registro.valor.informeIngreso.origen " name="origen
                     " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
             </plex-select>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="regitro.valor.informeIngreso.motivo">
+            <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="registro.valor.informeIngreso.motivo">
             </plex-text>
         </div>
     </div>

@@ -23,6 +23,7 @@ export class HudsBusquedaComponent implements OnInit {
     hallazgosCronicosAux: any[];
     hallazgosNoActivosAux: any;
     filtroActual: any = 'todos';
+    public loading = false;
 
     @Input() paciente: any;
     @Input() prestacionActual: any;
