@@ -222,8 +222,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                         paciente: {},
                         profesional: {},
                         organizacion: {},
-                        profesionalesDestino: {},
-                        organizacionDestino: {},
                         turno: null
                     },
                     estados: [
@@ -267,8 +265,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 paciente: {},
                 profesional: {},
                 organizacion: {},
-                profesionalesDestino: {},
-                organizacionDestino: {},
                 turno: null
             },
             estados: [
