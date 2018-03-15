@@ -34,7 +34,7 @@
                                                     </span>
                                                 </div>
                                                 <div class="content">
-                                                    <ng-container *ngIf="elemento.concepto.conceptId == 721915006 || elemento.concepto.conceptId == 308540004 || prestacion.estados[prestacion.estados.length - 1].tipo == 'validada'">
+                                                    <ng-container *ngIf="elemento.concepto.conceptId == 721915006 || prestacion.estados[prestacion.estados.length - 1].tipo == 'validada'">
                                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                                             [registro]="elemento" [soloValores]="true"></rup>
                                                     </ng-container>
@@ -87,62 +87,7 @@
                             </div>
                         </div>
                     </li>
-                    <li>
-                        <div class="rup-card mini procedimiento">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle p-0 pt-1">
-                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                </div>
 
-                                <div class="rup-border">
-
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
-                                            <div class="p-0 pl-2">
-                                                <label>Valoración Inicial Enfermería</label>
-                                            </div>
-                                        </div>
-                                        <div class=" col-6 p-0 m-0 ">
-                                            <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button class="btn btn-sm btn-primary
-                                                    btn-icon-rup p-0 ">
-                                                    <i class="mdi mdi-plus "></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="rup-card mini procedimiento">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle p-0 pt-1">
-                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                </div>
-
-                                <div class="rup-border">
-
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
-                                            <div class="p-0 pl-2">
-                                                <label>Valoración Inicial Médica</label>
-                                            </div>
-                                        </div>
-                                        <div class=" col-6 p-0 m-0 ">
-                                            <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button class="btn btn-sm btn-primary
-                                                        btn-icon-rup p-0 ">
-                                                    <i class="mdi mdi-plus "></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                     <li>
                         <div class="rup-card mini procedimiento">
                             <div class="rup-header">
@@ -201,63 +146,6 @@
                     </li>
 
 
-                    <li *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'">
-                        <div class="rup-card mini procedimiento">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle p-0 pt-1">
-                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                </div>
-
-                                <div class="rup-border">
-
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
-                                            <div class="p-0 pl-2">
-                                                <label>Validar la prestación</label>
-                                            </div>
-                                        </div>
-                                        <div class=" col-6 p-0 m-0 ">
-                                            <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button (click)="validar()" class="btn btn-sm btn-primary
-                                                                btn-icon-rup p-0 ">
-                                                    <i class="mdi mdi-plus "></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <li *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo == 'validada'">
-                        <div class="rup-card mini procedimiento">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle p-0 pt-1">
-                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                                </div>
-
-                                <div class="rup-border">
-
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
-                                            <div class="p-0 pl-2">
-                                                <label>Romper la validación</label>
-                                            </div>
-                                        </div>
-                                        <div class=" col-6 p-0 m-0 ">
-                                            <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button (click)="romperValidacion()" class="btn btn-sm btn-primary
-                                                                btn-icon-rup p-0 ">
-                                                    <i class="mdi mdi-plus "></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
                 </ul>
             </plex-box>
         </div>
@@ -267,9 +155,17 @@
 </section>
 <footer>
 
-    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'" label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}"
+    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'" label="GUARDAR {{prestacion?.solicitud?.tipoPrestacion?.term}}"
         (click)="guardarPrestacion()" type="success" class="float-right"></plex-button>
+    &nbsp;
+    <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'"
+        label="VALIDAR {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="validar()" type="success" class="float-right"></plex-button>
 
+    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" label="Romper validación {{prestacion?.solicitud?.tipoPrestacion?.term}}"
+        (click)="romperValidacion()" type="danger" class="float-right"></plex-button>
+
+    <plex-button class="float-left" type="primary" label="ir al mapa de camas" (click)="cancelar()">
+    </plex-button>&nbsp;&nbsp;
     <plex-button class="float-left" type="danger" label="CANCELAR" (click)="cancelar()">
     </plex-button>
 

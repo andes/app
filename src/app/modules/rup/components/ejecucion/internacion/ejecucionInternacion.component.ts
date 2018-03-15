@@ -30,6 +30,8 @@ export class EjecucionInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
 
+    public mostrarValidacion = false;
+
     public ocupaciones = [];
     public obrasSociales = [];
     public situacionesLaborales = [];
@@ -65,6 +67,7 @@ export class EjecucionInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         obraSocial: null
     };
+
     public egreso = {
         conceptId: '58000006',
         term: 'alta del paciente',
@@ -113,7 +116,7 @@ export class EjecucionInternacionComponent implements OnInit {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
             });
-
+            this.comprobarEgresoParaValidar();
         });
     }
 
@@ -124,7 +127,21 @@ export class EjecucionInternacionComponent implements OnInit {
         this.router.navigate(['mapa-de-camas']);
     }
 
+    comprobarEgresoParaValidar() {
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.egreso.conceptId);
 
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+            if (egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+                this.mostrarValidacion = true;
+            } else {
+                this.mostrarValidacion = false;
+            }
+        } else {
+            this.mostrarValidacion = false;
+        }
+    }
 
     ejecutarConcepto(snomedConcept) {
         let resultado;
@@ -165,7 +182,8 @@ export class EjecucionInternacionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            this.router.navigate(['mapa-de-camas']);
+            this.comprobarEgresoParaValidar();
+            // this.router.navigate(['mapa-de-camas']);
         });
     }
 
