@@ -46,8 +46,16 @@
                         <div class="detalle">Vea el estado del mapa de camas<br />de los distintos servicios de la organización</div>
                     </div>
                 </div>
+                <div *ngIf="solicitudes" class="col-4">
+                    <div class="boton color-salmon" routerLink="/solicitudes">
+                        <i class="icono mdi mdi-open-in-app"></i>
+                        <div class="titulo">Solicitudes</div>
+                        <div class="subtitulo">Modulo de Solicitudes</div>
+                        <div class="detalle">Permite el manejo de <br />solicitudes de turnos</div>
+                    </div>
+                </div>
             </div>
-
+            <!-- mdi mdi-open-in-app -->
             <div *ngIf="denied" class="row">
                 <div class="col">
                     <div class="boton color-amarillo" >

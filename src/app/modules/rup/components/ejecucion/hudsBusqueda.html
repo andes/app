@@ -137,7 +137,7 @@
 
             <!-- HALLAZGOS CRÓNICOS ONLY -->
             <div *ngIf="filtroActual === 'trastorno' || filtroActual === 'todos'" class="vista-titulo">
-                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's crónicos' : 'Crónicos'}}
+                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's crónicos' : 'Trastornos crónicos'}}
                 <div *ngIf="hallazgosCronicos.length > 0" class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'crónicos')">
                         <i class="mdi mdi-calendar-clock"></i>
@@ -180,7 +180,6 @@
                                             </div>
                                         </div>
 
-
                                         <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="hallazgo.evoluciones">
@@ -201,7 +200,7 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="filtroActual === 'trastorno' && hallazgosCronicos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : '' }} crónicos</div>
+            <div *ngIf="(filtroActual === 'trastorno' || filtroActual === 'todos') && hallazgosCronicos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : 'trastornos' }} crónicos</div>
 
             <!-- HALLAZGOS ACTIVOS ONLY -->
             <div class="vista-titulo">
@@ -309,7 +308,6 @@
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-7 p-0 m-0 hover" (click)="devolverRegistrosHuds(problema, 'hallazgo')">
                                             <div class="p-0 pl-2">
-
                                                 {{ problema.concepto.term }}
                                                 <br>
                                                 <ng-container *ngIf="problema.evoluciones">

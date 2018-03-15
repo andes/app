@@ -4,10 +4,10 @@ import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { EstadosAgenda } from './../../enums';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { environment } from './../../../../environment';
+import { environment } from './../../../../../environments/environment';
 import * as moment from 'moment';
 import { SmsService } from './../../../../services/turnos/sms.service';
-import { TurnoService } from './../../../../services/turnos/turno.service'
+import { TurnoService } from './../../../../services/turnos/turno.service';
 @Component({
     selector: 'suspender-agenda',
     templateUrl: 'suspender-agenda.html'
@@ -33,7 +33,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
     /**
      * Array con todos los turnos de la agenda.
-     * 
+     *
      * @memberof SuspenderAgendaComponent
      */
     public turnos = [];
