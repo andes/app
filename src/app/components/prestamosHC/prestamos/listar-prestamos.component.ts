@@ -13,7 +13,8 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'app-listar-prestamos',
-    templateUrl: './listar-prestamos.component.html'
+    templateUrl: './listar-prestamos.component.html',
+    styleUrls: ['../prestamos-hc.scss']
 })
 
 export class ListarPrestamosComponent implements OnInit {
@@ -49,11 +50,19 @@ export class ListarPrestamosComponent implements OnInit {
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
+    constructor(
+        public prestamosService: PrestamosService,
+        public servicioPrestacion: TipoPrestacionService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public servicioProfesional: ProfesionalService,
+        public auth: Auth) {
+    }
+
     ngOnInit() {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
         this.filters.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.filters.fechaHasta = moment(this.fechaHasta).endOf('day');;
+        this.filters.fechaHasta = moment(this.fechaHasta).endOf('day');
         this.getCarpetas({}, null);
     }
 
@@ -92,7 +101,6 @@ export class ListarPrestamosComponent implements OnInit {
                 this.filters['idEspacioFisico'] = '';
             }
         }
-
         if (filter === 'estado') {
             this.filters['estado'] = value.nombre;
         }
@@ -148,7 +156,7 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{nombre:'En Archivo', valor:'En Archivo'},{nombre:'Prestada', valor:'Prestada'}];
+        let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
         event.callback(listaEstados);
     }
 
@@ -167,21 +175,6 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     onCarpeta(value) {
-        console.log(value);
-        if (value !== undefined) {
-            this.carpetas =  this.carpetas.filter(function(el) {
-                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
-            });
-            this.recargarSolicitudesEmit.emit(true);
-        }
-    }
-
-    constructor(
-        public prestamosService: PrestamosService,
-        public servicioPrestacion: TipoPrestacionService,
-        public servicioEspacioFisico: EspacioFisicoService,
-        public servicioProfesional: ProfesionalService,
-        public auth: Auth) {
-
+        this.getCarpetas({}, null);
     }
 }

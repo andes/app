@@ -13,7 +13,8 @@ import * as moment from 'moment';
 
 @Component({
     selector: 'app-listar-solicitudes',
-    templateUrl: './listar-solicitudes.component.html'
+    templateUrl: './listar-solicitudes.component.html',
+    styleUrls: ['../prestamos-hc.scss']
 })
 
 export class ListarSolicitudesComponent implements OnInit {
@@ -35,10 +36,9 @@ export class ListarSolicitudesComponent implements OnInit {
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
-    
 
     public _listarCarpetas;
-    
+
     get listaCarpetasInput(): any {
         return this._listarCarpetas;
     }
@@ -53,16 +53,24 @@ export class ListarSolicitudesComponent implements OnInit {
     get recargar(): any {
         return;
     }
-    
+
     // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+
+    constructor(
+        public prestamosService: PrestamosService,
+        public servicioPrestacion: TipoPrestacionService,
+        public servicioEspacioFisico: EspacioFisicoService,
+        public servicioProfesional: ProfesionalService,
+        public auth: Auth) {
+    }
 
     ngOnInit() {
         this.fechaDesde = new Date();
         this.fechaHasta = new Date();
         this.filters.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.filters.fechaHasta = moment(this.fechaHasta).endOf('day');;
+        this.filters.fechaHasta = moment(this.fechaHasta).endOf('day');
         this.getCarpetas({}, null);
     }
 
@@ -105,6 +113,8 @@ export class ListarSolicitudesComponent implements OnInit {
         if (filter === 'estado') {
             this.filters['estado'] = value.nombre;
         }
+
+        this.filters['mostrarPrestamos'] = true;
 
         this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
@@ -157,7 +167,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{nombre:'En Archivo', valor:'En Archivo'},{nombre:'Prestada', valor:'Prestada'}];
+        let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
         event.callback(listaEstados);
     }
 
@@ -172,20 +182,6 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     onCarpeta(value) {
-        if (value !== undefined) {
-            this.carpetas =  this.carpetas.filter(function(el) {
-                return el.datosPrestamo.turno.id !== value.datosPrestamo.turno.id;
-            });
-            this.recargarPrestamosEmit.emit(true);
-        }
-    }
-
-    constructor(
-        public prestamosService: PrestamosService,
-        public servicioPrestacion: TipoPrestacionService,
-        public servicioEspacioFisico: EspacioFisicoService,
-        public servicioProfesional: ProfesionalService,
-        public auth: Auth) {
-
+        this.getCarpetas({}, null);
     }
 }

@@ -17,11 +17,17 @@ export class DevolverHcComponent implements OnInit {
     devolverHC: any = {
         estado: '',
         observacionesDevolucion: ''
-    }
+    };
     private _carpeta: any;
     prestamo: any;
 
     public estadosDevolucion = enumToArray(EstadosDevolucionCarpetas);
+
+    constructor(
+        public plex: Plex,
+        public prestamosService: PrestamosService,
+        public auth: Auth) {
+    }
 
     ngOnInit() {
 
@@ -36,14 +42,14 @@ export class DevolverHcComponent implements OnInit {
     }
 
     save(event) {
-        if(event.estado !== '') {
+        if (event.estado !== '') {
             event.idAgenda = this.prestamo.datosPrestamo.agendaId;
             event.idTurno = this.prestamo.datosPrestamo.turno.id;
             event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
             event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
             event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisicos;
             event.organizacion = this.auth.organizacion;
-            
+
             this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
                 this._carpeta = carpeta;
                 this.plex.alert('La Carpeta se devolvió correctamente');
@@ -55,9 +61,5 @@ export class DevolverHcComponent implements OnInit {
 
     cancel() {
         this.cancelDevolverEmit.emit(false);
-    }
-
-    constructor(public plex: Plex, public prestamosService: PrestamosService, public auth: Auth) {
-
     }
 }

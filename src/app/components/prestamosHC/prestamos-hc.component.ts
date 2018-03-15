@@ -5,7 +5,8 @@ import { PrestarHcComponent } from './solicitudes/prestar-hc.component';
 
 @Component({
     selector: 'app-prestamos-hc',
-    templateUrl: './prestamos-hc.component.html'
+    templateUrl: './prestamos-hc.component.html',
+    styleUrls: ['./prestamos-hc.scss']
 })
 
 export class PrestamosHcComponent implements OnInit {
@@ -13,7 +14,8 @@ export class PrestamosHcComponent implements OnInit {
     recargaPrestamos: any = false;
     recargaSolicitudes: any = false;
     listaCarpetas: any;
-    // public recargarSolicitudes;
+
+    constructor() { }
 
     ngOnInit() {
 
@@ -26,6 +28,4 @@ export class PrestamosHcComponent implements OnInit {
     recargarSolicitudes(event) {
         this.recargaSolicitudes = true;
     }
-
-    constructor() { }
 }

@@ -42,6 +42,12 @@ export class PrestarHcComponent implements OnInit {
         observacionesPrestamo: ''
     };
 
+    constructor(
+        public plex: Plex,
+        public prestamosService: PrestamosService,
+        public auth: Auth) {
+    }
+
     ngOnInit() {
 
     }
@@ -65,8 +71,5 @@ export class PrestarHcComponent implements OnInit {
     cancel() {
         this.cancelPrestarEmit.emit(false);
     }
-
-    constructor(public plex: Plex, public prestamosService: PrestamosService, public auth: Auth) {
-
-    }
 }
+
