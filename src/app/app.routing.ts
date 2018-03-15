@@ -65,6 +65,9 @@ import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -107,6 +110,9 @@ const appRoutes: Routes = [
 
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
+
+  // Préstamos HC
+  { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },

@@ -680,7 +680,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (this.idAgenda) {
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
-                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)){
+                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
                     cambios = {
                         op: 'noAsistio',
                         turnos: [this.prestacion.solicitud.turno]
