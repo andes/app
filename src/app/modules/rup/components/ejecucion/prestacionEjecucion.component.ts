@@ -677,13 +677,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
-            if (this.idAgenda && this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+            if (this.idAgenda) {
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
-                let cambios = {
-                    op: 'noAsistio',
-                    turnos: [this.prestacion.solicitud.turno]
-                };
-
+                let cambios;
+                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+                    cambios = {
+                        op: 'noAsistio',
+                        turnos: [this.prestacion.solicitud.turno]
+                    };
+                } else {
+                    cambios = {
+                        op: 'darAsistencia',
+                        turnos: [this.prestacion.solicitud.turno]
+                    };
+                }
                 this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
             }
 

@@ -1,34 +1,3 @@
-<!-- <div class="row mt-1">
-    <div class="col">
-
-        <div class="menu-huds">
-
-            <span>
-                <button class="btn btn-hallazgo btn-sm m-0" (click)="actualizarVista('hallazgo')" [ngClass]="{'active': vista === 'hallazgo'}">
-                    <span>HALLAZGOS</span>
-                </button>
-            </span>
-            <span>
-                <button class="btn btn-plan btn-sm m-0" (click)="actualizarVista('prestaciones')" [ngClass]="{'active': vista === 'prestaciones'}">
-                    <span>PRESTACIONES</span>
-                </button>
-            </span>
-            <span>
-                <button class="btn btn-producto btn-sm m-0" (click)="actualizarVista('productos')" [ngClass]="{'active': vista === 'productos'}">
-                    <span>MEDICAMENTOS</span>
-                </button>
-            </span>
-
-        </div>
-    </div>
-</div> -->
-<!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
-    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar> -->
-
-<!-- <div class="buscador">
-    <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
-</div> -->
-
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador">
     <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
@@ -42,8 +11,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
-                        <button (click)="filtroBuscador('todos')" [ngClass]="{'active': filtroActual === 'todos'}" [disabled]="getCantidadResultados('todos') === 0"
-                            class="btn btn-block p-0 btn-todos">
+                        <button (click)="filtroBuscador('todos')" [ngClass]="{'active': filtroActual === 'todos'}" class="btn btn-block p-0 btn-todos">
                             <i class="icon icon-rup-semantic-todos"></i>
                             ACTIVOS
                         </button>
@@ -51,8 +19,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right" [ngClass]="{'active': filtroActual === 'hallazgo'}">{{ getCantidadResultados('hallazgo')}}</small>
 
-                        <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}" [disabled]="getCantidadResultados('hallazgo') === 0"
-                            class="btn btn-block p-0 btn-hallazgo">
+                        <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}" class="btn btn-block p-0 btn-hallazgo">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
@@ -61,8 +28,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right" [ngClass]="{'active': filtroActual === 'trastorno'}">{{ getCantidadResultados('trastorno')}}</small>
 
-                        <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}" [disabled]="getCantidadResultados('trastorno') === 0"
-                            class="btn btn-block p-0 btn-trastorno">
+                        <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}" class="btn btn-block p-0 btn-trastorno">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
@@ -71,8 +37,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('procedimiento')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimiento'}">{{ getCantidadResultados('procedimiento')}}</small>
 
-                        <button (click)="filtroBuscador('procedimiento')" [ngClass]="{'active': filtroActual === 'procedimiento'}" [disabled]="getCantidadResultados('procedimiento') === 0"
-                            class="btn btn-block p-0 btn-procedimiento">
+                        <button (click)="filtroBuscador('procedimiento')" [ngClass]="{'active': filtroActual === 'procedimiento'}" class="btn btn-block p-0 btn-procedimiento">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROC.
                         </button>
@@ -80,8 +45,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
-                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="getCantidadResultados('planes') === 0">
+                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}">
                             <i class="icon icon-rup-semantic-plan"></i>
                             PLANES
                         </button>
@@ -90,8 +54,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right" [ngClass]="{'active': filtroActual === 'producto'}">{{ getCantidadResultados('producto')}}</small>
 
-                        <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}" [disabled]="getCantidadResultados('producto') === 0"
-                            class="btn btn-block p-0 btn-producto">
+                        <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}" class="btn btn-block p-0 btn-producto">
                             <i class="icon icon-rup-semantic-producto"></i>
                             PRODUCTOS
                         </button>
@@ -100,8 +63,7 @@
                     <li class="">
                         <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
 
-                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" [disabled]="getCantidadResultados('otros') === 0"
-                            class="btn btn-block p-0 btn-otro">
+                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" class="btn btn-block p-0 btn-otro">
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                             ELEM. REG.
                         </button>
@@ -113,19 +75,6 @@
         <div>
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-
-            <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
-                <!-- <ng-container *ngIf="searchTerm">
-                    No se han encontrado resultados.
-                </ng-container> -->
-
-                <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
-
-                <p class="text-center" *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes')">
-                    Intentar con el
-                    <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
-                </p>
-            </ng-container>
         </div>
     </ng-container>
 </div>

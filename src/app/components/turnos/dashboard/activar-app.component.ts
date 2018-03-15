@@ -73,15 +73,18 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                 if (!data.account) {
                     // No posee cuenta
                     this.checkPass = true;
+
                 } else {
                     if (!data.account.activacionApp) {
                         this.message = 'Cuenta pendiente de activación por el usuario';
                         this.hideButtonResend = false;
+                        this.checkPass = true;
                     } else {
                         this.message = 'Cuenta ya activada';
+                        this.checkPass = false;
+                        this.hideButtonResend = true;
                     }
                     this.hideButton = true;
-                    this.checkPass = false;
                     this.email = data.account.email;
                     this.celular = data.account.telefono;
                 }
@@ -128,8 +131,12 @@ export class ActivarAppComponent implements OnInit, OnChanges {
             };
 
 
-            if (!this.checkPass) {
-                this.appMobile.reenviar(this.paciente.id).subscribe((resultado) => {
+            if (this.hideButton && !this.hideButtonResend) {
+                let contacto = {
+                    email: this.email,
+                    telefono: this.celular
+                };
+                this.appMobile.reenviar(this.paciente.id, { contacto }).subscribe((resultado) => {
                     if (resultado.status === 'OK') {
                         this.plex.alert('El código de activación ha sido reenviado.');
                     }
@@ -140,6 +147,11 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     telefono: this.celular
                 };
                 this.appMobile.create(this.paciente.id, contacto).subscribe((datos) => {
+                    this.servicePaciente.patch(this.paciente.id, cambios).subscribe(resultado => {
+                        if (resultado) {
+                            this.plex.toast('info', 'Datos del paciente actualizados');
+                        }
+                    });
                     if (datos.error) {
                         if (datos.error === 'email_not_found') {
                             this.plex.alert('El paciente no tiene asignado un email.');
@@ -149,8 +161,9 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                         }
                     } else {
                         this.plex.alert('Se ha enviado el código de activación al paciente');
-                        this.checkPass = false;
+                        this.checkPass = true;
                         this.hideButton = true;
+                        this.hideButtonResend = false;
                         this.message = 'Cuenta pendiente de activación por el usuario';
 
                     }

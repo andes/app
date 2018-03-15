@@ -47,11 +47,11 @@
                                                 <p class="card-text" *ngIf="agenda.profesionales?.length > 0">Profesionales: {{ agenda.profesionales | enumerar:['apellido', 'nombre']
                                                     }}
                                                 </p>
+                                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
                                                 <br>
                                                 <button class="btn btn-sm btn-primary" (click)="toggleExpandir(indiceAgenda)">
                                                     <i class="mdi mdi-calendar-clock"></i> ver horarios
                                                 </button>
-                                                <p class="card-text text-danger" *ngIf="agenda.profesionales?.length === 0">Sin profesional asignado</p>
                                                 <div *ngFor="let bloque of agenda.bloques; let indiceBloque = index" [ngClass]="{'d-none': !agendasExpandidas[indiceAgenda]}">
                                                     <div>
                                                         <div *ngFor="let turno of bloque.turnos; let indiceTurno = index">

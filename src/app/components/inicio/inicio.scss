@@ -5,6 +5,7 @@ $color-violeta: #9B2A79;
 $color-rosa: #002B3A;
 $color-amarillo: #666600;
 $color-salmon: #E2917F;
+$color-coral: #ce803e;
 //
 // Clases
 .logo {
@@ -75,5 +76,11 @@ $color-salmon: #E2917F;
     }
     &.color-salmon:hover {
         background: darken($color-salmon, 10%);
+    }
+    &.color-coral {
+        background: $color-coral;
+    }
+    &.color-coral:hover {
+        background: darken($color-coral, 10%);
     }
 }

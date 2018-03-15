@@ -87,7 +87,11 @@ export class AgregarSobreturnoComponent implements OnInit {
         };
         this.showSobreturno = false;
         this.pacientesSearch = true;
+        if (this.agenda.tipoPrestaciones.length === 1) {
+            this.tipoPrestacion = this.agenda.tipoPrestaciones[0];
+        }
     }
+
 
     afterCreateUpdate(paciente) {
         this.showCreateUpdate = false;
