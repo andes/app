@@ -532,7 +532,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
-            console.log('tipoPrestacion ', this.opciones);
 
         this.turnoDoble = false;
         if (this.paciente) {
