@@ -20,4 +20,3 @@ export class ObraSocialService {
         return this.server.get(this.url + '/puco/' + dni);
     }
 }
-//
