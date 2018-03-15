@@ -27,6 +27,19 @@ export class ElementosRUPService {
     // BehaviorSubject permite que el subscribe se ejecute con el ultimo valor (aunque no haya cambios)
     public ready = new BehaviorSubject<boolean>(false);
 
+    /**
+     * Este objeto se llena con el valor de params de un elementoRUP,
+     * según cómo esté definido en la colección dentro de sus "requeridos"
+     * Su estructura es
+     * 'conceptId': {
+            titulo: 'My título',
+            refsetId: 'conceptId',
+            tipoSelect: 'radio' | 'select',
+            multiple: true | false
+        }
+     */
+    public coleccionRetsetId = {};
+
     constructor(private server: Server) {
         // Precachea la lista completa de elementos RUP
         this.server.get(url).subscribe((data: IElementoRUP[]) => {
@@ -117,6 +130,7 @@ export class ElementosRUPService {
      */
     buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
         // Busca el elemento RUP que implemente el concepto
+
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {
@@ -138,7 +152,7 @@ export class ElementosRUPService {
      * Metodo get. Trae el objeto elementoRup.
      * @param {any} params Opciones de busqueda
      */
-    guiada (id): Observable<IElementoRUP[]> {
+    guiada(id): Observable<IElementoRUP[]> {
         if (this.cacheBusquedaGuidada[id]) {
             return new Observable((observer) => {
                 observer.next(this.cacheBusquedaGuidada[id]);
@@ -148,4 +162,16 @@ export class ElementosRUPService {
             return this.server.get(url + '/' + id + '/guiada', { showError: true });
         }
     }
+
+    selectPorRefsetId(concepto) {
+        // console.log(this.coleccionRetsetId[concepto.conceptId]);
+        if (this.coleccionRetsetId[concepto.conceptId]) {
+            return this.coleccionRetsetId[concepto.conceptId];
+        }
+        return null;
+    }
+
+
+
+
 }

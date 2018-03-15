@@ -197,7 +197,6 @@
                                             </plex-button>
 
                                             <plex-button *ngIf="agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
-
                                                 label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacion(turno.paciente, turno.tipoPrestacion, turno.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion)"
@@ -373,16 +372,15 @@
 <!--Footer-->
 <footer>
     <div class="row">
-        <div class="col-6">
+        <div class="col-4">
 
         </div>
-        <div class="col-6">
+        <div class="col-8">
             <div class="row">
-                <div class="col-6">
-                    <plex-button label="VER LA HUDS DE UN PACIENTE" type="primary" class="float-right" (click)="verHuds()"></plex-button>
-                </div>
-                <div class="col-6">
-                    <plex-button label="REGISTRAR PRESTACION FUERA DE AGENDA" type="primary" class="float-right" (click)="crearPrestacion()"></plex-button>
+                <div class="col-12">
+                    <plex-button label="HUDS DE UN PACIENTE" type="primary" class="float-right mr-1" (click)="verHuds()"></plex-button>
+                    <plex-button label="PACIENTE FUERA DE AGENDA" type="primary" class="float-right mr-1" (click)="crearPrestacion('fueraAgenda')"></plex-button>
+                    <plex-button label="PACIENTE AUTOCITADO" type="primary" class="float-right mr-1" (click)="crearPrestacion('autocitar')"></plex-button>
                 </div>
             </div>
         </div>

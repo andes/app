@@ -22,6 +22,7 @@ import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
 import { IProvincia } from './../../interfaces/IProvincia';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'organizacion-create-update',
@@ -38,13 +39,13 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     localidadesNeuquen: any[];
-
+    
     private paisArgentina = null;
     private provinciaNeuquen = null;
     private barrioNulleado = null;
     public servicios: any;
     // con esta query de snomed trae todos los servicios.
-    private expression = '<<310138009';
+    private expression = '<<224891009';
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -97,7 +98,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         direccion: this.direccion,
     };
 
-    organizacionModel: IOrganizacion = {
+    organizacionModel: any = {
         id: null,
         codigo: {
             sisa: '',
@@ -125,7 +126,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private BarrioService: BarrioService,
         private tipoEstablecimientoService: TipoEstablecimientoService,
         public plex: Plex, private server: Server,
-        public snomed: SnomedService
+        public snomed: SnomedService,
+        private router: Router,
     ) { }
 
     ngOnInit() {
@@ -286,5 +288,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             });
             $event.callback(this.servicios);
         });
+    }
+    routeCama() {
+        this.router.navigate(['/tm/organizacion/' + this.seleccion.id + '/cama']);
     }
 }

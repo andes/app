@@ -140,15 +140,25 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 this.paciente = paciente;
                             });
 
-                            // Busca el elementoRUP que implementa esta prestación
+                            // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+
+                            // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
+
+                            // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
+
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
                                     let registoExiste = this.prestacion.ejecucion.registros.find(registro => registro.concepto.conceptId === elementoRequerido.concepto.conceptId);
+
                                     if (!registoExiste) {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
+                                    } else if (registoExiste.id && registoExiste.valor) {
+                                        // Expandir sólo si no tienen algún valor
+                                        this.itemsRegistros[registoExiste.id].collapse = true;
                                     }
                                 }
                             }
@@ -175,16 +185,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     /**
-     * recorre los registros de una prestación que ya tiene registros en ejecucion
-     * y los carga el array itemsRegistros para colapsar y para los regsitros que se puedan relacionar (items).
+     * recorre los registros de una prestación que ya tiene registros en ejecución
+     * y los carga el array itemsRegistros para colapsar y para los registros que se puedan relacionar (items).
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
         if (this.prestacion) {
-            // recorremos los registros ya almacenados en la prestacion
+            // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
-                // Si el registro actual tiene registros vinvulados los "populamos"
+                // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                 }
@@ -427,7 +437,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.showVincular = true;
         }
 
-        // nos fijamos si el concepto ya aparece en los registros
+        // El concepto ya aparece en los registros?
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
         // si estamos cargando un concepto para una transformación de hall
         if (this.transformarProblema && this.registroATransformar) {
@@ -467,7 +477,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
-            this.colapsarPrestaciones('collapse');
+
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
             if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
@@ -512,12 +522,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                         }
                     });
 
+
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
                     registroDestino.relacionadoCon = [resultado];
                 }
             }
+
         }
     }
 
@@ -665,13 +677,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
-            if (this.idAgenda && this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+            if (this.idAgenda) {
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
-                let cambios = {
-                    op: 'noAsistio',
-                    turnos: [this.prestacion.solicitud.turno]
-                };
-
+                let cambios;
+                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+                    cambios = {
+                        op: 'noAsistio',
+                        turnos: [this.prestacion.solicitud.turno]
+                    };
+                } else {
+                    cambios = {
+                        op: 'darAsistencia',
+                        turnos: [this.prestacion.solicitud.turno]
+                    };
+                }
                 this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
             }
 
@@ -719,6 +738,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.ejecutarConcepto(e.dragData);
                 });
             }
+
         }
     }
 

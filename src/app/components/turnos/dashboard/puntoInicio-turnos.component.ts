@@ -11,7 +11,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-import { AgendaService } from '../../../services/turnos/agenda.service';
+// import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
@@ -44,12 +44,15 @@ export class PuntoInicioTurnosComponent implements OnInit {
     esEscaneado = false;
     textoPacienteSearch = '';
     resultadoCreate;
+    turnoArancelamiento: any;
+    showArancelamiento = false;
     private esOperacion = false;
 
 
     constructor(
         public servicePaciente: PacienteService,
-        public servicioAgenda: AgendaService, public auth: Auth,
+        // public servicioAgenda: AgendaService,
+        public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
         private plex: Plex) { }
@@ -58,6 +61,17 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
     }
 
+    showArancelamientoForm(turno) {
+        this.turnoArancelamiento = turno;
+        this.showDashboard = false;
+        this.showArancelamiento = true;
+
+    }
+
+    volverAPuntoInicio() {
+        this.showArancelamiento = false;
+        this.showDashboard = true;
+    }
     onPacienteSelected(paciente: IPaciente): void {
         // debugger
         this.paciente = paciente;

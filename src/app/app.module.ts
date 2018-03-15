@@ -31,6 +31,8 @@ import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
+import { DocumentosService } from './services/documentos.service';
+
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -45,10 +47,12 @@ import { TextFilterPipe } from './pipes/textFilter.pipe';
 import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
+import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
+import { OcupacionService } from './services/ocupacion/ocupacion.service';
 import { ProfesionalService } from './services/profesional.service';
 import { EspecialidadService } from './services/especialidad.service';
 import { BarrioService } from './services/barrio.service';
@@ -63,6 +67,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
+import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -72,6 +77,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
+import { ObraSocialService } from './services/obraSocial.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -109,14 +115,18 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
+import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
+import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
+import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
 import { HeaderPacienteComponent } from './components/paciente/headerPaciente.component';
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
+import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -156,6 +166,11 @@ import { ListaSolicitudTurnoVentanillaComponent } from './components/turnos/dash
 import { ListarTurnosComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-turnos.component';
 import { ListarCarpetasComponent } from './components/turnos/gestor-agendas/operaciones-agenda/listar-carpetas.component';
 import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico.component';
+import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
+import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
+import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
+import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
+
 
 // ... RUP
 import { RUPComponent } from './modules/rup/components/core/rup.component';
@@ -176,6 +191,7 @@ import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
+import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
@@ -202,6 +218,14 @@ import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
+import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
+import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
+import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 
 
 // Llaves
@@ -236,10 +260,23 @@ import { routing, appRoutingProviders } from './app.routing';
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
+// Mapa de camas
+import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
+import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
+import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
+import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
+import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
+
 export let RUPRegistry = {
+    'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
@@ -263,10 +300,16 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent
+    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
+    'IngresoInternacionComponent': IngresoInternacionComponent,
+    'EgresoInternacionComponent': EgresoInternacionComponent,
+    'PasesCamaComponent': PasesCamaComponent,
+    'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
+    'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
 
 let RUPComponentsArray = [
+    SelectPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
     FiltradoGlomerularComponent,
@@ -290,7 +333,14 @@ let RUPComponentsArray = [
     TensionArterialComponent,
     TensionDiastolicaComponent,
     TensionSistolicaComponent,
-    AdjuntarDocumentoComponent
+    AdjuntarDocumentoComponent,
+    IngresoInternacionComponent,
+    OtoemisionAcusticaDeOidoDerechoComponent,
+    OtoemisionAcusticaDeOidoIzquierdoComponent,
+    IniciarInternacionComponent,
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent,
+    PasesCamaComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -314,13 +364,14 @@ let RUPComponentsArray = [
     declarations: [
         AppComponent, InicioComponent, LoginComponent, SelectOrganizacionComponent,
         OrganizacionComponent, OrganizacionCreateUpdateComponent,
+        CamaCreateUpdateComponent, CamasListadoComponent,
         ProfesionalComponent, ProfesionalCreateUpdateComponent,
         ProfesionalCreateUpdateComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
-        FilterPermisos, EnumerarPipe, PluralizarPipe,
-        PlanificarAgendaComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
+        FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
+        PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
@@ -328,6 +379,7 @@ let RUPComponentsArray = [
         RUPComponent, LiberarTurnoComponent, SuspenderTurnoComponent, AgregarNotaTurnoComponent, AgregarNotaAgendaComponent,
         AgregarSobreturnoComponent, PanelAgendaComponent,
         CarpetaPacienteComponent,
+        ArancelamientoFormComponent,
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
@@ -342,13 +394,15 @@ let RUPComponentsArray = [
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
         ListarTurnosComponent, ListarCarpetasComponent,
-        MapaEspacioFisicoComponent,
+        MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
         PrestacionCrearComponent,
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
+
         HeaderPacienteComponent,
+        PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
@@ -356,7 +410,16 @@ let RUPComponentsArray = [
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
-        TabComponent
+        TabComponent,
+        MapaDeCamasComponent,
+        CamaComponent,
+        PrestamosHcComponent,
+        ListarSolicitudesComponent,
+        ListarPrestamosComponent,
+        PrestarHcComponent,
+        DevolverHcComponent,
+        CamaEstadoComponent,
+        OcuparCamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -369,6 +432,7 @@ let RUPComponentsArray = [
         Auth,
         RoutingGuard,
         OrganizacionService,
+        OcupacionService,
         ProvinciaService,
         TipoEstablecimientoService,
         EspecialidadService,
@@ -392,6 +456,7 @@ let RUPComponentsArray = [
         PrestacionesService,
         AdjuntosService,
         TipoPrestacionService,
+        ObraSocialService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
@@ -407,7 +472,11 @@ let RUPComponentsArray = [
         LogPacienteService,
         UsuarioService,
         PermisosService,
-        FrecuentesProfesionalService
+        FrecuentesProfesionalService,
+        DocumentosService,
+        CamasService,
+        PrestamosService,
+        ProcedimientosQuirurgicosService
 
     ]
 })

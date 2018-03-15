@@ -7,38 +7,69 @@
                     <div class="boton color-celeste" routerLink="/mpi">
                         <i class="icono mdi mdi-account-multiple-outline"></i>
                         <div class="titulo">MPI</div>
-                        <div class="subtitulo">Indice Maestro<br>de Pacientes</div>
-                        <div class="detalle">Optimiza el proceso de<br>identificación del paciente</div>
+                        <div class="subtitulo">Indice Maestro
+                            <br>de Pacientes</div>
+                        <div class="detalle">Optimiza el proceso de
+                            <br>identificación del paciente</div>
                     </div>
                 </div>
                 <div *ngIf="turnos==='gestor'" class="col-4">
                     <div class="boton color-violeta" routerLink="/citas/gestor_agendas">
                         <i class="icono mdi mdi-calendar"></i>
                         <div class="titulo">CITAS</div>
-                        <div class="subtitulo">Centro Inteligente<br>de Agendas &amp; Turnos</div>
-                        <div class="detalle">Mejora la accesibilidad de<br>pacientes a las prestaciones</div>
+                        <div class="subtitulo">Centro Inteligente
+                            <br>de Agendas &amp; Turnos</div>
+                        <div class="detalle">Mejora la accesibilidad de
+                            <br>pacientes a las prestaciones</div>
                     </div>
                 </div>
                 <div *ngIf="turnos==='inicioTurnos'" class="col-4">
                     <div class="boton color-violeta" routerLink="/puntoInicioTurnos">
                         <i class="icono mdi mdi-calendar"></i>
                         <div class="titulo">CITAS</div>
-                        <div class="subtitulo">Centro Inteligente<br>de Agendas &amp; Turnos</div>
-                        <div class="detalle">Mejora la accesibilidad de<br>pacientes a las prestaciones</div>
+                        <div class="subtitulo">Centro Inteligente
+                            <br>de Agendas &amp; Turnos</div>
+                        <div class="detalle">Mejora la accesibilidad de
+                            <br>pacientes a las prestaciones</div>
                     </div>
                 </div>
                 <div *ngIf="rup" class="col-4">
                     <div class="boton color-rosa" routerLink="/rup">
                         <i class="icono mdi mdi-contacts"></i>
                         <div class="titulo">HUDS</div>
-                        <div class="subtitulo">Historia Digital<br>de Salud</div>
-                        <div class="detalle">Registro universal<br>de prestaciones de pacientes</div>
+                        <div class="subtitulo">Historia Digital
+                            <br>de Salud</div>
+                        <div class="detalle">Registro universal
+                            <br>de prestaciones de pacientes</div>
                     </div>
                 </div>
             </div>
+
+            <!-- <div *ngIf="!denied" class="row mt-4">
+                <div *ngIf="mapaDeCamas" class="col-4">
+                    <div class="boton color-amarillo" routerLink="/mapa-de-camas">
+                        <i class="icono mdi mdi-hotel"></i>
+                        <div class="titulo">Acosta2</div>
+                        <div class="subtitulo">Mapa de camas</div>
+                        <div class="detalle">Vea el estado del mapa de camas
+                            <br />de los distintos servicios de la organización</div>
+                    </div>
+                </div>
+
+                <div *ngIf="prestamosHC" class="col-4">
+                    <div class="boton color-coral" routerLink="/prestamosHC">
+                        <i class="icono mdi mdi-history"></i>
+                        <div class="titulo">Prestamos HC</div>
+                        <div class="subtitulo">Prestamos HC</div>
+                        <div class="detalle">Agiliza el préstamo y devolución
+                            <br />de Historias Clínicas</div>
+                    </div>
+                </div>
+            </div> -->
+
             <div *ngIf="denied" class="row">
                 <div class="col">
-                    <div class="boton color-amarillo" >
+                    <div class="boton color-amarillo">
                         <i class="icono mdi mdi-alert"></i>
                         <div class="titulo">ATENCIÓN</div>
                         <div class="subtitulo">PERMISOS DE APLICACIONES</div>
@@ -46,6 +77,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </plex-box>
 </section>
