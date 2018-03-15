@@ -65,14 +65,16 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         // Si tienen turno, dejan de estar pendientes de turno y no se listan
         let params = {
             idPaciente: this.paciente.id,
-            tienePrestacionOrigen: 'no',
+            // tienePrestacionOrigen: 'no',
             tieneTurno: 'no',
-            estado: 'pendiente'
+            estado: ['pendiente', 'ejecucion']
         };
+
         // let options = {
         //     idPrestacionOrigen: '',
         //     turnos: []
         // }
+
         this.servicioPrestacion.get(params).subscribe(resultado => {
             this.solicitudesPrestaciones = resultado;
         });
