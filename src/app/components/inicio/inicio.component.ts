@@ -30,6 +30,7 @@ export class InicioComponent implements AfterViewInit {
     public rup = '';
     public mapaDeCamas = '';
     public solicitudes = '';
+    public prestamosHC = '';
     public denied = false;
     public accessList: any = [];
 
@@ -60,14 +61,17 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
-            if (1 === 1) {
-                // if (this.auth.getPermissions('mapaDeCamas:?').length > 0) {
+            if (this.auth.getPermissions('mapaDeCamas:?').length > 0) {
                 this.mapaDeCamas = 'mapaDeCamas';
                 this.denied = false;
             }
 
             if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';
+            }
+            
+            if (this.auth.getPermissions('prestamos:?').length > 0) {
+                this.prestamosHC = 'prestamosHC';
                 this.denied = false;
             }
 
