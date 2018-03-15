@@ -740,11 +740,11 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     this.pacientesSimilares = resultado;
 
                     // agregamos la condición de abajo para filtrar las sugerencias
-                    // cuando el pacienfe fue escaneado o ya estaba validado.
+                    // cuando el paciente fue escaneado o ya estaba validado.
                     if (this.escaneado || this.pacienteModel.estado === 'validado') {
-
                         this.pacientesSimilares = this.pacientesSimilares.filter(item => item.paciente.estado === 'validado');
                     }
+                    this.pacientesSimilares = this.pacientesSimilares.filter(item => item.match >= 0.88);
                     if (this.pacientesSimilares.length > 0 && !this.sugerenciaAceptada) {
                         // Nos quedamos todos los pacientes menos el mismo.
 
@@ -985,7 +985,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                             }).subscribe(() => { });
                                             this.seleccionarPacienteRelacionado(this.pacientesSimilares[0].paciente, true);
                                         } else {
-                                            if (this.PacientesRel[0].match >= 0.80 && this.PacientesRel[0].match < 0.94) {
+                                            if (this.PacientesRel[0].match >= 0.85 && this.PacientesRel[0].match < 0.94) {
                                                 this.logService.post('mpi', 'posibleDuplicado', {
                                                     pacienteDB: datoDB,
                                                     pacienteScan: pacienteEscaneado
