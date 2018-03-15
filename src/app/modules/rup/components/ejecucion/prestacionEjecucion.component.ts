@@ -668,11 +668,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
-        // this.prestacion.solicitud.organizacionDestino = { 
-        //     id: this.prestacion.solicitud.organizacionDestino.id, 
-        //     nombre: this.prestacion.solicitud.organizacionDestino.nombre
-        // };
-
         let params: any = {
             op: 'registros',
             solicitud: this.prestacion.solicitud,
