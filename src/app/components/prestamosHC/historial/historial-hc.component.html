@@ -1,0 +1,73 @@
+<!-- Filtros -->
+<div class="row">
+    <div class="{{verPrestar || verDevolver ? 'col-8' : 'col-4'}}">
+        <plex-text [(ngModel)]="nroCarpeta" name="nroCarpeta" label="Número de Carpeta" >
+        </plex-select>
+    </div>
+    
+    <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
+        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
+            class="fechas">
+        </plex-datetime>
+    </div>
+    <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
+        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
+            class="fechas">
+        </plex-datetime>
+    </div>
+    <!-- <div class="col-4">
+        <plex-select [(ngModel)]="paciente" (change)="getPaciente($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
+            label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
+            ngModelOptions="{standalone: true}">
+        </plex-select>
+    </div> -->
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Numero</th>
+            <th>Fecha</th>
+            <th>Estado</th>
+            <th>Responsables</th>
+            <th>Destino</th>
+            <th>Prestaciones</th>
+            <th>Historia Clínica</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
+            <td>
+                {{carpeta.fecha | date:'dd-MM-yyyy'}}
+            </td>
+            <td>{{carpeta.estado}}</td>
+            <td>
+                {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+            </td>
+            <td>
+                {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
+            </td>
+            <td>
+                {{carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
+            </td>
+            <td>
+                <b>
+                    {{carpeta.numero}} - {{carpeta.paciente.apellido}},
+                    {{carpeta.paciente.nombre}}
+                </b>
+                <br/> Documento:
+                <b>{{carpeta.paciente.documento}}</b>
+            </td>   
+            <td *ngIf="carpeta.estado == 'En archivo'">
+                <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
+                </plex-button>
+            </td>   
+            <td *ngIf="carpeta.estado == 'Prestada'">
+                <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
+                </plex-button>
+            </td>
+        </tr>
+
+    </tbody>
+</table>

@@ -29,6 +29,7 @@ export class InicioComponent implements AfterViewInit {
     public mpi = '';
     public rup = '';
     public mapaDeCamas = '';
+    public prestamosHC = '';
     public denied = false;
     public accessList: any = [];
 
@@ -62,6 +63,11 @@ export class InicioComponent implements AfterViewInit {
             if (1 === 1) {
             // if (this.auth.getPermissions('mapaDeCamas:?').length > 0) {
                 this.mapaDeCamas = 'mapaDeCamas';
+                this.denied = false;
+            }
+
+            if (this.auth.getPermissions('prestamos:?').length > 0) {
+                this.prestamosHC = 'prestamosHC';
                 this.denied = false;
             }
 
