@@ -8,7 +8,7 @@
                             <div class="clearfix">
                                 <div class="page-title float-left">Solicitudes de Carpetas</div>
                             </div>
-                            <!-- Filtros -->                
+                            <!-- Filtros -->
                             <div class="row">
                                 <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
                                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
@@ -25,7 +25,7 @@
                                         name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                     </plex-select>
                                 </div>
-                                <div class="{{verPrestar || verDevolver === 1 ? 'col-4' : 'col-2'}} text-right">
+                                <div class="{{verPrestar || verDevolver ? 'col-4' : 'col-2'}} text-right">
                                     <label>
                                         <!--Spacer-->&nbsp;</label>
                                     <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
@@ -45,7 +45,7 @@
                                 </div>
                                 <div class="col-4">
                                     <plex-select label='Estado' [(ngModel)]="estado" name="nombre" (change)="getCarpetas($event,'estado')" [required]="true" placeholder="Seleccione un estado..." [data]="estadosCarpeta" >
-                                    </plex-select>    
+                                    </plex-select>
                                 </div>
                             </div>
                         </header>
@@ -73,7 +73,7 @@
                                                 {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
                                             </b>
                                             <br/> Documento: <b>{{carpeta.paciente.documento}}</b>
-                                        </td>   
+                                        </td>
                                         <td>
                                             {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
                                         </td>
@@ -86,7 +86,7 @@
                                         <td *ngIf="carpeta.estado == 'En archivo'">
                                             <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
                                             </plex-button>
-                                        </td>   
+                                        </td>
                                         <td *ngIf="carpeta.estado == 'Prestada'">
                                                 <span class="badge-warning float-left">Prestada</span>
                                         </td>

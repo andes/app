@@ -9,22 +9,22 @@
                         </div>
                         <!-- Filtros -->
                         <div class="row">
-                            <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
+                            <div class="{{verDevolver ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
+                            <div class="{{  verDevolver ? 'col-6' : 'col-3'}}">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{verPrestar || verDevolver ? 'col-8' : 'col-4'}}">
+                            <div class="{{  verDevolver ? 'col-8' : 'col-4'}}">
                                 <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
                                     name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
-                            <div class="{{verPrestar || verDevolver === 1 ? 'col-4' : 'col-2'}} text-right">
+                            <div class="{{  verDevolver ? 'col-4' : 'col-2'}} text-right">
                                 <label>
                                     &nbsp;</label>
                                 <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
@@ -55,7 +55,7 @@
                                 <th>Responsables</th>
                                 <th>Observaciones</th>
                                 <th></th>
-                            </tr>   
+                            </tr>
                         </thead>
                         <tbody *ngIf="carpetas.length">
                             <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
@@ -68,7 +68,7 @@
                                         {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
                                     </b>
                                     <br/> Documento: <b>{{carpeta.paciente.documento}}</b>
-                                </td>   
+                                </td>
                                 <td>
                                     {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
                                 </td>
@@ -84,7 +84,7 @@
                                 <td *ngIf="carpeta.estado == 'En archivo'">
                                     <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
                                     </plex-button>
-                                </td>   
+                                </td>
                                 <td *ngIf="carpeta.estado == 'Prestada'">
                                     <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
                                     </plex-button>

@@ -8,7 +8,9 @@
         "start": "ng serve",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build:prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=prod --prod --aot=true",
+        "build:test": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=test"
     },
     "repository": {
         "type": "git",
@@ -67,6 +69,6 @@
         "ts-node": "~2.0.0",
         "tslint": "~4.4.2",
         "typescript": "^2.4.2",
-        "webpack": "^3.4.1"
+        "webpack": "^3.11.0"
     }
 }
