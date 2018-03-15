@@ -49,7 +49,6 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     ngOnInit() {
 
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-
         // No está autorizado para ver esta pantalla
         if (!this.autorizado) {
             this.redirect('inicio');
@@ -66,8 +65,8 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         let params = {
             idPaciente: this.paciente.id,
             // tienePrestacionOrigen: 'no',
-            tieneTurno: 'no',
-            estado: ['pendiente', 'ejecucion']
+            // tieneTurno: 'no',
+            estado: ['pendiente', 'validada']
         };
 
         // let options = {
