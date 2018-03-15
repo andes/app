@@ -42,12 +42,12 @@
 <div *ngIf="paciente.contacto">
 
     <div class="row" *ngFor="let _unContacto of paciente.contacto; let i = index">
-        <div class="col-4">
+        <div class="col-5">
             <plex-select [(ngModel)]="_unContacto.tipo" [data]="tipoComunicacion" name="tipo-{{i}}" [required]="i <= 0" placeholder="Seleccione..."
                 label="Tipo contacto:">
             </plex-select>
         </div>
-        <div class="col-4">
+        <div class="col-5">
             <span *ngIf="_unContacto.tipo && _unContacto.tipo.id">
                 <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                 </plex-text>
@@ -63,7 +63,7 @@
                 </plex-phone>
             </span>
         </div>
-        <div class="col-2" *ngIf="i > 0">
+        <div class="col-1" *ngIf="i > 0">
             <br>
             <br>
             <plex-button label="" type="danger btn-sm" icon="close" (click)="removeContacto(i)"></plex-button>

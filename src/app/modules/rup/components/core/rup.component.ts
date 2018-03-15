@@ -15,6 +15,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
 import { FinanciadorService } from '../../../../services/financiador.service';
+import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { Cie10Service } from '../../../../services/term/cie10.service';
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -77,7 +79,9 @@ export class RUPComponent implements OnInit {
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
         public sanitazer: DomSanitizer,
-        public snomedService: SnomedService
+        public snomedService: SnomedService,
+        public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
+        public Cie10Service: Cie10Service
     ) { }
 
     ngOnInit() {

@@ -2,10 +2,13 @@
     <label for="observaciones">
         Observación
     </label>
-    <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución" (change)="emitChange()"></textarea>
+    <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
+        (change)="emitChange()"></textarea>
 </ng-container>
 
 <p *ngIf="soloValores" class="readonly">
+    <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
+    <!-- <br> -->
     <span>Observaciones</span>
     <ng-container>
         {{registro.valor}}

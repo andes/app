@@ -20,8 +20,8 @@ export class PrestacionCrearComponent implements OnInit {
     prestacionAutocitar: any;
     showAutocitar = false;
     agendasAutocitar: IAgenda[];
-    // solicitudPrestacion: { 
-    //     paciente: IPaciente; 
+    // solicitudPrestacion: {
+    //     paciente: IPaciente;
     //     registros: { nombre: String; concepto: any; valor: { solicitudPrestacion: any; }; tipo: string; }; solicitudPrestacion: ITipoPrestacion; };
     solicitudPrestacion: any;
     solicitudTurno: any;

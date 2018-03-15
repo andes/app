@@ -77,7 +77,7 @@ import { TurnoService } from './services/turnos/turno.service';
 import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
-import { ArancelamientoService } from './services/arancelamiento.service';
+import { ObraSocialService } from './services/obraSocial.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -119,6 +119,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
+import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
@@ -168,6 +169,7 @@ import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/ma
 import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/dashboard/arancelamiento-form.component';
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
+import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
 
 // ... RUP
@@ -221,6 +223,9 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/componen
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
+import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 
 
 // Llaves
@@ -258,6 +263,7 @@ import { ChartsModule } from 'ng2-charts';
 // Mapa de camas
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -296,6 +302,8 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
+    'EgresoInternacionComponent': EgresoInternacionComponent,
+    'PasesCamaComponent': PasesCamaComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -330,7 +338,9 @@ let RUPComponentsArray = [
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
-    EjecucionInternacionComponent
+    EjecucionInternacionComponent,
+    EgresoInternacionComponent,
+    PasesCamaComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -361,7 +371,7 @@ let RUPComponentsArray = [
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
-        PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
+        PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
         TurnosComponent, BotonesAgendaComponent, ClonarAgendaComponent,
@@ -407,7 +417,9 @@ let RUPComponentsArray = [
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
         PrestarHcComponent,
-        DevolverHcComponent
+        DevolverHcComponent,
+        CamaEstadoComponent,
+        OcuparCamaComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -444,7 +456,7 @@ let RUPComponentsArray = [
         PrestacionesService,
         AdjuntosService,
         TipoPrestacionService,
-        ArancelamientoService,
+        ObraSocialService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
@@ -463,7 +475,9 @@ let RUPComponentsArray = [
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,
-        PrestamosService
+        PrestamosService,
+        ProcedimientosQuirurgicosService
+
     ]
 })
 

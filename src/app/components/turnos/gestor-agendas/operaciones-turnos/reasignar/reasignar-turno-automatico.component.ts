@@ -1,4 +1,4 @@
-import { environment } from './../../../../../environment';
+import { environment } from './../../../../../../environments/environment';
 import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';

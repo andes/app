@@ -1,4 +1,4 @@
-import { environment } from './../../../environment';
+import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
@@ -10,6 +10,7 @@ import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
+import { ObraSocialService } from './../../../services/obraSocial.service';
 
 // Interfaces
 import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
@@ -28,6 +29,7 @@ import { AgendaService } from '../../../services/turnos/agenda.service';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { SmsService } from './../../../services/turnos/sms.service';
 import { TurnoService } from './../../../services/turnos/turno.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'dar-turnos',
@@ -91,7 +93,6 @@ export class DarTurnosComponent implements OnInit {
     public estadosAgenda = EstadosAgenda;
 
     estadoT: EstadosDarTurnos;
-
     turnoDoble = false;
     telefono: String = '';
     countBloques: any[];
@@ -124,6 +125,8 @@ export class DarTurnosComponent implements OnInit {
     reqfiltros = false;
     permitirTurnoDoble = false;
     carpetaEfector: any;
+    obraSocialPaciente: IObraSocial;
+    motivoConsulta: string;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -150,6 +153,7 @@ export class DarTurnosComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioPrestacionPaciente: PrestacionesService,
+        public servicioOS: ObraSocialService,
         public smsService: SmsService,
         public plex: Plex,
         public auth: Auth,
@@ -528,6 +532,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
+
         this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
@@ -729,6 +734,7 @@ export class DarTurnosComponent implements OnInit {
      */
     darTurno() {
         if (this.turnoTipoPrestacion) {
+            this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
             this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
@@ -749,7 +755,8 @@ export class DarTurnosComponent implements OnInit {
                         fechaNacimiento: this.paciente.fechaNacimiento,
                         sexo: this.paciente.sexo,
                         telefono: this.telefono,
-                        carpetaEfectores: this.paciente.carpetaEfectores
+                        carpetaEfectores: this.paciente.carpetaEfectores,
+                        obraSocial: this.obraSocialPaciente
                     };
                     this.agenda = agd;
                     this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
@@ -765,9 +772,9 @@ export class DarTurnosComponent implements OnInit {
                         paciente: pacienteSave,
                         tipoPrestacion: this.turnoTipoPrestacion,
                         tipoTurno: this.tiposTurnosSelect,
-                        nota: this.nota
+                        nota: this.nota,
+                        motivoConsulta: this.motivoConsulta
                     };
-
                     this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
                         this.estadoT = 'noSeleccionada';
                         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
@@ -865,7 +872,11 @@ export class DarTurnosComponent implements OnInit {
 
                 // "if 0 errores"
                 if (this.resultado === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                    if (paciente.alias) {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                    } else {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                    }
                 } else {
                     this.plex.toast('danger', 'ERROR: SMS no enviado');
                 }
@@ -931,6 +942,9 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
+                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                        this.obraSocialPaciente = resultado;
+                    });
                 });
         } else {
             this.seleccion = paciente;
