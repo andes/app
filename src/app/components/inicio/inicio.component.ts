@@ -69,12 +69,11 @@ export class InicioComponent implements AfterViewInit {
             if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';
             }
-            
+
             if (this.auth.getPermissions('prestamos:?').length > 0) {
                 this.prestamosHC = 'prestamosHC';
                 this.denied = false;
             }
-
         });
         // Por ahora desactivamos el wizard!
         // let wizard = new Wizard('turnos');

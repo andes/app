@@ -39,7 +39,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     tipoComunicacion: any[];
     todasLocalidades: ILocalidad[];
     localidadesNeuquen: any[];
-    
+
     private paisArgentina = null;
     private provinciaNeuquen = null;
     private barrioNulleado = null;
