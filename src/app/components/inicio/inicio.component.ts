@@ -29,6 +29,7 @@ export class InicioComponent implements AfterViewInit {
     public mpi = '';
     public rup = '';
     public mapaDeCamas = '';
+    public prestamosHC = '';
     public denied = false;
     public accessList: any = [];
 
@@ -65,6 +66,14 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
 
+<<<<<<< HEAD
+=======
+            if (this.auth.getPermissions('prestamos:?').length > 0) {
+                this.prestamosHC = 'prestamosHC';
+                this.denied = false;
+            }
+
+>>>>>>> 2289b7a09302bbfa1d6c93798ba5a782c500df7b
         });
         // Por ahora desactivamos el wizard!
         // let wizard = new Wizard('turnos');
