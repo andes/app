@@ -30,6 +30,8 @@ export class EjecucionInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
 
+    public mostrarValidacion = false;
+
     public ocupaciones = [];
     public obrasSociales = [];
     public situacionesLaborales = [];
@@ -65,6 +67,7 @@ export class EjecucionInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         obraSocial: null
     };
+
     public egreso = {
         conceptId: '58000006',
         term: 'alta del paciente',
@@ -79,8 +82,6 @@ export class EjecucionInternacionComponent implements OnInit {
         'term': 'estadía de internación',
         'refsetIds': []
     };
-
-    public soloValores = true;
 
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -115,7 +116,7 @@ export class EjecucionInternacionComponent implements OnInit {
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
             });
-
+            this.comprobarEgresoParaValidar();
         });
     }
 
@@ -126,9 +127,23 @@ export class EjecucionInternacionComponent implements OnInit {
         this.router.navigate(['mapa-de-camas']);
     }
 
+    comprobarEgresoParaValidar() {
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.egreso.conceptId);
 
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+            if (egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+                this.mostrarValidacion = true;
+            } else {
+                this.mostrarValidacion = false;
+            }
+        } else {
+            this.mostrarValidacion = false;
+        }
+    }
 
-    ejecutarConcepto(snomedConcept, soloValores = true) {
+    ejecutarConcepto(snomedConcept) {
         let resultado;
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
@@ -138,7 +153,6 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        this.soloValores = soloValores;
         resultado = this.cargarNuevoRegistro(snomedConcept);
 
     }
@@ -156,5 +170,76 @@ export class EjecucionInternacionComponent implements OnInit {
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
         return nuevoRegistro;
+    }
+
+    guardarPrestacion() {
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+
+        let params: any = {
+            op: 'registros',
+            registros: registros
+        };
+
+        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+            this.comprobarEgresoParaValidar();
+            // this.router.navigate(['mapa-de-camas']);
+        });
+    }
+
+    validar() {
+
+        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+
+                let planes = [];
+
+                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
+            }
+        });
+
+    }
+
+    romperValidacion() {
+        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+
+                // Guardamos la prestacion copia
+                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+
+                    let prestacionModificada = prestacionClonada;
+
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+
+                        // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                    });
+                });
+            }
+
+        });
     }
 }
