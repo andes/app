@@ -24,6 +24,12 @@ export class CensoDiarioComponent implements OnInit {
     public listadoCenso = [];
     public ingresoEgreso = {};
 
+    public snomedEgreso = {
+        conceptId: '58000006',
+        term: 'alta del paciente',
+        fsn: 'alta del paciente (procedimiento)',
+        semanticTag: 'procedimiento'
+    };
 
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -44,9 +50,8 @@ export class CensoDiarioComponent implements OnInit {
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getInfoCenso(params).subscribe(respuesta => {
+            debugger;
             this.listadoCenso = respuesta;
-            console.log(respuesta, 'res - api');
-
             this.completarIngresosEgresos();
 
             // Buscamos internaciones repertidas y solo dejamos la ultima. 
@@ -98,6 +103,24 @@ export class CensoDiarioComponent implements OnInit {
             }
         }
         return '';
+    }
+
+    comprobarEgreso(internacion) {
+        let fechaInicio = moment(this.fecha).startOf('day').toDate();
+        let fechaFin = moment(this.fecha).endOf('day').toDate();
+        let registros = internacion.ejecucion.registros;
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.snomedEgreso.conceptId);
+
+        this.ingresoEgreso[internacion.id]['egresoDefuncion'] = false;
+        this.ingresoEgreso[internacion.id]['egresoAlta'] = false;
+        if (egresoExiste) {
+            if (egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+                this.ingresoEgreso[internacion.id]['egresoDefuncion'] =
+                    (egresoExiste.valor.InformeEgreso.tipoEgreso.nombre === 'Defunción');
+                this.ingresoEgreso[internacion.id]['egresoAlta'] =
+                    (egresoExiste.valor.InformeEgreso.tipoEgreso.nombre !== 'Defunción');
+            }
+        }
     }
 
 

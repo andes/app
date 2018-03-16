@@ -21,13 +21,17 @@
                 <table class="table" *ngIf="listadoCenso">
                     <thead>
                         <tr>
-                            <th>Apellido y nombre</th>
-                            <th>Sector</th>
-                            <th>Cama</th>
-                            <th>Ingreso</th>
-                            <th>Pase de</th>
-                            <th>Egreso</th>
-                            <th>Pase a</th>
+                            <th rowspan="2">Apellido y nombre</th>
+                            <th rowspan="2">Sector</th>
+                            <th rowspan="2">Cama</th>
+                            <th rowspan="2">Ingreso</th>
+                            <th rowspan="2">Pase de</th>
+                            <th cos>Egreso</th>
+                            <th rowspan="2">Pase a</th>
+                        </tr>
+                        <tr>
+                            <th>Defunción</th>
+                            <th>Alta</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,9 +62,15 @@
                                 {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe }}
                             </td>
                             <td>
-
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.egresoDefuncion">
+                                    si
+                                </div>
                             </td>
-
+                            <td>
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.egresoAlta">
+                                    si
+                                </div>
+                            </td>
                             <td>
                                 {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseA }}
                             </td>
