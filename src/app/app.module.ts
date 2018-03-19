@@ -18,22 +18,23 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 
 // Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
+import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
-import { AgmCoreModule } from 'angular2-google-maps/core';
+import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
-
-
+console.log(Auth);
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
@@ -352,8 +353,10 @@ let RUPComponentsArray = [
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
+        HttpClientModule,
         HttpModule,
         PlexModule,
+        AuthModule,
         Ng2DragDropModule,
         ChartsModule,
         routing,
@@ -429,6 +432,7 @@ let RUPComponentsArray = [
             useValue: 'es-AR'
         },
         Plex,
+        Server,
         Auth,
         RoutingGuard,
         OrganizacionService,
@@ -451,7 +455,6 @@ let RUPComponentsArray = [
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,
-        Server,
         SmsService,
         PrestacionesService,
         AdjuntosService,

@@ -1,4 +1,3 @@
-import { element } from 'protractor';
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 @Component({
