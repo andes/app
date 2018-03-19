@@ -23,20 +23,20 @@ export class SugerenciasComponent {
             showLoaderOnConfirm: true,
             preConfirm: (textarea) => {
                 return new Promise((resolve, reject) => {
-                    this.sugerenciasService.post({ texto: textarea, subject: "Reportes de Errores o Sugerencias" }).subscribe(
+                    this.sugerenciasService.post({ texto: textarea, subject: 'Reportes de Errores o Sugerencias' }).subscribe(
                         result => {
                             if (result.mensaje === 'Ok') {
                                 swal({
                                     type: 'success',
                                     title: 'Se envió con éxito!',
                                     html: 'Muchas gracias.'
-                                }).then(() => resolve())
+                                }).then(() => resolve());
                             } else {
                                 swal({
                                     type: 'error',
                                     title: 'Hubo un error y no se envió el mensaje.',
                                     html: 'Error: ' + result.mensaje
-                                })
+                                });
                             };
                         },
                         err => {
@@ -45,7 +45,7 @@ export class SugerenciasComponent {
                                     type: 'error',
                                     title: 'Hubo un error. No se envió el mensaje.',
                                     html: 'Error: ' + err
-                                })
+                                });
                             }
                         });
                 });
