@@ -26,7 +26,7 @@
                             <th rowspan="2">Cama</th>
                             <th rowspan="2">Ingreso</th>
                             <th rowspan="2">Pase de</th>
-                            <th cos>Egreso</th>
+                            <th colspan="2">Egreso</th>
                             <th rowspan="2">Pase a</th>
                         </tr>
                         <tr>
@@ -59,7 +59,7 @@
                                 </ng-template>
                             </td>
                             <td>
-                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe }}
+                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe | json }}
                             </td>
                             <td>
                                 <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.egresoDefuncion">

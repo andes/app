@@ -50,8 +50,9 @@ export class CensoDiarioComponent implements OnInit {
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getInfoCenso(params).subscribe(respuesta => {
-            debugger;
             this.listadoCenso = respuesta;
+
+            console.log(this.listadoCenso);
             this.completarIngresosEgresos();
 
             // Buscamos internaciones repertidas y solo dejamos la ultima. 
@@ -75,17 +76,18 @@ export class CensoDiarioComponent implements OnInit {
     }
 
     esPaseDe(pases) {
+        debugger;
         if (pases && pases.length > 1) {
             let fechaInicio = moment(this.fecha).startOf('day').toDate();
             let fechaFin = moment(this.fecha).endOf('day').toDate();
             let ultimoPase = pases[pases.length - 1];
             if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
                 if (pases[pases.length - 2].estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
-                    return pases[pases.length - 2].estados.unidadOrganizativa.term;
+                    return pases[pases.length - 2].estados;
                 }
             }
         }
-        return '';
+        return null;
     }
 
     esPaseA(pases) {
@@ -96,9 +98,9 @@ export class CensoDiarioComponent implements OnInit {
             let paseAnterior = pases[pases.length - 2];
             if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
                 if (paseAnterior.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
-                    // if (pases[pases.length - 1].estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
-                    return pases[pases.length - 1].estados.unidadOrganizativa.term;
-                    // }
+                    if (ultimoPase.estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
+                        return pases[pases.length - 1].estados.unidadOrganizativa.term;
+                    }
                 }
             }
         }
@@ -125,17 +127,40 @@ export class CensoDiarioComponent implements OnInit {
 
 
     completarIngresosEgresos() {
+        // filtrar los pases interServicio
+        let listadoDefinitivo = [];
+        this.listadoCenso.forEach(unCenso => {
+            let camaRepetida = listadoDefinitivo.find(e => e.ultimoEstado.idInternacion === e.ultimoEstado.idInternacion);
+            if (camaRepetida) {
+                if (camaRepetida.ultimoEstado.unidadOrganizativa.conceptId !== unCenso.ultimoEstado.unidadOrganizativa.conceptId) {
+                    listadoDefinitivo.push(unCenso);
+                }
+            } else {
+                listadoDefinitivo.push(unCenso);
+            }
+        });
+
+        this.listadoCenso = listadoDefinitivo;
         this.listadoCenso.forEach(censo => {
             censo.pases = censo.pases.filter(p => { return p.estados.fecha <= moment(this.fecha).endOf('day').toDate(); });
 
-
-
             this.ingresoEgreso[censo.ultimoEstado.idInternacion] = {};
             this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso'] = this.esIngreso(censo.pases);
-            // if (!this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso']) {
             this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe'] = this.esPaseDe(censo.pases);
             this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseA'] = this.esPaseA(censo.pases);
-            //}
+            // debugger;
+            // if (this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso'] && this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe']) {
+            //     let index = censo.pases.findIndex(p => p.estados._id === this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe']._id);
+            //     let pases1 = censo.pases.slice(0, (index + 1));
+            //     let pases2 = censo.pases.slice(index, censo.pases.length);
+            //     censo.pases = pases1;
+            //     let nuevoCenso = Object.assign({}, censo);
+            //     nuevoCenso.pases = pases2;
+            //     this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esIngreso'] = this.esIngreso(censo.pases);
+            //     this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseDe'] = this.esPaseDe(censo.pases);
+            //     this.ingresoEgreso[censo.ultimoEstado.idInternacion]['esPaseA'] = this.esPaseA(censo.pases);
+            //     this.listadoCenso.push(nuevoCenso);
+            // }
 
         });
 
