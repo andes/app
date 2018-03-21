@@ -35,7 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let censo of listadoCenso">
+                        <tr *ngFor="let censo of listadoCenso, let indice = index">
                             <td>
                                 {{censo.ultimoEstado.paciente | paciente }}
                             </td>
@@ -51,7 +51,7 @@
                                 {{censo.cama.nombre}}
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.esIngreso; else elseIngreso">
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.esIngreso; else elseIngreso">
                                     si
                                 </div>
                                 <ng-template #elseIngreso>
@@ -59,20 +59,20 @@
                                 </ng-template>
                             </td>
                             <td>
-                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseDe | json }}
+                                {{ ingresoEgreso[indice]?.esPaseDe?.unidadOrganizativa.term }}
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.egresoDefuncion">
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.egresoDefuncion">
                                     si
                                 </div>
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[censo.ultimoEstado.idInternacion]?.egresoAlta">
+                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.egresoAlta">
                                     si
                                 </div>
                             </td>
                             <td>
-                                {{ ingresoEgreso[censo.ultimoEstado.idInternacion]?.esPaseA }}
+                                {{ ingresoEgreso[indice]?.esPaseA }}
                             </td>
                         </tr>
                     </tbody>
