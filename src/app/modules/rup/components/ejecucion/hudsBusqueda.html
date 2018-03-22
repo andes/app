@@ -68,6 +68,15 @@
                             ELEM. REG.
                         </button>
                     </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'laboratorios'}">{{ getCantidadResultados('laboratorios')}}</small>
+
+                        <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}" class="btn btn-block p-0 btn-laboratorio">
+                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                            LABORATORIOS
+                        </button>
+                    </li>
                 </ul>
             </div>
         </ng-container>
@@ -581,5 +590,84 @@
                 <div *ngIf="elementosRegistro.length === 0">No hay Elementos de registro registrados</div>
             </div>
         </ng-container>
+
+        <!-- <pre>
+            {{ laboratorios | json }}
+        </pre> -->
+
+
+        <!-- Vista: LABORATORIOS -->
+        <ng-container *ngIf="filtroActual === 'laboratorios'">
+            <div class="vista-titulo">Laboratorios
+                <small>(Sistema anterior)</small>
+                <div *ngIf="laboratorios.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="laboratorios && colapsado" class="conceptos hover list-unstyled">
+                <ul class="conceptos list-unstyled">
+                    <ng-container *ngFor="let laboratorio of laboratorios; let iCronico = index">
+                        <li>
+
+                            <div class="rup-card mini laboratorio" [ngClass]="{'active': estaEnTabs(laboratorio, 'laboratorio')}">
+                                <div class="rup-header">
+                                    <div class="rup-border rup-border-laboratorio">
+
+                                        <div class="row p-0 m-0 border-secondary border-left-0">
+                                            <div class="col-10 p-0 m-0">
+                                                <div class="row m-0 p-0">
+
+                                                    <ng-container *ngIf="emitirConceptos">
+                                                        <div class="icon-rup bg-success" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!emitirConceptos">
+                                                        <div class="icon-rup bg-success">
+                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(laboratorio, 'laboratorio')">
+                                                        {{ laboratorio.concepto.term }}
+
+                                                        <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <ng-container *ngIf="laboratorio">
+                                                                    <div class="text-sm">Solicitante: {{laboratorio.profesional.nombre}}</div>
+                                                                    <small class="sugerido">Creado: {{laboratorio.createdAt | fecha:['DD/MM/YYYY']:true}}
+                                                                    </small>
+                                                                </ng-container>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+                <div *ngIf="laboratorios.length === 0">No hay Laboratorios registrados</div>
+            </div>
+        </ng-container>
+        {{registrosHuds | json}}
     </div>
 </div>

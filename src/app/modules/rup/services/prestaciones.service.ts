@@ -420,6 +420,10 @@ export class PrestacionesService {
         });
     }
 
+    getByPacienteLaboratorios(documento) {
+        return this.server.get(`/modules/cda/laboratorios/${documento}`, null);
+    }
+
 
     /**
      * Metodo getUnHallazgoPaciente x Concepto obtiene un hallazgo cronico o activo con todas sus evoluciones

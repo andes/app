@@ -2,6 +2,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 @Component({
@@ -12,6 +13,8 @@ import { Auth } from '@andes/auth';
     encapsulation: ViewEncapsulation.None
 })
 export class HudsBusquedaComponent implements OnInit {
+    laboratoriosFS: any;
+    laboratorios: any;
     colapsadoOtros = true;
     colapsadoActivos = true;
     colapsadoCronicos = true;
@@ -97,7 +100,8 @@ export class HudsBusquedaComponent implements OnInit {
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
         producto: ['producto'],
-        elementoderegistro: ['elemento de registro']
+        elementoderegistro: ['elemento de registro'],
+        laboratorios: ['laboratorios'],
     };
 
     constructor(private servicioPrestacion: PrestacionesService,
@@ -159,7 +163,17 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+    devolverLaboratorio(laboratorio) {
+        let resultado = {
+            tipo: 'laboratorio',
+            data: laboratorio
+        };
+        this.evtData.emit(resultado);
+    }
+
     devolverRegistrosHuds(registro, tipo) {
+
+        console.log(registro);
 
         let index;
 
@@ -201,8 +215,22 @@ export class HudsBusquedaComponent implements OnInit {
                 registro.class = registro.concepto.semanticTag;
                 index = this.registrosHuds.findIndex(r => {
                     if ((r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento') && r.data.concepto.id === registro.concepto.id) {
-                        console.log(r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt);
                         if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+                break;
+            case 'laboratorio':
+
+                ////// 12948300
+                registro.class = 'laboratorio';
+                index = this.registrosHuds.findIndex(r => {
+                    console.log(registro);
+                    if (r.data.concepto.semanticTag === 'elemento de registro') {
+                        if (r.data.createdAt === registro.createdAt) {
                             return 1;
                         } else {
                             return 0;
@@ -214,10 +242,11 @@ export class HudsBusquedaComponent implements OnInit {
 
         let elemento = {
             tipo: tipo,
-            data: registro
+            data: registro,
+            ...(tipo === 'laboratorio') && { 'archivos': this.laboratoriosFS.filter(x => x.metadata.cdaId === registro.cda.id) }
         };
 
-        // console.log(elemento);
+        console.log('elemento', elemento);
 
         // si no existe lo agregamos
         if (index === -1) {
@@ -409,6 +438,28 @@ export class HudsBusquedaComponent implements OnInit {
             });
         }
 
+        // Ordenar LABORATORIOS
+        // (fecha === createddAt)
+        // (alfa === concepto.term)
+        if (this.filtroActual === 'laboratorios') {
+            this.laboratorios.sort((a, b) => {
+                console.log(a.createdAt);
+                if (tipoOrden === 'fecha') {
+                    if (this.ordenDesc) {
+                        return b.createdAt - a.createdAt;
+                    } else {
+                        return a.createdAt - b.createdAt;
+                    }
+                } else if (tipoOrden === 'alfa') {
+                    if (this.ordenDesc) {
+                        return b.concepto.term.localeCompare(a.concepto.term);
+                    } else {
+                        return a.concepto.term.localeCompare(b.concepto.term);
+                    }
+                }
+            });
+        }
+
 
         this.ordenDesc = !this.ordenDesc;
     }
@@ -449,6 +500,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarProcedimientos();
             this.listarMedicamentos();
             this.listarElementosDeRegistro();
+            this.listarLaboratorios(this.paciente);
         });
     }
 
@@ -507,6 +559,29 @@ export class HudsBusquedaComponent implements OnInit {
     listarElementosDeRegistro() {
         this.servicioPrestacion.getByPacienteElementosRegistro(this.paciente.id, true).subscribe(elementosRegistro => {
             this.elementosRegistro = elementosRegistro;
+        });
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarLaboratorios(paciente) {
+        this.servicioPrestacion.getByPacienteLaboratorios(paciente.documento).subscribe(labs => {
+            this.laboratoriosFS = labs.archivos;
+            labs.cdas.forEach((cda, i) => {
+                labs.cdas[i] = {
+                    cda,
+                    concepto: {
+                        conceptId: '4241000179101',
+                        semanticTag: 'elemento de registro',
+                        term: 'Exámen de Laboratorio',
+                        fsn: 'Exámen de Laboratorio',
+                    },
+                    profesional: labs.laboratorios[i].profesional,
+                    createdAt: moment(cda.uploadDate, 'DD/MM/YYYY')
+                };
+            });
+
+            this.laboratorios = labs.cdas;
+
         });
     }
 
