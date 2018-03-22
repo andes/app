@@ -61,6 +61,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     turnosOtorgados = 0;
     inasistencias = 0;
     anulaciones = 0;
+    idOrganizacion = this.auth.organizacion.id;
 
     // Inicialización
     constructor(

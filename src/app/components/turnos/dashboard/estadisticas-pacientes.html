@@ -51,6 +51,20 @@
             {{_paciente.contacto[0].valor}}
         </div>
     </div>
+    <div class="row">
+        <div class="col-6" *ngIf="_paciente">
+            <i class="mdi mdi-folder-account"></i>
+            <span style="color: #00A8E0">Nro. de Carpeta</span>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6" *ngIf="_paciente?.carpetaEfectores?.length > 0">
+            <span *ngFor="let carpeta of _paciente.carpetaEfectores">
+                <div *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </div>
+            </span>
+        </div>
+    </div>
     <br>
     <div class="row">
         <div class="col">
