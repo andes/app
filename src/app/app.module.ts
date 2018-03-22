@@ -189,6 +189,9 @@ import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucio
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
+
+// Legacy para RUP
+import { LaboratoriosComponent } from './modules/rup/components/legacy/laboratorios.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
@@ -417,6 +420,7 @@ let RUPComponentsArray = [
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
