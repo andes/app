@@ -615,6 +615,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
                     // Cuilifico el paciente si aún no pose cuil.
                     if (!pacienteGuardar.cuil && result.id) {
+                        pacienteGuardar.id = result.id;
                          this.ansesService.get(pacienteGuardar).subscribe(rta => {
                             if (rta && rta.cuil) {
                                 this.pacienteService.patch(result.id, {
