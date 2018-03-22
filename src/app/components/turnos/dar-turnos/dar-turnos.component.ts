@@ -783,16 +783,16 @@ export class DarTurnosComponent implements OnInit {
                         this.plex.toast('info', 'El turno se asignó correctamente');
                         this.hideDarTurno = false;
 
-                        // Enviar SMS sólo en Producción
-                        if (environment.production === true) {
-                            let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                            let horario = moment(this.turno.horaInicio).format('HH:mm');
-                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
-                            this.enviarSMS(pacienteSave, mensaje);
+                        // Enviar SMS comentado a pedido de los usuarios =)
+                        // if (environment.production === true) {
+                        //     let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+                        //     let horario = moment(this.turno.horaInicio).format('HH:mm');
+                        //     let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                        //     this.enviarSMS(pacienteSave, mensaje);
 
-                        } else {
-                            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-                        }
+                        // } else {
+                        //     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+                        // }
 
                         if (this._solicitudPrestacion) {
                             let params = {
@@ -861,33 +861,33 @@ export class DarTurnosComponent implements OnInit {
 
     }
 
-    enviarSMS(paciente: any, mensaje) {
-        let smsParams = {
-            telefono: paciente.telefono,
-            mensaje: mensaje,
-        };
-        this.smsService.enviarSms(smsParams).subscribe(
-            sms => {
-                this.resultado = sms;
+    // enviarSMS(paciente: any, mensaje) {
+    //     let smsParams = {
+    //         telefono: paciente.telefono,
+    //         mensaje: mensaje,
+    //     };
+    //     this.smsService.enviarSms(smsParams).subscribe(
+    //         sms => {
+    //             this.resultado = sms;
 
-                // "if 0 errores"
-                if (this.resultado === '0') {
-                    if (paciente.alias) {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
-                    } else {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
-                    }
-                } else {
-                    this.plex.toast('danger', 'ERROR: SMS no enviado');
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
+    //             // "if 0 errores"
+    //             if (this.resultado === '0') {
+    //                 if (paciente.alias) {
+    //                     this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+    //                 } else {
+    //                     this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+    //                 }
+    //             } else {
+    //                 this.plex.toast('danger', 'ERROR: SMS no enviado');
+    //             }
+    //         },
+    //         err => {
+    //             if (err) {
+    //                 this.plex.toast('danger', 'ERROR: Servicio caído');
 
-                }
-            });
-    }
+    //             }
+    //         });
+    // }
 
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
