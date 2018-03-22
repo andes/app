@@ -380,7 +380,7 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     primeraVez(elem) {
-        this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
+        // this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
         elem.esPrimeraVez = !elem.esPrimeraVez;
     }
 

@@ -1,4 +1,4 @@
-import { environment } from './../../../../environment';
+import { environment } from './../../../../../environments/environment';
 import * as moment from 'moment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';

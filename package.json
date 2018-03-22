@@ -8,7 +8,9 @@
         "start": "ng serve",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build:prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=prod --prod --aot=true",
+        "build:test": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=test"
     },
     "repository": {
         "type": "git",
@@ -22,7 +24,7 @@
     "dependencies": {
         "@andes/auth": "^0.3.0",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "^2.0.13",
+        "@andes/plex": "^2.0.14",
         "@andes/shared": "^1.0.1",
         "@angular/animations": "^4.3.1",
         "@angular/cdk": "2.0.0-beta.8",
@@ -36,7 +38,6 @@
         "@angular/platform-browser-dynamic": "^4.3.1",
         "@angular/platform-server": "^4.3.1",
         "@angular/router": "^4.3.1",
-        "@types/file-saver": "^1.3.0",
         "angular2-google-maps": "^0.17.0",
         "bowser": "^1.7.1",
         "bson": "^1.0.4",
@@ -46,6 +47,7 @@
         "file-saver": "^1.3.3",
         "ng2-charts": "^1.6.0",
         "ng2-drag-drop": "^1.5.1",
+        "ng2-slugify": "^0.1.0",
         "rxjs": "^5.4.2",
         "zone.js": "^0.8.14"
     },
@@ -67,6 +69,6 @@
         "ts-node": "~2.0.0",
         "tslint": "~4.4.2",
         "typescript": "^2.4.2",
-        "webpack": "^3.4.1"
+        "webpack": "^3.11.0"
     }
 }

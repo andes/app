@@ -191,7 +191,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoEditar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'pendienteAuditoria' || agenda.estado === 'codificada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
+            return agenda.estado === 'pendienteAuditoria' || agenda.estado === 'auditada' || agenda.estado === 'pausada' || agenda.estado === 'suspendida';
         }).length <= 0;
     }
 
@@ -222,7 +222,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoPausar() {
         return this.agendasSeleccionadas.filter((agenda) => {
-            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'codificada' || agenda.estado === 'pendienteAuditoria';
+            return agenda.estado === 'planificacion' || agenda.estado === 'pausada' || agenda.estado === 'suspendida' || agenda.estado === 'auditada' || agenda.estado === 'pendienteAuditoria';
         }).length <= 0;
     }
 

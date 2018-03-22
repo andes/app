@@ -73,12 +73,14 @@
 
             <!-- Botonera del frente de las card -->
             <div class="footer row">
-                <!-- Ver internacion -->
+
                 <div class="col-12 text-right">
+
                     <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
                         *ngIf="cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-bug"></i>
                     </button>
+                    <!-- Ver internacion -->
                     <button class="btn btn-default  tips" title="Ver internacion" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
                         <i class="mdi mdi-eye"></i>
                     </button>
@@ -105,6 +107,10 @@
                     <button class="btn btn-success " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
                         <i class="mdi mdi-wrench"></i>
+                    </button>
+                    <!-- Editar datos de la cama -->
+                    <button class="btn btn-default" title="Editar cama" (click)="editarCama(cama)">
+                        <i class="mdi mdi-mdi mdi-pencil"></i>
                     </button>
                 </div>
             </div>

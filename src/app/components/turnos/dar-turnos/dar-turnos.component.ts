@@ -1,4 +1,4 @@
-import { environment } from './../../../environment';
+import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
@@ -532,6 +532,7 @@ export class DarTurnosComponent implements OnInit {
     }
 
     seleccionarTurno(bloque: any, indice: number) {
+
         this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
@@ -733,6 +734,7 @@ export class DarTurnosComponent implements OnInit {
      */
     darTurno() {
         if (this.turnoTipoPrestacion) {
+            this.turnoTipoPrestacion['_id'] = this.turnoTipoPrestacion.id;
             this.hideDarTurno = true; // ocultamos el boton confirmar para evitar efecto gatillo facil
             // Ver si cambió el estado de la agenda desde otro lado
             this.serviceAgenda.getById(this.agenda.id).subscribe(agd => {
@@ -870,7 +872,11 @@ export class DarTurnosComponent implements OnInit {
 
                 // "if 0 errores"
                 if (this.resultado === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                    if (paciente.alias) {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                    } else {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                    }
                 } else {
                     this.plex.toast('danger', 'ERROR: SMS no enviado');
                 }

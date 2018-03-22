@@ -18,8 +18,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
 
-    @Input() agendasAutocitar: any;
-    @Input() prestacionAutocitar: any;
+    @Input() agendasAutocitar: IAgenda[];
+    @Input() prestacionAutocitar: IAgenda;
     @Input() paciente: any;
 
     // Avisa al componente padre que se canceló la acción de este componente
@@ -40,14 +40,27 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     }
 
     ngOnInit() {
-
         if (!this.autorizado) {
             this.router.navigate(['/rup/crear/autocitar']);
         }
 
         if (this.agendasAutocitar && this.agendasAutocitar.length > 0) {
+            // Filtro Agendas según cambios de acuerdo al día
+            this.agendasAutocitar = this.agendasAutocitar.filter(ag => this.comprobarFecha(ag));
             this.showListaAgendas = true;
         }
+    }
+
+    comprobarFecha(agenda: IAgenda): Boolean {
+
+        // Genero una fecha 48 horas en el futuro...
+        let fechaLimite = moment(new Date()).add(2, 'days');
+
+        if (agenda.horaInicio >= fechaLimite.startOf('day').toDate() && agenda.horaInicio <= fechaLimite.endOf('day').toDate()) {
+            return true;
+        }
+
+        return false;
     }
 
     toggleExpandir(index) {
@@ -113,8 +126,8 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     }
 
     esTurnoDoble(turno) {
-        if (this.agendasAutocitar && this.agendasAutocitar.length > 0) {
-            let bloqueTurno = this.agendasAutocitar.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
+        if (this.agendaSeleccionada) {
+            let bloqueTurno = this.agendaSeleccionada.bloques.find(bloque => (bloque.turnos.findIndex(t => (t.id === turno._id)) >= 0));
             let index;
             if (bloqueTurno) {
                 index = bloqueTurno.turnos.findIndex(t => { return t.id === turno._id; });

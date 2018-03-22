@@ -66,6 +66,25 @@
                                     <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
                                 </div>
                             </div>
+                            <div class="row">&nbsp;</div>
+                              <!-- DATOS PARA APP MOBILE DE ANDES -->
+                              <fieldset *ngIf="validado && activarApp">
+                                <legend>Datos para App Mobile de ANDES</legend>
+                                <div class="row">
+                                    <div class="col-4">
+                                        <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail" (focusout)="onFocusout('email', emailAndes)"></plex-text>
+                                    </div>
+                                    <div class="col-4">
+                                        <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes" (focusout)="onFocusout('celular', celularAndes)" ></plex-phone>
+                                    </div>
+                                    <div class="col-4">
+                                        <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
+                                            <i class="mdi mdi-alert-circle-outline"></i>
+                                            {{messageApp}}
+                                        </span>
+                                    </div>
+                                </div>
+                            </fieldset>
 
                             <!-- / DATOS BASICOS -->
                             <div class="row">&nbsp;</div>
@@ -78,7 +97,7 @@
                                             <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
                                         </div>
                                         <div class="col-2 text-right">
-                                            <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto()"></plex-button>
+                                            <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
                                         </div>
                                     </div>
                                     <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
@@ -111,6 +130,7 @@
                                     </div>
                                 </div>
                             </fieldset>
+
                             <!-- DATOS DE DOMICILIO -->
                             <fieldset>
                                 <legend>Datos de domicilio</legend>
@@ -358,15 +378,15 @@
                                                 <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
                                                     <br>
                                                     <small>Documento: {{elem.paciente.documento}}
-                                                    <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
-                                                    <br> Sexo: {{elem.paciente.sexo}}
-                                                </small>
+                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                                        <br> Sexo: {{elem.paciente.sexo}}
+                                                    </small>
 
                                                 </h4>
                                                 <h4>Similitud: {{elem.match * 100}} %
                                                     <span>
-                                                    <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
-                                                </span>
+                                                        <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
+                                                    </span>
                                                 </h4>
                                             </li>
                                         </ul>
@@ -382,10 +402,11 @@
     </section>
     <footer>
         <div class="text-right">
-            <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile" label="Gestión de App Mobile" type="info" (click)="gestionMobile(true)">
+            <plex-button *ngIf="pacienteModel.id && pacienteModel.estado === 'validado' && !showMobile" label="Gestión de App Mobile"
+                type="info" (click)="gestionMobile(true)">
             </plex-button>
             <plex-button *ngIf="showMobile" label="Volver a detalles paciente" type="info" (click)="gestionMobile(false)">
-                </plex-button>
+            </plex-button>
             <plex-button label="Cancelar" type="danger" (click)="onCancel()">
             </plex-button>
             <plex-button *ngIf="!disableGuardar" label="Guardar" type="success" validateForm="true" (click)="preSave($event)">
