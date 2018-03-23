@@ -16,11 +16,19 @@ export class PrestamosService {
         return this.server.post(this.turnoUrl + '/prestamosHC/getCarpetasPrestamo', filtros);
     }
 
+    getHistorialCarpetas(filtros): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/historial', filtros);
+    }
+
     prestarCarpeta(carpeta: any): Observable<any[]> {
         return this.server.post(this.turnoUrl + '/prestamosHC/prestarCarpeta', carpeta);
     }
 
     devolverCarpeta(carpeta): Observable<any[]> {
         return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpeta', carpeta);
+    }
+
+    devolverCarpetas(carpetas): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpetas', carpetas);
     }
 }

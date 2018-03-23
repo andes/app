@@ -44,9 +44,10 @@
                             </div>
                         </div>
                     </header>
-                    <table class="table table-striped table-sm">
+                    <table *ngIf="carpetas.length" class="table table-striped table-sm">
                         <thead>
                             <tr>
+                                <th></th>
                                 <th>Prestamo</th>
                                 <th>Carpeta</th>
                                 <th>Paciente</th>
@@ -57,8 +58,12 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        <tbody *ngIf="carpetas.length">
-                            <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
+                        <tbody>
+                            <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                                <td (click)="toogleSeleccionCarpeta(carpeta)">
+                                    <i *ngIf="estaSeleccionada(carpeta)" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!(estaSeleccionada(carpeta))" class="mdi mdi-checkbox-blank-outline"></i>
+                                </td>
                                 <td>
                                     {{carpeta.fecha | date:'dd-MM-yyyy'}}
                                 </td>
@@ -81,12 +86,8 @@
                                 <td>
                                     {{carpeta.datosPrestamo.observaciones}}
                                 </td>
-                                <td *ngIf="carpeta.estado == 'En archivo'">
-                                    <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
-                                    </plex-button>
-                                </td>
                                 <td *ngIf="carpeta.estado == 'Prestada'">
-                                    <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
+                                    <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0" >
                                     </plex-button>
                                 </td>
                             </tr>
@@ -100,4 +101,7 @@
             </div>
         </div>
     </section>
+    <footer *ngIf="carpetasSeleccionadas.length > 0">
+        <plex-button type="primary" label="Devolver Carpetas" (click)="devolverCarpetas()"></plex-button>
+    </footer>
 </form>
