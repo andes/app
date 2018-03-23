@@ -57,16 +57,18 @@
                                     <th>Operaciones</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let solicitud of solicitudes; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': (solicitud.seleccionada===true)}"
+                                    <tr *ngFor="let prestacion of prestaciones; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}"
                                         (click)="seleccionar(i)">
-                                        <td>{{solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
-                                        <td>{{solicitud.paciente | paciente}}</td>
-                                        <td>{{solicitud.organizacionOrigen.nombre}}</td>
-                                        <td>{{solicitud.profesionalOrigen | profesional}}</td>
-                                        <td>{{solicitud.tipoPrestacion.term}}</td>
-                                        <td>{{solicitud.profesionalDestino | profesional}}</td>
-                                        <td *ngIf="!solicitud.turno" class="text-right estado">{{solicitud.estados[solicitud.estados.length-1].tipo}}</td>
-                                        <td *ngIf="solicitud.turno" class="text-right estado">turno asignado</td>
+                                        <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
+                                        <td>{{prestacion.paciente | paciente}}</td>
+                                        <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
+                                        <td *ngIf="!prestacion.solicitud.organizacionOrigen"></td>
+                                        <td *ngIf="prestacion.solicitud.profesionalOrigen">{{prestacion.solicitud.profesionalOrigen | profesional}}</td>
+                                        <td *ngIf="!prestacion.solicitud.profesionalOrigen"></td>
+                                        <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
+                                        <td>{{prestacion.solicitud.profesional | profesional}}</td>
+                                        <td *ngIf="!prestacion.solicitud.turno" class="text-right estado">{{prestacion.estados[prestacion.estados.length-1].tipo}}</td>
+                                        <td *ngIf="prestacion.solicitud.turno" class="text-right estado">turno asignado</td>
                                         <td style="text-align:center">
                                             <span *ngIf="DT[i]">
                                                 <button class="btn btn-sm" (click)="darTurno()" title="Dar Turno">
