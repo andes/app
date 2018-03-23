@@ -24,9 +24,9 @@ export class ISolicitud {
     };
     // ID de la prestación desde la que se generó esta solicitud
     prestacionOrigen: string;
+    organizacionOrigen: any;
+    profesionalesOrigen: any;
     // Registros de la solicitud ... para los planes o prestaciones futuras
     registros: IPrestacionRegistro[];
-    organizacionDestino: any;
-    profesionalesDestino: any[];
 
 };

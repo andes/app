@@ -68,7 +68,7 @@
         </div>
 
         <!-- Organización Destino -->
-        <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
+        <div class="row">
             <div class="col-12">
                 <plex-select [(ngModel)]="modelo.solicitud.organizacionDestino" name="organizacionDestino" (getData)="loadOrganizacion($event)"
                     label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">

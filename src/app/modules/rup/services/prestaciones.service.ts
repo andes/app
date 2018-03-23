@@ -643,10 +643,11 @@ export class PrestacionesService {
         return this.post(prestacion);
     }
 
-    validarPrestacion(prestacion, planes): Observable<any> {
+    validarPrestacion(prestacion: IPrestacion, planes): Observable<any> {
 
         let planesCrear = undefined;
 
+        // 2018-03-23 "quiero hacer algún curso nerd" ~ by kroce
         if (planes.length) {
             planesCrear = [];
             planes.forEach(plan => {
@@ -656,6 +657,7 @@ export class PrestacionesService {
                 if (this.cache[prestacion.paciente.id]) {
                     existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                 }
+
                 if (!existePrestacion) {
                     // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
                     // que prestacion quiere solicitar debo hacer ese cambio
@@ -675,10 +677,12 @@ export class PrestacionesService {
 
                         if (plan.valor.solicitudPrestacion.organizacionDestino) {
                             nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
+                            nuevaPrestacion.solicitud.organizacionOrigen = prestacion.ejecucion.organizacion || prestacion.solicitud.organizacion;
                         }
 
                         if (plan.valor.solicitudPrestacion.profesionalesDestino) {
                             nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
+                            nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional || prestacion.createdBy;
                         }
 
                         // agregamos los registros en la solicitud

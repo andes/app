@@ -11,8 +11,7 @@
     </plex-select>
 
     <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.profesionalesDestino" (getData)="loadProfesionales($event)"
-        placeholder="Profesionales" (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" [multiple]="true"
-        label="Profesional(es) destino">
+        placeholder="Profesionales" (change)="verificarAutocitacion()" labelField="apellido + ' ' + nombre" label="Profesional destino">
     </plex-select>
 
 </ng-container>
@@ -35,7 +34,7 @@
             </ng-container>
         </div>
         <div>
-            <span>Profesional/es</span>
+            <span>Profesional</span>
             <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
                 <ng-container *ngFor="let profesional of registro.valor?.solicitudPrestacion?.profesionalesDestino">
                     {{ profesional.apellido }}, {{ profesional.nombre }}

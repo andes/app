@@ -1,9 +1,12 @@
 import { IPrestacionEstado } from './prestacion.estado.interface';
 import { IPrestacionRegistro } from './prestacion.registro.interface';
 import { ISnomedConcept } from './snomed-concept.interface';
+import { IProfesional } from '../../../interfaces/IProfesional';
 
 export class IPrestacion {
     id: string;
+    createdAt: Date;
+    createdBy: IProfesional;
     // Datos principales del paciente
     paciente: {
         // requirido, validar en middleware
@@ -38,10 +41,10 @@ export class IPrestacion {
         },
         // ID de la prestación desde la que se generó esta solicitud
         prestacionOrigen: string,
+        organizacionOrigen: any,
+        profesionalesOrigen: any,
         // Registros de la solicitud ... para los planes o prestaciones futuras
-        registros: IPrestacionRegistro[],
-        organizacionDestino: any,
-        profesionalesDestino: any[]
+        registros: IPrestacionRegistro[]
     };
 
     // Datos de la ejecución (i.e. realización)
