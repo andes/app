@@ -35,42 +35,11 @@ export class SolicitudesComponent implements OnInit {
 
     seleccionar(indice) {
         // let prestacion = this.prestaciones[indice];
-        // for (let i = 0; i < this.prestaciones.length; i++) {
-        //     this.prestaciones[i].seleccionada = false;
-        //     this.DT[i] = false;
-        //     this.visualizar[i] = false;
-        //     this.Auditar[i] = false;
-        // }
+        for (let i = 0; i < this.prestaciones.length; i++) {
+            this.prestaciones[i].seleccionada = false;
+        }
         // console.log('prestacion ', prestacion);
         this.prestaciones[indice].seleccionada = true;
-        // switch (prestacion.estados[prestacion.estados.length - 1].tipo) {
-        //     case 'pendiente':
-        //         this.Auditar[indice] = false;
-        //         if (prestacion.solicitud.turno !== null) {
-        //             this.visualizar[indice] = true;
-        //         } else {
-        //             this.DT[indice] = true;
-        //             this.visualizar[indice] = false;
-        //         }
-        //         break;
-        //     case 'pendiente auditoria':
-        //         this.DT[indice] = false;
-        //         this.visualizar[indice] = false;
-        //         this.Auditar[indice] = true;
-        //         if (prestacion.solicitud.turno !== null) {
-        //             this.visualizar[indice] = true;
-        //         } else {
-        //             this.visualizar[indice] = false;
-        //         }
-        //         break;
-        //     default:
-        //         if (prestacion.solicitud.turno !== null) {
-        //             this.visualizar[indice] = true;
-        //         }
-        //         this.DT[indice] = false;
-        //         this.Auditar[indice] = false;
-        //         break;
-        // }
     }
 
     darTurno() {
