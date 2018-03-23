@@ -141,6 +141,7 @@ export class PrestacionCrearComponent implements OnInit {
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+            localStorage.removeItem('idAgenda');
             this.router.navigate(['/rup/ejecucion', prestacion.id]);
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
