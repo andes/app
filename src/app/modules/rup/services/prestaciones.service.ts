@@ -681,7 +681,7 @@ export class PrestacionesService {
                         }
 
                         if (plan.valor.solicitudPrestacion.profesionalesDestino) {
-                            nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
+                            nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino;
                             nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional || prestacion.createdBy;
                         }
 

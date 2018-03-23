@@ -208,7 +208,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             };
 
             this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino[0] : { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
+            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino : { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
             this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
             this.modelo.solicitud.profesionalOrigen = { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
 
