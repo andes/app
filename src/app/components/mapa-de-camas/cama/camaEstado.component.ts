@@ -49,8 +49,9 @@ export class CamaEstadoComponent implements OnInit {
     }
 
     loadEspecialidades($event) {
-        let servicios = this.organizacion.servicios;
-        $event.callback(servicios);
+        this.snomed.getQuery({ expression: '<<394733009' }).subscribe(result => {
+            $event.callback(result);
+        });
     }
 
     loadGenero($event) {

@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "2.4.0",
+    "version": "2.6.0",
     "description": "Aplicación web Angular2 para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -8,7 +8,9 @@
         "start": "ng serve",
         "test": "ng test",
         "lint": "ng lint",
-        "e2e": "ng e2e"
+        "e2e": "ng e2e",
+        "build:prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=prod --prod --aot=true",
+        "build:test": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=test"
     },
     "repository": {
         "type": "git",
@@ -44,6 +46,7 @@
         "enhanced-resolve": "^3.4.1",
         "ng2-charts": "^1.6.0",
         "ng2-drag-drop": "^1.5.1",
+        "ng2-slugify": "^0.1.0",
         "rxjs": "^5.4.2",
         "zone.js": "^0.8.14"
     },
@@ -65,6 +68,6 @@
         "ts-node": "~2.0.0",
         "tslint": "~4.4.2",
         "typescript": "^2.4.2",
-        "webpack": "^3.4.1"
+        "webpack": "^3.11.0"
     }
 }

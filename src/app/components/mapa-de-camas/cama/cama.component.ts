@@ -67,6 +67,16 @@ export class CamaComponent implements OnInit {
     }
 
     /**
+     * Editar una cama
+     *
+     * @param {any} cama Cama que se envia a editar
+     * @memberof CamaComponent
+     */
+    editarCama(cama) {
+        this.router.navigate(['tm/organizacion/cama', cama.id]);
+    }
+
+    /**
      * Visualizar internacion
      *
      * @param {any} cama Cama en la cual se encuentra internado el paciente.

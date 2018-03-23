@@ -67,6 +67,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
+import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -227,7 +228,7 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 
 
-// Llaves
+// TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
 
@@ -264,8 +265,19 @@ import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/m
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
+
+// Solicitudes
+import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
+
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
+import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
+import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
+import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -405,6 +417,13 @@ let RUPComponentsArray = [
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        // Solicitudes
+        SolicitudesComponent,
+        PrestamosHcComponent,
+        ListarSolicitudesComponent,
+        ListarPrestamosComponent,
+        PrestarHcComponent,
+        DevolverHcComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
@@ -462,6 +481,7 @@ let RUPComponentsArray = [
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,
+        PrestamosService,
         ProcedimientosQuirurgicosService
 
     ]
