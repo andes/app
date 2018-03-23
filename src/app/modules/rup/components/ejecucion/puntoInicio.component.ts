@@ -336,6 +336,8 @@ export class PuntoInicioComponent implements OnInit {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
             localStorage.setItem('idAgenda', agenda.id);
+        } else {
+            localStorage.removeItem('idAgenda');
         }
         this.router.navigate(['rup/' + action + '/', id]);
     }

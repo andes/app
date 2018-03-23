@@ -35,10 +35,9 @@
         </div>
         <div>
             <span>Profesional</span>
-            <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
-                <ng-container *ngFor="let profesional of registro.valor?.solicitudPrestacion?.profesionalesDestino">
-                    {{ profesional.apellido }}, {{ profesional.nombre }}
-                </ng-container>
+            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.profesionalesDestino">
+                {{ registro.valor.solicitudPrestacion.profesionalesDestino.apellido }}, {{ registro.valor.solicitudPrestacion.profesionalesDestino.nombre
+                }}
             </ng-container>
         </div>
     </div>

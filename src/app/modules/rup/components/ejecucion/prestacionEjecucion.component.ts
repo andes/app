@@ -679,6 +679,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
             if (this.idAgenda) {
+                localStorage.removeItem('idAgenda');
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
                 if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
