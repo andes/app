@@ -16,6 +16,7 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
+import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',
@@ -29,7 +30,7 @@ import { ElementosRUPService } from '../../../services/elementosRUP.service';
 export class EjecucionInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
-
+    @Output() evtCamaInternacion: EventEmitter<any> = new EventEmitter<any>();
     public mostrarValidacion = false;
 
     public ocupaciones = [];
@@ -92,6 +93,7 @@ export class EjecucionInternacionComponent implements OnInit {
         public snomedService: SnomedService,
         private servicioPaciente: PacienteService,
         public elementosRUPService: ElementosRUPService,
+        public servicioInternacion: InternacionService,
         private location: Location) { }
 
     ngOnInit() {
@@ -143,6 +145,20 @@ export class EjecucionInternacionComponent implements OnInit {
         }
     }
 
+
+    desocuparCama() {
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.egreso.conceptId);
+
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' &&
+            egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
+
+        }
+    }
+
     ejecutarConcepto(snomedConcept) {
         let resultado;
         let registros = this.prestacion.ejecucion.registros;
@@ -183,6 +199,7 @@ export class EjecucionInternacionComponent implements OnInit {
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             this.comprobarEgresoParaValidar();
+            this.desocuparCama();
             // this.router.navigate(['mapa-de-camas']);
         });
     }
@@ -193,12 +210,9 @@ export class EjecucionInternacionComponent implements OnInit {
             if (!validar) {
                 return false;
             } else {
-
                 let planes = [];
-
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -215,15 +229,11 @@ export class EjecucionInternacionComponent implements OnInit {
             } else {
                 // guardamos una copia de la prestacion antes de romper la validacion.
                 let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
-
                 // Agregamos el estado de la prestacion copiada.
                 let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
-
                 // Guardamos la prestacion copia
                 this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
-
                     let prestacionModificada = prestacionClonada;
-
                     // hacemos el patch y luego creamos los planes
                     let cambioEstado: any = {
                         op: 'romperValidacion',
@@ -239,7 +249,6 @@ export class EjecucionInternacionComponent implements OnInit {
                     });
                 });
             }
-
         });
     }
 }

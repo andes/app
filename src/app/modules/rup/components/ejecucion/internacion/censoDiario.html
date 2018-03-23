@@ -26,12 +26,8 @@
                             <th rowspan="2">Cama</th>
                             <th rowspan="2">Ingreso</th>
                             <th rowspan="2">Pase de</th>
-                            <th colspan="2">Egreso</th>
+                            <th rowspan="2">Egreso</th>
                             <th rowspan="2">Pase a</th>
-                        </tr>
-                        <tr>
-                            <th>Defunción</th>
-                            <th>Alta</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -62,14 +58,7 @@
                                 {{ ingresoEgreso[indice]?.esPaseDe?.unidadOrganizativa.term }}
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.egresoDefuncion">
-                                    si
-                                </div>
-                            </td>
-                            <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.egresoAlta">
-                                    si
-                                </div>
+                                {{ ingresoEgreso[indice]?.egreso }}
                             </td>
                             <td>
                                 {{ ingresoEgreso[indice]?.esPaseA }}
