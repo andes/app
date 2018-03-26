@@ -12,7 +12,7 @@
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto" (getData)="loadTipoPrestaciones($event)"
+                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
                             </div>
