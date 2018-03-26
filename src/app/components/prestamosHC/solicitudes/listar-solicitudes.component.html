@@ -1,4 +1,4 @@
-<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
+<form *ngIf="!verImprimirSolicitudes" class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
     <section>
         <div class="row">
             <div class="col">
@@ -7,7 +7,14 @@
                         <header>
                             <div class="clearfix">
                                 <div class="page-title float-left">Solicitudes de Carpetas</div>
+                                <div class="float-right">
+                                    <span>
+                                        <plex-button icon="mdi mdi-folder-account"  title="Imprimir carpetas" (click)="showImprimirCarpetas()" >
+                                        </plex-button>
+                                    </span>
+                                </div>
                             </div>
+
                             <div class="row">
                                 <div class="{{verPrestar ? 'col-6' : 'col-3'}}">
                                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
@@ -85,7 +92,7 @@
                                             </plex-button>
                                         </td>
                                         <td *ngIf="carpeta.estado == 'Prestada'">
-                                                <span class="badge-warning float-left">Prestada</span>
+                                            <span class="badge-warning float-left">Prestada</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -102,3 +109,4 @@
         </div>
     </section>
 </form>
+<imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>

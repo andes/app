@@ -35,6 +35,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
+    public verImprimirSolicitudes: Boolean = false;
     public mostrarMasOpciones = false;
     public sortAscending = false;
     public _listarCarpetas;
@@ -57,6 +58,7 @@ export class ListarSolicitudesComponent implements OnInit {
     // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         public prestamosService: PrestamosService,
@@ -165,6 +167,15 @@ export class ListarSolicitudesComponent implements OnInit {
                 event.callback(listaProfesionales);
             });
         }
+    }
+
+    showImprimirCarpetas() {
+        this.verImprimirSolicitudes = true;
+        this.imprimirSolicitudesEmit.emit(this.carpetas);
+    }
+
+    volverAListado() {
+        this.verImprimirSolicitudes = false;
     }
 
     loadEstados(event) {
