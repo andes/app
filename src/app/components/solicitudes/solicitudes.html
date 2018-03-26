@@ -80,9 +80,10 @@
                                                 </button>
                                             </span>
                                             <span *ngIf="visualizar[i]">
-                                                <button class="btn btn-sm btn-info" (click)="verTurno()" title="Ver Turno">
+                                                <!-- <button class="btn btn-sm btn-info" (click)="verTurno()" title="Ver Turno">
                                                     <span class="mdi mdi-eye"></span>
-                                                </button>
+                                                </button> -->
+                                                <span class="badge badge-success">Turno dado</span>
                                             </span>
                                         </td>
                                     </tr>
@@ -94,28 +95,45 @@
                     </plex-tabs>
                 </plex-box>
             </div>
-            <div *ngIf="solicitudSelccionada" class="col">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col">
+            <div *ngIf="solicitudSelccionada" class="col-3">
+                <plex-box>
+                    <header>
+                        <div class="clearfix">
+                            <div *ngIf="turnoSeleccionado" class="page-title float-left">Datos del Turno</div>
                             <div class="float-right">
                                 <button class="btn btn-sm btn-danger" (click)="solicitudSelccionada = null">
                                     <i class="mdi mdi-close"></i>
                                 </button>
                             </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            {{ solicitudSelccionada | json }}
+                    </header>
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                            </div>
+                        </div>
+                        <div *ngIf="turnoSeleccionado" class="row">
+                            <div class="col">
+                                <b>Fecha:</b>
+                                {{ turnoSeleccionado.bloques[0].turnos[0].horaInicio | fecha }}
+                                <br>
+                                <b>Organización:</b>
+                                {{ turnoSeleccionado.organizacion.nombre }}
+                                <br>
+                                <b>Profesional(es):</b>
+                                {{ turnoSeleccionado.profesionales | enumerar:['apellido', 'nombre'] }}
+                                <br>
+                                <b>Tipo de Prestación:</b>
+                                {{ turnoSeleccionado.bloques[0].turnos[0].tipoPrestacion.term }}
+                            </div>
                         </div>
                     </div>
-                </div>
+                </plex-box>
             </div>
         </div>
     </section>
 </form>
-
 
 <!-- Calendario para dar turnos -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"

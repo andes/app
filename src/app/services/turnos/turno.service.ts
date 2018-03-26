@@ -10,10 +10,12 @@ export class TurnoService {
 
     constructor(private server: Server) { }
 
+    // params === id del turno
     get(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 
+    // params === id del turno
     getTurnos(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
     }

@@ -5,12 +5,14 @@ import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 import { PrestacionesService } from '../../modules/rup/services/prestaciones.service';
 import * as moment from 'moment';
+import { TurnoService } from '../../services/turnos/turno.service';
 
 @Component({
     selector: 'solicitudes',
     templateUrl: './solicitudes.html',
 })
 export class SolicitudesComponent implements OnInit {
+    turnoSeleccionado: any[];
     solicitudSelccionada: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
@@ -23,7 +25,7 @@ export class SolicitudesComponent implements OnInit {
     public auditarArray = [];
     public visualizar = [];
     constructor(private auth: Auth, private plex: Plex,
-        private router: Router, public servicioPrestacion: PrestacionesService) { }
+        private router: Router, public servicioPrestacion: PrestacionesService, public servicioTurnos: TurnoService) { }
 
     ngOnInit() {
         // this.cargarSolicitudes();
@@ -34,28 +36,38 @@ export class SolicitudesComponent implements OnInit {
     }
 
     estaSeleccionada(solicitud: any) {
-        console.log('solicitudes ', this.prestaciones);
         return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
     seleccionar(indice) {
-        // let prestacion = this.prestaciones[indice];
         for (let i = 0; i < this.prestaciones.length; i++) {
             this.prestaciones[i].seleccionada = false;
         }
-        // console.log('prestacion ', prestacion);
+
         this.prestaciones[indice].seleccionada = true;
         this.solicitudSelccionada = this.prestaciones[indice];
+
+        if (this.prestaciones[indice].solicitud && this.prestaciones[indice].solicitud.turno) {
+
+            let params = {
+                id: this.solicitudSelccionada.solicitud.turno
+            };
+
+            this.servicioTurnos.getTurnos(params).subscribe(turno => {
+                this.turnoSeleccionado = turno[0];
+            });
+        } else {
+            this.turnoSeleccionado = null;
+        }
+
     }
 
     darTurno(prestacionSolicitud) {
         // Pasar filtros al calendario
         this.solicitudTurno = prestacionSolicitud;
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
-        console.log('paciente', prestacionSolicitud.paciente);
         this.showDarTurnos = true;
     }
-
 
     volverDarTurno() {
         this.cargarSolicitudes();
