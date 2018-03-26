@@ -57,7 +57,7 @@
                                     <th>Operaciones</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let prestacion of prestaciones; let i=index" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                    <tr *ngFor="let prestacion of prestaciones; let i=index" class="hover" (click)="seleccionar(i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
                                         <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
                                         <td>{{prestacion.paciente | paciente}}</td>
                                         <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
@@ -94,9 +94,29 @@
                     </plex-tabs>
                 </plex-box>
             </div>
+            <div *ngIf="solicitudSelccionada" class="col">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="float-right">
+                                <button class="btn btn-sm btn-danger" (click)="solicitudSelccionada = null">
+                                    <i class="mdi mdi-close"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            {{ solicitudSelccionada | json }}
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </form>
-<!-- Calendario para dar turnos autocitados -->
+
+
+<!-- Calendario para dar turnos -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
     [opcionesVolver]="{ label: labelVolver, componente: 'solicitudes'}" [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>

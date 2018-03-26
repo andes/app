@@ -11,6 +11,7 @@ import * as moment from 'moment';
     templateUrl: './solicitudes.html',
 })
 export class SolicitudesComponent implements OnInit {
+    solicitudSelccionada: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
@@ -37,14 +38,15 @@ export class SolicitudesComponent implements OnInit {
         return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
-    // seleccionar(indice) {
-    //     // let prestacion = this.prestaciones[indice];
-    //     for (let i = 0; i < this.prestaciones.length; i++) {
-    //         this.prestaciones[i].seleccionada = false;
-    //     }
-    //     // console.log('prestacion ', prestacion);
-    //     this.prestaciones[indice].seleccionada = true;
-    // }
+    seleccionar(indice) {
+        // let prestacion = this.prestaciones[indice];
+        for (let i = 0; i < this.prestaciones.length; i++) {
+            this.prestaciones[i].seleccionada = false;
+        }
+        // console.log('prestacion ', prestacion);
+        this.prestaciones[indice].seleccionada = true;
+        this.solicitudSelccionada = this.prestaciones[indice];
+    }
 
     darTurno(prestacionSolicitud) {
         // Pasar filtros al calendario
