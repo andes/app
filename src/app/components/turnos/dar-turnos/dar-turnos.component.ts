@@ -77,6 +77,11 @@ export class DarTurnosComponent implements OnInit {
         return this._solicitudPrestacion;
     }
 
+    @Input() opcionesVolver: any = {
+        label: 'Buscar Otro Paciente',
+        componente: 'pacientesSearch'
+    };
+
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
@@ -102,7 +107,7 @@ export class DarTurnosComponent implements OnInit {
     esEscaneado = false;
     ultimosTurnos: any[];
     indice: number = -1;
-    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']; // TODO: resolver de otra manera
     permisos = [];
     autorizado = false;
     pacientesSearch = true;
@@ -1027,14 +1032,16 @@ export class DarTurnosComponent implements OnInit {
         this.volverAlGestor.emit(true);
     }
 
-    volver() {
+    volver(componente) {
         this.showDarTurnos = false;
         this.estadoT = 'noSeleccionada';
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
         this.cancelarDarTurno.emit(true);
-        this.buscarPaciente();
+        if (componente === 'pacienteSearch') {
+            this.buscarPaciente();
+        }
     }
 
     redirect(pagina: string) {

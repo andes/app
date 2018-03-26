@@ -11,11 +11,15 @@ import * as moment from 'moment';
     templateUrl: './solicitudes.html',
 })
 export class SolicitudesComponent implements OnInit {
+    pacienteSeleccionado: any;
+    showDarTurnos: boolean;
+    solicitudTurno: any;
+    labelVolver = 'Lista de Solicitudes';
     public prestaciones = [];
     public fechaDesde: Date = new Date();
     public fechaHasta: Date = new Date();
-    public DT = [];
-    public Auditar = [];
+    public darTurnoArray = [];
+    public auditarArray = [];
     public visualizar = [];
     constructor(private auth: Auth, private plex: Plex,
         private router: Router, public servicioPrestacion: PrestacionesService) { }
@@ -33,17 +37,28 @@ export class SolicitudesComponent implements OnInit {
         return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
-    seleccionar(indice) {
-        // let prestacion = this.prestaciones[indice];
-        for (let i = 0; i < this.prestaciones.length; i++) {
-            this.prestaciones[i].seleccionada = false;
-        }
-        // console.log('prestacion ', prestacion);
-        this.prestaciones[indice].seleccionada = true;
+    // seleccionar(indice) {
+    //     // let prestacion = this.prestaciones[indice];
+    //     for (let i = 0; i < this.prestaciones.length; i++) {
+    //         this.prestaciones[i].seleccionada = false;
+    //     }
+    //     // console.log('prestacion ', prestacion);
+    //     this.prestaciones[indice].seleccionada = true;
+    // }
+
+    darTurno(prestacionSolicitud) {
+        // Pasar filtros al calendario
+        this.solicitudTurno = prestacionSolicitud;
+        this.pacienteSeleccionado = prestacionSolicitud.paciente;
+        console.log('paciente', prestacionSolicitud.paciente);
+        this.showDarTurnos = true;
     }
 
-    darTurno() {
-        // Pasar filtros al calendario
+
+    volverDarTurno() {
+        this.cargarSolicitudes();
+        this.showDarTurnos = false;
+        this.solicitudTurno = null;
     }
 
     auditar() {
@@ -66,30 +81,53 @@ export class SolicitudesComponent implements OnInit {
 
                     switch (this.prestaciones[i].estados[this.prestaciones[i].estados.length - 1].tipo) {
                         case 'pendiente':
-                            this.Auditar[i] = false;
+
+                            // Se puede auditar?
+                            this.auditarArray[i] = false;
+
+                            // Hay turno?
                             if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
                                 this.visualizar[i] = true;
                             } else {
-                                this.DT[i] = true;
+                                // Se puede dar turno?
+                                this.darTurnoArray[i] = true;
+
+                                // Se puede visualizar?
                                 this.visualizar[i] = false;
                             }
                             break;
                         case 'pendiente auditoria':
-                            this.DT[i] = false;
+
+                            // Se puede dar turno?
+                            this.darTurnoArray[i] = false;
+
+                            // Se puede visualizar?
                             this.visualizar[i] = false;
-                            this.Auditar[i] = true;
+
+                            // Se puede auditar?
+                            this.auditarArray[i] = true;
+
+                            // Hay turno?
                             if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
                                 this.visualizar[i] = true;
                             } else {
+                                // Se puede visualizar?
                                 this.visualizar[i] = false;
                             }
                             break;
-                        default:
+                        case 'validada':
+
+                            // Hay turno?
                             if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
                                 this.visualizar[i] = true;
                             }
-                            this.DT[i] = false;
-                            this.Auditar[i] = false;
+                            // Se puede dar turno?
+                            this.darTurnoArray[i] = false;
+                            // Se puede auditar?
+                            this.auditarArray[i] = false;
                             break;
                     }
                 }

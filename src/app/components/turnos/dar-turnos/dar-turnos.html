@@ -348,7 +348,7 @@
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
-        <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
+        <plex-button [label]="opcionesVolver.label" type="info" (click)="volver(opcionesVolver.componente)"></plex-button>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
 </form>
