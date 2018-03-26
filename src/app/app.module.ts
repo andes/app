@@ -275,6 +275,7 @@ import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/lis
 import { HistorialCarpetasComponent } from './components/prestamosHC/historial/historial-hc.component';
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
+import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -420,6 +421,7 @@ let RUPComponentsArray = [
         PrestarHcComponent,
         DevolverHcComponent,
         HistorialCarpetasComponent,
+        ImprimirSolicitudesComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
