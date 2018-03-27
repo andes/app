@@ -163,7 +163,7 @@ export class ListarPrestamosComponent implements OnInit {
         return this.carpetasSeleccionadas.findIndex(x => x._id === carpeta._id) >= 0;
     }
 
-    toggleSeleccionCarpeta(carpeta: any) {
+    switchSeleccionCarpeta(carpeta: any) {
         if (!this.estaSeleccionada(carpeta)) {
             this.carpetasSeleccionadas.push(carpeta);
         } else {
@@ -173,7 +173,7 @@ export class ListarPrestamosComponent implements OnInit {
         this.carpetasSeleccionadas.length === 1 ? this.devolver(this.carpetasSeleccionadas[0]) : this.verDevolver = false;
     }
 
-    toggleMarcarTotas() {
+    switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
         this.carpetasSeleccionadas = this.marcarTodas ?  this.carpetas : [];
     }
@@ -193,6 +193,7 @@ export class ListarPrestamosComponent implements OnInit {
                     this.plex.toast('success', 'Las carpetas se devolvieron correctamente', 'Información', 1000);
                     this.recargarSolicitudesEmit.emit(true);
                     this.getCarpetas({}, null);
+                    this.marcarTodas = false;
                     this.carpetasSeleccionadas = [];
                 });
             }
