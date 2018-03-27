@@ -31,6 +31,20 @@ export class CensoDiarioComponent implements OnInit {
         semanticTag: 'procedimiento'
     };
 
+
+    public resumenCenso = {
+        existencia0: 0,
+        ingresos: 0,
+        pasesDe: 0,
+        egresosAlta: 0,
+        egresosDefuncion: 0,
+        pasesA: 0,
+        existencia24: 0,
+        ingresoEgresoDia: 0,
+        pacientesDia: 0,
+        disponibles24: 0
+    };
+
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -51,10 +65,8 @@ export class CensoDiarioComponent implements OnInit {
         };
         this.servicioInternacion.getInfoCenso(params).subscribe(respuesta => {
             this.listadoCenso = respuesta;
-
-            console.log(this.listadoCenso);
             this.completarIngresosEgresos();
-
+            this.completarResumenDiario();
         });
     }
 
@@ -100,69 +112,23 @@ export class CensoDiarioComponent implements OnInit {
         return null;
     }
 
-
-
-
-    // esPaseDe(pases) {
-    //     debugger;
-    //     if (pases && pases.length > 1) {
-    //         let fechaInicio = moment(this.fecha).startOf('day').toDate();
-    //         let fechaFin = moment(this.fecha).endOf('day').toDate();
-    //         let ultimoPase = pases[pases.length - 1];
-    //         let paseAnterior = pases[pases.length - 2];
-    //         console.log(paseAnterior, 'paseAnterior')
-    //         if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
-    //             if (paseAnterior.estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
-    //                 return paseAnterior.estados;
-    //             } else {
-    //                 if (pases[pases.length - 3]) {
-
-    //                     return pases[pases.length - 3].estados;
-    //                 }
-
-    //                 // VER que el pase de seria el anterior al que estamos mirando.
-    //             }
-    //         }
-    //     }
-    //     return null;
-    // }
-
     esPaseA(pases) {
-        debugger;
         if (pases && pases.length > 1) {
             let fechaInicio = moment(this.fecha).startOf('day').toDate();
             let fechaFin = moment(this.fecha).endOf('day').toDate();
             // // debugger;
-            // let ultimoPase = pases[pases.length - 1];
-            // let paseAnterior = pases[pases.length - 2];
-
-            let ultimoIndice = -2;
-            // pases.forEach((p, i) => {
-            //     if (p.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
-            //         ultimoIndice = i;
-            //     }
-            // });
-            ultimoIndice = pases.findIndex(p =>
-                p.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId
-                && p.estados.fecha > fechaInicio
-            );
-            let ultimoPase = null;
-            let pasePosterior = null;
-
-            if (ultimoIndice === pases.length - 1 && (pases[ultimoIndice - 2].estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId)) {
-                ultimoPase = pases[ultimoIndice];
-                pasePosterior = pases[ultimoIndice - 1];
-            } else {
-                ultimoPase = pases[ultimoIndice];
-                pasePosterior = pases[ultimoIndice + 1];
-            }
-
+            let ultimoPase = pases[pases.length - 1];
+            let paseAnterior = pases[pases.length - 2];
 
             if (ultimoPase.estados.fecha >= fechaInicio && ultimoPase.estados.fecha <= fechaFin) {
-                if (ultimoPase.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
-                    // if (ultimoPase.estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
-                    return pasePosterior.estados;
-                    // }
+                if (paseAnterior.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId &&
+                    ultimoPase.estados.unidadOrganizativa.conceptId !== this.organizacionSeleccionada.conceptId) {
+                    return ultimoPase.estados;
+                } else {
+                    let paseAux = pases[pases.length - 3];
+                    if (paseAux && ultimoPase.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId && paseAux.estados.unidadOrganizativa.conceptId === this.organizacionSeleccionada.conceptId) {
+                        return paseAnterior.estados;
+                    }
                 }
             }
         }
@@ -186,92 +152,121 @@ export class CensoDiarioComponent implements OnInit {
         return '';
     }
 
+    completarUnCenso(censo, indice) {
+        let internacion = this.listadoCenso[indice].internacion;
+        this.ingresoEgreso[indice] = {};
+        this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
+        this.ingresoEgreso[indice]['esIngreso'] = this.esIngreso(censo.pases);
+        this.ingresoEgreso[indice]['esPaseDe'] = this.esPaseDe(censo.pases);
+        this.ingresoEgreso[indice]['esPaseA'] = this.esPaseA(censo.pases);
+    }
 
     completarIngresosEgresos() {
-        // filtrar los pases interServicio
-        // let listadoDefinitivo = [];
-        // this.listadoCenso.forEach(unCenso => {
-        //     let camaRepetida = listadoDefinitivo.find(e => e.ultimoEstado.idInternacion === e.ultimoEstado.idInternacion);
-        //     if (camaRepetida) {
-        //         if (camaRepetida.ultimoEstado.unidadOrganizativa.conceptId !== unCenso.ultimoEstado.unidadOrganizativa.conceptId) {
-        //             listadoDefinitivo.push(unCenso);
-        //         }
-        //     } else {
-        //         listadoDefinitivo.push(unCenso);
-        //     }
-        // });
-
-        // this.listadoCenso = listadoDefinitivo;
-        this.listadoCenso.forEach((censo, indice) => {
-            console.log(indice, 'indice');
-            censo.pases = censo.pases.filter(p => { return p.estados.fecha <= moment(this.fecha).endOf('day').toDate(); });
-
-            let internacion = this.listadoCenso[indice].internacion;
-
-            // console.log(internacion, 'internacion')
-            // if (this.comprobarEgreso(internacion) === '') {
-
-            // }
-
-
-            this.ingresoEgreso[indice] = {};
-            this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
-            this.ingresoEgreso[indice]['esIngreso'] = this.esIngreso(censo.pases);
-            this.ingresoEgreso[indice]['esPaseDe'] = this.esPaseDe(censo.pases);
-            this.ingresoEgreso[indice]['esPaseA'] = this.esPaseA(censo.pases);
-            // debugger;
-            if (this.ingresoEgreso[indice]['esIngreso'] && this.ingresoEgreso[indice]['esPaseDe']) {
-                let index = censo.pases.findIndex(p => p.estados._id === this.ingresoEgreso[indice]['esPaseDe']._id);
-                let pases1 = censo.pases.slice(0, (index + 1));
-                let pases2 = censo.pases.slice(index, censo.pases.length);
-                censo.pases = pases1;
-                let nuevoCenso = Object.assign({}, censo);
-                nuevoCenso.pases = pases2;
-                this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
-                this.ingresoEgreso[indice]['esIngreso'] = this.esIngreso(censo.pases);
-                this.ingresoEgreso[indice]['esPaseDe'] = this.esPaseDe(censo.pases);
-                this.ingresoEgreso[indice]['esPaseA'] = this.esPaseA(censo.pases);
-                this.listadoCenso.push(nuevoCenso);
-                this.ingresoEgreso[this.listadoCenso.length - 1] = {};
-                this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
-                this.ingresoEgreso[this.listadoCenso.length - 1]['esIngreso'] = this.esIngreso(nuevoCenso.pases);
-                this.ingresoEgreso[this.listadoCenso.length - 1]['esPaseDe'] = this.esPaseDe(nuevoCenso.pases);
-                this.ingresoEgreso[this.listadoCenso.length - 1]['esPaseA'] = this.esPaseA(nuevoCenso.pases);
+        // filtrar los pases interServicio (cambio de cama en un mismo servicio)
+        console.log(this.listadoCenso);
+        let listadoDefinitivo = [];
+        this.listadoCenso.forEach(unCenso => {
+            let camaRepetida = listadoDefinitivo.findIndex(e => e.ultimoEstado.idInternacion === unCenso.ultimoEstado.idInternacion);
+            if (camaRepetida >= 0) {
+                if (this.listadoCenso[camaRepetida].ultimoEstado.unidadOrganizativa.conceptId !== unCenso.ultimoEstado.unidadOrganizativa.conceptId) {
+                    listadoDefinitivo.push(unCenso);
+                } else {
+                    console.log('camaRepetida', this.listadoCenso[camaRepetida]);
+                    console.log('unCenso', unCenso);
+                    listadoDefinitivo.splice(camaRepetida, 1, unCenso);
+                }
+            } else {
+                listadoDefinitivo.push(unCenso);
             }
+        });
+
+        this.listadoCenso = listadoDefinitivo;
+        this.listadoCenso.forEach((censo, indice) => {
+            censo.pases = censo.pases.filter(p => { return p.estados.fecha <= moment(this.fecha).endOf('day').toDate(); });
+            let internacion = this.listadoCenso[indice].internacion;
+            this.completarUnCenso(censo, indice);
+
+            let index = -2;
+            if (this.ingresoEgreso[indice]['esIngreso'] && this.ingresoEgreso[indice]['esPaseDe']) {
+                index = censo.pases.findIndex(p => p.estados._id === this.ingresoEgreso[indice]['esPaseDe']._id);
+            }
+
             if (!this.ingresoEgreso[indice]['esIngreso'] && this.ingresoEgreso[indice]['esPaseA'] && this.ingresoEgreso[indice]['esPaseDe']) {
-                console.log(this.ingresoEgreso[indice]['esPaseA'].fecha);
-                console.log(this.ingresoEgreso[indice]['esPaseDe'].fecha);
-                if (this.ingresoEgreso[indice]['esPaseA'].fecha < this.ingresoEgreso[indice]['esPaseDe'].fecha) {
-                    console.log('ENTROIF');
-
-
-                    let index = censo.pases.findIndex(p => p.estados._id === this.ingresoEgreso[indice]['esPaseA']._id);
-                    let pases1 = censo.pases.slice(0, (index + 1));
-                    let pases2 = censo.pases.slice(index, censo.pases.length);
-                    censo.pases = pases1;
-                    let nuevoCenso = Object.assign({}, censo);
-                    nuevoCenso.pases = pases2;
-                    this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
-                    this.ingresoEgreso[indice]['esIngreso'] = this.esIngreso(censo.pases);
-                    this.ingresoEgreso[indice]['esPaseDe'] = this.esPaseDe(censo.pases);
-                    this.ingresoEgreso[indice]['esPaseA'] = this.esPaseA(censo.pases);
-                    this.listadoCenso.push(nuevoCenso);
-                    this.ingresoEgreso[this.listadoCenso.length - 1] = {};
-                    this.ingresoEgreso[indice]['egreso'] = this.comprobarEgreso(internacion, censo.pases);
-                    this.ingresoEgreso[this.listadoCenso.length - 1]['esIngreso'] = this.esIngreso(nuevoCenso.pases);
-                    this.ingresoEgreso[this.listadoCenso.length - 1]['esPaseDe'] = this.esPaseDe(nuevoCenso.pases);
-                    this.ingresoEgreso[this.listadoCenso.length - 1]['esPaseA'] = this.esPaseA(nuevoCenso.pases);
+                if (this.ingresoEgreso[indice]['esPaseA'].fecha <= this.ingresoEgreso[indice]['esPaseDe'].fecha) {
+                    index = censo.pases.findIndex(p => p.estados._id === this.ingresoEgreso[indice]['esPaseA']._id);
                 }
             }
 
-        });
+            if (index >= 0) {
+                let pases1 = censo.pases.slice(0, (index + 1));
+                let pases2 = censo.pases.slice(index, censo.pases.length);
 
+                censo.pases = pases1;
+                let nuevoCenso = Object.assign({}, censo);
+                nuevoCenso.pases = pases2;
+                this.completarUnCenso(censo, indice);
+                this.listadoCenso.push(censo);
+                this.completarUnCenso(nuevoCenso, this.listadoCenso.length - 1);
+            }
+        });
 
     }
 
 
     reseteaBusqueda() {
         this.listadoCenso = [];
+    }
+
+
+    completarResumenDiario() {
+        this.resumenCenso = {
+            existencia0: 0,
+            ingresos: 0,
+            pasesDe: 0,
+            egresosAlta: 0,
+            egresosDefuncion: 0,
+            pasesA: 0,
+            existencia24: 0,
+            ingresoEgresoDia: 0,
+            pacientesDia: 0,
+            disponibles24: 0
+        };
+        if (this.listadoCenso && this.ingresoEgreso) {
+            Object.keys(this.ingresoEgreso).forEach(indice => {
+                this.resumenCenso.existencia24 += 1;
+                if (this.ingresoEgreso[indice]['esIngreso']) {
+                    this.resumenCenso.ingresos += 1;
+                }
+                if (!this.ingresoEgreso[indice]['esIngreso'] && !this.ingresoEgreso[indice]['esPaseDe']) {
+                    this.resumenCenso.existencia0 += 1;
+                }
+
+                if (this.ingresoEgreso[indice]['esPaseDe']) {
+                    this.resumenCenso.pasesDe += 1;
+                }
+
+                if (this.ingresoEgreso[indice]['esPaseA']) {
+                    this.resumenCenso.pasesA += 1;
+                }
+
+                if (this.ingresoEgreso[indice]['egreso'] !== '') {
+                    if (this.ingresoEgreso[indice]['egreso'] === 'Defunción') {
+                        this.resumenCenso.egresosDefuncion += 1;
+                    } else {
+                        this.resumenCenso.egresosAlta += 1;
+                    }
+                    if (this.ingresoEgreso[indice]['esIngreso']) {
+                        this.resumenCenso.ingresoEgresoDia += 1;
+                    }
+                }
+            });
+            this.resumenCenso.pacientesDia = this.resumenCenso.existencia0 +
+                this.resumenCenso.ingresos + this.resumenCenso.pasesDe -
+                this.resumenCenso.egresosDefuncion - this.resumenCenso.egresosAlta;
+
+            this.resumenCenso.existencia24 = this.resumenCenso.existencia24 -
+                this.resumenCenso.egresosDefuncion - this.resumenCenso.egresosAlta - this.resumenCenso.pasesA;
+        }
     }
 
 }
