@@ -1,0 +1,31 @@
+<div class="row">
+    <div class="col-12">
+
+        <rup-SelectPorRefset [params]="{refsetId: '439401001', tipoSelect: 'select', multiple: true, titulo: 'Diagnostico al ingreso'}"
+            [registro]="registro">
+
+        </rup-SelectPorRefset>
+        <textarea rows="2" class="form-control" placeholder="Diagnostico Principal" [(ngModel)]="registro.valor.diagnosticoPrincipal"
+            name="diagnosticoPrincipal"></textarea>
+    </div>
+
+</div>
+<div class="row">
+    <div class="col-12">
+        <label>Pautas de alarmad</label>
+        <textarea rows="2" class="form-control" placeholder="Pautas de alarma" [(ngModel)]="registro.valor.pautasAlarma" name="pautasDeAlarma"></textarea>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <label>Tratamiento a seguir</label>
+        <textarea rows="2" class="form-control" placeholder="tratamiento a seguir" [(ngModel)]="registro.valor.tratamientoASeguir"
+            name="tratamientoASeguir"></textarea>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <rup-SelectPorRefset [params]="{refsetId: '439401001', tipoSelect: 'select', multiple: true, titulo: 'Dieta alta'}" [registro]="registro">
+        </rup-SelectPorRefset>
+    </div>
+</div>
