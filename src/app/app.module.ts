@@ -34,7 +34,7 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
-console.log(Auth);
+
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
@@ -343,9 +343,12 @@ let RUPComponentsArray = [
     EgresoInternacionComponent,
     PasesCamaComponent
 ];
-// for (let key in RUPRegistry) {
-//     RUPComponentsArray.push(RUPRegistry[key]);
-// }
+
+/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs, 'es');
+
 
 // Main module
 @NgModule({
