@@ -47,7 +47,10 @@
                     <table *ngIf="carpetas.length" class="table table-striped table-sm">
                         <thead>
                             <tr>
-                                <th></th>
+                                <th (click)="toggleMarcarTotas()" >
+                                    <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
+                                    <i *ngIf="!marcarTodas"  class="mdi mdi-checkbox-blank-outline"></i>
+                                </th>
                                 <th>Prestamo</th>
                                 <th>Carpeta</th>
                                 <th>Paciente</th>
@@ -60,7 +63,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
-                                <td (click)="toogleSeleccionCarpeta(carpeta)">
+                                <td (click)="toggleSeleccionCarpeta(carpeta)">
                                     <i *ngIf="estaSeleccionada(carpeta)" class="mdi mdi-checkbox-marked"></i>
                                     <i *ngIf="!(estaSeleccionada(carpeta))" class="mdi mdi-checkbox-blank-outline"></i>
                                 </td>

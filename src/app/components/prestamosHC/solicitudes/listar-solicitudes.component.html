@@ -9,7 +9,7 @@
                                 <div class="page-title float-left">Solicitudes de Carpetas</div>
                                 <div class="float-right">
                                     <span>
-                                        <plex-button icon="mdi mdi-folder-account"  title="Imprimir carpetas" (click)="showImprimirCarpetas()" >
+                                        <plex-button icon="mdi mdi-printer"  title="Imprimir solicitudes" (click)="showImprimirCarpetas()" >
                                         </plex-button>
                                     </span>
                                 </div>
@@ -27,8 +27,8 @@
                                     </plex-datetime>
                                 </div>
                                 <div class="col-4" (click)="toogleSort()" style="margin-top: 45px;">
-                                    <i *ngIf="sortAscending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Ascendente</i>
-                                    <i *ngIf="!sortAscending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Ascendente</i>
+                                    <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
+                                    <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
                                 </div>
                                 
                                 <!-- <div class="{{verPrestar ? 'col-4' : 'col-2'}} text-right">

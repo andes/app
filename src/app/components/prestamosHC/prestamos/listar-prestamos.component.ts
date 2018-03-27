@@ -29,6 +29,7 @@ export class ListarPrestamosComponent implements OnInit {
     public estadosCarpeta = enumToArray(EstadosCarpetas);
     public carpetaSeleccionada: any;
     public carpetasSeleccionadas = [];
+    public marcarTodas: Boolean = false;
 
     public filters: any = {
         organizacion: this.auth.organizacion._id
@@ -162,10 +163,7 @@ export class ListarPrestamosComponent implements OnInit {
         return this.carpetasSeleccionadas.findIndex(x => x._id === carpeta._id) >= 0;
     }
 
-    toogleSeleccionCarpeta(carpeta: any) {
-        if (!carpeta.organizacion) {
-            carpeta.organizacion = this.auth.organizacion;
-        }
+    toggleSeleccionCarpeta(carpeta: any) {
         if (!this.estaSeleccionada(carpeta)) {
             this.carpetasSeleccionadas.push(carpeta);
         } else {
@@ -175,9 +173,21 @@ export class ListarPrestamosComponent implements OnInit {
         this.carpetasSeleccionadas.length === 1 ? this.devolver(this.carpetasSeleccionadas[0]) : this.verDevolver = false;
     }
 
+    toggleMarcarTotas() {
+        this.marcarTodas = !this.marcarTodas;
+        this.carpetasSeleccionadas = this.marcarTodas ?  this.carpetas : [];
+    }
+
     devolverCarpetas() {
         this.plex.confirm('¿Desea devolver las ' + this.carpetasSeleccionadas.length + ' carpetas seleccionadas?', 'Prestamos Carpetas').then((confirmar) => {
             if (confirmar) {
+
+                this.carpetasSeleccionadas.forEach(carpeta => {
+                    if (!carpeta.organizacion) {
+                        carpeta.organizacion = this.auth.organizacion;
+                    }
+                });
+
                 this.prestamosService.devolverCarpetas(this.carpetasSeleccionadas).subscribe(carpeta => {
                     this.verDevolver = false;
                     this.plex.toast('success', 'Las carpetas se devolvieron correctamente', 'Información', 1000);
