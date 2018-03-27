@@ -37,7 +37,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public verDevolver: Boolean = false;
     public verImprimirSolicitudes: Boolean = false;
     public mostrarMasOpciones = false;
-    public sortAscending = false;
+    public sortDescending = false;
     public _listarCarpetas;
 
     get listaCarpetasInput(): any {
@@ -190,12 +190,13 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     sortCarpetas() {
-        let val = this.sortAscending ? 1 : - 1;
+        let val = this.sortDescending ? -1 : 1;
+        // this.carpetas.sort((a, b) => { return (parseInt(a.numero) > parseInt(b.numero)) ? val : (parseInt(b.numero) > parseInt(a.numero)) ? -val : 0; } );
         this.carpetas.sort((a, b) => { return (a.numero > b.numero) ? val : ((b.numero > a.numero) ? -val : 0); } );
     }
 
     toogleSort() {
-        this.sortAscending = !this.sortAscending;
+        this.sortDescending = !this.sortDescending;
         this.sortCarpetas();
     }
 
