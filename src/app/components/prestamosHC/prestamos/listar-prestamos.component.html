@@ -47,7 +47,7 @@
                     <table *ngIf="carpetas.length" class="table table-striped table-sm">
                         <thead>
                             <tr>
-                                <th (click)="toggleMarcarTotas()" >
+                                <th (click)="switchMarcarTodas()" >
                                     <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
                                     <i *ngIf="!marcarTodas"  class="mdi mdi-checkbox-blank-outline"></i>
                                 </th>
@@ -55,7 +55,7 @@
                                 <th>Carpeta</th>
                                 <th>Paciente</th>
                                 <th>Ubicación</th>
-                                <th>Prestaciones</th>
+                                <th>Prestación</th>
                                 <th>Responsables</th>
                                 <th>Observaciones</th>
                                 <th></th>
@@ -63,7 +63,7 @@
                         </thead>
                         <tbody>
                             <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
-                                <td (click)="toggleSeleccionCarpeta(carpeta)">
+                                <td (click)="switchSeleccionCarpeta(carpeta)">
                                     <i *ngIf="estaSeleccionada(carpeta)" class="mdi mdi-checkbox-marked"></i>
                                     <i *ngIf="!(estaSeleccionada(carpeta))" class="mdi mdi-checkbox-blank-outline"></i>
                                 </td>
@@ -81,7 +81,7 @@
                                     {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
                                 </td>
                                 <td>
-                                    {{carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
+                                    {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
                                 </td>
                                 <td>
                                     {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}

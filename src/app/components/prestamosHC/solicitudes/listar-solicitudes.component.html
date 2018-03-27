@@ -30,12 +30,6 @@
                                     <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
                                     <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
                                 </div>
-                                
-                                <!-- <div class="{{verPrestar ? 'col-4' : 'col-2'}} text-right">
-                                    <label>
-                                        &nbsp;</label>
-                                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
-                                </div> -->
                             </div>
 
                             <div class="row">
@@ -44,10 +38,9 @@
                                         name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
                                     </plex-select>
                                 </div>
-                            <!-- <div class="row" *ngIf="mostrarMasOpciones"> -->
                                 <div class="col-4">
                                     <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
-                                        label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
+                                        label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" >
                                     </plex-select>
                                 </div>
                                 
@@ -61,7 +54,7 @@
                                         <th>Carpeta</th>
                                         <th>Paciente</th>
                                         <th>Destino</th>
-                                        <th>Prestaciones</th>
+                                        <th>Prestación</th>
                                         <th>Responsables</th>
                                         <th></th>
                                     </tr>
@@ -82,7 +75,7 @@
                                             {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
                                         </td>
                                         <td>
-                                            {{carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
+                                            {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
                                         </td>
                                         <td>
                                             {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
