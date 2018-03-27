@@ -102,7 +102,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.showCargarSolicitud = false;
 
-        console.log(this.auth);
         // Está autorizado para ver esta pantalla?
         if (!this.autorizado) {
             this.redirect('inicio');
