@@ -703,10 +703,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    volver() {
-        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al Punto de Inicio?').then(confirmado => {
+    volver(ambito = 'ambulatorio') {
+        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
-                this.router.navigate(['rup']);
+                if (ambito === 'ambulatorio') {
+                    this.router.navigate(['rup']);
+                } else {
+                    this.router.navigate(['mapa-de-camas']);
+                }
             } else {
                 return;
             }
