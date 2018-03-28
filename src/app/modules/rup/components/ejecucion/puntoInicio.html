@@ -19,6 +19,8 @@
                         <div class="col-3">
                             <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio" label="Fecha" [required]="true">
                             </plex-datetime>
+                            <span class="mdi mdi-chevron-left hover" (click)="cambiarDia('fecha', 1, 'restar')"></span>
+                            <span class="mdi mdi-chevron-right hover" (click)="cambiarDia('fecha', 1, 'sumar')"></span>
                         </div>
                         <div class="col-3">
                             <plex-text [(ngModel)]="paciente" (change)="filtrar()" label="Buscar paciente"></plex-text>

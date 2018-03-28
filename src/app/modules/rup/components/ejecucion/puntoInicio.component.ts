@@ -79,6 +79,18 @@ export class PuntoInicioComponent implements OnInit {
         return false;
     }
 
+    cambiarDia(fecha, dias, dir) {
+        switch (dir) {
+            case 'sumar':
+                this[String(fecha)] = moment(this[String(fecha)]).add(1, 'days');
+                break;
+            case 'restar':
+                this[String(fecha)] = moment(this[String(fecha)]).subtract(1, 'days');
+                break;
+        }
+        this.actualizar();
+    }
+
     /**
      * Actualiza el listado de agendas y prestaciones
      */
