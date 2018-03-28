@@ -11,20 +11,17 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
     public dietaDeAlta: any[] = [];
 
     ngOnInit() {
+        let refset = '439401001';
+
+        this.snomedService.getQuery({ expression: refset }).subscribe(resultado => {
+            this.pautasDeAlarma = resultado;
+            this.dietaDeAlta = resultado;
+        });
         if (!this.registro.valor) {
             this.registro.valor = {
-                diagnosticoPrincipal: null
+                resumen: null
             };
             // Reveer todo el componente... @Fer
-
-            let refset = '439401001';
-
-            this.snomedService.getQuery({ expression: refset }).subscribe(resultado => {
-                this.pautasDeAlarma = resultado;
-                this.dietaDeAlta = resultado;
-
-            });
-
         }
     }
 
