@@ -63,7 +63,7 @@
         <!-- Autocitado? -->
         <div class="row">
             <div class="col-12">
-                <plex-bool [(ngModel)]="registros.solicitudPrestacion.autocitado" label="Autocitado" name="autocitado"></plex-bool>
+                <plex-bool *ngIf="puedeAutocitar" [(ngModel)]="registros.solicitudPrestacion.autocitado" label="Autocitado" name="autocitado"></plex-bool>
             </div>
         </div>
 
