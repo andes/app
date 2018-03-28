@@ -173,8 +173,6 @@ export class HudsBusquedaComponent implements OnInit {
 
     devolverRegistrosHuds(registro, tipo) {
 
-        console.log(registro);
-
         let index;
 
         switch (tipo) {
@@ -228,7 +226,6 @@ export class HudsBusquedaComponent implements OnInit {
                 ////// 12948300
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
-                    console.log(registro);
                     if (r.data.concepto.semanticTag === 'elemento de registro') {
                         if (r.data.createdAt === registro.createdAt) {
                             return 1;
@@ -245,8 +242,6 @@ export class HudsBusquedaComponent implements OnInit {
             data: registro,
             ...(tipo === 'laboratorio') && { 'archivos': this.laboratoriosFS.filter(x => x.metadata.cdaId === registro.cda.id) }
         };
-
-        console.log('elemento', elemento);
 
         // si no existe lo agregamos
         if (index === -1) {

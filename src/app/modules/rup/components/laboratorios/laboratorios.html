@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>{{ laboratorio.data.concepto.term }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <!-- 12948300 {{ laboratorio.data | json }} -->
+            <b>Solicitante</b>
+            <div>
+                {{ laboratorio.data.profesional | profesional }}
+            </div>
+            <b>Datos del CDA</b>
+            <div>
+                Fecha: {{ laboratorio.data.cda.metadata.fecha | fecha }}
+            </div>
+            <b>Adjuntos</b>
+            <ng-container *ngFor="let archivo of laboratorio.data.cda.metadata.adjuntos">
+                {{ archivo.filename }}
+                <a href="javascript:void(0)" (click)="descargar(archivo.id)">
+                    <i class="mdi mdi-36px mdi-file-pdf"></i>
+                </a>
+            </ng-container>
+        </div>
+    </div>
+</div>

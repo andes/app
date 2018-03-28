@@ -600,7 +600,7 @@
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <div class="vista-titulo">Laboratorios
                 <small>(Sistema anterior)</small>
-                <div *ngIf="laboratorios.length > 0" class="float-right">
+                <div *ngIf="laboratorios?.length > 0" class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
                         <i class="mdi mdi-calendar-clock"></i>
                     </button>
@@ -668,6 +668,5 @@
                 <div *ngIf="laboratorios.length === 0">No hay Laboratorios registrados</div>
             </div>
         </ng-container>
-        {{registrosHuds | json}}
     </div>
 </div>

@@ -103,6 +103,8 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+import { CDAService } from './modules/rup/services/CDA.service';
+
 
 // Componentes
 import { LoginComponent } from './components/login/login.component';
@@ -191,7 +193,7 @@ import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
 // Legacy para RUP
-import { LaboratoriosComponent } from './modules/rup/components/legacy/laboratorios.component';
+import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
@@ -486,7 +488,8 @@ let RUPComponentsArray = [
         DocumentosService,
         CamasService,
         PrestamosService,
-        ProcedimientosQuirurgicosService
+        ProcedimientosQuirurgicosService,
+        CDAService,
 
     ]
 })
