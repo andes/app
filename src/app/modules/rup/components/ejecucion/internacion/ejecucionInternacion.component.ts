@@ -88,7 +88,7 @@ export class EjecucionInternacionComponent implements OnInit {
         'term': 'epicrisis de enfermería',
         'fsn': 'epicrisis de enfermería (elemento de registro)',
         'semanticTag': 'elemento de registro'
-    }
+    };
 
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
@@ -252,7 +252,7 @@ export class EjecucionInternacionComponent implements OnInit {
 
 
     /**
-     * Crea la prestacion de epicrisis, si existe recupera la epicrisis 
+     * Crea la prestacion de epicrisis, si existe recupera la epicrisis
      * creada anteriormente.
      * Nos rutea a la ejecucion de RUP.
      */
