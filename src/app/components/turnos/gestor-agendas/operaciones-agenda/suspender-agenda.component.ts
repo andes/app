@@ -54,10 +54,16 @@ export class SuspenderAgendaComponent implements OnInit {
         (this.agenda.estado !== 'suspendida') ? this.showConfirmar = true : this.showData = true;
         this.agenda.bloques.forEach(bloque => {
             bloque.turnos.forEach(turno => {
-                if (turno.paciente && turno.paciente.id) {
+                if (turno.paciente && turno.paciente.id && turno.paciente.telefono) {
                     this.turnos.push(turno);
                 }
             });
+        });
+        this.agenda.sobreturnos.forEach(sobreturno => {
+
+            if (sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.telefono) {
+                this.turnos.push(sobreturno);
+            }
         });
     }
 
@@ -116,14 +122,12 @@ export class SuspenderAgendaComponent implements OnInit {
             let indice = element.turnos.findIndex(t => {
                 return (t.id === turno.id);
             });
-            if (indice !== -1) {
-                idBloque = element.id;
-            }
+            idBloque = (indice !== -1) ? element.id : -1;
         });
         this.smsService.enviarSms(smsParams).subscribe(
             sms => {
                 if (sms === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + turno.paciente.nombreCompleto);
+                    this.plex.toast('info', 'Se envió SMS al paciente ' + turno.paciente.nombre + ' ' + turno.paciente.apellido);
                     let data = {
                         avisoSuspension: 'enviado'
                     };
@@ -183,11 +187,18 @@ export class SuspenderAgendaComponent implements OnInit {
                     }
                 });
             });
+            this.agenda.sobreturnos.forEach(sobreturno => {
+                if (!(sobreturno.reasignado && sobreturno.reasignado.siguiente)) {
+                    if (sobreturno.paciente && sobreturno.paciente.telefono && sobreturno.paciente.telefono !== '') {
+                        this.seleccionadosSMS = [...this.seleccionadosSMS, sobreturno];
+                    }
+                }
+            });
             this.todosSeleccionados = true;
         } else {
             this.seleccionadosSMS = [];
+            this.todosSeleccionados = false;
         }
-
     }
 
     tienePaciente(turno) {
