@@ -79,9 +79,23 @@ export class SolicitudesComponent implements OnInit {
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.showCargarSolicitud = false;
 
+        this.cargarSolicitudes();
         // Está autorizado para ver esta pantalla?
         if (!this.autorizado) {
+
         }
+    }
+
+    cambiarDia(fecha, dias, dir) {
+        switch (dir) {
+            case 'sumar':
+                this[String(fecha)] = moment(this[String(fecha)]).add(1, 'days');
+                break;
+            case 'restar':
+                this[String(fecha)] = moment(this[String(fecha)]).subtract(1, 'days');
+                break;
+        }
+        this.cargarSolicitudes();
     }
 
     refreshSelection(value, tipo) {
