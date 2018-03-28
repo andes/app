@@ -73,7 +73,7 @@
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col">
-                <table class="table table-bordered" *ngIf="listadoCenso && listadoCenso.length">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th rowspan="2">Existencia a las 0 hs</th>
@@ -84,6 +84,7 @@
                             <th rowspan="2">Existencia a las 24 hs</th>
                             <th rowspan="2">Ingresos y egresos del día</th>
                             <th rowspan="2">Pacientes día</th>
+                            <th rowspan="2">Camas disponibles a las 0hs</th>
                             <th rowspan="2">Camas disponibles a las 24hs</th>
                         </tr>
                         <tr>
@@ -100,6 +101,7 @@
                             <td>{{ resumenCenso.existencia24 }}</td>
                             <td>{{ resumenCenso.ingresoEgresoDia }}</td>
                             <td>{{ resumenCenso.pacientesDia }}</td>
+                            <td>{{ resumenCenso.disponibles0 }}</td>
                             <td>{{ resumenCenso.disponibles24 }}</td>
                         </tr>
 

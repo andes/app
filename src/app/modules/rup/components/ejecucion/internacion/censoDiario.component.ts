@@ -42,7 +42,8 @@ export class CensoDiarioComponent implements OnInit {
         existencia24: 0,
         ingresoEgresoDia: 0,
         pacientesDia: 0,
-        disponibles24: 0
+        disponibles24: 0,
+        disponibles0: 0
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -229,10 +230,12 @@ export class CensoDiarioComponent implements OnInit {
             existencia24: 0,
             ingresoEgresoDia: 0,
             pacientesDia: 0,
-            disponibles24: 0
+            disponibles24: 0,
+            disponibles0: 0
         };
         if (this.listadoCenso && this.ingresoEgreso) {
             Object.keys(this.ingresoEgreso).forEach(indice => {
+                this.resumenCenso.disponibles24 += 1;
                 this.resumenCenso.existencia24 += 1;
                 if (this.ingresoEgreso[indice]['esIngreso']) {
                     this.resumenCenso.ingresos += 1;
@@ -266,7 +269,19 @@ export class CensoDiarioComponent implements OnInit {
 
             this.resumenCenso.existencia24 = this.resumenCenso.existencia24 -
                 this.resumenCenso.egresosDefuncion - this.resumenCenso.egresosAlta - this.resumenCenso.pasesA;
+
         }
+
+        let params = {
+            fecha: this.fecha,
+            unidad: this.organizacionSeleccionada.conceptId
+        };
+        this.servicioInternacion.getCamaDisponibilidadCenso(params).subscribe((respuesta: any) => {
+            if (respuesta) {
+                this.resumenCenso.disponibles0 = respuesta.disponibilidad0 ? respuesta.disponibilidad0 : 0;
+                this.resumenCenso.disponibles24 = respuesta.disponibilidad24 ? respuesta.disponibilidad24 : 0;
+            }
+        });
     }
 
 }
