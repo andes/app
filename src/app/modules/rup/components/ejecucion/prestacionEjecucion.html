@@ -356,7 +356,6 @@
             <div class="col-4" *ngIf="!showCambioPaciente && prestacion && prestacion.solicitud.ambitoOrigen == 'internacion'">
                 <plex-button label="Mapa de camas" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info"></plex-button>
             </div>
-
             <div class="col-4 text-center">
                 <div droppable [dropScope]="'borrar-registros-rup'" (onDrop)="confirmarEliminarRegistro($event, 'footer')" [dragOverClass]="'drop-posicion-hover'"
                     [hidden]="!isDraggingRegistro" class="p-3">
