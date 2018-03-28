@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
@@ -13,9 +13,13 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
     public unique: number = new Date().getTime();
 
     ngOnInit() {
+        if (!this.registro.valor) {
+            this.registro.valor = {};
+        }
         if (this.params) {
-            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+            this.snomedService.getQuery({ expression: this.params.refsetId }).subscribe(resultado => {
                 this.conceptos = resultado;
+
             });
         }
     }

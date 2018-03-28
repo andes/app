@@ -118,7 +118,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
-
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
@@ -679,6 +678,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
             if (this.idAgenda) {
+                localStorage.removeItem('idAgenda');
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
                 if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
@@ -703,10 +703,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
 
-    volver() {
-        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al Punto de Inicio?').then(confirmado => {
+    volver(ambito = 'ambulatorio') {
+        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
-                this.router.navigate(['rup']);
+                if (ambito === 'ambulatorio') {
+                    this.router.navigate(['rup']);
+                } else {
+                    this.router.navigate(['mapa-de-camas']);
+                }
             } else {
                 return;
             }

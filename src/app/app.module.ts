@@ -226,7 +226,7 @@ import { EjecucionInternacionComponent } from './modules/rup/components/ejecucio
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
-
+import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -279,6 +279,7 @@ import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/lis
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 
+
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
@@ -308,6 +309,7 @@ export let RUPRegistry = {
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
+    'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -344,7 +346,8 @@ let RUPComponentsArray = [
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
-    PasesCamaComponent
+    PasesCamaComponent,
+    InformeEpicrisisComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
