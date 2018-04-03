@@ -48,7 +48,7 @@ export class PuntoInicioComponent implements OnInit {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
-    public mostrarBtnTurnero = false;
+    public mostrarBtnTurnero = true;
     public ultimoLlamado;
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -82,7 +82,6 @@ export class PuntoInicioComponent implements OnInit {
             }
         }
         this.conexionPantalla();
-
 
     }
 
@@ -413,7 +412,6 @@ export class PuntoInicioComponent implements OnInit {
 
     // TURNERO
     llamar(bloqueI, turnoI) {
-
         const turnoLlamado = this.agendaSeleccionada.bloques[bloqueI].turnos[turnoI];
         this.dniLlamado = turnoLlamado.paciente.documento;
         this.volverALlamar = true;
@@ -431,12 +429,15 @@ export class PuntoInicioComponent implements OnInit {
             this.dniLlamado = null;
         }, 2200);
     }
+
     // TURNERO
     llamarProximo() {
         let turnosSinAtender = [];
         const proximo = this.agendaSeleccionada.bloques[0].turnos;
         proximo.forEach(element => {
-            if (element.estado === 'asignado' && !element.asistencia) {
+            // if (element.estado === 'asignado' && !element.asistencia) {
+            // }
+            if (!element.prestacion && element.estado === 'asignado') {
                 turnosSinAtender.push(element);
             }
 
