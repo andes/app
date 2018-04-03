@@ -63,8 +63,10 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         solicitud: {
             fecha: null,
             paciente: {},
-            profesional: {},
             organizacion: {},
+            profesional: {},
+            organizacionOrigen: {},
+            profesionalOrigen: {},
             turno: null
         },
         estados: [
@@ -185,6 +187,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
         if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
 
+            // Se limpian keys del bendito plex-select
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;
             delete this.modelo.solicitud.tipoPrestacion.$order;
@@ -204,7 +207,9 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
             };
 
             this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino[0];
+            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino : { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
+            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            this.modelo.solicitud.profesionalOrigen = { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
 
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
@@ -232,7 +237,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                     solicitudPrestacion: {
                         profesionales: [],
                         motivo: '',
-                        autocitado: false
+                        autocitado: false,
                     }
                 };
 

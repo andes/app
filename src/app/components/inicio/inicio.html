@@ -44,6 +44,18 @@
                     </div>
                 </div>
             </div>
+            <br>
+            <div *ngIf="!denied" class="row">
+                <div *ngIf="solicitudes" class="col-4">
+                    <div class="boton color-salmon" routerLink="/solicitudes">
+                        <i class="icono mdi mdi-open-in-app"></i>
+                        <div class="titulo">Solicitudes</div>
+                        <div class="subtitulo">Modulo de Solicitudes</div>
+                        <div class="detalle">Permite el manejo de
+                            <br />solicitudes de turnos</div>
+                    </div>
+                </div>
+            </div>
 
             <!-- <div *ngIf="!denied" class="row mt-4">
                 <div *ngIf="mapaDeCamas" class="col-4">
@@ -55,18 +67,8 @@
                             <br />de los distintos servicios de la organización</div>
                     </div>
                 </div>
-
-                <div *ngIf="prestamosHC" class="col-4">
-                    <div class="boton color-coral" routerLink="/prestamosHC">
-                        <i class="icono mdi mdi-history"></i>
-                        <div class="titulo">Prestamos HC</div>
-                        <div class="subtitulo">Prestamos HC</div>
-                        <div class="detalle">Agiliza el préstamo y devolución
-                            <br />de Historias Clínicas</div>
-                    </div>
-                </div>
             </div> -->
-
+           
             <div *ngIf="denied" class="row">
                 <div class="col">
                     <div class="boton color-amarillo">

@@ -1,3 +1,4 @@
+import { IPaciente } from './../../interfaces/IPaciente';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -5,23 +6,96 @@ import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 import { PrestacionesService } from '../../modules/rup/services/prestaciones.service';
 import * as moment from 'moment';
+import { TurnoService } from '../../services/turnos/turno.service';
+import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
+import { OrganizacionService } from '../../services/organizacion.service';
+import { ProfesionalService } from '../../services/profesional.service';
 
 @Component({
     selector: 'solicitudes',
     templateUrl: './solicitudes.html',
 })
 export class SolicitudesComponent implements OnInit {
-    public solicitudes = [];
+
+    paciente: any;
+    profesionalDestino: any;
+    organizacionDestino: any;
+    turnoSeleccionado: any[];
+    solicitudSelccionada: any;
+    pacienteSeleccionado: any;
+    showDarTurnos: boolean;
+    solicitudTurno: any;
+    labelVolver = 'Lista de Solicitudes';
+
+    public permisos = [];
+    public autorizado = false;
+
+    public modelo: any = {
+        paciente: {},
+        profesional: {},
+        organizacion: {},
+        solicitud: {
+            fecha: null,
+            paciente: {},
+            organizacion: {},
+            profesional: {},
+            organizacionOrigen: this.auth.organizacion,
+            profesionalOrigen: {},
+            turno: null
+        },
+        estados: [
+            { tipo: 'pendiente' }
+        ]
+    };
+    public registros: any = {
+        solicitudPrestacion: {
+            profesionales: [],
+            motivo: '',
+            autocitado: false
+        }
+    };
+
+    public showCargarSolicitud = false;
+    public showBotonCargarSolicitud = true;
+    public showSeleccionarPaciente = false;
+
+    public prestaciones = [];
     public fechaDesde: Date = new Date();
     public fechaHasta: Date = new Date();
-    public DT = [];
-    public Auditar = [];
+    public darTurnoArray = [];
+    public auditarArray = [];
     public visualizar = [];
-    constructor(private auth: Auth, private plex: Plex,
-        private router: Router, public servicioPrestacion: PrestacionesService) { }
+    constructor(private servicioPrestacion: PrestacionesService,
+        private servicioTipoPrestacion: TipoPrestacionService,
+        private servicioOrganizacion: OrganizacionService,
+        private servicioProfesional: ProfesionalService,
+        private auth: Auth,
+        private router: Router,
+        private plex: Plex,
+        public servicioTurnos: TurnoService) { }
 
     ngOnInit() {
-        // this.cargarSolicitudes();
+        this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.showCargarSolicitud = false;
+
+        this.cargarSolicitudes();
+        // Está autorizado para ver esta pantalla?
+        if (!this.autorizado) {
+
+        }
+    }
+
+    cambiarDia(fecha, dias, dir) {
+        switch (dir) {
+            case 'sumar':
+                this[String(fecha)] = moment(this[String(fecha)]).add(1, 'days');
+                break;
+            case 'restar':
+                this[String(fecha)] = moment(this[String(fecha)]).subtract(1, 'days');
+                break;
+        }
+        this.cargarSolicitudes();
     }
 
     refreshSelection(value, tipo) {
@@ -29,52 +103,43 @@ export class SolicitudesComponent implements OnInit {
     }
 
     estaSeleccionada(solicitud: any) {
-        console.log('solicitud ', solicitud);
-        console.log('solicitudes ', this.solicitudes);
-        return this.solicitudes.findIndex(x => x.id === solicitud._id);
+        return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
     seleccionar(indice) {
-        let solicitud = this.solicitudes[indice];
-        for (let i = 0; i < this.solicitudes.length; i++) {
-            this.solicitudes[i].seleccionada = false;
-            this.DT[i] = false;
-            this.visualizar[i] = false;
-            this.Auditar[i] = false;
+        for (let i = 0; i < this.prestaciones.length; i++) {
+            this.prestaciones[i].seleccionada = false;
         }
-        solicitud.seleccionada = true;
-        switch (solicitud.estados[solicitud.estados.length - 1].tipo) {
-            case 'pendiente':
-                this.Auditar[indice] = false;
-                if (solicitud.turno !== null) {
-                    this.visualizar[indice] = true;
-                } else {
-                    this.DT[indice] = true;
-                    this.visualizar[indice] = false;
-                }
-                break;
-            case 'pendiente auditoria':
-                this.DT[indice] = false;
-                this.visualizar[indice] = false;
-                this.Auditar[indice] = true;
-                if (solicitud.turno !== null) {
-                    this.visualizar[indice] = true;
-                } else {
-                    this.visualizar[indice] = false;
-                }
-                break;
-            default:
-                if (solicitud.turno !== null) {
-                    this.visualizar[indice] = true;
-                }
-                this.DT[indice] = false;
-                this.Auditar[indice] = false;
-                break;
+
+        this.prestaciones[indice].seleccionada = true;
+        this.solicitudSelccionada = this.prestaciones[indice];
+
+        if (this.prestaciones[indice].solicitud && this.prestaciones[indice].solicitud.turno) {
+
+            let params = {
+                id: this.solicitudSelccionada.solicitud.turno
+            };
+
+            this.servicioTurnos.getTurnos(params).subscribe(turno => {
+                this.turnoSeleccionado = turno[0];
+            });
+        } else {
+            this.turnoSeleccionado = null;
         }
+
     }
 
-    darTurno() {
+    darTurno(prestacionSolicitud) {
         // Pasar filtros al calendario
+        this.solicitudTurno = prestacionSolicitud;
+        this.pacienteSeleccionado = prestacionSolicitud.paciente;
+        this.showDarTurnos = true;
+    }
+
+    volverDarTurno() {
+        this.cargarSolicitudes();
+        this.showDarTurnos = false;
+        this.solicitudTurno = null;
     }
 
     auditar() {
@@ -85,191 +150,254 @@ export class SolicitudesComponent implements OnInit {
         // Solicitudes que no tienen prestacionOrigen ni turno
         // Si tienen prestacionOrigen son generadas por RUP y no se listan
         // Si tienen turno, dejan de estar pendientes de turno y no se listan
-        let params = {
-            solicitudDesde: this.fechaDesde,
-            solicitudHasta: this.fechaHasta,
-            tienePrestacionOrigen: 'no',
-            tieneTurno: 'no',
-            estado: 'pendiente'
-        };
         if (this.fechaDesde && this.fechaHasta) {
+            let params = {
+                estado: 'pendiente',
+                solicitudDesde: moment(this.fechaDesde).startOf('day'),
+                solicitudHasta: moment(this.fechaHasta).endOf('day')
+            };
+            this.servicioPrestacion.get(params).subscribe(resultado => {
+                this.prestaciones = resultado;
+                for (let i = 0; i < this.prestaciones.length; i++) {
 
-            this.solicitudes = [
-                {
-                    id: 1,
-                    fecha: 'Mon Feb 26 2018 11:15:52 GMT-0300 (ART)',
-                    turno: null,
-                    organizacionOrigen: {
-                        id: '57f67d090166fa6aedb2f9fb',
-                        nombre: 'HOSPITAL DE AREA CENTENARIO - DR. NATALIO BURD'
-                    },
-                    organizacionDestino: {
-                        id: '57e9670e52df311059bc8964',
-                        nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON'
-                    },
-                    profesionalOrigen: {
-                        documento: '17046369',
-                        apellido: 'LOPEZ',
-                        nombre: 'MARICEL ETHEL',
-                        id: '58f74fd3d03019f919ea0957'
-                    },
-                    tipoPrestacion: {
-                        conceptId: '621000013102',
-                        fsn: 'Consulta de traumatologia de columna (procedimiento)',
-                        id: '59ee2d9bf00c415246fd3d82',
-                        refsetIds: [],
-                        semanticTag: 'procedimiento',
-                        term: 'Consulta de traumatologia de columna'
-                    },
-                    paciente: {
-                        id: '586e6e8f27d3107fde14b368',
-                        nombre: 'VERONICA AGNES',
-                        apellido: 'HERNANDEZ SOTO',
-                        documento: '92258444',
-                        sexo: 'femenino',
-                        fechaNacimiento: '1971-02-05T00:00:00.000-03:00'
-                    },
-                    estados: [
-                        {
-                            createdBy: {
-                                organizacion: {
-                                    id: '57e9670e52df311059bc8964',
-                                    nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON',
-                                },
-                                documento: 18546703,
-                                username: 18546703,
-                                apellido: 'FONSECA',
-                                nombre: 'DOMINGA',
-                                nombreCompleto: 'DOMINGA FONSECA'
-                            },
-                            createdAt: '2018-02-28T14:59:16.212-03:00',
-                            tipo: 'pendiente',
-                            id: '5a96edf4fb83f14b3ba3224d',
-                            idOrigenModifica: null
-                        }
-                    ]
-                },
-                {
-                    id: 2,
-                    fecha: 'Fri Feb 16 2018 11:15:52 GMT-0300 (ART)',
-                    turno: '5a69ef990577c50523b9af7a',
-                    organizacionOrigen: {
-                        id: '57fcf037326e73143fb48c3a',
-                        nombre: 'CENTRO DE SALUD PROGRESO'
-                    },
-                    organizacionDestino: {
-                        id: '57e9670e52df311059bc8964',
-                        nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON'
-                    },
-                    profesionalOrigen: {
-                        documento: '20821052',
-                        apellido: 'ARANEO',
-                        nombre: 'SILVIA LAURA',
-                        id: '58f74fd3d03019f919ea0e9e'
-                    },
-                    profesionalDestino: {
-                        documento: '26776993',
-                        apellido: 'ENTRENA',
-                        nombre: 'NICOLAS ALEJANDRO',
-                        id: '58f74fd4d03019f919ea1b48'
-                    },
-                    tipoPrestacion: {
-                        conceptId: '451000013109',
-                        fsn: 'consulta de traumatología general',
-                        id: '598ca8375adc68e2a0c121c5',
-                        semanticTag: 'procedimiento',
-                        term: 'consulta de traumatología general'
-                    },
-                    paciente: {
-                        id: '586e6e8827d3107fde121797',
-                        nombre: 'ROQUE ELBIO',
-                        apellido: 'OCAMPO',
-                        documento: '16107158',
-                        sexo: 'masculino',
-                        fechaNacimiento: '1963-04-21T00:00:00.000-03:00',
-                    },
-                    estados: [
-                        {
-                            createdBy: {
-                                organizacion: {
-                                    id: '57e9670e52df311059bc8964',
-                                    nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON',
-                                },
-                                documento: 18546703,
-                                username: 18546703,
-                                apellido: 'FONSECA',
-                                nombre: 'DOMINGA',
-                                nombreCompleto: 'DOMINGA FONSECA'
-                            },
-                            createdAt: '2018-02-28T14:59:16.212-03:00',
-                            tipo: 'pendiente',
-                            id: '5a96edf4fb83f14b3ba3224d',
-                            idOrigenModifica: null
-                        }
-                    ]
-                },
-                {
-                    id: 3,
-                    fecha: 'Wed Feb 14 2018 11:15:52 GMT-0300 (ART)',
-                    turno: null,
-                    organizacionOrigen: {
-                        id: '57fcf037326e73143fb48c3a',
-                        nombre: 'CENTRO DE SALUD PROGRESO'
-                    },
-                    organizacionDestino: {
-                        id: '57e9670e52df311059bc8964',
-                        nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON'
-                    },
-                    profesionalOrigen: {
-                        documento: '22851614',
-                        apellido: 'GARCIA',
-                        nombre: 'ESTEBAN OSMAR',
-                        id: '58f74fd4d03019f919ea1298'
-                    },
-                    tipoPrestacion: {
-                        id: '598ca8375adc68e2a0c121e5',
-                        conceptId: '551000013105',
-                        term: 'consulta de salud mental',
-                        fsn: 'consulta de salud mental',
-                        semanticTag: 'procedimiento'
-                    },
-                    paciente: {
-                        id: '59e5e01b27b2173491bdfa50',
-                        documento: '93090185',
-                        apellido: 'PALACIOS SEGUEL',
-                        nombre: 'MYRIAN DEL TRANSITO',
-                        sexo: 'femenino',
-                        fechaNacimiento: '1954-08-15T00:00:00.000-03:00'
-                    },
-                    estados: [
-                        {
-                            createdBy: {
-                                organizacion: {
-                                    id: '57e9670e52df311059bc8964',
-                                    nombre: 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON',
-                                },
-                                documento: 18546703,
-                                username: 18546703,
-                                apellido: 'FONSECA',
-                                nombre: 'DOMINGA',
-                                nombreCompleto: 'DOMINGA FONSECA'
-                            },
-                            createdAt: '2018-02-28T14:59:16.212-03:00',
-                            tipo: 'pendiente auditoria',
-                            id: '5a96edf4fb83f14b3ba3224d',
-                            idOrigenModifica: null
-                        }
-                    ]
+                    switch (this.prestaciones[i].estados[this.prestaciones[i].estados.length - 1].tipo) {
+                        case 'pendiente':
+
+                            // Se puede auditar?
+                            this.auditarArray[i] = false;
+
+                            // Hay turno?
+                            if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizar[i] = true;
+                            } else {
+                                // Se puede dar turno?
+                                this.darTurnoArray[i] = true;
+
+                                // Se puede visualizar?
+                                this.visualizar[i] = false;
+                            }
+                            break;
+                        case 'pendiente auditoria':
+
+                            // Se puede dar turno?
+                            this.darTurnoArray[i] = false;
+
+                            // Se puede visualizar?
+                            this.visualizar[i] = false;
+
+                            // Se puede auditar?
+                            this.auditarArray[i] = true;
+
+                            // Hay turno?
+                            if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizar[i] = true;
+                            } else {
+                                // Se puede visualizar?
+                                this.visualizar[i] = false;
+                            }
+                            break;
+                        case 'validada':
+
+                            // Hay turno?
+                            if (this.prestaciones[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizar[i] = true;
+                            }
+                            // Se puede dar turno?
+                            this.darTurnoArray[i] = false;
+                            // Se puede auditar?
+                            this.auditarArray[i] = false;
+                            break;
+                    }
                 }
-            ];
-            //     console.log('solicitudes ', this.solicitudes);
+                console.log('prestaciones ', this.prestaciones);
+            }, err => {
+                if (err) {
+                    console.log(err);
+                }
+            });
         }
-        // this.servicioPrestacion.get(params).subscribe(resultado => {
-        //     this.solicitudes = resultado;
-        // }, err => {
-        //     if (err) {
-        //         console.log(err);
-        //     }
-        // });
     }
+
+
+    seleccionarPaciente(paciente: any): void {
+        if (paciente.id) {
+            this.paciente = paciente;
+            this.showSeleccionarPaciente = false;
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        }
+    }
+
+
+    loadProfesionales(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.modelo.profesionales) {
+                    listaProfesionales = (resultado) ? this.modelo.solicitud.profesional.concat(resultado) : this.modelo.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
+        } else {
+            event.callback(this.modelo.solicitud.profesional);
+        }
+    }
+
+    loadProfesionalesMulti(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                if (this.registros.solicitudPrestacion.profesionales) {
+                    listaProfesionales = (resultado) ? this.registros.solicitudPrestacion.profesionales.concat(resultado) : this.registros.solicitudPrestacion.profesionales;
+                } else {
+                    listaProfesionales = resultado;
+                }
+                event.callback(listaProfesionales);
+            });
+        } else {
+            event.callback(this.registros.solicitudPrestacion.profesionales);
+        }
+    }
+
+    loadTipoPrestaciones(event) {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
+            event.callback(dataF);
+        });
+    }
+
+    formularioSolicitud() {
+        this.showCargarSolicitud = true;
+        this.showBotonCargarSolicitud = false;
+        this.showSeleccionarPaciente = true;
+    }
+
+    guardarSolicitud($event) {
+
+        if ($event.formValid && this.organizacionDestino._id && this.profesionalDestino._id) {
+
+            // Se limpian keys del bendito plex-select
+            delete this.modelo.solicitud.organizacion.$order;
+            delete this.modelo.solicitud.profesional.$order;
+            delete this.modelo.solicitud.tipoPrestacion.$order;
+            if (this.registros.solicitudPrestacion.profesionales) {
+                this.registros.solicitudPrestacion.profesionales.filter(profesional => {
+                    return delete profesional.$order;
+                });
+            }
+
+            this.modelo.solicitud.registros = {
+                nombre: this.modelo.solicitud.tipoPrestacion.term,
+                concepto: this.modelo.solicitud.tipoPrestacion,
+                valor: {
+                    solicitudPrestacion: this.registros.solicitudPrestacion
+                },
+                tipo: 'solicitud'
+            };
+
+            this.modelo.paciente = this.paciente;
+            this.modelo.solicitud.organizacion = this.organizacionDestino;
+            this.modelo.solicitud.profesional = this.profesionalDestino ? this.profesionalDestino : { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
+            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            this.modelo.solicitud.profesionalOrigen = { id: this.auth.profesional.id, nombre: this.auth.usuario.nombre, apellido: this.auth.usuario.apellido };
+
+            // Se guarda la solicitud 'pendiente' de prestación
+            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+
+                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+                this.showCargarSolicitud = false;
+                this.showBotonCargarSolicitud = true;
+
+                this.modelo = {
+                    paciente: this.paciente,
+                    profesional: {},
+                    organizacion: {},
+                    solicitud: {
+                        fecha: null,
+                        paciente: {},
+                        organizacion: {},
+                        organizacionOrigen: this.auth.organizacion,
+                        profesional: {},
+                        profesionalOrigen: {},
+                        turno: null
+                    },
+                    estados: [
+                        { tipo: 'pendiente' }
+                    ]
+                };
+                this.registros = {
+                    solicitudPrestacion: {
+                        profesionales: [],
+                        motivo: '',
+                        autocitado: false,
+                    }
+                };
+
+            });
+
+        } else {
+            this.plex.alert('Debe completar los datos requeridos');
+        }
+    }
+
+    cancelar() {
+        // this.modelo.solicitud = {};
+        // this.registros = [];
+        this.showCargarSolicitud = false;
+        this.showBotonCargarSolicitud = true;
+        this.showCargarSolicitud = false;
+        // this.cancelarSolicitudVentanilla.emit(true);
+
+        this.modelo = {
+            paciente: this.paciente,
+            profesional: {},
+            organizacion: this.auth.organizacion,
+            solicitud: {
+                fecha: null,
+                paciente: {},
+                organizacion: {},
+                organizacionOrigen: this.auth.organizacion,
+                profesional: {},
+                profesionalOrigen: {},
+                turno: null
+            },
+            estados: [
+                { tipo: 'pendiente' }
+            ]
+        };
+        this.registros = {
+            solicitudPrestacion: {
+                profesionales: [],
+                motivo: '',
+                autocitado: false
+            }
+        };
+
+    }
+
 }

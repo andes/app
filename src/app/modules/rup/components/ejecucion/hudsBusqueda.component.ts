@@ -217,8 +217,6 @@ export class HudsBusquedaComponent implements OnInit {
             data: registro
         };
 
-        // console.log(elemento);
-
         // si no existe lo agregamos
         if (index === -1) {
             this.registrosHuds.push(elemento);

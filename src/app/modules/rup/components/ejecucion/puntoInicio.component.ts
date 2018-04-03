@@ -79,6 +79,18 @@ export class PuntoInicioComponent implements OnInit {
         return false;
     }
 
+    cambiarDia(fecha, dias, dir) {
+        switch (dir) {
+            case 'sumar':
+                this[String(fecha)] = moment(this[String(fecha)]).add(1, 'days');
+                break;
+            case 'restar':
+                this[String(fecha)] = moment(this[String(fecha)]).subtract(1, 'days');
+                break;
+        }
+        this.actualizar();
+    }
+
     /**
      * Actualiza el listado de agendas y prestaciones
      */
@@ -336,6 +348,8 @@ export class PuntoInicioComponent implements OnInit {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
             localStorage.setItem('idAgenda', agenda.id);
+        } else {
+            localStorage.removeItem('idAgenda');
         }
         this.router.navigate(['rup/' + action + '/', id]);
     }
@@ -387,7 +401,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // Detecta si una Agenda es futura
     esFutura(agenda: IAgenda = null) {
-        return moment(agenda.horaInicio).endOf('day').isAfter(moment(new Date()).startOf('day'));
+        return moment(agenda.horaInicio).isAfter(moment(new Date()));
     }
 
     // Detecta si "hoy" es el día de la Agenda
