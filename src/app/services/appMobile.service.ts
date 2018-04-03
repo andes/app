@@ -34,8 +34,8 @@ export class AppMobileService {
      * @param {objectId} idPaciente
      */
 
-    reenviar(idPaciente): Observable<any> {
-        return this.server.post(this.mobileUrl + 'v2/reenviar-codigo', { id: idPaciente });
+    reenviar(idPaciente, data): Observable<any> {
+        return this.server.post(this.mobileUrl + 'v2/reenviar-codigo', { id: idPaciente, contacto: data.contacto });
     }
 
 }

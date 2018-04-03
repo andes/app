@@ -261,7 +261,7 @@ export class SolicitudesComponent implements OnInit {
                         }
                     ]
                 }
-            ]
+            ];
             //     console.log('solicitudes ', this.solicitudes);
         }
         // this.servicioPrestacion.get(params).subscribe(resultado => {

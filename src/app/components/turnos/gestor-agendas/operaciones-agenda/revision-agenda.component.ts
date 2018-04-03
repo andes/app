@@ -50,19 +50,15 @@ export class RevisionAgendaComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
-    private timeoutHandle: number;
-    // ultima request que se almacena con el subscribe
-    private lastRequest: ISubscription;
+    public cantidadTurnosAsignados: number;
     private estadoPendienteAuditoria;
     private estadoCodificado;
 
-    public searchTerm: String = '';
     indiceReparo: any;
     public showReparo = false;
     existeCodificacionProfesional: Boolean;
     showRevisionAgenda: Boolean = true;
     showAgregarSobreturno: Boolean = false;
-    sobreturnos = [];
     horaInicio: any;
     turnoSeleccionado: any = null;
     bloqueSeleccionado: any = null;
@@ -88,6 +84,22 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.getCantidadTurnosAsignados();
+    }
+
+    private getCantidadTurnosAsignados() {
+        // verificamos la cant. de turnos asignados que tiene la agenda
+        let turnosAsignados = [];
+        for (let i = 0; i < this.agenda.bloques.length; i++) {
+            turnosAsignados = turnosAsignados.concat(this.agenda.bloques[i].turnos);
+        }
+        if (this.agenda.sobreturnos) {
+            turnosAsignados = turnosAsignados.concat(this.agenda.sobreturnos);
+        }
+        turnosAsignados = turnosAsignados.filter(turno => {
+            return (turno.paciente && turno.paciente.id);
+        });
+        this.cantidadTurnosAsignados = turnosAsignados.length;
     }
 
     buscarPaciente() {
@@ -124,8 +136,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Output de la búsqueda de paciente
-     * 
-     * @param {IPaciente} paciente 
+     *
+     * @param {IPaciente} paciente
      * @memberof RevisionAgendaComponent
      */
     onReturn(paciente: IPaciente): void {
@@ -148,6 +160,7 @@ export class RevisionAgendaComponent implements OnInit {
         this.diagnosticos = [];
         this.paciente = null;
         this.bloqueSeleccionado = bloque;
+        this.showReparo = false;
         if (this.bloqueSeleccionado && this.bloqueSeleccionado !== -1) {
             this.turnoTipoPrestacion = this.bloqueSeleccionado.tipoPrestaciones.length === 1 ? this.bloqueSeleccionado.tipoPrestaciones[0] : null;
         } else { // para el caso de sobreturno, que no tiene bloques.
@@ -155,7 +168,6 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoSeleccionado === turno) {
             this.turnoSeleccionado = null;
-            this.showReparo = false;
         } else {
             this.turnoSeleccionado = turno;
             this.pacientesSearch = false;
@@ -165,7 +177,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
     }
 
-    seleccionarAsistencia(asistencia, i) {
+    seleccionarAsistencia(asistencia) {
         if (this.turnoSeleccionado) {
             this.turnoSeleccionado.asistencia = asistencia.id;
         }
@@ -199,7 +211,7 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     borrarDiagnostico(index) {
-        if (this.diagnosticos[index].codificacionProfesional === null) {
+        if (!this.diagnosticos[index].codificacionProfesional || (this.diagnosticos[index].codificacionProfesional && this.diagnosticos[index].codificacionProfesional.snomed && !this.diagnosticos[index].codificacionProfesional.snomed.term)) {
             this.diagnosticos.splice(index, 1);
         } else {
             this.diagnosticos[index].codificacionAuditoria = null;
@@ -211,12 +223,12 @@ export class RevisionAgendaComponent implements OnInit {
     }
 
     aprobar(index) {
-        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional;
+        this.diagnosticos[index].codificacionAuditoria = this.diagnosticos[index].codificacionProfesional.cie10;
         this.onSave();
     }
     /**
      * Verifica si cada turno tiene la asistencia verificada y modifica el estado de la agenda.
-     * 
+     *
      * @memberof RevisionAgendaComponent
      */
     cerrarAsistencia() {
@@ -232,8 +244,7 @@ export class RevisionAgendaComponent implements OnInit {
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
         });
-        if (!turnoSinVerificar) {
-            // TODO!!!
+        if (!turnoSinVerificar) { // Si todos los turnos están verificados..
             // Se cambia de estado la agenda a pendienteAuditoria
             let patch = {
                 'op': 'pendienteAuditoria',
@@ -242,11 +253,24 @@ export class RevisionAgendaComponent implements OnInit {
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
             });
+        } else {
+            // este caso se dá cuando se agregan sobreturnos desde la auditoria
+            // si hay algún turno sin verificar asistencia y la agenda ya está en otro estado, se vuelve a pendiente asisitencia
+            if (this.agenda.estado !== 'pendienteAsistencia') {
+                // Se cambia de estado la agenda a pendienteAuditoria
+                let patch = {
+                    'op': 'pendienteAsistencia',
+                    'estado': 'pendienteAsistencia'
+                };
+                this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
+                    this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Asistencia');
+                });
+            }
         }
     }
     /**
      * Verifica que cada turno esté codificado y modifica el estado de la agenda si corresponde
-     * 
+     *
      * @memberof RevisionAgendaComponent
      */
     cerrarCodificacion() {
@@ -277,7 +301,6 @@ export class RevisionAgendaComponent implements OnInit {
                 this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
             });
         }
-
     }
 
     cancelar() {
@@ -316,10 +339,8 @@ export class RevisionAgendaComponent implements OnInit {
 
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
-                // this.plex.toast('success', 'Información', 'El turno fue actualizado');
                 this.cerrarAsistencia();
                 this.cerrarCodificacion();
-                // this.turnoSeleccionado = null;
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');
@@ -353,8 +374,8 @@ export class RevisionAgendaComponent implements OnInit {
     }
     /**
      * Agrega el diagnóstico provisto por el revisor, y persiste el cambio automáticamente
-     * 
-     * @param {any} reparo 
+     *
+     * @param {any} reparo
      * @memberof RevisionAgendaComponent
      */
     repararDiagnostico(reparo) {
@@ -376,6 +397,7 @@ export class RevisionAgendaComponent implements OnInit {
         this.showRevisionAgenda = true;
         this.modoCompleto = true;
         this.refresh();
+        this.cerrarAsistencia();
     }
 
 }

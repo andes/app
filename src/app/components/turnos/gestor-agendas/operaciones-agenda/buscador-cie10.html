@@ -6,7 +6,7 @@
         <tbody>
             <tr *ngFor="let item of resultados; let i = index; " class="hover">
                 <td (click)="seleccionarPrestacion(item)">
-                    {{item.sinonimo}}
+                    ({{item.codigo}}) {{item.sinonimo}}
                 </td>
             </tr>
         </tbody>
