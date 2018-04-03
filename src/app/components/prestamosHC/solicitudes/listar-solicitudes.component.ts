@@ -35,8 +35,9 @@ export class ListarSolicitudesComponent implements OnInit {
 
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
+    public verImprimirSolicitudes: Boolean = false;
     public mostrarMasOpciones = false;
-
+    public sortDescending = false;
     public _listarCarpetas;
 
     get listaCarpetasInput(): any {
@@ -57,6 +58,7 @@ export class ListarSolicitudesComponent implements OnInit {
     // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         public prestamosService: PrestamosService,
@@ -118,6 +120,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
         this.prestamosService.getCarpetasSolicitud(this.filters).subscribe(carpetas => {
             this.carpetas = carpetas;
+            this.sortCarpetas();
         });
     }
 
@@ -166,6 +169,15 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
+    showImprimirCarpetas() {
+        this.verImprimirSolicitudes = true;
+        this.imprimirSolicitudesEmit.emit(this.carpetas);
+    }
+
+    volverAListado() {
+        this.verImprimirSolicitudes = false;
+    }
+
     loadEstados(event) {
         let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
         event.callback(listaEstados);
@@ -177,11 +189,23 @@ export class ListarSolicitudesComponent implements OnInit {
         this.verPrestar = true;
     }
 
+    sortCarpetas() {
+        let val = this.sortDescending ? -1 : 1;
+        // this.carpetas.sort((a, b) => { return (parseInt(a.numero) > parseInt(b.numero)) ? val : (parseInt(b.numero) > parseInt(a.numero)) ? -val : 0; } );
+        this.carpetas.sort((a, b) => { return (a.numero > b.numero) ? val : ((b.numero > a.numero) ? -val : 0); } );
+    }
+
+    toogleSort() {
+        this.sortDescending = !this.sortDescending;
+        this.sortCarpetas();
+    }
+
     onCancelPrestar(event) {
         this.verPrestar = false;
     }
 
     onCarpeta(value) {
+        this.recargarPrestamosEmit.emit(true);
         this.getCarpetas({}, null);
     }
 }

@@ -10,3 +10,7 @@ plex-box > DIV > DIV > DIV > header {
     margin-bottom: 15px;
     border-bottom: solid grey 1px !important;
 }
+
+i.mdi.mdi-checkbox-blank-outline, i.mdi.mdi-checkbox-marked {
+    cursor: pointer;
+}
