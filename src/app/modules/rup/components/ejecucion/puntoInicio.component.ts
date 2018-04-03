@@ -48,7 +48,7 @@ export class PuntoInicioComponent implements OnInit {
     private prestacionesOriginales: any = [];
     public prestacionSeleccion: any;
     public paciente: any;
-    public mostrarBtnTurnero = true;
+    public mostrarBtnTurnero = false;
     public ultimoLlamado;
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
