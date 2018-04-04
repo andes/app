@@ -115,7 +115,8 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     loadServicios($event) {
         if (this.organizacion) {
-            let servicios = this.organizacion.servicios;
+            let servicios = this.organizacion.unidadesOrganizativas;
+            console.log(this.organizacion);
             $event.callback(servicios);
         }
     }

@@ -168,7 +168,7 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <plex-select [multiple]="true" name="servicios" (getData)=" getServicios($event)" [(ngModel)]="serviciosSeleccionados" label="Servicios:">
+                                <plex-select [multiple]="true" name="servicios" labelField="term" [data]='listadoUO' idField="conceptId" [(ngModel)]="organizacionModel.unidadesOrganizativas" label="Servicios:">
                                 </plex-select>
                             </div>
                         </div>
