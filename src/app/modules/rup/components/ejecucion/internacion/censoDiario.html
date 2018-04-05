@@ -33,21 +33,21 @@
                     <tbody>
                         <tr *ngFor="let censo of listadoCenso, let indice = index">
                             <td>
-                                {{censo.ultimoEstado.paciente | paciente }}
+                                {{censo.dataCenso.ultimoEstado.paciente | paciente }}
                             </td>
                             <td>
-                                <span *ngIf="censo.cama.sector">
-                                    {{censo.cama.sector }} /
+                                <span *ngIf="censo.dataCenso?.cama.sector">
+                                    {{censo.dataCenso.cama.sector }} /
                                 </span>
-                                <span *ngIf="censo.cama.habitacion">
-                                    {{censo.cama.habitacion}}
+                                <span *ngIf="censo.dataCenso?.cama.habitacion">
+                                    {{censo.dataCenso.cama.habitacion}}
                                 </span>
                             </td>
                             <td>
-                                {{censo.cama.nombre}}
+                                {{censo.dataCenso.cama.nombre}}
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.esIngreso; else elseIngreso">
+                                <div *ngIf="censo.esIngreso; else elseIngreso">
                                     si
                                 </div>
                                 <ng-template #elseIngreso>
@@ -55,13 +55,13 @@
                                 </ng-template>
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.esPaseDe?.unidadOrganizativa.term }}
+                                {{ censo.esPaseDe?.unidadOrganizativa.term }}
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.egreso }}
+                                {{ censo.egreso }}
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.esPaseA?.unidadOrganizativa.term }}
+                                {{ censo.esPaseA?.unidadOrganizativa.term }}
                             </td>
                         </tr>
                     </tbody>
