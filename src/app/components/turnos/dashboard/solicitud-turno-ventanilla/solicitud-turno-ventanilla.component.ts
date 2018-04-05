@@ -55,6 +55,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     public permisos = [];
     public autorizado = false;
+    public puedeAutocitar = false;
 
     public modelo: any = {
         paciente: {},
@@ -98,6 +99,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.puedeAutocitar = this.auth.getPermissions('turnos:puntoInicio:autocitado:?').length > 0;
+
         this.showCargarSolicitud = false;
 
         // Está autorizado para ver esta pantalla?
