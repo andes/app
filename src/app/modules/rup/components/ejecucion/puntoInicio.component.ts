@@ -59,7 +59,7 @@ export class PuntoInicioComponent implements OnInit {
         public servicioTurnero: TurneroService) { }
 
     ngOnInit() {
-        if (this.auth.organizacion.id === '5a5e3f7e0bd5677324737244') {
+        if (this.auth.organizacion.turnero === true) {
             this.mostrarBtnTurnero = true;
         }
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
