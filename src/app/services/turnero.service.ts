@@ -8,7 +8,7 @@ import * as io from 'socket.io-client';
 export class TurneroService {
 
     private turneroUrl = '/modules/turnero/';  // URL to web api
-    private url = 'http://localhost:3002';
+    private url = environment.WS;
     private socket;
 
     constructor(private server: Server) { }
