@@ -59,14 +59,6 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
-import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
-import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-
-// Préstamos HC
-import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
 // Internacion
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';

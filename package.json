@@ -9,8 +9,8 @@
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
-        "build:prod": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=prod --prod --aot=true",
-        "build:test": "node --max_old_space_size=8192 ./node_modules/@angular/cli/bin/ng build --env=test"
+        "build:prod": "ng build --env=prod --prod --aot=true",
+        "build:test": "ng build --env=test"
     },
     "repository": {
         "type": "git",
@@ -25,7 +25,7 @@
         "@agm/core": "^1.0.0-beta.2",
         "@andes/auth": "^2.0.0",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "git://github.com/andes/plex.git",
+        "@andes/plex": "^3.1.0",
         "@andes/shared": "^2.0.0",
         "@angular/animations": "^5.0.0",
         "@angular/cdk": "^5.2.4",
