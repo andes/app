@@ -15,6 +15,16 @@ db.getCollection("conceptoTurneable").insert({
 		"900000000000497000"
 	],
 })
+// Concepto 2
+db.getCollection("conceptoTurneable").insert({
+    "conceptId" : "721145008",
+    "term" : "conjunto de referencias de odontografías",
+    "fsn" : "conjunto de referencias de odontografías (metadato fundacional)",
+    "semanticTag" : "metadato fundacional",
+    "refsetIds" : [
+        "900000000000497000"
+    ],
+})
 // TODO: Conceptos
 ```
 2. ### Insertar los siguientes Elementos RUP:
@@ -45,10 +55,13 @@ db.getCollection("elementosRUP").insert({
         {
             "elementoRUP": ObjectId("5ac3b7acd14c471590705a26"),
             "concepto": {
-                "conceptId" : "173291009",
-                "fsn" : "extracción simple de diente (procedimiento)",
-                "term" : "extracción simple de diente",
-                "semanticTag" : "procedimiento",
+                "conceptId" : "721145008",
+                "term" : "conjunto de referencias de odontografías",
+                "fsn" : "conjunto de referencias de odontografías (metadato fundacional)",
+                "semanticTag" : "metadato fundacional",
+                "refsetIds" : [
+                    "900000000000497000"
+                ],
             },
             "style": {
                 "columns": 6.0,
@@ -64,20 +77,20 @@ db.getCollection("elementosRUP").insert({
     ],
     "frecuentes": [
         {
-            "fsn": "primera falla en el cribado para la detección de alteraciones en la audición en el niño (hallazgo)",
-            "semanticTag": "hallazgo",
-            "refsetIds": [
+            "conceptId" : "173291009",
+            "fsn" : "extracción simple de diente (procedimiento)",
+            "term" : "extracción simple de diente",
+            "semanticTag" : "procedimiento",
+            "refsetIds" : [
                 "900000000000497000"
             ],
-            "conceptId": "185577006",
-            "term": "primera falla en el cribado para la detección de alteraciones en la audición en el niño"
         },
     ]
 });
 ```
 ### Insertar el siguiente Elemento RUP, que permite la selección de conceptos SNOMED como valores de resultados de otoemisiones
 ```
-// Select con datos de ReferenceSet de Resultados de otoemisión y Antecendentes para estudio de otoemisiones acústicas
+// Select con datos de ReferenceSet de Piezas dentarias
 db.getCollection("elementosRUP").insert({
     "activo": true,
     "componente": "SelectPorRefsetComponent",
@@ -89,23 +102,14 @@ db.getCollection("elementosRUP").insert({
     },
     "conceptos": [
         {
-            "fsn": "evaluación de antecedentes (procedimiento)",
-            "semanticTag": "procedimiento",
-            "term": "evaluación de antecedentes",
-            "conceptId": "371580005"
+            "conceptId" : "721145008",
+                "term" : "conjunto de referencias de odontografías",
+                "fsn" : "conjunto de referencias de odontografías (metadato fundacional)",
+                "semanticTag" : "metadato fundacional",
+                "refsetIds" : [
+                    "900000000000497000"
+                ],
         },
-        {
-            "fsn": "otoemisión acústica de oído derecho (entidad observable)",
-            "semanticTag": "entidad observable",
-            "term": "otoemisión acústica de oído derecho",
-            "conceptId": "2101000013106"
-        },
-        {
-            "fsn" : "otoemisión acústica de oído izquierdo (entidad observable)",
-            "semanticTag" : "entidad observable",
-            "conceptId" : "2111000013109",
-            "term" : "otoemisión acústica de oído izquierdo"
-        }
     ],
     "requeridos": [],
     "frecuentes": [],
