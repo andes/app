@@ -39,7 +39,8 @@
                             </div>
                             <div class="col-4">
                                 <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
-                                    label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
+                                    label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                                    [required]="true">
                                 </plex-select>
                             </div>
                         </div>
@@ -47,9 +48,9 @@
                     <table *ngIf="carpetas.length" class="table table-striped table-sm">
                         <thead>
                             <tr>
-                                <th (click)="switchMarcarTodas()" >
+                                <th (click)="switchMarcarTodas()">
                                     <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
-                                    <i *ngIf="!marcarTodas"  class="mdi mdi-checkbox-blank-outline"></i>
+                                    <i *ngIf="!marcarTodas" class="mdi mdi-checkbox-blank-outline"></i>
                                 </th>
                                 <th>Prestamo</th>
                                 <th>Carpeta</th>
@@ -62,7 +63,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                            <tr *ngFor="let carpeta of carpetas" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
                                 <td (click)="switchSeleccionCarpeta(carpeta)">
                                     <i *ngIf="estaSeleccionada(carpeta)" class="mdi mdi-checkbox-marked"></i>
                                     <i *ngIf="!(estaSeleccionada(carpeta))" class="mdi mdi-checkbox-blank-outline"></i>
@@ -75,10 +76,11 @@
                                     <b>
                                         {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
                                     </b>
-                                    <br/> Documento: <b>{{carpeta.paciente.documento}}</b>
+                                    <br/> Documento:
+                                    <b>{{carpeta.paciente.documento}}</b>
                                 </td>
                                 <td>
-                                    {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
+                                    {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
                                 </td>
                                 <td>
                                     {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
@@ -90,7 +92,7 @@
                                     {{carpeta.datosPrestamo.observaciones}}
                                 </td>
                                 <td *ngIf="carpeta.estado == 'Prestada'">
-                                    <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0" >
+                                    <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">
                                     </plex-button>
                                 </td>
                             </tr>
@@ -100,7 +102,7 @@
             </div>
             <div class="col-4" *ngIf="verDevolver">
                 <div class="clear"></div>
-                <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (carpetaDevueltaEmit)="onCarpeta($event)" ></app-devolver-hc>
+                <app-devolver-hc [devolver]="carpetaSeleccionada" (cancelDevolverEmit)="onCancelDevolver($event)" (carpetaDevueltaEmit)="onCarpeta($event)"></app-devolver-hc>
             </div>
         </div>
     </section>

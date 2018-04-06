@@ -8,6 +8,7 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 
 
@@ -28,6 +29,8 @@ export class ListarSolicitudesComponent implements OnInit {
     public estadosCarpeta = enumToArray(EstadosCarpetas);
     public estado: any = this.estadosCarpeta[0];
     public carpetaSeleccionada: any;
+    public carpetasSeleccionadas = [];
+    public marcarTodas: Boolean = false;
 
     public filters: any = {
         organizacion: this.auth.organizacion._id
@@ -61,6 +64,7 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
+        public plex: Plex,
         public prestamosService: PrestamosService,
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
@@ -169,6 +173,45 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
+    estaSeleccionada(carpeta: any) {
+        return this.carpetasSeleccionadas.findIndex(x => x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id) >= 0;
+    }
+
+    switchSeleccionCarpeta(carpeta: any) {
+        if (carpeta.estado !== 'Prestada') {
+            if (!this.estaSeleccionada(carpeta)) {
+                this.carpetasSeleccionadas.push(carpeta);
+            } else {
+                this.carpetasSeleccionadas.splice(this.carpetasSeleccionadas.findIndex(x => x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id), 1);
+            }
+            // Si solo una carpeta es seleccionada con checkbox, se muestran el box de detalles de devolución; caso contrario, el box de detalles se ocultas
+            this.carpetasSeleccionadas.length === 1 ? this.prestar(this.carpetasSeleccionadas[0]) : this.verPrestar = false;
+        }
+    }
+
+    switchMarcarTodas() {
+        this.marcarTodas = !this.marcarTodas;
+        this.carpetasSeleccionadas = this.marcarTodas ? this.carpetas : [];
+    }
+
+    prestarCarpetas() {
+        this.plex.confirm('¿Desea prestar las ' + this.carpetasSeleccionadas.length + ' carpetas seleccionadas?', 'Prestamos Carpetas').then((confirmar) => {
+            if (confirmar) {
+                this.carpetasSeleccionadas.forEach(carpeta => {
+                    carpeta.organizacion = this.auth.organizacion;
+                });
+                this.prestamosService.prestarCarpetas(this.carpetasSeleccionadas).subscribe(carpeta => {
+                    this.verPrestar = false;
+                    this.plex.toast('success', 'Las carpetas se entregaron correctamente', 'Información', 1000);
+                    this.recargarPrestamosEmit.emit(true);
+                    this.getCarpetas({}, null);
+                    this.marcarTodas = false;
+                    this.carpetasSeleccionadas = [];
+                });
+            }
+        });
+    }
+
     showImprimirCarpetas() {
         this.verImprimirSolicitudes = true;
         this.imprimirSolicitudesEmit.emit(this.carpetas);
@@ -179,7 +222,7 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
+        let listaEstados = [{ nombre: 'En Archivo', valor: 'En Archivo' }, { nombre: 'Prestada', valor: 'Prestada' }];
         event.callback(listaEstados);
     }
 
@@ -192,7 +235,7 @@ export class ListarSolicitudesComponent implements OnInit {
     sortCarpetas() {
         let val = this.sortDescending ? -1 : 1;
         // this.carpetas.sort((a, b) => { return (parseInt(a.numero) > parseInt(b.numero)) ? val : (parseInt(b.numero) > parseInt(a.numero)) ? -val : 0; } );
-        this.carpetas.sort((a, b) => { return (a.numero > b.numero) ? val : ((b.numero > a.numero) ? -val : 0); } );
+        this.carpetas.sort((a, b) => { return (a.numero > b.numero) ? val : ((b.numero > a.numero) ? -val : 0); });
     }
 
     toogleSort() {

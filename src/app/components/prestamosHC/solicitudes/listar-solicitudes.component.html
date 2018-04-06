@@ -9,7 +9,7 @@
                                 <div class="page-title float-left">Solicitudes de Carpetas</div>
                                 <div class="float-right">
                                     <span>
-                                        <plex-button icon="mdi mdi-printer"  title="Imprimir solicitudes" (click)="showImprimirCarpetas()" >
+                                        <plex-button icon="mdi mdi-printer" title="Imprimir solicitudes" (click)="showImprimirCarpetas()">
                                         </plex-button>
                                     </span>
                                 </div>
@@ -40,16 +40,20 @@
                                 </div>
                                 <div class="col-4">
                                     <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
-                                        label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" >
+                                        label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
                                     </plex-select>
                                 </div>
-                                
+
                             </div>
                         </header>
-                        <div class="plex-box-content" >
-                            <table *ngIf="carpetas.length" class="table table-striped table-sm" >
+                        <div class="plex-box-content">
+                            <table *ngIf="carpetas.length" class="table table-striped table-sm">
                                 <thead>
                                     <tr>
+                                        <th (click)="switchMarcarTodas()">
+                                            <i *ngIf="marcarTodas" class="mdi mdi-checkbox-marked"></i>
+                                            <i *ngIf="!marcarTodas" class="mdi mdi-checkbox-blank-outline"></i>
+                                        </th>
                                         <th>Fecha&nbsp;&nbsp; </th>
                                         <th>Carpeta</th>
                                         <th>Paciente</th>
@@ -60,7 +64,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
+                                    <tr *ngFor="let carpeta of carpetas" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                                        <td (click)="switchSeleccionCarpeta(carpeta)">
+                                            <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo'" class="mdi mdi-checkbox-marked"></i>
+                                            <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo'" class="mdi mdi-checkbox-blank-outline"></i>
+                                        </td>
                                         <td>
                                             {{carpeta.fecha | date:'dd-MM-yyyy'}}
                                         </td>
@@ -69,10 +77,11 @@
                                             <b>
                                                 {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
                                             </b>
-                                            <br/> Documento: <b>{{carpeta.paciente.documento}}</b>
+                                            <br/> Documento:
+                                            <b>{{carpeta.paciente.documento}}</b>
                                         </td>
                                         <td>
-                                            {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
+                                            {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
                                         </td>
                                         <td>
                                             {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
@@ -81,7 +90,7 @@
                                             {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                                         </td>
                                         <td *ngIf="carpeta.estado == 'En archivo'">
-                                            <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
+                                            <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">
                                             </plex-button>
                                         </td>
                                         <td *ngIf="carpeta.estado == 'Prestada'">
@@ -94,12 +103,15 @@
                     </div>
                 </plex-box>
             </div>
-            <div class="col-4"  *ngIf="verPrestar" >
+            <div class="col-4" *ngIf="verPrestar">
                 <div type="info">
-                    <app-prestar-hc [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="onCancelPrestar($event)" (carpetaPrestadaEmit)="onCarpeta($event)" ></app-prestar-hc>
+                    <app-prestar-hc [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="onCancelPrestar($event)" (carpetaPrestadaEmit)="onCarpeta($event)"></app-prestar-hc>
                 </div>
             </div>
         </div>
     </section>
+    <footer *ngIf="carpetasSeleccionadas.length > 0">
+        <plex-button type="primary" label="Prestar Carpetas" (click)="prestarCarpetas()"></plex-button>
+    </footer>
 </form>
 <imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>
