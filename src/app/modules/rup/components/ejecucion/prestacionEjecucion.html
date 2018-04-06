@@ -39,6 +39,7 @@
                         </p>
                     </div>
 
+                    <!-- <object data="../../assets/diente-odontograma.svg" type="image/svg+xml" style="width: 700px; height: 300px;"></object> -->
 
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true , canClose: true , tabFixed: true}" [hidden]="showDatosSolicitud"
                         (_tab)="cerrartab($event)">
@@ -171,9 +172,11 @@
                                                         </span>
                                                     </div>
 
-                                                    <!-- RUP Loader  (change)="prestacionChanged()"-->
+                                                    <!-- RUP Loader -->
+                                                    <!-- (change)="prestacionChanged()" -->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
+                                                        (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro.concepto)"></rup>
 
                                                 </div>
                                             </div>
