@@ -138,7 +138,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
-                if (resultado) {
+                if (resultado.servicios) {
                     Object.assign(this.organizacionModel, resultado);
                     // Lo mapeamos para que los tome el plex-select
                     this.serviciosSeleccionados = this.organizacionModel.servicios.map(function (obj) {

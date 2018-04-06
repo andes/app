@@ -5,7 +5,7 @@ import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
     templateUrl: 'autocitado.html'
 })
 export class AutocitadoComponent extends RUPComponent implements OnInit {
-    // Tipos de prestacion que el usuario tiene permiso
+    // Tipos de Prestaciones a las que el usuario tiene permiso
     public tiposPrestacion: any = [];
     public prestacionSeleccion;
 
@@ -13,7 +13,7 @@ export class AutocitadoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
         // Buscamos los tipos de prestación que sean turneables para los que el tenga permisos
-        // (OBS: a futuro un profesional puede tener permisos para mas prestaciones que no sean turneables)
+        // (OBS: a futuro un profesional puede tener permisos para más Prestaciones que no sean turneables)
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
             if (!this.registro.valor) {

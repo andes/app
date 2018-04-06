@@ -193,21 +193,31 @@
                                             <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
                                                 Motivo de consulta principal
                                             </small> -->
-                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
-                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">Motivo de consulta principal
+                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
+                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">
+                                                Motivo de consulta principal
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                                'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
-                                                                'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
-                                                            }">
+                                                    'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
+                                                    'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
+                                                }">
+                                                </span>
+                                            </label>
+                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen === 'internacion'"
+                                                title="Establecer como motivo de egreso" class="diagnostico-principal">
+                                                Motivo de egreso
+                                                <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                    'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
+                                                    'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
+                                                }">
                                                 </span>
                                             </label>
                                             <label *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
                                                 title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="primera-vez ml-2">
                                                 Indicar primera vez
                                                 <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                                    'mdi-toggle-switch': elemento.esPrimeraVez,
-                                                                    'mdi-toggle-switch-off': !elemento.esPrimeraVez
-                                                                }">
+                                                    'mdi-toggle-switch': elemento.esPrimeraVez,
+                                                    'mdi-toggle-switch-off': !elemento.esPrimeraVez
+                                                }">
                                                 </span>
                                             </label>
                                         </ng-container>
@@ -279,4 +289,8 @@
 
 <!-- Calendario para dar turnos autocitados -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (volverValidacion)="turnoDado($event)" [pacienteSeleccionado]="paciente"
+<<<<<<< HEAD
     [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+=======
+    [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+>>>>>>> develop
