@@ -12,7 +12,7 @@ import * as moment from 'moment';
 
 export class ImprimirSolicitudesComponent implements OnInit {
 
-    private solicitudes;
+    public solicitudes;
     @Input('solicutudes')
     set solicutudes(value: any) {
         this.solicitudes = value;
