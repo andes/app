@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "2.4.0",
+    "version": "2.6.0",
     "description": "Aplicación web Angular2 para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -45,7 +45,6 @@
         "chart.js": "^2.7.1",
         "core-js": "^2.4.1",
         "enhanced-resolve": "^3.4.1",
-        "file-saver": "^1.3.3",
         "ng2-charts": "^1.6.0",
         "ng2-drag-drop": "^1.5.1",
         "ng2-slugify": "^0.1.0",

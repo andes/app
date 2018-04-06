@@ -53,16 +53,10 @@ export class PrestarHcComponent implements OnInit {
     }
 
     save(event) {
-        event.idAgenda = this.prestamo.datosPrestamo.agendaId.id;
-        event.idTurno = this.prestamo.datosPrestamo.turno.id;
-        event.tipoPrestaciones = this.prestamo.datosPrestamo.turno.tipoPrestaciones;
-        event.profesionales = this.prestamo.datosPrestamo.turno.profesionales;
-        event.espacioFisico = this.prestamo.datosPrestamo.turno.espacioFisico;
-        event.organizacion = this.auth.organizacion;
-
-        this.prestamosService.prestarCarpeta(event).subscribe(carpeta => {
+        this.prestamo.organizacion = this.auth.organizacion;
+        this.prestamosService.prestarCarpeta(this.prestamo).subscribe(carpeta => {
             this._carpeta = carpeta;
-            this.plex.alert('La Carpeta se prestó correctamente');
+            this.plex.toast('success', 'La Carpeta se prestó correctamente', 'Información', 1000);
             this.cancelPrestarEmit.emit(true);
             this.carpetaPrestadaEmit.emit(this._carpeta);
         });
