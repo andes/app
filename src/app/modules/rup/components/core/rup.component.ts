@@ -41,6 +41,7 @@ export class RUPComponent implements OnInit {
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
+    @Output() ejecutarConcepto: EventEmitter<any> = new EventEmitter<any>();
 
     /**
      * Carga un componente dinámicamente
@@ -50,6 +51,7 @@ export class RUPComponent implements OnInit {
      */
     private loadComponent() {
 
+        // debugger;
         // Cargamos el componente
         const component = RUPRegistry[this.elementoRUP.componente];
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
@@ -66,6 +68,12 @@ export class RUPComponent implements OnInit {
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
             this.emitChange(false);
+        });
+        // Event bubbling
+        componentReference.instance['ejecutarConcepto'].subscribe(value => {
+            console.log('emitEjecutarConcepto', value);
+
+            this.emitEjecutarConcepto(value);
         });
 
         // Inicia el detector de cambios
@@ -104,7 +112,7 @@ export class RUPComponent implements OnInit {
     public emitChange(notifyObservers = true) {
         /**
         llamas a la funcion getMensajes y setea el objeto mensaje
-        para devolver el valor a los atomos,moleculas, formulas, etc
+        para devolver el valor a los átomos, moléculas, fórmulas, etc
         */
         this.mensaje = this.getMensajes();
         // Notifica a todos los components que estén suscriptos con este concepto
@@ -114,6 +122,25 @@ export class RUPComponent implements OnInit {
         // Notifica al componente padre del cambio
         this.change.emit(this.registro);
     }
+
+    public emitEjecutarConcepto(concepto, notifyObservers = true) {
+        console.log('emitEjecutarConceptos', this.registro);
+
+        /**
+        llamas a la funcion getMensajes y setea el objeto mensaje
+        para devolver el valor a los átomos, moléculas, fórmulas, etc
+        */
+        this.mensaje = this.getMensajes();
+        // Notifica a todos los components que estén suscriptos con este concepto
+        if (notifyObservers) {
+            this.conceptObserverService.notify(this.registro.concepto, this.registro);
+        }
+        // Notifica al componente padre del cambio
+        // this.change.emit(this.registro);
+        this.ejecutarConcepto.emit(concepto);
+    }
+
+
 
     /**
     * Devuelve los mensajes de los atomos, moleculas, formulas, etc.

@@ -6,7 +6,7 @@
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP" class="col{{'-' + item.style.columns}}">
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                    [soloValores]="soloValores" (change)="emitChange()">
+                    [soloValores]="soloValores" (change)="emitChange($event)" (ejecutarConcepto)="emitEjecutarConcepto(prestacion)">
                 </rup>
             </div>
         </ng-container>
