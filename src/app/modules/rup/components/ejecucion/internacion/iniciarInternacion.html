@@ -97,7 +97,7 @@
         <div class="float-right ">
             <plex-button type="danger " label="CANCELAR " (click)="cancelar() ">
             </plex-button>
-            <plex-button label="INICIAR INTERNACION " *ngIf="paciente " validateForm="true " type="success " (click)="guardar() ">
+            <plex-button label="INICIAR INTERNACION " *ngIf="paciente " validateForm="true " type="success " (click)="guardar($event) ">
             </plex-button>
         </div>
     </footer>

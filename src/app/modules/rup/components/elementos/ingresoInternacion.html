@@ -57,35 +57,42 @@
     <div class="row">
         <div class="col-4" *ngIf="registro.valor.informeIngreso.ocupacionHabitual">
             <label class="block">Ocupación habitual</label>
-            <span>{{registro.valor.informeIngreso.ocupacionHabitual.nombre }}</span>
+            <span>{{registro.valor.informeIngreso.ocupacionHabitual}}</span>
         </div>
         <div class="col-4" *ngIf="registro.valor.informeIngreso.situacionLaboral">
             <label class="block">Situación laboral</label>
-            <span>{{registro.valor.informeIngreso.situacionLaboral.nombre}}</span>
+            <span>{{registro.valor.informeIngreso.situacionLaboral}}</span>
         </div>
         <div class="col-4" *ngIf="registro.valor.informeIngreso.nivelInstruccion">
             <label class="block">Nivel instrucción</label>
-            <span>{{registro.valor.informeIngreso.nivelInstruccion.nombre }}</span>
+            <span>{{registro.valor.informeIngreso.nivelInstruccion }}</span>
         </div>
     </div>
     <div class="row">
         <div class="col-4">
             <label class="block">Asociado a</label>
-            <span *ngIf="registro.valor.informeIngreso.asociado">{{registro.valor.informeIngreso.asociado.nombre }}</span>
+            <span *ngIf="registro.valor.informeIngreso.asociado">{{registro.valor.informeIngreso.asociado }}</span>
         </div>
         <div class="col-4">
             <label class="block">Obra social</label>
-            <span *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial.nombre}}</span>
+            <span *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial}}</span>
         </div>
     </div>
     <div class="row">
         <div class="col-4">
             <label class="block">Fecha Ingreso</label>
-            <span>{{registro.valor.informeIngreso.fechaIngreso | date }}</span>
+            <span>{{registro.valor.informeIngreso.fechaIngreso | date: 'dd/MM/yyyy HH:mm' }}</span>
         </div>
         <div class="col-4">
             <label class="block">Origen hospitalización</label>
-            <span>{{registro.valor.informeIngreso.origen.nombre }}</span>
+            <span>{{registro.valor.informeIngreso.origen }}</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <label class="block">Motivo de ingreso</label>
+            <span>{{registro.valor.informeIngreso.motivo }}</span>
         </div>
     </div>
 
