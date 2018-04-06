@@ -221,6 +221,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
@@ -310,6 +311,7 @@ export let RUPRegistry = {
     'PasesCamaComponent': PasesCamaComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
 };
 
 let RUPComponentsArray = [
@@ -341,6 +343,7 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    OdontogramaRefsetComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
