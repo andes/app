@@ -24,6 +24,10 @@ export class PrestamosService {
         return this.server.post(this.turnoUrl + '/prestamosHC/prestarCarpeta', carpeta);
     }
 
+    prestarCarpetas(carpetas): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/prestarCarpetas', carpetas);
+    }
+
     devolverCarpeta(carpeta): Observable<any[]> {
         return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpeta', carpeta);
     }
