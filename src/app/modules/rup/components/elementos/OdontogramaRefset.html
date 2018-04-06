@@ -1,0 +1,169 @@
+<!-- <ng-container *ngIf="conceptos.length > 0 && params && params.tipoSelect === 'select'">
+    <plex-select *ngIf="!soloValores" [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
+        (change)="emitChange()" [required]="true" label="{{ params.titulo }}">
+    </plex-select>
+</ng-container>
+
+<ng-container *ngIf="conceptos && params && params.tipoSelect === 'radio'">
+
+    <span>{{ params.titulo }}</span>
+    <ng-container *ngFor="let concepto of conceptos, let i = index">
+
+        <label class="custom-control custom-radio">
+            <ng-container *ngIf="registro.valor && registro.valor.concepto.conceptId === concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio" checked>
+            </ng-container>
+            <ng-container *ngIf="registro.valor?.concepto.conceptId !== concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio">
+            </ng-container>
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"> {{concepto.term}}</span>
+        </label>
+    </ng-container>
+</ng-container> -->
+
+<ng-container *ngIf="conceptos.length > 0 && params">
+    <!-- <ng-container *ngFor="let diente of conceptos"></ng-container> -->
+
+    <div class="container">
+
+        <div class="row no-gutters">
+
+            <style type="text/css">
+                svg#cuadrante-sup-der {
+                    display: inline-block;
+                }
+
+                .diente {
+                    fill: white;
+                    stroke: #000000;
+                    stroke-width: 3px solid #4776d3;
+                    stroke-miterlimit: 10;
+                    cursor: pointer;
+                }
+
+                .diente:hover {
+                    fill: #4776d3;
+                }
+
+                .seleccionada {
+                    fill: #4776d3 !important;
+                }
+
+                .pieza {
+                    cursor: pointer;
+                }
+
+                .pieza:hover {
+                    fill: #4776d3;
+                }
+
+                .distal {
+                    /* fill: #4776d3; */
+                }
+
+                .vestibular {
+                    /* fill: #4776d3; */
+                }
+
+                .mesial {
+                    /* fill: #4776d3; */
+                }
+
+                .palatina {
+                    /* fill: #4776d3; */
+                }
+
+                .oclusal {
+                    /* fill: #4776d3; */
+                }
+
+                .diente-container {
+                    display: inline-block;
+                    width: 100px;
+                }
+
+            </style>
+            <div class="col-12 no-gutters">
+                <ng-container *ngFor="let diente of cuadranteSuperiorDerecho; let i=index">
+                    <div class="diente-container">
+                        <b class="text-sm">{{ diente.valor.concepto.term }}</b>
+                        <span class="test-sm">({{ diente.valor.concepto.ISODesignation }}</span>)
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="52px" height="55px"
+                            x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 50 50" xml:space="preserve">
+                            <path (click)="seleccionarCara(diente, 'distal')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'distal')}"
+                                d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
+        c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z" class="diente distal" />
+                            <path (click)="seleccionarCara(diente, 'vestibular')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'vestibular')}"
+                                d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
+        c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z" class="diente vestibular"
+                            />
+                            <path (click)="seleccionarCara(diente, 'mesial')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'mesial')}"
+                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
+        c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z" class="diente mesial" />
+                            <path (click)="seleccionarCara(diente, 'palatina')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'palatina')}"
+                                d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
+        c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z" class="diente palatina" />
+                            <path (click)="seleccionarCara(diente, 'oclusal')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'oclusal')}"
+                                d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
+        s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
+        C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal" />
+                            <path (click)="seleccionarCara(diente, 'pieza')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'pieza')}"
+                                class="pieza" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
+        l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z" />
+                        </svg>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <div class="row" *ngIf="caraSeleccionada">
+            <div class="col-6">
+                <plex-select [(ngModel)]="prestacionSeleccionada" (getData)="loadPrestacionesDientes($event)" name="prestacionesDientes"
+                    label="Prestación" [required]="true" (change)="emitEjecutarConcepto(prestacionesDientes.conceptos[0])"></plex-select>
+                <!-- <plex-button (click)="seleccionarPrestacion()" type="success" class="btn-sm" label="Seleccionar"></plex-button> -->
+            </div>
+        </div>
+    </div>
+
+</ng-container>
+
+<!-- <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </div>
+
+<div *ngIf="caraSeleccionada" class="menu-prestaciones">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false">
+            Dropdown button
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+    </div>
+</div> -->
+
+<p *ngIf="soloValores" class="readonly">
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length > 1">
+        <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">
+            <li class="list-item">{{valor.concepto.term}}</li>
+        </ul>
+    </ng-container>
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length === 1">
+        <p class="list-item-group" *ngFor="let valor of registro.valor let i = index">{{valor.concepto.term}}</p>
+    </ng-container>
+    <ng-container *ngIf="registro.valor && !registro.valor.length">
+        {{registro.valor.concepto.term}}
+    </ng-container>
+</p>
