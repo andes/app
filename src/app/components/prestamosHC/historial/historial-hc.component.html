@@ -41,16 +41,11 @@
                                         <td *ngIf="movimiento.estado == 'Prestada'">
                                             Prestada a: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                                         </td>
-                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                        <td>
                                             {{movimiento.datosDevolucion.observaciones}}
                                         </td>
-                                        <td *ngIf="movimiento.estado == 'Prestada'">
-                                            {{movimiento.datosPrestamo.observaciones}}
-                                        </td>
-                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                        <td>
                                             {{movimiento.datosDevolucion.estado}}
-                                        </td>
-                                        <td *ngIf="movimiento.estado == 'Prestada'">
                                         </td>
                                     </tr>
                                 </tbody>
