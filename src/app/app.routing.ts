@@ -59,11 +59,16 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+
+// Internacion
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+// Solicitudes
+import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
+import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
 
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
@@ -71,6 +76,7 @@ import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.comp
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/:id/cama', component: CamasListadoComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
@@ -97,6 +103,7 @@ const appRoutes: Routes = [
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/ver/:id', component: EjecucionInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingGuard] },
@@ -120,6 +127,9 @@ const appRoutes: Routes = [
   // Reportes
   { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
 
+  // Solicitudes
+  { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
+
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
@@ -128,7 +138,6 @@ const appRoutes: Routes = [
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
   /* VERIFICAR ==> */ { path: 'tipoprestaciones', component: TipoPrestacionComponent, canActivate: [RoutingGuard] },
-
 
   // Principal
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },

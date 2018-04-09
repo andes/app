@@ -39,7 +39,7 @@
                 </div>
                 <div class="col-4">
                     <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)" idField="term" labelField="term"
-                        [(ngModel)]="estado.especialidades" label="Especialidad/es">
+                        [(ngModel)]="estado.especialidades" [multiple]="true" label="Especialidad/es">
                     </plex-select>
                 </div>
                 <div class="col-4">
