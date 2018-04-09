@@ -9,16 +9,16 @@
                                 <div class="page-title float-left">Historial de Préstamos</div>
                             </div>
                             <!-- Filtros -->
-                            <div class="row" style="margin-bottom: 0.25rem" >
+                            <div class="row" style="margin-bottom: 0.25rem">
                                 <div class="col-4">
-                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta" 
-                                        placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta" placeholder="Escriba el número de carpeta"
+                                        labelField="numero" [required]="true">
                                     </plex-text>
                                 </div>
                                 <div class="col-4" style="margin-top:36px;">
                                     <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
                                     </plex-button>
-                                </div>                                
+                                </div>
                             </div>
 
                             <table *ngIf="historial.length" class="table table-striped">
@@ -31,7 +31,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let movimiento of historial" >
+                                    <tr *ngFor="let movimiento of historial">
                                         <td>
                                             {{movimiento.createdAt | date:'dd-MM-yyyy'}}
                                         </td>
@@ -51,10 +51,16 @@
                                             {{movimiento.datosDevolucion.estado}}
                                         </td>
                                         <td *ngIf="movimiento.estado == 'Prestada'">
-                                        </td>   
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div class="row" *ngIf="inicioBusqueda && !historial.length">
+                                <div class="col-12 text-center" style="margin: 3rem">
+                                    <h3>
+                                        <i class="mdi mdi-folder-remove"></i> No se encuentra la carpeta</h3>
+                                </div>
+                            </div>
                         </header>
                     </div>
                 </plex-box>
