@@ -17,8 +17,12 @@ export class InternacionService {
     liberarCama(idInternacion: any, fecha): Observable<any> {
         let param = {
             fecha: fecha
-        }
-        return this.server.patch(this.url + '/desocuparCama/' + idInternacion, param)
+        };
+        return this.server.patch(this.url + '/desocuparCama/' + idInternacion, param);
+    }
+
+    getCamaDisponibilidadCenso(params: any): Observable<any[]> {
+        return this.server.get(this.url + '/censo/disponibilidad', { params: params });
     }
 
 }

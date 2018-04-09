@@ -18,7 +18,7 @@
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col">
-                <table class="table" *ngIf="listadoCenso">
+                <table class="table table-bordered" *ngIf="listadoCenso  && listadoCenso.length">
                     <thead>
                         <tr>
                             <th rowspan="2">Apellido y nombre</th>
@@ -33,21 +33,21 @@
                     <tbody>
                         <tr *ngFor="let censo of listadoCenso, let indice = index">
                             <td>
-                                {{censo.ultimoEstado.paciente | paciente }}
+                                {{censo.dataCenso.ultimoEstado.paciente | paciente }}
                             </td>
                             <td>
-                                <span *ngIf="censo.cama.sector">
-                                    {{censo.cama.sector }} /
+                                <span *ngIf="censo.dataCenso?.cama.sector">
+                                    {{censo.dataCenso.cama.sector }} /
                                 </span>
-                                <span *ngIf="censo.cama.habitacion">
-                                    {{censo.cama.habitacion}}
+                                <span *ngIf="censo.dataCenso?.cama.habitacion">
+                                    {{censo.dataCenso.cama.habitacion}}
                                 </span>
                             </td>
                             <td>
-                                {{censo.cama.nombre}}
+                                {{censo.dataCenso.cama.nombre}}
                             </td>
                             <td>
-                                <div *ngIf="ingresoEgreso && ingresoEgreso[indice]?.esIngreso; else elseIngreso">
+                                <div *ngIf="censo.esIngreso; else elseIngreso">
                                     si
                                 </div>
                                 <ng-template #elseIngreso>
@@ -55,18 +55,61 @@
                                 </ng-template>
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.esPaseDe?.unidadOrganizativa.term }}
+                                {{ censo.esPaseDe?.unidadOrganizativa.term }}
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.egreso }}
+                                {{ censo.egreso }}
                             </td>
                             <td>
-                                {{ ingresoEgreso[indice]?.esPaseA }}
+                                {{ censo.esPaseA?.unidadOrganizativa.term }}
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
+
+
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Existencia a las 0 hs</th>
+                            <th rowspan="2">Ingresos</th>
+                            <th rowspan="2">Pases de</th>
+                            <th colspan="2">Egreso</th>
+                            <th rowspan="2">Pases A</th>
+                            <th rowspan="2">Existencia a las 24 hs</th>
+                            <th rowspan="2">Ingresos y egresos del día</th>
+                            <th rowspan="2">Pacientes día</th>
+                            <th rowspan="2">Camas disponibles a las 0hs</th>
+                            <th rowspan="2">Camas disponibles a las 24hs</th>
+                        </tr>
+                        <tr>
+                            <th>Altas</th>
+                            <th>Defunciones</th>
+                        </tr>
+                        <tr>
+                            <td>{{ resumenCenso.existencia0 }}</td>
+                            <td>{{ resumenCenso.ingresos }}</td>
+                            <td>{{ resumenCenso.pasesDe }}</td>
+                            <td>{{ resumenCenso.egresosAlta }}</td>
+                            <td>{{ resumenCenso.egresosDefuncion }}</td>
+                            <td>{{ resumenCenso.pasesA }}</td>
+                            <td>{{ resumenCenso.existencia24 }}</td>
+                            <td>{{ resumenCenso.ingresoEgresoDia }}</td>
+                            <td>{{ resumenCenso.pacientesDia }}</td>
+                            <td>{{ resumenCenso.disponibles0 }}</td>
+                            <td>{{ resumenCenso.disponibles24 }}</td>
+                        </tr>
+
+                    </thead>
+                </table>
+            </div>
+
+        </div>
+
     </plex-box>
 </section>

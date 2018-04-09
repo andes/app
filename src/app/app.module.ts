@@ -67,6 +67,7 @@ import { ListaEsperaService } from './services/turnos/listaEspera.service';
 import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
+import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -227,6 +228,7 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
 
+import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -272,6 +274,14 @@ import { SolicitudesComponent } from './components/solicitudes/solicitudes.compo
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
 
+// Préstamos HC
+import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
+import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
+import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
+import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
+
+
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
@@ -301,6 +311,7 @@ export let RUPRegistry = {
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
+    'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -338,7 +349,8 @@ let RUPComponentsArray = [
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
     PasesCamaComponent,
-    CensoDiarioComponent
+    CensoDiarioComponent,
+    InformeEpicrisisComponent
 ];
 // for (let key in RUPRegistry) {
 //     RUPComponentsArray.push(RUPRegistry[key]);
@@ -413,6 +425,11 @@ let RUPComponentsArray = [
         CamaComponent,
         // Solicitudes
         SolicitudesComponent,
+        PrestamosHcComponent,
+        ListarSolicitudesComponent,
+        ListarPrestamosComponent,
+        PrestarHcComponent,
+        DevolverHcComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
@@ -471,7 +488,10 @@ let RUPComponentsArray = [
         DocumentosService,
         CamasService,
         ProcedimientosQuirurgicosService,
-        InternacionService
+        InternacionService,
+        PrestamosService,
+        ProcedimientosQuirurgicosService
+
     ]
 })
 

@@ -23,6 +23,8 @@ export class IPrestacionRegistro {
     // Indica si este registro es valido (no vacio)
     valido: Boolean;
 
+    solicitud: any;
+
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
         this.nombre = snomedConcept.term;

@@ -148,14 +148,12 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     darTurnoAutocitado() {
+
+        // Hay paciente?
         this.existePaciente();
 
-        // let prestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada.conceptId, 'solicitud', (new Date()), null);
-
-        // if (prestacion.id) {
         let params = {
             disponiblesProfesional: true,
-            // profesional: [this.auth.profesional.id],
             idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
             fechaDesde: moment(new Date()).startOf('day'),
             fechaHasta: moment(new Date()).endOf('month'),
@@ -168,43 +166,6 @@ export class PrestacionCrearComponent implements OnInit {
             this.servicioPrestacion.crearPrestacion(this.paciente, this.tipoPrestacionSeleccionada.id, 'solicitud', (new Date()), null);
             this.showAutocitar = true;
         });
-        // }
-
-        // let fechaDesde = moment(new Date()).startOf('day');
-        // let fechaHasta = moment(new Date()).endOf('week');
-
-        // // Iniciamos la búsqueda
-        // let params = {
-        //     disponiblesProfesional: true,
-        //     profesionales: [this.auth.profesional.id],
-        //     idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
-        //     fechaDesde: fechaDesde,
-        //     fechaHasta: fechaHasta,
-        //     estados: ['disponible', 'publicada'],
-        //     organizacion: this.auth.organizacion._id
-        // };
-
-        // this.servicioAgenda.get(params).subscribe(agendas => {
-        //     this.agendasAutocitacion = agendas;
-
-        //     // Una vez que esta la prestacion vamos a dar el turno, si hay permiso
-        //     this.solicitudPrestacion = {
-        //         solicitud: {
-        //             fecha: null,
-        //             paciente: this.paciente,
-        //             profesional: this.auth.profesional,
-        //             organizacion: this.auth.organizacion,
-        //             turno: null
-        //         },
-        //         estados: [
-        //             { tipo: 'pendiente' }
-        //         ]
-        //     };
-
-        //     this.showDarTurnos = true;
-
-        // });
-
     }
 
     /** * Se selecciona un turno o paciente. Si la prestacion no existe la creamos en este momento
@@ -232,6 +193,7 @@ export class PrestacionCrearComponent implements OnInit {
                 this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
             }
         } else {
+            // TODO: REVISAR
             // Marcar la asistencia al turno
             if (unPacientePresente.estado !== 'Suspendido' && unPacientePresente.turno.asistencia !== 'asistio') {
                 let patch: any = {
@@ -273,8 +235,6 @@ export class PrestacionCrearComponent implements OnInit {
                     fecha: new Date(),
                     registros: [],
                     turno: unPacientePresente.turno.id,
-                    // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
-
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
                 },

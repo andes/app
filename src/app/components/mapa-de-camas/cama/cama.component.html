@@ -10,6 +10,11 @@
             </div>
             <div class="content">
                 <div class="main cama">
+                    <div class="row">
+                        <div class="col">
+                            {{ cama.ultimoEstado.unidadOrganizativa.term }}
+                        </div>
+                    </div>
                     <div class="col-indicadores text-left">
                         <div *ngIf="cama.idInternacion">
                             <br class="mdi" />

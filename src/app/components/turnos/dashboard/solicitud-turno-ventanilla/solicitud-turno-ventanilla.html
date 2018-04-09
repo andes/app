@@ -67,12 +67,20 @@
             </div>
         </div>
 
+        <!-- Organización Destino -->
+        <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
+            <div class="col-12">
+                <plex-select [(ngModel)]="modelo.solicitud.organizacionDestino" name="organizacionDestino" (getData)="loadOrganizacion($event)"
+                    label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">
+                </plex-select>
+            </div>
+        </div>
+
         <!-- Profesional Destino -->
         <div class="row" *ngIf="!registros.solicitudPrestacion.autocitado">
             <div class="col-12">
-                <plex-select [(ngModel)]="registros.solicitudPrestacion.profesionales" label="Profesional(es) destino" name="profesionales"
-                    (getData)="loadProfesionales($event)" [multiple]="true" placeholder="Escriba el apellido de un Profesional"
-                    labelField="apellido + ' ' + nombre">
+                <plex-select [(ngModel)]="modelo.solicitud.profesionalesDestino" label="Profesional(es) destino" name="profesionales" (getData)="loadProfesionales($event)"
+                    [multiple]="true" placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre">
                 </plex-select>
             </div>
         </div>
