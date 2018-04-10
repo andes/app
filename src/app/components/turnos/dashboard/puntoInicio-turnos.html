@@ -1,6 +1,6 @@
 <section>
     <div class="row" *ngIf="showDashboard">
-        <div class="col-8">
+        <div class="col-7">
             <plex-box>
                 <header>
                     <!--Busqueda de Pacientes-->
@@ -16,15 +16,15 @@
                 </div> -->
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
-                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
-                            (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)"
-                            (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud" [puedeDarTurno]="puedeDarTurno"
+                            [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate" (blanqueaInput)="handleBlanqueo($event)"
+                            (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
                     </div>
                 </div>
             </plex-box>
         </div>
         <!--Panel de Estadisticas y Operaciones-->
-        <div class="col-4">
+        <div class="col-5">
             <plex-box>
                 <div *ngIf="showMostrarEstadisticasAgendas" type="info">
                     <estadisticas-agendas></estadisticas-agendas>
@@ -36,7 +36,7 @@
                     <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
                 </div>
                 <div *ngIf="showMostrarTurnosPaciente && paciente" type="info">
-                    <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos"></turnos-paciente>
+                    <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos" (showArancelamientoForm)="showArancelamientoForm($event)"></turnos-paciente>
                 </div>
                 <div *ngIf="showActivarApp" type="info">
                     <activar-app [paciente]="paciente"></activar-app>
@@ -54,12 +54,11 @@
             </div>
         </div>
     </div>
+    <div *ngIf="showArancelamiento">
+        <arancelamiento-form [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'>
+        </arancelamiento-form>
+    </div>
 </section>
-
-<!--Footer-->
-<!-- <footer *ngIf="autorizado && !showDarTurnos">
-    <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
-</footer> -->
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"

@@ -109,10 +109,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>{{delDia ? (arrayDelDia[k] < 0 ? 0: arrayDelDia[k]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
-                        <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
-                        <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
-                        <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
+                        <td>{{delDia ? (arrayDelDia[k]
+                            < 0 ? 0: arrayDelDia[k]) : (bloque.restantesDelDia < 0 ? 0:bloque.restantesDelDia)}}</td>
+                                <td>{{delDia ? 0 : bloque.restantesProgramados}}</td>
+                                <td>{{delDia ? 0 : bloque.restantesGestion}}</td>
+                                <td>{{delDia ? 0 : bloque.restantesProfesional}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -200,7 +201,6 @@
                     </tr>
                 </tbody>
             </table>
-
         </ng-container>
         <!--Sobreturnos-->
         <table class="table table-striped">
@@ -228,10 +228,11 @@
                                 <br> DNI {{sobreturno.paciente.documento | number}}</span>
                             <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.documento === ''">
                                 <br> Sin documento</span>
-                            <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                            <span *ngIf="sobreturno?.paciente?.id && sobreturno.paciente.carpetaEfectores?.length > 0">
                                 | Nro Carpeta
-                                <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                                    {{carpeta.nroCarpeta}}
+                                <small> | </small>
+                                <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
+                                    <small *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </small>
                                 </span>
                             </span>
                         </small>
@@ -258,22 +259,7 @@
                         <small *ngIf="sobreturno?.estado !== 'disponible' && sobreturno?.estado !== 'turnoDoble'" class="badge badge-default float-right">
                             <popover-audit placement="left" [data]="sobreturno"></popover-audit>
                         </small>
-
                     </td>
-                    <!-- <td (click)="seleccionarTurno(agenda.sobreturnos[i], false, true)">
-                        <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'asistio' && sobreturno.estado !== 'suspendido'" class="badge-success">Asistió</div>
-                        <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'noAsistio' && sobreturno.estado !== 'suspendido'" class="badge-danger">No asistió</div>
-                        <div *ngIf="sobreturno?.paciente?.id && sobreturno.asistencia === 'sinDatos' && sobreturno.estado !== 'suspendido'" class="badge-danger">Sin Datos</div>
-
-                    </td> -->
-                    <!-- <td>
-                        <small *ngIf="sobreturno && sobreturno.nota" class="badge badge-warning">
-                            <i title="{{sobreturno.nota}}" class="text-warning warning mdi mdi-message"></i>
-                        </small>
-                        <popover-audit *ngIf="sobreturno && sobreturno.estado !== 'disponible' && sobreturno.estado !== 'turnoDoble'" placement="left"
-                            [data]="sobreturno">
-                        </popover-audit>
-                    </td> -->
                 </tr>
             </tbody>
         </table>

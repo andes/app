@@ -10,24 +10,42 @@ import { Location } from '@angular/common';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
+import { IAgenda } from '../../../../interfaces/turnos/IAgenda';
+import { ITipoPrestacion } from '../../../../interfaces/ITipoPrestacion';
 
 @Component({
     templateUrl: 'prestacionCrear.html'
 })
 export class PrestacionCrearComponent implements OnInit {
+    prestacionAutocitar: any;
+    showAutocitar = false;
+    agendasAutocitar: IAgenda[];
+    // solicitudPrestacion: {
+    //     paciente: IPaciente;
+    //     registros: { nombre: String; concepto: any; valor: { solicitudPrestacion: any; }; tipo: string; }; solicitudPrestacion: ITipoPrestacion; };
+    solicitudPrestacion: any;
+    solicitudTurno: any;
+    agendasAutocitacion: IAgenda[];
+    opcion: any;
     @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
-    public tiposPrestacion: any = [];
+    public tiposPrestacion: ITipoPrestacion[] = [];
     // Tipos de prestacion seleccionada
-    public tipoPrestacionSeleccionada: any;
+    public tipoPrestacionSeleccionada: ITipoPrestacion;
     // Paciente sleccionado
     public paciente: IPaciente;
     public buscandoPaciente = false;
 
+    /**
+     * Indica si muestra el calendario para dar turno autocitado
+     */
+    public showDarTurnos = false;
+
     constructor(private router: Router,
+        private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
@@ -39,6 +57,11 @@ export class PrestacionCrearComponent implements OnInit {
         this.servicioTipoPrestacion.get({ id: this.auth.getPermissions('rup:tipoPrestacion:?') }).subscribe(data => {
             this.tiposPrestacion = data;
         });
+
+        this.route.params.subscribe(params => {
+            this.opcion = params['opcion'];
+        });
+
     }
 
     onPacienteSelected(paciente: IPaciente) {
@@ -54,6 +77,12 @@ export class PrestacionCrearComponent implements OnInit {
         this.buscandoPaciente = false;
     }
 
+    cancelarAutocitar() {
+        this.showAutocitar = false;
+        this.paciente = null;
+        this.onReturn();
+    }
+
     /**
      * Vuelve a la página anterior
      */
@@ -61,14 +90,19 @@ export class PrestacionCrearComponent implements OnInit {
         this.location.back();
     }
 
-    /**
-     * Guarda la prestación
-     */
-    guardar() {
+    existePaciente(): void {
         if (!this.paciente) {
             this.plex.info('warning', 'Debe seleccionar un paciente');
             return;
         }
+    }
+
+    /**
+     * Guarda e inicia la Prestación
+     */
+    iniciarPrestacion() {
+
+        this.existePaciente();
 
         let conceptoSnomed = this.tipoPrestacionSeleccionada;
         let nuevaPrestacion;
@@ -86,10 +120,10 @@ export class PrestacionCrearComponent implements OnInit {
                 tipoPrestacion: conceptoSnomed,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
@@ -107,9 +141,31 @@ export class PrestacionCrearComponent implements OnInit {
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+            localStorage.removeItem('idAgenda');
             this.router.navigate(['/rup/ejecucion', prestacion.id]);
         }, (err) => {
             this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+        });
+    }
+
+    darTurnoAutocitado() {
+
+        // Hay paciente?
+        this.existePaciente();
+
+        let params = {
+            disponiblesProfesional: true,
+            idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
+            fechaDesde: moment(new Date()).startOf('day'),
+            fechaHasta: moment(new Date()).endOf('month'),
+            estados: ['disponible', 'publicada'],
+            organizacion: this.auth.organizacion.id
+        };
+        this.servicioAgenda.get(params).subscribe(agendas => {
+            this.agendasAutocitar = agendas;
+            this.prestacionAutocitar = this.tipoPrestacionSeleccionada;
+            this.servicioPrestacion.crearPrestacion(this.paciente, this.tipoPrestacionSeleccionada.id, 'solicitud', (new Date()), null);
+            this.showAutocitar = true;
         });
     }
 
@@ -129,7 +185,6 @@ export class PrestacionCrearComponent implements OnInit {
                 };
 
                 // Vamos a cambiar el estado de la prestación a ejecucion
-
                 this.servicioPrestacion.patch(unPacientePresente.idPrestacion, cambioEstado).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
                 }, (err) => {
@@ -139,6 +194,7 @@ export class PrestacionCrearComponent implements OnInit {
                 this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
             }
         } else {
+            // TODO: REVISAR
             // Marcar la asistencia al turno
             if (unPacientePresente.estado !== 'Suspendido' && unPacientePresente.turno.asistencia !== 'asistio') {
                 let patch: any = {
@@ -169,10 +225,10 @@ export class PrestacionCrearComponent implements OnInit {
                     prestacionOrigen: null,
                     // profesional logueado
                     profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                        {
+                            id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                            apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                        },
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
                 },
@@ -180,8 +236,6 @@ export class PrestacionCrearComponent implements OnInit {
                     fecha: new Date(),
                     registros: [],
                     turno: unPacientePresente.turno.id,
-                    // profesionales:[] falta asignar.. para obtener el nombre ver si va a venir en token
-
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre }
                 },

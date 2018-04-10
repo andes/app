@@ -19,6 +19,9 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    ultimosTurnos: any[];
+    puedeRegistrarAsistencia: boolean;
+    puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
 
@@ -27,7 +30,7 @@ export class TurnosPacienteComponent implements OnInit {
     tituloOperacion = 'Operaciones de Turnos';
     turnosPaciente = [];
     turnosSeleccionados: any[] = [];
-
+    showPuntoInicio = true;
 
     @Input('operacion')
     set operacion(value: string) {
@@ -47,11 +50,19 @@ export class TurnosPacienteComponent implements OnInit {
     get paciente(): IPaciente {
         return this._paciente;
     }
+    @Output() showArancelamientoForm = new EventEmitter<any>();
+
 
     // Inicialización
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
 
     ngOnInit() {
+        this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
+        this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
+    }
+
+    printArancelamiento(turno) {
+        this.showArancelamientoForm.emit(turno);
     }
 
     getTurnosPaciente(paciente) {
@@ -61,6 +72,9 @@ export class TurnosPacienteComponent implements OnInit {
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
                     return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.ultimosTurnos = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
                 });
                 this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
                     return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
@@ -125,4 +139,5 @@ export class TurnosPacienteComponent implements OnInit {
         this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
+
 }

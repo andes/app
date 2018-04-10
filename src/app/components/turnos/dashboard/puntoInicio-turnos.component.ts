@@ -11,7 +11,7 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 
 // Servicios
 import { PacienteService } from '../../../services/paciente.service';
-import { AgendaService } from '../../../services/turnos/agenda.service';
+// import { AgendaService } from '../../../services/turnos/agenda.service';
 import { AppMobileService } from '../../../services/appMobile.service';
 
 @Component({
@@ -25,6 +25,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
+    public puedeCrearSolicitud = false;
+    public puedeAutocitar = false;
+    public puedeDarTurno = false;
     public alerta = false;
     public mostrarLista = true;
     public mostrarPacientesSearch = true;
@@ -44,20 +47,36 @@ export class PuntoInicioTurnosComponent implements OnInit {
     esEscaneado = false;
     textoPacienteSearch = '';
     resultadoCreate;
+    turnoArancelamiento: any;
+    showArancelamiento = false;
     private esOperacion = false;
 
 
     constructor(
         public servicePaciente: PacienteService,
-        public servicioAgenda: AgendaService, public auth: Auth,
+        // public servicioAgenda: AgendaService,
+        public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
         private plex: Plex) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
+        this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
+        this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
     }
 
+    showArancelamientoForm(turno) {
+        this.turnoArancelamiento = turno;
+        this.showDashboard = false;
+        this.showArancelamiento = true;
+
+    }
+
+    volverAPuntoInicio() {
+        this.showArancelamiento = false;
+        this.showDashboard = true;
+    }
     onPacienteSelected(paciente: IPaciente): void {
         // debugger
         this.paciente = paciente;

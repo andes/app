@@ -23,6 +23,8 @@ export class IPrestacionRegistro {
     // Indica si este registro es valido (no vacio)
     valido: Boolean;
 
+    solicitud: any;
+
     constructor(elementoRUP: IElementoRUP, snomedConcept: ISnomedConcept) {
         this.id = (new ObjectID()).toString();
         this.nombre = snomedConcept.term;
@@ -32,7 +34,7 @@ export class IPrestacionRegistro {
         this.valor = null;
         this.relacionadoCon = [];
         this.registros = [];
-        if (elementoRUP.requeridos) {
+        if (elementoRUP && elementoRUP.requeridos) {
             elementoRUP.requeridos.forEach((item) => {
                 this.registros.push(new IPrestacionRegistro(item.elementoRUP, item.concepto));
             });

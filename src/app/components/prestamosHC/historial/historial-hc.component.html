@@ -1,0 +1,64 @@
+<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
+    <section>
+        <div class="row">
+            <div class="col">
+                <plex-box>
+                    <div class="plex-box">
+                        <header>
+                            <div class="clearfix">
+                                <div class="page-title float-left">Historial de Préstamos</div>
+                            </div>
+                            <!-- Filtros -->
+                            <div class="row" style="margin-bottom: 0.25rem" >
+                                <div class="col-4">
+                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta" 
+                                        placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
+                                    </plex-text>
+                                </div>
+                                <div class="col-4" style="margin-top:36px;">
+                                    <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
+                                    </plex-button>
+                                </div>                                
+                            </div>
+
+                            <table *ngIf="historial.length" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Movimiento</th>
+                                        <th>Observaciones</th>
+                                        <th>Estado de devolución</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let movimiento of historial" >
+                                        <td>
+                                            {{movimiento.createdAt | date:'dd-MM-yyyy'}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                            Devuelta por: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'Prestada'">
+                                            Prestada a: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                            {{movimiento.datosDevolucion.observaciones}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'Prestada'">
+                                            {{movimiento.datosPrestamo.observaciones}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                            {{movimiento.datosDevolucion.estado}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'Prestada'">
+                                        </td>   
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </header>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+</form>

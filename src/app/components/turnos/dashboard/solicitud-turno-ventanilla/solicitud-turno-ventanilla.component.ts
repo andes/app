@@ -55,6 +55,7 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
     public permisos = [];
     public autorizado = false;
+    public puedeAutocitar = false;
 
     public modelo: any = {
         paciente: {},
@@ -98,6 +99,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
 
         this.permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.puedeAutocitar = this.auth.getPermissions('turnos:puntoInicio:autocitado:?').length > 0;
+
         this.showCargarSolicitud = false;
 
         // Está autorizado para ver esta pantalla?
@@ -203,8 +206,12 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'solicitud'
             };
 
+            this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino;
+            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino[0];
+
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
                 this.showCargarSolicitud = false;
                 this.showBotonCargarSolicitud = true;

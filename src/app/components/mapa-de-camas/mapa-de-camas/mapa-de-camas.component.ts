@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 import { ICama } from '../../../interfaces/ICama';
 
 @Component({
@@ -46,15 +46,15 @@ export class MapaDeCamasComponent implements OnInit {
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router,
-        private organizacionesService: OrganizacionService) { }
+        private camasService: CamasService) { }
 
     ngOnInit() {
         // verificar permisos
         // buscar camas para la organización
-        this.organizacionesService.getCamas(this.auth.organizacion.id).subscribe(camas => {
+        this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
             this.camas = camas;
 
-            this.organizacionesService.getEstadoServicio(camas).subscribe(estado => {
+            this.camasService.getEstadoServicio(camas).subscribe(estado => {
                 this.estadoServicio = estado;
             });
 
@@ -117,10 +117,9 @@ export class MapaDeCamasComponent implements OnInit {
             if (cama.ultimoEstado && !existe) {
                 this.filtros.opciones.estados.push({ 'id': cama.ultimoEstado.estado, 'nombre': cama.ultimoEstado.estado });
             }
-
-            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.servicio.conceptId);
-            if (cama.servicio && !existe) {
-                this.filtros.opciones.servicios.push({ 'id': cama.servicio.conceptId, 'nombre': cama.servicio.term });
+            existe = this.filtros.opciones.servicios.find(servicio => servicio.id === cama.ultimoEstado.unidadOrganizativa.conceptId);
+            if (cama.ultimoEstado.unidadOrganizativa && !existe) {
+                this.filtros.opciones.servicios.push({ 'id': cama.ultimoEstado.unidadOrganizativa.conceptId, 'nombre': cama.ultimoEstado.unidadOrganizativa.term });
             }
 
             existe = this.filtros.opciones.tiposCamas.find(tipoCama => tipoCama.id === cama.tipoCama.conceptId);
@@ -151,18 +150,13 @@ export class MapaDeCamasComponent implements OnInit {
         let _desinfectada = (this.filtros.desinfectada) ? false : null;
 
         this.camas = this.camasCopy.filter((i) => {
-
             return (
-                // (!this.filtros.oxigeno || (this.filtros.oxigeno && i.oxigeno)) &&
-
-                // (_desinfectada === null || (!_desinfectada && !i.desinfectada)) &&
                 (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
                 (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
-                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.servicio && i.servicio.conceptId === this.filtros.servicio.id)) &&
-                (!this.filtros.nombre || (this.filtros.nombre && i.paciente && (regex_nombre.test(i.paciente.nombre) || (regex_nombre.test(i.paciente.apellido)) || (regex_nombre.test(i.paciente.documento)))))
-
+                (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.ultimoEstado.unidadOrganizativa && i.ultimoEstado.unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
+                (!this.filtros.nombre || (this.filtros.nombre && i.ultimoEstado && (regex_nombre.test(i.ultimoEstado.paciente.nombre) || (regex_nombre.test(i.ultimoEstado.paciente.apellido)) || (regex_nombre.test(i.ultimoEstado.paciente.documento)))))
             );
         });
     }
@@ -177,5 +171,10 @@ export class MapaDeCamasComponent implements OnInit {
      */
     public updateCama(e, index) {
         this.camas[index] = e;
+    }
+
+
+    public ingresarPaciente() {
+        this.router.navigate(['rup/internacion/crear']);
     }
 }

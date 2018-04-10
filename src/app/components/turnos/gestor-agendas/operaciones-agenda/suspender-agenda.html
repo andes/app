@@ -1,0 +1,211 @@
+<!--Header de agenda-->
+<header class="header-fixed" [ngClass]="{'header-fixed-front': mostrarHeaderCompleto}">
+    <div class="row" *ngIf="showData">
+        <div class="col-12 bloques-y-turnos">
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">TURNOS SUSPENDIDOS</span>
+                        <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{ estadosAgenda[agenda.estado]?.nombre }}</span>
+                    </div>
+                </legend>
+                <!--Header de la agenda-->
+                <div class="alert alert-default mb-0">
+                    <div class="float-right">
+                        <plex-button type="default" title="Mostrar detalle de la agenda" titlePosition="left" [icon]="mostrarHeaderCompleto ? 'chevron-up' : 'chevron-down'"
+                            (click)="mostrarHeaderCompleto = !mostrarHeaderCompleto"></plex-button>
+                    </div>
+                    <!--Header pequeño-->
+                    <div *ngIf="!mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+                            'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                        </div>
+                    </div>
+                    <!--Header completo-->
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Fecha</label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date:
+                            'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}}
+                            hs
+                        </div>
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Tipos de prestación</label>
+                            <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                        </div>
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Profesionales</label>
+                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                            <ng-container *ngIf="agenda.profesionales">
+                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
+                            </ng-container>
+                        </div>
+                    </div>
+                    <div *ngIf="mostrarHeaderCompleto" class="row">
+                        <div class="col-12">
+                            <label>Espacio físico</label>
+                            <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
+                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                        </div>
+                    </div>
+                </div>
+                <!--Nota-->
+                <div *ngIf="agenda.nota" class="alert alert-default mb-0">
+                    <i class="mdi mdi-comment mr-3"></i>{{ agenda.nota }}
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</header>
+
+<div class="row lista-turnos" *ngIf="showData">
+    <div class="col-2 text-center">
+        <i *ngIf="todosSeleccionados" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos"
+            titlePosition="right"></i>
+        <i *ngIf="!todosSeleccionados" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"
+            titlePosition="right"></i>
+    </div>
+    <div class="col-10 text-center">
+        <plex-button type="default" icon="mdi mdi-email-outline" (click)="notificar()" title="Enviar un mensaje al paciente" titlePosition="left"></plex-button>
+    </div>
+    <div class="col-12">
+        <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
+        <!--Turnos-->
+        <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
+            <table class="table">
+                <thead *ngIf="bloque.descripcion || bloque.citarPorBloque">
+                    <tr>
+                        <th *ngIf="!agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}}
+                            hs
+                        </th>
+                        <th *ngIf="agenda.nominalizada && bloque.descripcion">{{bloque.descripcion}}
+                        </th>
+                        <th *ngIf="bloque.citarPorBloque">
+                            <span class="text-info">Citación por segmento</span>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+            <table class="table table-striped">
+                <tbody>
+                    <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
+                        <!-- Checkbox seleccion -->
+                        <td>
+                            <span *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
+                                <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
+                                <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                            </span>
+                        </td>
+                        <!-- Hora turno -->
+                        <td>
+                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                        </td>
+                        <!-- Teléfono del paciente, si tiene -->
+                        <td>
+                            <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                            </small>
+                            <small *ngIf="turno?.paciente?.id">
+                                <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
+                                    <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                                <ng-template #noTelefono>
+                                    <br>
+                                    <span>Sin teléfono registrado</span>
+                                </ng-template>
+                            </small>
+                        </td>
+                        <td>
+                            <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
+                                <i *ngIf="turno.avisoSuspension === 'fallido'" class="mdi mdi-message-alert text-danger" title="SMS fallido"></i>
+                                <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
+                                <i *ngIf="turno.avisoSuspension ==='no enviado'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
+                            </span>
+                        </td>
+
+                        <!-- Badge que indica si el turno está reasignado a otra agenda -->
+                        <td>
+                            <small class="badge-info float-right" *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <table class="table table-striped">
+                <thead *ngIf="agenda.sobreturnos && agenda.sobreturnos.length > 0">
+                    <tr>
+                        <th colspan="4">Sobreturnos Suspendidos </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let turno of agenda.sobreturnos; let i=index" class="hover" (click)="seleccionarTurno(turno)" [ngClass]="{'bg-inverse text-white': estaSeleccionado(agenda.sobreturnos[i])}">
+                        <!-- Checkbox seleccion -->
+                        <td>
+                            <span *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.paciente.telefono!=='' && !turno.reasignado?.siguiente">
+                                <i *ngIf="estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-marked"></i>
+                                <i *ngIf="!estaSeleccionado(agenda.sobreturnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
+                            </span>
+                        </td>
+                        <!-- Hora turno -->
+                        <td>
+                            <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                        </td>
+                        <!-- Teléfono del paciente, si tiene -->
+                        <td>
+                            <small *ngIf="turno?.paciente?.id" [ngClass]="{'text-danger' : turno?.estado === 'suspendido'}">{{ turno.paciente | paciente }}
+                            </small>
+                            <small *ngIf="turno?.paciente?.id">
+                                <span *ngIf="turno.paciente.telefono !== '' ; else noTelefono">
+                                    <br>Teléfono: {{ turno.paciente.telefono }}</span>
+                                <ng-template #noTelefono>
+                                    <br>
+                                    <span>Sin teléfono registrado</span>
+                                </ng-template>
+                            </small>
+                        </td>
+                        <td>
+                            <span *ngIf="turno.paciente?.telefono && turno.avisoSuspension && !turno.reasignado?.siguiente">
+                                <i *ngIf="turno.avisoSuspension === 'fallido'" class="mdi mdi-message-alert text-danger" title="SMS fallido"></i>
+                                <i *ngIf="turno.avisoSuspension ==='enviado'" class="mdi mdi-message-text-outline text-success" title="SMS enviado"></i>
+                                <i *ngIf="turno.avisoSuspension ==='no enviado'" class="mdi mdi-message-processing text-info" title="SMS pendiente"></i>
+                            </span>
+                        </td>
+
+                        <!-- Badge que indica si el turno está reasignado a otra agenda -->
+                        <td>
+                            <small class="badge-info float-right" *ngIf="turno?.paciente?.id && turno?.estado === 'suspendido' && turno.reasignado?.siguiente">Reasignado</small>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </div>
+</div>
+
+<fieldset *ngIf="showConfirmar">
+    <legend>Suspender Agenda</legend>
+
+    <div class="row">
+        <div class="col-12">
+            <plex-select [(ngModel)]="motivoSuspensionSelect.select" name="motivoSuspension" [data]="motivoSuspension" label="Motivos de Suspensión"
+                placeholder="Seleccione un motivo de suspensión">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-warning p-3 text-white" *ngIf="!motivoSuspensionSelect.select?.nombre">
+                Seleccione un motivo de suspensión
+            </div>
+        </div>
+    </div>
+    <div class="mt-3 float-right">
+        <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+        </plex-button>
+        <plex-button type="success" label="Confirmar" (click)="suspenderAgenda()" title="Confirmar">
+        </plex-button>
+    </div>
+</fieldset>

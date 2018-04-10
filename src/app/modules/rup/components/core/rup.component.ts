@@ -12,6 +12,13 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 import { RUPRegistry } from '../../../../app.module';
 import { AdjuntosService } from '../../services/adjuntos.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
+import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { Cie10Service } from '../../../../services/term/cie10.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -42,10 +49,12 @@ export class RUPComponent implements OnInit {
      * @memberof RUPComponent
      */
     private loadComponent() {
+
         // Cargamos el componente
         const component = RUPRegistry[this.elementoRUP.componente];
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
         const componentReference = this.viewContainerRef.createComponent(componentFactory);
+
         // Copia todas las propiedades
         componentReference.instance['prestacion'] = this.prestacion;
         componentReference.instance['registro'] = this.registro;
@@ -53,10 +62,12 @@ export class RUPComponent implements OnInit {
         componentReference.instance['soloValores'] = this.soloValores;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
+
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
             this.emitChange(false);
         });
+
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
     }
@@ -69,10 +80,15 @@ export class RUPComponent implements OnInit {
         public elementosRUPService: ElementosRUPService,
         public prestacionesService: PrestacionesService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public auth: Auth,
+        public auth: Auth, public ocupacionService: OcupacionService,
+        public financiadorService: FinanciadorService,
         public serviceProfesional: ProfesionalService,
         public adjuntosService: AdjuntosService,
-        public sanitazer: DomSanitizer
+        public sanitazer: DomSanitizer,
+        public snomedService: SnomedService,
+        public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
+        public Cie10Service: Cie10Service,
+        public servicioOrganizacion: OrganizacionService
     ) { }
 
     ngOnInit() {

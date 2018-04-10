@@ -1,0 +1,16 @@
+form.plex-layout {
+    font-size: 0.9rem;
+}
+
+table.table-striped thead th {
+    font-size: 1rem;
+}
+
+plex-box > DIV > DIV > DIV > header {
+    margin-bottom: 15px;
+    border-bottom: solid grey 1px !important;
+}
+
+i.mdi.mdi-checkbox-blank-outline, i.mdi.mdi-checkbox-marked {
+    cursor: pointer;
+}

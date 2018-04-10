@@ -4,7 +4,6 @@
 ******************************
 */
 
-
 /* estado del servicio */
 
 .estado-servicio {
@@ -32,7 +31,6 @@
     perspective: 800px;
     min-height: 390px;
     width: 100%;
-
     .cama {
         -webkit-transition: -webkit-transform .5s;
         -moz-transition: -moz-transform .5s;
@@ -73,7 +71,6 @@
             left: 0;
             background-color: #FFF;
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
-
             min-height: 390px;
             width: 100%;
             margin-bottom: 20px;
@@ -91,14 +88,10 @@
             -o-transform: rotateY(180deg);
             transform: rotateY(180deg);
             z-index: 3;
-
-
             .content.reparacion .footer .col-left::after {
                 border-right: 0 none;
             }
-
             .footer {
-
                 .col-left::after {
                     float: right;
                     content: " ";
@@ -111,7 +104,6 @@
                     }
                 }
             }
-
         }
         .cover {
             /*height: 105px;*/
@@ -128,11 +120,9 @@
                 padding: 0;
                 margin: 0;
             }
-
             .content .footer .col-left {
                 padding-left: 0;
             }
-
             .content .footer .col-right {
                 padding-left: 0;
                 padding-right: 0;
@@ -140,9 +130,9 @@
         }
         .name {
             color: #000;
-            font-size: 18px;
-            line-height: 28px;
-            margin: 10px 0 0;
+            font-size: 16px;
+            line-height: 18px;
+            margin: 8px 0 0;
             text-align: center;
         }
         .name.dorso {
@@ -175,16 +165,12 @@
             padding: 10px 0 0 10px;
             height: 60px;
         }
-
-
-
         .icon {
             text-align: center;
-
-            .mdi.agregar, .mdi {
+            .mdi.agregar,
+            .mdi {
                 font-size: 160px;
             }
-
             .reparacion {
                 font-size: 100px;
                 cursor: pointer;
@@ -194,15 +180,12 @@
                 cursor: pointer;
             }
         }
-
-
         .rounded-background {
             border-radius: 18px;
             color: white;
             padding: 5px;
             width: 32px;
         }
-
         .numero-habitacion-header {
             background: #f4f4f4;
             color: #000;
@@ -210,21 +193,38 @@
             padding: 5px 10px;
             font-size: 15px;
         }
-
         .btn-buscar-paciente {
+            background: white;
+            .agregar {
+                background: white;
+                color: rgb(101, 167, 95);
+            }
+        }
+        .btn-desocupada {
             background: white;
             .agregar {
                 background: white;
                 color: #5F90A7;
             }
         }
-
+        .btn-ocupada {
+            background: white;
+            color: rgb(107, 124, 123);
+            .mdi {
+                font-size: 120px;
+            }
+        }
+        .btn-preparacion {
+            background: white;
+            .agregar {
+                background: white;
+                color: rgb(201, 201, 201);
+            }
+        }
         .btn-bloqueada {
             padding: 0;
             background: transparent;
         }
-
-
         .grow {
             padding: 0;
             transition: all .2s ease-in-out;
@@ -232,10 +232,8 @@
                 transform: scale(1.1);
             }
         }
-
     }
 }
-
 
 @media screen and (-ms-high-contrast:active),
 (-ms-high-contrast:none) {
@@ -247,7 +245,7 @@
     .back {
         visibility: hidden;
         -ms-transition: all .2s cubic-bezier(.92, .01, .83, .67);
-        transition:  all .2s cubic-bezier(.92, .01, .83, .67);
+        transition: all .2s cubic-bezier(.92, .01, .83, .67);
     }
     .front {
         z-index: 4;
@@ -259,13 +257,16 @@
     }
 }
 
-.cama-container.hover.manual-flip .cama, .cama-container:not(.manual-flip):hover .cama {
+.cama-container.hover.manual-flip .cama,
+.cama-container:not(.manual-flip):hover .cama {
     -webkit-transform: rotateY(180deg);
     -moz-transform: rotateY(180deg);
     -o-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
-.cama-container.static.hover .cama, .cama-container.static:hover .cama {
+
+.cama-container.static.hover .cama,
+.cama-container.static:hover .cama {
     -webkit-transform: none;
     -moz-transform: none;
     -o-transform: none;
@@ -285,12 +286,6 @@
     transition: all 0.3s ease-out;
 }
 
-
-
-
-
-
-
 /* varios */
 
 .numero-habitacion {
@@ -298,7 +293,7 @@
     color: #000;
     font-weight: bold;
     padding: 10px 15px;
-    font-size: 20px;
+    font-size: 15px;
     display: inline-block;
 }
 

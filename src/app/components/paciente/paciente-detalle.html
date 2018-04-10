@@ -20,7 +20,7 @@
         <span class="text-danger">Sin documento</span>
     </div>
     <div class="col" *ngIf="paciente.estado">
-        <label class="block">Estado</label>
+        <span class="block">Estado</span>
         <span *ngIf="paciente.estado === 'validado'" class="badge badge-success">
             {{ paciente.estado | uppercase }}
         </span>
@@ -49,5 +49,11 @@
     <div class="col">
         <label>Sexo / Género</label>
         <span>{{ paciente | sexo }}</span>
+    </div>
+</div>
+<div class="row mb-1" *ngIf="paciente.cuil">
+    <div class="col">
+        <label>Cuil</label>
+        <span>{{ paciente.cuil }}</span>
     </div>
 </div>
