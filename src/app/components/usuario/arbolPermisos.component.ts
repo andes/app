@@ -37,6 +37,12 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
         if ($event) {
             if (this.allModule) {
                 this.accordions.first.active = false;
+            }else {
+                let index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
+                if (index >= 0) {
+                    this.userPermissions.splice(index, 1);
+                    this.userPermissions = [...this.userPermissions];
+                }
             }
         }
     }
@@ -57,6 +63,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
             } else {
                 let permisos = this.makePermission();
                 let items: String[] = this.shiro.permissions(permisos + ':?');
+
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
@@ -141,6 +148,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                         lists.push(this.makePermission() + ':' + item._id);
                     });
                 }
+
                 return lists;
             }
         }
