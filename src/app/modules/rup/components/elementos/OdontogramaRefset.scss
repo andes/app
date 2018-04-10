@@ -1,0 +1,69 @@
+.odontograma {
+    width: 100%;
+}
+
+svg#cuadrante-sup-der {
+    display: inline-block;
+}
+
+.diente {
+    fill: white;
+    stroke: #000000;
+    stroke-width: 3px solid #4776d3;
+    stroke-miterlimit: 10;
+    cursor: pointer;
+    &:hover {
+        fill: #4776d3;
+    }
+}
+
+.st1 {
+    fill: white;
+}
+
+.st1:hover {
+    fill: #4776d3;
+}
+
+.seleccionada {
+    fill: #4776d3 !important;
+}
+
+.pieza {
+    cursor: pointer;
+    &:hover {
+        fill: #4776d3;
+    }
+}
+
+.distal {
+    /* fill: #4776d3; */
+}
+
+.vestibular {
+    /* fill: #4776d3; */
+}
+
+.mesial {
+    /* fill: #4776d3; */
+}
+
+.palatina {
+    /* fill: #4776d3; */
+}
+
+.oclusal {
+    /* fill: #4776d3; */
+}
+
+.diente-container {
+    display: inline-block;
+    width: 100px;
+}
+
+.st0 {
+    fill: none;
+    stroke: #5074B9;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+}
