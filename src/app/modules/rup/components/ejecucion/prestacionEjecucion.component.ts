@@ -297,7 +297,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     desvincular(registroActual, registroDesvincular) {
-        this.confirmarDesvincular[registroActual.id] = registroDesvincular.id;
+        console.log('DESVINCULAR');
+        console.log(registroActual, registroDesvincular);
+        this.confirmarDesvincular[registroActual.id] = (registroDesvincular.id ? registroDesvincular.id : registroDesvincular.concepto.conceptId);
     }
 
     /**
@@ -323,6 +325,12 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     cancelarDesvincular(registroId) {
         delete this.confirmarDesvincular[registroId];
+    }
+
+    verKeys(reg) {
+        Object.keys(reg).forEach((v, i) => {
+            console.log(v, reg[v]);
+        });
     }
 
     /**
@@ -374,6 +382,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     confirmarEliminarRegistro(registroEliminar, scope) {
+        console.log('registroEliminar', registroEliminar);
         let index;
         if (registroEliminar.dragData) {
             this.conceptoAEliminar = registroEliminar.dragData.concepto;
@@ -426,6 +435,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+        console.log('registroDestino', registroDestino);
         let valor;
         let resultado;
         this.isDraggingConcepto = false;
@@ -524,7 +534,13 @@ export class PrestacionEjecucionComponent implements OnInit {
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
-                    registroDestino.relacionadoCon = [resultado];
+                    registroDestino.relacionadoCon.push(resultado);
+
+                    console.log('registroDestino', registroDestino);
+                    if (registroDestino.valor.piezas.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === registroDestino.concepto.conceptId)) === -1) {
+                        console.log('resultado', resultado);
+                        resultado.relacionadoCon.push(registroDestino);
+                    }
                 }
             }
 

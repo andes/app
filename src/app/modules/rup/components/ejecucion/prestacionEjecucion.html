@@ -39,7 +39,6 @@
                         </p>
                     </div>
 
-                    <!-- <object data="../../assets/diente-odontograma.svg" type="image/svg+xml" style="width: 700px; height: 300px;"></object> -->
 
                     <tabs [options]="{dragScroll: false, trim: 30, fixFirstOnScroll: true , canClose: true , tabFixed: true}" [hidden]="showDatosSolicitud"
                         (_tab)="cerrartab($event)">
@@ -100,11 +99,25 @@
                                                     {{registro.nombre}}
 
                                                     <!-- vinculacion / desvinculacion -->
-                                                    <div class="vinculadoCon" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
+                                                    <div class="" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
-                                                        <span class="badge badge-info">
-                                                            {{registro.relacionadoCon[0].concepto.term}}
-                                                        </span>
+                                                        <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
+                                                            <b class="clearfix">Relacionado con: </b>
+                                                            <span *ngFor="let relacion of registro.relacionadoCon" class="badge badge-info">
+                                                                {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
+                                                                <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
+                                                                <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
+                                                                <ng-container *ngIf="relacion.valor?.piezas">
+                                                                    <b *ngFor="let pieza of relacion.valor.piezas">
+                                                                        {{ pieza.concepto.term }}
+                                                                    </b>
+                                                                </ng-container>
+                                                            </span>
+                                                        </ng-container>
+                                                        <!-- <span class="badge badge-info">
+                                                            {{registro.relacionadoCon[0].concepto.term }}
+                                                        </span> -->
+
                                                         <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
                                                             title="Desvincular" class="btn btn-sm btn-primary">
                                                             <i class="mdi mdi-link-variant-off"></i>
@@ -176,7 +189,8 @@
                                                     <!-- (change)="prestacionChanged()" -->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
                                                         [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
-                                                        (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro.concepto)"></rup>
+                                                        (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro)"
+                                                        (ejecutarAccion)="confirmarEliminarRegistro($event.tipoAccion, $event.opciones)"></rup>
 
                                                 </div>
                                             </div>
@@ -185,7 +199,7 @@
                                             <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                                                 <div class="type"></div>
 
-                                                <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length> 0 && confirmarDesvincular[registro.id]">
+                                                <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]">
 
                                                     <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
                                                         <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
@@ -195,7 +209,7 @@
                                                                 Cancelar
                                                             </a>
 
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id, i)" class="btn btn-success">
+                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)" class="btn btn-success">
                                                                 Desvincular
                                                             </a>
                                                         </div>
@@ -292,10 +306,12 @@
                                                         <div class="actions">
                                                             <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
 
-                                                            <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                                                <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
-                                                                + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                                            </small>
+                                                            <ng-container *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
+                                                                <b>Relacionado con:</b>
+                                                                <small *ngFor="let relacion of elemento.relacionadoCon" class="badge badge-info">
+                                                                    {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
+                                                                </small>
+                                                            </ng-container>
                                                         </div>
                                                     </div>
                                                     <div class="rup-body">
