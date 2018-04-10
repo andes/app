@@ -227,6 +227,7 @@ import { EgresoInternacionComponent } from './modules/rup/components/elementos/e
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
+import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
 
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 
@@ -350,6 +351,7 @@ let RUPComponentsArray = [
     EgresoInternacionComponent,
     PasesCamaComponent,
     CensoDiarioComponent,
+    CensoMensualComponent,
     InformeEpicrisisComponent
 ];
 // for (let key in RUPRegistry) {
