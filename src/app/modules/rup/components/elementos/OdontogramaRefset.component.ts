@@ -7,15 +7,48 @@ import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'rup-OdontogramaRefset',
-    templateUrl: 'OdontogramaRefset.html'
+    templateUrl: 'OdontogramaRefset.html',
+    styleUrls: [
+        'OdontogramaRefset.scss'
+    ]
 })
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
+    piezasSeleccionadas: { diente: any; }[] = [];
     // @Output() emitConcepto: EventEmitter<any> = new EventEmitter<any>();
 
     public caraSeleccionada: any;
+    public piezaSeleccionada: any;
     public carasSeleccionadas: { diente: any; cara: any; }[] = [];
     public conceptos: any[] = [];
+
+    public prestacionesCaras: any = {
+        activo: true,
+        componente: 'ObservacionesComponent',
+        tipo: 'atomo',
+        esSolicitud: false,
+        style: {
+            columns: 12.0,
+            cssClass: null
+        },
+        defaultFor: [],
+        conceptosBuscar: null,
+        requeridos: [],
+        frecuentes: [],
+        params: null,
+        conceptos: [
+            {
+                id: '',
+                conceptId: '67784006',
+                term: 'prueba de sensibilidad a la caries',
+                fsn: 'prueba de sensibilidad a la caries (procedimiento)',
+                semanticTag: 'procedimiento',
+                refsetIds: [
+                    '900000000000497000'
+                ],
+            }
+        ]
+    };
 
     public prestacionesDientes: any =
         {
@@ -187,7 +220,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
     ];
 
-    prestacionSeleccionada: any;
+    prestacionDienteSeleccionada: any;
+    prestacionCaraSeleccionada: any;
 
     // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
     public unique: number = new Date().getTime();
@@ -200,58 +234,87 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             });
 
             this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
-
         }
     }
 
-    loadPrestacionesDientes($event) {
-        let conceptosSelect = this.prestacionesDientes.conceptos.map(elem => {
+    loadPrestacionesDientes($event, tipo) {
+        let conceptosSelect = this[tipo].conceptos.map(elem => {
             return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() };
         });
 
-        // let conceptosSelect = this.prestacionesDientes.map(elem => {
-        //     return { id: elem.concepto.conceptId, nombre: elem.concepto.term, concepto: elem.concepto, componente: 'ObservacionesComponent', timestamp: new Date().getTime() };
-        // });
-        // this.prestacionSeleccionada = this.prestacionesDientes;
         $event.callback(conceptosSelect);
     }
 
-    // loadConceptos($event) {
-    //     let conceptosSelect = this.conceptos.map(elem => {
-    //         return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() };
-    //     });
-    //     $event.callback(conceptosSelect);
-    // }
-    // selectRadio(concepto) {
-    //     this.registro.valor = { concepto: concepto };
-    // }
 
-    seleccionarCara(diente, cara) {
+    seleccionarDiente(diente, cara) {
+        // this.emitEjecutarAccion({ tipoAccion: 'eliminarRegistro', opciones: 'card' });
         if (cara === 'pieza') {
+            let index = this.piezaCompleta(diente);
+            diente.valor.piezaCompleta = true;
+            delete diente.valor.cara;
 
+            if (index === -1) {
+                this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente.valor.concepto }];
+                this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente.valor];
+                let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
+                piezas.push({
+                    concepto: diente.valor.concepto,
+                    cara: cara
+                });
+                this.registro.valor = {
+                    piezas: piezas
+                };
+            } else {
+                this.piezasSeleccionadas.splice(index, 1);
+                this.registro.relacionadoCon.splice(index, 1);
+
+            }
+            this.piezaSeleccionada = this.prestacionesDientes;
         } else {
-            this.carasSeleccionadas = [...this.carasSeleccionadas, { diente: diente.valor.concepto.conceptId, cara: cara }];
-            let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
-            piezas.push({
-                conceptId: diente.valor.concepto.conceptId,
-                cara: cara
-            });
-            this.registro.valor = {
-                piezas: piezas
-            };
-            this.registro.relacionadoCon.push(diente.valor);
-            this.caraSeleccionada = this.prestacionesDientes;
+            let index = this.seleccionado(diente, cara);
+            if (index === -1) {
+                this.carasSeleccionadas = [...this.carasSeleccionadas, { diente: diente.valor.concepto, cara: cara }];
+                diente.valor.cara = cara;
+                diente.valor.piezaCompleta = false;
+
+                this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente.valor];
+                let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
+                piezas.push({
+                    concepto: diente.valor.concepto,
+                    cara: cara
+                });
+                this.registro.valor = {
+                    piezas: piezas
+                };
+            } else {
+                this.carasSeleccionadas.splice(index, 1);
+                this.registro.relacionadoCon.splice(index, 1);
+            }
+            this.caraSeleccionada = this.prestacionesCaras;
         }
+
     }
 
     seleccionado(diente, cara) {
-        return this.carasSeleccionadas.find(x => x.diente === diente.valor.concepto.conceptId && x.cara === cara);
+        return this.carasSeleccionadas.findIndex(x => x.diente.conceptId === diente.valor.concepto.conceptId && x.cara === cara);
+    }
+
+    piezaCompleta(diente) {
+        return this.piezasSeleccionadas.findIndex(x => x.diente.conceptId === diente.valor.concepto.conceptId);
     }
 
     seleccionarPrestacion() {
-        console.log(this.prestacionSeleccionada);
         // this.emitConcepto.emit(this.modelo.prestacionSeleccionada);
-        this.emitChange(this.prestacionesDientes);
+        if (this.prestacionDienteSeleccionada) {
+            let prestacionDienteEmit = this.prestacionDienteSeleccionada;
+            this.emitChange(prestacionDienteEmit);
+        }
+
+        if (this.prestacionCaraSeleccionada) {
+            let prestacionCaraEmit = this.prestacionCaraSeleccionada;
+            this.emitChange(prestacionCaraEmit);
+        }
+        this.prestacionDienteSeleccionada = this.prestacionCaraSeleccionada = null;
     }
 
 }
