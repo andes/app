@@ -87,7 +87,6 @@
                             </div>
                         </div>
                     </li>
-
                     <li>
                         <div class="rup-card mini procedimiento">
                             <div class="rup-header">
@@ -106,8 +105,8 @@
                                         <div class=" col-6 p-0 m-0 ">
                                             <div class="p-0 pt-1 pr-1 float-right ">
                                                 <button class="btn btn-sm btn-primary
-                                                            btn-icon-rup p-0 ">
-                                                    <i class="mdi mdi-plus "></i>
+                                                            btn-icon-rup p-0 " (click)="generaEpicrisis()">
+                                                    <i class=" mdi mdi-plus "></i>
                                                 </button>
                                             </div>
                                         </div>
@@ -117,24 +116,24 @@
                         </div>
                     </li>
                     <li>
-                        <div class="rup-card mini procedimiento">
-                            <div class="rup-header">
-                                <div class="icon-rup drag-handle p-0 pt-1">
-                                    <i class="icon icon-rup-semantic-elementoderegistro"></i>
+                        <div class="rup-card mini procedimiento ">
+                            <div class="rup-header ">
+                                <div class="icon-rup drag-handle p-0 pt-1 ">
+                                    <i class="icon icon-rup-semantic-elementoderegistro "></i>
                                 </div>
 
-                                <div class="rup-border">
+                                <div class="rup-border ">
 
-                                    <div class="row p-0 m-0 border-secondary border-left-0">
-                                        <div class="col-6 p-0 m-0">
-                                            <div class="p-0 pl-2">
+                                    <div class="row p-0 m-0 border-secondary border-left-0 ">
+                                        <div class="col-6 p-0 m-0 ">
+                                            <div class="p-0 pl-2 ">
                                                 <label>Egreso</label>
                                             </div>
                                         </div>
                                         <div class=" col-6 p-0 m-0 ">
                                             <div class="p-0 pt-1 pr-1 float-right ">
-                                                <button (click)="ejecutarConcepto(egreso)" class="btn btn-sm btn-primary
-                                                                btn-icon-rup p-0 ">
+                                                <button (click)="ejecutarConcepto(egreso) " class="btn btn-sm btn-primary
+                                                    btn-icon-rup p-0 ">
                                                     <i class="mdi mdi-plus "></i>
                                                 </button>
                                             </div>
@@ -155,18 +154,20 @@
 </section>
 <footer>
 
-    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'" label="GUARDAR {{prestacion?.solicitud?.tipoPrestacion?.term}}"
-        (click)="guardarPrestacion()" type="success" class="float-right"></plex-button>
+    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="GUARDAR
+                                                    {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="guardarPrestacion() "
+        type="success " class="float-right "></plex-button>
     &nbsp;
-    <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo != 'validada'"
-        label="VALIDAR {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="validar()" type="success" class="float-right"></plex-button>
+    <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
+        label="VALIDAR {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="validar() " type="success " class="float-right "></plex-button>
 
-    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" label="Romper validación {{prestacion?.solicitud?.tipoPrestacion?.term}}"
-        (click)="romperValidacion()" type="danger" class="float-right"></plex-button>
+    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper
+                                                    validación {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="romperValidacion() "
+        type="danger " class="float-right "></plex-button>
 
-    <plex-button class="float-left" type="primary" label="ir al mapa de camas" (click)="cancelar()">
+    <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="cancelar() ">
     </plex-button>&nbsp;&nbsp;
-    <plex-button class="float-left" type="danger" label="CANCELAR" (click)="cancelar()">
+    <plex-button class="float-left " type="danger " label="CANCELAR " (click)="cancelar() ">
     </plex-button>
 
 </footer>

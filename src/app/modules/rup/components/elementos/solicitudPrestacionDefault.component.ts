@@ -6,6 +6,7 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'solicitudPrestacionDefault.html'
 })
 export class SolicitudPrestacionDefaultComponent extends RUPComponent implements OnInit {
+
     private listaPlanes: any = [];
 
     // public puedeAutocitar: Boolean = false;
@@ -16,6 +17,8 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 solicitudPrestacion: {}
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
+            this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto.conceptId;
+
         }
     }
 
@@ -26,12 +29,24 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            let callback = (this.registro.valor.solicitudPrestacion && this.registro.valor.solicitudPrestacion.profesionales) ? this.registro.valor.solicitudPrestacion.profesionales : null;
+            let callback = (this.registro.valor.solicitudPrestacion.profesionalesDestino) ? this.registro.valor.solicitudPrestacion.profesionalesDestino : null;
             event.callback(callback);
         }
-
     }
 
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        } else {
+            let callback = (this.registro.valor.solicitudPrestacion.organizacionDestino) ? this.registro.valor.solicitudPrestacion.organizacionDestino : null;
+            event.callback(callback);
+        }
+    }
 
     verificarAutocitacion() {
         if (this.registro.valor.solicitudPrestacion.profesionales) {
@@ -39,5 +54,5 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 this.registro.valor.solicitudPrestacion['autocitado'] = true;
             }
         }
-    }
+    } 
 }

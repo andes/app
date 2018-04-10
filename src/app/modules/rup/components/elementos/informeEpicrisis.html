@@ -1,0 +1,67 @@
+<div *ngIf="!soloValores">
+    <div class="row">
+        <div class="col-12">
+            <plex-text rows="4" [(ngModel)]="registro.valor.resumen" multiline=true name="resumenIngreso" label=" Resumen del ingreso"
+                placeholder="Ingrese Resumen al egreso">
+            </plex-text>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-select [multiple]="true" [(ngModel)]="registro.valor.pautasDeAlarma" name="pautasDeAlarma" [data]="pautasDeAlarma"
+                labelField="term" idField="conceptId" [required]="true" label="Pautas de alarma">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-text rows="4" [(ngModel)]="registro.valor.tratamientoASeguir" multiline=true name="tratamientoASeguir" label="Tratamiento a seguir"
+                placeholder="Ingrese tratamiento a seguir">
+            </plex-text>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <plex-select [multiple]="true" [(ngModel)]="registro.valor.dietaAlta" name="dietaAlta" [data]="dietaDeAlta" [required]="true"
+                label="Dieta alta" labelField="term" idField="conceptId">
+            </plex-select>
+        </div>
+    </div>
+</div>
+
+
+
+<div *ngIf="soloValores">
+    <div class="row">
+        <div class="col-12">
+            <label>Resumen al egreso</label>
+            {{registro.valor.resumen}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>Pautas de alarma</label>
+            <ng-container *ngFor="let pauta of registro.valor.pautasDeAlarma">
+
+                {{pauta.term}}
+
+            </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>Tratamiento a seguir</label>
+            {{registro.valor.tratamientoASeguir}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>Dieta alta</label>
+            <ng-container *ngFor="let pauta of registro.valor.dietaAlta">
+
+                {{pauta.term}}
+
+            </ng-container>
+        </div>
+    </div>
+</div>

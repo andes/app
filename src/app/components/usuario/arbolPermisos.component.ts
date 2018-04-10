@@ -120,7 +120,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
         if (this.allModule) {
             return [this.makePermission() + ':*'];
         }
-        if (this.item.child) {
+        if (this.item.child && this.childsComponents) {
             this.childsComponents.forEach(child => {
                 results = [...results, ...child.generateString()];
             });
@@ -136,9 +136,11 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                 }
 
                 let lists = [];
-                this.seleccionados.forEach(item => {
-                    lists.push(this.makePermission() + ':' + item._id);
-                });
+                if (this.seleccionados) {
+                    this.seleccionados.forEach(item => {
+                        lists.push(this.makePermission() + ':' + item._id);
+                    });
+                }
                 return lists;
             }
         }
