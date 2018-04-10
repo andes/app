@@ -58,13 +58,13 @@ export class UsuarioUpdateComponent implements OnInit {
         this.permisos$ = this.permisosService.get();
         this.permisosService.organizaciones({ admin: true }).subscribe(data => {
             this.organizacionesAuth = data;
-            
+
             if (this.organizacionesAuth.length > 0) {
                 if (this.seleccion) {
-                    if(this.seleccion.organizaciones && this.seleccion.organizaciones.length > 0){
+                    if (this.seleccion.organizaciones && this.seleccion.organizaciones.length > 0) {
                         let idOrganizaciones = this.seleccion.organizaciones.map(i => i._id);
-                        
-                            this.organizacionService.get({ids : idOrganizaciones}).subscribe(dataUss => {
+
+                        this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
                             this.organizacionesUsuario = dataUss;
                             this.loadUser();
                         });
@@ -108,7 +108,7 @@ export class UsuarioUpdateComponent implements OnInit {
             }
             this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
             this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
-        }   
+        }
     }
 
 
@@ -160,7 +160,7 @@ export class UsuarioUpdateComponent implements OnInit {
             this.permisos = [];
         }
     }
-z
+    z
     deleteEfector() {
         this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then(value => {
             if (value) {
