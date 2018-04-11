@@ -14,10 +14,14 @@
                 <br>
                 <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
             </div>
+            <div class="col-2">
+                <br>
+                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo diario" titlePosition="top" (click)="descargarCenso()"></plex-button>
+            </div>
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
-            <div class="col">
+            <div class="col" id="tabla">
                 <table class="table table-bordered" *ngIf="listadoCenso  && listadoCenso.length">
                     <thead>
                         <tr>
@@ -31,6 +35,7 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <tr *ngFor="let censo of listadoCenso, let indice = index">
                             <td>
                                 {{censo.dataCenso.ultimoEstado.paciente | paciente }}
@@ -92,7 +97,7 @@
                             <th>Defunciones</th>
                         </tr>
                         <tr>
-                            <td>{{ resumenCenso.existencia0 }}</td>
+                            <!-- <td>{{ resumenCenso.existencia0 }}</td>
                             <td>{{ resumenCenso.ingresos }}</td>
                             <td>{{ resumenCenso.pasesDe }}</td>
                             <td>{{ resumenCenso.egresosAlta }}</td>
@@ -102,7 +107,7 @@
                             <td>{{ resumenCenso.ingresoEgresoDia }}</td>
                             <td>{{ resumenCenso.pacientesDia }}</td>
                             <td>{{ resumenCenso.disponibles0 }}</td>
-                            <td>{{ resumenCenso.disponibles24 }}</td>
+                            <td>{{ resumenCenso.disponibles24 }}</td> -->
                         </tr>
 
                     </thead>
