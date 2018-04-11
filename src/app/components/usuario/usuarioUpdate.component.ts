@@ -68,8 +68,9 @@ export class UsuarioUpdateComponent implements OnInit {
                             this.organizacionesUsuario = dataUss;
                             this.loadUser();
                         });
-                    }
-                    else this.loadUser();
+                    } else {
+                        this.loadUser();
+                    };
                 }
             } else {
                 this.router.navigate(['./inicio']);
@@ -87,7 +88,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.organizacionSelect = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
         this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
-        // Si el usuario puede agregar efectores, se listan todos los disponibles 
+        // Si el usuario puede agregar efectores, se listan todos los disponibles
         if (this.auth.check('usuarios:agregarEfector')) {
             this.organizacionService.get({}).subscribe(organizaciones => {
                 this.newOrganizaciones = organizaciones;
@@ -101,7 +102,7 @@ export class UsuarioUpdateComponent implements OnInit {
             if (this.organizacionesUsuario.length > 0) {
                 // si el user seleccionado tiene organizaciones, hacemos un "join" con las del administrador
                 // y el resultado se asigna al combo de posibles nuevas organizaciones
-                //this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
+                // this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
                 this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
             } else {
                 this.newOrganizaciones = this.organizacionesAuth;
@@ -160,7 +161,7 @@ export class UsuarioUpdateComponent implements OnInit {
             this.permisos = [];
         }
     }
-    z
+
     deleteEfector() {
         this.plex.confirm('¿Eliminar todos los permisos de ' + this.organizacionSelect.nombre + '?').then(value => {
             if (value) {
