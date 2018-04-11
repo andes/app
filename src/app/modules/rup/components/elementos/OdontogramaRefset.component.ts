@@ -81,141 +81,133 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     public cuadranteSuperiorDerecho = [
         {
-            valor: {
-                registros: [],
 
-                concepto: {
-                    conceptId: '48402004',
-                    term: 'diente 18',
-                    fsn: 'estructura del segundo molar mandibular izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '446608001',
-                        '900000000000497000',
-                        '734138000'
-                    ],
-                    ISODesignation: 37
-                }
+            registros: [],
+
+            concepto: {
+                conceptId: '48402004',
+                term: 'diente 18',
+                fsn: 'estructura del segundo molar mandibular izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '446608001',
+                    '900000000000497000',
+                    '734138000'
+                ],
+                ISODesignation: 37
             }
         },
         {
-            valor: {
-                concepto: {
-                    conceptId: '74344005',
-                    term: 'diente 17',
-                    fsn: 'estructura del tercer molar mandibular izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '446608001',
-                        '900000000000497000',
-                        '734138000'
-                    ],
-                    ISODesignation: 38
-                }
+
+            concepto: {
+                conceptId: '74344005',
+                term: 'diente 17',
+                fsn: 'estructura del tercer molar mandibular izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '446608001',
+                    '900000000000497000',
+                    '734138000'
+                ],
+                ISODesignation: 38
             }
         },
         {
-            valor: {
-                concepto: {
-                    conceptId: '87704003',
-                    term: 'diente 16',
-                    fsn: 'estructura del tercer molar maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '446608001',
-                        '900000000000497000',
-                        '734138000'
-                    ],
-                    ISODesignation: 28
-                }
+
+            concepto: {
+                conceptId: '87704003',
+                term: 'diente 16',
+                fsn: 'estructura del tercer molar maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '446608001',
+                    '900000000000497000',
+                    '734138000'
+                ],
+                ISODesignation: 28
             }
         },
         {
-            valor: {
-                concepto: {
-                    conceptId: '66303006',
-                    term: 'diente 15',
-                    fsn: 'estructura del segundo molar maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '446608001',
-                        '900000000000497000',
-                        '734138000'
-                    ],
-                    ISODesignation: 27
-                }
+
+            concepto: {
+                conceptId: '66303006',
+                term: 'diente 15',
+                fsn: 'estructura del segundo molar maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '446608001',
+                    '900000000000497000',
+                    '734138000'
+                ],
+                ISODesignation: 27
             }
         },
         {
-            valor: {
-                concepto: {
-                    conceptId: '23427002',
-                    term: 'diente 14',
-                    fsn: 'estructura del primer molar maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '900000000000497000',
-                        '446608001',
-                        '734138000'
-                    ],
-                    ISODesignation: 26
-                }
+
+            concepto: {
+                conceptId: '23427002',
+                term: 'diente 14',
+                fsn: 'estructura del primer molar maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '900000000000497000',
+                    '446608001',
+                    '734138000'
+                ],
+                ISODesignation: 26
             }
         },
         {
-            valor: {
-                concepto: {
-                    fsn: 'estructura del segundo premolar maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '446608001',
-                        '900000000000497000',
-                        '734138000'
-                    ],
-                    conceptId: '23226009',
-                    term: 'diente 13',
-                    ISODesignation: 25
-                }
+
+            concepto: {
+                fsn: 'estructura del segundo premolar maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '446608001',
+                    '900000000000497000',
+                    '734138000'
+                ],
+                conceptId: '23226009',
+                term: 'diente 13',
+                ISODesignation: 25
             }
         },
         {
-            valor: {
-                concepto: {
-                    fsn: 'estructura del primer premolar maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '900000000000497000',
-                        '446608001',
-                        '734138000'
-                    ],
-                    conceptId: '61897005',
-                    term: 'diente 12',
-                    ISODesignation: 24
-                }
+
+            concepto: {
+                fsn: 'estructura del primer premolar maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '900000000000497000',
+                    '446608001',
+                    '734138000'
+                ],
+                conceptId: '61897005',
+                term: 'diente 12',
+                ISODesignation: 24
             }
         },
         {
-            valor: {
-                concepto: {
-                    fsn: 'estructura del canino maxilar izquierdo (estructura corporal)',
-                    semanticTag: 'estructura corporal',
-                    refsetIds: [
-                        '721145008',
-                        '900000000000497000',
-                        '446608001',
-                        '734138000'
-                    ],
-                    conceptId: '72876007',
-                    term: 'diente 11',
-                    ISODesignation: 23
-                }
+
+            concepto: {
+                fsn: 'estructura del canino maxilar izquierdo (estructura corporal)',
+                semanticTag: 'estructura corporal',
+                refsetIds: [
+                    '721145008',
+                    '900000000000497000',
+                    '446608001',
+                    '734138000'
+                ],
+                conceptId: '72876007',
+                term: 'diente 11',
+                ISODesignation: 23
             }
         }
     ];
@@ -250,15 +242,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         // this.emitEjecutarAccion({ tipoAccion: 'eliminarRegistro', opciones: 'card' });
         if (cara === 'pieza') {
             let index = this.piezaCompleta(diente);
-            diente.valor.piezaCompleta = true;
-            delete diente.valor.cara;
+            diente.piezaCompleta = true;
+            delete diente.cara;
 
             if (index === -1) {
-                this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente.valor.concepto }];
-                this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente.valor];
+                this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente.concepto }];
+                // this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente];
                 let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
                 piezas.push({
-                    concepto: diente.valor.concepto,
+                    concepto: diente.concepto,
                     cara: cara
                 });
                 this.registro.valor = {
@@ -266,21 +258,21 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 };
             } else {
                 this.piezasSeleccionadas.splice(index, 1);
-                this.registro.relacionadoCon.splice(index, 1);
+                // this.registro.relacionadoCon.splice(index, 1);
 
             }
             this.piezaSeleccionada = this.prestacionesDientes;
         } else {
             let index = this.seleccionado(diente, cara);
             if (index === -1) {
-                this.carasSeleccionadas = [...this.carasSeleccionadas, { diente: diente.valor.concepto, cara: cara }];
-                diente.valor.cara = cara;
-                diente.valor.piezaCompleta = false;
+                this.carasSeleccionadas = [...this.carasSeleccionadas, { diente: diente.concepto, cara: cara }];
+                diente.cara = cara;
+                diente.piezaCompleta = false;
 
-                this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente.valor];
+                // this.registro.relacionadoCon = [...this.registro.relacionadoCon, diente];
                 let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
                 piezas.push({
-                    concepto: diente.valor.concepto,
+                    concepto: diente.concepto,
                     cara: cara
                 });
                 this.registro.valor = {
@@ -288,7 +280,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 };
             } else {
                 this.carasSeleccionadas.splice(index, 1);
-                this.registro.relacionadoCon.splice(index, 1);
+                // this.registro.relacionadoCon.splice(index, 1);
             }
             this.caraSeleccionada = this.prestacionesCaras;
         }
@@ -296,11 +288,11 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     seleccionado(diente, cara) {
-        return this.carasSeleccionadas.findIndex(x => x.diente.conceptId === diente.valor.concepto.conceptId && x.cara === cara);
+        return this.carasSeleccionadas.findIndex(x => x.diente.conceptId === diente.concepto.conceptId && x.cara === cara);
     }
 
     piezaCompleta(diente) {
-        return this.piezasSeleccionadas.findIndex(x => x.diente.conceptId === diente.valor.concepto.conceptId);
+        return this.piezasSeleccionadas.findIndex(x => x.diente.conceptId === diente.concepto.conceptId);
     }
 
     seleccionarPrestacion() {
@@ -308,13 +300,16 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacionDienteSeleccionada) {
             let prestacionDienteEmit = this.prestacionDienteSeleccionada;
             this.emitChange(prestacionDienteEmit);
+            this.piezaSeleccionada = false;
         }
 
         if (this.prestacionCaraSeleccionada) {
             let prestacionCaraEmit = this.prestacionCaraSeleccionada;
             this.emitChange(prestacionCaraEmit);
+            this.caraSeleccionada = false;
         }
-        this.prestacionDienteSeleccionada = this.prestacionCaraSeleccionada = null;
+        this.prestacionDienteSeleccionada = null;
+        this.prestacionCaraSeleccionada = null;
     }
 
 }

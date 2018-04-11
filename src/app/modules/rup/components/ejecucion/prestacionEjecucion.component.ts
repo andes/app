@@ -677,7 +677,9 @@ export class PrestacionEjecucionComponent implements OnInit {
             return;
         }
 
-        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        // let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        let registros = this.prestacion.ejecucion.registros;
+
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);

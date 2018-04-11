@@ -107,10 +107,30 @@
                                                                 {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
                                                                 <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
                                                                 <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
-                                                                <ng-container *ngIf="relacion.valor?.piezas">
-                                                                    <b *ngFor="let pieza of relacion.valor.piezas">
-                                                                        {{ pieza.concepto.term }}
-                                                                    </b>
+                                                                <!-- 900000000000497000 -->
+                                                                <!-- <pre>
+                                                                   conceptIdRel {{ registro.concepto.conceptId }} {{ registro.concepto.term }}
+                                                                   conceptIdRel {{ relacion.concepto.conceptId }} {{ relacion.concepto.term }}
+                                                                   registro RefsetID {{ registro.concepto.refsetIds[0] }}
+                                                                   relCon RefsetID {{ relacion.concepto.refsetIds[0] }}
+                                                                </pre> -->
+                                                                <!--  && registro.concepto.conceptId === '173291009' -->
+                                                                <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '173291009'">
+                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
+                                                                        <!-- {{pieza | json }} -->
+                                                                        <span *ngIf="pieza.cara === 'pieza'">
+                                                                            {{ pieza.concepto.term }} / pieza completa
+                                                                        </span>
+                                                                    </span>
+                                                                </ng-container>
+                                                                <!--  && registro.concepto.conceptId === '67784006' -->
+                                                                <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '67784006'">
+                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
+                                                                        <!-- {{pieza | json }} -->
+                                                                        <span *ngIf="pieza.cara !== 'pieza'">
+                                                                            {{ pieza.concepto.term }} / cara {{ pieza.cara }}
+                                                                        </span>
+                                                                    </span>
                                                                 </ng-container>
                                                             </span>
                                                         </ng-container>

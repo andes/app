@@ -31,8 +31,8 @@
             <div class="col-12 no-gutters">
                 <ng-container *ngFor="let diente of cuadranteSuperiorDerecho; let i=index">
                     <div class="diente-container">
-                        <b class="text-sm">{{ diente.valor.concepto.term }}</b>
-                        <!-- <span class="test-sm">({{ diente.valor.concepto.ISODesignation }}</span>) -->
+                        <b class="text-sm">{{ diente.concepto.term }}</b>
+                        <!-- <span class="test-sm">({{ diente.concepto.ISODesignation }}</span>) -->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="55px" height="55px"
                             x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
                             <path (click)="seleccionarDiente(diente, 'distal')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'distal') !== -1}"
@@ -69,17 +69,19 @@
                 </ng-container>
             </div>
         </div>
+        <!-- {{ piezaSeleccionada | json }} -->
         <div class="row" *ngIf="piezaSeleccionada">
             <div class="col-6">
                 <plex-select [(ngModel)]="prestacionDienteSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesDientes')"
-                    name="prestacionesDientes" label="Prestación Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesDientes.conceptos[0])"></plex-select>
+                    name="prestacionesDientes" label="Prestación Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesDientes.conceptos[0]); piezaSeleccionada = null;"></plex-select>
                 <!-- <plex-button (click)="seleccionarPrestacion()" type="success" class="btn-sm" label="Seleccionar"></plex-button> -->
             </div>
         </div>
+        <!-- {{ caraSeleccionada | json }} -->
         <div class="row" *ngIf="caraSeleccionada">
             <div class="col-6">
                 <plex-select [(ngModel)]="prestacionCaraSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesCaras')" name="prestacionesCaras"
-                    label="Prestación Cara del Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesCaras.conceptos[0])"></plex-select>
+                    label="Prestación Cara del Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesCaras.conceptos[0]); caraSeleccionada = null;"></plex-select>
                 <!-- <plex-button (click)="seleccionarPrestacion()" type="success" class="btn-sm" label="Seleccionar"></plex-button> -->
             </div>
         </div>
