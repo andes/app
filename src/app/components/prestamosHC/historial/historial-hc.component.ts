@@ -14,6 +14,7 @@ import * as moment from 'moment';
 export class HistorialCarpetasComponent implements OnInit {
     public historial: any[] = [];
     public numeroCarpeta = '';
+    public inicioBusqueda = false;
 
     constructor(
         public prestamosService: PrestamosService,
@@ -26,10 +27,15 @@ export class HistorialCarpetasComponent implements OnInit {
 
     buscarHistorial() {
         if (this.numeroCarpeta != null) {
-            this.prestamosService.getHistorialCarpetas( { numero: this.numeroCarpeta, organizacion: this.auth.organizacion } )
-            .subscribe(historial => {
-                this.historial = historial;
-            });
+            this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion })
+                .subscribe(historial => {
+                    this.inicioBusqueda = true;
+                    if (historial.length > 0) {
+                        this.historial = historial;
+                    } else {
+                        this.historial = [];
+                    }
+                });
         }
     }
 
