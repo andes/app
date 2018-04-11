@@ -64,8 +64,7 @@ export class CensoDiarioComponent implements OnInit {
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
-            console.log(respuesta);
-            this.listadoCenso = respuesta.censoDiario;
+            this.listadoCenso = respuesta.censoDiario.map(c => c.censo);
             this.resumenCenso = respuesta.resumen;
             // this.completarResumenDiario();
         });

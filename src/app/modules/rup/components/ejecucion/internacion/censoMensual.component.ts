@@ -62,14 +62,12 @@ export class CensoMensualComponent implements OnInit {
 
     generarCenso() {
         let params = {
-            fechaDesde: this.fecha,
-            fechaHasta: this.fechaHasta,
+            fechaDesde: moment(this.fecha).endOf('day'),
+            fechaHasta: moment(this.fechaHasta).endOf('day'),
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
-            console.log(respuesta)
             this.resumenCensoTotal = respuesta;
-            console.log(this.resumenCenso)
             // this.completarResumenDiario();
         });
     }
