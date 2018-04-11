@@ -14,6 +14,10 @@ export class InternacionService {
         return this.server.get(this.url + '/censo', { params: params });
     }
 
+    getCensoMensual(params: any): Observable<any[]> {
+        return this.server.get(this.url + '/censoMensual', { params: params });
+    }
+
     liberarCama(idInternacion: any, fecha): Observable<any> {
         let param = {
             fecha: fecha

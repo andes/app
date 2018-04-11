@@ -1,8 +1,12 @@
 <section *ngIf="organizacion">
     <plex-box>
         <div class="row">
-            <div class="col-4">
-                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
+            <div class="col-3">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha Desde">
+                </plex-datetime>
+            </div>
+            <div class="col-3">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Fecha Hasta">
                 </plex-datetime>
             </div>
             <div class="col-4">
@@ -91,18 +95,18 @@
                             <th>Altas</th>
                             <th>Defunciones</th>
                         </tr>
-                        <tr>
-                            <td>{{ resumenCenso.existencia0 }}</td>
-                            <td>{{ resumenCenso.ingresos }}</td>
-                            <td>{{ resumenCenso.pasesDe }}</td>
-                            <td>{{ resumenCenso.egresosAlta }}</td>
-                            <td>{{ resumenCenso.egresosDefuncion }}</td>
-                            <td>{{ resumenCenso.pasesA }}</td>
-                            <td>{{ resumenCenso.existencia24 }}</td>
-                            <td>{{ resumenCenso.ingresoEgresoDia }}</td>
-                            <td>{{ resumenCenso.pacientesDia }}</td>
-                            <td>{{ resumenCenso.disponibles0 }}</td>
-                            <td>{{ resumenCenso.disponibles24 }}</td>
+                        <tr  *ngFor="let censo of resumenCensoTotal, let indice = index">
+                            <td>{{ censo.existencia0 }}</td>
+                            <td>{{ censo.ingresos }}</td>
+                            <td>{{ censo.pasesDe }}</td>
+                            <td>{{ censo.egresosAlta }}</td>
+                            <td>{{ censo.egresosDefuncion }}</td>
+                            <td>{{ censo.pasesA }}</td>
+                            <td>{{ censo.existencia24 }}</td>
+                            <td>{{ censo.ingresoEgresoDia }}</td>
+                            <td>{{ censo.pacientesDia }}</td>
+                            <td>{{ censo.disponibles0 }}</td>
+                            <td>{{ censo.disponibles24 }}</td>
                         </tr>
 
                     </thead>

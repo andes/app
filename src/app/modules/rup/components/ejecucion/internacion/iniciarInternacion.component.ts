@@ -79,7 +79,11 @@ export class IniciarInternacionComponent implements OnInit {
         horaIngreso: null,
         origen: null,
         ocupacionHabitual: null,
-        obraSocial: null
+        situacionLaboral: null,
+        nivelInstruccion: null,
+        asociado: null,
+        obraSocial: null,
+        motivo: null
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -185,52 +189,61 @@ export class IniciarInternacionComponent implements OnInit {
     /**
      * Guarda la prestación
      */
-    guardar() {
-        if (!this.paciente) {
-            this.plex.info('warning', 'Debe seleccionar un paciente');
-            return;
-        }
-
-
-        // armamos el elemento data a agregar al array de registros
-        let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
-        nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
-        // el concepto snomed del tipo de prestacion para la internacion
-        let conceptoSnomed = this.tipoPrestacionSeleccionada;
-
-        this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
-        delete this.informeIngreso.horaIngreso;
-        // creamos la prestacion de internacion y agregamos el registro de ingreso
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
-        nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
-        nuevaPrestacion.paciente['_id'] = this.paciente.id;
-        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            if (this.cama) {
-                // vamos a actualizar el estado de la cama
-                let dto = {
-                    fecha: this.informeIngreso.fechaIngreso,
-                    estado: 'ocupada',
-                    unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
-                    especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
-                    esCensable: this.cama.ultimoEstado.esCensable,
-                    genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                    paciente: this.paciente,
-                    idInternacion: prestacion.id
-                };
-
-                this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
-                    this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                    this.router.navigate(['rup/internacion/ver', prestacion.id]);
-                }, (err1) => {
-                    this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
-                });
-            } else {
-                this.router.navigate(['rup/internacion/ver', prestacion.id]);
+    guardar(valid) {
+        if (valid.formValid) {
+            if (!this.paciente) {
+                this.plex.info('warning', 'Debe seleccionar un paciente');
+                return;
             }
 
-        }, (err) => {
-            this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
-        });
+            // mapeamos los datos en los combos
+            this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).id);
+            this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).id);
+            this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).id);
+            this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).id);
+            this.informeIngreso.obraSocial = ((typeof this.informeIngreso.obraSocial === 'string')) ? this.informeIngreso.obraSocial : (Object(this.informeIngreso.obraSocial).id);
+            this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).id);
+            // armamos el elemento data a agregar al array de registros
+            let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+            nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
+            // el concepto snomed del tipo de prestacion para la internacion
+            let conceptoSnomed = this.tipoPrestacionSeleccionada;
+
+            this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
+            delete this.informeIngreso.horaIngreso;
+            // creamos la prestacion de internacion y agregamos el registro de ingreso
+            let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
+            nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
+            nuevaPrestacion.paciente['_id'] = this.paciente.id;
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                if (this.cama) {
+                    // vamos a actualizar el estado de la cama
+                    let dto = {
+                        fecha: this.informeIngreso.fechaIngreso,
+                        estado: 'ocupada',
+                        unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                        especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                        esCensable: this.cama.ultimoEstado.esCensable,
+                        genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                        paciente: this.paciente,
+                        idInternacion: prestacion.id
+                    };
+
+                    this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                        this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                        this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                    }, (err1) => {
+                        this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                    });
+                } else {
+                    this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                }
+
+            }, (err) => {
+                this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+            });
+        }
+
     }
 
     onReturn() {

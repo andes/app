@@ -10,18 +10,20 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 
 @Component({
-    templateUrl: 'censoDiario.html'
+    templateUrl: 'censoMensual.html'
 })
 
-export class CensoDiarioComponent implements OnInit {
+export class CensoMensualComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
 
     public organizacion;
     public fecha = new Date();
+    public fechaHasta;
     public organizacionSeleccionada;
     public listadoCenso = [];
     public ingresoEgreso = {};
+    public resumenCensoTotal;
 
     public snomedEgreso = {
         conceptId: '58000006',
@@ -60,13 +62,14 @@ export class CensoDiarioComponent implements OnInit {
 
     generarCenso() {
         let params = {
-            fecha: moment(this.fecha).endOf('day'),
+            fechaDesde: this.fecha,
+            fechaHasta: this.fechaHasta,
             unidad: this.organizacionSeleccionada.conceptId
         };
-        this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
-            console.log(respuesta);
-            this.listadoCenso = respuesta.censoDiario;
-            this.resumenCenso = respuesta.resumen;
+        this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
+            console.log(respuesta)
+            this.resumenCensoTotal = respuesta;
+            console.log(this.resumenCenso)
             // this.completarResumenDiario();
         });
     }
