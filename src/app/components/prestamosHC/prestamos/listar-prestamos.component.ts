@@ -175,7 +175,11 @@ export class ListarPrestamosComponent implements OnInit {
 
     switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
-        this.carpetasSeleccionadas = this.marcarTodas ?  this.carpetas : [];
+        this.carpetasSeleccionadas = this.marcarTodas ?
+            this.carpetas.filter(function (el) {
+                return el.estado === 'Prestada';
+            }) : [];
+        this.verDevolver = false;
     }
 
     devolverCarpetas() {
@@ -201,14 +205,16 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
+        let listaEstados = [{ nombre: 'En Archivo', valor: 'En Archivo' }, { nombre: 'Prestada', valor: 'Prestada' }];
         event.callback(listaEstados);
     }
 
     devolver(solicitudCarpeta) {
-        this.carpetaDevueltaEmit.emit(solicitudCarpeta);
-        this.carpetaSeleccionada = solicitudCarpeta;
-        this.verDevolver = true;
+        if (this.carpetasSeleccionadas.length === 0) {
+            this.carpetaDevueltaEmit.emit(solicitudCarpeta);
+            this.carpetaSeleccionada = solicitudCarpeta;
+            this.verDevolver = true;
+        }
     }
 
     onShowDevolver(event) {

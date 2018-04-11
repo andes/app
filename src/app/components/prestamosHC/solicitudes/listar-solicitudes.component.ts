@@ -191,7 +191,10 @@ export class ListarSolicitudesComponent implements OnInit {
 
     switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
-        this.carpetasSeleccionadas = this.marcarTodas ? this.carpetas : [];
+        this.carpetasSeleccionadas = this.marcarTodas ? this.carpetas.filter(function (el) {
+            return el.estado === 'En archivo';
+        }) : [];
+        this.verPrestar = false;
     }
 
     prestarCarpetas() {
@@ -227,9 +230,11 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     prestar(solicitudCarpeta) {
-        this.carpetaPrestadaEmit.emit(solicitudCarpeta);
-        this.carpetaSeleccionada = solicitudCarpeta;
-        this.verPrestar = true;
+        if (this.carpetasSeleccionadas.length === 0) {
+            this.carpetaPrestadaEmit.emit(solicitudCarpeta);
+            this.carpetaSeleccionada = solicitudCarpeta;
+            this.verPrestar = true;
+        }
     }
 
     sortCarpetas() {
