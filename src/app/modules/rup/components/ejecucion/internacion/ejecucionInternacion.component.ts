@@ -67,7 +67,6 @@ export class EjecucionInternacionComponent implements OnInit {
         ocupacionHabitual: null,
         obraSocial: null
     };
-
     public egreso = {
         conceptId: '58000006',
         term: 'alta del paciente',

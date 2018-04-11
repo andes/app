@@ -24,6 +24,7 @@ export class SuspenderAgendaComponent implements OnInit {
 
     constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
 
+    public mostrarHeaderCompleto = false; // Pongo false por defecto, estipo que arranca así. [Agregado para AOT]
     public motivoSuspensionSelect = { select: null };
     public motivoSuspension: { id: number; nombre: string; }[];
     public estadosAgenda = EstadosAgenda;
