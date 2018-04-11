@@ -67,50 +67,12 @@ export class CensoDiarioComponent implements OnInit {
         this.listadoCenso = [];
     }
 
-
-
-
-
-
     descargarCenso() {
         setTimeout(() => {
 
             let content = '';
-            // let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
-            // let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
-
-            /**
-             * Cada logo va a quedar generado como base64 desde la API:
-             *
-             * <img src="data:image/png;base64,..." class="logoAndes">
-             * <img src="data:image/png;base64,..." class="logotipoAndes">
-             * <img src="data:image/png;base64,..." class="logoPDP">
-             *
-             */
             let tabla = document.getElementById('tabla');
-
-            // const header =
             content += tabla.innerHTML;
-
-            console.log(content);
-            // content += header;
-            // content += `
-            // <div class="paciente">
-            //     <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
-            //     ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
-            // </div>
-            // `;
-
-            // agregamos prestaciones
-            // let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
-
-            // const total = elementosRUP.length;
-            // for (let i = 0; i < total; i++) {
-            //     content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
-            // }
-
-            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
-            // content = this.sanitizer.sanitize(1, content);
 
             this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {
