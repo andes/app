@@ -242,7 +242,7 @@ export class ListarSolicitudesComponent implements OnInit {
     sortCarpetas() {
         let val = this.sortDescending ? -1 : 1;
         // this.carpetas.sort((a, b) => { return (parseInt(a.numero) > parseInt(b.numero)) ? val : (parseInt(b.numero) > parseInt(a.numero)) ? -val : 0; } );
-        this.carpetas.sort((a, b) => { return (parseInt(a.numero) > parseInt(b.numero)) ? val : ((b.numero > a.numero) ? -val : 0); });
+        this.carpetas.sort((a, b) => { return (parseInt(a.numero, 10) > parseInt(b.numero, 10)) ? val : ((b.numero > a.numero) ? -val : 0); });
     }
 
     toogleSort() {
