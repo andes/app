@@ -651,45 +651,58 @@ export class PrestacionesService {
             planesCrear = [];
             planes.forEach(plan => {
 
-                // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
-                let existePrestacion = null;
-                if (this.cache[prestacion.paciente.id]) {
-                    existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
-                }
-                if (!existePrestacion) {
-                    // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
-                    // que prestacion quiere solicitar debo hacer ese cambio
-                    let conceptoSolicitud = plan.concepto;
-                    if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
-                        conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
+                if (plan.semanticTag !== 'metadato fundacional') {
+
+
+                    // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
+                    let existePrestacion = null;
+                    if (this.cache[prestacion.paciente.id]) {
+                        existePrestacion = this.cache[prestacion.paciente.id].find(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === prestacion.id && p.solicitud.registros[0]._id === plan.id);
                     }
-
-                    // Controlemos que se trata de una prestación turneable.
-                    // Solo creamos prestaciones pendiente para conceptos turneables
-                    let turneable = this.conceptosTurneables.find(c => c.conceptId === plan.concepto.conceptId);
-                    if (turneable) {
-                        // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
-                        // asignamos la prestacion de origen
-                        nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
-
-                        if (plan.valor.solicitudPrestacion.organizacionDestino) {
-                            nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
+                    if (!existePrestacion) {
+                        // Si se trata de una autocitación o consulta de seguimiento donde el profesional selecciono
+                        // que prestacion quiere solicitar debo hacer ese cambio
+                        let conceptoSolicitud = plan.concepto;
+                        if (plan.valor && plan.valor.solicitudPrestacion.prestacionSolicitada) {
+                            conceptoSolicitud = plan.valor.solicitudPrestacion.prestacionSolicitada;
                         }
 
-                        if (plan.valor.solicitudPrestacion.profesionalesDestino) {
-                            nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
+                        // Controlemos que se trata de una prestación turneable.
+                        // Solo creamos prestaciones pendiente para conceptos turneables
+                        let turneable = this.conceptosTurneables.find(c => c.conceptId === plan.concepto.conceptId);
+                        if (turneable) {
+                            // creamos objeto de prestacion
+                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
+                            // asignamos la prestacion de origen
+                            nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
+
+                            if (plan.valor.solicitudPrestacion.organizacionDestino) {
+                                nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
+                            }
+
+                            if (plan.valor.solicitudPrestacion.profesionalesDestino) {
+                                nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
+                            }
+
+                            // agregamos los registros en la solicitud
+                            nuevaPrestacion.solicitud.registros.push(plan);
+
+                            planesCrear.push(nuevaPrestacion);
                         }
-
-                        // agregamos los registros en la solicitud
-                        nuevaPrestacion.solicitud.registros.push(plan);
-
-                        planesCrear.push(nuevaPrestacion);
                     }
                 }
             });
+
         }
         // hacemos el patch y luego creamos los planes
+        prestacion.ejecucion.registros.forEach(x => {
+            if (x.relacionadoCon && x.relacionadoCon.length) {
+                x.relacionadoCon.forEach(y => {
+                    delete y.relacionadoCon;
+                });
+            }
+        });
+
         let dto: any = {
             op: 'estadoPush',
             estado: { tipo: 'validada' },

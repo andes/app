@@ -15,7 +15,6 @@ import { Plex } from '@andes/plex';
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     piezasSeleccionadas: { diente: any; }[] = [];
-    // @Output() emitConcepto: EventEmitter<any> = new EventEmitter<any>();
 
     public caraSeleccionada: any;
     public piezaSeleccionada: any;
@@ -254,7 +253,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     cara: cara
                 });
                 this.registro.valor = {
-                    piezas: piezas
+                    piezas: piezas,
+                    odontograma: this.cuadranteSuperiorDerecho
                 };
             } else {
                 this.piezasSeleccionadas.splice(index, 1);
@@ -276,7 +276,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     cara: cara
                 });
                 this.registro.valor = {
-                    piezas: piezas
+                    piezas: piezas,
+                    odontograma: this.cuadranteSuperiorDerecho
                 };
             } else {
                 this.carasSeleccionadas.splice(index, 1);
@@ -296,6 +297,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     seleccionarPrestacion() {
+
         // this.emitConcepto.emit(this.modelo.prestacionSeleccionada);
         if (this.prestacionDienteSeleccionada) {
             let prestacionDienteEmit = this.prestacionDienteSeleccionada;
@@ -310,6 +312,22 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
         this.prestacionDienteSeleccionada = null;
         this.prestacionCaraSeleccionada = null;
+    }
+
+    seleccionadoSoloValores(diente) {
+        return this.registro.valor.find(x => x.conceptId === diente.conceptId);
+    }
+
+    piezaCompletaSoloValores(diente) {
+        return this.registro.valor.find(x => x.conceptId === diente.conceptId);
+    }
+
+    existeEnRegistro(diente, cara) {
+        if (this.registro.valor && this.registro.valor.piezas) {
+            if (this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === cara) !== -1) {
+                return true;
+            }
+        }
     }
 
 }

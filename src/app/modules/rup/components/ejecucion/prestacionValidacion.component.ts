@@ -37,6 +37,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
 
+    public nombreArchivo = '';
+
     // Usa el keymap 'default'
     private slug = new Slug('default');
 
@@ -262,7 +264,8 @@ export class PrestacionValidacionComponent implements OnInit {
                 return false;
             } else {
                 // guardamos una copia de la prestacion antes de romper la validacion.
-                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+                // let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+                let prestacionCopia = this.prestacion;
 
                 // Agregamos el estado de la prestacion copiada.
                 let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
@@ -536,6 +539,7 @@ export class PrestacionValidacionComponent implements OnInit {
         });
         setTimeout(() => {
 
+            this.nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term);
             let content = '';
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
@@ -574,7 +578,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            this.servicioDocumentos.descargar(content).subscribe(data => {
+            this.servicioDocumentos.descargar(content, this.nombreArchivo).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
@@ -588,8 +592,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
+        this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
+        saveAs(blob, this.nombreArchivo);
     }
 
     /**

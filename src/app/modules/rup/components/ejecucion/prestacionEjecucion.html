@@ -103,22 +103,22 @@
 
                                                         <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
                                                             <b class="clearfix">Relacionado con: </b>
-                                                            <span *ngFor="let relacion of registro.relacionadoCon" class="badge badge-info">
-                                                                {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
-                                                                <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
-                                                                <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
-                                                                <!-- 900000000000497000 -->
-                                                                <!-- <pre>
-                                                                   conceptIdRel {{ registro.concepto.conceptId }} {{ registro.concepto.term }}
-                                                                   conceptIdRel {{ relacion.concepto.conceptId }} {{ relacion.concepto.term }}
-                                                                   registro RefsetID {{ registro.concepto.refsetIds[0] }}
-                                                                   relCon RefsetID {{ relacion.concepto.refsetIds[0] }}
-                                                                </pre> -->
-                                                                <!--  && registro.concepto.conceptId === '173291009' -->
+                                                            <ng-container *ngFor="let relacion of registro.relacionadoCon">
+
+                                                                <span class="badge badge-info">
+
+                                                                    <!-- ODONTO? -->
+                                                                    <ng-container *ngIf="relacion?.concepto">
+                                                                        {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
+                                                                        <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
+                                                                        <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
+                                                                    </ng-container>
+                                                                </span>
+
                                                                 <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '173291009'">
                                                                     <span *ngFor="let pieza of relacion.valor.piezas">
                                                                         <!-- {{pieza | json }} -->
-                                                                        <span *ngIf="pieza.cara === 'pieza'">
+                                                                        <span *ngIf="pieza.cara === 'pieza'" class="badge badge-info">
                                                                             {{ pieza.concepto.term }} / pieza completa
                                                                         </span>
                                                                     </span>
@@ -127,16 +127,14 @@
                                                                 <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '67784006'">
                                                                     <span *ngFor="let pieza of relacion.valor.piezas">
                                                                         <!-- {{pieza | json }} -->
-                                                                        <span *ngIf="pieza.cara !== 'pieza'">
+                                                                        <span *ngIf="pieza.cara !== 'pieza'" class="badge badge-info">
                                                                             {{ pieza.concepto.term }} / cara {{ pieza.cara }}
                                                                         </span>
                                                                     </span>
                                                                 </ng-container>
-                                                            </span>
+                                                            </ng-container>
+
                                                         </ng-container>
-                                                        <!-- <span class="badge badge-info">
-                                                            {{registro.relacionadoCon[0].concepto.term }}
-                                                        </span> -->
 
                                                         <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
                                                             title="Desvincular" class="btn btn-sm btn-primary">
@@ -326,11 +324,35 @@
                                                         <div class="actions">
                                                             <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
 
-                                                            <ng-container *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
-                                                                <b>Relacionado con:</b>
-                                                                <small *ngFor="let relacion of elemento.relacionadoCon" class="badge badge-info">
-                                                                    {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
-                                                                </small>
+                                                            <ng-container *ngFor="let relacion of elemento.relacionadoCon">
+
+                                                                <span class="badge badge-info">
+
+                                                                    <!-- ODONTO -->
+                                                                    <ng-container *ngIf="relacion?.concepto">
+                                                                        {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
+                                                                        <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
+                                                                        <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
+                                                                    </ng-container>
+                                                                </span>
+
+                                                                <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '173291009'">
+                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
+                                                                        <!-- {{pieza | json }} -->
+                                                                        <span *ngIf="pieza.cara === 'pieza'" class="badge badge-info">
+                                                                            {{ pieza.concepto.term }} / pieza completa
+                                                                        </span>
+                                                                    </span>
+                                                                </ng-container>
+                                                                <!--  && registro.concepto.conceptId === '67784006' -->
+                                                                <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '67784006'">
+                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
+                                                                        <!-- {{pieza | json }} -->
+                                                                        <span *ngIf="pieza.cara !== 'pieza'" class="badge badge-info">
+                                                                            {{ pieza.concepto.term }} / cara {{ pieza.cara }}
+                                                                        </span>
+                                                                    </span>
+                                                                </ng-container>
                                                             </ng-container>
                                                         </div>
                                                     </div>

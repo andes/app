@@ -499,7 +499,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 };
                                 resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                 if (registroDestino) {
-                                    registroDestino.relacionadoCon = [resultado];
+                                    registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
                                 }
                             } else {
                                 // verificamos si no es cronico pero esta activo
@@ -511,12 +511,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                                             };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                             if (registroDestino) {
-                                                registroDestino.relacionadoCon = [resultado];
+                                                registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
                                             }
                                         } else {
                                             resultado = this.cargarNuevoRegistro(snomedConcept);
                                             if (registroDestino) {
-                                                registroDestino.relacionadoCon = [resultado];
+                                                registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
                                             }
                                         }
                                     });
@@ -525,7 +525,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                         } else {
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (registroDestino) {
-                                registroDestino.relacionadoCon = [resultado];
+                                registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
                             }
                         }
                     });
@@ -535,10 +535,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
                     registroDestino.relacionadoCon.push(resultado);
-
-                    console.log('registroDestino', registroDestino);
                     if (registroDestino.valor.piezas.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === registroDestino.concepto.conceptId)) === -1) {
-                        console.log('resultado', resultado);
                         resultado.relacionadoCon.push(registroDestino);
                     }
                 }
@@ -697,6 +694,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
             if (this.idAgenda) {
+                localStorage.removeItem('idAgenda');
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
                 if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {

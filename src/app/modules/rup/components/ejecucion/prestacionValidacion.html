@@ -142,9 +142,36 @@
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
+                                <div class="float-left" *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
+                                    <b>Relacionado con:</b>
+                                    <ng-container *ngFor="let relacion of elemento.relacionadoCon">
+
+                                        <span class="badge badge-info">
+
+                                            <!-- ODONTO? -->
+                                            <ng-container *ngIf="relacion?.concepto?.term">
+                                                {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
+                                                <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
+                                                <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
+                                            </ng-container>
+                                        </span>
+
+                                        <ng-container *ngIf="relacion?.valor?.piezas && elemento?.concepto?.conceptId === '173291009'">
+                                            <span *ngFor="let pieza of relacion.valor.piezas">
+                                                <span *ngIf="pieza.cara === 'pieza'" class="badge badge-info">
+                                                    {{ pieza.concepto.term }} / pieza completa
+                                                </span>
+                                            </span>
+                                        </ng-container>
+                                        <ng-container *ngIf="relacion?.valor?.piezas && elemento?.concepto?.conceptId === '67784006'">
+                                            <span *ngFor="let pieza of relacion.valor.piezas">
+                                                <span *ngIf="pieza.cara !== 'pieza'" class="badge badge-info">
+                                                    {{ pieza.concepto.term }} / cara {{ pieza.cara }}
+                                                </span>
+                                            </span>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
@@ -231,7 +258,7 @@
                             </div>
                         </div>
                     </header>
-                    <ng-container *ngFor="let rama of registrosOrdenados; let iRama = index">
+                    <!-- <ng-container *ngFor="let rama of registrosOrdenados; let iRama = index">
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal,
@@ -239,7 +266,6 @@
                             }" class="list-group-item pl-0 pt-0 pb-0 mb-0">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                    <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
                                             Motivo de consulta principal
@@ -248,7 +274,7 @@
                                 </div>
                             </li>
                         </ul>
-                    </ng-container>
+                    </ng-container> -->
                 </plex-box>
             </div>
         </div>
