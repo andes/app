@@ -15,7 +15,12 @@ export class DocumentosService {
 
     constructor(private http: Http) { }
 
-    descargar(html: string): Observable<any> {
+    /**
+     * 
+     * @param html string código HTML
+     * @param scssFile (opcional) string nombre referencia a una hoja de estilos
+     */
+    descargar(html: string, scssFile = null): Observable<any> {
 
         let htmlPdf = { html: Buffer.from(html).toString('base64') };
         let headers = new Headers({
@@ -24,7 +29,7 @@ export class DocumentosService {
         });
 
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
+        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' }, scssFile: scssFile }, options)
             .map(this.extractData)
             .catch(this.handleError);
     }
