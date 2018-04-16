@@ -228,6 +228,7 @@ import { EgresoInternacionComponent } from './modules/rup/components/elementos/e
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -314,6 +315,7 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
 let RUPComponentsArray = [
@@ -349,7 +351,8 @@ let RUPComponentsArray = [
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
     PasesCamaComponent,
-    InformeEpicrisisComponent
+    InformeEpicrisisComponent,
+    CircunferenciaCinturaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
