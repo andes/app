@@ -18,8 +18,8 @@ export class CircunferenciaCinturaComponent extends RUPComponent implements OnIn
                 }
             });
         }
-        /*   if (this.registro.valor) {
-               this.mensaje = this.getMensajes();
-         }*/
+        if (this.registro.valor) {
+            this.mensaje = this.getMensajes();
+        }
     }
 }

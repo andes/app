@@ -3,11 +3,12 @@
 </plex-int>
 
 <p *ngIf="soloValores" class="readonly">
-    <span>Circunferencia de cint</span> {{registro.valor}}
+    <span>Circunferencia de cintura</span>
+    {{registro.valor}}
 </p>
 
-<p *ngIf="mensaje.texto">
-    <span class="badge-{{mensaje.class}}">
-        {{mensaje.texto}}
+<p *ngIf="mensaje?.texto">
+    <span class="badge-{{mensaje?.class}}">
+        {{mensaje?.texto}}
     </span>
 </p>
