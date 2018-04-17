@@ -6,7 +6,8 @@ import {
     Output,
     Input,
     EventEmitter,
-    OnInit
+    OnInit,
+    Host
 } from '@angular/core';
 
 
@@ -27,12 +28,15 @@ export class PacienteSearchTurnosComponent extends PacienteSearchComponent {
     get resultadoCreateUpdate(): any {
         return this.resultado;
     }
+
+    @Input() puedeCrearSolicitud = true;
+    @Input() puedeDarTurno = true;
+
     @Output() sinResultados: EventEmitter<any> = new EventEmitter<any>();
     @Output() operacion: EventEmitter<any> = new EventEmitter<any>();
     @Output() createUpdate: EventEmitter<any> = new EventEmitter<any>();
 
     pacienteSeleccionado = null;
-
 
     // Emite al componente puntoInicio
     public operacionSeleccionada(operacion, paciente) {

@@ -787,7 +787,7 @@ export class DarTurnosComponent implements OnInit {
                         if (environment.production === true) {
                             let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
                             let horario = moment(this.turno.horaInicio).format('HH:mm');
-                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
                             this.enviarSMS(pacienteSave, mensaje);
 
                         } else {

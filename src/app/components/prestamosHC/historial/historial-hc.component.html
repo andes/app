@@ -1,73 +1,65 @@
-<!-- Filtros -->
-<div class="row">
-    <div class="{{verPrestar || verDevolver ? 'col-8' : 'col-4'}}">
-        <plex-text [(ngModel)]="nroCarpeta" name="nroCarpeta" label="Número de Carpeta" >
-        </plex-select>
-    </div>
-    
-    <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
-        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
-            class="fechas">
-        </plex-datetime>
-    </div>
-    <div class="{{verPrestar || verDevolver ? 'col-6' : 'col-3'}}">
-        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
-            class="fechas">
-        </plex-datetime>
-    </div>
-    <!-- <div class="col-4">
-        <plex-select [(ngModel)]="paciente" (change)="getPaciente($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
-            label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
-            ngModelOptions="{standalone: true}">
-        </plex-select>
-    </div> -->
-</div>
+<form class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
+    <section>
+        <div class="row">
+            <div class="col">
+                <plex-box>
+                    <div class="plex-box">
+                        <header>
+                            <div class="clearfix">
+                                <div class="page-title float-left">Historial de Préstamos</div>
+                            </div>
+                            <!-- Filtros -->
+                            <div class="row" style="margin-bottom: 0.25rem">
+                                <div class="col-4">
+                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta" placeholder="Escriba el número de carpeta"
+                                        labelField="numero" [required]="true">
+                                    </plex-text>
+                                </div>
+                                <div class="col-4" style="margin-top:36px;">
+                                    <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
+                                    </plex-button>
+                                </div>
+                            </div>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Numero</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Responsables</th>
-            <th>Destino</th>
-            <th>Prestaciones</th>
-            <th>Historia Clínica</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let carpeta of carpetas"  [ngClass]="{'bg-inverse text-white': carpetaSeleccionada == carpeta}">
-            <td>
-                {{carpeta.fecha | date:'dd-MM-yyyy'}}
-            </td>
-            <td>{{carpeta.estado}}</td>
-            <td>
-                {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
-            </td>
-            <td>
-                {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio.nombre}}
-            </td>
-            <td>
-                {{carpeta.datosPrestamo.turno.tipoPrestaciones | enumerar:['term']:'/' }}
-            </td>
-            <td>
-                <b>
-                    {{carpeta.numero}} - {{carpeta.paciente.apellido}},
-                    {{carpeta.paciente.nombre}}
-                </b>
-                <br/> Documento:
-                <b>{{carpeta.paciente.documento}}</b>
-            </td>   
-            <td *ngIf="carpeta.estado == 'En archivo'">
-                <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)">
-                </plex-button>
-            </td>   
-            <td *ngIf="carpeta.estado == 'Prestada'">
-                <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)">
-                </plex-button>
-            </td>
-        </tr>
-
-    </tbody>
-</table>
+                            <table *ngIf="historial.length" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Movimiento</th>
+                                        <th>Observaciones</th>
+                                        <th>Estado de devolución</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let movimiento of historial">
+                                        <td>
+                                            {{movimiento.createdAt | date:'dd-MM-yyyy'}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'En archivo'">
+                                            Devuelta por: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        </td>
+                                        <td *ngIf="movimiento.estado == 'Prestada'">
+                                            Prestada a: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        </td>
+                                        <td>
+                                            {{movimiento.datosDevolucion.observaciones}}
+                                        </td>
+                                        <td>
+                                            {{movimiento.datosDevolucion.estado}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row" *ngIf="inicioBusqueda && !historial.length">
+                                <div class="col-12 text-center" style="margin: 3rem">
+                                    <h3>
+                                        <i class="mdi mdi-folder-remove"></i> No se encuentra la carpeta</h3>
+                                </div>
+                            </div>
+                        </header>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+</form>

@@ -19,6 +19,7 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    ultimosTurnos: any[];
     puedeRegistrarAsistencia: boolean;
     puedeLiberarTurno: boolean;
     agenda: IAgenda;
@@ -71,6 +72,9 @@ export class TurnosPacienteComponent implements OnInit {
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
                     return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.ultimosTurnos = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
                 });
                 this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
                     return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
@@ -135,4 +139,5 @@ export class TurnosPacienteComponent implements OnInit {
         this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
+
 }

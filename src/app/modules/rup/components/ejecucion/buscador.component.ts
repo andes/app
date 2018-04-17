@@ -1,5 +1,4 @@
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
-import { element } from 'protractor';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';

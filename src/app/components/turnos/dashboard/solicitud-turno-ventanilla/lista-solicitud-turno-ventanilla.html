@@ -10,7 +10,8 @@
                         <tr>
                             <th>Fecha</th>
                             <th>Prestación</th>
-                            <th>Profesional</th>
+                            <th>Profesional/Organización</th>
+                            <th>Operación</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -22,11 +23,14 @@
                                 {{ prestacion.solicitud.tipoPrestacion.term }}
                             </td>
                             <td>
-                                {{ prestacion.solicitud.profesional | profesional }}
-                                <span class="text-danger" *ngIf="prestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true">(autocitado)</span>
+                                {{ prestacion.solicitud.profesional | profesional }} - {{ prestacion.solicitud.organizacion.nombre }}
+                                <span class="text-danger" *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
                             </td>
                             <td>
-                                <plex-button type="success" icon="mdi mdi-calendar-plus" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
+                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion.solicitud.organizacion.id)" type="success"
+                                    label="DAR TURNO" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
+                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id === prestacion.solicitud.organizacion.id)" class="badge badge-success">Turno Dado</span>
+                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion.solicitud.organizacion.id)" class="badge badge-info">Turno Dado</span>
                             </td>
                         </tr>
                     </tbody>

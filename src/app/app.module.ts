@@ -18,21 +18,22 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
 
 // Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
+import { AuthModule } from '@andes/auth';
 import { Auth } from '@andes/auth';
 import { RoutingGuard } from './app.routings-guard.class';
-import { AgmCoreModule } from 'angular2-google-maps/core';
+import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
-
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
@@ -231,7 +232,8 @@ import { EjecucionInternacionComponent } from './modules/rup/components/ejecucio
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
-
+import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -281,8 +283,10 @@ import { SolicitudesComponent } from './components/solicitudes/solicitudes.compo
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ListarSolicitudesComponent } from './components/prestamosHC/solicitudes/listar-solicitudes.component';
 import { ListarPrestamosComponent } from './components/prestamosHC/prestamos/listar-prestamos.component';
+import { HistorialCarpetasComponent } from './components/prestamosHC/historial/historial-hc.component';
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
+import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -313,8 +317,10 @@ export let RUPRegistry = {
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
+    'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
 let RUPComponentsArray = [
@@ -349,11 +355,16 @@ let RUPComponentsArray = [
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
-    PasesCamaComponent
+    PasesCamaComponent,
+    InformeEpicrisisComponent,
+    CircunferenciaCinturaComponent
 ];
-// for (let key in RUPRegistry) {
-//     RUPComponentsArray.push(RUPRegistry[key]);
-// }
+
+/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs, 'es');
+
 
 // Main module
 @NgModule({
@@ -361,8 +372,10 @@ let RUPComponentsArray = [
         BrowserModule,
         ReactiveFormsModule,
         FormsModule,
+        HttpClientModule,
         HttpModule,
         PlexModule,
+        AuthModule,
         Ng2DragDropModule,
         ChartsModule,
         routing,
@@ -430,6 +443,8 @@ let RUPComponentsArray = [
         ListarPrestamosComponent,
         PrestarHcComponent,
         DevolverHcComponent,
+        HistorialCarpetasComponent,
+        ImprimirSolicitudesComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
@@ -441,6 +456,7 @@ let RUPComponentsArray = [
             useValue: 'es-AR'
         },
         Plex,
+        Server,
         Auth,
         RoutingGuard,
         OrganizacionService,
@@ -463,7 +479,6 @@ let RUPComponentsArray = [
         TurnoService,
         EspacioFisicoService,
         ListaEsperaService,
-        Server,
         SmsService,
         PrestacionesService,
         AdjuntosService,
