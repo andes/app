@@ -32,10 +32,10 @@
                                 <span>{{paciente.sexo}}</span>
                             </td>
                             <td>
-                                <plex-button *ngIf="pacienteSeleccionado" title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado && puedeDarTurno" title="Dar Turno" icon="calendar-plus" (click)="operacionSeleccionada('darTurno', paciente)"></plex-button>
                             </td>
                             <td>
-                                <plex-button *ngIf="pacienteSeleccionado" title="Solicitudes" icon="open-in-app" (click)="operacionSeleccionada('ingresarSolicitud', paciente)"></plex-button>
+                                <plex-button *ngIf="pacienteSeleccionado && puedeCrearSolicitud" title="Solicitudes" icon="open-in-app" (click)="operacionSeleccionada('ingresarSolicitud', paciente)"></plex-button>
                             </td>
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado" title="Operaciones de Turno" icon="calendar-multiple" (click)="operacionSeleccionada('operacionesTurno', paciente)"></plex-button>
