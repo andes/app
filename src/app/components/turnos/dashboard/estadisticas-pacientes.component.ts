@@ -96,19 +96,19 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     nuevoNroCarpeta() {
         if (this.nuevaCarpeta !== '') {
-            this.carpetaEfector = {
-                organizacion: {
-                    _id: this.auth.organizacion.id,
-                    nombre: this.auth.organizacion.nombre
-                },
-                nroCarpeta: this.nuevaCarpeta
-            };
-            this._paciente.carpetaEfectores.push(this.carpetaEfector);
             this.servicePaciente.patch(this._paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this._paciente.carpetaEfectores }).subscribe(
                 resultadoCarpeta => {
+                    this.carpetaEfector = {
+                        organizacion: {
+                            _id: this.auth.organizacion.id,
+                            nombre: this.auth.organizacion.nombre
+                        },
+                        nroCarpeta: this.nuevaCarpeta
+                    };
+                    this._paciente.carpetaEfectores.push(this.carpetaEfector);
                     this.plex.alert('Nro. de carpeta Asignado', 'Información');
                 },
-                error => { this.plex.alert('No se asignó el Nro. de carpeta, intente nuevamente.', 'Error'); }
+                error => { this.plex.toast('danger', 'No se asignó el Nro. de carpeta, intente nuevamente.'); }
             );
         }
     }
