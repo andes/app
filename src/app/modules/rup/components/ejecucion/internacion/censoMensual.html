@@ -80,6 +80,7 @@
                 <table class="table table-bordered">
                     <thead>
                         <tr>
+                            <th rowspan="2">Fecha</th>
                             <th rowspan="2">Existencia a las 0 hs</th>
                             <th rowspan="2">Ingresos</th>
                             <th rowspan="2">Pases de</th>
@@ -95,18 +96,59 @@
                             <th>Altas</th>
                             <th>Defunciones</th>
                         </tr>
-                        <tr  *ngFor="let censo of resumenCensoTotal, let indice = index">
-                            <td>{{ censo.existencia0 }}</td>
-                            <td>{{ censo.ingresos }}</td>
-                            <td>{{ censo.pasesDe }}</td>
-                            <td>{{ censo.egresosAlta }}</td>
-                            <td>{{ censo.egresosDefuncion }}</td>
-                            <td>{{ censo.pasesA }}</td>
-                            <td>{{ censo.existencia24 }}</td>
-                            <td>{{ censo.ingresoEgresoDia }}</td>
-                            <td>{{ censo.pacientesDia }}</td>
-                            <td>{{ censo.disponibles0 }}</td>
-                            <td>{{ censo.disponibles24 }}</td>
+                        <tr *ngFor="let unResumen of resumenCensoTotal, let indice = index">
+                            <td>{{ unResumen.fecha | date: 'dd/MM/yyyy' }}</td>
+                            <td>{{ unResumen.resumen.existencia0 }}</td>
+                            <td>{{ unResumen.resumen.ingresos }}</td>
+                            <td>{{ unResumen.resumen.pasesDe }}</td>
+                            <td>{{ unResumen.resumen.egresosAlta }}</td>
+                            <td>{{ unResumen.resumen.egresosDefuncion }}</td>
+                            <td>{{ unResumen.resumen.pasesA }}</td>
+                            <td>{{ unResumen.resumen.existencia24 }}</td>
+                            <td>{{ unResumen.resumen.ingresoEgresoDia }}</td>
+                            <td>{{ unResumen.resumen.pacientesDia }}</td>
+                            <td>{{ unResumen.resumen.disponibles0 }}</td>
+                            <td>{{ unResumen.resumen.disponibles24 }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>Totales</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.existencia0}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.ingresos}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pasesDe }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.egresosAlta}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.egresosDefuncion}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pasesA}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.existencia24}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.ingresoEgresoDia}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pacientesDia}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.disponibles0}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.disponibles24}}</strong>
+                            </td>
+
                         </tr>
 
                     </thead>
@@ -114,6 +156,8 @@
             </div>
 
         </div>
+
+
 
     </plex-box>
 </section>

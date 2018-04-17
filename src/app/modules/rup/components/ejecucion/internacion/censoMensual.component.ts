@@ -33,7 +33,7 @@ export class CensoMensualComponent implements OnInit {
     };
 
 
-    public resumenCenso = {
+    public totalResumenCenso = {
         existencia0: 0,
         ingresos: 0,
         pasesDe: 0,
@@ -62,15 +62,46 @@ export class CensoMensualComponent implements OnInit {
 
     generarCenso() {
         let params = {
-            fechaDesde: this.fecha,
-            fechaHasta: this.fechaHasta,
+            fechaDesde: moment(this.fecha).endOf('day'),
+            fechaHasta: moment(this.fechaHasta).endOf('day'),
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
-            console.log(respuesta)
             this.resumenCensoTotal = respuesta;
-            console.log(this.resumenCenso)
+
+            this.totalCenso();
             // this.completarResumenDiario();
+        });
+    }
+
+
+    totalCenso() {
+        this.totalResumenCenso =  {
+            existencia0: 0,
+            ingresos: 0,
+            pasesDe: 0,
+            egresosAlta: 0,
+            egresosDefuncion: 0,
+            pasesA: 0,
+            existencia24: 0,
+            ingresoEgresoDia: 0,
+            pacientesDia: 0,
+            disponibles24: 0,
+            disponibles0: 0
+        };
+        this.resumenCensoTotal.forEach(element => {
+            this.totalResumenCenso.existencia0 += element.resumen.existencia0;
+            this.totalResumenCenso.ingresos += element.resumen.ingresos;
+            this.totalResumenCenso.pasesDe += element.resumen.pasesDe;
+            this.totalResumenCenso.egresosAlta += element.resumen.egresosAlta;
+            this.totalResumenCenso.egresosDefuncion += element.resumen.egresosDefuncion;
+            this.totalResumenCenso.pasesA += element.resumen.pasesA;
+            this.totalResumenCenso.existencia24 += element.resumen.existencia24;
+            this.totalResumenCenso.ingresoEgresoDia += element.resumen.ingresoEgresoDia;
+            this.totalResumenCenso.pacientesDia += element.resumen.pacientesDia;
+            this.totalResumenCenso.disponibles24 += element.resumen.disponibles24;
+            this.totalResumenCenso.disponibles0 += element.resumen.disponibles0;
+
         });
     }
 
