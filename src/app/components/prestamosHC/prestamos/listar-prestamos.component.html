@@ -19,10 +19,9 @@
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="{{  verDevolver ? 'col-8' : 'col-4'}}">
-                                <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
-                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
-                                </plex-select>
+                            <div class="{{  verDevolver ? 'col-6' : 'col-4'}}" (click)="toogleSort()" style="margin-top: 45px;">
+                                <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
+                                <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
                             </div>
                             <div class="{{  verDevolver ? 'col-4' : 'col-2'}} text-right">
                                 <label>
@@ -31,6 +30,11 @@
                             </div>
                         </div>
                         <div class="row" *ngIf="mostrarMasOpciones">
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
+                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div>
                             <div class="col-4">
                                 <plex-select [(ngModel)]="espacioFisico" (change)="getCarpetas($event,'espacioFisico')" name="espacioFisico" (getData)="loadEspacios($event)"
                                     label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + '(' + servicio.nombre + ')'"
