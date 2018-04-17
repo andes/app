@@ -9,12 +9,6 @@ export class OdontologiaDefaultComponent extends RUPComponent implements OnInit 
     public carasDentales;
 
     ngOnInit() {
-        debugger;
-        // buscamos las piezas dentales en snomed
-
-
-
-
         if (!this.registro.valor) {
             this.registro.valor = { piezaDental: null };
         }
@@ -23,12 +17,14 @@ export class OdontologiaDefaultComponent extends RUPComponent implements OnInit 
 
 
     loadPiezasDentales($event) {
+        // buscamos las piezas dentales en snomed
         this.snomedService.getQuery({ expression: '<245563006' }).subscribe(dientes => {
             $event.callback(dientes);
         });
     }
 
     loadCarasDentales($event) {
+        // buscamos las caras dentales en snomed
         this.snomedService.getQuery({ expression: '245652002 OR 245653007 OR 362103001 OR 72203008 OR 245647007' }).subscribe(dientes => {
             $event.callback(dientes);
         });
