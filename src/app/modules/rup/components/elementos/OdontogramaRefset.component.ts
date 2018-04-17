@@ -84,129 +84,127 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             registros: [],
 
             concepto: {
-                conceptId: '48402004',
-                term: 'diente 18',
-                fsn: 'estructura del segundo molar mandibular izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del tercer molar maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
                     '446608001',
                     '900000000000497000',
                     '734138000'
                 ],
-                ISODesignation: 37
+                'conceptId': '68085002',
+                'term': 'diente 1',
+                ISODesignation: 18
             }
         },
         {
 
             concepto: {
-                conceptId: '74344005',
-                term: 'diente 17',
-                fsn: 'estructura del tercer molar mandibular izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del segundo molar maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '446608001',
                     '900000000000497000',
+                    '446608001',
                     '734138000'
                 ],
-                ISODesignation: 38
+                'conceptId': '7121006',
+                'term': 'diente 2',
+                ISODesignation: 17
             }
         },
         {
 
             concepto: {
-                conceptId: '87704003',
-                term: 'diente 16',
-                fsn: 'estructura del tercer molar maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del primer molar maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '446608001',
                     '900000000000497000',
+                    '446608001',
                     '734138000'
                 ],
-                ISODesignation: 28
+                'conceptId': '5140004',
+                'term': 'diente 3',
+                ISODesignation: 16
             }
         },
         {
 
             concepto: {
-                conceptId: '66303006',
-                term: 'diente 15',
-                fsn: 'estructura del segundo molar maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del segundo premolar maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
                     '446608001',
                     '900000000000497000',
                     '734138000'
                 ],
-                ISODesignation: 27
+                'conceptId': '36492000',
+                'term': 'diente 4',
+                ISODesignation: 15
             }
         },
         {
 
             concepto: {
-                conceptId: '23427002',
-                term: 'diente 14',
-                fsn: 'estructura del primer molar maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del primer premolar maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '900000000000497000',
                     '446608001',
+                    '900000000000497000',
                     '734138000'
                 ],
-                ISODesignation: 26
+                'conceptId': '57826002',
+                'term': 'diente 5',
+                ISODesignation: 14
             }
         },
         {
 
             concepto: {
-                fsn: 'estructura del segundo premolar maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del canino maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '446608001',
                     '900000000000497000',
+                    '446608001',
                     '734138000'
                 ],
-                conceptId: '23226009',
-                term: 'diente 13',
-                ISODesignation: 25
+                'conceptId': '80647007',
+                'term': 'diente 6',
+                ISODesignation: 13
             }
         },
         {
 
             concepto: {
-                fsn: 'estructura del primer premolar maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del incisivo lateral maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '900000000000497000',
                     '446608001',
-                    '734138000'
+                    '900000000000497000'
                 ],
-                conceptId: '61897005',
-                term: 'diente 12',
-                ISODesignation: 24
+                'conceptId': '11712009',
+                'term': 'diente 7',
+                ISODesignation: 12
             }
         },
         {
 
             concepto: {
-                fsn: 'estructura del canino maxilar izquierdo (estructura corporal)',
-                semanticTag: 'estructura corporal',
-                refsetIds: [
+                'fsn': 'estructura del incisivo central maxilar derecho (estructura corporal)',
+                'semanticTag': 'estructura corporal',
+                'refsetIds': [
                     '721145008',
-                    '900000000000497000',
                     '446608001',
-                    '734138000'
+                    '900000000000497000'
                 ],
-                conceptId: '72876007',
-                term: 'diente 11',
-                ISODesignation: 23
+                'conceptId': '22120004',
+                'term': 'diente 8',
+                ISODesignation: 11
             }
         }
     ];
@@ -257,6 +255,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     odontograma: this.cuadranteSuperiorDerecho
                 };
             } else {
+                console.log(this.piezasSeleccionadas.splice(index, 1));
                 this.piezasSeleccionadas.splice(index, 1);
                 // this.registro.relacionadoCon.splice(index, 1);
 
