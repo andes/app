@@ -1,0 +1,31 @@
+<div>
+    <div class="row">
+        <div class="col-3" *ngIf="first">
+            <plex-select name="sservicio" [required]="true" [data]="tipos" label="Tipo Jerarquico" [(ngModel)]="selectTipo" (change)="onTipoChange($event)">
+            </plex-select>
+        </div>
+
+        <div class="col-3" *ngIf="root.tipo === 'sector-fisico'">
+            <plex-select name="servicio" [required]="true" (getData)="loadSectores($event)" idField="term" labelField="term" [(ngModel)]="root.concept"
+                label="Tipo de sector" (change)="onSectorChange()">
+            </plex-select>
+        </div>
+
+        <div class="col-3" *ngIf="root.tipo === 'unidad-organizativa'">
+            <plex-select name="servicio" [required]="true" (getData)="loadUnidades($event)" idField="term" labelField="term" [(ngModel)]="root.concept"
+                label="Unidad organizativa" (change)="onUnidadChange()">
+            </plex-select>
+        </div>
+
+        <div class="col-3" *ngIf="root.tipo === 'sector-fisico'">
+            <plex-text [(ngModel)]="root.nombre" name="nombre-sector" label="Nombre del sector" placeholder="Nombre del sector" [required]="true"></plex-text>
+        </div>
+
+        <div class="col-3">
+            <plex-button icon="reply" label="Agregar subsector" type="success" (click)="onAdd()"> </plex-button>
+        </div>
+    </div>
+    <div *ngFor="let child of root.hijos" class="subitems">
+        <sectores-item [root]="child"></sectores-item>
+    </div>
+</div>

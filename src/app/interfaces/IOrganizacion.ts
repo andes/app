@@ -7,6 +7,13 @@ import { tipoComunicacion } from './../utils/enumerados';
 
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
 
+export interface ISectores {
+    tipo: String; // enum: [ 'unidad-organizativa', 'sector-fisico' ]
+    concept: ISnomedConcept;
+    nombre: String;
+    hijos?:  ISectores [];
+}
+
 export interface IOrganizacion {
     id: string;
     codigo: {
@@ -32,4 +39,5 @@ export interface IOrganizacion {
     fechaAlta: Date;
     fechaBaja: Date;
     servicios: [ISnomedConcept];
+    unidadesOrganizativas: ISectores[];
 }

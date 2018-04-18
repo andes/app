@@ -108,6 +108,6 @@ export class OrganizacionComponent implements OnInit {
         }
     }
     routeCama(id) {
-        this.router.navigate(['/tm/organizacion/' + id + '/cama']);
+        this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
     }
 }

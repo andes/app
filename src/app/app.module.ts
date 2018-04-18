@@ -109,6 +109,7 @@ import { InternacionService } from './modules/rup/services/internacion.service';
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
@@ -121,6 +122,7 @@ import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasList
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
+import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
@@ -269,6 +271,7 @@ import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/m
 import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
 import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
 import { CamasService } from './services/camas.service';
+import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
@@ -360,6 +363,8 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+
+
 registerLocaleData(localeEs, 'es');
 
 
@@ -442,7 +447,9 @@ registerLocaleData(localeEs, 'es');
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         CamaEstadoComponent,
-        OcuparCamaComponent
+        OcuparCamaComponent,
+        OrganizacionSectoresComponent,
+        SectoresItemComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

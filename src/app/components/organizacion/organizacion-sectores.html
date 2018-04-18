@@ -1,0 +1,27 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box type="primary">
+            <header>
+                <div class="page-title">Mapa de sectores de {{ organizacion?.nombre }}</div>
+            </header>
+            <div class="row" *ngIf="organizacion">
+                <div class="col">
+                    <div *ngIf="!hasItems()">
+                        La organización no tiene armado el esquema de sectores.
+                        <plex-button icon="reply" label="Empezar" type="success" (click)="onAdd()"> </plex-button>
+                    </div>
+                    <div *ngIf="hasItems()">
+                        <plex-button icon="reply" label="Agregar unidad organizativa" type="success" (click)="onAdd()"> </plex-button>
+                        <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [root]="unidad" first="true"></sectores-item>
+                    </div>
+                </div>
+            </div>
+        </plex-box>
+    </section>
+</form>
+<footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" type="danger" (click)="onCancel()"> </plex-button>
+            <plex-button label="Guardar" type="success" (click)="onSave()"> </plex-button>
+        </div>
+</footer>
