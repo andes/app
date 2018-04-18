@@ -72,6 +72,13 @@ export class TurnosPacienteComponent implements OnInit {
         this.showMotivoConsulta = true;
     }
     printArancelamiento(turno) {
+        // TODO: si el motivo consulta fue modificado, patchear el turno.
+        let data = {
+            motivoConsulta: turno.motivoConsulta
+        };
+        this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
+            turno.avisoSuspension = 'fallido';
+        });
         this.showArancelamientoForm.emit(turno);
     }
 
