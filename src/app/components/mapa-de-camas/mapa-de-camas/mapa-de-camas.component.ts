@@ -173,6 +173,14 @@ export class MapaDeCamasComponent implements OnInit {
         this.camas[index] = e;
     }
 
+    /**
+     * Ir al ABM de camas
+     */
+
+    onGestionCamaClick() {
+        let org = this.auth.organizacion.id;
+        this.router.navigate(['tm/organizacion/' + org + '/cama']);
+    }
 
     public ingresarPaciente() {
         this.router.navigate(['rup/internacion/crear']);

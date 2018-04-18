@@ -35,7 +35,7 @@ export class SectoresItemComponent implements OnInit {
         private route: ActivatedRoute,
     ) { }
 
-    public ambienteHospitalarioQuery: String = '<<285201006';
+    public ambienteHospitalarioQuery: String = '^2391000013102';
     public unidadesOrganizativasQuery: String = '<<284548004';
 
     ngOnInit() {
