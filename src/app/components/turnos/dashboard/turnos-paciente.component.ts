@@ -19,6 +19,8 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    turnoArancelamiento: any;
+    showMotivoConsulta = false;
     ultimosTurnos: any[];
     puedeRegistrarAsistencia: boolean;
     puedeLiberarTurno: boolean;
@@ -61,6 +63,14 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
     }
 
+    showPanel() {
+        this.showMotivoConsulta = false;
+        this.showLiberarTurno = false;
+    }
+    showArancelamiento(turno) {
+        this.turnoArancelamiento = turno;
+        this.showMotivoConsulta = true;
+    }
     printArancelamiento(turno) {
         this.showArancelamientoForm.emit(turno);
     }

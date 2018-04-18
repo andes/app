@@ -1,6 +1,6 @@
 <fieldset>
     <legend>{{ tituloOperacion }}</legend>
-    <header>
+    <header *ngIf="!showLiberarTurno && !showMotivoConsulta">
         <div class="row">
             <div *ngIf="paciente.nombre" class="col">
                 <h5> Turnos próximos del paciente:
@@ -10,7 +10,7 @@
         </div>
     </header>
 
-    <plex-box>
+    <plex-box *ngIf="!showLiberarTurno && !showMotivoConsulta">
         <plex-tabs>
             <plex-tab icon="list" label="Turnos">
                 <!-- El paciente no tiene turnos -->
@@ -19,7 +19,7 @@
                 </h5>
 
                 <!-- El paciente tiene turnos -->
-                <div *ngIf="!showLiberarTurno">
+                <div>
                     <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
 
                         <div *ngIf="turno.tipoPrestacion.term" class="accordion-dashboard">
@@ -66,22 +66,13 @@
                                         <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                                     </div>
                                     <div class="col">
-                                        <plex-button type="info" label="Arancelamiento" (click)="printArancelamiento(turno)"></plex-button>
+                                        <plex-button type="info" label="Arancelamiento" (click)="showArancelamiento(turno)"></plex-button>
                                     </div>
                                 </div>
                             </div>
                             <!-- fin Panel -->
                         </div>
-                        <!-- <div class="col">
-                            <plex-button type="info" label="Arancelamiento" (click)="printArancelamiento(turno)"></plex-button>
-                        </div> -->
                     </div>
-                </div>
-
-                <div *ngIf="showLiberarTurno ">
-                    <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="saveLiberarTurno($event, paciente) "
-                        (cancelaLiberarTurno)="cancelaLiberarTurno($event) ">
-                    </liberar-turno>
                 </div>
             </plex-tab>
             <plex-tab icon="history" label="Historial del paciente">
@@ -107,4 +98,29 @@
             </plex-tab>
         </plex-tabs>
     </plex-box>
+    <div *ngIf="showMotivoConsulta">
+        <div class="row">
+            <div class="col-12">
+                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.nombre">
+                    <label>Obra Social </label>
+                    <div>{{turnoArancelamiento.paciente.obraSocial.nombre}}</div>
+                </span>
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-4">
+                <plex-button type="danger" label="Cancelar" (click)="showPanel()"></plex-button>
+            </div>
+            <div class="col-4">
+                <plex-button type="info" label="Imprimir" (click)="printArancelamiento(turnoArancelamiento)"></plex-button>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="showLiberarTurno ">
+        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="saveLiberarTurno($event, paciente) "
+            (cancelaLiberarTurno)="cancelaLiberarTurno($event) ">
+        </liberar-turno>
+    </div>
 </fieldset>
