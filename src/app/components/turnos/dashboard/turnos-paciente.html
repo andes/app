@@ -58,10 +58,10 @@
                                         <!-- no funcionan bien los title="" -->
                                         <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)"></plex-button>
                                     </div>
-                                    <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'">
+                                    <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia !== 'asistio'&& isToday(turno)">
                                         <plex-button type="success" label="Dar Asistencia" (click)="eventosTurno(turno, 'darAsistencia')"></plex-button>
                                     </div>
-                                    <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio'">
+                                    <div class="col-4" *ngIf="puedeRegistrarAsistencia && turno.asistencia === 'asistio' && isToday(turno)">
 
                                         <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                                     </div>

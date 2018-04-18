@@ -150,4 +150,8 @@ export class TurnosPacienteComponent implements OnInit {
         this.showLiberarTurno = false;
     }
 
+    isToday(turno) {
+        return (moment(turno.horaInicio)).isSame(new Date(), 'day');
+    }
+
 }
