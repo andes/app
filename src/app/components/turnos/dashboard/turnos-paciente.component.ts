@@ -19,6 +19,7 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    cambioMotivo: boolean;
     turnoArancelamiento: any;
     showMotivoConsulta = false;
     ultimosTurnos: any[];
@@ -33,7 +34,6 @@ export class TurnosPacienteComponent implements OnInit {
     turnosPaciente = [];
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
-
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
@@ -63,6 +63,10 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
     }
 
+    cambiarMotivo() {
+        this.cambioMotivo = true;
+    }
+
     showPanel() {
         this.showMotivoConsulta = false;
         this.showLiberarTurno = false;
@@ -72,13 +76,14 @@ export class TurnosPacienteComponent implements OnInit {
         this.showMotivoConsulta = true;
     }
     printArancelamiento(turno) {
-        // TODO: si el motivo consulta fue modificado, patchear el turno.
-        let data = {
-            motivoConsulta: turno.motivoConsulta
-        };
-        this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
-            turno.avisoSuspension = 'fallido';
-        });
+        if (this.cambioMotivo) {
+            let data = {
+                motivoConsulta: turno.motivoConsulta
+            };
+            this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
+
+            });
+        }
         this.showArancelamientoForm.emit(turno);
     }
 

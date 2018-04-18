@@ -105,7 +105,7 @@
                     <label>Obra Social </label>
                     <div>{{turnoArancelamiento.paciente.obraSocial.nombre}}</div>
                 </span>
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
         </div>
         <br>
