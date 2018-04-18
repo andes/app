@@ -17,6 +17,18 @@ svg#cuadrante-sup-der {
     }
 }
 
+.evolucionada {
+    // fill: repeating-linear-gradient( 45deg, #606dbc, #606dbc 3px, #465298 3px, #465298 6px) !important;
+    fill: rgb(133, 133, 133);
+}
+
+.evolucionada-stroke {
+    stroke: rgb(133, 133, 133);
+    fill: none;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+}
+
 .st1 {
     fill: white;
 }
@@ -36,26 +48,21 @@ svg#cuadrante-sup-der {
     }
 }
 
-.distal {
-    /* fill: #4776d3; */
-}
-
-.vestibular {
-    /* fill: #4776d3; */
-}
-
-.mesial {
-    /* fill: #4776d3; */
-}
-
-.palatina {
-    /* fill: #4776d3; */
-}
-
-.oclusal {
-    /* fill: #4776d3; */
-}
-
+// .distal {
+//     /* fill: #4776d3; */
+// }
+// .vestibular {
+//     /* fill: #4776d3; */
+// }
+// .mesial {
+//     /* fill: #4776d3; */
+// }
+// .palatina {
+//     /* fill: #4776d3; */
+// }
+// .oclusal {
+//     /* fill: #4776d3; */
+// }
 .diente-container {
     display: inline-block;
     width: 100px;

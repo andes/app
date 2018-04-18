@@ -304,6 +304,7 @@ $color in $rup_colors {
     .open .dropdown-toggle.btn-#{$tag} {
         // color: white;
         // border-color: $hallazgos;
+        color: initial;
     }
     .btn-#{$tag}:active,
     .btn-#{$tag}.active,
