@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
+import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 
 @Injectable()
 export class PrestacionesService {
@@ -43,13 +44,13 @@ export class PrestacionesService {
     /**
      * Método get. Trae lista de objetos prestacion.
      *
-     * @param {*} params Opciones de búsqueda
+     * @param {*} params: IPrestacioGetParams Opciones de búsqueda
      * @param {*} [options={}] Options a pasar a la API
      * @returns {Observable<IPrestacion[]>}
      *
      * @memberof PrestacionesService
      */
-    get(params: any, options: any = {}): Observable<IPrestacion[]> {
+    get(params: IPrestacionGetParams, options: any = {}): Observable<IPrestacion[]> {
         if (typeof options.showError === 'undefined') {
             options.showError = true;
         }
@@ -480,8 +481,8 @@ export class PrestacionesService {
 
 
     /**
-     * Método getById. Trae el objeto tipoPrestacion por su Id.
-     * @param {String} id Busca por Id
+     * Método getById. Trae el objeto tipoPrestacion por una key.
+     * @param {String} key Busca por key
      */
     getByKey(params: any, options: any = {}): Observable<IPrestacion[]> {
         if (typeof options.showError === 'undefined') {
