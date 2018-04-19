@@ -107,7 +107,8 @@
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
-        <plex-button type="primary" label="Prestar {{ carpetasSeleccionadas.length }} Carpetas" (click)="prestarCarpetas()"></plex-button>
+        <plex-button type="primary" label="Prestar {{ carpetasSeleccionadas.length }} {{ carpetasSeleccionadas.length > 1 ? 'Carpetas' : 'Carpeta' }}"
+            (click)="prestarCarpetas()"></plex-button>
     </footer>
 </form>
 <imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>
