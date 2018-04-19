@@ -82,9 +82,14 @@
 
                                     <!-- Contenedor del registro RUP -->
 
-                                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
-                                        [ngClass]="{'relacionado': registro?.relacionadoCon}">
 
+
+                                    <!-- El de arriba es que tenia antes.. Cambios para probar el elementoDeRegistro @Fer -->
+                                    <!-- <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
+                                        [ngClass]="{'relacionado': registro?.relacionadoCon}"> -->
+
+                                    <!-- este div es de prueba -->
+                                    <div [ngClass]="{'relacionado': registro?.relacionadoCon}">
 
                                         <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="rup-header">

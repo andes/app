@@ -1,6 +1,9 @@
 <ng-container *ngIf="!soloValores">
-    <label for="observaciones">
+    <label for="observaciones" *ngIf="!params">
         Observación
+    </label>
+    <label *ngIf="params && params.titulo">
+        {{params.titulo}}
     </label>
     <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
         (change)="emitChange()"></textarea>

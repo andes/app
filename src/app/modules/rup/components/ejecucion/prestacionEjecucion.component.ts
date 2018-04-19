@@ -752,9 +752,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
         if (dragging === true) {
-            this.colapsarPrestaciones('collapse');
+            // this.colapsarPrestaciones('collapse');
         } else {
-            this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
+            // this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
         }
     }
 
