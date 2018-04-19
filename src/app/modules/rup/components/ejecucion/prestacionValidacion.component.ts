@@ -204,7 +204,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        if (!existeDiagnostico) {
+        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion') {
             this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
             return false;
         }

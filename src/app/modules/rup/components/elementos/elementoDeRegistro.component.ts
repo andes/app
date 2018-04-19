@@ -135,12 +135,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];
-                // // buscamos en la posición que se encuentra el registro de orgien y destino
-                // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
-                // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
-
-                // registros.splice(indexOrigen, 1);
-                // registros.splice(indexDestino + 1, 0, registroOrigen);
             }
         }
 
@@ -177,9 +171,11 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     }
 
+
     cancelarDesvincular(registroId) {
         delete this.confirmarDesvincular[registroId];
     }
+
     // Controla antes de vincular que no esten vinculados
     controlVinculacion(registroOrigen, registroDestino) {
         let control;
@@ -201,6 +197,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             return false;
         }
     }
+
     // Busca recursivamente en los relacionadoCon de los registros
     recorreArbol(registroDestino, registroOrigen) {
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {

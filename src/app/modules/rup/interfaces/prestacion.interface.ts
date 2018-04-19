@@ -17,6 +17,7 @@ export class IPrestacion {
     };
     // Datos de la solicitud
     solicitud: {
+        ambitoOrigen: string,
         // Tipo de prestación de ejecutarse
         tipoPrestacion: ISnomedConcept,
         // Fecha de solicitud
