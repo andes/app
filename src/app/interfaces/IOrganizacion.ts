@@ -8,8 +8,8 @@ import { tipoComunicacion } from './../utils/enumerados';
 // export enum tipoCom {"Teléfono Fijo", "Teléfono Celular", "email"};
 
 export interface ISectores {
-    tipo: String; // enum: [ 'unidad-organizativa', 'sector-fisico' ]
-    concept: ISnomedConcept;
+    tipoSector: ISnomedConcept;
+    unidadConcept?: ISnomedConcept;
     nombre: String;
     hijos?:  ISectores [];
 }

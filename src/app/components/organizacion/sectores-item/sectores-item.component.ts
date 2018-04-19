@@ -17,15 +17,12 @@ export class SectoresItemComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     // definición de arreglos
-
-    public tipos = [
-        {id: 'unidad-organizativa', nombre: 'Unidades organizativas'},
-        {id: 'sector-fisico', nombre: 'Espacio físico'}
-    ];
-    public selectTipo: any;
-
+    @Output() onAdd: EventEmitter<any> = new EventEmitter();
+    @Output() onRemove: EventEmitter<any> = new EventEmitter();
     @Input() root: ISectores;
     @Input() first: Boolean = false;
+    @Input() selected: any;
+    public hidden = false;
 
     public idOrganizacion: String;
     constructor(
@@ -35,41 +32,25 @@ export class SectoresItemComponent implements OnInit {
         private route: ActivatedRoute,
     ) { }
 
-    public ambienteHospitalarioQuery: String = '^2391000013102';
-    public unidadesOrganizativasQuery: String = '<<284548004';
 
     ngOnInit() {
-        this.selectTipo = this.root.tipo;
+
     }
 
-    loadTipos($event) {
-        $event.callback(this.tipos);
+    hasItems() {
+        return this.root.hijos.length > 0;
     }
 
-    loadUnidades($event) {
-        this.snomed.getQuery({ expression: this.unidadesOrganizativasQuery }).subscribe(result => {
-            $event.callback(result);
-        });
+    onAddClick() {
+        this.onAdd.emit(this.root);
     }
 
-    loadSectores($event) {
-        this.snomed.getQuery({ expression: this.ambienteHospitalarioQuery }).subscribe(result => {
-            $event.callback(result);
-        });
+    onRemoveClick () {
+        this.onRemove.emit(this.root);
     }
 
-    onAdd() {
-        let item: ISectores = {
-            tipo: 'sector-fisico',
-            nombre: '',
-            concept: { id: '', term: '', conceptId: '', fsn: '',  semanticTag: ''  },
-            hijos: []
-        };
-        if (!this.root.hijos) {
-            this.root.hijos = [];
-        }
-        this.root.hijos.push(item);
-        this.root.hijos = [...this.root.hijos];
+    onCollapseClick () {
+        this.hidden = !this.hidden;
     }
 
     onSectorChange() {
@@ -77,11 +58,14 @@ export class SectoresItemComponent implements OnInit {
     }
 
     onUnidadChange () {
-        this.root.nombre = this.root.concept.term;
     }
 
-    onTipoChange ($event) {
-        this.root.tipo = $event.value.id;
+    removeChild(child) {
+        debugger;
+        let index = this.root.hijos.findIndex((item) => item === child);
+        if (index >= 0) {
+            this.root.hijos.splice(index, 1);
+        }
     }
 
 }
