@@ -23,48 +23,46 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     public scopeEliminar: String;
 
-    ngOnInit() {
+    public conceptosPermitidos: any[] = [];
 
+    ngOnInit() {
+        if (this.params.refsetId) {
+            console.log(this.params.refsetId);
+            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+                this.conceptosPermitidos = resultado;
+                console.log(resultado);
+            });
+        }
         if (!this.registro.valor) {
             this.registro.valor = [];
         }
-        // let refset = '439401001';
-
-        // this.snomedService.getQuery({ expression: refset }).subscribe(resultado => {
-        //     this.pautasDeAlarma = resultado;
-        //     this.dietaDeAlta = resultado;
-        // });
-        // if (!this.registro.valor) {
-        //     this.registro.valor = {
-        //         resumen: null
-        //     };
-        // }
     }
     onConceptoDrop(e: any) {
+        if (!this.validaConcepto(e.dragData)) {
+        } else {
+            if (e.dragData.tipo) {
+                switch (e.dragData.tipo) {
+                    case 'prestacion':
+                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
+                        break;
+                    case 'hallazgo':
+                    case 'trastorno':
+                    case 'situación':
+                        this.ejecutarConcepto(e.dragData.data.concepto);
+                        break;
+                    default:
+                        this.ejecutarConcepto(e.dragData);
+                        break;
+                }
 
-        console.log(e.dragData);
-        if (e.dragData.tipo) {
-            switch (e.dragData.tipo) {
-                case 'prestacion':
-                    this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
-                    break;
-                case 'hallazgo':
-                case 'trastorno':
-                case 'situación':
-                    this.ejecutarConcepto(e.dragData.data.concepto);
-                    break;
-                default:
+            } else {
+                window.setTimeout(() => {
                     this.ejecutarConcepto(e.dragData);
-                    break;
+                });
             }
 
-        } else {
-            window.setTimeout(() => {
-                this.ejecutarConcepto(e.dragData);
-            });
+
         }
-
-
     }
 
 
@@ -281,5 +279,19 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         this.indexEliminar = index;
         this.confirmarEliminar = true;
     }
+
+    validaConcepto(concepto) {
+        let control = this.conceptosPermitidos.find(c => c.conceptId === concepto.conceptId);
+
+        if (control) {
+            return true;
+        } else {
+            // TODO: Ver el mensaje a mostrar.. 
+            this.plex.alert('No se puede agregar ese concepto');
+            return false;
+        }
+    }
+
+
 
 }

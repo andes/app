@@ -18,6 +18,7 @@ import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'rup',
@@ -88,7 +89,8 @@ export class RUPComponent implements OnInit {
         public snomedService: SnomedService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         public Cie10Service: Cie10Service,
-        public servicioOrganizacion: OrganizacionService
+        public servicioOrganizacion: OrganizacionService,
+        public plex: Plex
     ) { }
 
     ngOnInit() {
