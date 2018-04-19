@@ -129,6 +129,10 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
 
+//PUCO/ObraSocial
+import { PucoComponent } from './components/puco/puco.component';
+
+
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
@@ -444,7 +448,8 @@ registerLocaleData(localeEs, 'es');
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         CamaEstadoComponent,
-        OcuparCamaComponent
+        OcuparCamaComponent,
+        PucoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
