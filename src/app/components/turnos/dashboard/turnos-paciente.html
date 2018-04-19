@@ -1,15 +1,4 @@
 <fieldset>
-    <legend>{{ tituloOperacion }}</legend>
-    <header>
-        <div class="row">
-            <div *ngIf="paciente.nombre" class="col">
-                <h5> Turnos próximos del paciente:
-                    <span class="text-info">{{ paciente | paciente }}</span>
-                </h5>
-            </div>
-        </div>
-    </header>
-
     <plex-box>
         <plex-tabs>
             <plex-tab icon="list" label="Turnos">
