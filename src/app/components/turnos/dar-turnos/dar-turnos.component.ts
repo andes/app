@@ -574,9 +574,10 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
         this.opciones.profesional = turno.profesionales[0];
-        if (!actualizarProfesional && this.eventoProfesional) {
-            this.eventoProfesional.callback(this.opciones.profesional);
-        }
+        // TODO revisar carga de profesional, idem solicitudes
+        // if (!actualizarProfesional && this.eventoProfesional) {
+        //     this.eventoProfesional.callback(this.opciones.profesional);
+        // }
         this.actualizar('');
     }
 
