@@ -420,8 +420,13 @@ export class PrestacionesService {
         });
     }
 
-    getByPacienteLaboratorios(documento) {
-        return this.server.get(`/modules/cda/laboratorios/${documento}`, null);
+    getByPacienteLaboratorios(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
     }
 
 

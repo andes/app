@@ -559,7 +559,8 @@ export class HudsBusquedaComponent implements OnInit {
 
     // Trae los medicamentos registrados para el paciente
     listarLaboratorios(paciente) {
-        this.servicioPrestacion.getByPacienteLaboratorios(paciente.documento).subscribe(labs => {
+        this.servicioPrestacion.getByPacienteLaboratorios(paciente.id, '4241000179101').subscribe(labs => {
+            debugger;
             this.laboratoriosFS = labs.archivos;
             labs.cdas.forEach((cda, i) => {
                 labs.cdas[i] = {
