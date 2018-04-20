@@ -14,8 +14,8 @@
                                 <plex-button icon="reply" label="Empezar" type="success" (click)="onStart()"> </plex-button>
                             </div>
                             <div *ngIf="hasItems()">
-                                <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [selected]="selectedItem" [root]="unidad" first="true" 
-                                 (onAdd)="addItem($event)"></sectores-item>
+                                <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [selected]="selectedItem" [root]="unidad" 
+                                 (onAdd)="addItem($event)" (onEdit)="editItem($event)" (onRemove)="removeItem($event)" ></sectores-item>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,8 @@
 
                         <div class="mt-15">
                             <plex-button label="Cancelar" type="danger" (click)="onDissmis()" [disabled]="disabledPanel"></plex-button>
-                            <plex-button label="Crear" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
+                            <plex-button *ngIf="!editing" label="Crear" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
+                            <plex-button *ngIf="editing" label="Editar" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
                         </div>
                     </div>
                 </plex-box>

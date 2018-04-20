@@ -37,6 +37,7 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     // definición de arreglos
     public disabledPanel = true;
+    public editing = false;
 
     public itemName: String;
     public tipoSector: ISnomedConcept;
@@ -86,7 +87,7 @@ export class OrganizacionSectoresComponent implements OnInit {
         });
     }
 
-    
+
 
     onCancel() {
         this.router.navigate(['tm/organizacion']);
@@ -99,6 +100,23 @@ export class OrganizacionSectoresComponent implements OnInit {
     addItem($event) {
         this.selectedItem = $event;
         this.disabledPanel = false;
+    }
+
+    editItem($event) {
+        this.selectedItem = $event;
+        this.disabledPanel = false;
+        this.editing = true;
+
+        this.itemName = $event.nombre;
+        this.tipoSector = $event.tipoSector;
+        this.unidadOrg = $event.unidadConcept;
+    }
+
+    removeItem($event) {
+        let index = this.organizacion.unidadesOrganizativas.findIndex((item) => item === $event);
+        if (index >= 0) {
+            this.organizacion.unidadesOrganizativas.splice(index, 1);
+        }
     }
 
     /**
@@ -126,7 +144,7 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     }
 
-    createObject () : ISectores {
+    createObject (): ISectores {
         if (this.unidadID !== this.tipoSector.conceptId) {
             return  {
                 nombre: this.itemName,
@@ -151,12 +169,19 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     onAdd() {
         let item = this.createObject();
-        if (this.selectedItem) {
-            this.selectedItem.hijos.push(item);
-            // this.selectedItem.hijos = [...this.selectedItem.hijos];
+        if (this.editing) {
+            this.selectedItem.nombre = item.nombre;
+            this.selectedItem.tipoSector = item.tipoSector;
+            this.selectedItem.unidadOrg = item.unidadConcept;
+            this.editing = false;
         } else {
-            this.organizacion.unidadesOrganizativas.push(item);
-            this.organizacion.unidadesOrganizativas = [...this.organizacion.unidadesOrganizativas];
+            if (this.selectedItem) {
+                this.selectedItem.hijos.push(item);
+                // this.selectedItem.hijos = [...this.selectedItem.hijos];
+            } else {
+                this.organizacion.unidadesOrganizativas.push(item);
+                this.organizacion.unidadesOrganizativas = [...this.organizacion.unidadesOrganizativas];
+            }
         }
         this.disabledPanel = true;
         this.selectedItem = null;

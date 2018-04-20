@@ -1,12 +1,4 @@
-.subitems {
-    margin-left: 25px;
-}
-
-//@import '../variables';
-// TODO: Crear paquete NPM con las fonts
-//@import '../../assets/font.css';
-
-$plex_colors: ( problema: black, trastorno: blue, procedimiento: rgb(200, 0, 0));
+$plex_colors: ( sala: rgb(200, 0, 0), edificio: rgb(200, 0, 0), sector: rgb(200, 0, 0));
 
 $rotate: -90deg;
 .plex-card {
@@ -43,13 +35,8 @@ $rotate: -90deg;
     .plex-header {
         text-transform: capitalize;
         display: flex;
-        .plex-icon,
-        .title,
-        .actions {
-            padding: 5px;
-        }
         .btn-plex-icon {
-            line-height: 1.3em;
+            line-height: 1em;
         }
         .plex-icon {
             font-size: 1.2rem;
@@ -57,8 +44,9 @@ $rotate: -90deg;
             text-align: center;
             i {
                 color: white;
-                font-size: 2.5rem;
+                font-size: 2rem;
                 line-height: 30px;
+                vertical-align: -13px;
             }
         }
         .title {
@@ -73,19 +61,22 @@ $rotate: -90deg;
             font-size: 1rem;
             font-weight: 600;
             padding: 10px 20px;
-            display: inline-grid;
-            .vinculadoCon {
-                display: inline-flex;
-            }
+            display: inline-grid; 
         }
         .actions { 
             background: white;
             margin-left: auto;
             .btn {
                 margin: 0 5px;
+                opacity: 0.5;
             }
             .btn:first-child {
                 margin-right: 0;
+            }
+            &:hover {
+                .btn {
+                    opacity: 1;
+                }
             }
         }
     }
@@ -232,6 +223,7 @@ $color in $plex_colors {
         border-color: $color;
         background: white;
     }
+    /*
     .btn-#{$tag}:hover,
     .btn-#{$tag}:focus,
     .btn-#{$tag}:active,
@@ -240,6 +232,7 @@ $color in $plex_colors {
         // color: white;
         // border-color: $hallazgos;
     }
+    */
     .btn-#{$tag}:active,
     .btn-#{$tag}.active,
     .open .dropdown-toggle.btn-#{$tag} {
@@ -295,8 +288,3 @@ $color in $plex_colors {
         border: 1px solid #ccc;
     }
 }
-
-// Debería ser global (Plex)
-// .bg-inverse {
-//     background-color: #002738 !important;
-// }

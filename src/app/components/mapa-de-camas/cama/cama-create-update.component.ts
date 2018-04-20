@@ -17,6 +17,7 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     public organizacion: any;
     public unidadOrganizativa = null;
+    public sectores: any[] = [];
 
     public cama: any = {
         organizacion: null,
@@ -49,6 +50,9 @@ export class CamaCreateUpdateComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.organizacionService.getById(this.idOrganizacion).subscribe(organizacion => {
+            this.organizacion = organizacion;
+        });
         this.route.params.subscribe(params => {
             if (params && params['idCama']) {
                 let idCama = params['idCama'];
@@ -59,12 +63,12 @@ export class CamaCreateUpdateComponent implements OnInit {
                         this.organizacion = organizacion;
                     });
                 });
-            } else {
-                this.organizacionService.getById(this.idOrganizacion).subscribe(organizacion => {
-                    this.organizacion = organizacion;
-                });
             }
         });
+    }
+
+    onSelectItem($event) {
+        this.sectores = $event;
     }
 
     save($event) {
@@ -114,11 +118,9 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     loadServicios($event) {
-        if (this.organizacion) {
-            let servicios = this.organizacion.unidadesOrganizativas;
-            console.log(this.organizacion);
-            $event.callback(servicios);
-        }
+        this.snomed.getQuery({ expression: '<<284548004' }).subscribe(result => {
+            $event.callback(result);
+        });
     }
 
     loadEspecialidades($event) {

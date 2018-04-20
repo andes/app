@@ -1,12 +1,12 @@
-<div class="plex-card procedimiento" [ngClass]="{selected: selected === root}">
-    <div class="plex-header">
+<div class="plex-card sala" [ngClass]="{selected: selected === root}">
+    <div class="plex-header" (click)="selectItem($event)">
         <div class="plex-icon"> 
             <i class="mdi mdi-sitemap"></i> 
         </div>
         <div class="title">
             {{root.tipoSector.term}} - {{root.nombre}}
         </div>
-        <div class="actions">
+        <div class="actions" *ngIf="actions">
             <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
                 <i class="mdi mdi-pencil"></i>
             </span>
@@ -27,7 +27,7 @@
         </div>
         <div class="content">
             <div *ngFor="let child of root.hijos">
-                <sectores-item [root]="child" (onAdd)="onAdd.emit($event)" (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
+                <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)" (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
             </div>
         </div>
     </div>

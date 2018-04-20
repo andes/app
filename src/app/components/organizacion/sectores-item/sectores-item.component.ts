@@ -19,8 +19,11 @@ export class SectoresItemComponent implements OnInit {
     // definición de arreglos
     @Output() onAdd: EventEmitter<any> = new EventEmitter();
     @Output() onRemove: EventEmitter<any> = new EventEmitter();
+    @Output() onEdit: EventEmitter<any> = new EventEmitter();
+    @Output() onSelect: EventEmitter<any> = new EventEmitter();
+
     @Input() root: ISectores;
-    @Input() first: Boolean = false;
+    @Input() actions: Boolean = true;
     @Input() selected: any;
     public hidden = false;
 
@@ -37,6 +40,22 @@ export class SectoresItemComponent implements OnInit {
 
     }
 
+    cloneObject(item) {
+        let i = Object.assign({}, item);
+        delete i['hijos'];
+        return i;
+    }
+
+    onSelectItem($event) {
+        this.onSelect.emit([this.cloneObject(this.root), ...$event]);
+    }
+
+    selectItem($event) {
+        $event.stopPropagation();
+        if (!this.actions) {
+            this.onSelect.emit([this.cloneObject(this.root)]);
+        }
+    }
     hasItems() {
         return this.root.hijos.length > 0;
     }
@@ -53,6 +72,10 @@ export class SectoresItemComponent implements OnInit {
         this.hidden = !this.hidden;
     }
 
+    onEditClick () {
+        this.onEdit.emit(this.root);
+    }
+
     onSectorChange() {
 
     }
@@ -61,7 +84,6 @@ export class SectoresItemComponent implements OnInit {
     }
 
     removeChild(child) {
-        debugger;
         let index = this.root.hijos.findIndex((item) => item === child);
         if (index >= 0) {
             this.root.hijos.splice(index, 1);
