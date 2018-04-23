@@ -60,6 +60,9 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 
+// Consulta Diagnostico
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+
 // Internacion
 import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
@@ -126,6 +129,9 @@ const appRoutes: Routes = [
 
   // Reportes
   { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
+  
+  // Consulta Diagnostico
+  { path: 'consultaDiagnostico', component: ConsultaDiagnosticoComponent, canActivate: [RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },

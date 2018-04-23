@@ -1,0 +1,94 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <div class="row">
+            <div class="col-8">
+                <plex-box>
+                    <header>
+                        <div class="row">
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
+                                    class="fechas">
+                                </plex-datetime>
+                                <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
+                            </div>
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
+                                    class="fechas">
+                                </plex-datetime>
+                            </div>
+                            <!-- <div class="col-3">
+                                <plex-select [(ngModel)]="organizaciones" (change)="refreshSelection($event,'organizaciones')" (getData)="loadOrganizaciones($event)"
+                                    name="organizaciones" label="Organizacion" ngModelOptions="{standalone: true}">
+                                </plex-select>
+                            </div> -->
+                            <br>
+                        </div>
+                        <br>
+                    </header>
+
+                    <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
+                        <thead>
+                            <!-- <th></th> -->
+                            <th>Nombre del paciente</th>
+                            <th>Apellido del paciente</th>
+                            <th>Documento del paciente</th>
+                            <th>Código de prestación</th>
+                            <th>Descripcion de prestación</th>
+                            <th>Código de auditoria</th>
+                            <th>Nombre de auditoria</th>
+                            <th>Código cie10</th>
+                            <th>Nombre cie10</th>
+                            <th>Código Snomed</th>
+                            <th>Nombre Snomed</th>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': seleccionada[i]}"
+                                (click)="datosPacientes(i)">
+                                <td>
+                                    {{ diagnostico.nombrePaciente }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.apellidoPaciente }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.documentoPaciente }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.apellidoPaciente }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.tipoPrestacion }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.descripcionPrestacion }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.auditoriaCodigo }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.auditoriaNombre }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.codProfesionalCie10Codigo }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.codrofesionalCie10Nombre }}
+                                </td>
+                                <td>
+                                    {{ diagnostico.codProfesionalSnomedCodigo }}
+                                </td>
+
+                                <td>
+                                    {{ diagnostico.codProfesionalSnomedNombre }}
+                                </td>
+
+                            </tr>
+                        </tbody>
+
+                    </table>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+
+</form>

@@ -8,7 +8,8 @@ const limit = 25;
 
 @Component({
     selector: 'organizaciones',
-    templateUrl: 'organizacion.html'
+    templateUrl: 'organizacion.html',
+    
 })
 export class OrganizacionComponent implements OnInit {
 
