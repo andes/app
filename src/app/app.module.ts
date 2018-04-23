@@ -254,6 +254,9 @@ import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.compo
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 
+// Consulta diagnostico
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+
 // Locales
 import { AppComponent } from './app.component';
 import { routing, appRoutingProviders } from './app.routing';
