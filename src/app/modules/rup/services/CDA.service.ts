@@ -16,9 +16,7 @@ export class CDAService {
      */
 
     get(id) {
-        return this.server.get(this.CDAUrl + id);
-        // .map(this.extractData)
-        // .catch(this.handleError);
+        return this.server.get(this.CDAUrl + 'files/' + id);
     }
 
     private handleError(error: any) {

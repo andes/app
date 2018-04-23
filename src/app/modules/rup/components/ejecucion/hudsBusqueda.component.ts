@@ -223,11 +223,11 @@ export class HudsBusquedaComponent implements OnInit {
                 break;
             case 'laboratorio':
 
-                ////// 12948300
+                debugger;
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto.semanticTag === 'elemento de registro') {
-                        if (r.data.createdAt === registro.createdAt) {
+                        if (r.data.fecha === registro.cda.fecha) {
                             return 1;
                         } else {
                             return 0;
@@ -239,8 +239,7 @@ export class HudsBusquedaComponent implements OnInit {
 
         let elemento = {
             tipo: tipo,
-            data: registro,
-            ...(tipo === 'laboratorio') && { 'archivos': this.laboratoriosFS.filter(x => x.metadata.cdaId === registro.cda.id) }
+            data: registro
         };
 
         // si no existe lo agregamos
@@ -560,23 +559,34 @@ export class HudsBusquedaComponent implements OnInit {
     // Trae los medicamentos registrados para el paciente
     listarLaboratorios(paciente) {
         this.servicioPrestacion.getByPacienteLaboratorios(paciente.id, '4241000179101').subscribe(labs => {
-            debugger;
-            this.laboratoriosFS = labs.archivos;
-            labs.cdas.forEach((cda, i) => {
-                labs.cdas[i] = {
-                    cda,
-                    concepto: {
+
+            this.laboratorios = labs.map(l => {
+                return {
+                    cda: l, concepto: {
                         conceptId: '4241000179101',
                         semanticTag: 'elemento de registro',
                         term: 'Exámen de Laboratorio',
                         fsn: 'Exámen de Laboratorio',
-                    },
-                    profesional: labs.laboratorios[i].profesional,
-                    createdAt: moment(cda.uploadDate, 'DD/MM/YYYY')
+                    }
                 };
             });
 
-            this.laboratorios = labs.cdas;
+            // labs;
+            // labs.forEach((cda, i) => {
+            //     labs.cdas[i] = {
+            //         cda,
+            //         concepto: {
+            //             conceptId: '4241000179101',
+            //             semanticTag: 'elemento de registro',
+            //             term: 'Exámen de Laboratorio',
+            //             fsn: 'Exámen de Laboratorio',
+            //         },
+            //         profesional: '',
+            //         createdAt: moment(cda.uploadDate, 'DD/MM/YYYY')
+            //     };
+            // });
+
+            // this.laboratorios = labs;
 
         });
     }

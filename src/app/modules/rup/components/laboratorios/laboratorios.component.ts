@@ -23,13 +23,16 @@ export class LaboratoriosComponent implements OnInit {
     constructor(private servicioCDA: CDAService) { }
 
     ngOnInit() {
+        console.log(this.laboratorio);
     }
 
-    descargar(idArchivo) {
-        this.servicioCDA.get(idArchivo).subscribe(lab => {
-            console.log(lab);
+    descargar(archivo) {
+        debugger;
+        let nombreArchivo = archivo; // .substring(0, archivo.lastIndexOf('.'))
+        this.servicioCDA.get(nombreArchivo).subscribe(lab => {
+            debugger;
             let blob = new Blob([lab], { type: 'application/pdf' });
-            let nombreArchivo = this.slug.slugify(idArchivo); // por lo pronto no hace falta, pero puede que en el futuro lo haga
+            // let nombreArchivo = this.slug.slugify(nombreArchivo); // por lo pronto no hace falta, pero puede que en el futuro lo haga
             saveAs(blob, nombreArchivo);
         });
     }

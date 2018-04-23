@@ -47,7 +47,7 @@
 
                         <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}">
                             <i class="icon icon-rup-semantic-plan"></i>
-                            PLANES
+                            PRESTACIONES
                         </button>
                     </li>
 
@@ -643,8 +643,8 @@
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
                                                                 <ng-container *ngIf="laboratorio">
-                                                                    <div class="text-sm">Solicitante: {{laboratorio.profesional.nombre}}</div>
-                                                                    <small class="sugerido">Creado: {{laboratorio.createdAt | fecha:['DD/MM/YYYY']:true}}
+                                                                    <div class="text-sm">Solicitante: {{laboratorio.cda.Profesional}}</div>
+                                                                    <small class="sugerido">Creado: {{laboratorio.cda.Fecha | fecha:['DD/MM/YYYY']:true}}
                                                                     </small>
                                                                 </ng-container>
 
