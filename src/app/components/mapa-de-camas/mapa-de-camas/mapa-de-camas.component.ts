@@ -6,6 +6,8 @@ import { Plex, SelectEvent } from '@andes/plex';
 
 import { CamasService } from '../../../services/camas.service';
 import { ICama } from '../../../interfaces/ICama';
+import { IOrganizacion } from '../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'app-mapa-de-camas',
@@ -23,6 +25,8 @@ export class MapaDeCamasComponent implements OnInit {
     public estadoServicio: any = {};
     // tipo de vista del mapa de camas
     public layout: String = 'grid';
+
+    public organizacion: IOrganizacion;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -46,9 +50,12 @@ export class MapaDeCamasComponent implements OnInit {
 
     constructor(private auth: Auth, private plex: Plex,
         private router: Router,
+        public organizacionService: OrganizacionService,
         private camasService: CamasService) { }
 
     ngOnInit() {
+
+
         // verificar permisos
         // buscar camas para la organización
         this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
@@ -101,17 +108,15 @@ export class MapaDeCamasComponent implements OnInit {
             return;
         }
 
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            this.organizacion = organizacion;
+            // Filtros por sector
+            this.filtros.opciones.sectores = this.organizacionService.getFlatTree(this.organizacion, false);
+        });
+
         let existe;
         // asignamos los sectores para los filtros
         camas.forEach(cama => {
-            if (cama.sector && this.filtros.opciones.sectores.indexOf(cama.sector) === -1) {
-                this.filtros.opciones.sectores.push({ 'id': cama.sector, 'nombre': cama.sector });
-            }
-
-            existe = this.filtros.opciones.habitaciones.find(habitacion => cama.habitacion === habitacion.id);
-            if (cama.habitacion && !existe) {
-                this.filtros.opciones.habitaciones.push({ 'id': cama.habitacion, 'nombre': cama.habitacion });
-            }
 
             existe = this.filtros.opciones.estados.find(estado => estado.id === cama.ultimoEstado.estado);
             if (cama.ultimoEstado && !existe) {
@@ -130,8 +135,6 @@ export class MapaDeCamasComponent implements OnInit {
             // TODO: Definir filtros para , oxigeno, etc.
 
             // ordenamos las opciones utilizando el desaconsejado metodo sort() :D
-            if (this.filtros.opciones.sectores) { this.filtros.opciones.sectores.sort((a, b) => a.id - b.id); }
-            if (this.filtros.opciones.habitaciones) { this.filtros.opciones.habitaciones.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.estados) { this.filtros.opciones.estados.sort((a, b) => a.id - b.id); }
             if (this.filtros.opciones.servicios) { this.filtros.opciones.servicios.sort((a, b) => a.term - b.term); }
             if (this.filtros.opciones.tiposCamas) { this.filtros.opciones.tiposCamas.sort((a, b) => a.term - b.term); }
@@ -144,17 +147,15 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public filtrar() {
-
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
 
         let _desinfectada = (this.filtros.desinfectada) ? false : null;
 
         this.camas = this.camasCopy.filter((i) => {
             return (
+                (!this.filtros.sector || i.sectores.findIndex((_s) => _s.id === this.filtros.sector.id) >= 0) &&
                 (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
-                (!this.filtros.habitacion || (this.filtros.habitacion && i.habitacion === this.filtros.habitacion.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
-                (!this.filtros.sector || (this.filtros.sector && i.sector === this.filtros.sector.id)) &&
                 (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.ultimoEstado.unidadOrganizativa && i.ultimoEstado.unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
                 (!this.filtros.nombre || (this.filtros.nombre && i.ultimoEstado && (regex_nombre.test(i.ultimoEstado.paciente.nombre) || (regex_nombre.test(i.ultimoEstado.paciente.apellido)) || (regex_nombre.test(i.ultimoEstado.paciente.documento)))))
             );
@@ -179,7 +180,7 @@ export class MapaDeCamasComponent implements OnInit {
 
     onGestionCamaClick() {
         let org = this.auth.organizacion.id;
-        this.router.navigate(['tm/organizacion/' + org + '/cama']);
+        this.router.navigate(['tm/organizacion/cama']);
     }
 
     public ingresarPaciente() {

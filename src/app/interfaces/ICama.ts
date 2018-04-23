@@ -8,8 +8,11 @@ export interface ICama {
         id: String,
         nombre: String
     };
-    sector: String;
-    habitacion: String;
+    sectores: [{
+        tipoSector: ISnomedConcept;
+        unidadConcept?: ISnomedConcept;
+        nombre: String;
+    }];
     nombre: String;
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc

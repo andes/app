@@ -52,6 +52,18 @@ export class CamaComponent implements OnInit {
     }
 
     /**
+     * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
+     */
+
+    public getHabitacionName() {
+        let sec = this.cama.sectores;
+        if (sec && sec.length > 0) {
+            return sec[sec.length - 1].nombre;
+        }
+        return '';
+    }
+
+    /**
      * Buscar un paciente para internar.
      *
      * @param {any} cama Cama en la cual se va a internar el paciente.

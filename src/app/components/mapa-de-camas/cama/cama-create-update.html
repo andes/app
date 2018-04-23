@@ -11,7 +11,6 @@
                             <plex-text [(ngModel)]="cama.nombre" name="nombre" label="Nombre" placeholder="nombre" [required]="true"></plex-text>
                         </div>
                     </div>
-
                     <div class="row">
                         <div class="col-4">
                             <plex-select name="equipamiento" [multiple]="true" (getData)="loadEquipamientos($event)" idField="term" labelField="term"
@@ -44,16 +43,22 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-4">
-                            <plex-text [(ngModel)]="cama.sector" name="sector" label="Sector" placeholder="Sector" [required]="true"></plex-text>
-                        </div>
-                        <div class="col-4">
-                            <plex-text [(ngModel)]="cama.habitacion" name="habitacion" label="Habitacion" [required]="true" placeholder="Habitacion"></plex-text>
+                        <div class="col-12">
+                            <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)"
+                                label="Ubicación de la cama" idField="id" labelField="nombre" [(ngModel)]="cama.sector"></plex-select>
                         </div>
                     </div>
                     <div>
-                        <div *ngFor="let sec of sectores">
-                            {{ sec.tipoSector.term }} - {{ sec.nombre }}
+                        <div class="row">
+                            <div class="col-3" *ngFor="let sec of sectores">
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ sec.tipoSector.term }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ sec.nombre }}</h6>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </plex-box>
@@ -64,7 +69,8 @@
                         <div class="page-title">Mapa de la organización</div>
                     </header>
                     <div *ngIf="organizacion">
-                            <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [root]="unidad" (onSelect)="onSelectItem($event)" [actions]="false"></sectores-item>
+                        <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [root]="unidad" (onSelect)="onSelectItem($event)"
+                            [actions]="false"></sectores-item>
                     </div>
                 </plex-box>
             </div>

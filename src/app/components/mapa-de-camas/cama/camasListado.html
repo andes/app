@@ -17,7 +17,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="hover" *ngFor="let cama of camas">
+                    <tr class="hover" *ngFor="let cama of camas" (click)="update(cama)">
                         <td>{{cama.nombre}}</td>
                         <td>{{cama.sector}}</td>
                         <td>{{cama.habitacion}}</td>

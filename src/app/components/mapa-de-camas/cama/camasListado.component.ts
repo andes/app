@@ -39,7 +39,7 @@ export class CamasListadoComponent implements OnInit {
 
     /*Muestra el create-update para editar una cama
      */
-    Update(cama) {
+    update(cama) {
         this.camaSeleccion = cama;
         this.createUpdate = true;
     }

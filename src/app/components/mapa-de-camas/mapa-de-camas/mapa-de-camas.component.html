@@ -1,3 +1,4 @@
+<form class="plex-layout">
 <section>
     <plex-box>
         <div class="row">
@@ -8,7 +9,10 @@
                             Mapa de camas
                         </div>
                         <div class="text-right">
-                            <plex-button label="Gestionar camas" type="primary" (click)="onGestionCamaClick()"></plex-button>
+                            <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()"></plex-button>
+                            <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()"></plex-button>
+                            <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()"></plex-button>
+                            <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()"></plex-button>
                         </div>
                     </div>
 
@@ -92,12 +96,7 @@
                                 <plex-select [(ngModel)]="filtros.servicio" nmae="servicio" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
                                     *ngIf="filtros.opciones.servicios.length"></plex-select>
                             </div>
-                        </div>
-
-                        <div class="col-2">
-                            <plex-select [(ngModel)]="filtros.habitacion" name="habitacion" [data]="filtros.opciones.habitaciones" label="Habitación"
-                                (change)="filtrar()" *ngIf="filtros.opciones.habitaciones.length"></plex-select>
-                        </div>
+                        </div> 
 
                         <div class="col-2">
                             <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
@@ -108,28 +107,9 @@
                             <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
                                 *ngIf="filtros.opciones.estados.length"></plex-select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <plex-button class="float-right" type="primary" label="Limpiar filtros" (click)="limpiarFiltros()">
+                        <div class="col-2 actions-icons">
+                            <plex-button type="primary" label="Limpiar filtros" (click)="limpiarFiltros()">
                             </plex-button>
-                            <plex-button class="float-right" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()">
-                            </plex-button>
-                            <plex-button class="float-right" type="primary" label="Censo diario" (click)="censoDiario()">
-                            </plex-button>
-                            <plex-button class="float-right" type="primary" label="Censo mensual" (click)="censoMensual()">
-                            </plex-button>
-
-                            <!-- <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'grid'" [ngClass]="{'active': layout == 'grid'}"
-                                            title="Vista de grilla">
-                                            <i class="mdi mdi-grid"></i>
-                                        </button>
-
-                                        <button type="button" class="btn btn-primary btn-block tips" (click)="layout = 'list'" [ngClass]="{'active': layout == 'list'}"
-                                            title="Vista de lista">
-                                            <i class="mdi mdi-view-list"></i>
-                                        </button> -->
-
                         </div>
                     </div>
 
@@ -147,3 +127,4 @@
         </div>
     </plex-box>
 </section>
+</form>

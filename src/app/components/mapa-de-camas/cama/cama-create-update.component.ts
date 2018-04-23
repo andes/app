@@ -3,11 +3,12 @@ import { Plex } from '@andes/plex';
 import { CamasService } from '../../../services/camas.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SnomedService } from '../../../services/term/snomed.service';
-import { query } from '@angular/core/src/animation/dsl';
 import { OrganizacionService } from '../../../services/organizacion.service';
+import { Auth } from '@andes/auth';
 @Component({
     selector: 'cama-create-update',
-    templateUrl: 'cama-create-update.html'
+    templateUrl: 'cama-create-update.html',
+    styleUrls: ['cama-create-update.scss']
 })
 export class CamaCreateUpdateComponent implements OnInit {
     @Input('idOrganizacion') idOrganizacion;
@@ -21,8 +22,7 @@ export class CamaCreateUpdateComponent implements OnInit {
 
     public cama: any = {
         organizacion: null,
-        sector: null,
-        habitacion: null,
+        sectores: [],
         nombre: null,
         tipoCama: null,
         equipamiento: [],
@@ -45,19 +45,22 @@ export class CamaCreateUpdateComponent implements OnInit {
         public organizacionService: OrganizacionService,
         public CamaService: CamasService,
         private route: ActivatedRoute,
+        private authService: Auth,
         private router: Router,
         public snomed: SnomedService
     ) { }
 
     ngOnInit() {
-        this.organizacionService.getById(this.idOrganizacion).subscribe(organizacion => {
+        this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
         });
+
         this.route.params.subscribe(params => {
             if (params && params['idCama']) {
                 let idCama = params['idCama'];
                 this.CamaService.getCama(idCama).subscribe(cama => {
                     this.cama = cama;
+                    this.sectores = this.cama.sectores;
                     this.estado = Object.assign({}, this.cama.ultimoEstado);
                     this.organizacionService.getById(this.cama.organizacion.id).subscribe(organizacion => {
                         this.organizacion = organizacion;
@@ -89,6 +92,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                 nombre: this.organizacion.nombre
             };
 
+            this.cama.sectores = this.sectores;
             let operacion = this.CamaService.addCama(this.cama);
             operacion.subscribe(result => {
                 if (result) {
@@ -109,12 +113,17 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     cancel() {
-        if (this.cama.id) {
-            this.router.navigate(['/mapa-de-camas']);
-        } else {
-            this.showCama.emit(false);
-        }
+        this.router.navigate(['/mapa-de-camas']);
+    }
 
+    onSectorSelect($event, org) {
+        this.sectores = this.organizacionService.getRuta(org, $event.value);
+    }
+
+    loadSectores ($event) {
+        let query = $event.query;
+        let items = this.organizacionService.getFlatTree(this.organizacion);
+        $event.callback(items);
     }
 
     loadServicios($event) {
