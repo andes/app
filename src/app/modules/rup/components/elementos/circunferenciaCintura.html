@@ -1,0 +1,14 @@
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor" required="true" [(ngModel)]="registro.valor" name="circunferenciaCintura"
+    label="Circunferencia de la cintura" suffix="cm" min="6" max="300" (change)="emitChange()">
+</plex-int>
+
+<p *ngIf="soloValores" class="readonly">
+    <span>Circunferencia de cintura</span>
+    {{registro.valor}}
+</p>
+
+<p *ngIf="mensaje?.texto">
+    <span class="badge-{{mensaje?.class}}">
+        {{mensaje?.texto}}
+    </span>
+</p>
