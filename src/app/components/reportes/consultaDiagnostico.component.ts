@@ -6,51 +6,81 @@ import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 
+import { OrganizacionService } from '../../services/organizacion.service';
+
 // Services
 import { AgendaService } from '../../services/turnos/agenda.service';
 
 @Component({
     selector: 'consultaDiagnostico',
     templateUrl: 'consultaDiagnostico.html',
-   
+
 })
 
 export class ConsultaDiagnosticoComponent implements OnInit {
 
-    @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
+    //@HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
-    private timeoutHandle: number;
+    // private timeoutHandle: number;
+
 
     // Propiedades públicas
     public parametros;
-    public horaInicio: any;
-    public horaFin: any;
+    public horaInicio;
+    public horaFin;
+    public organizacion;
     public diagnosticos = [];
     public diagnostico;
     public seleccionada = [];
     public listaPacientes = false;
 
-  
+
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex, private router: Router, private server: Server,private agendaService: AgendaService, private auth: Auth) {
+    constructor(
+        private plex: Plex,
+        private router: Router,
+        private server: Server,
+        private agendaService: AgendaService,
+        private auth: Auth,
+        private servicioOrganizacion: OrganizacionService,
+
+    ) {
 
     }
 
     public ngOnInit() {
         this.parametros = {
-            horaInicio: '',
-            horaFin: ''
-            //organizacion:''
+            horaInicio: ' ',
+            horaFin: ' ',
+            organizacion: ''
         };
+        this.parametros = {
+            fechaDesde: this.horaInicio,
+            fechaHasta: this.horaFin,
+            organizacion: this.auth.organizacion._id
+        };
+
+
+    }
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(resultado => {
+                event.callback(resultado);
+            });
+        }
     }
 
+
     public imprimir() {
-        if (this.parametros['horaInicio'] && this.parametros['horaFin']) {
-            this.agendaService.findDiagnosticos(this.parametros).subscribe((diagnosticos) => {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion']) {
+            this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                 this.diagnosticos = diagnosticos;
-               });
+            });
         }
     }
 
@@ -68,8 +98,16 @@ export class ConsultaDiagnosticoComponent implements OnInit {
                 this.parametros['horaFin'] = horaFin.isValid() ? horaFin.toDate() : moment().format();
             }
         }
-       
-       
+        if (tipo === 'organizacion') {
+            if (value.value !== null) {
+                this.parametros['organizacion'] = this.auth.organizacion._id;
+            } else {
+                this.parametros['organizacion'] = '';
+            }
+        }
+
+
+
     }
     datosPacientes(indice) {
         this.diagnostico = this.diagnosticos[indice];
@@ -84,5 +122,5 @@ export class ConsultaDiagnosticoComponent implements OnInit {
         }
     }
 
-  
+
 }

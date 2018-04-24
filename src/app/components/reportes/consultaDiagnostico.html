@@ -1,27 +1,32 @@
 <form class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-8">
+            <div class="col">
                 <plex-box>
                     <header>
+                        <div class="clearfix">
+                            <div class="page-title float-left">Consulta Diagnostico</div>
+                        </div>
+
                         <div class="row">
-                            <div class="col-3">
+                            <div class="col-4">
                                 <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
                                     class="fechas">
                                 </plex-datetime>
-                                <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
                             </div>
-                            <div class="col-3">
+                            <div class="col-4">
                                 <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
                                     class="fechas">
                                 </plex-datetime>
                             </div>
-                            <!-- <div class="col-3">
-                                <plex-select [(ngModel)]="organizaciones" (change)="refreshSelection($event,'organizaciones')" (getData)="loadOrganizaciones($event)"
-                                    name="organizaciones" label="Organizacion" ngModelOptions="{standalone: true}">
-                                </plex-select>
-                            </div> -->
                             <br>
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización" placeholder="Seleccione la organización"
+                                    labelField="nombre" [required]="true">
+                                </plex-select>
+                            </div>
+                            <br>
+
                         </div>
                         <br>
                     </header>
@@ -90,5 +95,8 @@
             </div>
         </div>
     </section>
+    <footer>
+        <plex-button type="success" label="Imprimir" (click)="imprimir()" class="float-right"></plex-button>
+    </footer>
 
 </form>

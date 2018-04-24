@@ -417,6 +417,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
+        ConsultaDiagnosticoComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
