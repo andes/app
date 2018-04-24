@@ -16,7 +16,7 @@
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
+<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto'"
     [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
@@ -120,6 +120,9 @@
                     <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
                 </p>
             </ng-container>
+            <!-- <pre>
+                {{ busquedaRefSet | json }}
+            </pre> -->
         </div>
     </ng-container>
 </div>
