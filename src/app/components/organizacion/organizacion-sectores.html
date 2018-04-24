@@ -8,14 +8,13 @@
                     </header>
                     <div class="row" *ngIf="organizacion">
                         <div class="col">
-                            <div *ngIf="!hasItems()" class="text-center align-middle">
-                                Comienza agregando un espacio físico
-                                <br>
-                                <plex-button icon="reply" label="Empezar" type="success" (click)="onStart()"> </plex-button>
-                            </div>
                             <div *ngIf="hasItems()">
-                                <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [selected]="selectedItem" [root]="unidad" 
-                                 (onAdd)="addItem($event)" (onEdit)="editItem($event)" (onRemove)="removeItem($event)" ></sectores-item>
+                                <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [selected]="selectedItem" [root]="unidad" (onAdd)="addItem($event)"
+                                    (onEdit)="editItem($event)" (onRemove)="removeItem($event)"></sectores-item>
+                            </div>
+                            <div class="text-center align-middle add-more">
+                                Agregar nueva sector
+                                <plex-button icon="reply" label="Agregar" type="primary" (click)="onAddParent()"> </plex-button>
                             </div>
                         </div>
                     </div>
@@ -26,29 +25,30 @@
                     <header>
                         <div class="page-title">CREAR SECTOR FISICO</div>
                     </header>
-                    <div >
+                    <form class="plex-layout" #form="ngForm">
                         <div>
-                            <plex-select name="servicio" [data]="tiposSectores" idField="conceptId" labelField="term" [(ngModel)]="tipoSector"
-                                label="Tipo de sector" (change)="onSectorChange()" [readonly]="disabledPanel">
+                            <plex-select name="servicio" [required]="true" [data]="tiposSectores" idField="conceptId" labelField="term" [(ngModel)]="tipoSector" label="Tipo de sector"
+                                (change)="onSectorChange()" [readonly]="disabledPanel">
                             </plex-select>
                         </div>
 
                         <div *ngIf="unidadID === tipoSector?.conceptId">
-                            <plex-select name="servicio" (getData)="loadUnidades($event)" idField="term" labelField="term" [(ngModel)]="unidadOrg"
-                                label="Unidad organizativa" (change)="onUnidadChange()" [disabled]="disabledPanel">
+                            <plex-select name="servicio" (getData)="loadUnidades($event)" idField="term" labelField="term" [(ngModel)]="unidadOrg" label="Unidad organizativa"
+                                (change)="onUnidadChange()" [disabled]="disabledPanel">
                             </plex-select>
                         </div>
 
                         <div *ngIf="unidadID !== tipoSector?.conceptId">
-                            <plex-text [(ngModel)]="itemName" name="nombre-sector" label="Nombre del sector" placeholder="Nombre del sector" [required]="true" [disabled]="disabledPanel"></plex-text>
+                            <plex-text [(ngModel)]="itemName" name="nombre-sector" label="Nombre del sector" placeholder="Nombre del sector" [required]="true"
+                                [disabled]="disabledPanel"></plex-text>
                         </div>
 
-                        <div class="mt-15">
+                        <div class="panel-actions">
                             <plex-button label="Cancelar" type="danger" (click)="onDissmis()" [disabled]="disabledPanel"></plex-button>
-                            <plex-button *ngIf="!editing" label="Crear" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
-                            <plex-button *ngIf="editing" label="Editar" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
+                            <plex-button class="btn-right" *ngIf="!editing" label="Agregar item" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
+                            <plex-button class="btn-right" *ngIf="editing" label="Modificar" type="success" (click)="onAdd()" [disabled]="disabledPanel"></plex-button>
                         </div>
-                    </div>
+                    </form>
                 </plex-box>
             </div>
         </div>
@@ -56,7 +56,7 @@
 </form>
 <footer>
     <div class="text-right">
-        <plex-button label="Cancelar" type="danger" (click)="onCancel()"> </plex-button>
+        <plex-button label="Volver" type="danger" (click)="onCancel()"> </plex-button>
         <plex-button label="Guardar" type="success" (click)="onSave()"> </plex-button>
     </div>
 </footer>

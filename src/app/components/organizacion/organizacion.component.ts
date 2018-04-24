@@ -46,26 +46,27 @@ export class OrganizacionComponent implements OnInit {
 
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            'activo': this.value && this.value.activo, 'nombre':
-            this.value && this.value.nombre
-            , 'skip': this.skip, 'limit': limit
+            activo: this.value && this.value.activo,
+            nombre: this.value && this.value.nombre,
+            skip: this.skip,
+            limit: limit
         };
         this.organizacionService.get(parametros)
             .subscribe(
-            datos => {
-                if (concatenar) {
-                    if (datos.length > 0) {
-                        this.datos = this.datos.concat(datos);
+                datos => {
+                    if (concatenar) {
+                        if (datos.length > 0) {
+                            this.datos = this.datos.concat(datos);
+                        } else {
+                            this.finScroll = true;
+                            this.tengoDatos = false;
+                        }
                     } else {
-                        this.finScroll = true;
-                        this.tengoDatos = false;
+                        this.datos = datos;
+                        this.finScroll = false;
                     }
-                } else {
-                    this.datos = datos;
-                    this.finScroll = false;
-                }
-                this.loader = false;
-            });
+                    this.loader = false;
+                });
     }
 
     onReturn(objOrganizacion: IOrganizacion): void {
@@ -107,7 +108,7 @@ export class OrganizacionComponent implements OnInit {
             this.loader = true;
         }
     }
-    routeCama(id) {
+    routeSectores(id) {
         this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
     }
 }

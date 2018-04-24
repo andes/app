@@ -35,20 +35,44 @@ export class SectoresItemComponent implements OnInit {
         private route: ActivatedRoute,
     ) { }
 
+    /**
+     * Devuelve el conjunto de clases a aplicar a la card. Según el tipo de elemento seleccionado.
+     */
+    getClass() {
+        let c =  {
+            selected: this.selected === this.root,
+        };
+        c[this.root.tipoSector.term.replace(' ', '-').replace('ó', 'o').toLocaleLowerCase()] = true;
+        return c;
+    }
 
     ngOnInit() {
 
     }
 
+    /**
+     * Clona un item sin sus hijos.
+     * @param item
+     */
     cloneObject(item) {
         let i = Object.assign({}, item);
         delete i['hijos'];
         return i;
     }
 
+    /**
+     * Emite la selección de un item
+     * @param
+     */
+
     onSelectItem($event) {
         this.onSelect.emit([this.cloneObject(this.root), ...$event]);
     }
+
+    /**
+     * Reacciona con la selección de un item
+     * @param
+     */
 
     selectItem($event) {
         $event.stopPropagation();
@@ -56,25 +80,52 @@ export class SectoresItemComponent implements OnInit {
             this.onSelect.emit([this.cloneObject(this.root)]);
         }
     }
+
+    /**
+     * Devuelve si tiene items
+     * @param
+     */
+
     hasItems() {
         return this.root.hijos.length > 0;
     }
+
+    /**
+     * Emite el evento de agregar items
+     * @param
+     */
 
     onAddClick() {
         this.onAdd.emit(this.root);
     }
 
+    /**
+     * Emite el evento de borrar item
+     * @param
+     */
+
     onRemoveClick () {
         this.onRemove.emit(this.root);
     }
+
+    /**
+     * Emite el evento de modificar item
+     * @param
+     */
+
+    onEditClick () {
+        this.onEdit.emit(this.root);
+    }
+
+    /**
+     * Oculta o no los hijos
+     * @param
+     */
 
     onCollapseClick () {
         this.hidden = !this.hidden;
     }
 
-    onEditClick () {
-        this.onEdit.emit(this.root);
-    }
 
     onSectorChange() {
 
@@ -83,6 +134,10 @@ export class SectoresItemComponent implements OnInit {
     onUnidadChange () {
     }
 
+    /**
+     * Borra un hijo del listado. Según el evento handleado.
+     * @param child 
+     */
     removeChild(child) {
         let index = this.root.hijos.findIndex((item) => item === child);
         if (index >= 0) {

@@ -1,7 +1,7 @@
-<div class="plex-card sala" [ngClass]="{selected: selected === root}">
+<div class="plex-card" [ngClass]="getClass()">
     <div class="plex-header" (click)="selectItem($event)">
         <div class="plex-icon"> 
-            <i class="mdi mdi-sitemap"></i> 
+            <i class="mdi mdi-file-tree"></i> 
         </div>
         <div class="title">
             {{root.tipoSector.term}} - {{root.nombre}}
@@ -22,9 +22,9 @@
         </div>
     </div>
     <div class="plex-body" *ngIf="hasItems() && !hidden">
-        <div class="legend">
+        <!-- <div class="legend">
 
-        </div>
+        </div> -->
         <div class="content">
             <div *ngFor="let child of root.hijos">
                 <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)" (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>

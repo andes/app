@@ -1,71 +1,65 @@
 <section *ngIf="!showcreate">
-  <div class="row">
-    <div class="col">
-      <plex-box type="primary">
-        <header>
-          <div class="page-title">Organizaciones</div>
-        </header>
-        <form [formGroup]="searchForm">
-          <div class="row">
-            <div class="col-6">
-              <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
-              </plex-text>
-            </div>
-            <div class="col-4">
-              <label>Habilitado</label>
-              <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
-            </div>
-          </div>
-        </form>
-        <!--// TODO: hay que resolver el tema de plex-scroll-->
-        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-        <table *ngIf="datos && datos.length" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Codigo Sisa</th>
-              <th>Nombre</th>
-              <th>Complejidad</th>
-              <th>Habilitado</th>
-              <th class="text-center">Acciones</th>
-              <!-- <th>Ver listado de camas</th> -->
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="hover" *ngFor="let organizacion of datos">
-              <td>{{organizacion.codigo.sisa}}</td>
-              <td>{{organizacion.nombre}}</td>
-              <td>
-                <p class="text-center">{{organizacion.nivelComplejidad}}</p>
-              </td>
-              <td>
-                <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
-              </td>
-              <td class="text-center">
-                <plex-button type="primary" label="Editar" (click)="onEdit(organizacion)">
-                </plex-button>
-                <plex-button type="primary" label="Ver sectores" (click)="routeCama(organizacion.id)">
-                  </plex-button>
-              </td>
-              <!-- <td>
-                <plex-button type="primary" label="Ver listado de camas" (click)="routeCama(organizacion.id)">
-                </plex-button>
-              </td> -->
-            </tr>
-          </tbody>
-        </table>
-        <plex-loader *ngIf="loader"></plex-loader>
-        <div *ngIf="finScroll" class="alert alert-warning">
-          <p style="text-align: center;"> No se encontraron más resultados </p>
+    <div class="row">
+        <div class="col">
+            <plex-box type="primary">
+                <header>
+                    <div class="page-title">Organizaciones</div>
+                </header>
+                <form [formGroup]="searchForm">
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
+                            </plex-text>
+                        </div>
+                        <div class="col-4">
+                            <label>Habilitado</label>
+                            <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
+                        </div>
+                    </div>
+                </form>
+                <!--// TODO: hay que resolver el tema de plex-scroll-->
+                <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
+                <table *ngIf="datos && datos.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Codigo Sisa</th>
+                            <th>Nombre</th>
+                            <th>Complejidad</th>
+                            <th>Habilitado</th>
+                            <th class="text-center">Acciones</th>
+                            <!-- <th>Ver listado de camas</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let organizacion of datos">
+                            <td>{{organizacion.codigo.sisa}}</td>
+                            <td>{{organizacion.nombre}}</td>
+                            <td>
+                                <p class="text-center">{{organizacion.nivelComplejidad}}</p>
+                            </td>
+                            <td>
+                                <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
+                            </td>
+                            <td class="text-center">
+                                <plex-button type="primary" label="Editar" (click)="onEdit(organizacion)"></plex-button>
+                                <plex-button type="primary" label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <plex-loader *ngIf="loader"></plex-loader>
+                <div *ngIf="finScroll" class="alert alert-warning">
+                    <p style="text-align: center;"> No se encontraron más resultados </p>
+                </div>
+            </plex-box>
         </div>
-      </plex-box>
     </div>
-  </div>
 </section>
 
 <footer *ngIf="!showcreate">
-  <div class="text-right">
-    <plex-button type="success" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
-  </div>
+    <div class="text-right">
+        <plex-button type="success" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+    </div>
 </footer>
 
 <!--Componente de Alta/Modificación-->

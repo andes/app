@@ -77,30 +77,52 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Funciones del plex-box de la izquierda
      */
 
+
+    /**
+     * Devuelve se la organizacion tiene sectores
+     */
+
     hasItems () {
         return this.organizacion.unidadesOrganizativas && this.organizacion.unidadesOrganizativas.length > 0;
     }
 
+    /**
+     * Grabar los cambios de la organización
+     */
     onSave() {
         this.organizacionService.save(this.organizacion).subscribe(() => {
-            console.log('Todo bien!');
+            this.router.navigate(['/tm/organizacion']);
         });
     }
 
-
+    /**
+     * Vuelve al listado de organizaciones
+     */
 
     onCancel() {
         this.router.navigate(['tm/organizacion']);
     }
 
-    onStart () {
+    /**
+     * Agrega un sector root
+     */
+
+    onAddParent () {
         this.disabledPanel = false;
     }
+
+    /**
+     * Habilita el plex-box de la derecha para agregar un item
+     */
 
     addItem($event) {
         this.selectedItem = $event;
         this.disabledPanel = false;
     }
+
+    /**
+     * Habilita el plex-box de la derecha en modo edición.
+     */
 
     editItem($event) {
         this.selectedItem = $event;
@@ -111,6 +133,11 @@ export class OrganizacionSectoresComponent implements OnInit {
         this.tipoSector = $event.tipoSector;
         this.unidadOrg = $event.unidadConcept;
     }
+
+
+    /**
+     * Remueve un item root
+     */
 
     removeItem($event) {
         let index = this.organizacion.unidadesOrganizativas.findIndex((item) => item === $event);
@@ -144,7 +171,13 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     }
 
+    /**
+     * Crea un sector item para agregar al arbol de sectores
+     */
     createObject (): ISectores {
+        if (!this.tipoSector) {
+            return null;
+        }
         if (this.unidadID !== this.tipoSector.conceptId) {
             return  {
                 nombre: this.itemName,
@@ -152,6 +185,9 @@ export class OrganizacionSectoresComponent implements OnInit {
                 hijos: []
             };
         } else {
+            if (!this.unidadOrg) {
+                return null;
+            }
             return {
                 nombre: this.unidadOrg.term,
                 tipoSector: this.tipoSector,
@@ -161,14 +197,25 @@ export class OrganizacionSectoresComponent implements OnInit {
         }
     }
 
+    /**
+     * Cancela el modo edición
+     */
+
     onDissmis () {
         this.clearForm();
         this.selectedItem = null;
         this.disabledPanel = true;
     }
 
+    /**
+     * Agrega un item al nodo seleccionado
+     */
+
     onAdd() {
         let item = this.createObject();
+        if (!item) {
+            return;
+        }
         if (this.editing) {
             this.selectedItem.nombre = item.nombre;
             this.selectedItem.tipoSector = item.tipoSector;
@@ -187,6 +234,10 @@ export class OrganizacionSectoresComponent implements OnInit {
         this.selectedItem = null;
         this.clearForm();
     }
+
+    /**
+     * Limpia el form del panel derecho
+     */
 
     clearForm() {
         this.itemName = '';
