@@ -136,7 +136,7 @@ export class SectoresItemComponent implements OnInit {
 
     /**
      * Borra un hijo del listado. Según el evento handleado.
-     * @param child 
+     * @param child
      */
     removeChild(child) {
         let index = this.root.hijos.findIndex((item) => item === child);
