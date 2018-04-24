@@ -14,6 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurneroService } from '../../../../services/turnero.service';
+import { OrganizacionService } from './../../../../services/organizacion.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -56,12 +57,20 @@ export class PuntoInicioComponent implements OnInit {
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
-        public servicioTurnero: TurneroService) { }
+        public servicioTurnero: TurneroService,
+    public servicioOrganizacion: OrganizacionService) { }
 
     ngOnInit() {
-        if (this.auth.organizacion.turnero === true) {
-            this.mostrarBtnTurnero = true;
-        }
+
+        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe(res => {
+let organizacion: any = res;
+if (organizacion.turnero === true) {
+    this.mostrarBtnTurnero = true;
+    this.conexionPantalla();
+}
+
+        });
+
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -81,7 +90,7 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
-        this.conexionPantalla();
+
 
     }
 

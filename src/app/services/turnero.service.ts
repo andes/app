@@ -27,7 +27,7 @@ export class TurneroService {
     getTurno(datos?): any {
         let observable = new Observable(observer => {
             this.socket = io(this.url);
-            var room = 'pantalla1';
+            let room = 'pantalla1';
             this.socket.data = 'hola';
             this.socket.emit('room', datos);
             this.socket.on('muestraTurno', (data) => {
