@@ -533,6 +533,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
+                console.log('registroDestino', registroDestino);
                 if (registroDestino) {
                     registroDestino.relacionadoCon.push(resultado);
                     if (registroDestino.valor.piezas.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === registroDestino.concepto.conceptId)) === -1) {
@@ -557,7 +558,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
-
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
@@ -769,8 +769,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
     }
 
-    recibeTipoBusqueda(tipoDeBusqueda) {
+    getTipoBusqueda(tipoDeBusqueda) {
         this.tipoBusqueda = tipoDeBusqueda;
+    }
+
+    setTipoBusqueda(conceptos) {
+        this.tipoBusqueda = conceptos;
+        console.log('conceptos', conceptos);
     }
 
     cargaItems(registroActual, indice) {
@@ -1036,7 +1041,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * busca los grupos de la busqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept
      */
-    matchinBusquedaGuiada(concept) {
+    matchBusquedaGuiada(concept) {
         let results = [];
         this.grupos_guida.forEach(data => {
             if (data.conceptIds.indexOf(concept.conceptId) >= 0) {

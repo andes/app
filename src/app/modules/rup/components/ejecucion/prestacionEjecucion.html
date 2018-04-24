@@ -187,10 +187,10 @@
                                                 <!-- ... Body -->
                                                 <div class="content" *ngIf="paciente">
 
-                                                    <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
+                                                    <ng-container *ngIf="matchBusquedaGuiada(registro.concepto)">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <span *ngFor="let rf of matchinBusquedaGuiada(registro.concepto)" class="badge badge-danger">
+                                                                <span *ngFor="let rf of matchBusquedaGuiada(registro.concepto)" class="badge badge-danger">
                                                                     {{rf.nombre}}
                                                                 </span>
                                                             </div>
@@ -208,8 +208,8 @@
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
                                                         [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
                                                         (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro)"
-                                                        (ejecutarAccion)="confirmarEliminarRegistro($event.tipoAccion, $event.opciones)"></rup>
-
+                                                        (ejecutarAccion)="setTipoBusqueda($event)"></rup>
+                                                    <!-- (ejecutarAccion)="confirmarEliminarRegistro($event.tipoAccion, $event.opciones)" -->
                                                 </div>
                                             </div>
 
@@ -391,9 +391,9 @@
                     <plex-tabs [activeIndex]="panelIndex">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
-                                [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)"
-                                (evtData)="ejecutarConcepto($event)" (tagBusqueda)="recibeTipoBusqueda($event)" (_onDragStart)="arrastrandoConcepto(true)"
-                                (_onDragEnd)="arrastrandoConcepto(false)">
+                                [showFrecuentesTipoPrestacion]="tengoResultado" [busquedaRefSet]="tipoBusqueda" (tagBusqueda)="getTipoBusqueda($event)"
+                                (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event, tipoBusqueda.concepto)"
+                                (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                         </plex-tab>
                         <plex-tab label="Historia de Salud" (click)="panelIndex = 1">
