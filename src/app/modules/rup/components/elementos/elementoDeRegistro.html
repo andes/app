@@ -1,5 +1,13 @@
 <label *ngIf="params?.titulo">{{ params.titulo }}</label>
 
+<plex-text *ngIf="!soloValores" multiline="true" [(ngModel)]="registro.valor.descripcion" placeholder="Ingrese una descripción..."></plex-text>
+
+<p *ngIf="soloValores" class="readonly">
+    <ng-container>
+        {{registro.valor.descripcion}}
+    </ng-container>
+</p>
+
 <!-- Area droppable del elemento -->
 
 <div *ngIf="!soloValores" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)"
@@ -9,8 +17,9 @@
     </p>
 </div>
 
-<div *ngIf="registro.valor.length">
-    <ng-container *ngFor="let registro of registro.valor, let i = index">
+
+<div *ngIf="registro.valor.registros.length">
+    <ng-container *ngFor="let registro of registro.valor.registros, let i = index">
 
         <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
             [ngClass]="{'relacionado': registro?.relacionadoCon}">
@@ -49,7 +58,8 @@
                             {{registro.concepto.semanticTag}}
                         </span>
 
-                        <a href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger eliminar">
+                        <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')"
+                            class="btn btn-sm btn-danger eliminar">
                             <i class="mdi mdi-delete"></i>
                             <i class="mdi mdi-delete-empty"></i>
                         </a>

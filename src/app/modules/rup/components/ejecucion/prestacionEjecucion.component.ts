@@ -603,12 +603,23 @@ export class PrestacionEjecucionComponent implements OnInit {
     private controlValido(registro) {
         if (registro.registros.length <= 0) {
             registro.valido = (registro.valor) ? true : false;
+            // valida el elemento de registro que es el elemento RUP que
+            // nos permite agregar muchos registros dentro del mismo.
+            if (registro.valido && registro.valor.registros && registro.valor.registros.length) {
+                let total = registro.valor.registros.length;
+                let contadorValiddos = 0;
+                registro.valor.registros.forEach(element => {
+                    let res = this.controlValido(element);
+                    if (res) {
+                        contadorValiddos++;
+                    }
+                });
+                registro.valido = (contadorValiddos === total) ? true : false;
+            }
             if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
-                this.colapsarPrestaciones('expand');
+                return registro.valido;
             }
         } else {
-
             let total = registro.registros.length;
             let contadorValiddos = 0;
             registro.registros.forEach(r => {
@@ -643,7 +654,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             });
         }
-
+        if (!resultado) {
+            this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
+            this.colapsarPrestaciones('expand');
+        }
         return resultado;
     }
 

@@ -316,8 +316,19 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
     }
 
-    volverInicio() {
-        this.router.navigate(['rup']);
+    volverInicio(ambito = 'ambulatorio') {
+        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
+            if (confirmado) {
+                if (ambito === 'ambulatorio') {
+                    this.router.navigate(['rup']);
+                } else {
+                    this.router.navigate(['mapa-de-camas']);
+                }
+            } else {
+                return;
+            }
+        });
     }
 
     darTurno(prestacionSolicitud) {

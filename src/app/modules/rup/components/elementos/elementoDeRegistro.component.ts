@@ -34,7 +34,10 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             });
         }
         if (!this.registro.valor) {
-            this.registro.valor = [];
+            this.registro.valor = {
+                descripcion: null,
+                registros: []
+            };
         }
     }
     onConceptoDrop(e: any) {
@@ -106,13 +109,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         }
         nuevoRegistro.valor = valor;
 
-        console.log(nuevoRegistro, 'NEW+{+{+{{+');
-        // Agregamos al array de registros
-        console.log(this.registro.valor);
-        this.registro.valor.push(nuevoRegistro);
-        // this.showDatosSolicitud = false;
-        // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
-        // return nuevoRegistro;
+        this.registro.valor.registros.push(nuevoRegistro);
     }
 
 
@@ -160,7 +157,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
         // quitamos relacion si existe
         if (this.confirmarDesvincular[registroId]) {
-            let registroActual = this.registro.valor.find(r => r.id === registroId);
+            let registroActual = this.registro.valor.registros.find(r => r.id === registroId);
 
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
@@ -224,7 +221,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
          */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
-            let registros = this.registro.valor;
+            let registros = this.registro.valor.registros;
             let _registro = registros[this.indexEliminar];
 
             // Quitamos toda la vinculación que puedan tener con el registro
@@ -240,7 +237,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
             // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
             // y por lo tanto hay qye volver el registro orige a su estado original
-            if (_registro.valor && _registro.valor.idRegistroTransformado) {
+            if (_registro.valor.registros && _registro.valor.registros.idRegistroTransformado) {
                 let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
                 if (registroOriginal) {
                     registroOriginal.valor.estado = 'activo';
@@ -270,7 +267,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             this.conceptoAEliminar = registroEliminar.dragData.concepto;
             index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
         } else {
-            index = this.registro.valor.findIndex(r => (registroEliminar.id === r.id));
+            index = this.registro.valor.registros.findIndex(r => (registroEliminar.id === r.id));
         }
         this.scopeEliminar = scope;
         this.indexEliminar = index;
@@ -278,17 +275,20 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     }
 
     validaConcepto(concepto) {
-        let control = this.conceptosPermitidos.find(c => c.conceptId === concepto.conceptId);
+        if (this.conceptosPermitidos.length) {
 
-        if (control) {
-            return true;
+            let control = this.conceptosPermitidos.find(c => c.conceptId === concepto.conceptId);
+
+            if (control) {
+                return true;
+            } else {
+                // TODO: Ver el mensaje a mostrar.. 
+                this.plex.alert('No se puede agregar ese concepto');
+                return false;
+            }
         } else {
-            // TODO: Ver el mensaje a mostrar.. 
-            this.plex.alert('No se puede agregar ese concepto');
-            return false;
+            return true;
         }
     }
-
-
 
 }
