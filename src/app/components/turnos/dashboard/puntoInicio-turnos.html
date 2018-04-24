@@ -16,9 +16,9 @@
                 </div> -->
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
-                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
-                            (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)"
-                            (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud" [puedeDarTurno]="puedeDarTurno"
+                            [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate" (blanqueaInput)="handleBlanqueo($event)"
+                            (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
                     </div>
                 </div>
             </plex-box>
@@ -59,11 +59,6 @@
         </arancelamiento-form>
     </div>
 </section>
-
-<!--Footer-->
-<!-- <footer *ngIf="autorizado && !showDarTurnos">
-    <plex-button type="info" label="Verificar Asistencias y Codificar" (click)="verificarCodificarAgendas()"></plex-button>
-</footer> -->
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"

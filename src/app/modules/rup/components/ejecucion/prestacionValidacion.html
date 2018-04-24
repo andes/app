@@ -220,8 +220,18 @@
                                             <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
                                                 Motivo de consulta principal
                                             </small> -->
-                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado'"
-                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">Motivo de consulta principal
+                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
+                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">
+                                                Motivo de consulta principal
+                                                <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
+                                                    'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
+                                                    'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
+                                                }">
+                                                </span>
+                                            </label>
+                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen === 'internacion'"
+                                                title="Establecer como motivo de egreso" class="diagnostico-principal">
+                                                Motivo de egreso
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                     'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                     'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal

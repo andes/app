@@ -54,6 +54,9 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
+                this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.obraSocialPaciente = resultado;
+                });
                 this.mostrarCalendario = false;
             });
     }
@@ -70,6 +73,9 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
+                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                        this.obraSocialPaciente = resultado;
+                    });
                 });
         }
     }
@@ -787,7 +793,7 @@ export class DarTurnosComponent implements OnInit {
                         if (environment.production === true) {
                             let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
                             let horario = moment(this.turno.horaInicio).format('HH:mm');
-                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + this.turnoTipoPrestacion.nombre;
+                            let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
                             this.enviarSMS(pacienteSave, mensaje);
 
                         } else {
@@ -919,6 +925,9 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
+                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                        this.obraSocialPaciente = resultado;
+                    });
                 });
         } else {
             this.buscarPaciente();
@@ -928,7 +937,6 @@ export class DarTurnosComponent implements OnInit {
     afterSearch(paciente: IPaciente): void {
         this.paciente = paciente;
         this.showDarTurnos = true;
-
 
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(

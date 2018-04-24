@@ -33,7 +33,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                 // Se muestra la cantidad de turnos otorgados e inasistencias
                 this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                     turnos.forEach(turno => {
-                        if (turno.asistencia === 'noAsistio') {
+                        if (turno.asistencia && turno.asistencia === 'noAsistio') {
                             cantInasistencias++;
                         }
                     });
@@ -61,6 +61,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     turnosOtorgados = 0;
     inasistencias = 0;
     anulaciones = 0;
+    idOrganizacion = this.auth.organizacion.id;
 
     // Inicialización
     constructor(
