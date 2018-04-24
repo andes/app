@@ -7,7 +7,7 @@
             <div *ngIf="item.elementoRUP" class="col{{'-' + item.style.columns}}">
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
                     [soloValores]="soloValores" (change)="emitChange($event)" (ejecutarConcepto)="emitEjecutarConcepto(prestacion)"
-                    (ejecutarAccion)="emitEjecutarAccion({tipoAccion: 'eliminarRegistro', opciones: 'card'})">
+                    (ejecutarAccion)="emitEjecutarAccion($event)">
                 </rup>
             </div>
         </ng-container>
