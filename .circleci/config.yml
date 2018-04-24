@@ -13,10 +13,7 @@ jobs:
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
-            - ./node_modules
-      - run:
-          name: Copy config private
-          command: cp config.private.ts.example config.private.ts      
+            - ./node_modules 
       - run:
           name: lint
           command: npm run lint
