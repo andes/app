@@ -1,3 +1,4 @@
+@import '../variables';
 .odontograma {
     width: 100%;
 }
@@ -17,9 +18,22 @@ svg#cuadrante-sup-der {
     }
 }
 
+.diente-procedimiento {
+    fill: $procedimiento;
+}
+
+.diente-trastorno {
+    fill: $trastorno;
+}
+
+.diente-hallazgo {
+    fill: $hallazgo;
+}
+
 .evolucionada {
     // fill: repeating-linear-gradient( 45deg, #606dbc, #606dbc 3px, #465298 3px, #465298 6px) !important;
-    fill: rgb(133, 133, 133);
+    fill: rgb(133, 133, 133); // fill: url(#striped);
+    // fill: url(#pattern1);
 }
 
 .evolucionada-stroke {

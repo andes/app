@@ -11,35 +11,51 @@
                         <!-- <pre class="small">
                                     {{ diente.concepto.conceptId | json }}
                                 </pre> -->
-                        <b class="text-sm">diente {{ diente.concepto.ISODesignation }}</b>
-                        <small>({{ diente.concepto.term }})</small>
+                        <b class="text-sm">{{ diente.concepto.term }}</b>
+                        <!-- <small>({{ diente.concepto.term }})</small> -->
                         <!-- MESIAL? {{ ultimoOdontograma && tieneEvolucion(diente, 'mesial') | json}} -->
                         <!-- <span class="test-sm">({{ diente.concepto.ISODesignation }}</span>) -->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="55px" height="55px"
                             x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
+                            <!-- <defs>
+                                <linearGradient id="striped">
+                                    <stop offset="5%" stop-color="#F60" />
+                                    <stop offset="95%" stop-color="#FF6" />
+                                </linearGradient>
+                                <pattern id="pattern1" x="-60" y="0" width="65.5" height="65.5" patternUnits="userSpaceOnUse">
+                                    <line fill="none" stroke="#4F73B8" stroke-width="2" stroke-miterlimit="0" x1="-1" y1="-1" x2="65.5" y2="65.5" />
+                                    <circle fill="#4F73B8" cx="2.115" cy="2.115" r="2.115" />
+                                </pattern>
+                            </defs> -->
                             <path [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'distal')}" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z" class="diente distal"
+                c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z" class="diente distal diente-{{ getClassEvolucion(diente, 'distal') }}"
                                 title="distal" />
                             <path [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'vestibular')}" d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z" class="diente vestibular"
+                c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z" class="diente vestibular diente-{{ getClassEvolucion(diente, 'vestibular') }}"
                                 title="vestibular" />
                             <path [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'mesial')}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z" class="diente mesial" title="mesial"
+                c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z" class="diente mesial" title="mesial diente-{{ getClassEvolucion(diente, 'mesial') }}"
                             />
                             <path [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'palatina')}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z" class="diente palatina"
+                c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z" class="diente palatina diente-{{ getClassEvolucion(diente, 'palatina') }}"
                                 title="palatina" />
                             <path [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'oclusal')}" d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
                 s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal" title="oclusal" />
+                C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal diente-{{ getClassEvolucion(diente, 'oclusal') }}"
+                                title="oclusal" />
                             <!-- <path (click)="seleccionarDiente(diente, 'pieza')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'pieza')}"
                                         class="pieza" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
                 l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z" /> -->
 
 
                             <g class="pieza" title="pieza completa">
-                                <circle [ngClass]="{'evolucionada': ultimoOdontograma && tieneEvolucion(diente, 'pieza')}" class="st1" cx="46.285" cy="7.311"
-                                    r="5.801" />
+                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311" r="5.801"
+                                />
+                            </g>
+                            <g (mouseenter)="showTooltip($event, i)" (mouseleave)="hideTooltip()">
+                                <text x="0" y="15" *ngIf="tooltip === i">
+                                    diente.concepto.term
+                                </text>
                             </g>
                             <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada-stroke" cx="26" cy="27.5" r="22.246"
                             />
@@ -51,20 +67,11 @@
 
         <div class="row no-gutters">
             <div class="col-12 no-gutters">
-                <!-- <pre class="small" *ngIf="ultimoOdontograma?.valor">
-                    {{ ultimoOdontograma.valor | json }}
-                </pre> -->
-                <ng-container *ngFor="let diente of cuadranteSuperiorDerecho; let i=index">
+                <ng-container *ngFor="let diente of odontograma.cuadranteSuperiorDerecho; let i=index">
                     <div class="diente-container">
-                        <!-- <pre class="small">
-                            {{ diente.concepto.conceptId | json }}
-                        </pre> -->
-                        <b class="text-sm">diente {{ diente.concepto.ISODesignation }}</b>
-                        <small>({{ diente.concepto.term }})</small>
-                        <!-- MESIAL? {{ ultimoOdontograma && tieneEvolucion(diente, 'mesial') | json}} -->
-                        <!-- <span class="test-sm">({{ diente.concepto.ISODesignation }}</span>) -->
-                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="55px" height="55px"
-                            x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
+                        <b class="text-sm">{{ diente.concepto.term }}</b>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" x="15px" y="15px"
+                            baseProfile="basic" version="1.1" viewBox="0 0 55 50" preserveAspectRatio="none">
                             <path (click)="seleccionarDiente(diente, 'distal')" [ngClass]="{'seleccionada': existeEnRegistro('carasSeleccionadas', diente, 'distal')}"
                                 d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
         c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z" class="diente distal" title="distal"
@@ -85,16 +92,12 @@
                                 d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
         s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
         C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal" title="oclusal" />
-                            <!-- <path (click)="seleccionarDiente(diente, 'pieza')" [ngClass]="{'seleccionada': carasSeleccionadas && seleccionado(diente, 'pieza')}"
-                                class="pieza" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-        l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z" /> -->
-
-
                             <g class="pieza" (click)="seleccionarDiente(diente, 'pieza')" title="pieza completa">
                                 <circle [ngClass]="{'seleccionada': existeEnRegistro('piezasSeleccionadas', diente, 'pieza')}" class="st1" cx="46.285" cy="7.311"
                                     r="5.801" />
                                 <path [ngClass]="{'seleccionada': existeEnRegistro('piezasSeleccionadas', diente, 'pieza')}" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-                        l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z" />
+                        l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z" class="diente-{{ getClassEvolucion(diente, 'pieza') }}"
+                                />
                             </g>
                             <circle *ngIf="existeEnRegistro('piezasSeleccionadas', diente, 'pieza')" class="st0" cx="26" cy="27.5" r="22.246" />
                         </svg>
@@ -102,22 +105,23 @@
                 </ng-container>
             </div>
         </div>
-        <!-- {{ piezaSeleccionada | json }} -->
-        <div class="row" *ngIf="piezaSeleccionada && piezasSeleccionadas.length > 0">
-            <div class="col-6">
-                <plex-select [(ngModel)]="prestacionDienteSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesDientes')"
-                    name="prestacionesDientes" label="Prestación Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesDientes.conceptos[0]); piezaSeleccionada = null;"></plex-select>
-                <!-- <plex-button (click)="seleccionarPrestacion()" type="success" class="btn-sm" label="Seleccionar"></plex-button> -->
+        <!-- <div *ngIf="piezasSeleccionadas.length > 0 || carasSeleccionadas.length > 0" class="card">
+            <div class="card-body ml-1 mt-1">
+                <h6>Registrar:</h6>
+                <div class="row" *ngIf="piezaSeleccionada && piezasSeleccionadas.length > 0">
+                    <div class="col-6">
+                        <plex-select [(ngModel)]="prestacionDienteSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesDientes')"
+                            name="prestacionesDientes" label="Dientes" [required]="true" (change)="emitEjecutarAccion(prestacionDienteSeleccionada); piezaSeleccionada = prestacionDienteSeleccionada = null;"></plex-select>
+                    </div>
+                </div>
+                <div class="row" *ngIf="caraSeleccionada && carasSeleccionadas.length > 0">
+                    <div class="col-6">
+                        <plex-select [(ngModel)]="prestacionCaraSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesCaras')" name="prestacionesCaras"
+                            label="Caras de Dientes" [required]="true" (change)="emitEjecutarAccion(prestacionCaraSeleccionada); caraSeleccionada = prestacionCaraSeleccionada = null;"></plex-select>
+                    </div>
+                </div>
             </div>
-        </div>
-        <!-- {{ caraSeleccionada | json }} -->
-        <div class="row" *ngIf="caraSeleccionada && carasSeleccionadas.length > 0">
-            <div class="col-6">
-                <plex-select [(ngModel)]="prestacionCaraSeleccionada" (getData)="loadPrestacionesDientes($event, 'prestacionesCaras')" name="prestacionesCaras"
-                    label="Prestación Cara del Diente" [required]="true" (change)="emitEjecutarConcepto(prestacionesCaras.conceptos[0]); caraSeleccionada = null;"></plex-select>
-                <!-- <plex-button (click)="seleccionarPrestacion()" type="success" class="btn-sm" label="Seleccionar"></plex-button> -->
-            </div>
-        </div>
+        </div> -->
     </div>
 
 </ng-container>
@@ -129,8 +133,8 @@
             <div class="col-12 no-gutters">
                 <ng-container *ngFor="let diente of registro.valor.odontograma; let i = index">
                     <div class="diente-container">
-                        <b class="text-sm">diente {{ diente.concepto.ISODesignation }}</b>
-                        <small>({{ diente.concepto.term }})</small>
+                        <b class="text-sm"> {{ diente.concepto.term }}</b>
+                        <!-- <small>({{ diente.concepto.term }})</small> -->
                         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="55px" height="55px"
                             x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
                             <path [ngClass]="{'seleccionada': existeEnRegistro('carasSeleccionadas', diente, 'distal')}" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966

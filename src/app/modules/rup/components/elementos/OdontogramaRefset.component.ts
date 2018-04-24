@@ -16,6 +16,7 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 })
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
+    tooltip: any;
     ultimoOdontograma: IPrestacionRegistro;
     odontogramasHUDS: IPrestacion[];
     public piezasSeleccionadas: { diente: any; }[] = [];
@@ -51,24 +52,24 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 ],
             },
             {
-                'fsn': 'inserción de restauración con amalgama en el diente (procedimiento)',
-                'semanticTag': 'procedimiento',
-                'refsetIds': [
+                fsn: 'inserción de restauración con amalgama en el diente (procedimiento)',
+                semanticTag: 'procedimiento',
+                refsetIds: [
                     '721145008',
                     '900000000000497000'
                 ],
-                'conceptId': '234787002',
-                'term': 'restauración con amalgama'
+                conceptId: '234787002',
+                term: 'restauración con amalgama'
             },
             {
-                'fsn': 'caries dental (trastorno)',
-                'semanticTag': 'trastorno',
-                'refsetIds': [
+                fsn: 'caries dental (trastorno)',
+                semanticTag: 'trastorno',
+                refsetIds: [
                     '721145008',
                     '900000000000497000'
                 ],
-                'conceptId': '80967001',
-                'term': 'caries dentales'
+                conceptId: '80967001',
+                term: 'caries dentales'
             }
         ]
     };
@@ -98,7 +99,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     refsetIds: [
                         '900000000000497000'
                     ],
-                },
+                }
+                ,
                 {
                     'fsn': 'tratamiento de conducto completo (procedimiento)',
                     'semanticTag': 'procedimiento',
@@ -113,136 +115,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         };
 
 
-    public cuadranteSuperiorDerecho = [
-        {
-
-            registros: [],
-
-            concepto: {
-                'fsn': 'estructura del tercer molar maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '446608001',
-                    '900000000000497000',
-                    '734138000'
-                ],
-                'conceptId': '68085002',
-                'term': 'diente 1',
-                ISODesignation: 18
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del segundo molar maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '900000000000497000',
-                    '446608001',
-                    '734138000'
-                ],
-                'conceptId': '7121006',
-                'term': 'diente 2',
-                ISODesignation: 17
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del primer molar maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '900000000000497000',
-                    '446608001',
-                    '734138000'
-                ],
-                'conceptId': '5140004',
-                'term': 'diente 3',
-                ISODesignation: 16
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del segundo premolar maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '446608001',
-                    '900000000000497000',
-                    '734138000'
-                ],
-                'conceptId': '36492000',
-                'term': 'diente 4',
-                ISODesignation: 15
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del primer premolar maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '446608001',
-                    '900000000000497000',
-                    '734138000'
-                ],
-                'conceptId': '57826002',
-                'term': 'diente 5',
-                ISODesignation: 14
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del canino maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '900000000000497000',
-                    '446608001',
-                    '734138000'
-                ],
-                'conceptId': '80647007',
-                'term': 'diente 6',
-                ISODesignation: 13
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del incisivo lateral maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '446608001',
-                    '900000000000497000'
-                ],
-                'conceptId': '11712009',
-                'term': 'diente 7',
-                ISODesignation: 12
-            }
-        },
-        {
-
-            concepto: {
-                'fsn': 'estructura del incisivo central maxilar derecho (estructura corporal)',
-                'semanticTag': 'estructura corporal',
-                'refsetIds': [
-                    '721145008',
-                    '446608001',
-                    '900000000000497000'
-                ],
-                'conceptId': '22120004',
-                'term': 'diente 8',
-                ISODesignation: 11
-            }
-        }
-    ];
 
     prestacionDienteSeleccionada: any;
     prestacionCaraSeleccionada: any;
@@ -250,8 +122,42 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     // Hace falta un valor único para usar como nombre de cada grupo de radiobutton
     public unique: number = new Date().getTime();
 
+    public odontograma: any = {
+        cuadranteSuperiorDerecho: [],
+        cuadranteSuperiorIzquierdo: [],
+        cuadranteInferiorDerecho: [],
+        cuadranteInferiorIzquierdo: []
+    };
 
     ngOnInit() {
+
+        // Traer EL odontograma
+        this.snomedService.getQuery({ expression: '^721145008', field: 'term', words: 'iso designation', languageCode: 'en' }).subscribe(odontograma => {
+            odontograma.forEach(diente => {
+                let nroDiente = Number(diente.term.replace('ISO designation ', ''));
+                diente.term = 'diente ' + nroDiente.toString();
+                if (nroDiente >= 11 && nroDiente <= 18) {
+                    this.odontograma.cuadranteSuperiorDerecho.push({ concepto: diente });
+                } else if (nroDiente >= 21 && nroDiente <= 28) {
+                    this.odontograma.cuadranteSuperiorIzquierdo.push({ concepto: diente });
+                } else if (nroDiente >= 41 && nroDiente <= 48) {
+                    this.odontograma.cuadranteInferiorDerecho.push({ concepto: diente });
+                } else if (nroDiente >= 31 && nroDiente <= 38) {
+                    this.odontograma.cuadranteInferiorIzquierdo.push({ concepto: diente });
+                }
+
+            });
+            this.odontograma.cuadranteSuperiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
+            this.odontograma.cuadranteSuperiorIzquierdo.sort((a, b) => b.concepto.term > a.concepto.term);
+            this.odontograma.cuadranteInferiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
+            this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => b.concepto.term > a.concepto.term);
+
+            console.log(this.odontograma);
+
+
+
+        });
+
         if (this.params) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptos = resultado;
@@ -259,6 +165,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
         }
+
+
+
         if (this.registro.valor && this.registro.valor.piezas) {
             // traer las evoluciones del odontograma (odontogramas anteriores)
         }
@@ -267,29 +176,55 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
             estado: 'validada'
         };
+
         this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
             this.odontogramasHUDS = odontogramasPaciente;
             if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                 this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
-                console.info(this.ultimoOdontograma);
             }
         });
     }
+
+    showTooltip(e, index) {
+        this.tooltip = index;
+    }
+
+    hideTooltip() {
+        this.tooltip = null;
+    }
+
 
     tieneEvolucion(diente, cara) {
         return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
     }
 
+    getClassEvolucion(diente, cara) {
+        if (this.ultimoOdontograma) {
+            // console.log(this.ultimoOdontograma.valor);
+            return true;
+            // this.ultimoOdontograma.valor.piezas.find(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara);
+        } else {
+            return false;
+        }
+    }
+    getClass(tipo, diente, cara) {
+        if (this[String(tipo)].length > 0) {
+            return this[String(tipo)].find(x => x.diente.conceptId === diente.concepto.conceptId && (cara === 'pieza' || cara === x.cara)).concepto.semanticTag;
+        }
+    }
+
     loadPrestacionesDientes($event, tipo) {
-        let conceptosSelect = this[tipo].conceptos.map(elem => {
-            return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() };
+        let conceptosSelect = this.conceptos.map(elem => {
+            return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() }
         });
+        // let conceptosSelect = this[tipo].conceptos.map(elem => {
+        //     return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() };
+        // });
 
         $event.callback(conceptosSelect);
     }
 
     seleccionarDiente(diente, cara) {
-        // this.emitEjecutarAccion({ tipoAccion: 'eliminarRegistro', opciones: 'card' });
         if (cara === 'pieza') {
             let index = this.piezaCompleta(diente);
             diente.piezaCompleta = true;
@@ -304,13 +239,13 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
                 this.registro.valor = {
                     piezas: piezas,
-                    odontograma: this.cuadranteSuperiorDerecho
+                    odontograma: this.odontograma
                 };
             } else {
                 this.piezasSeleccionadas.splice(index, 1);
-                console.log(this.piezasSeleccionadas);
             }
             this.piezaSeleccionada = this.prestacionesDientes;
+            this.emitEjecutarAccion({ concepto: diente.concepto, ...this.params });
         } else {
             let index = this.seleccionado(diente, cara);
             if (index === -1) {
@@ -325,7 +260,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
                 this.registro.valor = {
                     piezas: piezas,
-                    odontograma: this.cuadranteSuperiorDerecho
+                    odontograma: this.odontograma
                 };
             } else {
                 this.carasSeleccionadas.splice(index, 1);
@@ -369,14 +304,18 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return this.registro.valor.find(x => x.conceptId === diente.conceptId);
     }
 
-    existeEnRegistro(tipo, diente, cara) {
-        if (this.registro.valor && this.registro.valor.piezas) {
-            return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && (cara === 'pieza' || cara === x.cara)) !== -1;
-        } else {
-            if (this[String(tipo)].length > 0) {
-                return this[String(tipo)].findIndex(x => x.diente.conceptId === diente.concepto.conceptId && (cara === 'pieza' || cara === x.cara)) !== -1;
-            }
+    existeEnRegistro(tipo: 'carasSeleccionadas' | 'piezasSeleccionadas', diente, cara) {
+        // if (this.registro.valor && this.registro.valor.piezas) {
+        //     return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && (cara === 'pieza' || cara === x.cara)) !== -1;
+        // } else {
+        if (this[String(tipo)].length > 0) {
+            return this[String(tipo)].findIndex(x => x.diente.conceptId === diente.concepto.conceptId && (cara === 'pieza' || cara === x.cara)) !== -1;
         }
+        // }
+    }
+
+    getMensajes() {
+        return [this.carasSeleccionadas, this.piezasSeleccionadas];
     }
 
 }
