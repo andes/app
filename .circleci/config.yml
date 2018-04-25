@@ -21,5 +21,5 @@ jobs:
           name: tsc
           command: npm run build:prod -- --progress=false
       - store_artifacts:
-          path: /dist
+          path: ./dist
           destination: dist-folder
