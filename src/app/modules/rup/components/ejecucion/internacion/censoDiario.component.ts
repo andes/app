@@ -93,4 +93,11 @@ export class CensoDiarioComponent implements OnInit {
         saveAs(blob, nombreArchivo);
     }
 
+
+    /**
+    * Vuelve a la página anterior (mapa de camas)
+    */
+    mapaDeCamas() {
+        this.router.navigate(['mapa-de-camas']);
+    }
 }

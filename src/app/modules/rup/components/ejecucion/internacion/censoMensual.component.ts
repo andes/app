@@ -76,7 +76,7 @@ export class CensoMensualComponent implements OnInit {
 
 
     totalCenso() {
-        this.totalResumenCenso =  {
+        this.totalResumenCenso = {
             existencia0: 0,
             ingresos: 0,
             pasesDe: 0,
@@ -109,6 +109,11 @@ export class CensoMensualComponent implements OnInit {
         this.listadoCenso = [];
     }
 
-
+    /**
+     * Vuelve a la página anterior (mapa de camas)
+     */
+    mapaDeCamas() {
+        this.router.navigate(['mapa-de-camas']);
+    }
 
 }

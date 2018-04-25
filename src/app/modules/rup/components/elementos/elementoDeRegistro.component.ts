@@ -282,7 +282,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             if (control) {
                 return true;
             } else {
-                // TODO: Ver el mensaje a mostrar.. 
+                // TODO: Ver el mensaje a mostrar..
                 this.plex.alert('No se puede agregar ese concepto');
                 return false;
             }
