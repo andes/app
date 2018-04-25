@@ -41,7 +41,7 @@
                             <plex-select name="genero" (getData)="loadGenero($event)" label="Sector por genero" idField="term" labelField="term" [(ngModel)]="estado.genero">
                             </plex-select>
                         </div>
-                    </div>
+                    </div> 
                     <div class="row">
                         <div class="col-12">
                             <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)"

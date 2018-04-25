@@ -1,7 +1,7 @@
 <form class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-8">
+            <div [ngClass]="{ 'col-8': !disabledPanel, 'col-12': disabledPanel }">
                 <plex-box type="primary">
                     <header>
                         <div class="page-title">Mapa de sectores de {{ organizacion?.nombre }}</div>
@@ -20,10 +20,11 @@
                     </div>
                 </plex-box>
             </div>
-            <div class="col-4">
+            <div class="col-4" *ngIf="!disabledPanel">
                 <plex-box>
                     <header>
-                        <div class="page-title">CREAR SECTOR FISICO</div>
+                        <div class="page-title" *ngIf="!editing"> CREAR SECTOR FISICO </div>
+                        <div class="page-title" *ngIf="editing"> EDITAR SECTOR FISICO </div>
                     </header>
                     <form class="plex-layout" #form="ngForm">
                         <div>
