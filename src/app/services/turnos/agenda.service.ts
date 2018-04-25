@@ -23,6 +23,9 @@ export class AgendaService {
     findDiagnosticos(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/diagnosticos', { params: params, showError: true });
     }
+    findConsultaDiagnosticos(params: any): Observable<any> {
+        return this.server.get(this.agendaUrl + '/consultaDiagnosticos', { params: params, showError: true });
+    }
 
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
