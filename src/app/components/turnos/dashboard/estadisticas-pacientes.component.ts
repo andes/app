@@ -88,10 +88,10 @@ export class EstadisticasPacientesComponent implements OnInit {
             let resultado: any = this._paciente.carpetaEfectores.filter((carpeta: any) => {
                 return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
             });
-            return resultado[0].nroCarpeta;
-        } else {
-            return null;
-        }
+            if (resultado && resultado[0]) {
+                return resultado[0].nroCarpeta;
+            } else { return null; }
+        } else { return null; }
     }
 
     nuevoNroCarpeta() {
