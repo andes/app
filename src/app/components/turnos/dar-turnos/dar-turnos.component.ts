@@ -574,9 +574,10 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
         this.opciones.profesional = turno.profesionales[0];
-        if (!actualizarProfesional && this.eventoProfesional) {
-            this.eventoProfesional.callback(this.opciones.profesional);
-        }
+        // TODO revisar carga de profesional, idem solicitudes
+        // if (!actualizarProfesional && this.eventoProfesional) {
+        //     this.eventoProfesional.callback(this.opciones.profesional);
+        // }
         this.actualizar('');
     }
 
@@ -673,9 +674,14 @@ export class DarTurnosComponent implements OnInit {
                     });
                 });
             });
-            this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
-                return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
-            });
+            if (this.permisos[0] !== '*') {
+                this.ultimosTurnos = ultimosTurnos.filter(ultimo => {
+                    return this.permisos.indexOf(ultimo.tipoPrestacion.id) >= 0;
+                });
+
+            } else {
+                this.ultimosTurnos = ultimosTurnos;
+            }
         });
 
     }
