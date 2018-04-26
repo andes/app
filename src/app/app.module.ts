@@ -317,7 +317,6 @@ export let RUPRegistry = {
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
-
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 

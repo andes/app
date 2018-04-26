@@ -614,16 +614,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     }
 
                     // Cuilifico el paciente si aún no pose cuil.
-                    if (!pacienteGuardar.cuil) {
-                         this.ansesService.get(pacienteGuardar).subscribe(rta => {
-                            if (rta && rta.cuil) {
-                                this.pacienteService.patch(pacienteGuardar.id, {
-                                    'op': 'updateCuil',
-                                    'cuil': rta.cuil
-                                }).subscribe(result2 => {});
-                            }
-                        });
-                    }
+                    // if (!pacienteGuardar.cuil) {
+                    //      this.ansesService.get(pacienteGuardar).subscribe(rta => {
+                    //         if (rta && rta.cuil) {
+                    //             this.pacienteService.patch(pacienteGuardar.id, {
+                    //                 'op': 'updateCuil',
+                    //                 'cuil': rta.cuil
+                    //             }).subscribe(result2 => {});
+                    //         }
+                    //     });
+                    // }
                     this.plex.alert('Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile
