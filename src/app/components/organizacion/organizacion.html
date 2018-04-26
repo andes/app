@@ -41,8 +41,8 @@
                                 <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>
                             </td>
                             <td class="text-center">
-                                <plex-button type="primary" label="Editar" (click)="onEdit(organizacion)"></plex-button>
-                                <plex-button type="primary" label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
+                                <plex-button  *ngIf="checkAuth('edit')" type="primary" label="Editar" (click)="onEdit(organizacion)"></plex-button>
+                                <plex-button *ngIf="checkAuth('sectores', organizacion.id)" type="primary" label="Ver sectores" (click)="routeSectores(organizacion.id)"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -58,7 +58,7 @@
 
 <footer *ngIf="!showcreate">
     <div class="text-right">
-        <plex-button type="success" label="Nueva Organizacion" (click)="showcreate = !showcreate"></plex-button>
+        <plex-button type="success" label="Nueva Organizacion" (click)="showcreate = !showcreate" *ngIf="checkAuth('create')"></plex-button>
     </div>
 </footer>
 

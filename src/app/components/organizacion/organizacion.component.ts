@@ -3,6 +3,7 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 const limit = 25;
 
@@ -28,6 +29,7 @@ export class OrganizacionComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
         private organizacionService: OrganizacionService,
+        private auth: Auth,
         private router: Router) { }
 
     ngOnInit() {
@@ -42,6 +44,10 @@ export class OrganizacionComponent implements OnInit {
             this.loadDatos(false);
         });
         this.loadDatos();
+    }
+
+    checkAuth (permiso, id) {
+        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : '') );
     }
 
     loadDatos(concatenar: boolean = false) {

@@ -48,14 +48,14 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    constructor(private auth: Auth, private plex: Plex,
+    constructor(
+        private auth: Auth,
+        private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
         private camasService: CamasService) { }
 
     ngOnInit() {
-
-
         // verificar permisos
         // buscar camas para la organización
         this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
@@ -190,7 +190,16 @@ export class MapaDeCamasComponent implements OnInit {
     public censoDiario() {
         this.router.navigate(['rup/internacion/censo']);
     }
+
     public censoMensual() {
         this.router.navigate(['rup/internacion/censoMensual']);
+    }
+
+    /**
+     * Check de los permisos para mostrar botones o datos.
+     */
+
+    checkAuth (permiso) {
+        return this.auth.check('internacion:' + permiso);
     }
 }

@@ -99,10 +99,9 @@ export class CamaCreateUpdateComponent implements OnInit {
                     if (this.cama.id) {
                         this.plex.alert('Los datos de la cama se han actualizado correctamente correctamente');
                         this.router.navigate(['/mapa-de-camas']);
-                        this.showCama.emit(result);
                     } else {
                         this.plex.alert('La cama se creo correctamente');
-                        this.showCama.emit(result);
+                        this.router.navigate(['/mapa-de-camas']);
                     }
 
                 } else {

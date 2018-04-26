@@ -9,76 +9,12 @@
                             Mapa de camas
                         </div>
                         <div class="text-right">
-                            <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()"></plex-button>
-                            <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()"></plex-button>
-                            <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()"></plex-button>
-                            <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()"></plex-button>
+                            <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
+                            <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
+                            <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
+                            <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                         </div>
                     </div>
-
-                    <!-- <hr />
-
-                    <div class="row" *ngIf="estadoServicio && estadoServicio.total > 0">
-                        <div class="col-2">
-                            <h4>
-                                Estado del servicio
-                            </h4>
-                        </div>
-                        <div class="col">
-                            <span class="estado">
-                                Total de camas
-                                <span class="badge badge-default">
-                                    {{estadoServicio.total}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Ocupación
-                                <span class="badge badge-primary">
-                                    {{estadoServicio.ocupadas}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Desocupadas
-                                <span class="badge badge-success">
-                                    {{estadoServicio.desocupadas}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Bloqueadas
-                                <span class="badge badge-danger">
-                                    {{estadoServicio.bloqueadas}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Reparación
-                                <span class="badge badge-danger">
-                                    {{estadoServicio.reparacion}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Descontaminación
-                                <span class="badge badge-success">
-                                    {{estadoServicio.descontaminacion}}
-                                </span>
-                            </span>
-
-                            <span class="estado">
-                                Desocupadas con oxígeno
-                                <span class="badge badge-success">
-                                    {{estadoServicio.desocupadasOxigeno}}
-                                </span>
-                            </span>
-                        </div>
-                    </div>
-
-                    <hr /> -->
-
-
                     <div class="row" *ngIf="camas">
                         <div class="col-2">
                             <div class="form-group">
@@ -111,8 +47,6 @@
                             <plex-button type="primary" label="Limpiar filtros" (click)="limpiarFiltros()"></plex-button>
                         </div>
                     </div>
-
-
                     <hr />
                 </header>
 

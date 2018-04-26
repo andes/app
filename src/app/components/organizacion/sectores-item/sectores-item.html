@@ -7,14 +7,14 @@
             {{root.tipoSector.term}} - {{root.nombre}}
         </div>
         <div class="actions" *ngIf="actions">
-            <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
-                <i class="mdi mdi-pencil"></i>
-            </span>
             <span class="btn btn-sm btn-success collapse-card" (click)="onAddClick()">
                 <i class="mdi mdi-plus"></i>
             </span>
             <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
                 <i class="mdi mdi-close"></i>
+            </span>
+            <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
+                <i class="mdi mdi-pencil"></i>
             </span>
             <span class="btn btn-sm btn-primary collapse-card" (click)="onCollapseClick()" *ngIf="hasItems()">
                 <i class="mdi mdi-chevron-down"></i>

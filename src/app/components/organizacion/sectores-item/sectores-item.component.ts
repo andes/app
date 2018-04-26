@@ -76,7 +76,7 @@ export class SectoresItemComponent implements OnInit {
 
     selectItem($event) {
         $event.stopPropagation();
-        if (!this.actions) {
+        if (!this.actions && this.root.hijos.length === 0) {
             this.onSelect.emit([this.cloneObject(this.root)]);
         }
     }
