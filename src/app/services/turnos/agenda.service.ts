@@ -24,7 +24,7 @@ export class AgendaService {
         return this.server.get(this.agendaUrl + '/diagnosticos', { params: params, showError: true });
     }
     findConsultaDiagnosticos(params: any): Observable<any> {
-        return this.server.get(this.agendaUrl + '/consultaDiagnosticos', { params: params, showError: true });
+        return this.server.get(this.agendaUrl + '/consultaDiagnostico', { params: params, showError: true });
     }
 
     get(params: any): Observable<IAgenda[]> {
@@ -36,6 +36,8 @@ export class AgendaService {
     }
 
     patch(id: String, cambios: any): Observable<IAgenda> {
+        console.log("patch agenda");
+        console.log(this.agendaUrl);
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 
