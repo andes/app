@@ -16,8 +16,8 @@
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto'"
-    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
+<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="(busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada' || busquedaActual === 'porConcepto') && autofocus"
+    [searchTermInput]="search" [autofocus]="autofocus" id="buscador"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
     <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
@@ -100,13 +100,17 @@
                             ELEM. REG.
                         </button>
                     </li>
+
                 </ul>
             </div>
         </ng-container>
 
         <div>
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
-            <i class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
+            <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
+            <i *ngIf="busquedaPorConcepto" class="text-secondary ml-1">(
+                <span *ngFor="let c of busquedaRefSet.conceptos">{{ c.concepto.fsn }} </span>)
+            </i>
 
             <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
                 <!-- <ng-container *ngIf="searchTerm">

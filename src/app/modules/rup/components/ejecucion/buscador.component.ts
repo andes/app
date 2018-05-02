@@ -1,6 +1,6 @@
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
@@ -14,7 +14,7 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 })
 
 export class BuscadorComponent implements OnInit, OnChanges {
-    autofocus: any;
+    autofocus = true;
 
     // @Input() elementoRUPprestacion;
     // @Input() resultados;
@@ -80,8 +80,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
         planes: ['procedimiento', 'régimen/tratamiento'],
         productos: ['producto'],
         otros: ['elemento de registro']
-
     };
+
+    public busquedaPorConcepto = false;
 
     // Listados de grupos de la busqueda guiada
     public gruposGuiada: any[] = [];
@@ -109,7 +110,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
-        public servicioPrestacion: PrestacionesService) {
+        public servicioPrestacion: PrestacionesService,
+        public renderer: Renderer2) {
     }
 
     ngOnInit() {
@@ -169,7 +171,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
 
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.busquedaActual = 'basico';
+                this.busquedaActual = 'buscadorBasico';
             } else {
                 // inicializamos el filtro actual para los hallazgos
                 this.filtroActual = 'todos';
@@ -203,10 +205,19 @@ export class BuscadorComponent implements OnInit, OnChanges {
             });
         }
 
-        if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
+        if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
             this.busquedaActual = 'buscadorBasico';
+            this.autofocus = false;
             this.setTipoBusqueda(this.busquedaActual);
+            this.busquedaPorConcepto = true;
+        } else {
+            this.busquedaPorConcepto = false;
         }
+
+        // const element = this.renderer.selectRootElement('#buscador');
+        // const element = this.renderer.selectRootElement('#snomed-buscar');
+        // setTimeout(() => element.focus(), 0);
+
     }
 
     /**
@@ -255,6 +266,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public setTipoBusqueda(busquedaActual): void {
+        this.busquedaPorConcepto = false;
         if (this.busquedaActual !== busquedaActual) {
             this.busquedaActual = busquedaActual;
             // creamos una copia del filtro
@@ -272,6 +284,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.buscar();
             }
         }
+        this.autofocus = true;
     }
 
     // drag and drop funciones. Hago los emit.
@@ -475,6 +488,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
             // devolvemos si querésmos que se genere una relación
             this.tagBusqueda.emit(this.busquedaRefSet);
+            this.busquedaRefSet = null;
         } else {
             // devolvemos los tipos de filtros
             this.tagBusqueda.emit(filtro);
@@ -535,7 +549,10 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public getSemanticTagFiltros() {
-        return this.conceptos[this.filtroActual];
+        if (!this.busquedaPorConcepto) {
+            return this.conceptos[this.filtroActual];
+        }
+        return this.busquedaPorConcepto;
     }
 
 

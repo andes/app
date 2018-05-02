@@ -4,6 +4,8 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
+// import { RxSocket } from 'rx-socket.io-client';
+
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -11,18 +13,18 @@ import { Auth } from '@andes/auth';
 
 export class AppComponent {
     private initStatusCheck() {
-        if (environment.APIStatusCheck) {
-            setTimeout(() => {
-                this.server.get('/core/status', { params: null, showError: false, showLoader: false })
-                    .finally(() => this.initStatusCheck())
-                    .subscribe(
-                        (data) => this.plex.updateAppStatus(data),
-                        (err) => this.plex.updateAppStatus({ API: 'Error' })
-                    );
-            }, 2000);
-        } else {
-            this.plex.updateAppStatus({ API: 'OK' });
-        }
+        // if (environment.APIStatusCheck) {
+        //     setTimeout(() => {
+        //         this.server.get('/core/status', { params: null, showError: false, showLoader: false })
+        //             .finally(() => this.initStatusCheck())
+        //             .subscribe(
+        //                 (data) => this.plex.updateAppStatus(data),
+        //                 (err) => this.plex.updateAppStatus({ API: 'Error' })
+        //             );
+        //     }, 2000);
+        // } else {
+        //     this.plex.updateAppStatus({ API: 'OK' });
+        // }
     }
 
     private menuList = [];

@@ -105,7 +105,7 @@ export class PrestacionValidacionComponent implements OnInit {
         private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
         private servicioDocumentos: DocumentosService,
         private sanitizer: DomSanitizer,
-        // private zone: NgZone
+        private servicioSnomed: SnomedService
     ) {
     }
 
@@ -168,12 +168,35 @@ export class PrestacionValidacionComponent implements OnInit {
             // Carga la información completa del paciente
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
+
+
                 this.prestacion.ejecucion.registros.forEach(registro => {
+
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                            return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                        registro.relacionadoCon.forEach((idRegistroRel, key) => {
+                            console.log('idRegistroRel', idRegistroRel);
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            // Es registro RUP o es un concepto puro?
+                            if (esRegistro) {
+                                registro.relacionadoCon[key] = esRegistro;
+                            } else {
+                                registro.relacionadoCon[key] = idRegistroRel;
+                                window.setTimeout(() => {
+                                    this.servicioSnomed.getByConceptId(idRegistroRel.conceptId, { format: '' }).subscribe(rel => {
+                                        registro.relacionadoCon[key] = rel;
+                                    });
+                                }, 1000);
+                            }
                         });
                     }
+
+
+
+                    // if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                    //     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                    //         return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
+                    //     });
+                    // }
                     if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
                         let parametros = {
                             conceptId: registro.concepto.conceptId,
@@ -231,7 +254,9 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
+                            });
                         }
                     });
                     // actualizamos las prestaciones de la HUDS
@@ -265,7 +290,7 @@ export class PrestacionValidacionComponent implements OnInit {
             } else {
                 // guardamos una copia de la prestacion antes de romper la validacion.
                 // let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
-                let prestacionCopia = this.prestacion;
+                const prestacionCopia = this.prestacion;
 
                 // Agregamos el estado de la prestacion copiada.
                 let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
@@ -281,6 +306,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
                     };
                     // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.plex.alert(this.prestacion.id);
                     this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
@@ -592,8 +618,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, this.nombreArchivo);
+        saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
 
     /**

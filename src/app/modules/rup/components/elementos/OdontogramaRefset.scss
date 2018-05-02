@@ -1,6 +1,35 @@
 @import '../variables';
 .odontograma {
     width: 100%;
+    text-align: center;
+}
+
+.último-odontograma {
+    padding: 15px 0;
+    background: rgba(133, 133, 133, 0.4);
+    border-radius: 5px;
+    .title {
+        height: 40px;
+    }
+}
+
+.hidden {
+    opacity: 0;
+    height: 40px;
+    transition: all ease 500ms;
+}
+
+.visible {
+    opacity: 1;
+    height: 75px;
+    transition: all ease 500ms;
+}
+
+.toggle-último {
+    display: inline-block;
+    position: relative;
+    top: -30px;
+    right: 15px;
 }
 
 svg#cuadrante-sup-der {
@@ -79,7 +108,11 @@ svg#cuadrante-sup-der {
 // }
 .diente-container {
     display: inline-block;
-    width: 100px;
+    width: 50px;
+    font-size: 12px;
+    .text-diente {
+        font-size: 16px;
+    }
 }
 
 .st0 {
