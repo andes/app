@@ -25,6 +25,10 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     public conceptosPermitidos: any[] = [];
 
+    public itemsRegistros = {};
+    // boleean para verificar si estan todos los conceptos colapsados
+    public collapse = true;
+
     ngOnInit() {
         if (this.params.refsetId) {
             console.log(this.params.refsetId);
@@ -86,6 +90,40 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
 
 
+
+    // cargarNuevoRegistro(snomedConcept, valor = null) {
+    //     // Si proviene del drag and drop
+    //     if (snomedConcept.dragData) {
+    //         snomedConcept = snomedConcept.dragData;
+    //     }
+    //     // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
+    //     let esSolicitud = false;
+
+    //     // Si es un plan seteamos el true para que nos traiga el elemento rup por default
+    //     if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
+    //         esSolicitud = true;
+    //     }
+    //     let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+    //     // armamos el elemento data a agregar al array de registros
+    //     let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
+    //     this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
+    //     nuevoRegistro['_id'] = nuevoRegistro.id;
+    //     // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
+    //     if (esSolicitud) {
+    //         nuevoRegistro.esSolicitud = true;
+    //     }
+    //     nuevoRegistro.valor = valor;
+
+    //     // Agregamos al array de registros
+    //     this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
+    //     this.showDatosSolicitud = false;
+    //     // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
+    //     return nuevoRegistro;
+    // }
+
+
+
+
     cargarNuevoRegistro(snomedConcept, valor = null) {
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
@@ -101,7 +139,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
-        // this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
+        this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
@@ -114,7 +152,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        let registros = this.prestacion.ejecucion.registros;
+        let registros = this.registro.valor.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
@@ -265,7 +303,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let index;
         if (registroEliminar.dragData) {
             this.conceptoAEliminar = registroEliminar.dragData.concepto;
-            index = this.prestacion.ejecucion.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
+            index = this.registro.valor.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
         } else {
             index = this.registro.valor.registros.findIndex(r => (registroEliminar.id === r.id));
         }
@@ -291,4 +329,24 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         }
     }
 
+
+    cambiaValorCollapse(indice) {
+        console.log(indice);
+        console.log(this.itemsRegistros[indice], 'rrrr');
+        if (this.itemsRegistros[indice]) {
+            console.log(this.itemsRegistros[indice].collapse);
+
+            this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
+        }
+        this.registrosColapsados();
+    }
+
+    registrosColapsados() {
+        this.registro.valor.registros.forEach(registro => {
+            let unRegistro = this.itemsRegistros[registro.id].collapse;
+            if (unRegistro !== this.collapse) {
+                this.collapse = !this.collapse;
+            }
+        });
+    }
 }
