@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>{{ registro.data.prestacion.snomed.term }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Solicitante: </strong>
+            <div>
+                <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional }}</ng-container>
+            </div>
+            <div>
+                <strong>Organización:</strong>
+                <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion }}</ng-container>
+            </div>
+            <div>
+                <strong>Fecha:</strong> {{ registro.data.fecha | fecha }}
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <ng-container *ngIf="urlcda">
+                <iframe *ngIf="urlcda" width="100%" height="300" [src]="urlcda"></iframe>
+            </ng-container>
+        </div>
+    </div>
+</div>

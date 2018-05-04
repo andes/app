@@ -87,11 +87,14 @@
 
                                 </tab>
 
-                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
-                                    <!-- <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
-                                    </rup> -->
+                                <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
+
                                     <lab [laboratorio]="registro"></lab>
+                                </tab>
+
+                                <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'cda'">
+
+                                    <vista-cda [registro]="registro"></vista-cda>
                                 </tab>
                             </ng-container>
                         </ng-container>

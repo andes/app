@@ -28,6 +28,8 @@ export class HudsBusquedaComponent implements OnInit {
     filtroActual: any = 'todos';
     public loading = false;
 
+    public cdas = [];
+
     @Input() paciente: any;
     @Input() prestacionActual: any;
 
@@ -172,7 +174,7 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     devolverRegistrosHuds(registro, tipo) {
-
+        debugger;
         let index;
 
         switch (tipo) {
@@ -191,22 +193,32 @@ export class HudsBusquedaComponent implements OnInit {
                 break;
             case 'prestacion':
                 // Se populan las relaciones usando el _id
-                if (registro.ejecucion.registros) {
-                    registro.ejecucion.registros.forEach(reg => {
-                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                            if (typeof reg.relacionadoCon[0] === 'string') {
-                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                    return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
-                                });
+                if (registro.tipo === 'rup') {
+                    registro = registro.data;
+                    if (registro.ejecucion.registros) {
+                        registro.ejecucion.registros.forEach(reg => {
+                            if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                                if (typeof reg.relacionadoCon[0] === 'string') {
+                                    reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                    });
+                                }
                             }
-                        }
+                        });
+                    }
+
+                    index = this.registrosHuds.findIndex(r => {
+                        return (r.data.id === registro.id);
+                    });
+                    registro.class = 'plan';
+                } else {
+                    tipo = 'cda';
+                    registro = registro.data;
+                    index = this.registrosHuds.findIndex(r => {
+                        return (r.data.id === registro.id);
                     });
                 }
 
-                index = this.registrosHuds.findIndex(r => {
-                    return (r.data.id === registro.id);
-                });
-                registro.class = 'plan';
 
                 break;
             case 'procedimiento':
@@ -222,12 +234,10 @@ export class HudsBusquedaComponent implements OnInit {
                 });
                 break;
             case 'laboratorio':
-
-                debugger;
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto.semanticTag === 'elemento de registro') {
-                        if (r.data.fecha === registro.cda.fecha) {
+                        if (r.data.fecha === registro.fecha) {
                             return 1;
                         } else {
                             return 0;
@@ -241,6 +251,7 @@ export class HudsBusquedaComponent implements OnInit {
             tipo: tipo,
             data: registro
         };
+
 
         // si no existe lo agregamos
         if (index === -1) {
@@ -481,6 +492,20 @@ export class HudsBusquedaComponent implements OnInit {
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            this.prestaciones = this.prestaciones.map(p => {
+                return {
+                    data: p,
+                    tipo: 'rup',
+                    prestacion: p.solicitud.tipoPrestacion,
+                    profesional: p.estados[p.estados.length - 1].createdBy.nombreCompleto,
+                    fecha: p.estados[p.estados.length - 1].createdAt,
+                    estado: p.estados[p.estados.length - 1].tipo
+                };
+            });
+
+            debugger;
+            this.buscarCDAPacientes();
+
         });
     }
 
@@ -494,7 +519,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarProcedimientos();
             this.listarMedicamentos();
             this.listarElementosDeRegistro();
-            this.listarLaboratorios(this.paciente);
+
         });
     }
 
@@ -557,38 +582,31 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     // Trae los medicamentos registrados para el paciente
-    listarLaboratorios(paciente) {
-        this.servicioPrestacion.getByPacienteLaboratorios(paciente.id, '4241000179101').subscribe(labs => {
-
-            this.laboratorios = labs.map(l => {
+    buscarCDAPacientes() {
+        this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
+            this.cdas = registros;
+            this.listarLaboratorios();
+            let otrasPrestaciones = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId !== '4241000179101')];
+            let filtro = otrasPrestaciones.map(op => {
+                op.id = op.cda_id;
                 return {
-                    cda: l, concepto: {
-                        conceptId: '4241000179101',
-                        semanticTag: 'elemento de registro',
-                        term: 'Exámen de Laboratorio',
-                        fsn: 'Exámen de Laboratorio',
-                    }
+                    data: op,
+                    tipo: 'cda',
+                    prestacion: op.prestacion.snomed,
+                    profesional: op.profesional ? op.profesional : '',
+                    fecha: op.fecha,
+                    estado: 'validada'
                 };
             });
 
-            // labs;
-            // labs.forEach((cda, i) => {
-            //     labs.cdas[i] = {
-            //         cda,
-            //         concepto: {
-            //             conceptId: '4241000179101',
-            //             semanticTag: 'elemento de registro',
-            //             term: 'Exámen de Laboratorio',
-            //             fsn: 'Exámen de Laboratorio',
-            //         },
-            //         profesional: '',
-            //         createdAt: moment(cda.uploadDate, 'DD/MM/YYYY')
-            //     };
-            // });
-
-            // this.laboratorios = labs;
-
+            this.prestaciones = [...this.prestaciones, ...filtro];
         });
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarLaboratorios() {
+        this.laboratorios = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '4241000179101')];
+
     }
 
     buscarTranformacion(transformado) {
@@ -623,6 +641,11 @@ export class HudsBusquedaComponent implements OnInit {
             this.hallazgosCronicos = this.hallazgosCronicos.filter(h => {
                 return h.concepto.semanticTag === this.filtroActual;
             });
+        } else {
+            if (this.filtroActual === 'laboratorios') {
+                this.listarLaboratorios();
+            }
+
         }
     }
 

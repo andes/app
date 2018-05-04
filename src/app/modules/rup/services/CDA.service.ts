@@ -16,7 +16,15 @@ export class CDAService {
      */
 
     get(id) {
-        return this.server.get(this.CDAUrl + 'files/' + id);
+        return this.server.get(this.CDAUrl + id);
+    }
+
+    /**
+     *
+     * @param id, id del archivo CDA // 12948300
+     */
+    getJson(id) {
+        return this.server.get(this.CDAUrl + '/tojson/' + id);
     }
 
     private handleError(error: any) {

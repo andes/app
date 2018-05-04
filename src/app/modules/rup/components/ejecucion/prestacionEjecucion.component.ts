@@ -121,7 +121,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
-            this.plex.alert(this.idAgenda);
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {

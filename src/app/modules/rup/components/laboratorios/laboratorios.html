@@ -1,26 +1,34 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <h5>{{ laboratorio.data.concepto.term }}</h5>
+            <h5>{{ laboratorio.data.prestacion.snomed.term }}</h5>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <b>Solicitante</b>
+            <strong>Solicitante: </strong>
             <div>
-                {{ laboratorio.data.cda.profesional }}
+                <ng-container *ngIf="laboratorio?.data.profesional">{{laboratorio?.data.profesional }}</ng-container>
             </div>
-            <b>Datos del CDA</b>
             <div>
-                Fecha: {{ laboratorio.data.cda.fecha | fecha }}
+                <strong>Organización:</strong>
+                <ng-container *ngIf="laboratorio?.data.organizacion">{{laboratorio?.data.organizacion }}</ng-container>
             </div>
-            <b>Adjuntos</b>
-            <ng-container *ngFor="let archivo of laboratorio.data.cda.adjuntos">
-                {{ archivo }}
-                <a href="javascript:void(0)" (click)="descargar(archivo)">
-                    <i class="mdi mdi-36px mdi-file-pdf"></i>
-                </a>
-            </ng-container>
+            <div>
+                <strong>Fecha:</strong> {{ laboratorio.data.fecha | fecha }}
+            </div>
+            <b>Adjuntos:</b>
+            <ul>
+                <ng-container *ngFor="let archivo of laboratorio.data.adjuntos">
+                    <li>
+                        <a href="javascript:void(0)" (click)="descargar(archivo)">
+                            Descargar documento adjunto
+                            <i class="mdi mdi-36px mdi-file-pdf"></i>
+                        </a>
+                    </li>
+
+                </ng-container>
+            </ul>
         </div>
     </div>
 </div>

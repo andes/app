@@ -191,6 +191,7 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 
 // Legacy para RUP
@@ -428,6 +429,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,

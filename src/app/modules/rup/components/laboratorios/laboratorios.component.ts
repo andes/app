@@ -4,6 +4,7 @@ import { Auth } from '@andes/auth';
 import { CDAService } from './../../services/CDA.service';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
     selector: 'lab',
@@ -20,20 +21,16 @@ export class LaboratoriosComponent implements OnInit {
     // Usa el keymap 'default'
     private slug = new Slug('default');
 
-    constructor(private servicioCDA: CDAService) { }
+    constructor(private servicioCDA: CDAService, private auth: Auth) { }
 
     ngOnInit() {
-        console.log(this.laboratorio);
     }
 
+
     descargar(archivo) {
-        debugger;
-        let nombreArchivo = archivo; // .substring(0, archivo.lastIndexOf('.'))
-        this.servicioCDA.get(nombreArchivo).subscribe(lab => {
-            debugger;
-            let blob = new Blob([lab], { type: 'application/pdf' });
-            // let nombreArchivo = this.slug.slugify(nombreArchivo); // por lo pronto no hace falta, pero puede que en el futuro lo haga
-            saveAs(blob, nombreArchivo);
-        });
+        let nombreArchivo = archivo.substring(0, archivo.lastIndexOf('.'));
+        let token = window.sessionStorage.getItem('jwt');
+        let url = environment.API + '/modules/cda/' + nombreArchivo + '?token=' + token;
+        window.open(url);
     }
 };

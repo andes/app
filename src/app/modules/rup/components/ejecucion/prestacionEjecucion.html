@@ -317,6 +317,11 @@
                                     </div>
 
                                 </tab>
+
+                                <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
+
+                                    <lab [laboratorio]="registro"></lab>
+                                </tab>
                             </ng-container>
                         </ng-container>
                     </tabs>
