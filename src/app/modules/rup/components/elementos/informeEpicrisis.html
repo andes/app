@@ -1,5 +1,6 @@
-<div *ngIf="!soloValores">
-    <div class="row">
+<!-- <div *ngIf="!soloValores"> -->
+<!-- <pre>{{prestacion | json}}</pre> -->
+<!-- <div class="row">
         <div class="col-12">
             <plex-text rows="4" [(ngModel)]="registro.valor.resumen" multiline=true name="resumenIngreso" label=" Resumen del ingreso"
                 placeholder="Ingrese Resumen al egreso">
@@ -11,6 +12,37 @@
             <plex-select [multiple]="true" [(ngModel)]="registro.valor.pautasDeAlarma" name="pautasDeAlarma" [data]="pautasDeAlarma"
                 labelField="term" idField="conceptId" [required]="true" label="Pautas de alarma">
             </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col" *ngIf="registro.valor && registro.valor.pautasDeAlarma">
+            <pre>{{registro.valor.pautasDeAlarma | json}}</pre>
+            <ng-container *ngFor="let elemento of registro.valor.pautasDeAlarma; let i = index">
+                <div class="rup-card elementoderegistro elementoRup">
+                    <div class="rup-header">
+                        <div class="icon-rup drag-handle">
+                            <i class="icon"></i>
+                        </div>
+                        <div class="title">
+                            <ng-container *ngIf="elemento?.nombre">
+                                {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                            </ng-container>
+                        </div>
+
+                    </div>
+                    <div class="rup-body">
+                        <div class="legend">
+                            <span>
+                                {{elemento.semanticTag}}
+                            </span>
+                        </div>
+                        <div class="content">
+                            <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento)" [prestacion]="prestacion" [registro]="elemento"
+                                [soloValores]="false"></rup>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
         </div>
     </div>
     <div class="row">
@@ -64,4 +96,4 @@
             </ng-container>
         </div>
     </div>
-</div>
+</div> -->

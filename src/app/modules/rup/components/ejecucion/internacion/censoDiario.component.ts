@@ -74,8 +74,8 @@ export class CensoDiarioComponent implements OnInit {
             let content = '';
             let tabla = document.getElementById('tabla');
             content += tabla.innerHTML;
-
-            this.servicioDocumentos.descargar(content).subscribe(data => {
+            let scssFile = '../censo/censoDiario';
+            this.servicioDocumentos.descargar(content, scssFile).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
@@ -93,4 +93,11 @@ export class CensoDiarioComponent implements OnInit {
         saveAs(blob, nombreArchivo);
     }
 
+
+    /**
+    * Vuelve a la página anterior (mapa de camas)
+    */
+    mapaDeCamas() {
+        this.router.navigate(['mapa-de-camas']);
+    }
 }

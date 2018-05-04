@@ -82,10 +82,10 @@
 
                                     <!-- Contenedor del registro RUP -->
 
+
+
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
                                         [ngClass]="{'relacionado': registro?.relacionadoCon}">
-
-
                                         <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="rup-header">
                                                 <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"

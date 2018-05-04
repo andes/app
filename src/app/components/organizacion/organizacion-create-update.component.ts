@@ -139,7 +139,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         });
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
-                    Object.assign(this.organizacionModel, resultado);
+                Object.assign(this.organizacionModel, resultado);
             });
         }
 

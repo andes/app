@@ -94,6 +94,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
+    public nombreArchivo = '';
+
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
@@ -204,7 +206,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
-        if (!existeDiagnostico) {
+        if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion') {
             this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
             return false;
         }
@@ -316,8 +318,19 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
     }
 
-    volverInicio() {
-        this.router.navigate(['rup']);
+    volverInicio(ambito = 'ambulatorio') {
+        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
+            if (confirmado) {
+                if (ambito === 'ambulatorio') {
+                    this.router.navigate(['rup']);
+                } else {
+                    this.router.navigate(['mapa-de-camas']);
+                }
+            } else {
+                return;
+            }
+        });
     }
 
     darTurno(prestacionSolicitud) {
@@ -536,6 +549,7 @@ export class PrestacionValidacionComponent implements OnInit {
         });
         setTimeout(() => {
 
+            this.nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term);
             let content = '';
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
@@ -558,7 +572,7 @@ export class PrestacionValidacionComponent implements OnInit {
             content += header;
             content += `
             <div class="paciente">
-                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} -
                 ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
             </div>
             `;
@@ -588,10 +602,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
+        saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
-
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept

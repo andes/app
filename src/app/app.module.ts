@@ -231,7 +231,7 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
-
+import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -318,6 +318,7 @@ export let RUPRegistry = {
     'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
+    'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
 };
@@ -357,13 +358,13 @@ let RUPComponentsArray = [
     PasesCamaComponent,
     CensoDiarioComponent,
     CensoMensualComponent,
-    InformeEpicrisisComponent
+    InformeEpicrisisComponent,
+    ElementoDeRegistroComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-
 
 registerLocaleData(localeEs, 'es');
 
