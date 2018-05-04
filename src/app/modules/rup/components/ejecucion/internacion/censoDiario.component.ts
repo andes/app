@@ -74,8 +74,8 @@ export class CensoDiarioComponent implements OnInit {
             let content = '';
             let tabla = document.getElementById('tabla');
             content += tabla.innerHTML;
-
-            this.servicioDocumentos.descargar(content).subscribe(data => {
+            let scssFile = '../censo/censoDiario';
+            this.servicioDocumentos.descargar(content, scssFile).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });

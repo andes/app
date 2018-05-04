@@ -6,8 +6,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { InternacionService } from '../../../services/internacion.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import * as moment from 'moment';
-import { forEach } from '@angular/router/src/utils/collection';
-
+import { DomSanitizer } from '@angular/platform-browser';
+import { Slug } from 'ng2-slugify';
+import { saveAs } from 'file-saver';
+import { DocumentosService } from '../../../../../services/documentos.service';
 
 @Component({
     templateUrl: 'censoMensual.html'
@@ -46,11 +48,14 @@ export class CensoMensualComponent implements OnInit {
         disponibles24: 0,
         disponibles0: 0
     };
-
+    // Usa el keymap 'default'
+    private slug = new Slug('default');
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
         private organizacionService: OrganizacionService,
+        private servicioDocumentos: DocumentosService,
+        private sanitizer: DomSanitizer,
         private servicioInternacion: InternacionService) { }
 
     ngOnInit() {
@@ -107,6 +112,32 @@ export class CensoMensualComponent implements OnInit {
 
     reseteaBusqueda() {
         this.listadoCenso = [];
+    }
+
+
+    descargarCensoMensual() {
+        setTimeout(() => {
+
+            let content = '';
+            let tabla = document.getElementById('tabla');
+            content += tabla.innerHTML;
+            let scssFile = '../censo/censoDiario';
+            this.servicioDocumentos.descargar(content, scssFile, true).subscribe(data => {
+                if (data) {
+                    // Generar descarga como PDF
+                    this.descargarArchivo(data, { type: 'application/pdf' });
+                } else {
+                    // Fallback a impresión normal desde el navegador
+                    window.print();
+                }
+            });
+        });
+    }
+
+    private descargarArchivo(data: any, headers: any): void {
+        let blob = new Blob([data], headers);
+        let nombreArchivo = this.slug.slugify('CENSOMENSUAL' + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
+        saveAs(blob, nombreArchivo);
     }
 
     /**

@@ -94,6 +94,8 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
+    public nombreArchivo = '';
+
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
@@ -547,6 +549,7 @@ export class PrestacionValidacionComponent implements OnInit {
         });
         setTimeout(() => {
 
+            this.nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term);
             let content = '';
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
@@ -569,7 +572,7 @@ export class PrestacionValidacionComponent implements OnInit {
             content += header;
             content += `
             <div class="paciente">
-                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} -
                 ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
             </div>
             `;
@@ -599,10 +602,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
+        saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
     }
-
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto
      * @param {IConcept} concept

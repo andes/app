@@ -1,11 +1,11 @@
 <section *ngIf="organizacion">
     <plex-box>
         <div class="row">
-            <div class="col-3">
+            <div class="col-2">
                 <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha Desde">
                 </plex-datetime>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Fecha Hasta">
                 </plex-datetime>
             </div>
@@ -18,10 +18,14 @@
                 <br>
                 <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
             </div>
+            <div class="col-2">
+                <br>
+                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo mensual" titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
+            </div>
         </div>
         <div class="row">&nbsp;</div>
         <div class="row">
-            <div class="col">
+            <!-- <div class="col" id="tabla">
                 <table class="table table-bordered" *ngIf="listadoCenso  && listadoCenso.length">
                     <thead>
                         <tr>
@@ -70,13 +74,13 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
 
 
         <div class="row">&nbsp;</div>
         <div class="row">
-            <div class="col">
+            <div class="col" id="tabla">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -92,7 +96,7 @@
                             <th rowspan="2">Camas disponibles a las 0hs</th>
                             <th rowspan="2">Camas disponibles a las 24hs</th>
                         </tr>
-                        <tr>
+                        <tr class="clean">
                             <th>Altas</th>
                             <th>Defunciones</th>
                         </tr>
