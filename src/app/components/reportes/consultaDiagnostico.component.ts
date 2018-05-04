@@ -64,15 +64,18 @@ export class ConsultaDiagnosticoComponent implements OnInit {
 
 
     }
+
     loadOrganizacion(event) {
         if (event.query) {
             let query = {
                 nombre: event.query
             };
-            this.servicioOrganizacion.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
         }
+
+
     }
 
 
