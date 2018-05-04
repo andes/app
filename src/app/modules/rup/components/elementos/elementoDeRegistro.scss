@@ -1,0 +1,28 @@
+    .drop-box {
+        width: 100%;
+        border: 2px dashed #AAAAAA;
+
+        color: #AAAAAA;
+    }
+
+    .add {
+        text-align: center;
+    }
+
+    .mdi-plus-circle {
+        color: #b9c512;
+        font-size: 3.5rem;
+    }
+
+    .svgTextarea {
+        background-image: url('/assets/svg/lapiz-tratamiento.svg');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-size: 9rem;
+        background-position: center;
+        height: 200px;
+    }
+
+    p {
+        margin-top: 2.1rem;
+    }

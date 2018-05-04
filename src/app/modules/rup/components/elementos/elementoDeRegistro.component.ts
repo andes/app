@@ -3,7 +3,8 @@ import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
-    templateUrl: 'elementoDeRegistro.html'
+    templateUrl: 'elementoDeRegistro.html',
+    styleUrls: ['elementoDeRegistro.scss']
 })
 
 export class ElementoDeRegistroComponent extends RUPComponent implements OnInit {
