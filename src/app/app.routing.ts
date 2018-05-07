@@ -91,7 +91,7 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
-  //Obras sociales
+  // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
   // Turnos

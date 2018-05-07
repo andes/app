@@ -129,7 +129,7 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
 
-//PUCO/ObraSocial
+// PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
 
 
