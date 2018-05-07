@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { CamasService } from '../../../services/camas.service';
 import { Router } from '@angular/router';
