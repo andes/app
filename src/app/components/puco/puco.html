@@ -4,17 +4,18 @@
         <div class="col">
             <plex-box type="primary">
                 <header>
-                    <h3>Datos de obra social</h3>
+                    <div class="page-title">Datos de obra social</div>
                 </header>
+                <p>Consultas de afiliación a obras sociales de salud.</p>
                 <div class="buscador">
                     <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
                         prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
                 </div>
+                <!--Loader-->
+                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
                 <div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
                     <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
                 </div>
-                <!--Loader-->
-                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
                 <!--Tabla de resultados por SimpleQuery -->
                 <table *ngIf="usuarios && usuarios.length" class="table table-striped">
                     <thead>
@@ -28,8 +29,8 @@
                     <tbody>
                         <tr *ngFor="let usuario of usuarios  | textFilter:textoLibre ; let i=index">
                             <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
-                            <td *ngIf="usuario.DNI; else sinDatos">
-                                {{usuario.DNI}}
+                            <td *ngIf="usuario.dni; else sinDatos">
+                                {{usuario.dni}}
                             </td>
                             <td *ngIf="usuario.financiador; else programaProFe">
                                 {{usuario.financiador}}

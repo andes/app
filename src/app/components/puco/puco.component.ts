@@ -44,12 +44,15 @@ export class PucoComponent implements OnInit, OnDestroy {
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
+            this.usuarios = [];
+            this.loading = false;
         }
 
         let search = this.searchTerm.trim();
-        if (/^([0-9])*$/.test(search)) {
+        if (/^([0-9])*$/.test(search) && !/^\s*$/.test(search)) {
             this.timeoutHandle = window.setTimeout(() => {
 
+                this.loading = true;
                 let apiMethod = Observable.forkJoin([
                     this.obraSocialService.getPuco({ dni: search }),
                     this.obraSocialService.getProFe({ dni: search })]).subscribe(t => {
@@ -60,6 +63,9 @@ export class PucoComponent implements OnInit, OnDestroy {
 
                         if (this.lastRequest) {
                             this.lastRequest.unsubscribe();
+                        }
+                        if (this.usuarios.length > 0) {
+                            this.loading = false;
                         }
                     });
 
