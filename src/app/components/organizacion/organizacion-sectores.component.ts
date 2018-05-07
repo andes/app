@@ -83,7 +83,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
 
     hasItems () {
-        return this.organizacion.unidadesOrganizativas && this.organizacion.unidadesOrganizativas.length > 0;
+        return this.organizacion.mapaSectores && this.organizacion.mapaSectores.length > 0;
     }
 
     /**
@@ -140,9 +140,9 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
 
     removeItem($event) {
-        let index = this.organizacion.unidadesOrganizativas.findIndex((item) => item === $event);
+        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
         if (index >= 0) {
-            this.organizacion.unidadesOrganizativas.splice(index, 1);
+            this.organizacion.mapaSectores.splice(index, 1);
         }
     }
 
@@ -226,8 +226,8 @@ export class OrganizacionSectoresComponent implements OnInit {
                 this.selectedItem.hijos.push(item);
                 // this.selectedItem.hijos = [...this.selectedItem.hijos];
             } else {
-                this.organizacion.unidadesOrganizativas.push(item);
-                this.organizacion.unidadesOrganizativas = [...this.organizacion.unidadesOrganizativas];
+                this.organizacion.mapaSectores.push(item);
+                this.organizacion.mapaSectores = [...this.organizacion.mapaSectores];
             }
         }
         this.disabledPanel = true;

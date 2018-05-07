@@ -39,5 +39,6 @@ export interface IOrganizacion {
     fechaAlta: Date;
     fechaBaja: Date;
     servicios: [ISnomedConcept];
-    unidadesOrganizativas: ISectores[];
+    mapaSectores: ISectores[];
+    unidadesOrganizativas: [ISnomedConcept];
 }

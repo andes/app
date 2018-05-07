@@ -9,7 +9,7 @@
                     <div class="row" *ngIf="organizacion">
                         <div class="col">
                             <div *ngIf="hasItems()">
-                                <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [selected]="selectedItem" [root]="unidad" (onAdd)="addItem($event)"
+                                <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [selected]="selectedItem" [root]="unidad" (onAdd)="addItem($event)"
                                     (onEdit)="editItem($event)" (onRemove)="removeItem($event)"></sectores-item>
                             </div>
                             <div class="text-center align-middle add-more">
