@@ -10,29 +10,29 @@
                     <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
                         prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
                 </div>
+                <div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
+                    <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
+                </div>
                 <!--Loader-->
                 <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-                <!--div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> El usuario no se ha encontrado.
-                </div-->
                 <!--Tabla de resultados por SimpleQuery -->
                 <table *ngIf="usuarios && usuarios.length" class="table table-striped">
                     <thead>
                         <tr>
                             <th>Apellido y nombre</th>
+                            <th>DNI</th>
                             <th>Obra Social</th>
-                            <th>Código</th>
                             <th>Transmite</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let usuario of usuarios  | textFilter:textoLibre ; let i=index">
                             <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
+                            <td *ngIf="usuario.DNI; else sinDatos">
+                                {{usuario.DNI}}
+                            </td>
                             <td *ngIf="usuario.financiador; else programaProFe">
                                 {{usuario.financiador}}
-                            </td>
-                            <td *ngIf="usuario.codigoFinanciador; else sinDatos">
-                                {{usuario.codigoFinanciador}}
                             </td>
                             <td *ngIf="usuario.transmite; else sinDatos">
                                 Si
