@@ -43,8 +43,20 @@ export class CamaEstadoComponent implements OnInit {
         }
     }
 
+    /**
+     * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
+     */
+
+    public getHabitacionName() {
+        let sec = this.cama.sectores;
+        if (sec && sec.length > 0) {
+            return sec[sec.length - 1].nombre;
+        }
+        return '';
+    }
+
     loadServicios($event) {
-        let servicios = this.organizacion.servicios;
+        let servicios = this.organizacion.unidadesOrganizativas;
         $event.callback(servicios);
     }
 

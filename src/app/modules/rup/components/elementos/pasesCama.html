@@ -15,7 +15,7 @@
                     {{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}
                 </td>
                 <td>
-                    {{ pase.habitacion + '/' + pase.nombre }}
+                    {{ getHabitacionName(pase) + '/' + pase.nombre }}
                 </td>
                 <td>
                     {{ pase.estados.unidadOrganizativa.term }}

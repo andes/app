@@ -15,4 +15,16 @@ export class PasesCamaComponent extends RUPComponent implements OnInit {
         });
     }
 
+    /**
+     * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
+     */
+
+    public getHabitacionName(pase) {
+        let sec = pase.sectores;
+        if (sec && sec.length > 0) {
+            return sec[sec.length - 1].nombre;
+        }
+        return '';
+    }
+
 }

@@ -44,7 +44,7 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     private provinciaNeuquen = null;
     private barrioNulleado = null;
     // con esta query de snomed trae todos los servicios.
-    private expression = '<<224891009';
+    private expression = '<<284548004';
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',

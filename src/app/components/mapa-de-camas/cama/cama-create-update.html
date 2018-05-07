@@ -28,8 +28,8 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <plex-select name="servicio" [required]="true" (getData)="loadServicios($event)" idField="term" labelField="term" [(ngModel)]="estado.unidadOrganizativa"
-                                label="Unidad organizativa">
+                            <plex-select name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas" idField="term" labelField="term"
+                                [(ngModel)]="estado.unidadOrganizativa" label="Unidad organizativa">
                             </plex-select>
                         </div>
                         <div class="col-4">
@@ -41,11 +41,11 @@
                             <plex-select name="genero" (getData)="loadGenero($event)" label="Sector por genero" idField="term" labelField="term" [(ngModel)]="estado.genero">
                             </plex-select>
                         </div>
-                    </div> 
+                    </div>
                     <div class="row">
                         <div class="col-12">
-                            <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)"
-                                label="Ubicación de la cama" idField="id" labelField="nombre" [(ngModel)]="cama.sector"></plex-select>
+                            <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)" label="Ubicación de la cama"
+                                idField="id" labelField="nombre" [(ngModel)]="cama.sector"></plex-select>
                         </div>
                     </div>
                     <div>
@@ -69,8 +69,7 @@
                         <div class="page-title">Mapa de la organización</div>
                     </header>
                     <div *ngIf="organizacion">
-                        <sectores-item *ngFor="let unidad of organizacion.unidadesOrganizativas" [root]="unidad" (onSelect)="onSelectItem($event)"
-                            [actions]="false"></sectores-item>
+                        <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" (onSelect)="onSelectItem($event)" [actions]="false"></sectores-item>
                     </div>
                 </plex-box>
             </div>
