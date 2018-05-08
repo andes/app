@@ -145,11 +145,11 @@
                                                         <td>
                                                             <div>
                                                                 <!-- Si no mapea a cie10 -->
-                                                                <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term &&!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria">
+                                                                <span *ngIf="!diagnostico.codificacionProfesional?.snomed?.term &&!diagnostico.codificacionProfesional?.cie10?.codigo && !diagnostico.codificacionAuditoria?.codigo">
                                                                     No encontrado
                                                                 </span>
                                                                 <!-- Mostramos el mapeo de la codificación snomed -->
-                                                                <span *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
+                                                                <span *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
                                                                     ({{diagnostico.codificacionProfesional.cie10.codigo}}) {{diagnostico.codificacionProfesional.cie10.sinonimo}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación reparada -->
@@ -217,7 +217,7 @@
                                                             <div>
 
                                                                 <!-- Mostramos el código de la prestación -->
-                                                                <span *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
+                                                                <span *ngIf="diagnostico.codificacionProfesional?.cie10 && (!diagnostico.codificacionAuditoria?.codigo || diagnostico.codificacionAuditoria?.codigo == diagnostico.codificacionProfesional?.cie10?.codigo )">
                                                                     ({{diagnostico.codificacionProfesional.cie10.codigo}}) {{diagnostico.codificacionProfesional.cie10.sinonimo}}
                                                                 </span>
                                                                 <!-- Mostramos la codificación reparada -->
