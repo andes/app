@@ -13,5 +13,14 @@
         "typeRoots": [
             "../node_modules/@types"
         ]
-    }
+    },
+    "include": [
+        "./**/*.ts",
+        "../node_modules/@andes/**/*.ts",
+        "../node_modules/ng2-slugify/**/*.ts"
+    ],
+    "exclude": [
+        "../node_modules/@schematics/**/*.ts",
+        "../node_modules/karma/**/*.ts"
+    ]
 }
