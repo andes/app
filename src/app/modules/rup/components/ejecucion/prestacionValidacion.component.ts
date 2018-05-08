@@ -349,7 +349,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
                         let idRegistro = element.solicitud.registros[0].id;
-                        if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
+                        if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId && pa.term === element.solicitud.tipoPrestacion.term)) {
                             this.asignarTurno[idRegistro] = element;
                         }
                     });
