@@ -16,7 +16,6 @@ export class DocumentosService {
     constructor(private http: Http) { }
 
     /**
-     * 
      * @param html HTML que se envía a la API para que genere y devuelva un PDF "institucionalizado"
      */
     descargar(html: string): Observable<any> {

@@ -175,7 +175,6 @@ export class HudsBusquedaComponent implements OnInit {
 
     devolverRegistrosHuds(registro, tipo) {
         let index;
-        debugger;
         switch (tipo) {
             case 'hallazgo':
             case 'producto':
