@@ -81,6 +81,11 @@
 
                 <div class="col-12 text-right">
 
+                    <button type="button" title="Devolver cama" class="btn btn-default" (click)="devolverCama(cama)"
+                        *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente" >
+                        <i class="mdi mdi-keyboard-return"></i>
+                    </button>
+
                     <button type="button" title="Preparar cama" class="btn btn-default " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
                         *ngIf="cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-bug"></i>

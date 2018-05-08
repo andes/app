@@ -19,8 +19,6 @@ export class CamaComponent implements OnInit {
 
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
-
-
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
     constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router) { }
@@ -98,6 +96,22 @@ export class CamaComponent implements OnInit {
         if (cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.idInternacion) {
             this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
         }
+    }
+
+    public devolverCama(cama) {
+        let dto = {
+            fecha: this.fecha,
+            estado: cama.ultimoEstado.estado,
+            unidadOrganizativa: cama.unidadOrganizativaOriginal,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
+        };
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+            this.evtCama.emit(null);
+        });
     }
 
     public cambiarEstado(cama, estado) {

@@ -84,14 +84,14 @@ export class OrganizacionService {
     }
 
     getFlatTree(organizacion, onlyLeaft = true) {
-        let items = organizacion.unidadesOrganizativas.reduce((_items, actual) => {
+        let items = organizacion.mapaSectores.reduce((_items, actual) => {
             return [..._items, ...this.traverseTree(actual, onlyLeaft)];
         } , []);
         return items;
     }
 
     getRuta(organizacion, item) {
-        for (let sector of organizacion.unidadesOrganizativas) {
+        for (let sector of organizacion.mapaSectores) {
             let res = this.makeTree(sector, item);
             if (res) {
                 return res;

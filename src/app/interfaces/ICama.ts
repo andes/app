@@ -13,6 +13,7 @@ export interface ICama {
         unidadConcept?: ISnomedConcept;
         nombre: String;
     }];
+    unidadOrganizativaOriginal: ISnomedConcept;
     nombre: String;
     tipoCama: ISnomedConcept;
     equipamiento: [ISnomedConcept]; // oxigeno / bomba / etc

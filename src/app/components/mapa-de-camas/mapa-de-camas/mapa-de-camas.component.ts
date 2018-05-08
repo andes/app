@@ -56,8 +56,13 @@ export class MapaDeCamasComponent implements OnInit {
         private camasService: CamasService) { }
 
     ngOnInit() {
+        this.refresh();
+    }
+
+    refresh () {
         // verificar permisos
         // buscar camas para la organización
+        this.limpiarFiltros();
         this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
             this.camas = camas;
 
@@ -92,6 +97,13 @@ export class MapaDeCamasComponent implements OnInit {
         this.filtros.estado = null;
         this.filtros.servicio = null;
         this.filtros.sector = null;
+        this.filtros.opciones = {
+            sectores: [],
+            habitaciones: [],
+            estados: [],
+            servicios: [],
+            tiposCamas: []
+        };
 
         this.camas = this.camasCopy;
     }
@@ -171,7 +183,11 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e, index) {
-        this.camas[index] = e;
+        if (e) {
+            this.camas[index] = e;
+        } else {
+            this.refresh();
+        }
     }
 
     /**
