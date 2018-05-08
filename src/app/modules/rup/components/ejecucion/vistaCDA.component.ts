@@ -22,6 +22,10 @@ export class VistaCDAComponent implements OnInit {
     // Usa el keymap 'default'
     private slug = new Slug('default');
     public dataXML = '';
+    public codificacionCDA = null;
+    public autorCDA = null;
+    public organizacionCDA = null;
+
     constructor(private servicioCDA: CDAService, private sanitizer: DomSanitizer, private auth: Auth) { }
 
     ngOnInit() {
@@ -29,13 +33,12 @@ export class VistaCDAComponent implements OnInit {
         let data = this.registro;
         this.servicioCDA.getJson(this.registro.data.cda_id).subscribe(
             cda => {
-                debugger
-            });
-        // let token = window.sessionStorage.getItem('jwt');
-        // this.urlcda = this.sanitizer.bypassSecurityTrustResourceUrl(environment.API + '/modules/cda/' + this.registro.data.cda_id + '?token=' + token);
-        // this.urlcda
-        // debugger;
+                this.autorCDA = cda.ClinicalDocument.author.assignedAuthor.assignedPerson ? cda.ClinicalDocument.author.assignedAuthor.assignedPerson : null;
+                this.organizacionCDA = cda.ClinicalDocument.author.assignedAuthor.representedOrganization ? cda.ClinicalDocument.author.assignedAuthor.representedOrganization : null;
+                this.codificacionCDA = cda.ClinicalDocument
+                    .component.structuredBody.component.section ? cda.ClinicalDocument.component.structuredBody.component.section : null;
 
+            });
     }
 
     descargar(archivo) {

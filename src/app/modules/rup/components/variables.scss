@@ -11,9 +11,10 @@ $adjunto: #b9c512;
 $todos: #111;
 $otro: #b9c512;
 $invert: #002738;
+$laboratorio: #a0a0a0;
 // definimos esta lista para poder acceder mediante la funcion map-get() ya que en sass no se puede hacer 
 // la interpolacion del string a una variable directamente
-$rup_colors: ( problema: $problema, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto, invert: $invert, todos: $todos, otro: $otro);
+$rup_colors: ( problema: $problema, laboratorio: $laboratorio, trastorno: $trastorno, situación: $problema, hallazgo: $hallazgo, procedimiento: $procedimiento, regimen: $procedimiento, entidad: $procedimiento, plan: $plan, producto: $producto, adjunto: $adjunto, elementoderegistro: $adjunto, invert: $invert, todos: $todos, otro: $otro);
 //TODO: hay que unificar los badges de distintas pantallas: tamaño, colores, bordes, espacios...    
 .badge-validada,
 .badge-success,

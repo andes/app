@@ -624,13 +624,13 @@
                                                 <div class="row m-0 p-0">
 
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup bg-success" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>
                                                     </ng-container>
                                                     <ng-container *ngIf="!emitirConceptos">
-                                                        <div class="icon-rup bg-success">
+                                                        <div class="icon-rup">
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>
                                                     </ng-container>

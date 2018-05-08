@@ -174,9 +174,8 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     devolverRegistrosHuds(registro, tipo) {
-        debugger;
         let index;
-
+        debugger;
         switch (tipo) {
             case 'hallazgo':
             case 'producto':
@@ -210,7 +209,7 @@ export class HudsBusquedaComponent implements OnInit {
                     index = this.registrosHuds.findIndex(r => {
                         return (r.data.id === registro.id);
                     });
-                    registro.class = 'plan';
+
                 } else {
                     tipo = 'cda';
                     registro = registro.data;
@@ -218,8 +217,7 @@ export class HudsBusquedaComponent implements OnInit {
                         return (r.data.id === registro.id);
                     });
                 }
-
-
+                registro.class = 'plan';
                 break;
             case 'procedimiento':
                 registro.class = registro.concepto.semanticTag;
@@ -236,7 +234,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'laboratorio':
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
-                    if (r.data.concepto.semanticTag === 'elemento de registro') {
+                    if (r.tipo === 'cda' && r.prestacion.snomed.semanticTag === 'elemento de registro') {
                         if (r.data.fecha === registro.fecha) {
                             return 1;
                         } else {
@@ -502,8 +500,6 @@ export class HudsBusquedaComponent implements OnInit {
                     estado: p.estados[p.estados.length - 1].tipo
                 };
             });
-
-            debugger;
             this.buscarCDAPacientes();
 
         });
@@ -581,7 +577,7 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
-    // Trae los medicamentos registrados para el paciente
+    // Trae los cdas registrados para el paciente
     buscarCDAPacientes() {
         this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
             this.cdas = registros;
@@ -600,6 +596,14 @@ export class HudsBusquedaComponent implements OnInit {
             });
 
             this.prestaciones = [...this.prestaciones, ...filtro];
+
+            // vamos a ordenar la prestaciones por fecha
+            this.prestaciones = this.prestaciones.sort(
+                function (a, b) {
+                    a = a.fecha;
+                    b = b.fecha;
+                    return b - a;
+                });
         });
     }
 

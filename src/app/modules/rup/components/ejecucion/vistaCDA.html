@@ -6,28 +6,59 @@
     </div>
     <div class="row">
         <div class="col">
-            <strong>Solicitante: </strong>
-            <div>
-                <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional }}</ng-container>
-            </div>
-            <div>
-                <strong>Organización:</strong>
-                <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion }}</ng-container>
-            </div>
-            <div>
-                <strong>Fecha:</strong> {{ registro.data.fecha | fecha }}
-            </div>
-
-
-
+            <strong>Profesional: </strong>
+            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional }}</ng-container>
+            <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}} {{autorCDA?.name?.given}}</ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Organización:</strong>
+            <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion }}</ng-container>
+            <ng-container *ngIf="!registro?.data.organizacion && organizacionCDA">{{organizacionCDA?.name}}</ng-container>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
-            <ng-container *ngIf="urlcda">
-                <iframe *ngIf="urlcda" width="100%" height="300" [src]="urlcda"></iframe>
+            <strong>Fecha:</strong> {{ registro.data.fecha | fecha }}
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <strong>Registros de la consulta:</strong>
+        </div>
+    </div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <ng-container *ngIf="codificacionCDA.code.$">
+                {{codificacionCDA.code.$.code }} - {{codificacionCDA.code.$.displayName}}
             </ng-container>
+        </div>
+    </div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <ng-container *ngIf="codificacionCDA.title && codificacionCDA.text">
+                {{codificacionCDA.title }}: {{codificacionCDA.text}}
+            </ng-container>
+        </div>
+    </div>
+    <div class="row" *ngIf="registro?.data?.adjuntos">
+        <div class="col" *ngIf="registro?.data?.adjuntos.length > 0">
+            <strong>Adjuntos:</strong>
+            <ul>
+                <ng-container *ngFor="let archivo of registro.data.adjuntos">
+                    <li>
+                        <a href="javascript:void(0)" (click)="descargar(archivo)">
+                            Descargar documento adjunto
+                            <i class="mdi mdi-36px mdi-file-pdf"></i>
+                        </a>
+                    </li>
+
+                </ng-container>
+            </ul>
         </div>
     </div>
 </div>
