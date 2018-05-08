@@ -82,6 +82,13 @@ export class EjecucionInternacionComponent implements OnInit {
         'refsetIds': []
     };
 
+    public epicrisis = {
+        'conceptId': '721919000',
+        'term': 'epicrisis de enfermería',
+        'fsn': 'epicrisis de enfermería (elemento de registro)',
+        'semanticTag': 'elemento de registro'
+    };
+
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -241,4 +248,30 @@ export class EjecucionInternacionComponent implements OnInit {
 
         });
     }
+
+
+    /**
+     * Crea la prestacion de epicrisis, si existe recupera la epicrisis
+     * creada anteriormente.
+     * Nos rutea a la ejecucion de RUP.
+     */
+    generaEpicrisis() {
+        let epicrisis;
+        let params = {
+            idPrestacionOrigen: this.prestacion.id
+        };
+        this.servicioPrestacion.get(params).subscribe(prestacionExiste => {
+            epicrisis = prestacionExiste;
+            if (!epicrisis.length) {
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
+                nuevaPrestacion.solicitud.prestacionOrigen = this.prestacion.id;
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    this.router.navigate(['rup/ejecucion', prestacion.id]);
+                });
+            } else {
+                this.router.navigate(['rup/ejecucion', epicrisis[0].id]);
+            }
+        });
+    }
+
 }
