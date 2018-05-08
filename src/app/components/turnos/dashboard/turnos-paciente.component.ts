@@ -19,6 +19,10 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
 })
 
 export class TurnosPacienteComponent implements OnInit {
+    cambioMotivo: boolean;
+    turnoArancelamiento: any;
+    showMotivoConsulta = false;
+    ultimosTurnos: any[];
     puedeRegistrarAsistencia: boolean;
     puedeLiberarTurno: boolean;
     agenda: IAgenda;
@@ -30,7 +34,6 @@ export class TurnosPacienteComponent implements OnInit {
     turnosPaciente = [];
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
-
     @Input('operacion')
     set operacion(value: string) {
         this._operacion = value;
@@ -60,7 +63,27 @@ export class TurnosPacienteComponent implements OnInit {
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
     }
 
+    cambiarMotivo() {
+        this.cambioMotivo = true;
+    }
+
+    showPanel() {
+        this.showMotivoConsulta = false;
+        this.showLiberarTurno = false;
+    }
+    showArancelamiento(turno) {
+        this.turnoArancelamiento = turno;
+        this.showMotivoConsulta = true;
+    }
     printArancelamiento(turno) {
+        if (this.cambioMotivo) {
+            let data = {
+                motivoConsulta: turno.motivoConsulta
+            };
+            this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
+
+            });
+        }
         this.showArancelamientoForm.emit(turno);
     }
 
@@ -71,6 +94,9 @@ export class TurnosPacienteComponent implements OnInit {
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
                     return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                });
+                this.ultimosTurnos = turnos.filter(t => {
+                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
                 });
                 this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
                     return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
@@ -135,4 +161,9 @@ export class TurnosPacienteComponent implements OnInit {
         this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
+
+    isToday(turno) {
+        return (moment(turno.horaInicio)).isSame(new Date(), 'day');
+    }
+
 }
