@@ -37,6 +37,7 @@ export class ListarPrestamosComponent implements OnInit {
 
     public verDevolver: Boolean = false;
     public mostrarMasOpciones = false;
+    public sortDescending = false;
     public _listarCarpetas;
 
     @Input('recargar')
@@ -156,6 +157,8 @@ export class ListarPrestamosComponent implements OnInit {
                 listaProfesionales = resultado;
                 event.callback(listaProfesionales);
             });
+        } else {
+            event.callback(this.espacioFisico || []);
         }
     }
 
@@ -175,7 +178,11 @@ export class ListarPrestamosComponent implements OnInit {
 
     switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
-        this.carpetasSeleccionadas = this.marcarTodas ?  this.carpetas : [];
+        this.carpetasSeleccionadas = this.marcarTodas ?
+            this.carpetas.filter(function (el) {
+                return el.estado === 'Prestada';
+            }) : [];
+        this.verDevolver = false;
     }
 
     devolverCarpetas() {
@@ -201,14 +208,33 @@ export class ListarPrestamosComponent implements OnInit {
     }
 
     loadEstados(event) {
-        let listaEstados = [{nombre: 'En Archivo', valor: 'En Archivo'}, {nombre: 'Prestada', valor: 'Prestada'}];
+        let listaEstados = [{ nombre: 'En Archivo', valor: 'En Archivo' }, { nombre: 'Prestada', valor: 'Prestada' }];
         event.callback(listaEstados);
     }
 
     devolver(solicitudCarpeta) {
-        this.carpetaDevueltaEmit.emit(solicitudCarpeta);
-        this.carpetaSeleccionada = solicitudCarpeta;
-        this.verDevolver = true;
+        if (this.carpetasSeleccionadas.length === 0) {
+            this.carpetaDevueltaEmit.emit(solicitudCarpeta);
+            this.carpetaSeleccionada = solicitudCarpeta;
+            this.verDevolver = true;
+        }
+    }
+
+    sortCarpetas() { // se divide this.carpetas en letras y en numeros para hacer el sort correspondiente
+        let val = this.sortDescending ? -1 : 1;
+        let carpetas_numeros = this.carpetas.filter(x => !isNaN(x._id));
+        let carpetas_letras = this.carpetas.filter(x => isNaN(x._id));
+        carpetas_letras.sort((a, b) => { return (a._id > b._id) ? val : (b._id > a._id) ? -val : 0; });
+        carpetas_numeros.sort((a, b) => { return (parseInt(a._id, 10) > parseInt(b._id, 10)) ? val : ((parseInt(b._id, 10) > parseInt(a._id, 10)) ? -val : 0); });
+
+        let carpetas_sort = carpetas_numeros.concat(carpetas_letras);
+        this.carpetas = [];
+        this.carpetas = carpetas_sort;
+    }
+
+    toogleSort() {
+        this.sortDescending = !this.sortDescending;
+        this.sortCarpetas();
     }
 
     onShowDevolver(event) {

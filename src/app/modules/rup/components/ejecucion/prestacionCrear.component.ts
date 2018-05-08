@@ -194,6 +194,7 @@ export class PrestacionCrearComponent implements OnInit {
                 this.router.navigate(['/rup/ejecucion', unPacientePresente.idPrestacion]);
             }
         } else {
+            // TODO: REVISAR
             // Marcar la asistencia al turno
             if (unPacientePresente.estado !== 'Suspendido' && unPacientePresente.turno.asistencia !== 'asistio') {
                 let patch: any = {

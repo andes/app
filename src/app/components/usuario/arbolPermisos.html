@@ -1,5 +1,5 @@
 <plex-accordion *ngIf="item.child">
-    <plex-panel (toggle)="expand($event)">
+    <plex-panel (toggle)="expand($event)" #panel>
         <div plex-accordion-title>
             {{item.title}}
             <span *ngIf="allModule">(todos)</span>
