@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
