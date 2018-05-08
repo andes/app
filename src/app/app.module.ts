@@ -34,10 +34,6 @@ import { PermisosComponent } from './utils/permisos/permisos.component';
 import { Ng2DragDropModule } from 'ng2-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 
 // Pipes
 import { EdadPipe } from './pipes/edad.pipe';
