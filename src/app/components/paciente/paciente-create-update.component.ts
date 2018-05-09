@@ -128,7 +128,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
-    localidadesNeuquen: any[];
+    localidadesNeuquen: any[] = [];
 
     paisArgentina = null;
     provinciaNeuquen = null;
@@ -411,7 +411,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     loadProvincias(event, pais) {
         if (pais && pais.id) {
             this.provinciaService.get({
-                'pais': pais.id
+                pais: pais.id
             }).subscribe(event.callback);
         }
     }
@@ -482,7 +482,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    onFocusout (type, value) {
+    onFocusout(type, value) {
 
         let item = null;
         for (let elem of this.pacienteModel.contacto) {
@@ -501,12 +501,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    verificarContactosRepetidos () {
+    verificarContactosRepetidos() {
         let valores = [];
         console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
-            if (item ) {
+            if (item) {
                 return false;
             } else {
                 valores.push(elem.valor);
