@@ -72,7 +72,7 @@ export class RevisionAgendaComponent implements OnInit {
     public estadosAsistencia = enumToArray(EstadosAsistencia);
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
-
+    public esAgendaOdonto = false;
 
     constructor(public plex: Plex,
         public router: Router,
@@ -85,6 +85,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.getCantidadTurnosAsignados();
+        this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
     }
 
     private getCantidadTurnosAsignados() {
@@ -398,5 +399,4 @@ export class RevisionAgendaComponent implements OnInit {
         this.refresh();
         this.cerrarAsistencia();
     }
-
 }
