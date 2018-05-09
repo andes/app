@@ -13,12 +13,17 @@ import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 
 @Component({
+    selector: 'censo-diario',
     templateUrl: 'censoDiario.html'
 })
 
 export class CensoDiarioComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-
+    @Input() params = {
+        fecha: null,
+        organizacion: null
+    };
+    @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion;
     public fecha = new Date();
@@ -26,6 +31,7 @@ export class CensoDiarioComponent implements OnInit {
     public listadoCenso = [];
     public ingresoEgreso = {};
     public resumenCenso;
+    public textoVolver = 'Ir al mapa de camas';
 
     public snomedEgreso = {
         conceptId: '58000006',
@@ -46,9 +52,16 @@ export class CensoDiarioComponent implements OnInit {
         private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
+        console.log(this.params);
 
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
+            if (this.params) {
+                this.textoVolver = 'Volver al censo mensual';
+                this.fecha = this.params.fecha;
+                this.organizacionSeleccionada = this.params.organizacion;
+                this.generarCenso();
+            }
         });
     }
 
@@ -60,7 +73,7 @@ export class CensoDiarioComponent implements OnInit {
         this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
             this.listadoCenso = respuesta.censoDiario.map(c => c.censo);
             this.resumenCenso = respuesta.resumen;
-            // this.completarResumenDiario();
+
         });
     }
 
@@ -97,7 +110,11 @@ export class CensoDiarioComponent implements OnInit {
     /**
     * Vuelve a la página anterior (mapa de camas)
     */
-    mapaDeCamas() {
-        this.router.navigate(['mapa-de-camas']);
+    volver() {
+        if (this.params) {
+            this.evtData.emit(false);
+        } else {
+            this.router.navigate(['mapa-de-camas']);
+        }
     }
 }
