@@ -809,7 +809,12 @@ export class DarTurnosComponent implements OnInit {
             if (environment.production === true) {
                 let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
                 let horario = moment(this.turno.horaInicio).format('HH:mm');
-                let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
+                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
+                let mensaje = this.paciente.apellido + ' el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.nombre +
+                    ' el dia ' + dia + ' a las ' + horario + ' hs. ';
+                if (agendaReturn.espacioFisico) {
+                    mensaje = mensaje + 'en ' + agendaReturn.espacioFisico.nombre + '.';
+                }
                 this.enviarSMS(pacienteSave, mensaje);
             } else {
                 this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
