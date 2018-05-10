@@ -173,16 +173,17 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.prestacion.ejecucion.registros.forEach(registro => {
 
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        console.log(registro.relacionadoCo);
                         registro.relacionadoCon.forEach((idRegistroRel, key) => {
                             console.log('idRegistroRel', idRegistroRel);
                             let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
                             // Es registro RUP o es un concepto puro?
                             if (esRegistro) {
                                 registro.relacionadoCon[key] = esRegistro;
-                            } else {
+                            } else if (idRegistroRel) {
                                 registro.relacionadoCon[key] = idRegistroRel;
                                 window.setTimeout(() => {
-                                    this.servicioSnomed.getByConceptId(idRegistroRel.conceptId, { format: '' }).subscribe(rel => {
+                                    this.servicioSnomed.getByConceptId(idRegistroRel, { format: '' }).subscribe(rel => {
                                         registro.relacionadoCon[key] = rel;
                                     });
                                 }, 1000);
@@ -191,12 +192,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     }
 
 
-
-                    // if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                    //     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                    //         return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
-                    //     });
-                    // }
                     if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
                         let parametros = {
                             conceptId: registro.concepto.conceptId,
