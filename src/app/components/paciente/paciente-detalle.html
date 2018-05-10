@@ -51,9 +51,15 @@
         <span>{{ paciente | sexo }}</span>
     </div>
 </div>
-<div class="row mb-1" *ngIf="paciente.cuil">
+<div class="row mb-2" *ngIf="paciente.cuil">
     <div class="col">
         <label>Cuil</label>
         <span>{{ paciente.cuil }}</span>
+    </div>
+</div>
+<label>SERVICIOS DE FUENTE AUTENTICA</label>
+<div class="row">
+    <div class="col-md-12">
+        <plex-button type="primary btn-sm" icon="account" label="Validar con servicios de Renaper" (click)="renaperVerification(paciente)"></plex-button>
     </div>
 </div>

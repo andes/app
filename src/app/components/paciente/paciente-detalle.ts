@@ -14,4 +14,9 @@ export class PacienteDetalleComponent {
      * @memberof PacienteDetalleComponent
      */
     @Input() paciente: IPaciente;
+
+    renaperVerification(patient) {
+        // TODO llamar al servicio de renaper y actualizar: Fatos básicos y Foto
+        // En caso que el paciente ya esté validado sólo traer la foto!
+    }
 }
