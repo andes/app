@@ -1,0 +1,34 @@
+<section>
+    <plex-box>
+        <header>
+            <div class="clearfix">
+                <div class="page-title">Estadísticas</div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-4">
+                <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="filter()"></plex-datetime>
+            </div> 
+            <div class="col-4">
+                <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="desde" (change)="filter()"></plex-datetime>
+            </div> 
+            <div class="col-4">
+                <plex-button type="success" label="Filtrar"></plex-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
+                Filtros
+            </div>
+            <div class="col-10">
+                Graficos
+                <div *ngIf="sexoData.length > 0">
+                    <canvas  baseChart [data]="sexoData" [labels]="sexoLabels" chartType="pie"></canvas>
+                </div>
+                <div *ngIf="edadData.length > 0">
+                        <canvas  baseChart [data]="edadData" [labels]="edadLabels" chartType="line"></canvas>
+                    </div>
+            </div>
+        </div>
+    </plex-box>
+</section>
