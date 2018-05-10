@@ -357,12 +357,17 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registros = this.prestacion.ejecucion.registros;
             let _registro = registros[this.indexEliminar];
 
+            this.ejecutarAccion([]);
+
             // Quitamos toda la vinculación que puedan tener con el registro
             registros.forEach(registro => {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
 
                     // relacionadoCon está populado, y debe comprobarse el id
                     if (registro.relacionadoCon[0].id === _registro.id) {
+                        registro.relacionadoCon = [];
+                    }
+                    if (registro.relacionadoCon[0] === _registro.concepto.conceptId) {
                         registro.relacionadoCon = [];
                     }
                 }
@@ -395,7 +400,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     confirmarEliminarRegistro(registroEliminar, scope) {
-        console.log('registroEliminar', registroEliminar);
         let index;
         if (registroEliminar.dragData) {
             this.conceptoAEliminar = registroEliminar.dragData.concepto;
@@ -493,13 +497,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             }
         } else {
-            if (registoExiste) {
+            if (registoExiste && !this.tipoBusqueda.puedeRepetirRegistros) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
 
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if (snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') {
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && !this.tipoBusqueda.puedeRepetirRegistros) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
@@ -551,7 +555,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
-                if (resultado && resultado.relacionadoCon && this.tipoBusqueda.conceptos) {
+                if (resultado && resultado.relacionadoCon && (this.tipoBusqueda && this.tipoBusqueda.conceptos)) {
                     if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda as any).conceptId)) === -1) {
                         resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
                     }
@@ -563,7 +567,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     /**
      * Recibe un conpecto de la HUDS para ejecutarlo
-     * @param resultadoHuds conpecto de la HUDS puede ser un hallazgo o una prestación
+     * @param resultadoHuds concepto de la HUDS puede ser un hallazgo o una prestación
      */
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
@@ -575,7 +579,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
-            if (!existeEjecucion) {
+            if (!existeEjecucion || this.tipoBusqueda.puedeRepetirRegistros) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
                     let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
@@ -660,8 +664,10 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     beforeSave() {
+
         let resultado = true;
-        if (!this.prestacion.ejecucion.registros.length) {
+
+        if (!this.prestacion.ejecucion.registros.length || (this.prestacion.ejecucion.registros.length === 1 && this.prestacion.ejecucion.registros[0].concepto.conceptId === '721145008')) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         } else {
@@ -696,8 +702,9 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                console.log(registro.relacionadoCon);
                 // Relacionar con otro registro o con un concepto
-                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id ? r.id : r.conceptId);
+                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id ? r.id : (r.concepto ? r.concepto.conceptId : r.conceptId));
             }
         });
 
@@ -797,8 +804,16 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     // Búsqueda que filtra según concepto
-    setTipoBusqueda(conceptos) {
-        this.tipoBusqueda = conceptos;
+    ejecutarAccion(accion) {
+        console.log(accion);
+        if (accion.conceptos) {
+            this.tipoBusqueda = accion;
+        } else {
+            this.registrosHuds = [...this.registrosHuds, accion];
+        }
+
+
+
     }
 
     cargaItems(registroActual, indice) {

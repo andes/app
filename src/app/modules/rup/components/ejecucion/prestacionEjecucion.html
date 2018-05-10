@@ -211,7 +211,7 @@
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
                                                         [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
                                                         (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro)"
-                                                        (ejecutarAccion)="setTipoBusqueda($event)"></rup>
+                                                        (ejecutarAccion)="ejecutarAccion($event)"></rup>
                                                     <!-- (ejecutarAccion)="confirmarEliminarRegistro($event.tipoAccion, $event.opciones)" -->
                                                 </div>
                                             </div>
