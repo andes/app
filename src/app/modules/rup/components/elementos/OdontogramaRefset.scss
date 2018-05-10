@@ -52,16 +52,28 @@ svg#cuadrante-sup-der {
 }
 
 .diente-trastorno {
-    fill: $trastorno;
+    fill: $trastorno !important; // fill: #ff4a1a;
 }
 
 .diente-hallazgo {
     fill: $hallazgo;
 }
 
+.diente-procedimiento-outline {
+    stroke: $procedimiento !important;
+}
+
+.diente-trastorno-outline {
+    stroke: $trastorno !important;
+}
+
+.diente-hallazgo-outline {
+    stroke: $hallazgo !important;
+}
+
 .evolucionada {
     // fill: repeating-linear-gradient( 45deg, #606dbc, #606dbc 3px, #465298 3px, #465298 6px) !important;
-    fill: rgb(133, 133, 133); // fill: url(#striped);
+    // fill: rgb(133, 133, 133); // fill: url(#striped);
     // fill: url(#pattern1);
 }
 
@@ -70,6 +82,16 @@ svg#cuadrante-sup-der {
     fill: none;
     stroke-width: 2;
     stroke-miterlimit: 10;
+}
+
+.st0 {
+    fill: none; // stroke: #5074B9;
+    stroke: rgb(133, 133, 133);
+    stroke-width: 1;
+    stroke-miterlimit: 10;
+    &.seleccionada {
+        // stroke: #47d3a7 !important;
+    }
 }
 
 .st1 {
@@ -81,7 +103,11 @@ svg#cuadrante-sup-der {
 }
 
 .seleccionada {
-    fill: #4776d3 !important;
+    fill: #47d3a7 !important;
+}
+
+.registrada {
+    fill: rgb(133, 133, 133) !important;
 }
 
 .pieza {
@@ -115,9 +141,10 @@ svg#cuadrante-sup-der {
     }
 }
 
-.st0 {
-    fill: none;
-    stroke: #5074B9;
-    stroke-width: 2;
-    stroke-miterlimit: 10;
+.ngx-pop {
+    width: auto;
+    background: #5bc0de;
+    color: black;
+    padding: 10px;
+    text-align: center;
 }
