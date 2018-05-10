@@ -324,9 +324,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // evitando tener que volver a buscar
             // this.filtrarResultados(this.busquedaActual);
             // Búsqueda por refset 🤔
-            this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
-                return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-            });
+
+            if (this.busquedaRefSet) {
+                this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
+                    return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                });
+            }
             this.filtrarResultados('buscadorBasico');
 
             // filtramos los resultados para la busqueda guiada y que quede armado

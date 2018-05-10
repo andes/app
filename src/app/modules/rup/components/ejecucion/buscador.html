@@ -108,7 +108,7 @@
         <div>
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-            <i *ngIf="busquedaPorConcepto" class="text-secondary ml-1">(
+            <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">(
                 <span *ngFor="let c of busquedaRefSet.conceptos">{{ c.concepto.fsn }} </span>)
             </i>
 
