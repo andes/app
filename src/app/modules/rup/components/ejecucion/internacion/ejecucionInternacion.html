@@ -153,21 +153,19 @@
 
 </section>
 <footer>
-
-    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="GUARDAR
-                                                    {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="guardarPrestacion() "
-        type="success " class="float-right "></plex-button>
-    &nbsp;
-    <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
-        label="VALIDAR {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="validar() " type="success " class="float-right "></plex-button>
-
-    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper
-                                                    validación {{prestacion?.solicitud?.tipoPrestacion?.term}} " (click)="romperValidacion() "
-        type="danger " class="float-right "></plex-button>
-
-    <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="cancelar() ">
-    </plex-button>&nbsp;&nbsp;
-    <plex-button class="float-left " type="danger " label="CANCELAR " (click)="cancelar() ">
-    </plex-button>
-
+    <div class="row">
+        <div class="col-6 text-left">
+            <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="cancelar() "></plex-button>
+        </div>
+        <div class="col-6 text-right">
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar Internación" (click)="guardarPrestacion() "
+                type="success " class="float-right "></plex-button>
+            
+            <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
+                label="Validar Internación " (click)="validar() " type="success " class="float-right "></plex-button>
+        
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación" (click)="romperValidacion() "
+                type="danger " class="float-right "></plex-button>
+        </div>
+    </div>
 </footer>
