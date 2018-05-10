@@ -165,6 +165,7 @@ export class HudsBusquedaComponent implements OnInit {
 
         switch (tipo) {
             case 'hallazgo':
+            case 'trastorno':
             case 'producto':
                 registro.class = registro.concepto.semanticTag;
                 index = this.registrosHuds.findIndex(r => {
