@@ -1,171 +1,143 @@
-<form class="plex-layout" #form="ngForm">
-    <section>
-        <div class="row">
-            <!--Panel Estadisticas-->
-            <div class="col-8">
-                <plex-box>
-                    <header>
+<div class="row">
+    <div class="col-8">
+        <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
+            <thead>
+                <!-- <th></th> -->
+                <th>Codigo</th>
+                <th>Descripción</th>
+                <th>Descripción General</th>
+                <th style="text-align:center">Total Consultas</th>
+                <th style="text-align:center">&lt;1</th>
+                <th style="text-align:center">1</th>
+                <th style="text-align:center">2 a 4</th>
+                <th style="text-align:center">5 a 9</th>
+                <th style="text-align:center">10 a 14</th>
+                <th style="text-align:center">15 a 24</th>
+                <th style="text-align:center">25 a 34</th>
+                <th style="text-align:center">35 a 44</th>
+                <th style="text-align:center">45 a 64</th>
+                <th style="text-align:center">65 +</th>
+                <th style="text-align:center">Masculino</th>
+                <th style="text-align:center">Femenino</th>
+                <th style="text-align:center">Indeterminado</th>
+            </thead>
+            <tbody>
+                <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover">
+                    <td>
+                        {{ diagnostico.codigo }}
+                    </td>
+                    <td>
+                        {{ diagnostico.nombre }}
+                    </td>
+                    <td>
+                        {{ diagnostico.reporteC2 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">
+                        {{ diagnostico.total }}
+                    </td>
+                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor1 > 0}">
+                        {{ diagnostico.sumaMenor1 }}
+                    </td>
+                    <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style="text-align:center"
+                        [ngClass]="{'font-weight-bold': diagnostico.sumaLactante > 0}">
+                        {{ diagnostico.sumaLactante }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
+                        {{ diagnostico.suma1 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma24 > 0}">
+                        {{ diagnostico.suma24 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma59 > 0}">
+                        {{ diagnostico.suma59 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
+                        {{ diagnostico.suma1014 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1524 > 0}">
+                        {{ diagnostico.suma1524 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
+                        {{ diagnostico.suma2534 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma3544 > 0}">
+                        {{ diagnostico.suma3544 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
+                        {{ diagnostico.suma4564 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor65 > 0}">
+                        {{ diagnostico.sumaMayor65 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
+                        {{ diagnostico.sumaMasculino }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaFemenino > 0}">
+                        {{ diagnostico.sumaFemenino }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaOtro > 0}">
+                        {{ diagnostico.sumaOtro }}
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="16"></td>
+                </tr>
+                <tr>
+                    <td colspan="3" style="text-align:right">
+                        Total de Consultas
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">{{totalConsultas}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total1 > 0}">{{total1}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total24 > 0}">{{total24}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total59 > 0}">{{total59}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total1014 > 0}">{{total1014}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total1524 > 0}">{{total1524}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total2534 > 0}">{{total2534}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total3544 > 0}">{{total3544}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total4564 > 0}">{{total4564}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMayor65 > 0}">{{totalMayor65}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMasculino > 0}">{{totalMasculino}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalFemenino > 0}">{{totalFemenino}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalOtro > 0}">{{totalOtro}}</td>
 
-                        <div class="row">
-                            <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
-                                    class="fechas">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
-                                    class="fechas">
-                                </plex-datetime>
-                            </div>
-                            <br>
-                        </div>
-                        <br>
-                    </header>
+                </tr>
+            </tfoot>
+        </table>
 
-                    <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
-                        <thead>
-                            <!-- <th></th> -->
-                            <th>Codigo</th>
-                            <th>Descripción</th>
-                            <th>Descripción General</th>
-                            <th style="text-align:center">Total Consultas</th>
-                            <th style="text-align:center">&lt;1</th>
-                            <th style="text-align:center">1</th>
-                            <th style="text-align:center">2 a 4</th>
-                            <th style="text-align:center">5 a 9</th>
-                            <th style="text-align:center">10 a 14</th>
-                            <th style="text-align:center">15 a 24</th>
-                            <th style="text-align:center">25 a 34</th>
-                            <th style="text-align:center">35 a 44</th>
-                            <th style="text-align:center">45 a 64</th>
-                            <th style="text-align:center">65 +</th>
-                            <th style="text-align:center">Masculino</th>
-                            <th style="text-align:center">Femenino</th>
-                            <th style="text-align:center">Indeterminado</th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': seleccionada[i]}"
-                                (click)="datosPacientes(i)">
-                                <td>
-                                    {{ diagnostico.codigo }}
-                                </td>
-                                <td>
-                                    {{ diagnostico.nombre }}
-                                </td>
-                                <td>
-                                    {{ diagnostico.reporteC2 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">
-                                    {{ diagnostico.total }}
-                                </td>
-                                <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor1 > 0}">
-                                    {{ diagnostico.sumaMenor1 }}
-                                </td>
-                                <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style="text-align:center"
-                                    [ngClass]="{'font-weight-bold': diagnostico.sumaLactante > 0}">
-                                    {{ diagnostico.sumaLactante }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
-                                    {{ diagnostico.suma1 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma24 > 0}">
-                                    {{ diagnostico.suma24 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma59 > 0}">
-                                    {{ diagnostico.suma59 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
-                                    {{ diagnostico.suma1014 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1524 > 0}">
-                                    {{ diagnostico.suma1524 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
-                                    {{ diagnostico.suma2534 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma3544 > 0}">
-                                    {{ diagnostico.suma3544 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
-                                    {{ diagnostico.suma4564 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor65 > 0}">
-                                    {{ diagnostico.sumaMayor65 }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
-                                    {{ diagnostico.sumaMasculino }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaFemenino > 0}">
-                                    {{ diagnostico.sumaFemenino }}
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaOtro > 0}">
-                                    {{ diagnostico.sumaOtro }}
-                                </td>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="16"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="3" style="text-align:right">
-                                    Total de Consultas
-                                </td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">{{totalConsultas}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total1 > 0}">{{total1}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total24 > 0}">{{total24}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total59 > 0}">{{total59}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total1014 > 0}">{{total1014}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total1524 > 0}">{{total1524}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total2534 > 0}">{{total2534}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total3544 > 0}">{{total3544}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': total4564 > 0}">{{total4564}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMayor65 > 0}">{{totalMayor65}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMasculino > 0}">{{totalMasculino}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': totalFemenino > 0}">{{totalFemenino}}</td>
-                                <td style="text-align:center" [ngClass]="{'font-weight-bold': totalOtro > 0}">{{totalOtro}}</td>
-
-                            </tr>
-                        </tfoot>
-                    </table>
-                </plex-box>
-            </div>
-            <!--Panel Pacientes-->
-            <div class="col-4">
-                <plex-box>
-                    <fieldset *ngIf="listaPacientes">
-                        <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
-                        <table class="table table-striped table-sm">
-                            <thead>
-                                <th>Documento</th>
-                                <th>Nombre Completo</th>
-                                <th>Sexo</th>
-                                <th>Edad</th>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let paciente of diagnostico.pacientes" class="hover" [ngClass]="{'bg-inverse text-white': false}">
-                                    <td>
-                                        {{ paciente.documento}}
-                                    </td>
-                                    <td>
-                                        {{ paciente | paciente}}
-                                    </td>
-                                    <td>
-                                        {{ paciente.sexo}}
-                                    </td>
-                                    <td>
-                                        {{ paciente | edad}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </fieldset>
-                </plex-box>
-            </div>
-        </div>
-    </section>
-    <footer>
-        <plex-button type="success" label="Imprimir" (click)="imprimir()" class="float-right"></plex-button>
-    </footer>
-</form>
+    </div>
+    <!--Panel Pacientes-->
+    <div class="col-4">
+        <plex-box>
+            <fieldset *ngIf="listaPacientes">
+                <legend>Listado de Pacientes {{diagnostico.reporteC2}}</legend>
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <th>Documento</th>
+                        <th>Nombre Completo</th>
+                        <th>Sexo</th>
+                        <th>Edad</th>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let paciente of diagnostico.pacientes" class="hover" [ngClass]="{'bg-inverse text-white': false}">
+                            <td>
+                                {{ paciente.documento}}
+                            </td>
+                            <td>
+                                {{ paciente | paciente}}
+                            </td>
+                            <td>
+                                {{ paciente.sexo}}
+                            </td>
+                            <td>
+                                {{ paciente | edad}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </fieldset>
+        </plex-box>
+    </div>
+</div>

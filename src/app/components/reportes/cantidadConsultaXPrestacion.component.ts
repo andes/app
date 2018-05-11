@@ -10,12 +10,12 @@ import * as moment from 'moment';
 
 
 @Component({
-    selector: 'consultaDiagnostico',
-    templateUrl: 'consultaDiagnostico.html',
+    selector: 'cantidadConsultaXPrestacion',
+    templateUrl: 'cantidadConsultaXPrestacion.html',
 
 })
 
-export class ConsultaDiagnosticoComponent implements OnInit {
+export class CantidadConsultaXPrestacionComponent implements OnInit {
     private _diagnosticos;
     @Input('diagnosticos') // recibe un array de parametros
     set diagnosticos(value: any) {
@@ -37,7 +37,6 @@ export class ConsultaDiagnosticoComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         private server: Server,
-
         private auth: Auth,
 
 

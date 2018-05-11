@@ -26,6 +26,10 @@ export class AgendaService {
     findConsultaDiagnosticos(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/consultaDiagnostico', { params: params, showError: true });
     }
+    findCantidadConsultaXPrestacion(params: any): Observable<any> {
+        return this.server.get(this.agendaUrl + '/cantidadConsultaXPrestacion', { params: params, showError: true });
+    }
+
 
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
