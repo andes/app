@@ -7,14 +7,14 @@
     <div class="row">
         <div class="col">
             <strong>Profesional: </strong>
-            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional }}</ng-container>
+            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional.apellido }} {{registro?.data.profesional.nombre }}</ng-container>
             <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}} {{autorCDA?.name?.given}}</ng-container>
         </div>
     </div>
     <div class="row">
         <div class="col">
             <strong>Organización:</strong>
-            <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion }}</ng-container>
+            <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion.nombre }}</ng-container>
             <ng-container *ngIf="!registro?.data.organizacion && organizacionCDA">{{organizacionCDA?.name}}</ng-container>
         </div>
     </div>
