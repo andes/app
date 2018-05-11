@@ -174,6 +174,7 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     devolverRegistrosHuds(registro, tipo) {
+        debugger;
         let index;
         switch (tipo) {
             case 'hallazgo':
@@ -233,7 +234,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'laboratorio':
                 registro.class = 'laboratorio';
                 index = this.registrosHuds.findIndex(r => {
-                    if (r.tipo === 'cda' && r.prestacion.snomed.semanticTag === 'elemento de registro') {
+                    if (r.tipo === 'cda' && r.data.prestacion.snomed.semanticTag === 'elemento de registro') {
                         if (r.data.fecha === registro.fecha) {
                             return 1;
                         } else {
