@@ -128,7 +128,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
-    localidadesNeuquen: any[];
+    localidadesNeuquen: any[] = [];
 
     paisArgentina = null;
     provinciaNeuquen = null;
@@ -411,7 +411,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     loadProvincias(event, pais) {
         if (pais && pais.id) {
             this.provinciaService.get({
-                'pais': pais.id
+                pais: pais.id
             }).subscribe(event.callback);
         }
     }
@@ -482,7 +482,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    onFocusout (type, value) {
+    onFocusout(type, value) {
 
         let item = null;
         for (let elem of this.pacienteModel.contacto) {
@@ -501,12 +501,12 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    verificarContactosRepetidos () {
+    verificarContactosRepetidos() {
         let valores = [];
         console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
-            if (item ) {
+            if (item) {
                 return false;
             } else {
                 valores.push(elem.valor);
@@ -614,16 +614,16 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     }
 
                     // Cuilifico el paciente si aún no pose cuil.
-                    if (!pacienteGuardar.cuil) {
-                         this.ansesService.get(pacienteGuardar).subscribe(rta => {
-                            if (rta && rta.cuil) {
-                                this.pacienteService.patch(pacienteGuardar.id, {
-                                    'op': 'updateCuil',
-                                    'cuil': rta.cuil
-                                }).subscribe(result2 => {});
-                            }
-                        });
-                    }
+                    // if (!pacienteGuardar.cuil) {
+                    //      this.ansesService.get(pacienteGuardar).subscribe(rta => {
+                    //         if (rta && rta.cuil) {
+                    //             this.pacienteService.patch(pacienteGuardar.id, {
+                    //                 'op': 'updateCuil',
+                    //                 'cuil': rta.cuil
+                    //             }).subscribe(result2 => {});
+                    //         }
+                    //     });
+                    // }
                     this.plex.alert('Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile

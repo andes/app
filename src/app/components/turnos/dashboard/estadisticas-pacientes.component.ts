@@ -62,6 +62,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     inasistencias = 0;
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
+    nuevaCarpeta = '';
+    carpetaEfector: any;
 
     // Inicialización
     constructor(
@@ -81,6 +83,33 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.fechaHasta = new Date(hoy.fechaHasta);
     }
 
+    getNroCarpeta() {
+        if (this._paciente && this._paciente.carpetaEfectores && this._paciente.carpetaEfectores.length > 0) {
+            let resultado: any = this._paciente.carpetaEfectores.filter((carpeta: any) => {
+                return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
+            });
+            if (resultado && resultado[0]) {
+                return resultado[0].nroCarpeta;
+            } else { return null; }
+        } else { return null; }
+    }
 
-
+    nuevoNroCarpeta() {
+        if (this.nuevaCarpeta !== '') {
+            this.servicePaciente.patch(this._paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this._paciente.carpetaEfectores }).subscribe(
+                resultadoCarpeta => {
+                    this.carpetaEfector = {
+                        organizacion: {
+                            _id: this.auth.organizacion.id,
+                            nombre: this.auth.organizacion.nombre
+                        },
+                        nroCarpeta: this.nuevaCarpeta
+                    };
+                    this._paciente.carpetaEfectores.push(this.carpetaEfector);
+                    this.plex.alert('Nro. de carpeta Asignado', 'Información');
+                },
+                error => { this.plex.toast('danger', 'No se asignó el Nro. de carpeta, intente nuevamente.'); }
+            );
+        }
+    }
 }
