@@ -14,6 +14,10 @@ import * as moment from 'moment';
 
 export class ReporteC2Component implements OnInit {
     private _diagnosticos;
+    private diagnostico;
+    public seleccionada = [];
+    public listaPacientes = false;
+
     @Input('diagnosticos') // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
@@ -40,6 +44,18 @@ export class ReporteC2Component implements OnInit {
 
     public ngOnInit() {
 
+    }
+    datosPacientes(indice) {
+        this.diagnostico = this.diagnosticos[indice];
+        for (let i = 0; i < this.seleccionada.length; i++) {
+            this.seleccionada[i] = false;
+        }
+        if (this.diagnostico.ficha !== null) {
+            this.seleccionada[indice] = true;
+            this.listaPacientes = true;
+        } else {
+            this.listaPacientes = false;
+        }
     }
 
 

@@ -22,7 +22,8 @@
                 <th style="text-align:center">Indeterminado</th>
             </thead>
             <tbody>
-                <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover">
+                <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': seleccionada[i]}"
+                    (click)="datosPacientes(i)">
                     <td>
                         {{ diagnostico.codigo }}
                     </td>

@@ -1,23 +1,29 @@
 <div class="row">
     <div class="col">
-        <div style="overflow-x: auto;">
-            <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
-                <thead>
-                    <!-- <th></th> -->
-                    <th>Nombre del paciente</th>
-                    <th>Apellido del paciente</th>
-                    <th>Documento del paciente</th>
-                    <th>Código de prestación</th>
-                    <th>Descripcion de prestación</th>
-                    <th>Código de auditoria</th>
-                    <th>Nombre de auditoria</th>
-                    <th>Código cie10</th>
-                    <th>Nombre cie10</th>
-                    <th>Código Snomed</th>
-                    <th>Nombre Snomed</th>
-                </thead>
+
+        <plex-box type="primary">
+            <header>
+                <table *ngIf="diagnosticos.length>0" style="table-layout:fixed" class="table table-fixed">
+                    <thead>
+                        <tr>
+                            <th>Nombre del paciente</th>
+                            <th>Apellido del paciente</th>
+                            <th>Documento del paciente</th>
+                            <th>Código de prestación</th>
+                            <th>Descripcion de prestación</th>
+                            <th>Código de auditoria</th>
+                            <th>Nombre de auditoria</th>
+                            <th>Código cie10</th>
+                            <th>Nombre cie10</th>
+                            <th>Código Snomed</th>
+                            <th>Nombre Snomed</th>
+                        </tr>
+                    </thead>
+                </table>
+            </header>
+            <table class="table table-fixed">
                 <tbody>
-                    <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover">
+                    <tr class="hover" *ngFor="let diagnostico of diagnosticos; let i=index">
                         <td>
                             {{ diagnostico.nombrePaciente }}
                         </td>
@@ -57,7 +63,7 @@
                 </tbody>
 
             </table>
-        </div>
-
+        </plex-box>
     </div>
+
 </div>

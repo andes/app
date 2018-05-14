@@ -1,13 +1,19 @@
 <div class="row">
     <div class="col">
-        <div style="overflow-x: auto;">
-            <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
-                <thead>
-                    <!-- <th></th> -->
-                    <th>Nombre de la prestación</th>
-                    <th>ConceptId de la prestación</th>
-                    <th>Total de turnos asignados</th>
-                </thead>
+        <plex-box type="primary">
+            <header>
+                <table *ngIf="diagnosticos.length>0" style="table-layout:fixed" class="table table-fixed">
+                    <thead>
+                        <tr>
+                            <!-- <th></th> -->
+                            <th>Nombre de la prestación</th>
+                            <th>ConceptId de la prestación</th>
+                            <th>Total de turnos asignados</th>
+                        </tr>
+                    </thead>
+                </table>
+            </header>
+            <table style="table-layout:fixed" class="table table-fixed">
                 <tbody>
                     <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover">
                         <td>
@@ -21,9 +27,8 @@
                         </td>
                     </tr>
                 </tbody>
-
             </table>
-        </div>
-
+        </plex-box>
     </div>
+
 </div>

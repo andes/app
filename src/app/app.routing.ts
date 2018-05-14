@@ -129,7 +129,7 @@ const appRoutes: Routes = [
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
   // Reportes
-  { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
+  { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
   { path: 'consultaDiagnostico', component: ConsultaDiagnosticoComponent, canActivate: [RoutingGuard] },
   { path: 'encabezadoReportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
   { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingGuard] },

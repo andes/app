@@ -28,9 +28,9 @@ export class EncabezadoReportesComponent implements OnInit {
     public organizacion;
     public tipoReportes;
     public diagnosticos = [];
-    public diagnostico;
-    public seleccionada = [];
-    public listaPacientes = false;
+    //public diagnostico;
+    //public seleccionada = [];
+    //public listaPacientes = false;
 
 
     //Propiedades reporteC2
@@ -116,18 +116,19 @@ export class EncabezadoReportesComponent implements OnInit {
 
     }
 
-    datosPacientes(indice) {
-        this.diagnostico = this.diagnosticos[indice];
-        for (let i = 0; i < this.seleccionada.length; i++) {
-            this.seleccionada[i] = false;
-        }
-        if (this.diagnostico.ficha !== null) {
-            this.seleccionada[indice] = true;
-            this.listaPacientes = true;
-        } else {
-            this.listaPacientes = false;
-        }
-    }
+    // datosPacientes(indice) {
+    //     console.log("aa", this.diagnostico);
+    //     this.diagnostico = this.diagnosticos[indice];
+    //     for (let i = 0; i < this.seleccionada.length; i++) {
+    //         this.seleccionada[i] = false;
+    //     }
+    //     if (this.diagnostico.ficha !== null) {
+    //         this.seleccionada[indice] = true;
+    //         this.listaPacientes = true;
+    //     } else {
+    //         this.listaPacientes = false;
+    //     }
+    // }
 
 
 
