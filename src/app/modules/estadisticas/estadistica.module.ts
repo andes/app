@@ -10,6 +10,7 @@ import { EstAgendasService } from './services/agenda.service';
 
 // Components
 import { HomeComponent } from './components/home.component';
+import { FiltrosComponent } from './components/citas/filtros.component';
 
 // Module
 import { PlexModule } from '@andes/plex';
@@ -29,10 +30,12 @@ import { HttpModule } from '@angular/http';
         HttpModule,
     ],
     declarations: [
-        HomeComponent
+        HomeComponent,
+        FiltrosComponent
     ],
     entryComponents: [
-        HomeComponent
+        HomeComponent,
+        FiltrosComponent
     ],
     exports: [],
     providers: [
