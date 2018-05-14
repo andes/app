@@ -8,16 +8,22 @@
         <div>
             <turnos-filtros (filter)="filter($event)" [params]="filtros"></turnos-filtros>
             <div class="row">
-                <div class="col-6">
+                <div class="col-4">
                     <h3>Por sexo</h3>
                     <div *ngIf="sexoData.length > 0">
                         <canvas  baseChart [data]="sexoData" [labels]="sexoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
-                <div class="col-6">
+                <div class="col-4">
                     <h3>Por edad</h3>
                     <div *ngIf="edadData.length > 0">
                         <canvas baseChart [data]="edadData" [options]="{legend: { display: false }}" [labels]="edadLabels" chartType="line"></canvas>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <h3>Por estado</h3>
+                    <div *ngIf="estadoData.length > 0">
+                        <canvas baseChart [data]="estadoData"   [labels]="estadoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
             </div>

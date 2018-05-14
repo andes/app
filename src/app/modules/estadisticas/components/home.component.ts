@@ -39,6 +39,9 @@ export class HomeComponent implements AfterViewInit {
     public prestacionLabels = [];
     public prestacionData = [];
 
+    public estadoLabels = [];
+    public estadoData = [];
+
     public barOptions = {
         legend: { display: false },
         scales: {
@@ -72,6 +75,8 @@ export class HomeComponent implements AfterViewInit {
         this.administrativosData = [];
         this.prestacionLabels = [];
         this.prestacionData = [];
+        this.estadoLabels = [];
+        this.estadoData = [];
 
 
         let params = {
@@ -112,6 +117,13 @@ export class HomeComponent implements AfterViewInit {
                 this.data.prestacion.forEach((item) => {
                     this.prestacionLabels.push(item.nombre);
                     this.prestacionData.push(item.total);
+                });
+            }
+
+            if (this.data.estado_turno) {
+                this.data.estado_turno.forEach((item) => {
+                    this.estadoLabels.push(item._id);
+                    this.estadoData.push(item.count);
                 });
             }
 
