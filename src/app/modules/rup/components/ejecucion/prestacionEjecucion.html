@@ -288,7 +288,8 @@
                         </tab>
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
-                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
+
+                                <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento' || registro.tipo === 'procedimiento'">
                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
@@ -395,7 +396,7 @@
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" [busquedaRefSet]="tipoBusqueda" (tagBusqueda)="getTipoBusqueda($event)"
-                                (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event, tipoBusqueda.concepto)"
+                                (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event, tipoBusqueda)"
                                 (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                         </plex-tab>
