@@ -452,6 +452,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+
+        if (registroDestino && registroDestino.concepto) {
+            registroDestino = registroDestino.concepto; // quickfix
+        }
+
         let valor;
         let resultado;
         this.isDraggingConcepto = false;
@@ -497,13 +502,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             }
         } else {
-            if (registoExiste && !this.tipoBusqueda.puedeRepetirRegistros) {
+            if (registoExiste && (!this.tipoBusqueda && !this.tipoBusqueda.puedeRepetirRegistros)) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
 
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && !this.tipoBusqueda.puedeRepetirRegistros) {
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (this.tipoBusqueda && !this.tipoBusqueda.puedeRepetirRegistros)) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
@@ -579,7 +584,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
-            if (!existeEjecucion || this.tipoBusqueda.puedeRepetirRegistros) {
+            if (!existeEjecucion || (this.tipoBusqueda && this.tipoBusqueda.puedeRepetirRegistros)) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
                     let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
@@ -805,7 +810,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Búsqueda que filtra según concepto
     ejecutarAccion(accion) {
-        console.log(accion);
         if (accion.conceptos) {
             this.tipoBusqueda = accion;
         } else {
