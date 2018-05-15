@@ -60,14 +60,17 @@ svg#cuadrante-sup-der {
 }
 
 .diente-procedimiento-outline {
+    fill: none !important;
     stroke: $procedimiento !important;
 }
 
 .diente-trastorno-outline {
+    fill: none !important;
     stroke: $trastorno !important;
 }
 
 .diente-hallazgo-outline {
+    fill: none !important;
     stroke: $hallazgo !important;
 }
 
@@ -75,6 +78,7 @@ svg#cuadrante-sup-der {
     // fill: repeating-linear-gradient( 45deg, #606dbc, #606dbc 3px, #465298 3px, #465298 6px) !important;
     // fill: rgb(133, 133, 133); // fill: url(#striped);
     // fill: url(#pattern1);
+    // fill: rgb(133, 133, 133);
 }
 
 .evolucionada-stroke {
@@ -103,11 +107,24 @@ svg#cuadrante-sup-der {
 }
 
 .seleccionada {
-    fill: #47d3a7 !important;
+    fill: #47d3a7;
 }
 
 .registrada {
-    fill: rgb(133, 133, 133) !important;
+    fill: rgb(133, 133, 133);
+    &.pieza-hallazgo {
+        fill: $hallazgo
+    }
+    &.pieza-trastorno {
+        fill: $trastorno
+    }
+    &.pieza-procedimiento {
+        fill: $procedimiento
+    }
+}
+
+circle {
+    fill: none;
 }
 
 .pieza {
