@@ -1,3 +1,4 @@
+import { setTimeout } from 'timers';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
 import { ISnomedConcept } from './../../interfaces/snomed-concept.interface';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
@@ -16,6 +17,8 @@ import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interf
 })
 export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
+    showRelacion: boolean;
+    relacionesActuales: IPrestacionRegistro[];
     relaciones: IPrestacionRegistro[];
     ultimoOdontogramaIndex: number;
     tooltip: any;
@@ -30,7 +33,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     public conceptos: any[] = [];
 
     showPopOver = false;
-    popOverText = '';
+    popOverText: any = '';
 
     public prestacionesCaras: any = {
         activo: true,
@@ -157,71 +160,107 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.odontograma.cuadranteSuperiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
             this.odontograma.cuadranteInferiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
             this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
-        });
+            if (this.params) {
+                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+                    this.conceptos = resultado;
+                });
 
-        if (this.params) {
-            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
-                this.conceptos = resultado;
-            });
-
-            this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
-        }
-
-
-
-        if (this.registro.valor && this.registro.valor.piezas) {
-            // traer las evoluciones del odontograma (odontogramas anteriores)
-        }
-        let params: IPrestacionGetParams = {
-            idPaciente: this.paciente.id,
-            conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
-            estado: 'validada'
-        };
-
-        this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-            this.odontogramasHUDS = odontogramasPaciente;
-            if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
-                this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
-                this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
-
-                this.armarRelaciones();
+                this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
             }
+
+
+
+            if (this.registro.valor && this.registro.valor.piezas) {
+                // traer las evoluciones del odontograma (odontogramas anteriores)
+            }
+            let params: IPrestacionGetParams = {
+                idPaciente: this.paciente.id,
+                conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
+                estado: 'validada'
+            };
+
+            this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
+                this.odontogramasHUDS = odontogramasPaciente;
+                if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
+
+                }
+                this.armarRelaciones();
+            });
         });
+
 
     }
 
     armarRelaciones() {
-        this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.shift();
-        this.relaciones = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros;
+        if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
 
-        this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-            x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || {};
-        });
-        this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-            x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || {};
-        });
-        this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho.forEach(x => {
-            x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || {};
-        });
-        this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-            x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || {};
-        });
+            // Quito el odontograma porque se necesitan sólo los registros y sus relaciones
+            this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.shift();
+            this.relaciones = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros;
+            this.relacionesActuales = this.registro.registros;
+
+            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerecho.forEach(x => {
+                x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
+                x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho.forEach(x => {
+                x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
+                x.relacion = this.relaciones.find(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+        }
+
+        if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+            // Esta consulta
+            this.odontograma.cuadranteSuperiorDerecho.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || '{}';
+            });
+            this.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || '{}';
+            });
+            this.odontograma.cuadranteInferiorDerecho.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || '{}';
+            });
+            this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.find(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId)) || '{}';
+            });
+        }
+
+    }
+
+    getRelacionClass(diente, cara = '') {
+        if (this.prestacion.ejecucion.registros.findIndex(x => x.relacionadoCon.length > 0) !== -1) {
+            let rel = this.prestacion.ejecucion.registros.find(x => x.relacionadoCon.find(y => y.concepto ? y.concepto.conceptId === diente.concepto.conceptId : y === diente.concepto.conceptId));
+            if (rel) {
+                return 'diente-' + rel.concepto.semanticTag + (cara === 'pieza' ? '-outline' : '');
+            }
+        }
     }
 
     getRelacion(cuadrante, diente, cara) {
-        console.info(cuadrante, diente, cara);
         return this.ultimoOdontograma.valor.odontograma[String(cuadrante)].find(z => z.cara === cara);
 
     }
 
     classRelacion(cuadrante, diente, cara) {
         if (this.relaciones && this.ultimoOdontograma) {
-            let rel = this.relaciones.find(x => x.relacionadoCon.find(y => y.conceptId === diente.concepto.conceptId &&
-                this.ultimoOdontograma.valor.odontograma[String(cuadrante)].find(z => z.cara === cara)));
-            if (rel) {
-                return 'diente-' + rel.concepto.semanticTag;
+            let dientecito = this.estaEnUltimoOdontograma(diente, cara);
+            if (dientecito) {
+                let rel = this.relaciones.find(x => x.relacionadoCon.find(y => y.conceptId === dientecito.concepto.conceptId));
+                if (rel) {
+                    return 'diente-' + rel.concepto.semanticTag;
+                }
             }
         }
+    }
+
+    private estaEnUltimoOdontograma(diente: any, cara: any) {
+        return this.ultimoOdontograma.valor.piezas.find(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === cara);
     }
 
     getTipoHUDS(st) {
@@ -239,21 +278,35 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     verRegistroDiente(cuandrante, diente, cara) {
+        if (!diente.relacion.concepto || (!diente.piezaCompleta && cara === 'pieza')) {
+            return;
+        }
         let conceptoValor = this.getRelacion(cuandrante, diente, cara);
         this.emitEjecutarAccion({ data: diente.relacion, ...{ tipo: this.getTipoHUDS(diente.relacion.concepto.semanticTag) } });
     }
 
     showTooltip(diente, cara) {
-        if (diente.relacion && diente.cara === cara) {
-            this.popOverText = diente;
-            this.showPopOver = true;
+        this.popOverText = {};
+
+        if (cara !== 'pieza') {
+            diente.piezaCompleta = false;
+        } else {
+            diente.piezaCompleta = true;
+        }
+
+        this.popOverText = diente;
+        this.popOverText.cara = cara;
+        this.showPopOver = true;
+        if (!this.estaEnUltimoOdontograma(diente, cara)) {
+            this.showRelacion = false;
+        } else {
+            this.showRelacion = true;
         }
     }
 
     hideTooltip() {
         this.showPopOver = false;
-        this.popOverText = null;
-        // this.tooltip = null;
+        this.popOverText = {};
     }
 
     toggleUltimo() {
@@ -314,12 +367,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         // }
     }
     getClass(cuadrante, diente, cara, outline) {
-        // if (this[String(tipo)].length > 0) {
-        //     return this[String(tipo)].find(x => x.diente.conceptId === diente.concepto.conceptId && (cara === x.cara)).concepto.semanticTag;
-        // }
-        // if (this.registro.valor) {
-        //     return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
-        // }
         if (this.existeEnRegistro('valor', diente, 'pieza')) {
             return {
                 ...outline ? { 'diente-trastorno-outline': true } : { 'diente-trastorno': true }
@@ -331,11 +378,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         let conceptosSelect = this.conceptos.map(elem => {
             return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() }
         });
-        // let conceptosSelect = this[tipo].conceptos.map(elem => {
-        //     return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() };
-        // });
-
         $event.callback(conceptosSelect);
+    }
+
+    cara(diente, cara) {
+        if (this.carasSeleccionadas.length > 0) {
+            return this.carasSeleccionadas.findIndex(x => x.diente.concepto.conceptId === diente.concepto.conceptId && x.cara === cara);
+        }
+        return -1;
     }
 
     caraValor(diente, cara) {
@@ -349,20 +399,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return -1;
     }
 
-    piezaCompletaValor(diente, cara) {
-        if (this.registro.valor) {
-            return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
-        }
-        return -1;
-    }
-
-    cara(diente, cara) {
-        if (this.carasSeleccionadas.length > 0) {
-            return this.carasSeleccionadas.findIndex(x => x.diente.concepto.conceptId === diente.concepto.conceptId && x.cara === cara);
-        }
-        return -1;
-    }
-
     piezaCompleta(diente, cara) {
         if (this.piezasSeleccionadas.length > 0) {
             return this.piezasSeleccionadas.findIndex(x => x.diente.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
@@ -370,15 +406,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return -1;
     }
 
+    piezaCompletaValor(diente, cara) {
+        if (this.registro.valor) {
+            return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
+        }
+        return -1;
+    }
+
     seleccionarDiente(diente, cara) {
 
-        console.log('this.ultimoOdontograma', this.ultimoOdontograma);
-        console.log('this.relaciones', this.relaciones);
-
-
-        // if (this.prestacion.ejecucion.registros.length === 1 && this.registro.valor.piezas.length > 0 && !this.isEmitted) {
-        //     // this.registro.valor.piezas = [];
-        // }
 
         if (cara === 'pieza') {
 
@@ -390,12 +426,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             if (index === -1) {
                 this.piezasSeleccionadas = [{ diente: diente, cara: cara }];
-                // this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente, cara: cara }];
                 let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
 
                 if (this.piezaCompletaValor(diente, cara) === -1) {
-
-                    // this.registro.valor.piezas.pop();
 
                     piezas.push({
                         concepto: diente.concepto,
@@ -428,7 +461,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             if (index === -1) {
                 this.carasSeleccionadas = [{ diente: diente, cara: cara }];
-                // this.carasSeleccionadas = [...this.carasSeleccionadas, { diente: diente, cara: cara }];
                 diente.cara = cara;
                 diente.piezaCompleta = false;
 
@@ -466,7 +498,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     seleccionarPrestacion() {
 
-        // this.emitConcepto.emit(this.modelo.prestacionSeleccionada);
         if (this.prestacionDienteSeleccionada) {
             let prestacionDienteEmit = this.prestacionDienteSeleccionada;
             this.emitChange(prestacionDienteEmit);
@@ -486,14 +517,10 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     existeEnRegistro(tipo: 'carasSeleccionadas' | 'piezasSeleccionadas' | 'valor', diente, cara) {
         if (this.registro.valor && this.registro.valor.piezas) {
-            // console.log('cara', cara);
             return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && (cara === x.cara)) !== -1;
         } else {
-            // console.log('cara 2', cara);
             if (this[String(tipo)].length > 0) {
                 return this[String(tipo)].findIndex(x => {
-                    console.log('x.diente.conceptId', x.diente.conceptId);
-                    console.log('diente.concepto.conceptId', diente.concepto.conceptId);
                     return x.diente.conceptId === diente.concepto.conceptId && (cara === x.cara);
                 }) !== -1;
             }
@@ -501,7 +528,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     getMensajes() {
-        // return [this.carasSeleccionadas, this.piezasSeleccionadas];
     }
 
 }
