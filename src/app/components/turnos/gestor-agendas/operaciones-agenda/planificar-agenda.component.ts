@@ -176,6 +176,9 @@ export class PlanificarAgendaComponent implements OnInit {
     horaInicioPlus() {
         return moment(this.modelo.horaInicio).add(30, 'minutes');
     }
+    fechaInicio() {
+        return moment(new Date()).startOf('day');
+    }
 
     inicializarPrestacionesBloques(bloque) {
         if (this.modelo.tipoPrestaciones) {
