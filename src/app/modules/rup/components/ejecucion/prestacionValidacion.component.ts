@@ -182,6 +182,7 @@ export class PrestacionValidacionComponent implements OnInit {
                                 registro.relacionadoCon[key] = esRegistro;
                             } else if (idRegistroRel) {
                                 registro.relacionadoCon[key] = idRegistroRel;
+                                idRegistroRel = typeof idRegistroRel === 'object' ? idRegistroRel.conceptId : idRegistroRel;
                                 window.setTimeout(() => {
                                     this.servicioSnomed.getByConceptId(idRegistroRel, { format: '' }).subscribe(rel => {
                                         registro.relacionadoCon[key] = rel;
