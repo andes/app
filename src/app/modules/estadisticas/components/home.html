@@ -8,45 +8,45 @@
         <div>
             <turnos-filtros (filter)="filter($event)" [params]="filtros"></turnos-filtros>
             <div class="row">
-                <div class="col-4">
+                <div class="col-4" *ngIf="sexoData.length > 0">
                     <h3>Por sexo</h3>
-                    <div *ngIf="sexoData.length > 0">
+                    <div>
                         <canvas  baseChart [data]="sexoData" [labels]="sexoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-4" *ngIf="edadData.length > 0">
                     <h3>Por edad</h3>
-                    <div *ngIf="edadData.length > 0">
+                    <div>
                         <canvas baseChart [data]="edadData" [options]="{legend: { display: false }}" [labels]="edadLabels" chartType="line"></canvas>
                     </div>
                 </div>
-                <div class="col-4">
+                <div class="col-4" *ngIf="estadoData.length > 0">
                     <h3>Por estado</h3>
-                    <div *ngIf="estadoData.length > 0">
+                    <div>
                         <canvas baseChart [data]="estadoData"   [labels]="estadoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="profesionalData.length > 0">
                 <div class="col-10">
                     <h3>Por profesionales</h3>
-                    <div *ngIf="profesionalData.length > 0">
+                    <div>
                         <canvas  baseChart [data]="profesionalData" [options]="barOptions"  [labels]="profesionalLabels" chartType="bar"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="administrativosData.length > 0">
                 <div class="col-8">
                     <h3>Por administrativos</h3>
-                    <div *ngIf="administrativosData.length > 0">
+                    <div>
                         <canvas  baseChart [data]="administrativosData"  [options]="barOptions"  [labels]="administrativosLabels" chartType="bar"></canvas>
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" *ngIf="prestacionData.length > 0">
                 <div class="col-8">
                     <h3>Por prestaciones</h3>
-                    <div *ngIf="prestacionData.length > 0">
+                    <div>
                         <canvas  baseChart [data]="prestacionData"  [options]="barOptions"  [labels]="prestacionLabels" chartType="bar"></canvas>
                     </div>
                 </div>
