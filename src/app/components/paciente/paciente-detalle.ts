@@ -6,6 +6,7 @@ import {
 import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 
 @Component({
     selector: 'paciente-detalle',
@@ -20,15 +21,29 @@ export class PacienteDetalleComponent {
      * @memberof PacienteDetalleComponent
      */
     @Input() paciente: IPaciente;
+    renaperFoto;
+    // datos
 
     constructor(private pacienteService: PacienteService, private renaperService: RenaperService) { }
 
     renaperVerification(patient) {
-        // TODO llamar al servicio de renaper y actualizar: Fatos básicos y Foto
+        // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
+        let sexoRena = (patient.sexo == 'masculino') ? 'M' : 'F';
+        this.renaperService.get({ documento: patient.documento, sexo: sexoRena }).subscribe(resultado => {
+            let codigo = resultado.codigo;
+            let datos = resultado.array;
+            console.log(datos);
 
-        this.renaperService.get(patient.documento).subscribe(resultado => {
-            // hacer cositas
+            if (datos.lenght > 0) {
+                this.paciente.foto = datos[0].foto;
+                console.log(this.paciente.foto);
+
+            }
+
         })
+
+
+
     }
 }
