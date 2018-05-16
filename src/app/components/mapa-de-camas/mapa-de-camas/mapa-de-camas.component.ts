@@ -25,7 +25,7 @@ export class MapaDeCamasComponent implements OnInit {
     public estadoServicio: any = {};
     // tipo de vista del mapa de camas
     public layout: String = 'grid';
-
+    public prestacion: any;
     public organizacion: IOrganizacion;
 
     // filtros para el mapa de cama
@@ -48,6 +48,8 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
+    public showListaEspera = false;
+
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -59,7 +61,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.refresh();
     }
 
-    refresh () {
+    refresh() {
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();
@@ -215,7 +217,7 @@ export class MapaDeCamasComponent implements OnInit {
      * Check de los permisos para mostrar botones o datos.
      */
 
-    checkAuth (permiso) {
+    checkAuth(permiso) {
         return this.auth.check('internacion:' + permiso);
     }
 }

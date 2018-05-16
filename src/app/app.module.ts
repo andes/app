@@ -233,6 +233,7 @@ import { CensoDiarioComponent } from './modules/rup/components/ejecucion/interna
 import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -366,6 +367,7 @@ let RUPComponentsArray = [
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 
+
 registerLocaleData(localeEs, 'es');
 
 
@@ -450,7 +452,8 @@ registerLocaleData(localeEs, 'es');
         CamaEstadoComponent,
         OcuparCamaComponent,
         OrganizacionSectoresComponent,
-        SectoresItemComponent
+        SectoresItemComponent,
+        ListaEsperaInternacionComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -510,6 +513,7 @@ registerLocaleData(localeEs, 'es');
         InternacionService,
         PrestamosService,
         ProcedimientosQuirurgicosService
+
 
     ]
 })
