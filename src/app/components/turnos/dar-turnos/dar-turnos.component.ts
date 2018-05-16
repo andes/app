@@ -743,14 +743,14 @@ export class DarTurnosComponent implements OnInit {
                 } else {
                     this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
                     if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+                        if (indiceCarpeta > -1) {
+                            this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+                        } else {
+                            this.paciente.carpetaEfectores.push(this.carpetaEfector);
+                        }
                         this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(
                             resultadoCarpeta => {
-                                let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-                                if (indiceCarpeta > -1) {
-                                    this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
-                                } else {
-                                    this.paciente.carpetaEfectores.push(this.carpetaEfector);
-                                }
                                 this.guardarTurno(agd);
                             }, error => {
                                 this.plex.toast('danger', 'El número de carpeta ya existe');
