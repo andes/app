@@ -24,59 +24,6 @@
             </div>
         </div>
         <div class="row">&nbsp;</div>
-        <div class="row">
-            <!-- <div class="col" id="tabla">
-                <table class="table table-bordered" *ngIf="listadoCenso  && listadoCenso.length">
-                    <thead>
-                        <tr>
-                            <th rowspan="2">Apellido y nombre</th>
-                            <th rowspan="2">Sector</th>
-                            <th rowspan="2">Cama</th>
-                            <th rowspan="2">Ingreso</th>
-                            <th rowspan="2">Pase de</th>
-                            <th rowspan="2">Egreso</th>
-                            <th rowspan="2">Pase a</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let censo of listadoCenso, let indice = index">
-                            <td>
-                                {{censo.dataCenso.ultimoEstado.paciente | paciente }}
-                            </td>
-                            <td>
-                                <span *ngIf="censo.dataCenso?.cama.sector">
-                                    {{censo.dataCenso.cama.sector }} /
-                                </span>
-                                <span *ngIf="censo.dataCenso?.cama.habitacion">
-                                    {{censo.dataCenso.cama.habitacion}}
-                                </span>
-                            </td>
-                            <td>
-                                {{censo.dataCenso.cama.nombre}}
-                            </td>
-                            <td>
-                                <div *ngIf="censo.esIngreso; else elseIngreso">
-                                    si
-                                </div>
-                                <ng-template #elseIngreso>
-                                    no
-                                </ng-template>
-                            </td>
-                            <td>
-                                {{ censo.esPaseDe?.unidadOrganizativa.term }}
-                            </td>
-                            <td>
-                                {{ censo.egreso }}
-                            </td>
-                            <td>
-                                {{ censo.esPaseA?.unidadOrganizativa.term }}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div> -->
-        </div>
-
 
         <div class="row">&nbsp;</div>
         <div class="row">
@@ -101,7 +48,7 @@
                             <th>Defunciones</th>
                         </tr>
                         <tr *ngFor="let unResumen of resumenCensoTotal, let indice = index">
-                            <td>{{ unResumen.fecha | date: 'dd/MM/yyyy' }}</td>
+                            <td class="click" (click)="CensoDiario(unResumen.fecha)">{{ unResumen.fecha | date: 'dd/MM/yyyy' }}</td>
                             <td>{{ unResumen.resumen.existencia0 }}</td>
                             <td>{{ unResumen.resumen.ingresos }}</td>
                             <td>{{ unResumen.resumen.pasesDe }}</td>
@@ -165,7 +112,15 @@
 
     </plex-box>
 </section>
-<footer>
+
+
+
+<footer *ngIf="!showCensoDiario">
     <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="mapaDeCamas()">
     </plex-button>
 </footer>
+
+<ng-container *ngIf="showCensoDiario">
+
+    <censo-diario (evtData)="showCensoDiario = $event" [params]="paramsCensoDiario"></censo-diario>
+</ng-container>

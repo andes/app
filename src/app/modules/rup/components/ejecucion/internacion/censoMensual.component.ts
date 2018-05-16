@@ -12,7 +12,8 @@ import { saveAs } from 'file-saver';
 import { DocumentosService } from '../../../../../services/documentos.service';
 
 @Component({
-    templateUrl: 'censoMensual.html'
+    templateUrl: 'censoMensual.html',
+    styleUrls: ['censoMensual.scss']
 })
 
 export class CensoMensualComponent implements OnInit {
@@ -50,6 +51,10 @@ export class CensoMensualComponent implements OnInit {
     };
     // Usa el keymap 'default'
     private slug = new Slug('default');
+
+    public paramsCensoDiario: any;
+    public showCensoDiario = false;
+
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -73,9 +78,7 @@ export class CensoMensualComponent implements OnInit {
         };
         this.servicioInternacion.getCensoMensual(params).subscribe((respuesta: any) => {
             this.resumenCensoTotal = respuesta;
-
             this.totalCenso();
-            // this.completarResumenDiario();
         });
     }
 
@@ -146,5 +149,18 @@ export class CensoMensualComponent implements OnInit {
     mapaDeCamas() {
         this.router.navigate(['mapa-de-camas']);
     }
+
+
+
+    // Nos lleva al censo diario con la fecha seleccionada.
+    CensoDiario(fecha) {
+        let parametro = {
+            fecha: fecha,
+            organizacion: this.organizacionSeleccionada
+        };
+        this.paramsCensoDiario = parametro;
+        this.showCensoDiario = true;
+    }
+
 
 }
