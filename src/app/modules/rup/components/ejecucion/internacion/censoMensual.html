@@ -99,21 +99,25 @@
                             <td>
                                 <strong>{{totalResumenCenso.disponibles24}}</strong>
                             </td>
-
                         </tr>
-
                     </thead>
                 </table>
+                <table>
+                    <tr>
+                        <td>Días de funcionamiento del servicio</td><td>{{totalResumenCenso.count}}</td>
+                        <td>Promedio diario de camas disponibles</td><td>{{ totalResumenCenso.disponibles24 / totalResumenCenso.count}}</td>
+                        <td>Promedio diario de paciente día</td><td>{{ totalResumenCenso.pacientesDia / totalResumenCenso.count}}</td>
+                        <td>Tasa de mortalidad hospitalaria</td><td>{{ totalResumenCenso.egresosDefuncion / (totalResumenCenso.pasesA + totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion) }}</td>
+                        <td>Promedio de permanencia</td><td>{{ totalResumenCenso.pacientesDia / (totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion + totalResumenCenso.pasesA) }}</td>
+
+                        <td>Giro Cama</td><td>{{ (totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion) / (totalResumenCenso.pasesA + totalResumenCenso.disponibles24 / totalResumenCenso.count) }}</td>
+                    </tr>
+                </table>
+
             </div>
-
         </div>
-
-
-
     </plex-box>
 </section>
-
-
 
 <footer *ngIf="!showCensoDiario">
     <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="mapaDeCamas()">
@@ -121,6 +125,5 @@
 </footer>
 
 <ng-container *ngIf="showCensoDiario">
-
     <censo-diario (evtData)="showCensoDiario = $event" [params]="paramsCensoDiario"></censo-diario>
 </ng-container>

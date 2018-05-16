@@ -71,7 +71,7 @@ export class CensoDiarioComponent implements OnInit {
             unidad: this.organizacionSeleccionada.conceptId
         };
         this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
-            this.listadoCenso = respuesta.censoDiario.map(c => c.censo);
+            this.listadoCenso = respuesta.censoDiario.map(c => c.censo).filter(item => item);
             this.resumenCenso = respuesta.resumen;
 
         });
@@ -111,10 +111,6 @@ export class CensoDiarioComponent implements OnInit {
     * Vuelve a la página anterior (mapa de camas)
     */
     volver() {
-        if (this.params) {
-            this.evtData.emit(false);
-        } else {
-            this.router.navigate(['mapa-de-camas']);
-        }
+        this.router.navigate(['mapa-de-camas']);
     }
 }

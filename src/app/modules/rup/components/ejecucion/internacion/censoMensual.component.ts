@@ -47,7 +47,8 @@ export class CensoMensualComponent implements OnInit {
         ingresoEgresoDia: 0,
         pacientesDia: 0,
         disponibles24: 0,
-        disponibles0: 0
+        disponibles0: 0,
+        count: 0
     };
     // Usa el keymap 'default'
     private slug = new Slug('default');
@@ -95,7 +96,8 @@ export class CensoMensualComponent implements OnInit {
             ingresoEgresoDia: 0,
             pacientesDia: 0,
             disponibles24: 0,
-            disponibles0: 0
+            disponibles0: 0,
+            count: 0
         };
         this.resumenCensoTotal.forEach(element => {
             this.totalResumenCenso.existencia0 += element.resumen.existencia0;
@@ -109,6 +111,7 @@ export class CensoMensualComponent implements OnInit {
             this.totalResumenCenso.pacientesDia += element.resumen.pacientesDia;
             this.totalResumenCenso.disponibles24 += element.resumen.disponibles24;
             this.totalResumenCenso.disponibles0 += element.resumen.disponibles0;
+            this.totalResumenCenso.count++;
 
         });
     }
