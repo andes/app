@@ -39,7 +39,6 @@ export class CamasService {
         return this.server.patch(this.camasUrl + '/' + idcama, options);
     }
 
-
     cambiaEstado(idcama, estado): Observable<any> {
         return this.server.patch(this.camasUrl + '/cambiaEstado/' + idcama, estado);
     }

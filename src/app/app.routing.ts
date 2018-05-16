@@ -72,9 +72,10 @@ import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internac
 import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
 import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
-
+import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -121,6 +122,8 @@ const appRoutes: Routes = [
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/censoMensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/listaEnEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingGuard] },
+
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 

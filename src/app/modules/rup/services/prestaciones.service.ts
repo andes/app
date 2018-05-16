@@ -870,4 +870,17 @@ export class PrestacionesService {
     public getPasesInternacion(idInternacion) {
         return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
     }
+
+    /**
+  * Método get. Trae lista de objetos prestacion.
+  *
+  * @param {*} params Opciones de búsqueda
+  * @param {*} [options={}] Options a pasar a la API
+  * @returns {Observable<IPrestacion[]>}
+  *
+  * @memberof PrestacionesService
+  */
+    getInternaciones(params: any = {}, options: any = {}): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/sinCama');
+    }
 }

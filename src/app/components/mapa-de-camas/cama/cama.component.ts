@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { CamasService } from '../../../services/camas.service';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { PacienteService } from '../../../services/paciente.service';
 
 @Component({
     selector: 'app-cama',
@@ -15,13 +16,14 @@ import * as moment from 'moment';
 export class CamaComponent implements OnInit {
 
     @Input() cama: any;
+    @Input() prestacion: any;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
 
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
-    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router) { }
+    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router, private pacienteService: PacienteService) { }
 
     ngOnInit() {
         this.opcionesDropdown = [
@@ -72,7 +74,11 @@ export class CamaComponent implements OnInit {
         if (cama.ultimoEstado.estado !== 'disponible') {
             this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
         } else {
-            this.router.navigate(['rup/internacion/crear', cama.id]);
+            if (this.prestacion) {
+                this.darCama();
+            } else {
+                this.router.navigate(['rup/internacion/crear', cama.id]);
+            }
         }
     }
 
@@ -202,4 +208,30 @@ export class CamaComponent implements OnInit {
     SetFecha() {
         this.fecha = new Date();
     }
+
+
+    darCama() {
+        let dto: any;
+        // Recuperamos el paciente completo
+        this.pacienteService.getById(this.prestacion.paciente.id).subscribe(paciente => {
+            // vamos a actualizar el estado de la cama
+            dto = {
+                fecha: new Date,
+                estado: 'ocupada',
+                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                esCensable: this.cama.ultimoEstado.esCensable,
+                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                paciente: paciente,
+                idInternacion: this.prestacion.id
+            };
+            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                this.router.navigate(['rup/internacion/ver', this.prestacion.id]);
+            }, (err1) => {
+                this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+            });
+        });
+    }
+
 }

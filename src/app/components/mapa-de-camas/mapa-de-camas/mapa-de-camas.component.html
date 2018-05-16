@@ -1,63 +1,69 @@
-<form class="plex-layout">
-    <section>
-        <plex-box>
-            <div class="row">
-                <div class="col">
-                    <header>
-                        <div class="clearfix">
-                            <div class="page-title">
-                                Mapa de camas
-                            </div>
-                            <div class="text-right">
-                                <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
-                                <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
-                                <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
-                                <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="camas">
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <label for="filtros-nombre">Paciente</label>
-                                    <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
-                                        (keyup)="filtrar()" />
+<ng-container *ngIf="!showListaEspera">
+    <form class="plex-layout">
+        <section>
+            <plex-box>
+                <div class="row">
+                    <div class="col">
+                        <header>
+                            <div class="clearfix">
+                                <div class="page-title">
+                                    Mapa de camas
+                                </div>
+                                <div class="text-right">
+                                    <plex-button class="" type="primary" label="Limbo" (click)="showListaEspera = true;"></plex-button>
+                                    <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
+                                    <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
+                                    <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
+                                    <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                                 </div>
                             </div>
-                            <div class="col-2">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
-                            </div>
-                            <div class="col-2">
-                                <div class="form-group">
-                                    <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
-                                        *ngIf="filtros.opciones.servicios.length"></plex-select>
+                            <div class="row" *ngIf="camas">
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <label for="filtros-nombre">Paciente</label>
+                                        <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
+                                            (keyup)="filtrar()" />
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
+                                        (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group">
+                                        <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
+                                            *ngIf="filtros.opciones.servicios.length"></plex-select>
+                                    </div>
+                                </div>
+
+                                <div class="col-2">
+                                    <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
+                                        *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
+                                </div>
+
+                                <div class="col-2">
+                                    <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
+                                        *ngIf="filtros.opciones.estados.length"></plex-select>
+                                </div>
+                                <div class="col-2 actions-icons">
+                                    <plex-button type="primary" label="Limpiar filtros" (click)="limpiarFiltros()"></plex-button>
                                 </div>
                             </div>
+                            <hr />
+                        </header>
 
-                            <div class="col-2">
-                                <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
-                                    *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
-                            </div>
-
-                            <div class="col-2">
-                                <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
-                                    *ngIf="filtros.opciones.estados.length"></plex-select>
-                            </div>
-                            <div class="col-2 actions-icons">
-                                <plex-button type="primary" label="Limpiar filtros" (click)="limpiarFiltros()"></plex-button>
+                        <div class="row">
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 " *ngFor="let cama of camas; let i = index">
+                                <app-cama [prestacion]="prestacion" [cama]="cama" (evtCama)="updateCama($event, i)"></app-cama>
                             </div>
                         </div>
-                        <hr />
-                    </header>
 
-                    <div class="row">
-                        <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-xs-12 " *ngFor="let cama of camas; let i = index">
-                            <app-cama [cama]="cama" (evtCama)="updateCama($event, i)"></app-cama>
-                        </div>
                     </div>
-
                 </div>
-            </div>
-        </plex-box>
-    </section>
-</form>
+            </plex-box>
+        </section>
+    </form>
+</ng-container>
+<ng-container *ngIf="showListaEspera">
+    <listaEsperaInternacion (prestacion)='prestacion = $event' (showCamas)='showListaEspera = $event'></listaEsperaInternacion>
+</ng-container>

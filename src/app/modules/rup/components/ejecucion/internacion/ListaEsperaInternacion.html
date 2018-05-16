@@ -1,0 +1,56 @@
+<section>
+    <div class="row">
+        <div class="col-12">
+            <plex-box>
+                <header>
+                    <div class="page-title">Lista de espera</div>
+                </header>
+                <div class="row">
+                    <div class="col-12" *ngIf="prestacionesPendientes?.length">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <td>Nombre</td>
+                                    <td>Apellido</td>
+                                    <td>Estado</td>
+                                    <td>Ver Internación</td>
+                                    <td>Internar</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let prestacion of prestacionesPendientes">
+                                    <td> {{prestacion.prestacion.paciente.nombre}}</td>
+                                    <td> {{prestacion.prestacion.paciente.apellido}}</td>
+                                    <td *ngIf="prestacion.paseDe || prestacion.esEgreso">
+                                        <span *ngIf="prestacion.paseDe">Pase de: </span>
+                                        <span *ngIf="prestacion.esEgreso">Egreso: </span>
+                                        {{prestacion.ultimoEstado}}</td>
+                                    <td *ngIf="!prestacion.paseDe && !prestacion.esEgreso">
+                                        Ingreso
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(prestacion.prestacion.id)" *ngIf="prestacion?.prestacion.id">
+                                            <i class="mdi mdi-eye"></i>
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default  tips" title="Dar cama" (click)="darCama(prestacion.prestacion)" *ngIf="prestacion?.prestacion.id">
+                                            Dar cama
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+
+            </plex-box>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <plex-button label="Volver a mapa de camas" type="danger" (click)="onCancel()"></plex-button>
+</footer>
