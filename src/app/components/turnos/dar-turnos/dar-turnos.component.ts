@@ -40,6 +40,7 @@ import { IObraSocial } from '../../../interfaces/IObraSocial';
 })
 
 export class DarTurnosComponent implements OnInit {
+    nroCarpetaOriginal: string;
     public lenNota = 140;
     public nota = '';
     public changeCarpeta = false;
@@ -634,6 +635,7 @@ export class DarTurnosComponent implements OnInit {
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+                this.nroCarpetaOriginal = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
             }
         }
         if (indiceCarpeta === -1) {
@@ -650,8 +652,6 @@ export class DarTurnosComponent implements OnInit {
     cambiarCarpeta() {
         this.changeCarpeta = true;
     }
-
-
 
     getUltimosTurnos() {
         let ultimosTurnos = [];
@@ -741,7 +741,8 @@ export class DarTurnosComponent implements OnInit {
                     this.actualizar('');
                     return false;
                 } else {
-                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '') {
+                    this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
+                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
                         this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.paciente.carpetaEfectores }).subscribe(
                             resultadoCarpeta => {
                                 let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
