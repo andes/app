@@ -1,0 +1,69 @@
+<div class="row">
+    <div class="col">
+
+        <plex-box type="primary">
+            <header>
+                <table *ngIf="diagnosticos.length>0" style="table-layout:fixed" class="table table-fixed">
+                    <thead>
+                        <tr>
+                            <th>Nombre del paciente</th>
+                            <th>Apellido del paciente</th>
+                            <th>Documento del paciente</th>
+                            <th>Código de prestación</th>
+                            <th>Descripcion de prestación</th>
+                            <th>Código de auditoria</th>
+                            <th>Nombre de auditoria</th>
+                            <th>Código cie10</th>
+                            <th>Nombre cie10</th>
+                            <th>Código Snomed</th>
+                            <th>Nombre Snomed</th>
+                        </tr>
+                    </thead>
+                </table>
+            </header>
+            <table class="table table-fixed">
+                <tbody>
+                    <tr class="hover" *ngFor="let diagnostico of diagnosticos; let i=index">
+                        <td>
+                            {{ diagnostico.nombrePaciente }}
+                        </td>
+                        <td>
+                            {{ diagnostico.apellidoPaciente }}
+                        </td>
+                        <td>
+                            {{ diagnostico.documentoPaciente }}
+                        </td>
+                        <td>
+                            {{ diagnostico.tipoPrestacion }}
+                        </td>
+                        <td>
+                            {{ diagnostico.descripcionPrestacion }}
+                        </td>
+                        <td>
+                            {{ diagnostico.auditoriaCodigo }}
+                        </td>
+                        <td>
+                            {{ diagnostico.auditoriaNombre }}
+                        </td>
+                        <td>
+                            {{ diagnostico.codProfesionalCie10Codigo }}
+                        </td>
+                        <td>
+                            {{ diagnostico.codrofesionalCie10Nombre }}
+                        </td>
+                        <td>
+                            {{ diagnostico.codProfesionalSnomedCodigo }}
+                        </td>
+
+                        <td>
+                            {{ diagnostico.codProfesionalSnomedNombre }}
+                        </td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+        </plex-box>
+    </div>
+
+</div>
