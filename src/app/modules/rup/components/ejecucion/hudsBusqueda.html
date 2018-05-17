@@ -166,9 +166,9 @@
                     </button>
                 </div>
             </div>
-            <ul *ngIf="problemasActivos && colapsadoActivos" class="conceptos list-unstyled">
+            <ul *ngIf="problemasActivos && problemasActivos.length && colapsadoActivos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
-                    <li>
+                    <li *ngIf="problema?.concepto">
 
                         <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">

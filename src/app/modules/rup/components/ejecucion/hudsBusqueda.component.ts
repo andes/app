@@ -251,11 +251,11 @@ export class HudsBusquedaComponent implements OnInit {
 
             // console.log('registro, _registro', registro, _registro);
 
-            if (_registro.concepto && registro.concepto) {
+            if (_registro && _registro.concepto && registro.concepto) {
                 if (_registro.concepto.conceptId === registro.concepto.conceptId && _registro.createdAt === registro.createdAt) {
                     return true;
                 }
-            } else if (_registro.createdAt && _registro.createdAt === registro.createdAt) {
+            } else if (_registro && _registro.createdAt && _registro.createdAt === registro.createdAt) {
                 return true;
             }
         }
