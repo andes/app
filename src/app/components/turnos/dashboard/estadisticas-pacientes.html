@@ -59,15 +59,19 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="getNroCarpeta()">
-            <div> {{getNroCarpeta()}} </div>
+        <div class="col-3" *ngIf="nroCarpeta  && !editando">
+            <div> {{nroCarpeta}} </div>
         </div>
-        <div class="col-4" *ngIf="!getNroCarpeta()">
+        <div class="col-3" *ngIf="nroCarpeta && !editando">
+            <plex-button (click)="editarNroCarpeta()" type="success" label="Editar"></plex-button>
+        </div>
+
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
             <plex-text name="nroCarpeta" [(ngModel)]="nuevaCarpeta"></plex-text>
 
         </div>
-        <div class="col" *ngIf="!getNroCarpeta()">
-            <plex-button (click)="nuevoNroCarpeta()" type="success" label="Crear"></plex-button>
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
+            <plex-button (click)="nuevoNroCarpeta()" type="success" label="Guardar"></plex-button>
         </div>
     </div>
     <br>
