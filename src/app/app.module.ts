@@ -117,8 +117,8 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
-import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
+import { CamasListadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
@@ -182,6 +182,7 @@ import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.c
 import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
+import { CamasService } from './modules/rup/services/camas.service';
 
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
@@ -229,8 +230,8 @@ import { EjecucionInternacionComponent } from './modules/rup/components/ejecucio
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
-import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
-import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
+import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
+import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
@@ -270,10 +271,9 @@ import { routing, appRoutingProviders } from './app.routing';
 import { ChartsModule } from 'ng2-charts';
 
 // Mapa de camas
-import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
-import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
-import { CamasService } from './services/camas.service';
+import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camaEstado.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 
 // Solicitudes
@@ -372,6 +372,7 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+
 
 
 registerLocaleData(localeEs, 'es');

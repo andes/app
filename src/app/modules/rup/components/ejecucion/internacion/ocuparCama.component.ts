@@ -1,5 +1,4 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { CamasService } from './../../../../../services/camas.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -16,6 +15,7 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     templateUrl: 'ocuparCama.html'

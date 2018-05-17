@@ -62,16 +62,16 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
 
 // Internacion
-import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamasListadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camasListado.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-import { CensoDiarioComponent } from './modules/rup/components/ejecucion/internacion/censoDiario.component';
-import { CensoMensualComponent } from './modules/rup/components/ejecucion/internacion/censoMensual.component';
-import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
+import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
+import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
+import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
@@ -83,7 +83,6 @@ const appRoutes: Routes = [
   { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
-  { path: 'tm/organizacion/:id/cama', component: CamasListadoComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },

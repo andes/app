@@ -2,10 +2,10 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } fro
 import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
-import { CamasService } from '../../../services/camas.service';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { PacienteService } from '../../../services/paciente.service';
+import { PacienteService } from '../../../../../../services/paciente.service';
+import { CamasService } from '../../../../services/camas.service';
 
 @Component({
     selector: 'app-cama',

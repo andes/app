@@ -1,5 +1,4 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { CamasService } from './../../../../../services/camas.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
@@ -17,6 +16,7 @@ import { take } from 'rxjs/operator/take';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { InternacionService } from '../../../services/internacion.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',

@@ -1,5 +1,4 @@
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { CamasService } from '../../../../../services/camas.service';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -10,6 +9,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import { DocumentosService } from '../../../../../services/documentos.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     templateUrl: 'censoMensual.html',

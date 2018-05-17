@@ -1,10 +1,13 @@
 import { HostBinding, EventEmitter, Component, OnInit, Input, Output } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { CamasService } from '../../../services/camas.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnomedService } from '../../../services/term/snomed.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
+
+import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+
+import { SnomedService } from '../../../../../../services/term/snomed.service';
+import { OrganizacionService } from '../../../../../../services/organizacion.service';
+import { CamasService } from '../../../../services/camas.service';
+
 @Component({
     selector: 'cama-create-update',
     templateUrl: 'cama-create-update.html',

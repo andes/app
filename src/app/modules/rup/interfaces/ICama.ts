@@ -1,5 +1,5 @@
-import { ISnomedConcept } from './../modules/rup/interfaces/snomed-concept.interface';
-import { IPaciente } from './IPaciente';
+import { ISnomedConcept } from './snomed-concept.interface';
+import { IPaciente } from '../../../interfaces/IPaciente';
 import { ICamaEstado } from './ICamaEstado';
 
 export interface ICama {

@@ -1,7 +1,6 @@
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { environment } from '../../environments/environment';
 import { ICama } from '../interfaces/ICama';
 import { ICamaEstado } from '../interfaces/ICamaEstado';
 

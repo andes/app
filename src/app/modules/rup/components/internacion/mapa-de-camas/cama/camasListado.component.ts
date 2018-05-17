@@ -1,7 +1,7 @@
 import { HostBinding, Component, OnInit } from '@angular/core';
-import { Plex } from '@andes/plex';
-import { CamasService } from '../../../services/camas.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Plex } from '@andes/plex';
+import { CamasService } from '../../../../services/camas.service';
 
 @Component({
     selector: 'camas',

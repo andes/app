@@ -1,5 +1,4 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { CamasService } from './../../../../../services/camas.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -15,6 +14,7 @@ import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.int
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -25,26 +25,39 @@ export class IniciarInternacionComponent implements OnInit {
 
     public ocupaciones = [];
     public obrasSociales = [];
-    public origenHospitalizacion = [{ id: 'consultorio externo', nombre: 'Consultorio externo' },
-    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'traslado', nombre: 'Traslado' },
-    { id: 'sala de parto', nombre: 'Sala de parto' }, { id: 'otro', nombre: 'Otro' }];
-    public nivelesInstruccion = [{ id: 'primario incompleto', nombre: 'Primario incompleto' }, { id: 'primario completo', nombre: 'Primario completo' },
-    { id: 'secundario incompleto', nombre: 'Secundario incompleto' }, { id: 'secundario completo', nombre: 'Secundario completo' },
-    { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
-    { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
-    { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
-    { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
-    { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
-    { id: 'Polimodal completo', nombre: 'Polimodal completo' },
-    { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
-    { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
-    public situacionesLaborales = [{ id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
-    { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
-    { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }];
-    public pacienteAsociado = [{ id: 'Obra Social', nombre: 'Obra Social' },
-    { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
-    { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
-    { id: 'Mas de uno', nombre: 'Mas de uno' }, { id: 'Ninguno', nombre: 'Ninguno' }];
+    public origenHospitalizacion = [
+        { id: 'consultorio externo', nombre: 'Consultorio externo' },
+        { id: 'emergencia', nombre: 'Emergencia' },
+        { id: 'traslado', nombre: 'Traslado' },
+        { id: 'sala de parto', nombre: 'Sala de parto' },
+        { id: 'otro', nombre: 'Otro' }
+    ];
+    public nivelesInstruccion = [
+        { id: 'primario incompleto', nombre: 'Primario incompleto' },
+        { id: 'primario completo', nombre: 'Primario completo' },
+        { id: 'secundario incompleto', nombre: 'Secundario incompleto' },
+        { id: 'secundario completo', nombre: 'Secundario completo' },
+        { id: 'Ciclo EGB (1 y 2) incompleto', nombre: 'Ciclo EGB (1 y 2) incompleto' },
+        { id: 'Ciclo EGB (1 y 2) completo', nombre: 'Ciclo EGB (1 y 2) completo' },
+        { id: 'Ciclo EGB 3 incompleto', nombre: 'Ciclo EGB 3 incompleto' },
+        { id: 'Ciclo EGB 3 completo', nombre: 'Ciclo EGB 3 completo' },
+        { id: 'Polimodal incompleto', nombre: 'Polimodal incompleto' },
+        { id: 'Polimodal completo', nombre: 'Polimodal completo' },
+        { id: 'terciario/universitario incompleto', nombre: 'Terciario/Universitario incompleto' },
+        { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
+    ];
+    public situacionesLaborales = [
+        { id: 'Trabaja o está de licencia', nombre: 'Trabaja o está de licencia' },
+        { id: 'No trabaja y busca trabajo', nombre: 'No trabaja y busca trabajo' },
+        { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }
+    ];
+    public pacienteAsociado = [
+        { id: 'Obra Social', nombre: 'Obra Social' },
+        { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
+        { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
+        { id: 'Mas de uno', nombre: 'Mas de uno' },
+        { id: 'Ninguno', nombre: 'Ninguno' }
+    ];
 
     // Fecha seleccionada
     public fecha: Date = new Date();

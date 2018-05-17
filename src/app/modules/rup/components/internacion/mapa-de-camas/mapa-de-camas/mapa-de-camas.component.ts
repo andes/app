@@ -4,10 +4,9 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
 
-import { CamasService } from '../../../services/camas.service';
-import { ICama } from '../../../interfaces/ICama';
-import { IOrganizacion } from '../../../interfaces/IOrganizacion';
-import { OrganizacionService } from '../../../services/organizacion.service';
+import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
+import { OrganizacionService } from '../../../../../../services/organizacion.service';
+import { CamasService } from '../../../../services/camas.service';
 
 @Component({
     selector: 'app-mapa-de-camas',
