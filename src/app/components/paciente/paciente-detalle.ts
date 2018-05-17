@@ -29,21 +29,17 @@ export class PacienteDetalleComponent {
     renaperVerification(patient) {
         // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
-        let sexoRena = (patient.sexo == 'masculino') ? 'M' : 'F';
+        let sexoRena = (patient.sexo === 'masculino') ? 'M' : 'F';
         this.renaperService.get({ documento: patient.documento, sexo: sexoRena }).subscribe(resultado => {
-            let codigo = resultado.codigo;
-            let datos = resultado.array;
-            console.log(datos);
-
-            if (datos.lenght > 0) {
-                this.paciente.foto = datos[0].foto;
-                console.log(this.paciente.foto);
-
+            if (resultado) {
+                let codigo = resultado.codigo;
+                let datos = resultado.datos;
+                this.paciente.foto = resultado.datos.foto;
+            } else {
+                // TODO ver el tema de mostrar algún error si no trae nada
+                console.log('entro por algun problema');
             }
 
-        })
-
-
-
+        });
     }
 }
