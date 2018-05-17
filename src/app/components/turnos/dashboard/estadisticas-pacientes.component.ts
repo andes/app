@@ -17,6 +17,7 @@ import { LogPacienteService } from '../../../services/logPaciente.service';
 
 export class EstadisticasPacientesComponent implements OnInit {
 
+    nroCarpeta: any;
     public _paciente: IPaciente;
     @Input('paciente')
     set paciente(value: any) {
@@ -25,6 +26,50 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.anulaciones = 0;
         this.pacienteSeleccionado = value;
         this._paciente = value;
+
+    }
+    get agenda(): any {
+        return this._paciente;
+    }
+    pacienteSeleccionado: IPaciente;
+    public fechaDesde: any;
+    public fechaHasta: any;
+    turnosOtorgados = 0;
+    inasistencias = 0;
+    anulaciones = 0;
+    idOrganizacion = this.auth.organizacion.id;
+    nuevaCarpeta = '';
+    editando = false;
+    carpetaEfector: any;
+
+    // Inicialización
+    constructor(
+        public serviceTurno: TurnoService,
+        public plex: Plex,
+        public auth: Auth,
+        public serviceLogPaciente: LogPacienteService,
+        public servicePaciente: PacienteService) { }
+
+    ngOnInit() {
+        // Se cargan los datos calculados
+        let hoy = {
+            fechaDesde: moment().startOf('month').format(),
+            fechaHasta: moment().endOf('day').format()
+        };
+        this.fechaDesde = new Date(hoy.fechaDesde);
+        this.fechaHasta = new Date(hoy.fechaHasta);
+        this.carpetaEfector = {
+            organizacion: {
+                _id: this.auth.organizacion.id,
+                nombre: this.auth.organizacion.nombre
+            },
+            nroCarpeta: ''
+        };
+        this.getPaciente();
+
+    }
+
+    getPaciente() {
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this._paciente = pacienteMPI;
@@ -50,65 +95,61 @@ export class EstadisticasPacientesComponent implements OnInit {
                         }
                     });
                 }
+                this.obtenerCarpetaPaciente();
             });
     }
-    get agenda(): any {
-        return this._paciente;
-    }
-    pacienteSeleccionado: IPaciente;
-    public fechaDesde: any;
-    public fechaHasta: any;
-    turnosOtorgados = 0;
-    inasistencias = 0;
-    anulaciones = 0;
-    idOrganizacion = this.auth.organizacion.id;
-    nuevaCarpeta = '';
-    carpetaEfector: any;
 
-    // Inicialización
-    constructor(
-        public serviceTurno: TurnoService,
-        public plex: Plex,
-        public auth: Auth,
-        public serviceLogPaciente: LogPacienteService,
-        public servicePaciente: PacienteService) { }
-
-    ngOnInit() {
-        // Se cargan los datos calculados
-        let hoy = {
-            fechaDesde: moment().startOf('month').format(),
-            fechaHasta: moment().endOf('day').format()
-        };
-        this.fechaDesde = new Date(hoy.fechaDesde);
-        this.fechaHasta = new Date(hoy.fechaHasta);
+    editarNroCarpeta() {
+        this.editando = true;
     }
 
-    getNroCarpeta() {
-        if (this._paciente && this._paciente.carpetaEfectores && this._paciente.carpetaEfectores.length > 0) {
-            let resultado: any = this._paciente.carpetaEfectores.filter((carpeta: any) => {
-                return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
+    obtenerCarpetaPaciente() {
+        let indiceCarpeta = -1;
+        if (this._paciente.carpetaEfectores.length > 0) {
+            // Filtro por organizacion
+            indiceCarpeta = this._paciente.carpetaEfectores.findIndex((x) => (x.organizacion as any)._id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfector = this._paciente.carpetaEfectores[indiceCarpeta];
+                this.nroCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+            }
+        }
+
+        if (indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.servicePaciente.getNroCarpeta({ documento: this._paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                    this.nroCarpeta = carpeta.nroCarpeta;
+                }
             });
-            if (resultado && resultado[0]) {
-                return resultado[0].nroCarpeta;
-            } else { return null; }
-        } else { return null; }
+        }
     }
 
     nuevoNroCarpeta() {
         if (this.nuevaCarpeta !== '') {
+            this.carpetaEfector = {
+                organizacion: {
+                    _id: this.auth.organizacion.id,
+                    nombre: this.auth.organizacion.nombre
+                },
+                nroCarpeta: this.nuevaCarpeta
+            };
+            let indiceCarpeta = this._paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this._paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
+            } else {
+                this._paciente.carpetaEfectores.push(this.carpetaEfector);
+            }
             this.servicePaciente.patch(this._paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this._paciente.carpetaEfectores }).subscribe(
                 resultadoCarpeta => {
-                    this.carpetaEfector = {
-                        organizacion: {
-                            _id: this.auth.organizacion.id,
-                            nombre: this.auth.organizacion.nombre
-                        },
-                        nroCarpeta: this.nuevaCarpeta
-                    };
-                    this._paciente.carpetaEfectores.push(this.carpetaEfector);
+                    this.getPaciente();
                     this.plex.alert('Nro. de carpeta Asignado', 'Información');
+                    this.editando = false;
                 },
-                error => { this.plex.toast('danger', 'No se asignó el Nro. de carpeta, intente nuevamente.'); }
+                error => {
+                    this.plex.toast('danger', 'No se asignó el Nro. de carpeta, intente nuevamente.');
+                    this.editando = false;
+                }
             );
         }
     }
