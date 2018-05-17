@@ -253,6 +253,10 @@ import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.compo
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
+
 
 // Locales
 import { AppComponent } from './app.component';
@@ -413,6 +417,9 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
+        ConsultaDiagnosticoComponent,
+        CantidadConsultaXPrestacionComponent,
+        EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
