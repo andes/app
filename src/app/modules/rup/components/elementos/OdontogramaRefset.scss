@@ -32,6 +32,10 @@
     right: 15px;
 }
 
+svg {
+    overflow: visible;
+}
+
 svg#cuadrante-sup-der {
     display: inline-block;
 }
@@ -48,7 +52,7 @@ svg#cuadrante-sup-der {
 }
 
 .diente-procedimiento {
-    fill: $procedimiento;
+    fill: $procedimiento !important;
 }
 
 .diente-trastorno {
@@ -125,6 +129,17 @@ svg#cuadrante-sup-der {
 
 circle {
     fill: none;
+}
+
+$angles: (13deg: 10px);
+$i: 1;
+// $angles: ( 13: '13deg');
+@each $rotation,
+$translation in $angles {
+    .rotate-#{$i} {
+        transform: scale(1.025, 1.025) translateX(-#{$i}px) rotateZ($rotation) translateX($translation);
+    }
+    $i: ($i+1);
 }
 
 .pieza {
