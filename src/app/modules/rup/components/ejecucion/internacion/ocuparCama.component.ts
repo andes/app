@@ -90,14 +90,14 @@ export class OcuparCamaComponent implements OnInit {
 
         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-            this.router.navigate(['/mapa-de-camas']);
+            this.router.navigate(['/internacion/camas']);
         }, (err1) => {
             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
         });
     }
 
     cancelar() {
-        this.router.navigate(['/mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 
 }

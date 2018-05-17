@@ -39,11 +39,11 @@ export class ListaEsperaInternacionComponent implements OnInit {
     }
 
     onCancel() {
+        this.prestacion.emit(null);
         this.showCamas.emit(false);
     }
 
     darCama(prestacion) {
-        console.log(prestacion, 'prestacion');
         this.prestacion.emit(prestacion);
         this.showCamas.emit(false);
     }

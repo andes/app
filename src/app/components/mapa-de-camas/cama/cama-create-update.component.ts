@@ -98,10 +98,10 @@ export class CamaCreateUpdateComponent implements OnInit {
                 if (result) {
                     if (this.cama.id) {
                         this.plex.alert('Los datos de la cama se han actualizado correctamente correctamente');
-                        this.router.navigate(['/mapa-de-camas']);
+                        this.router.navigate(['/internacion/camas']);
                     } else {
                         this.plex.alert('La cama se creo correctamente');
-                        this.router.navigate(['/mapa-de-camas']);
+                        this.router.navigate(['/internacion/camas']);
                     }
 
                 } else {
@@ -112,7 +112,7 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     cancel() {
-        this.router.navigate(['/mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 
     onSectorSelect($event, org) {

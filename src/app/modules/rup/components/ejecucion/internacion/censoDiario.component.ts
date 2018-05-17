@@ -111,6 +111,6 @@ export class CensoDiarioComponent implements OnInit {
     * Vuelve a la página anterior (mapa de camas)
     */
     volver() {
-        this.router.navigate(['mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 }

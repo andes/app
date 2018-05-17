@@ -25,8 +25,8 @@ export class MapaDeCamasComponent implements OnInit {
     public estadoServicio: any = {};
     // tipo de vista del mapa de camas
     public layout: String = 'grid';
-    public prestacion: any;
     public organizacion: IOrganizacion;
+    public prestacion: any;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -210,7 +210,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     public censoMensual() {
-        this.router.navigate(['rup/internacion/censoMensual']);
+        this.router.navigate(['rup/internacion/censo/mensual']);
     }
 
     /**
@@ -219,5 +219,12 @@ export class MapaDeCamasComponent implements OnInit {
 
     checkAuth(permiso) {
         return this.auth.check('internacion:' + permiso);
+    }
+
+    onDarCama($event) {
+        this.prestacion = $event;
+        this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
+        this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
+        this.filtrar();
     }
 }

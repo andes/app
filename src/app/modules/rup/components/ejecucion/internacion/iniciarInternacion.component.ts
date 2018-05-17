@@ -134,7 +134,7 @@ export class IniciarInternacionComponent implements OnInit {
                 if (resultado) {
                     if (resultado.cama) {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
-                        this.router.navigate(['/mapa-de-camas']);
+                        this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
@@ -247,6 +247,6 @@ export class IniciarInternacionComponent implements OnInit {
     }
 
     onReturn() {
-        this.router.navigate(['/mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 }

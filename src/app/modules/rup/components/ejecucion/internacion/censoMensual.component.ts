@@ -150,7 +150,7 @@ export class CensoMensualComponent implements OnInit {
      * Vuelve a la página anterior (mapa de camas)
      */
     mapaDeCamas() {
-        this.router.navigate(['mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 
 

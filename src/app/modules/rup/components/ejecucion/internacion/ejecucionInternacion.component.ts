@@ -36,11 +36,17 @@ export class EjecucionInternacionComponent implements OnInit {
     public ocupaciones = [];
     public obrasSociales = [];
     public situacionesLaborales = [];
-    public nivelesInstruccion = [{ id: 'primario completo', nombre: 'Primario completo' },
-    { id: 'secundario completo', nombre: 'Secundario completo' }, { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }];
-    public origenHospitalizacion = [{ id: 'ambulatorio', nombre: 'Ambulatorio' },
-    { id: 'emergencia', nombre: 'Emergencia' }, { id: 'consultorio externo', nombre: 'Consultorio externo' },
-    { id: 'derivación', nombre: 'Derivación' }];
+    public nivelesInstruccion = [
+        { id: 'primario completo', nombre: 'Primario completo' },
+        { id: 'secundario completo', nombre: 'Secundario completo' },
+        { id: 'terciario/universitario completo', nombre: 'Terciario/Universitario completo' }
+    ];
+    public origenHospitalizacion = [
+        { id: 'ambulatorio', nombre: 'Ambulatorio' },
+        { id: 'emergencia', nombre: 'Emergencia' },
+        { id: 'consultorio externo', nombre: 'Consultorio externo' },
+        { id: 'derivación', nombre: 'Derivación' }
+    ];
     // Fecha seleccionada
     public fecha: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
@@ -132,7 +138,7 @@ export class EjecucionInternacionComponent implements OnInit {
      * Vuelve a la página anterior
      */
     cancelar() {
-        this.router.navigate(['mapa-de-camas']);
+        this.router.navigate(['internacion/camas']);
     }
 
     comprobarEgresoParaValidar() {
@@ -206,7 +212,7 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             this.comprobarEgresoParaValidar();
             this.desocuparCama();
-            // this.router.navigate(['mapa-de-camas']);
+            // this.router.navigate(['/internacion/camas']);
         });
     }
 

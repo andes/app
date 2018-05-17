@@ -121,11 +121,10 @@ const appRoutes: Routes = [
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/internacion/censoMensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/internacion/listaEnEspera', component: ListaEsperaInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
 
   // Mapa de camas
-  { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
+  { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },

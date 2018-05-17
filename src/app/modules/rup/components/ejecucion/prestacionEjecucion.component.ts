@@ -724,7 +724,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (ambito === 'ambulatorio') {
                     this.router.navigate(['rup']);
                 } else {
-                    this.router.navigate(['mapa-de-camas']);
+                    this.router.navigate(['/internacion/camas']);
                 }
             } else {
                 return;
