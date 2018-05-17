@@ -632,7 +632,7 @@ export class DarTurnosComponent implements OnInit {
         let indiceCarpeta = -1;
         if (this.paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
-            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
                 this.nroCarpetaOriginal = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
@@ -743,7 +743,7 @@ export class DarTurnosComponent implements OnInit {
                 } else {
                     this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
                     if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
-                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+                        let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
                         } else {
