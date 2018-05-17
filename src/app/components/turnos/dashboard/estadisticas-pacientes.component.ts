@@ -119,7 +119,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             this.servicePaciente.getNroCarpeta({ documento: this._paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.getPaciente();
+                    this.nroCarpeta = carpeta.nroCarpeta;
                 }
             });
         }
@@ -142,7 +142,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             }
             this.servicePaciente.patch(this._paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this._paciente.carpetaEfectores }).subscribe(
                 resultadoCarpeta => {
-                    this.nroCarpeta = this.nuevaCarpeta;
+                    this.getPaciente();
                     this.plex.alert('Nro. de carpeta Asignado', 'Información');
                     this.editando = false;
                 },
