@@ -28,18 +28,8 @@ export class EncabezadoReportesComponent implements OnInit {
     public organizacion;
     public tipoReportes;
     public diagnosticos = [];
-    //public diagnostico;
-    //public seleccionada = [];
-    //public listaPacientes = false;
-
-
-    //Propiedades reporteC2
-
+    // Propiedades reporteC2
     private timeoutHandle: number;
-    // public parametros;
-    //public horaInicio: any;
-    //public horaFin: any;
-    //public diagnosticos = [];
     public totalConsultas = 0;
     public totalMenor1 = 0;
     public total1 = 0;
@@ -54,11 +44,6 @@ export class EncabezadoReportesComponent implements OnInit {
     public totalMasculino = 0;
     public totalFemenino = 0;
     public totalOtro = 0;
-    //public listaPacientes = false;
-    // public diagnostico;
-    // public seleccionada = [];
-
-
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
@@ -116,23 +101,6 @@ export class EncabezadoReportesComponent implements OnInit {
 
     }
 
-    // datosPacientes(indice) {
-    //     console.log("aa", this.diagnostico);
-    //     this.diagnostico = this.diagnosticos[indice];
-    //     for (let i = 0; i < this.seleccionada.length; i++) {
-    //         this.seleccionada[i] = false;
-    //     }
-    //     if (this.diagnostico.ficha !== null) {
-    //         this.seleccionada[indice] = true;
-    //         this.listaPacientes = true;
-    //     } else {
-    //         this.listaPacientes = false;
-    //     }
-    // }
-
-
-
-
     refreshSelection(value, tipo) {
         if (tipo === 'horaInicio') {
             let horaInicio = moment(this.horaInicio).startOf('day');
@@ -159,7 +127,7 @@ export class EncabezadoReportesComponent implements OnInit {
 
 
     public imprimir() {
-        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === "Diagnosticos") {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Diagnosticos') {
             this.showConsultaDiagnostico = true;
             this.showReporteC2 = false;
             this.showCantidadConsultaXPrestacion = false;
@@ -168,7 +136,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 console.log(this.diagnosticos);
             });
         }
-        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === "ReporteC2") {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === 'ReporteC2') {
             this.showReporteC2 = true;
             this.showConsultaDiagnostico = false;
             this.showCantidadConsultaXPrestacion = false;
@@ -190,7 +158,7 @@ export class EncabezadoReportesComponent implements OnInit {
                 this.totalOtro = this.diagnosticos.map(elem => { return elem.sumaOtro; }).reduce(this.add, 0);
             });
         }
-        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === "Consultas por prestación") {
+        if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.parametros['organizacion'] && this.tipoReportes.nombre === 'Consultas por prestación') {
             this.showCantidadConsultaXPrestacion = true;
             this.showConsultaDiagnostico = false;
             this.showReporteC2 = false;
