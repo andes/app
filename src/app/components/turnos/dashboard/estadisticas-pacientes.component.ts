@@ -26,32 +26,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.anulaciones = 0;
         this.pacienteSeleccionado = value;
         this._paciente = value;
-        this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
-            pacienteMPI => {
-                this._paciente = pacienteMPI;
-                let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
-                let cantInasistencias = 0;
-                // Se muestra la cantidad de turnos otorgados e inasistencias
-                this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                    turnos.forEach(turno => {
-                        if (turno.asistencia && turno.asistencia === 'noAsistio') {
-                            cantInasistencias++;
-                        }
-                    });
-                    this.turnosOtorgados = turnos.length;
-                    this.inasistencias = cantInasistencias;
-                });
 
-                if (this._paciente && this._paciente.id) {
-                    // Se muestra la cantidad de turnos anulados
-                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
-                    this.serviceLogPaciente.get(datosLog).subscribe(logs => {
-                        if (logs && logs.length) {
-                            this.anulaciones = logs.length;
-                        }
-                    });
-                }
-            });
     }
     get agenda(): any {
         return this._paciente;
@@ -90,7 +65,38 @@ export class EstadisticasPacientesComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.obtenerCarpetaPaciente();
+        this.getPaciente();
+
+    }
+
+    getPaciente() {
+        this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
+            pacienteMPI => {
+                this._paciente = pacienteMPI;
+                let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
+                let cantInasistencias = 0;
+                // Se muestra la cantidad de turnos otorgados e inasistencias
+                this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+                    turnos.forEach(turno => {
+                        if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                            cantInasistencias++;
+                        }
+                    });
+                    this.turnosOtorgados = turnos.length;
+                    this.inasistencias = cantInasistencias;
+                });
+
+                if (this._paciente && this._paciente.id) {
+                    // Se muestra la cantidad de turnos anulados
+                    let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
+                    this.serviceLogPaciente.get(datosLog).subscribe(logs => {
+                        if (logs && logs.length) {
+                            this.anulaciones = logs.length;
+                        }
+                    });
+                }
+                this.obtenerCarpetaPaciente();
+            });
     }
 
     editarNroCarpeta() {
@@ -101,19 +107,19 @@ export class EstadisticasPacientesComponent implements OnInit {
         let indiceCarpeta = -1;
         if (this._paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
-            debugger;
-            indiceCarpeta = this._paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            indiceCarpeta = this._paciente.carpetaEfectores.findIndex((x) => (x.organizacion as any)._id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this._paciente.carpetaEfectores[indiceCarpeta];
                 this.nroCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
             }
         }
+
         if (indiceCarpeta === -1) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this._paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.nroCarpeta = carpeta.nroCarpeta;
+                    this.getPaciente();
                 }
             });
         }
@@ -128,8 +134,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                 },
                 nroCarpeta: this.nuevaCarpeta
             };
-            debugger;
-            let indiceCarpeta = this._paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            let indiceCarpeta = this._paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this._paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
             } else {
