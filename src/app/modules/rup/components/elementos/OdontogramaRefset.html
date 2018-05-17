@@ -10,7 +10,13 @@
                         Diente {{ popOverText.concepto.term }}
                         <span *ngIf="popOverText?.cara && popOverText?.cara !== 'pieza'">(cara {{ popOverText.cara }})</span>
                         <span *ngIf="popOverText?.cara && popOverText?.cara === 'pieza'">(pieza completa)</span>
-                        <span *ngIf="popOverText?.relacion?.concepto?.term && showRelacion"> - {{ popOverText.relacion.concepto.term }} ({{ popOverText.relacion.concepto.semanticTag }})</span>
+                        <ng-container *ngIf="popOverText?.relacion?.length > 0 && showRelacion">
+                            <span *ngFor="let rel of popOverText?.relacion"> - {{ rel.concepto.term }} ({{ rel.concepto.semanticTag }})</span>
+                        </ng-container>
+                        <!-- {{ popOverText.relacion | json}} -->
+                        <ng-container *ngIf="popOverText?.relacion?.concepto && showRelacion">
+                            - {{ popOverText.relacion.concepto.term }} ({{ popOverText.relacion.concepto.semanticTag }})
+                        </ng-container>
                     </span>
                 </div>
             </div>
@@ -39,35 +45,41 @@
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="50px" height="50px"
                                 x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
                                 <path (mouseenter)="showTooltip(diente, 'distal')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'distal')"
-                                    [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'distal')" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
+                                    d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
                 c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z" class="diente distal"
-                                    title="distal" />
+                                    [ngClass]="'diente-' + classRelacion( 'cuadranteSuperiorDerecho', diente, 'distal')" title="distal"
+                                />
                                 <path (mouseenter)="showTooltip(diente, 'vestibular')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'vestibular')"
-                                    [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'vestibular')" d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
+                                    d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
                 c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z" class="diente vestibular"
+                                    [ngClass]="'diente-' + classRelacion( 'cuadranteSuperiorDerecho', diente, 'vestibular')"
                                     title="vestibular" />
                                 <path (mouseenter)="showTooltip(diente, 'mesial')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'mesial')"
-                                    [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'mesial')" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z" class="diente mesial" title="mesial"
-                                />
+                                    d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
+                c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z" class="diente mesial" [ngClass]="'diente-' + classRelacion( 'cuadranteSuperiorDerecho', diente, 'mesial')"
+                                    title="mesial" />
                                 <path (mouseenter)="showTooltip(diente, 'palatina')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'palatina')"
-                                    [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'palatina')" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
+                                    d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
                 c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z" class="diente palatina"
-                                    title="palatina" />
-                                <path (mouseenter)="showTooltip(diente, 'oclusal')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'oclusal')"
-                                    [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'oclusal')" d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal" title="oclusal" />
-                                <g (mouseenter)="showTooltip(diente, 'pieza')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'pieza')"
-                                    class="pieza" title="pieza completa">
-                                    <!-- Círculo MINI -->
-                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada {{ classRelacion( 'cuadranteSuperiorDerecho', diente, 'pieza') }}"
-                                        cx="46.285" cy="7.311" r="5.801" [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'pieza')"
-                                    />
-                                </g>
-                                <!-- Círculo GRANDE -->
-                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="classRelacion('cuadranteSuperiorDerecho', diente, 'pieza') + '-outline'"
+                                    [ngClass]="'diente-' + classRelacion( 'cuadranteSuperiorDerecho', diente, 'palatina')" title="palatina"
                                 />
+                                <path (mouseenter)="showTooltip(diente, 'oclusal')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'oclusal')"
+                                    d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
+                s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
+                C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal" [ngClass]="'diente-' + classRelacion( 'cuadranteSuperiorDerecho', diente, 'oclusal')"
+                                    title="oclusal" />
+                                <ng-container *ngFor="let relClass of classRelacion( 'cuadranteSuperiorDerecho', diente, 'pieza'); let a=index">
+                                    <g *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
+                                        class="pieza" title="pieza completa">
+                                        <!-- Círculo MINI -->
+                                        <circle (click)="verRegistroDiente('cuadranteSuperiorDerecho', diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311"
+                                            r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
+                                        />
+                                    </g>
+                                    <!-- Círculo GRANDE -->
+                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'"
+                                    />
+                                </ng-container>
                             </svg>
                         </div>
                     </ng-container>
@@ -100,124 +112,106 @@
                     s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
                     C30.188,20.433,28.198,19.542,26,19.542z" class="diente oclusal {{ classRelacion('cuadranteSuperiorIzquierdo', diente, 'oclusal')}}"
                                     title="oclusal" />
-                                <g (mouseenter)="showTooltip(diente, 'pieza')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorIzquierdo', diente, 'pieza')"
-                                    class="pieza" title="pieza completa">
-                                    <!-- Círculo MINI -->
-                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'pieza') }}"
-                                        cx="46.285" cy="7.311" r="5.801" [ngClass]="classRelacion('cuadranteSuperiorIzquierdo', diente, 'pieza')"
+                                <ng-container *ngFor="let relClass of classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'pieza'); let a=index">
+                                    <g *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
+                                        class="pieza" title="pieza completa">
+                                        <!-- Círculo MINI -->
+                                        <circle (click)="verRegistroDiente('cuadranteSuperiorIzquierdo', diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311"
+                                            r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
+                                        />
+                                    </g>
+                                    <!-- Círculo GRANDE -->
+                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'"
                                     />
-                                </g>
-                                <!-- Círculo GRANDE -->
-                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="classRelacion('cuadranteSuperiorIzquierdo', diente, 'pieza') + '-outline'"
-                                />
+                                </ng-container>
                             </svg>
                         </div>
                     </ng-container>
                 </div>
 
                 <!-- CUADRANTE INF DER -->
-                <div class="col-6 no-gutters " [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma} ">
-                    <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho; let
-                                    i=index ">
+                <div class="col-6 no-gutters " [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
+                    <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho; let i=index">
                         <div class="diente-container text-center ">
                             <span class="text-xs ">{{ diente.concepto.term }}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                                viewBox="0 0 55 50 " xml:space="preserve ">
-                                <path (mouseenter)="showTooltip(diente, 'distal') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') " [ngClass]="{}
-                                    " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'distal')}} "
-                                    title="distal " />
-                                <path (mouseenter)="showTooltip(diente, 'vestibular') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') " [ngClass]="{} "
-                                    d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'vestibular')}} "
-                                    title="vestibular " />
-                                <path (mouseenter)="showTooltip(diente, 'mesial') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') " [ngClass]="{}
-                                    " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'mesial')}} "
+                            <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="50px"
+                                height="50px" x="0px " y="0px " baseProfile="basic " version="1.1 " viewBox="0 0 55 50 " xml:space="preserve ">
+                                <path (mouseenter)="showTooltip(diente, 'distal') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') "
+                                    [ngClass]="{}" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                    class="diente distal {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'distal')}}" title="distal"
                                 />
-                                <path (mouseenter)="showTooltip(diente, 'palatina') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') " [ngClass]="{}
-                                    " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'palatina')}} "
-                                    title="palatina " />
-                                <path (mouseenter)="showTooltip(diente, 'oclusal') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') " [ngClass]="{}
-                                    " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal {{ classRelacion(
-                                    'cuadranteInferiorDerecho', diente, 'oclusal')}} " title="oclusal " />
-                                <g (mouseenter)="showTooltip(diente, 'pieza')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteInferiorDerecho', diente, 'pieza')"
-                                    class="pieza" title="pieza completa">
-                                    <!-- Círculo MINI -->
-                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'pieza') }}"
-                                        cx="46.285" cy="7.311" r="5.801" [ngClass]="classRelacion('cuadranteInferiorDerecho', diente, 'pieza')"
+                                <path (mouseenter)="showTooltip(diente, 'vestibular') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                    class="diente vestibular {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'vestibular')}}"
+                                    title="vestibular" />
+                                <path (mouseenter)="showTooltip(diente, 'mesial') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') "
+                                    [ngClass]="{}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z "
+                                    class="diente mesial " title="mesial {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'mesial')}}"
+                                />
+                                <path (mouseenter)="showTooltip(diente, 'palatina') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                    class="diente palatina {{ classRelacion( 'cuadranteInferiorDerecho', diente, 'palatina')}}"
+                                    title="palatina" />
+                                <path (mouseenter)="showTooltip(diente, 'oclusal') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteInferiorDerecho', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                    class="diente oclusal {{ classRelacion('cuadranteInferiorDerecho', diente, 'oclusal')}}"
+                                    title="oclusal" />
+                                <ng-container *ngFor="let relClass of classRelacion( 'cuadranteInferiorDerecho', diente, 'pieza'); let a=index">
+                                    <g *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
+                                        class="pieza" title="pieza completa">
+                                        <!-- Círculo MINI -->
+                                        <circle (click)="verRegistroDiente('cuadranteInferiorDerecho', diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311"
+                                            r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
+                                        />
+                                    </g>
+                                    <!-- Círculo GRANDE -->
+                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'"
                                     />
-                                </g>
-                                <!-- Círculo GRANDE -->
-                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="classRelacion('cuadranteInferiorDerecho', diente, 'pieza') + '-outline'"
-                                />
+                                </ng-container>
                             </svg>
                         </div>
                     </ng-container>
                 </div>
 
                 <!-- CUADRANTE INF IZQ -->
-                <div class="col-6 no-gutters " [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma} ">
-                    <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo;
-                                    let i=index ">
+                <div class="col-6 no-gutters " [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
+                    <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo;let i=index ">
                         <div class="diente-container text-center ">
                             <span class="text-xs ">{{ diente.concepto.term }}</span>
-                            <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                                viewBox="0 0 55 50 " xml:space="preserve ">
-                                <path (mouseenter)="showTooltip(diente, 'distal') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') " [ngClass]="{}
-                                    " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'distal')}} "
-                                    title="distal " />
-                                <path (mouseenter)="showTooltip(diente, 'vestibular') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') " [ngClass]="{} "
-                                    d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'vestibular')
-                                    }} " title="vestibular " />
-                                <path (mouseenter)="showTooltip(diente, 'mesial') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') " [ngClass]="{}
-                                    " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'mesial')}} "
+                            <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="50px"
+                                height="50px" x="0px " y="0px " baseProfile="basic " version="1.1 " viewBox="0 0 55 50 " xml:space="preserve ">
+                                <path (mouseenter)="showTooltip(diente, 'distal') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') "
+                                    [ngClass]="{}" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                    class="diente distal {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'distal')}}"
+                                    title="distal" />
+                                <path (mouseenter)="showTooltip(diente, 'vestibular') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                    class="diente vestibular {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'vestibular')}}"
+                                    title="vestibular" />
+                                <path (mouseenter)="showTooltip(diente, 'mesial') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') "
+                                    [ngClass]="{}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z "
+                                    class="diente mesial " title="mesial {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'mesial')}}"
                                 />
-                                <path (mouseenter)="showTooltip(diente, 'palatina') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') " [ngClass]="{}
-                                    " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'palatina')}} "
-                                    title="palatina " />
-                                <path (mouseenter)="showTooltip(diente, 'oclusal') " (mouseleave)="hideTooltip()
-                                    " (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') " [ngClass]="{}
-                                    " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal {{ classRelacion(
-                                    'cuadranteSuperiorIzquierdo', diente, 'oclusal')}} " title="oclusal " />
-                                <g (mouseenter)="showTooltip(diente, 'pieza')" (mouseleave)="hideTooltip()" (click)="verRegistroDiente('cuadranteSuperiorIzquierdo', diente, 'pieza')"
-                                    class="pieza" title="pieza completa">
-                                    <!-- Círculo MINI -->
-                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" class="evolucionada {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'pieza') }}"
-                                        cx="46.285" cy="7.311" r="5.801" [ngClass]="classRelacion('cuadranteSuperiorIzquierdo', diente, 'pieza')"
+                                <path (mouseenter)="showTooltip(diente, 'palatina') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                    class="diente palatina {{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'palatina')}}"
+                                    title="palatina" />
+                                <path (mouseenter)="showTooltip(diente, 'oclusal') " (mouseleave)="hideTooltip()" (click)="verRegistroDiente( 'cuadranteSuperiorIzquierdo', diente, 'distal') "
+                                    [ngClass]="{}" d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                    class="diente oclusal {{ classRelacion('cuadranteSuperiorIzquierdo', diente, 'oclusal')}}"
+                                    title="oclusal" />
+                                <ng-container *ngFor="let relClass of classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'pieza'); let a=index">
+                                    <g *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
+                                        class="pieza" title="pieza completa">
+                                        <!-- Círculo MINI -->
+                                        <circle (click)="verRegistroDiente('cuadranteSuperiorIzquierdo', diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311"
+                                            r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
+                                        />
+                                    </g>
+                                    <!-- Círculo GRANDE -->
+                                    <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'"
                                     />
-                                </g>
-                                <!-- Círculo GRANDE -->
-                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="classRelacion('cuadranteSuperiorIzquierdo', diente, 'pieza') + '-outline'"
-                                />
+                                </ng-container>
                             </svg>
                         </div>
                     </ng-container>
@@ -228,60 +222,53 @@
 
 
         <!-- ODONTOGRAMA DE ESTA CONSULTA -->
-        <div class="row no-gutters ">
-            <div class="col-12 no-gutters pt-3 ">
+        <div class="row no-gutters">
+            <div class="col-12 no-gutters pt-3">
                 <h6>Odontograma de esta consulta</h6>
-                <!-- <pre class="text-left " *ngIf="registro?.valor?.piezas ">
+                <!-- <pre class="text-left" *ngIf="registro?.valor?.piezas">
                     RELACIONES {{ relaciones | json }}
-                </pre> -->
-                <!-- <pre>
-                    {{ prestacion.ejecucion.registros[1].relacionadoCon | json }}
                 </pre> -->
             </div>
 
             <!-- CUADRANTE SUP DER -->
-            <div class="col-6 no-gutters ">
-                <ng-container *ngFor="let diente of odontograma.cuadranteSuperiorDerecho; let i=index ">
-
-                    <div class="diente-container text-center ">
-                        <span class="text-diente ">{{ diente.concepto.term }}</span>
-                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                            viewBox="0 0 55 50 " xml:space="preserve ">
-                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1} " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal " title="distal " />
-                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,
-                                    'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1} " d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular " title="vestibular " />
-                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,
-                                    'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1} " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial " />
-                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,
-                                    'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1} " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina " title="palatina " />
-                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1} " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal " title="oclusal " />
-                            <g class="pieza " (click)="seleccionarDiente(diente, 'pieza') " title="pieza completa ">
-                                <!-- Círculo MINI -->
-                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,
-                                    'registrada': piezaCompletaValor(diente, 'pieza') !== -1} " class="st1 {{ getRelacionClass(diente)}} "
-                                    cx="46.285 " cy="7.311 " r="5.801 " />
-                                <!-- Asterisco -->
-                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':
-                                    piezaCompletaValor(diente, 'pieza') !== -1} " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-                                    l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z
-                                    " class="{{getRelacionClass(diente)}}-outline " />
+            <div class="col-6 no-gutters">
+                <ng-container *ngFor="let diente of odontograma.cuadranteSuperiorDerecho; let i=index">
+                    <!-- <pre class="text-xs">
+                            {{ getRelacionClass(diente, 'pieza') !== -1 ? 'AAHHH' : 'NOOOO' }}
+                        </pre> -->
+                    <!-- {{ diente.concepto.conceptId }} -->
+                    <div class="diente-container text-center">
+                        <span class="text-diente">{{ diente.concepto.term }}</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="cuadrante-sup-der" width="50px" height="50px"
+                            x="0px" y="0px" baseProfile="basic" version="1.1" viewBox="0 0 55 50" xml:space="preserve">
+                            <path (click)="seleccionarDiente(diente, 'distal')" [ngClass]="{'seleccionada': cara(diente,'distal') !== -1}" d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                class="diente distal {{ caraValor(diente, 'distal') !== -1 ? 'diente-' + diente.relacion?.concepto?.semanticTag : '' }}"
+                                title="distal" />
+                            <path (click)="seleccionarDiente(diente, 'vestibular')" [ngClass]="{'seleccionada': cara(diente,'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1}"
+                                d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                class="diente vestibular" title="vestibular" />
+                            <path (click)="seleccionarDiente(diente, 'mesial')" [ngClass]="{'seleccionada': cara(diente,'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
+                                class="diente mesial" title="mesial" />
+                            <path (click)="seleccionarDiente(diente, 'palatina')" [ngClass]="{'seleccionada': cara(diente,'palatina') !== -1}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                class="diente palatina {{ caraValor(diente, 'palatina') !== -1 ? 'diente-' + diente.relacion?.concepto?.semanticTag : '' }}"
+                                title="palatina" />
+                            <path (click)="seleccionarDiente(diente, 'oclusal')" [ngClass]="{'seleccionada': cara(diente,'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1}"
+                                d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
+                                class="diente oclusal" title="oclusal" />
+                            <g class="pieza" (click)="seleccionarDiente(diente, 'pieza')" title="pieza completa">
+                                <circle class="st1" [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + diente.relacion?.concepto?.semanticTag : ''"
+                                    cx="46.285" cy="7.311" r="5.801" />
+                                <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + diente.relacion?.concepto?.semanticTag + '-outline' : ''"
+                                    d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                />
                             </g>
-                            <!-- Círculo GRANDE -->
-                            <circle *ngIf="true " class="st0 " [ngClass]="getRelacionClass(diente, 'pieza') " cx="26
-                                    " cy="27.5 " r="22.246 " />
+                            <ng-container *ngIf="piezaCompletaValor(diente, 'pieza') !== -1">
+                                <!-- *ngFor="let rel of diente.relacion" -->
+                                {{ diente.relacion.length | json}}
+                                <circle [ngClass]="'diente-' + diente.relacion?.concepto?.semanticTag + '-outline'" class="st0" cx="26" cy="27.5" r="22.246"
+                                />
+                            </ng-container>
                         </svg>
                     </div>
                 </ng-container>
@@ -292,43 +279,34 @@
                 <ng-container *ngFor="let diente of odontograma.cuadranteSuperiorIzquierdo; let i=index ">
                     <div class="diente-container text-center ">
                         <span class="text-diente ">{{ diente.concepto.term }}</span>
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="35px " height="35px "
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="35px " height="35px "
                             x="0px " y="px " baseProfile="basic " version="1.1 " viewBox="0 0 45 55 "> -->
                         <!--  preserveAspectRatio="none " -->
-                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                            viewBox="0 0 55 50 " xml:space="preserve ">
-                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1} " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal " title="distal " />
-                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,
-                                    'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1} " d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular " title="vestibular " />
-                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,
-                                    'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1} " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial " />
-                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,
-                                    'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1} " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina " title="palatina " />
-                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1} " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal " title="oclusal " />
+                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="50px"
+                            height="50px" x="0px " y="0px " baseProfile="basic " version="1.1 " viewBox="0 0 55 50 " xml:space="preserve ">
+                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1}"
+                                d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                class="diente distal " title="distal" />
+                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1}"
+                                d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                class="diente vestibular " title="vestibular" />
+                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z "
+                                class="diente mesial " title="mesial" />
+                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1}"
+                                d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                class="diente palatina " title="palatina" />
+                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1}"
+                                d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                class="diente oclusal " title="oclusal" />
                             <g class="pieza " (click)="seleccionarDiente(diente, 'pieza') " title="pieza completa ">
-                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,
-                                    'registrada': piezaCompletaValor(diente, 'pieza') !== -1} " class="st1 " cx="46.285 "
-                                    cy="7.311 " r="5.801 " />
-                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':
-                                    piezaCompletaValor(diente, 'pieza') !== -1} " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-                                    l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z
-                                    " class="{{ classRelacion( 'cuadranteSuperiorDerecho', diente, 'pieza')}} " />
+                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,'registrada': piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    class="st1 " cx="46.285 " cy="7.311 " r="5.801" />
+                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                    class="{{ classRelacion( 'cuadranteSuperiorIzquierdo', diente, 'pieza')}}" />
                             </g>
-                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246 " />
+                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246" />
                         </svg>
                     </div>
                 </ng-container>
@@ -339,43 +317,34 @@
                 <ng-container *ngFor="let diente of odontograma.cuadranteInferiorDerecho; let i=index ">
                     <div class="diente-container text-center ">
                         <span class="text-diente ">{{ diente.concepto.term }}</span>
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="35px " height="35px "
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="35px " height="35px "
                             x="0px " y="px " baseProfile="basic " version="1.1 " viewBox="0 0 45 55 "> -->
                         <!--  preserveAspectRatio="none " -->
-                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                            viewBox="0 0 55 50 " xml:space="preserve ">
-                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1} " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal " title="distal " />
-                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,
-                                    'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1} " d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular " title="vestibular " />
-                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,
-                                    'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1} " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial " />
-                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,
-                                    'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1} " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina " title="palatina " />
-                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1} " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal " title="oclusal " />
+                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="50px"
+                            height="50px" x="0px " y="0px " baseProfile="basic " version="1.1 " viewBox="0 0 55 50 " xml:space="preserve ">
+                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1}"
+                                d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                class="diente distal " title="distal" />
+                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1}"
+                                d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                class="diente vestibular " title="vestibular" />
+                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z "
+                                class="diente mesial " title="mesial" />
+                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1}"
+                                d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                class="diente palatina " title="palatina" />
+                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1}"
+                                d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                class="diente oclusal " title="oclusal" />
                             <g class="pieza " (click)="seleccionarDiente(diente, 'pieza') " title="pieza completa ">
-                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,
-                                    'registrada': piezaCompletaValor(diente, 'pieza') !== -1} " class="st1 " cx="46.285 "
-                                    cy="7.311 " r="5.801 " />
-                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':
-                                    piezaCompletaValor(diente, 'pieza') !== -1} " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-                                    l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z
-                                    " class="{{ classRelacion( 'cuadranteSuperiorDerecho', diente, 'pieza')}} " />
+                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,'registrada': piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    class="st1 " cx="46.285 " cy="7.311 " r="5.801" />
+                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                    class="{{ classRelacion( 'cuadranteInferiorDerecho', diente, 'pieza')}}" />
                             </g>
-                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246 " />
+                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246" />
                         </svg>
                     </div>
                 </ng-container>
@@ -386,43 +355,34 @@
                 <ng-container *ngFor="let diente of odontograma.cuadranteInferiorIzquierdo; let i=index ">
                     <div class="diente-container text-center ">
                         <span class="text-diente ">{{ diente.concepto.term }}</span>
-                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="35px " height="35px "
+                        <!-- <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="35px " height="35px "
                             x="0px " y="px " baseProfile="basic " version="1.1 " viewBox="0 0 45 55 "> -->
                         <!--  preserveAspectRatio="none " -->
-                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der
-                                    " width="50px " height="50px " x="0px " y="0px " baseProfile="basic " version="1.1 "
-                            viewBox="0 0 55 50 " xml:space="preserve ">
-                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1} " d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966
-                                    c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z
-                                    " class="diente distal " title="distal " />
-                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,
-                                    'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1} " d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2
-                                    c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z
-                                    " class="diente vestibular " title="vestibular " />
-                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,
-                                    'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1} " d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34
-                                    c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z " class="diente
-                                    mesial " title="mesial " />
-                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,
-                                    'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1} " d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2
-                                    c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z
-                                    " class="diente palatina " title="palatina " />
-                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,
-                                    'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1} " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627
-                                    s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627
-                                    C30.188,20.433,28.198,19.542,26,19.542z " class="diente oclusal " title="oclusal " />
+                        <svg xmlns="http://www.w3.org/2000/svg " xmlns:xlink="http://www.w3.org/1999/xlink " id="cuadrante-sup-der" width="50px"
+                            height="50px" x="0px " y="0px " baseProfile="basic " version="1.1 " viewBox="0 0 55 50 " xml:space="preserve ">
+                            <path (click)="seleccionarDiente(diente, 'distal') " [ngClass]="{'seleccionada': cara(diente,'distal') !== -1, 'registrada': caraValor(diente, 'distal') !== -1}"
+                                d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
+                                class="diente distal " title="distal" />
+                            <path (click)="seleccionarDiente(diente, 'vestibular') " [ngClass]="{'seleccionada': cara(diente,'vestibular') !== -1, 'registrada': caraValor(diente, 'vestibular') !== -1}"
+                                d="M26,19.542c2.197,0,4.187,0.891,5.627,2.331l9.34-9.339c-3.831-3.831-9.122-6.2-14.967-6.2c-5.845,0-11.137,2.369-14.967,6.2l9.339,9.339C21.813,20.433,23.802,19.542,26,19.542z"
+                                class="diente vestibular " title="vestibular" />
+                            <path (click)="seleccionarDiente(diente, 'mesial') " [ngClass]="{'seleccionada': cara(diente,'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z "
+                                class="diente mesial " title="mesial" />
+                            <path (click)="seleccionarDiente(diente, 'palatina') " [ngClass]="{'seleccionada': cara(diente,'palatina') !== -1, 'registrada': caraValor(diente, 'palatina') !== -1}"
+                                d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
+                                class="diente palatina " title="palatina" />
+                            <path (click)="seleccionarDiente(diente, 'oclusal') " [ngClass]="{'seleccionada': cara(diente,'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1}"
+                                d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                class="diente oclusal " title="oclusal" />
                             <g class="pieza " (click)="seleccionarDiente(diente, 'pieza') " title="pieza completa ">
-                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,
-                                    'registrada': piezaCompletaValor(diente, 'pieza') !== -1} " class="st1 " cx="46.285 "
-                                    cy="7.311 " r="5.801 " />
-                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':
-                                    piezaCompletaValor(diente, 'pieza') !== -1} " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25
-                                    l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z
-                                    " class="{{ classRelacion( 'cuadranteSuperiorDerecho', diente, 'pieza')}} " />
+                                <circle [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1,'registrada': piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    class="st1 " cx="46.285 " cy="7.311 " r="5.801" />
+                                <path [ngClass]="{'seleccionada': piezaCompleta(diente, 'pieza') !== -1, 'registrada':piezaCompletaValor(diente, 'pieza') !== -1}"
+                                    d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                    class="{{ classRelacion( 'cuadranteInferiorIzquierdo', diente, 'pieza')}}" />
                             </g>
-                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246 " />
+                            <circle *ngIf="piezaCompleta(diente, 'pieza') !== -1 " class="st0 " cx="26 " cy="27.5 " r="22.246" />
                         </svg>
                     </div>
                 </ng-container>
