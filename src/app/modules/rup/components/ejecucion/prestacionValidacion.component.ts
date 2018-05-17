@@ -104,9 +104,7 @@ export class PrestacionValidacionComponent implements OnInit {
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
         private servicioDocumentos: DocumentosService,
-        private sanitizer: DomSanitizer,
-        // private zone: NgZone
-    ) {
+        private sanitizer: DomSanitizer) {
     }
 
     ngOnInit() {
@@ -143,7 +141,6 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
-
             this.registrosOriginales = prestacion.ejecucion.registros;
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
@@ -367,7 +364,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     agendas.forEach(a => this.prestacionesAgendas = [...this.prestacionesAgendas, ...a.tipoPrestaciones]);
                     prestacionesSolicitadas.forEach(element => {
                         let idRegistro = element.solicitud.registros[0].id;
-                        if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId)) {
+                        if (this.prestacionesAgendas.find(pa => pa.conceptId === element.solicitud.tipoPrestacion.conceptId && pa.term === element.solicitud.tipoPrestacion.term)) {
                             this.asignarTurno[idRegistro] = element;
                         }
                     });
@@ -557,9 +554,9 @@ export class PrestacionValidacionComponent implements OnInit {
             /**
              * Cada logo va a quedar generado como base64 desde la API:
              *
-             * <img src="data:image/png;base64,..." class="logoAndes">
-             * <img src="data:image/png;base64,..." class="logotipoAndes">
-             * <img src="data:image/png;base64,..." class="logoPDP">
+             * <img src="data:image/png;base64,..." style="float: left;">
+             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
+             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
              *
              */
 

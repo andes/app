@@ -234,6 +234,8 @@ import { CensoMensualComponent } from './modules/rup/components/ejecucion/intern
 import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
+import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
+import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -322,6 +324,8 @@ export let RUPRegistry = {
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
+    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
 let RUPComponentsArray = [
@@ -360,7 +364,9 @@ let RUPComponentsArray = [
     CensoDiarioComponent,
     CensoMensualComponent,
     InformeEpicrisisComponent,
-    ElementoDeRegistroComponent
+    ElementoDeRegistroComponent,
+    OdontologiaDefaultComponent,
+    CircunferenciaCinturaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
