@@ -7,6 +7,7 @@ import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
+import { Plex } from '@andes/plex';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class PacienteDetalleComponent {
     deshabilitar = false;
     inconsistenciaDatos = false;
 
-    constructor(private pacienteService: PacienteService, private renaperService: RenaperService) { }
+    constructor(private pacienteService: PacienteService, private renaperService: RenaperService,  private plex: Plex) { }
 
     renaperVerification(patient) {
 
@@ -60,6 +61,9 @@ export class PacienteDetalleComponent {
 
             this.loading = false;
             this.deshabilitar = true;
+
+            // TODO: Controlar cuando el ws no devuelve nada porque eso no está funcionando bien.
+
             if (resultado) {
                 let codigo = resultado.codigo;
                 let datos = resultado.datos;
@@ -75,6 +79,8 @@ export class PacienteDetalleComponent {
                 this.renaperNotification.emit(true);
             } else {
                 // TODO ver el tema de mostrar algún error si no trae nada
+
+                this.plex.toast('error', 'No hemos encontrado información en RENAPER', '', 5000);
                 console.log('entro por algun problema');
             }
 
