@@ -72,9 +72,7 @@ export class PacienteDetalleComponent {
                     // this.paciente.direccion[0]['codigoPostal'] = datos.cpostal;
                 };
                 patient.foto = resultado.datos.foto;
-                console.log('antes del emmitttt');
                 this.renaperNotification.emit(true);
-                console.log('luego del emmittt');
             } else {
                 // TODO ver el tema de mostrar algún error si no trae nada
                 console.log('entro por algun problema');

@@ -14,7 +14,7 @@
                                     <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
                                         [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento" [required]="!noPoseeDNI"
                                         placeholder="Ingresar DNI...">
-                                    </plex-int>noPoseeDNI
+                                    </plex-int>
                                 </div>
                                 <div class="col-4">
                                     <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
