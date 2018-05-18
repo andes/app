@@ -68,8 +68,8 @@ export class PacienteDetalleComponent {
                     patient.apellido = resultado.datos.apellido;
                     patient.fechaNacimiento = resultado.datos.fechaNacimiento;
                     patient.estado = 'validado';
-                    // this.paciente.direccion[0]['valor'] = datos.calle + ' ' + datos.numero;
-                    // this.paciente.direccion[0]['codigoPostal'] = datos.cpostal;
+                    this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                    this.paciente.direccion[0].codigoPostal = datos.cpostal;
                 };
                 patient.foto = resultado.datos.foto;
                 this.renaperNotification.emit(true);
