@@ -12,9 +12,9 @@
                             <div class="row">
                                 <div class="col-4">
                                     <plex-int label="Número de Documento" [(ngModel)]="pacienteModel.documento" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [readonly]="validado || noPoseeDNI" [max]="9999999999" name="documento" [required]="!noPoseeDNI"
+                                        [readonly]=" validado || noPoseeDNI " [max]="9999999999" name="documento" [required]="!noPoseeDNI"
                                         placeholder="Ingresar DNI...">
-                                    </plex-int>
+                                    </plex-int>noPoseeDNI
                                 </div>
                                 <div class="col-4">
                                     <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
@@ -360,10 +360,10 @@
             </div>
 
             <!-- Detalle -->
-            <div class="col">
+            <div class="col-3">
                 <plex-box>
                     <div *ngIf='!showMobile'>
-                        <paciente-detalle [paciente]="pacienteModel"></paciente-detalle>
+                        <paciente-detalle [paciente]="pacienteModel" (renaperNotification)="renaperNotification($event)"></paciente-detalle>
 
                         <!-- Pacientes candidatos -->
                         <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">
