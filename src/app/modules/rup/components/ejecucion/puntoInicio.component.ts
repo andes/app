@@ -218,6 +218,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.fueraDeAgenda = _turnos;
             }
         }
+        let indexResultadoBusqueda;
         if (typeof this.paciente !== 'undefined' && this.paciente) {
             let search = this.paciente.toLowerCase();
 
@@ -230,17 +231,26 @@ export class PuntoInicioComponent implements OnInit {
                     let lengthBloques = this.agendas[indexAgenda].bloques.length;
                     for (let indexBloque = 0; indexBloque < lengthBloques; indexBloque++) {
 
-                        let _turnos = this.agendas[indexAgenda].bloques[indexBloque].turnos.filter(t => {
+
+                        let _turnos = [];
+                        this.agendas[indexAgenda].bloques[indexBloque].turnos.forEach(t => {
                             let nombreCompleto = '';
                             if (t.paciente && t.paciente.id) {
                                 nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
                             }
-                            return (t.paciente && t.paciente.id &&
+
+                            if (t.paciente && t.paciente.id &&
                                 (nombreCompleto.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
                                     || t.paciente.documento.toLowerCase().indexOf(search) >= 0)
-                            );
+                            ) {
+                                // guardamos el indice de la primer agenda tenga el paciente que se busca.
+                                if (indexResultadoBusqueda === undefined) {
+                                    indexResultadoBusqueda = indexAgenda;
+                                }
+                                _turnos.push(t);
+                            }
                         });
 
                         this.agendas[indexAgenda].bloques[indexBloque].turnos = _turnos;
@@ -257,12 +267,15 @@ export class PuntoInicioComponent implements OnInit {
                 });
 
                 this.fueraDeAgenda = _turnos;
+
             }
+
         }
 
-
-        if (this.agendas.length) {
-            this.agendaSeleccionada = this.agendas[0];
+        if (this.agendas.length && this.paciente) {
+            this.cargarTurnos(this.agendas[indexResultadoBusqueda]);
+        } else {
+            this.cargarTurnos(this.agendas[0]);
         }
 
     }
