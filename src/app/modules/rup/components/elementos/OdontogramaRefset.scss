@@ -11,6 +11,8 @@
     .title {
         height: 40px;
     }
+    width: 100%;
+    transition: all 1s;
 }
 
 .hidden {
@@ -60,7 +62,17 @@ svg#cuadrante-sup-der {
 }
 
 .diente-hallazgo {
-    fill: $hallazgo;
+    fill: $hallazgo !important;
+}
+
+// :JOY:
+.diente-null {
+    fill: $plan !important;
+}
+
+.diente-null-outline {
+    fill: none !important;
+    stroke: $plan !important;
 }
 
 .diente-procedimiento-outline {
@@ -179,4 +191,8 @@ $translation in $angles {
     color: black;
     padding: 10px;
     text-align: center;
+    .readonly,
+    span {
+        display: inline-block !important;
+    }
 }
