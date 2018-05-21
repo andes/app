@@ -166,4 +166,37 @@ export class CensoMensualComponent implements OnInit {
     }
 
 
+    diasFuncionamiento() {
+        return this.totalResumenCenso.count;
+    }
+
+    promedioDisponible() {
+        return Math.round(this.totalResumenCenso.disponibles24 / this.totalResumenCenso.count);
+    }
+
+    pacienteDia() {
+        return Math.round(this.totalResumenCenso.pacientesDia / this.totalResumenCenso.count);
+    }
+
+    mortalidadHospitalaria() {
+        let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
+            + this.totalResumenCenso.egresosDefuncion;
+        return total === 0 ? 0 : this.totalResumenCenso.egresosDefuncion / (total);
+    }
+
+    promedioPermanencia() {
+        let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
+            + this.totalResumenCenso.egresosDefuncion;
+        return total === 0 ? 0 : this.totalResumenCenso.pacientesDia / (total);
+    }
+
+    giro() {
+        let total = this.totalResumenCenso.pasesA + this.totalResumenCenso.egresosAlta
+            + this.totalResumenCenso.egresosDefuncion;
+        let promedio = this.promedioDisponible();
+        return promedio === 0 ? 0 : total / promedio;
+    }
+
+
+
 }

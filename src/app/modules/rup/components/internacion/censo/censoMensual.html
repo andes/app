@@ -105,27 +105,27 @@
                 <table class="table table-bordered">
                     <tr>
                         <td>Días de funcionamiento del servicio</td>
-                        <td>{{totalResumenCenso.count}}</td>
+                        <td>{{diasFuncionamiento()}}</td>
                     </tr>
                     <tr>
                         <td>Promedio diario de camas disponibles</td>
-                        <td>{{ totalResumenCenso.disponibles24 / totalResumenCenso.count}}</td>
+                        <td>{{ promedioDisponible() }}</td>
                     </tr>
                     <tr>
                         <td>Promedio diario de paciente día</td>
-                        <td>{{ totalResumenCenso.pacientesDia / totalResumenCenso.count}}</td>
+                        <td>{{ pacienteDia() }}</td>
                     </tr>
                     <tr>
                         <td>Tasa de mortalidad hospitalaria</td>
-                        <td>{{ totalResumenCenso.egresosDefuncion / (totalResumenCenso.pasesA + totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion) }}</td>
+                        <td>{{ mortalidadHospitalaria() }}</td>
                     </tr>
                     <tr>
                         <td>Promedio de permanencia</td>
-                        <td>{{ totalResumenCenso.pacientesDia / (totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion + totalResumenCenso.pasesA) }}</td>
+                        <td>{{ promedioPermanencia() }}</td>
                     </tr>
                     <tr>
                         <td>Giro Cama</td>
-                        <td>{{ (totalResumenCenso.egresosAlta + totalResumenCenso.egresosDefuncion) / (totalResumenCenso.pasesA + totalResumenCenso.disponibles24 / totalResumenCenso.count) }}</td>
+                        <td>{{ giro() }}</td>
                     </tr>
                 </table>
 
