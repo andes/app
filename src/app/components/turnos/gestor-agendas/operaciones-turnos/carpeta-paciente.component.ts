@@ -75,17 +75,10 @@ export class CarpetaPacienteComponent implements OnInit {
     guardarCarpetaPaciente() {
         if (this.carpetaPaciente.nroCarpeta !== '') {
             this.carpetaSave.nroCarpeta = this.carpetaPaciente.nroCarpeta;
-            let indiceCarpeta = this.pacienteTurno.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
-                this.pacienteTurno.carpetaEfectores[indiceCarpeta] = this.carpetaSave;
-            } else {
-                this.pacienteTurno.carpetaEfectores.push(this.carpetaSave);
-            }
             this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.pacienteTurno.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);
             });
         }
-
     }
 
     cancelar() {

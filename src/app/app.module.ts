@@ -228,6 +228,7 @@ import { EgresoInternacionComponent } from './modules/rup/components/elementos/e
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -252,6 +253,10 @@ import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.compo
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
+
 
 // Locales
 import { AppComponent } from './app.component';
@@ -315,6 +320,7 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
@@ -352,6 +358,7 @@ let RUPComponentsArray = [
     EgresoInternacionComponent,
     PasesCamaComponent,
     InformeEpicrisisComponent,
+    OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent
 ];
 
@@ -410,6 +417,9 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
+        ConsultaDiagnosticoComponent,
+        CantidadConsultaXPrestacionComponent,
+        EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,

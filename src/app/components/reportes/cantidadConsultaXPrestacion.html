@@ -1,0 +1,34 @@
+<div class="row">
+    <div class="col">
+        <plex-box type="primary">
+            <header>
+                <table *ngIf="diagnosticos.length>0" style="table-layout:fixed" class="table table-fixed">
+                    <thead>
+                        <tr>
+                            <!-- <th></th> -->
+                            <th>Nombre de la prestación</th>
+                            <th>ConceptId de la prestación</th>
+                            <th>Total de turnos asignados</th>
+                        </tr>
+                    </thead>
+                </table>
+            </header>
+            <table style="table-layout:fixed" class="table table-fixed">
+                <tbody>
+                    <tr *ngFor="let diagnostico of diagnosticos; let i=index" class="hover">
+                        <td>
+                            {{ diagnostico.nombrePrestacion }}
+                        </td>
+                        <td>
+                            {{ diagnostico.conceptId }}
+                        </td>
+                        <td>
+                            {{ diagnostico.total }}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </plex-box>
+    </div>
+
+</div>

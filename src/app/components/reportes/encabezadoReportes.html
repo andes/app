@@ -1,0 +1,52 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <div class="row">
+            <div class="col">
+                <plex-box>
+                    <header>
+                        <div class="clearfix">
+                            <div class="page-title float-left">Reportes</div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-2">
+                                <plex-datetime type="date" [(ngModel)]="horaInicio" (change)="refreshSelection($event,'horaInicio')" name="horaInicio" label="Desde"
+                                    class="fechas" [required]="true">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-2">
+                                <plex-datetime type="date" [(ngModel)]="horaFin" (change)="refreshSelection($event,'horaFin')" name="horaFin" label="Hasta"
+                                    class="fechas" [required]="true">
+                                </plex-datetime>
+                            </div>
+                            <br>
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización" placeholder="Seleccione la organización"
+                                    labelField="nombre" [required]="true">
+                                </plex-select>
+                            </div>
+                            <br>
+                            <div class="col-4">
+                                <plex-select [(ngModel)]="tipoReportes" name="tipoReportes" [data]="opciones" label-field="Tipo de reportes" label="Seleccione reporte"
+                                    [required]="true">
+                                </plex-select>
+                            </div>
+                            <br>
+
+                        </div>
+                        <br>
+                    </header>
+                    <consultaDiagnostico *ngIf="showConsultaDiagnostico" [diagnosticos]="diagnosticos"></consultaDiagnostico>
+                    <reporteC2 *ngIf="showReporteC2" [diagnosticos]="diagnosticos"></reporteC2>
+                    <cantidadConsultaXPrestacion *ngIf="showCantidadConsultaXPrestacion" [diagnosticos]="diagnosticos"></cantidadConsultaXPrestacion>
+                </plex-box>
+            </div>
+        </div>
+
+    </section>
+
+    <footer>
+        <plex-button type="success" label="Imprimir" (click)="imprimir()" class="float-right"></plex-button>
+    </footer>
+
+</form>
