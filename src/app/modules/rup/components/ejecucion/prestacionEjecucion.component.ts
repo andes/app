@@ -276,6 +276,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
+
         let registros = this.prestacion.ejecucion.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
@@ -283,23 +284,29 @@ export class PrestacionEjecucionComponent implements OnInit {
             registroOrigen = registroOrigen.dragData;
         }
         // Verificamos si ya esta vinculado no dejar que se vinculen de nuevo
-        let control = this.controlVinculacion(registroOrigen, registroDestino);
-        if (control) {
+        let tieneVinculacion = this.tieneVinculacion(registroOrigen, registroDestino);
+        if (tieneVinculacion) {
             this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
             return false;
         }
         // Controlar si lo que llega como parámetro es un registro o es un concepto
+        // return;
         if (!registroOrigen.concepto) {
             this.ejecutarConcepto(registroOrigen, registroDestino);
         } else {
             if (registroOrigen) {
-                registroOrigen.relacionadoCon = [...registroOrigen.relacionadoCon, registroDestino];
+                if (!registroOrigen.relacionadoCon) {
+                    registroOrigen.relacionadoCon = [];
+                }
+                registroOrigen.relacionadoCon.push(registroDestino.concepto);
                 // // buscamos en la posición que se encuentra el registro de orgien y destino
                 // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
                 // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
 
                 // registros.splice(indexOrigen, 1);
                 // registros.splice(indexDestino + 1, 0, registroOrigen);
+            } else {
+                return false;
             }
         }
 
@@ -560,11 +567,16 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
-                if (resultado && resultado.relacionadoCon && (this.tipoBusqueda && this.tipoBusqueda.conceptos)) {
-                    if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda as any).conceptId)) === -1) {
-                        resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                if (resultado && resultado.relacionadoCon) {
+                    if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
+                        if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda as any).conceptId)) === -1) {
+                            resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                        }
+                    } else {
+                        resultado.relacionadoCon = this.tipoBusqueda;
                     }
                 }
+
             }
 
         }
@@ -827,10 +839,15 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.itemsRegistros[registroActual.id].items = [];
         let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
-            let control = this.controlVinculacion(registroActual, registro);
+            // let control = this.tieneVinculacion(registroActual, registro);
+            // if (control) {
+            //     this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
+            //     return false;
+            // }
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
-                    if (registro.id !== registroActual.relacionadoCon[0].id) {
+                    // if (registro.id !== registroActual.relacionadoCon[0].id) {
+                    if (registroActual.relacionadoCon.findIndex(x => x.id !== registro.id) > -1) {
                         return registro;
                     }
                 } else {
@@ -985,8 +1002,8 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
     }
     // Controla antes de vincular que no esten vinculados
-    controlVinculacion(registroOrigen, registroDestino) {
-        let control;
+    tieneVinculacion(registroOrigen, registroDestino) {
+        let control = false;
         if (this.recorreArbol(registroDestino, registroOrigen)) {
             return true;
         }
@@ -997,7 +1014,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             control = registroOrigen.relacionadoCon.find(registro => registro.id === registroDestino.id || registro.concepto.conceptId === registroDestino.concepto.conceptId);
         }
         if (registroDestino.relacionadoCon && registroDestino.relacionadoCon.length > 0) {
-            control = registroDestino.relacionadoCon.find(registro => registro.id === registroOrigen.id || registro.concepto.conceptId === registroOrigen.concepto.conceptI);
+            control = registroDestino.relacionadoCon.find(registro => registro.id === registroOrigen.id || registro.concepto.conceptId === registroOrigen.concepto.conceptId);
         }
         if (control) {
             return true;

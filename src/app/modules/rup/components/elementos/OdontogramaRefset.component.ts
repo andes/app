@@ -218,16 +218,16 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
             // Esta consulta
             this.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId)) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
             });
             this.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId)) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
             });
             this.odontograma.cuadranteInferiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId)) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
             });
             this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId)) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
             });
         }
 
@@ -258,7 +258,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 if (cara === 'pieza') {
                     return rel;
                 } else {
-                    return rel[0].concepto.semanticTag;
+                    return rel[0] && rel[0].concepto ? rel[0].concepto.semanticTag : '';
                 }
             }
         }
