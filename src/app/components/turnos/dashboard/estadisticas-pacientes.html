@@ -51,6 +51,29 @@
             {{_paciente.contacto[0].valor}}
         </div>
     </div>
+    <div class="row">
+        <div class="col-6" *ngIf="_paciente">
+            <i class="mdi mdi-folder-account"></i>
+            <span style="color: #00A8E0">Nro. de Carpeta</span>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3" *ngIf="nroCarpeta  && !editando">
+            <div> {{nroCarpeta}} </div>
+        </div>
+        <div class="col-3" *ngIf="nroCarpeta && !editando">
+            <plex-button (click)="editarNroCarpeta()" type="success" label="Editar"></plex-button>
+        </div>
+
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
+            <plex-text name="nroCarpeta" [(ngModel)]="nuevaCarpeta"></plex-text>
+
+        </div>
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
+            <plex-button (click)="nuevoNroCarpeta()" type="success" label="Guardar"></plex-button>
+        </div>
+    </div>
     <br>
     <div class="row">
         <div class="col">

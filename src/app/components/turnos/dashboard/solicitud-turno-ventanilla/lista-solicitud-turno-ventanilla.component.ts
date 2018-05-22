@@ -49,7 +49,6 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     ngOnInit() {
 
         this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
-
         // No está autorizado para ver esta pantalla
         if (!this.autorizado) {
             this.redirect('inicio');
@@ -59,20 +58,16 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-
         // Solicitudes que no tienen prestacionOrigen ni turno
         // Si tienen prestacionOrigen son generadas por RUP y no se listan
         // Si tienen turno, dejan de estar pendientes de turno y no se listan
         let params = {
             idPaciente: this.paciente.id,
-            tienePrestacionOrigen: 'no',
-            tieneTurno: 'no',
-            estado: 'pendiente'
+            // tienePrestacionOrigen: 'no',
+            // tieneTurno: 'no',
+            estado: ['pendiente']
         };
-        // let options = {
-        //     idPrestacionOrigen: '',
-        //     turnos: []
-        // }
+
         this.servicioPrestacion.get(params).subscribe(resultado => {
             this.solicitudesPrestaciones = resultado;
         });

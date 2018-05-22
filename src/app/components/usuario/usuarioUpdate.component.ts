@@ -55,13 +55,22 @@ export class UsuarioUpdateComponent implements OnInit {
         private auth: Auth, private provinciaService: ProvinciaService, private organizacionService: OrganizacionService, private permisosService: PermisosService) { }
 
     public ngOnInit() {
-
         this.permisos$ = this.permisosService.get();
         this.permisosService.organizaciones({ admin: true }).subscribe(data => {
             this.organizacionesAuth = data;
+
             if (this.organizacionesAuth.length > 0) {
                 if (this.seleccion) {
-                    this.loadUser();
+                    if (this.seleccion.organizaciones && this.seleccion.organizaciones.length > 0) {
+                        let idOrganizaciones = this.seleccion.organizaciones.map(i => i._id);
+
+                        this.organizacionService.get({ ids: idOrganizaciones }).subscribe(dataUss => {
+                            this.organizacionesUsuario = dataUss;
+                            this.loadUser();
+                        });
+                    } else {
+                        this.loadUser();
+                    };
                 }
             } else {
                 this.router.navigate(['./inicio']);
@@ -76,19 +85,31 @@ export class UsuarioUpdateComponent implements OnInit {
      * @memberof UsuarioUpdateComponent
      */
     getOrganizaciones() {
-        // obtenemos las organizaciones del usuario
-        this.organizacionesUsuario = this.organizacionesAuth.filter(item => this.userModel.organizaciones.findIndex(elem => elem._id === item._id) >= 0);
+        this.organizacionSelect = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
+        this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
-        if (this.organizacionesUsuario.length > 0) {
-            // si el user seleccionado tiene organizaciones, hacemos un "join" con las del administrador
-            // y el resultado se asigna al combo de posibles nuevas organizaciones
-            this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
-            this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
+        // Si el usuario puede agregar efectores, se listan todos los disponibles
+        if (this.auth.check('usuarios:agregarEfector')) {
+            this.organizacionService.get({}).subscribe(organizaciones => {
+                this.newOrganizaciones = organizaciones;
+                this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
+                this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
+            });
         } else {
-            this.newOrganizaciones = this.organizacionesAuth;
+
+            // obtenemos las organizaciones del usuario
+
+            if (this.organizacionesUsuario.length > 0) {
+                // si el user seleccionado tiene organizaciones, hacemos un "join" con las del administrador
+                // y el resultado se asigna al combo de posibles nuevas organizaciones
+                // this.organizacionSelect = this.organizacionSelectPrev = this.organizacionesUsuario[0];
+                this.newOrganizaciones = this.organizacionesAuth.filter(elem => this.userModel.organizaciones.findIndex(item => elem._id === item._id) < 0);
+            } else {
+                this.newOrganizaciones = this.organizacionesAuth;
+            }
+            this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
+            this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
         }
-        this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
-        this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
     }
 
 

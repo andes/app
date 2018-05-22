@@ -378,7 +378,7 @@
                                 </span>
                                 <span [ngClass]="{'text-warning': true}" *ngIf="turno?.asistencia && turno?.asistencia == 'asistio' && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && !turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term">| Asistencia Verificada</span>
                                 <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && !turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo && turno?.diagnostico?.codificaciones[0]?.codificacionProfesional?.snomed?.term">| Registrado por Profesional</span>
-                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.asistencia && (turno.asistencia =='noAsistio'|| turno.asistencia=='sinDatos' ||  turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo) ">| Auditado</span>
+                                <span [ngClass]="{'text-success': true}" *ngIf="turno?.paciente?.id && turno?.asistencia && (turno.asistencia =='noAsistio'|| turno.asistencia=='sinDatos' || turno?.diagnostico?.codificaciones[0]?.codificacionAuditoria?.codigo) ">| Auditado</span>
 
                             </td>
                         </tr>
