@@ -54,7 +54,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
-        this.actualizarContadores();
+        // this.actualizarContadores();
     }
 
     public ngOnInit() {
@@ -67,9 +67,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             return false;
         };
         // controla el input y bloquea dashboard si no tiene permisos
-        if (this.modoCompleto) {
-            this.modoCompleto = this.auth.check('mpi:paciente:dashboard');
-        }
+        // Lo quitamos junto con el html del dashboard
+        // if (this.modoCompleto) {
+        //     this.modoCompleto = this.auth.check('mpi:paciente:dashboard');
+        // }
         this.autoFocus = this.autoFocus + 1;
     }
 
@@ -117,17 +118,18 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      *
      * @private
      */
-    private actualizarContadores() {
-        let actualizar = () => {
-            this.pacienteService.getConsultas('validados')
-                .subscribe(cantPacientesValidados => {
-                    this.cantPacientesValidados = cantPacientesValidados;
-                });
-        };
+    // Lo quitamos junto con el html del Dashboard
+    // private actualizarContadores() {
+    //     let actualizar = () => {
+    //         this.pacienteService.getConsultas('validados')
+    //             .subscribe(cantPacientesValidados => {
+    //                 this.cantPacientesValidados = cantPacientesValidados;
+    //             });
+    //     };
 
-        actualizar();
-        this.intervalHandle = window.setInterval(actualizar, 1000 * 60); // Cada un minuto
-    }
+    //     actualizar();
+    //     this.intervalHandle = window.setInterval(actualizar, 1000 * 60); // Cada un minuto
+    // }
 
     /**
      * Controla que el texto ingresado corresponda a un documento válido, controlando todas las expresiones regulares

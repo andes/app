@@ -19,7 +19,7 @@ export class AppComponent {
                         (data) => this.plex.updateAppStatus(data),
                         (err) => this.plex.updateAppStatus({ API: 'Error' })
                     );
-            }, 2000);
+            }, 100000);
         } else {
             this.plex.updateAppStatus({ API: 'OK' });
         }
