@@ -10,8 +10,10 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <td>Nombre</td>
-                                    <td>Apellido</td>
+                                    <td>Nombre y apellido</td>
+                                    <td>Documento</td>
+                                    <td>Fecha de nacimiento</td>
+                                    <td>Sexo</td>
                                     <td>Estado</td>
                                     <td>Ver Internación</td>
                                     <td>Internar</td>
@@ -19,8 +21,10 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let prestacion of prestacionesPendientes">
-                                    <td> {{prestacion.prestacion.paciente.nombre}}</td>
-                                    <td> {{prestacion.prestacion.paciente.apellido}}</td>
+                                    <td> {{prestacion.prestacion.paciente.nombre}} {{prestacion.prestacion.paciente.apellido}}</td>
+                                    <td>{{prestacion.prestacion.paciente.documento }}</td>
+                                    <td>{{prestacion.prestacion.paciente.fechaNacimiento | fecha }}</td>
+                                    <td>{{prestacion.prestacion.paciente.sexo }}</td>
                                     <td *ngIf="prestacion.paseDe || prestacion.esEgreso">
                                         <span *ngIf="prestacion.paseDe">Pase de: </span>
                                         <span *ngIf="prestacion.esEgreso">Egreso: </span>
@@ -29,14 +33,14 @@
                                         Ingreso
                                     </td>
                                     <td>
-                                        <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(prestacion.prestacion.id)" *ngIf="prestacion?.prestacion.id">
-                                            <i class="mdi mdi-eye"></i>
-                                        </button>
+                                        <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación" (click)="verInternacion(prestacion.prestacion.id)"
+                                            *ngIf="prestacion?.prestacion.id">
+                                        </plex-button>
                                     </td>
                                     <td>
-                                        <button class="btn btn-default  tips" title="Dar cama" (click)="darCama(prestacion.prestacion)" *ngIf="prestacion?.prestacion.id">
+                                        <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion.prestacion)" *ngIf="prestacion?.prestacion.id">
                                             Dar cama
-                                        </button>
+                                        </plex-button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -47,7 +51,6 @@
         </div>
     </div>
 </section>
-
 <footer>
-    <plex-button label="Volver a mapa de camas" type="danger" (click)="onCancel()"></plex-button>
+    <plex-button label="Volver a mapa de camas" type="primary" (click)="onCancel()"></plex-button>
 </footer>
