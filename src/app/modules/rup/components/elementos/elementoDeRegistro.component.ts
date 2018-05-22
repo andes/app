@@ -32,19 +32,17 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     ngOnInit() {
         if (this.params.refsetId) {
-            console.log(this.params.refsetId);
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptosPermitidos = resultado;
-                console.log(resultado);
             });
         }
         if (!this.registro.valor) {
             this.registro.valor = {
-                descripcion: null,
-                registros: []
+                descripcion: null
             };
         }
     }
+
     onConceptoDrop(e: any) {
         if (!this.validaConcepto(e.dragData)) {
         } else {
@@ -89,42 +87,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         this.cargarNuevoRegistro(snomedConcept);
     }
 
-
-
-
-    // cargarNuevoRegistro(snomedConcept, valor = null) {
-    //     // Si proviene del drag and drop
-    //     if (snomedConcept.dragData) {
-    //         snomedConcept = snomedConcept.dragData;
-    //     }
-    //     // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
-    //     let esSolicitud = false;
-
-    //     // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-    //     if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
-    //         esSolicitud = true;
-    //     }
-    //     let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
-    //     // armamos el elemento data a agregar al array de registros
-    //     let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
-    //     this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
-    //     nuevoRegistro['_id'] = nuevoRegistro.id;
-    //     // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
-    //     if (esSolicitud) {
-    //         nuevoRegistro.esSolicitud = true;
-    //     }
-    //     nuevoRegistro.valor = valor;
-
-    //     // Agregamos al array de registros
-    //     this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
-    //     this.showDatosSolicitud = false;
-    //     // this.recuperaLosMasFrecuentes(snomedConcept, elementoRUP);
-    //     return nuevoRegistro;
-    // }
-
-
-
-
     cargarNuevoRegistro(snomedConcept, valor = null) {
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
@@ -148,12 +110,12 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         }
         nuevoRegistro.valor = valor;
 
-        this.registro.valor.registros.push(nuevoRegistro);
+        this.registro.registros.push(nuevoRegistro);
     }
 
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        let registros = this.registro.valor.registros;
+        let registros = this.registro.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
@@ -196,7 +158,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
         // quitamos relacion si existe
         if (this.confirmarDesvincular[registroId]) {
-            let registroActual = this.registro.valor.registros.find(r => r.id === registroId);
+            let registroActual = this.registro.registros.find(r => r.id === registroId);
 
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
@@ -260,7 +222,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
          */
     eliminarRegistro() {
         if (this.confirmarEliminar) {
-            let registros = this.registro.valor.registros;
+            let registros = this.registro.registros;
             let _registro = registros[this.indexEliminar];
 
             // Quitamos toda la vinculación que puedan tener con el registro
@@ -274,15 +236,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 }
             });
 
-            // Si exite el campo idRegistroTransformado significa que el registro a elimininar nace de una transformación
-            // y por lo tanto hay qye volver el registro orige a su estado original
-            if (_registro.valor.registros && _registro.valor.registros.idRegistroTransformado) {
-                let registroOriginal = registros.find(r => r.id === _registro.valor.idRegistroTransformado);
-                if (registroOriginal) {
-                    registroOriginal.valor.estado = 'activo';
-                    delete registroOriginal.valor.idRegistroGenerado;
-                }
-            }
             // eliminamos el registro del array
             registros.splice(this.indexEliminar, 1);
 
@@ -304,9 +257,9 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let index;
         if (registroEliminar.dragData) {
             this.conceptoAEliminar = registroEliminar.dragData.concepto;
-            index = this.registro.valor.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
+            index = this.registro.registros.findIndex(r => (registroEliminar.dragData.id === r.id));
         } else {
-            index = this.registro.valor.registros.findIndex(r => (registroEliminar.id === r.id));
+            index = this.registro.registros.findIndex(r => (registroEliminar.id === r.id));
         }
         this.scopeEliminar = scope;
         this.indexEliminar = index;
@@ -343,7 +296,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     }
 
     registrosColapsados() {
-        this.registro.valor.registros.forEach(registro => {
+        this.registro.registros.forEach(registro => {
             let unRegistro = this.itemsRegistros[registro.id].collapse;
             if (unRegistro !== this.collapse) {
                 this.collapse = !this.collapse;
