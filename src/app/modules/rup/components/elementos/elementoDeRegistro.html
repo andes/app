@@ -99,13 +99,8 @@
                                     <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
 
                                     <div class="buttons">
-                                        <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)" class="btn btn-default">
-                                            Cancelar
-                                        </a>
-
-                                        <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id, i)" class="btn btn-success">
-                                            Desvincular
-                                        </a>
+                                        <plex-button (click)="cancelarDesvincular(registro.id)" label="Cancelar" type="default"></plex-button>
+                                        <plex-button (click)="confirmarDesvinculacion(registro.id, i)" label="Desvincular" type="success"></plex-button>
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +109,8 @@
                                 <div class="confirmarDesvincular">
                                     <div>¿Quitar de esta consulta?</div>
                                     <div class="buttons">
-                                        <plex-button type=" btn-danger btn-sm" label="Cancelar" (click)="confirmarEliminar = false;" class="hover"></plex-button>
-                                        <plex-button type=" btn-success btn-sm" label="Confirmar" (click)="eliminarRegistro()" class="confirm hover"></plex-button>
+                                        <plex-button type="danger" label="Cancelar" (click)="confirmarEliminar = false;" class="hover"></plex-button>
+                                        <plex-button type="success" label="Confirmar" (click)="eliminarRegistro()" class="confirm hover"></plex-button>
                                     </div>
                                 </div>
                             </div>
