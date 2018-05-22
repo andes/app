@@ -60,6 +60,10 @@ import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.c
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+
 
 // Internacion
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -132,7 +136,10 @@ const appRoutes: Routes = [
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
   // Reportes
-  { path: 'reportes', component: ReporteC2Component, canActivate: [RoutingGuard] },
+  { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
+  { path: 'consultaDiagnostico', component: ConsultaDiagnosticoComponent, canActivate: [RoutingGuard] },
+  { path: 'encabezadoReportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
+  { path: 'cantidadConsultaXPrestacion', component: CantidadConsultaXPrestacionComponent, canActivate: [RoutingGuard] },
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
