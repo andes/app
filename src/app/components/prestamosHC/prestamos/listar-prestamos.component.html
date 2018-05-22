@@ -111,6 +111,7 @@
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
-        <plex-button type="primary" label="Devolver Carpetas" (click)="devolverCarpetas()"></plex-button>
+        <plex-button type="primary" label="Devolver {{ carpetasSeleccionadas.length }} {{ carpetasSeleccionadas.length > 1 ? 'Carpetas' : 'Carpeta' }}"
+            (click)="devolverCarpetas()"></plex-button>
     </footer>
 </form>
