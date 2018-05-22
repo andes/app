@@ -58,30 +58,34 @@ export class PacienteDetalleComponent {
         }
 
         this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
-
+            // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
             this.loading = false;
             this.deshabilitar = true;
-
-            // TODO: Controlar cuando el ws no devuelve nada porque eso no está funcionando bien.
-
-            if (resultado) {
-                let codigo = resultado.codigo;
-                let datos = resultado.datos;
+            let codigo = resultado.codigo;
+            let datos = resultado.datos;
+            if (resultado.datos.nroError === 0) {
                 if (patient.estado === 'temporal') {
-                    patient.nombre = resultado.datos.nombres;
-                    patient.apellido = resultado.datos.apellido;
-                    patient.fechaNacimiento = resultado.datos.fechaNacimiento;
+                    patient.nombre = datos.nombres;
+                    patient.apellido = datos.apellido;
+                    patient.fechaNacimiento = datos.fechaNacimiento;
                     patient.estado = 'validado';
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;
-                };
+                    patient.cuil = datos.cuil;
+                } else {
+                    if (!this.paciente.direccion[0].valor) {
+                        this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                    }
+                    if (!this.paciente.cuil) {
+                        this.paciente.cuil = datos.cuil;
+                    }
+                }
                 patient.foto = resultado.datos.foto;
                 this.renaperNotification.emit(true);
             } else {
                 // TODO ver el tema de mostrar algún error si no trae nada
-
-                this.plex.toast('error', 'No hemos encontrado información en RENAPER', '', 5000);
-                console.log('entro por algun problema');
+                this.plex.toast('danger', resultado.datos.descripcionError + ' REVISAR LOS DATOS INGRESADOS');
+                this.deshabilitar = false;
             }
 
             window.document.getElementById('detalleContenedor').style.opacity = '1';
