@@ -51,10 +51,10 @@ export class FiltrosComponent implements AfterViewInit, OnChanges {
     public hasta: Date = new Date();
     public hoy = new Date();
 
-    @Input() params = {};
+    @Input() params: any = {};
     @Output() filter = new EventEmitter();
 
-    public seleccion = {
+    public seleccion: any = {
         sexo: null,
         edad: null,
         profesional: null,
