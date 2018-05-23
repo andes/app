@@ -10,11 +10,19 @@
         (change)="emitChange()"></textarea>
 </ng-container>
 
-<p *ngIf="soloValores" class="readonly">
-    <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
-    <!-- <br> -->
+<p *ngIf="!(soloValores && params && params.hr)" class="readonly">
     <span>Observaciones</span>
     <ng-container>
         {{registro.valor}}
     </ng-container>
 </p>
+
+<ng-container *ngIf="soloValores && params && params.hr" class="readonly">
+    <label class="title-element">
+        Observaciones:
+    </label>
+    <hr>
+    <p>
+        {{registro.valor}}
+    </p>
+</ng-container>

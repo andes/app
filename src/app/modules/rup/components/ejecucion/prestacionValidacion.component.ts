@@ -584,6 +584,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
+            console.log('CONTENNNN', content);
 
             this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {

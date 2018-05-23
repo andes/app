@@ -1,4 +1,4 @@
-<label *ngIf="params?.titulo">
+<label class="title-element" *ngIf="params?.titulo">
     {{ params.titulo }}</label>
 <hr>
 <div class="row">
@@ -33,7 +33,7 @@
 
                 <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
                     [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                    <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
+                    <div class="rup-card2 {{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                 [dragOverClass]="'drag-target-border'" [dragData]="registro">
