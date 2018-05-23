@@ -12,6 +12,10 @@
                                         <plex-button icon="mdi mdi-printer" title="Imprimir solicitudes" (click)="showImprimirCarpetas()">
                                         </plex-button>
                                     </span>
+                                    <span>
+                                        <plex-button type="primary" icon="mdi mdi-plus" title="Agregar solicitud manual" (click)="showSolicitudManual()">
+                                        </plex-button>
+                                    </span>
                                 </div>
                             </div>
 
@@ -57,22 +61,28 @@
                                         <th>Fecha&nbsp;&nbsp; </th>
                                         <th>Carpeta</th>
                                         <th>Paciente</th>
-                                        <th>Destino</th>
                                         <th>Prestación</th>
                                         <th>Responsables</th>
+                                        <th>Observaciones</th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr *ngFor="let carpeta of carpetas" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
                                         <td (click)="switchSeleccionCarpeta(carpeta)">
-                                            <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo'" class="mdi mdi-checkbox-marked"></i>
-                                            <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo'" class="mdi mdi-checkbox-blank-outline"></i>
+                                            <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'" class="mdi mdi-checkbox-marked"></i>
+                                            <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'" class="mdi mdi-checkbox-blank-outline"></i>
                                         </td>
                                         <td>
                                             {{carpeta.fecha | date:'dd-MM-yyyy'}}
                                         </td>
-                                        <td>{{carpeta.numero}}</td>
+                                        <td>
+                                            <b>{{carpeta.numero}}</b>
+                                            <br>
+                                            <span class="badge-{{carpeta.tipo === 'Automatica' ? 'success':'info'}} float-left">
+                                                {{carpeta.tipo === 'Automatica' ? 'Automática':'Manual'}}
+                                            </span>
+                                        </td>
                                         <td>
                                             <b>
                                                 {{carpeta.paciente.apellido}}, {{carpeta.paciente.nombre}}
@@ -80,15 +90,30 @@
                                             <br/> Documento:
                                             <b>{{carpeta.paciente.documento}}</b>
                                         </td>
-                                        <td>
-                                            {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
-                                        </td>
-                                        <td>
+                                        <!-- Prestacion -->
+                                        <td *ngIf="carpeta.datosPrestamo?.turno">
                                             {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
                                         </td>
-                                        <td>
+                                        <td *ngIf="carpeta.datosSolicitudManual">
+                                            {{carpeta.datosSolicitudManual.prestacion?.term}}
+                                        </td>
+                                        <!-- Profesional -->
+                                        <td *ngIf="carpeta.datosPrestamo?.turno">
                                             {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                                         </td>
+                                        <td *ngIf="carpeta.datosSolicitudManual">
+                                            {{carpeta.datosSolicitudManual.profesional ? carpeta.datosSolicitudManual.profesional.nombre + ', ' + carpeta.datosSolicitudManual.profesional.apellido
+                                            : ''}}
+                                            <!-- , {{carpeta.datosSolicitudManual.profesional.apellido}} -->
+                                        </td>
+                                        <!-- Observaciones -->
+                                        <td *ngIf="carpeta.datosPrestamo">
+                                            {{carpeta.datosPrestamo.observaciones}}
+                                        </td>
+                                        <td *ngIf="carpeta.datosSolicitudManual">
+                                            {{carpeta.datosSolicitudManual.observaciones}}
+                                        </td>
+                                        <!-- Estado -->
                                         <td *ngIf="carpeta.estado == 'En archivo'">
                                             <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">
                                             </plex-button>
@@ -103,15 +128,21 @@
                     </div>
                 </plex-box>
             </div>
-            <div class="col-4" *ngIf="verPrestar">
+            <div class="col-3" *ngIf="verPrestar">
                 <div type="info">
                     <app-prestar-hc [prestar]="carpetaSeleccionada" (cancelPrestarEmit)="onCancelPrestar($event)" (carpetaPrestadaEmit)="onCarpeta($event)"></app-prestar-hc>
+                </div>
+            </div>
+            <div class="col-3" *ngIf="verSolicitudManual">
+                <div type="info">
+                    <solicitud-manual-hc [pacienteSeleccionado]="paciente" (cancelSolicitudManualEmit)="onCancelSolicitar($event)" (nuevaCarpetaManualEmit)="onCarpeta($event)"></solicitud-manual-hc>
                 </div>
             </div>
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
-        <plex-button type="primary" label="Prestar Carpetas" (click)="prestarCarpetas()"></plex-button>
+        <button type="primary" class="btn btn-primary" label="Prestar Carpetas" (click)="prestarCarpetas()">Prestar Carpetas</button>
     </footer>
+    <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"></pacientesSearch>
 </form>
 <imprimir-solicitudes [solicutudes]="carpetas" *ngIf="verImprimirSolicitudes" (volverAlListadoEmit)="volverAListado($event)"></imprimir-solicitudes>

@@ -83,21 +83,34 @@
                                     <br/> Documento:
                                     <b>{{carpeta.paciente.documento}}</b>
                                 </td>
-                                <td>
+                                <td *ngIf='!carpeta.datosSolicitudManual'>
                                     {{carpeta.datosPrestamo.turno.espacioFisico?.nombre}} {{carpeta.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{carpeta.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
                                 </td>
-                                <td>
-                                    {{carpeta.datosPrestamo.turno.tipoPrestacion.term}}
+                                <td *ngIf='carpeta.datosSolicitudManual'>
+                                    {{carpeta.datosSolicitudManual.espacioFisico?.nombre}} {{carpeta.datosSolicitudManual.espacioFisico ? ' - ' : ''}} {{carpeta.datosSolicitudManual.espacioFisico?.servicio?.nombre}}
                                 </td>
-                                <td>
+                                <td *ngIf='!carpeta.datosSolicitudManual'>
+                                    {{carpeta.datosPrestamo.turno.tipoPrestacion?.term}}
+                                </td>
+                                <td *ngIf='carpeta.datosSolicitudManual'>
+                                    {{carpeta.datosSolicitudManual.prestacion?.term}}
+                                </td>
+                                <td *ngIf='!carpeta.datosSolicitudManual'>
                                     {{carpeta.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
                                 </td>
-                                <td>
+                                <td *ngIf='carpeta.datosSolicitudManual'>
+                                    {{carpeta.datosSolicitudManual.profesional ? carpeta.datosSolicitudManual.profesional.nombre + ', ' + carpeta.datosSolicitudManual.profesional.apellido
+                                    : ''}}
+                                </td>
+                                <td *ngIf='!carpeta.datosSolicitudManual'>
                                     {{carpeta.datosPrestamo.observaciones}}
                                 </td>
+                                <td *ngIf='carpeta.datosSolicitudManual'>
+                                    {{carpeta.datosSolicitudManual.observaciones}}
+                                </td>
                                 <td *ngIf="carpeta.estado == 'Prestada'">
-                                    <plex-button type="primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">
-                                    </plex-button>
+                                    <button class="btn btn-primary" label="Devolver" (click)="devolver(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">Devolver
+                                    </button>
                                 </td>
                             </tr>
                         </tbody>
@@ -111,6 +124,6 @@
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
-        <plex-button type="primary" label="Devolver Carpetas" (click)="devolverCarpetas()"></plex-button>
+        <button type="primary" class="btn btn-primary" label="Devolver Carpetas" (click)="devolverCarpetas()">Devolver Carpetas</button>
     </footer>
 </form>

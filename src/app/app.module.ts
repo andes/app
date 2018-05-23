@@ -283,6 +283,7 @@ import { HistorialCarpetasComponent } from './components/prestamosHC/historial/h
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
+import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -443,6 +444,7 @@ registerLocaleData(localeEs, 'es');
         DevolverHcComponent,
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
+        SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
