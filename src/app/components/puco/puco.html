@@ -1,53 +1,51 @@
-<section *ngIf="!showUpdate && ! showCreate">
-    <div class="row">
-        <!--Panel central-->
-        <div class="col">
-            <plex-box type="primary">
-                <header>
-                    <div class="page-title">Datos de obra social</div>
-                </header>
-                <p>Consultas de afiliación a obras sociales de salud.</p>
-                <div class="buscador">
-                    <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
-                        prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
-                </div>
-                <!--Loader-->
-                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-                <div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
-                    <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
-                </div>
-                <!--Tabla de resultados por SimpleQuery -->
-                <table *ngIf="usuarios && usuarios.length" class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Apellido y nombre</th>
-                            <th>DNI</th>
-                            <th>Obra Social</th>
-                            <th>Transmite</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let usuario of usuarios  | textFilter:textoLibre ; let i=index">
-                            <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
-                            <td *ngIf="usuario.dni; else sinDatos">
-                                {{usuario.dni}}
-                            </td>
-                            <td *ngIf="usuario.financiador; else programaProFe">
-                                {{usuario.financiador}}
-                            </td>
-                            <td *ngIf="usuario.transmite; else sinDatos">
-                                Si
-                            </td>
-                            <ng-template #sinDatos>
-                                <td>SIN DATOS</td>
-                            </ng-template>
-                            <ng-template #programaProFe>
-                                <td>Programa Pro Fe</td>
-                            </ng-template>
-                        </tr>
-                    </tbody>
-                </table>
-            </plex-box>
-        </div>
+<div class="row">
+    <!--Panel central-->
+    <div class="col">
+        <plex-box type="primary">
+            <header>
+                <div class="page-title">Datos de obra social</div>
+            </header>
+            <p>Consultas de afiliación a obras sociales de salud.</p>
+            <div class="buscador">
+                <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
+                    prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
+            </div>
+            <!--Loader-->
+            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+            <div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
+            </div>
+            <!--Tabla de resultados por SimpleQuery -->
+            <table *ngIf="usuarios && usuarios.length" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Apellido y nombre</th>
+                        <th>DNI</th>
+                        <th>Obra Social</th>
+                        <th>Transmite</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let usuario of usuarios  | textFilter:textoLibre ; let i=index">
+                        <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
+                        <td *ngIf="usuario.dni; else sinDatos">
+                            {{usuario.dni}}
+                        </td>
+                        <td *ngIf="usuario.financiador; else programaProFe">
+                            {{usuario.financiador}}
+                        </td>
+                        <td *ngIf="usuario.transmite; else sinDatos">
+                            Si
+                        </td>
+                        <ng-template #sinDatos>
+                            <td>SIN DATOS</td>
+                        </ng-template>
+                        <ng-template #programaProFe>
+                            <td>Programa Pro Fe</td>
+                        </ng-template>
+                    </tr>
+                </tbody>
+            </table>
+        </plex-box>
     </div>
-</section>
+</div>
