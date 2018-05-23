@@ -14,6 +14,8 @@ import { PacienteService } from './../../../../services/paciente.service';
 
 export class CarpetaPacienteComponent implements OnInit {
 
+    carpetaEfectores: [{ organizacion: { id: string; nombre: string; }; nroCarpeta: string; }];
+    nroCarpetaOriginal: string;
     @Input() turnoSeleccionado: ITurno;
     @Output() guardarCarpetaEmit = new EventEmitter<boolean>();
     @Output() cancelarCarpetaEmit = new EventEmitter<boolean>();
@@ -54,9 +56,11 @@ export class CarpetaPacienteComponent implements OnInit {
                     let indiceCarpeta = -1;
                     if (paciente.carpetaEfectores.length > 0) {
                         // Filtramos y traemos sólo la carpeta de la organización actual
+                        this.carpetaEfectores = paciente.carpetaEfectores;
                         indiceCarpeta = paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.carpetaPaciente = paciente.carpetaEfectores[indiceCarpeta];
+                            this.nroCarpetaOriginal = paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
                         }
                     }
                     if (indiceCarpeta === -1) {
@@ -73,11 +77,25 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     guardarCarpetaPaciente() {
-        if (this.carpetaPaciente.nroCarpeta !== '') {
-            this.carpetaSave.nroCarpeta = this.carpetaPaciente.nroCarpeta;
-            this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.pacienteTurno.carpetaEfectores }).subscribe(resultadoCarpeta => {
+
+        this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim(); // quitamos los espacios
+        if (this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
+
+            let indiceCarpeta = this.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfectores[indiceCarpeta] = this.carpetaPaciente;
+            } else {
+                this.carpetaEfectores.push(this.carpetaPaciente);
+            }
+
+            this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);
+            }, error => {
+                this.plex.toast('danger', 'El número de carpeta ya existe');
+                console.log(error);
             });
+        } else {
+            this.guardarCarpetaEmit.emit(true);
         }
     }
 
