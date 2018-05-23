@@ -218,15 +218,19 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             // Esta consulta
             this.odontograma.cuadranteSuperiorDerecho.forEach(x => {
                 x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
                 x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteInferiorDerecho.forEach(x => {
                 x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
                 x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = x.relacion.map(y => y.concepto);
             });
         }
 
@@ -547,7 +551,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     // TODO: REVISAR
     piezaAnulada(conceptId) {
         if (this.odontogramasHUDS) {
-
             let relacion = this.odontogramasHUDS.find(x => x.ejecucion.registros.findIndex(y => y.relacionadoCon.findIndex(z => z.conceptId === conceptId) !== -1) !== -1);
             return relacion && relacion.ejecucion.registros.find(a => this.params.anularPieza.find(b => b === a.concepto.conceptId));
         }
