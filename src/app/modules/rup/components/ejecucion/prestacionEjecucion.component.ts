@@ -719,9 +719,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                console.log(registro.relacionadoCon);
                 // Relacionar con otro registro o con un concepto
-                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id ? r.id : (r.concepto ? r.concepto.conceptId : r.conceptId));
+                registro.relacionadoCon = registro.relacionadoCon.map(r => r.concepto.conceptId || r.id);
             }
         });
 
