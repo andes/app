@@ -48,14 +48,16 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.loading = false;
         }
 
-        let search = this.searchTerm.trim();
-        if (/^([0-9])*$/.test(search) && !/^\s*$/.test(search)) {
+        if (this.searchTerm && /^([0-9])*$/.test(this.searchTerm.toString())) {
+            let search = this.searchTerm.trim();
+
+            this.loading = true;
             this.timeoutHandle = window.setTimeout(() => {
 
-                this.loading = true;
                 let apiMethod = Observable.forkJoin([
                     this.obraSocialService.getPuco({ dni: search }),
                     this.obraSocialService.getProFe({ dni: search })]).subscribe(t => {
+                        this.loading = false;
                         let resultadosPuco = t[0];
                         let resultadosProFE = t[1];
                         this.usuarios = resultadosPuco.concat(resultadosProFE);
@@ -72,6 +74,11 @@ export class PucoComponent implements OnInit, OnDestroy {
             }, err => {
                 this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
             }, 600);
+        }
+        else {
+            if (this.searchTerm) {
+                this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
+            }
         }
     }
 }

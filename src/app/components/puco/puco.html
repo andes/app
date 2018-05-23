@@ -12,7 +12,7 @@
             </div>
             <!--Loader-->
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-            <div *ngIf="usuarios && !usuarios.length && !searchTerm==''" class="alert alert-danger">
+            <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
             </div>
             <!--Tabla de resultados por SimpleQuery -->
