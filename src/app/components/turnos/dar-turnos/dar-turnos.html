@@ -272,11 +272,11 @@
                                         </div>
                                         <div class="row">
                                             <div class="col">
-                                                <div *ngIf="obraSocialPaciente">
+                                                <span *ngIf="obraSocialPaciente">
                                                     <label>Obra Social </label>
                                                     <div>{{obraSocialPaciente.nombre}}</div>
-                                                    <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
-                                                </div>
+                                                </span>
+                                                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
                                             </div>
                                         </div>
                                         <div class="row">

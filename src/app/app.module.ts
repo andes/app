@@ -253,6 +253,10 @@ import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.compo
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
+
 
 // Locales
 import { AppComponent } from './app.component';
@@ -318,7 +322,6 @@ export let RUPRegistry = {
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
-
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
@@ -360,9 +363,12 @@ let RUPComponentsArray = [
     CircunferenciaCinturaComponent
 ];
 
+import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
+
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+
 registerLocaleData(localeEs, 'es');
 
 
@@ -379,6 +385,7 @@ registerLocaleData(localeEs, 'es');
         Ng2DragDropModule,
         ChartsModule,
         routing,
+        EstadisticaModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })
@@ -415,6 +422,9 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
+        ConsultaDiagnosticoComponent,
+        CantidadConsultaXPrestacionComponent,
+        EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
