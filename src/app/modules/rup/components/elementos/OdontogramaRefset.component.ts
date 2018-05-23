@@ -184,7 +184,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
-
                 }
                 this.armarRelaciones();
             });
@@ -542,6 +541,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     return x.diente.conceptId === diente.concepto.conceptId && (cara === x.cara);
                 }) !== -1;
             }
+        }
+    }
+
+    // TODO: REVISAR
+    piezaAnulada(conceptId) {
+        if (this.odontogramasHUDS) {
+
+            let relacion = this.odontogramasHUDS.find(x => x.ejecucion.registros.findIndex(y => y.relacionadoCon.findIndex(z => z.conceptId === conceptId) !== -1) !== -1);
+            return relacion && relacion.ejecucion.registros.find(a => this.params.anularPieza.find(b => b === a.concepto.conceptId));
         }
     }
 
