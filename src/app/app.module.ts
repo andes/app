@@ -230,6 +230,8 @@ import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
+import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
+import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -322,6 +324,8 @@ export let RUPRegistry = {
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
+    'PercentiloPesoComponent': PercentiloPesoComponent,
+    'PercentiloTallaComponent': PercentiloTallaComponent,
 };
 
 let RUPComponentsArray = [
@@ -359,7 +363,9 @@ let RUPComponentsArray = [
     PasesCamaComponent,
     InformeEpicrisisComponent,
     OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent
+    CircunferenciaCinturaComponent,
+    PercentiloPesoComponent,
+    PercentiloTallaComponent
 ];
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
