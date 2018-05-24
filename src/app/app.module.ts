@@ -204,6 +204,8 @@ import { SaturacionOxigenoComponent } from './modules/rup/components/elementos/s
 import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/frecuenciaCardiaca.component';
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
+import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
+import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
@@ -293,6 +295,8 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
+    'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
+    'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
     'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
     'InformesComponent': InformesComponent,
@@ -342,6 +346,8 @@ let RUPComponentsArray = [
     ObesidadComponent,
     ObservacionesComponent,
     PesoComponent,
+    PercentiloPerimetroCefalicoComponent,
+    PerimetroCefalicoComponent,
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
