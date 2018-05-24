@@ -969,7 +969,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let relacionesOrdenadas = [];
 
         registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
+            let esPadre = registros.filter(x => x.relacionadoCon[0] ? x.relacionadoCon[0] === cosa.id : false);
 
             if (esPadre.length > 0) {
                 if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
