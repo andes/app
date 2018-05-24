@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { PacienteService } from '../../../../../../services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
+import { OrganizacionService } from '../../../../../../services/organizacion.service';
 
 @Component({
     selector: 'app-cama',
@@ -19,13 +20,24 @@ export class CamaComponent implements OnInit {
     @Input() prestacion: any;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
 
+    public organizacion: any;
+    public PaseAunidadOrganizativa: any;
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
-    constructor(private plex: Plex, private auth: Auth, private camasService: CamasService, private router: Router, private pacienteService: PacienteService) { }
+    constructor(private plex: Plex,
+        private auth: Auth,
+        private camasService: CamasService,
+        private router: Router,
+        public organizacionService: OrganizacionService,
+        private pacienteService: PacienteService) { }
 
     ngOnInit() {
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            this.organizacion = organizacion;
+            this.organizacion.unidadesOrganizativas = this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId);
+        });
         this.opcionesDropdown = [
             {
                 label: 'Valoración inicial enfermería',
@@ -182,7 +194,8 @@ export class CamaComponent implements OnInit {
             esCensable: cama.ultimoEstado.esCensable,
             genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
             paciente: null,
-            idInternacion: null
+            idInternacion: null,
+            sugierePase: this.PaseAunidadOrganizativa
         };
 
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {

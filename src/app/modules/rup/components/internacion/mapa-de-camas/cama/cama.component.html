@@ -81,8 +81,7 @@
 
                 <div class="col-12 text-right">
 
-                    <button type="button" title="Devolver cama" class="btn btn-default" (click)="devolverCama(cama)"
-                        *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente" >
+                    <button type="button" title="Devolver cama" class="btn btn-default" (click)="devolverCama(cama)" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente">
                         <i class="mdi mdi-keyboard-return"></i>
                     </button>
 
@@ -262,6 +261,10 @@
                             <p class="text-center">
                                 ¿Está seguro que desea desocupar la cama?
                             </p>
+                            <plex-select name="unidadOrganizativa" [required]="true" [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
+                                [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa">
+                            </plex-select>
+
                         </div>
                     </div>
                     <div class="footer with-buttons row">
