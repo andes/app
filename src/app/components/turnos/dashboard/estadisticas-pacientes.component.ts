@@ -111,6 +111,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this._paciente.carpetaEfectores[indiceCarpeta];
                 this.nroCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                this.nuevaCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
             }
         }
 
@@ -120,6 +121,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.nroCarpeta = carpeta.nroCarpeta;
+                    this.nuevaCarpeta = carpeta.nroCarpeta;
                 }
             });
         }
