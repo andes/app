@@ -23,6 +23,13 @@ export class AgendaService {
     findDiagnosticos(params: any): Observable<any> {
         return this.server.get(this.agendaUrl + '/diagnosticos', { params: params, showError: true });
     }
+    findConsultaDiagnosticos(params: any): Observable<any> {
+        return this.server.get(this.agendaUrl + '/consultaDiagnostico', { params: params, showError: true });
+    }
+    findCantidadConsultaXPrestacion(params: any): Observable<any> {
+        return this.server.get(this.agendaUrl + '/cantidadConsultaXPrestacion', { params: params, showError: true });
+    }
+
 
     get(params: any): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl, { params: params, showError: true });
@@ -33,6 +40,7 @@ export class AgendaService {
     }
 
     patch(id: String, cambios: any): Observable<IAgenda> {
+        console.log(this.agendaUrl);
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 

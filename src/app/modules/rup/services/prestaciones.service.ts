@@ -684,10 +684,10 @@ export class PrestacionesService {
 
                     // Controlemos que se trata de una prestación turneable.
                     // Solo creamos prestaciones pendiente para conceptos turneables
-                    let turneable = this.conceptosTurneables.find(c => c.conceptId === plan.concepto.conceptId);
-                    if (turneable) {
+                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
+                    if (existeConcepto) {
                         // creamos objeto de prestacion
-                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
+                        let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
