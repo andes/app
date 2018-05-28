@@ -59,10 +59,19 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-6" *ngIf="_paciente?.carpetaEfectores?.length > 0">
-            <span *ngFor="let carpeta of _paciente.carpetaEfectores">
-                <div *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null">{{carpeta.nroCarpeta}} </div>
-            </span>
+        <div class="col-3" *ngIf="nroCarpeta  && !editando">
+            <div> {{nroCarpeta}} </div>
+        </div>
+        <div class="col-3" *ngIf="nroCarpeta && !editando">
+            <plex-button (click)="editarNroCarpeta()" type="success" label="Editar"></plex-button>
+        </div>
+
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
+            <plex-text name="nroCarpeta" [(ngModel)]="nuevaCarpeta"></plex-text>
+
+        </div>
+        <div class="col-3" *ngIf="!nroCarpeta || editando">
+            <plex-button (click)="nuevoNroCarpeta()" type="success" label="Guardar"></plex-button>
         </div>
     </div>
     <br>

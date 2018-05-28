@@ -72,6 +72,7 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.modelo.espacioFisico && !this.modelo.espacioFisico.organizacion) {
             this.espacioFisicoPropios = false;
         }
+        this.noNominalizada = !this.modelo.nominalizada;
         if (!this.modelo.intercalar) {
             this.modelo.bloques.sort(this.compararBloques);
         }
@@ -174,6 +175,9 @@ export class PlanificarAgendaComponent implements OnInit {
 
     horaInicioPlus() {
         return moment(this.modelo.horaInicio).add(30, 'minutes');
+    }
+    fechaInicio() {
+        return moment(new Date()).startOf('day');
     }
 
     inicializarPrestacionesBloques(bloque) {
