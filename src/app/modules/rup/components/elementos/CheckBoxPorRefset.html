@@ -1,0 +1,54 @@
+<!-- <ng-container *ngIf="!soloValores ">
+    <label for="observaciones">
+        {{ params.titulo }}
+    </label>
+    <ng-container *ngFor="let concepto of conceptos">
+        <plex-bool [(ngModel)]="conceptos" type="checkbox" label="{{concepto.term}}" name="activo"></plex-bool>
+    </ng-container>
+</ng-container>
+
+<p *ngIf="soloValores" class="readonly">
+    <span>Observaciones</span>
+    <ng-container>
+
+    </ng-container>
+</p> -->
+<ng-container *ngIf="conceptos.length > 0 && params">
+    <plex-select *ngIf="!soloValores" [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
+        (change)="emitChange()" [required]="true" label="{{ params.titulo }}">
+    </plex-select>
+</ng-container>
+
+<ng-container *ngIf="conceptos && params">
+
+    <span>{{ params.titulo }}</span>
+    <ng-container *ngFor="let concepto of conceptos, let i = index">
+
+        <label class="custom-control custom-radio">
+            <ng-container *ngIf="registro.valor && registro.valor.concepto.conceptId === concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio" checked>
+            </ng-container>
+            <ng-container *ngIf="registro.valor?.concepto.conceptId !== concepto.conceptId">
+                <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
+                    type="radio">
+            </ng-container>
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"> {{concepto.term}}</span>
+        </label>
+    </ng-container>
+</ng-container>
+
+<p *ngIf="soloValores" class="readonly">
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length > 1">
+        <ul class="list-item-group" *ngFor="let valor of registro.valor let i = index">
+            <li class="list-item">{{valor.concepto.term}}</li>
+        </ul>
+    </ng-container>
+    <ng-container *ngIf="registro.valor.length > 0 && registro.valor.length === 1">
+        <p class="list-item-group" *ngFor="let valor of registro.valor let i = index">{{valor.concepto.term}}</p>
+    </ng-container>
+    <ng-container *ngIf="registro.valor && !registro.valor.length">
+        {{registro.valor.concepto.term}}
+    </ng-container>
+</p>

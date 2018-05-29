@@ -193,6 +193,7 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
+import { CheckBoxPorRefsetComponent } from './modules/rup/components/elementos/CheckBoxPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
@@ -224,6 +225,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
@@ -294,6 +296,7 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
+    'CheckBoxPorRefsetComponent': CheckBoxPorRefsetComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
@@ -326,6 +329,7 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
@@ -334,6 +338,7 @@ export let RUPRegistry = {
 
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
+    CheckBoxPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
     FiltradoGlomerularComponent,
@@ -363,6 +368,7 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    LactanciaComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
