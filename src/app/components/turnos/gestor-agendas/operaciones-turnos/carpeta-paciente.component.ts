@@ -71,7 +71,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
     guardarCarpetaPaciente() {
 
-        if (this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
+        if (this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
 
             this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim(); // quitamos los espacios
             if (this.indiceCarpeta > -1) {

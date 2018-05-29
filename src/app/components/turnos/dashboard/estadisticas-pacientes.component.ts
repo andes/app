@@ -128,7 +128,8 @@ export class EstadisticasPacientesComponent implements OnInit {
     }
 
     nuevoNroCarpeta() {
-        if (this.nuevaCarpeta !== '') {
+        if (this.nuevaCarpeta && this.nuevaCarpeta !== '') {
+            this.nuevaCarpeta = this.nuevaCarpeta.trim();
             this.carpetaEfector = {
                 organizacion: {
                     _id: this.auth.organizacion.id,
