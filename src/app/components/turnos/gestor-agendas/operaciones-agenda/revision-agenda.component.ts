@@ -72,7 +72,7 @@ export class RevisionAgendaComponent implements OnInit {
     public estadosAsistencia = enumToArray(EstadosAsistencia);
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
-
+    public esAgendaOdonto = false;
 
     constructor(public plex: Plex,
         public router: Router,
@@ -85,6 +85,7 @@ export class RevisionAgendaComponent implements OnInit {
 
     ngOnInit() {
         this.getCantidadTurnosAsignados();
+        this.esAgendaOdonto = this._agenda.tipoPrestaciones[0].term.includes('odonto');
     }
 
     private getCantidadTurnosAsignados() {
@@ -242,7 +243,7 @@ export class RevisionAgendaComponent implements OnInit {
             listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
         turnoSinVerificar = listaTurnos.find(t => {
-            return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido');
+            return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido' && t.estado !== 'turnoDoble');
         });
         if (!turnoSinVerificar) { // Si todos los turnos están verificados..
             // Se cambia de estado la agenda a pendienteAuditoria
@@ -290,7 +291,6 @@ export class RevisionAgendaComponent implements OnInit {
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });
-
         if (!turnoSinCodificar) {
             // Se cambia de estado la agenda a asistenciaCerrada
             let patch = {
@@ -399,5 +399,4 @@ export class RevisionAgendaComponent implements OnInit {
         this.refresh();
         this.cerrarAsistencia();
     }
-
 }

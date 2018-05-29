@@ -7,17 +7,16 @@ import { Auth } from '@andes/auth';
 import * as moment from 'moment';
 
 
+
+
 @Component({
-    selector: 'reporteC2',
-    templateUrl: 'reporteC2.html',
+    selector: 'consultaDiagnostico',
+    templateUrl: 'consultaDiagnostico.html',
+
 })
 
-export class ReporteC2Component implements OnInit {
+export class ConsultaDiagnosticoComponent implements OnInit {
     private _diagnosticos;
-    private diagnostico;
-    public seleccionada = [];
-    public listaPacientes = false;
-
     @Input('diagnosticos') // recibe un array de parametros
     set diagnosticos(value: any) {
         this._diagnosticos = value;
@@ -27,7 +26,11 @@ export class ReporteC2Component implements OnInit {
         return this._diagnosticos;
     }
 
+
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
+
+
+    // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
@@ -44,18 +47,6 @@ export class ReporteC2Component implements OnInit {
 
     public ngOnInit() {
 
-    }
-    datosPacientes(indice) {
-        this.diagnostico = this.diagnosticos[indice];
-        for (let i = 0; i < this.seleccionada.length; i++) {
-            this.seleccionada[i] = false;
-        }
-        if (this.diagnostico.ficha !== null) {
-            this.seleccionada[indice] = true;
-            this.listaPacientes = true;
-        } else {
-            this.listaPacientes = false;
-        }
     }
 
 
