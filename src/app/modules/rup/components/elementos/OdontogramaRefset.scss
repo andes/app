@@ -151,6 +151,10 @@ $translation in $angles {
     .rotate-#{$i} {
         transform: scale(1.025, 1.025) translateX(-#{$i}px) rotateZ($rotation) translateX($translation);
     }
+    .diente-offset-#{$i} {
+        transform: translateX(#{$i * 10}px);
+        z-index: #{$i * 10};
+    }
     $i: ($i+1);
 }
 

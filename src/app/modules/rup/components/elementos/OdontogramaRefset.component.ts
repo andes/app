@@ -286,11 +286,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     verRegistroDiente(cuandrante, diente, cara) {
-        if (!this.popOverText.relacion.concepto || (!diente.piezaCompleta && cara === 'pieza')) {
+        if (!this.popOverText.relacion || !diente.piezaCompleta && cara === 'pieza') {
             return;
+        } else {
+            if (this.popOverText.relacion.concepto === undefined || this.popOverText.relacion.concepto.semanticTag === undefined) {
+                let conceptoValor = this.getRelacion(cuandrante, diente, cara);
+                this.emitEjecutarAccion({ data: this.popOverText.relacion, ...{ tipo: this.getTipoHUDS(this.popOverText.relacion.concepto.semanticTag) } });
+
+            }
         }
-        let conceptoValor = this.getRelacion(cuandrante, diente, cara);
-        this.emitEjecutarAccion({ data: this.popOverText.relacion, ...{ tipo: this.getTipoHUDS(this.popOverText.relacion.concepto.semanticTag) } });
     }
 
     showTooltip(diente, cara, index = -1) {
@@ -401,8 +405,10 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     caraValor(diente, cara) {
-        if (this.registro.valor) {
-            return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === cara);
+        if (this.prestacion.ejecucion.registros[0].valor && this.prestacion.ejecucion.registros[0].valor.piezas) {
+            return this.prestacion.ejecucion.registros[0].valor.piezas.findIndex(x => {
+                return (x.concepto ? x.concepto.conceptId === diente.concepto.conceptId : false) && x.cara === cara;
+            });
         }
         return -1;
     }
@@ -435,7 +441,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     seleccionarDiente(diente, cara) {
-
 
         if (cara === 'pieza') {
 
