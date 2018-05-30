@@ -198,18 +198,18 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.itemsRegistros[registro.id] = { collapse: false, items: null };
                 // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                    registro.relacionadoCon.forEach((idRegistroRel, key) => {
-                        let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                    registro.relacionadoCon.forEach((registroRel, key) => {
+                        let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
                         // Es registro RUP o es un concepto puro?
                         if (esRegistro) {
                             registro.relacionadoCon[key] = esRegistro;
                         } else {
-                            registro.relacionadoCon[key] = idRegistroRel;
-                            window.setTimeout(() => {
-                                this.servicioSnomed.getByConceptId(idRegistroRel, { format: '' }).subscribe(rel => {
-                                    registro.relacionadoCon[key] = rel;
-                                });
-                            }, 1000);
+                            registro.relacionadoCon[key] = registroRel;
+                            // window.setTimeout(() => {
+                            //     this.servicioSnomed.getByConceptId(registroRel, { format: '' }).subscribe(rel => {
+                            //         registro.relacionadoCon[key] = rel;
+                            //     });
+                            // }, 1000);
                         }
                     });
                 }
@@ -301,7 +301,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (!registroOrigen.relacionadoCon) {
                     registroOrigen.relacionadoCon = [];
                 }
-                registroOrigen.relacionadoCon.push(registroDestino.concepto);
+                registroOrigen.relacionadoCon.push(registroDestino);
                 // // buscamos en la posición que se encuentra el registro de orgien y destino
                 // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
                 // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
@@ -335,7 +335,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // quitamos relacion si existe
         if (this.confirmarDesvincular[registroId]) {
-            let registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId);
+            let registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId || r.concepto && r.concepto.conceptId === registroId);
 
             if (registroActual) {
                 registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
@@ -409,6 +409,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param {any} scope
      * @memberof PrestacionEjecucionComponent
      */
+
     confirmarEliminarRegistro(registroEliminar, scope) {
         let index;
         if (registroEliminar.dragData) {
@@ -478,6 +479,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         // El concepto ya aparece en los registros?
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
+
         // si estamos cargando un concepto para una transformación de hall
         if (this.transformarProblema && this.registroATransformar) {
 
@@ -572,7 +574,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (resultado && resultado.relacionadoCon) {
                     if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
-                        if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda as any).conceptId)) === -1) {
+                        if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
                             resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
                         }
                     } else {
@@ -723,7 +725,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                 // Relacionar con otro registro o con un concepto
-                registro.relacionadoCon = registro.relacionadoCon.map(r => (r.concepto ? r.concepto.conceptId : r.conceptId) || r.id);
+                // registro.relacionadoCon = registro.relacionadoCon.map(r => (r.concepto ? r.concepto.conceptId : r.conceptId) || r.id);
             }
         });
 
@@ -824,6 +826,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Búsqueda que filtra según concepto
     ejecutarAccion(accion) {
+        debugger;
         if (accion.conceptos) {
             this.tipoBusqueda = accion;
         } else {

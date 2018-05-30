@@ -85,7 +85,6 @@
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
                                         [ngClass]="{'relacionado': registro?.relacionadoCon}">
 
-
                                         <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="rup-header">
                                                 <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
@@ -106,7 +105,8 @@
                                                             <b class="clearfix" *ngIf="registro.relacionadoCon[0]">Relacionado con: </b>
                                                             <ng-container *ngFor="let relacion of registro.relacionadoCon">
                                                                 <span class="badge badge-info">
-                                                                    {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? relacion.concepto.term : relacion) }}
+                                                                    {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara
+                                                                    + ')' : relacion) }}
                                                                 </span>
                                                                 <!-- <pre class="text-sm">
                                                                     {{registro | json}}

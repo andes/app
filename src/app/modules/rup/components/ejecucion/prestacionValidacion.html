@@ -145,10 +145,14 @@
                                 <div class="float-left" *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
                                     <b>Relacionado con:</b>
                                     <ng-container *ngFor="let relacion of elemento.relacionadoCon">
-                                        <span class="badge badge-info">
+                                        <!-- <span class="badge badge-info">
                                             {{ relacion?.term ? relacion.term : relacion }}
-                                        </span>
+                                        </span> -->
 
+                                        <span class="badge badge-info">
+                                            {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara
+                                            + ')' : relacion) }}
+                                        </span>
                                         <!-- <span class="badge badge-info">
                                             <ng-container *ngIf="relacion?.concepto?.term">
                                                 {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}

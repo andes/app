@@ -173,21 +173,21 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.prestacion.ejecucion.registros.forEach(registro => {
 
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        console.log(registro.relacionadoCo);
-                        registro.relacionadoCon.forEach((idRegistroRel, key) => {
-                            console.log('idRegistroRel', idRegistroRel);
-                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                        // console.log(registro.relacionadoCo);
+                        registro.relacionadoCon.forEach((registroRel, key) => {
+                            // console.log('registroRel', registroRel);
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
                             // Es registro RUP o es un concepto puro?
                             if (esRegistro) {
                                 registro.relacionadoCon[key] = esRegistro;
-                            } else if (idRegistroRel) {
-                                registro.relacionadoCon[key] = idRegistroRel;
-                                idRegistroRel = typeof idRegistroRel === 'object' ? idRegistroRel.conceptId : idRegistroRel;
-                                window.setTimeout(() => {
-                                    this.servicioSnomed.getByConceptId(idRegistroRel, { format: '' }).subscribe(rel => {
-                                        registro.relacionadoCon[key] = rel;
-                                    });
-                                }, 1000);
+                            } else if (registroRel) {
+                                registro.relacionadoCon[key] = registroRel;
+                                // registroRel = typeof registroRel === 'object' ? registroRel.concepto.conceptId : registroRel;
+                                // window.setTimeout(() => {
+                                //     this.servicioSnomed.getByConceptId(registroRel, { format: '' }).subscribe(rel => {
+                                //         registro.relacionadoCon[key] = rel;
+                                //     });
+                                // }, 1000);
                             }
                         });
                     }
