@@ -275,6 +275,9 @@
             <!-- CUADRANTE SUP DER -->
             <div class="col-6 no-gutters">
                 <ng-container *ngFor="let diente of odontograma.cuadranteSuperiorDerecho; let i=index">
+                    <pre>
+                        {{ getClassRegistro(diente) | json }}
+                    </pre>
                     <div class="diente-container text-center">
                         <span class="text-diente">{{ diente.concepto.term }}</span>
                         <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -307,7 +310,6 @@
                                 />
                             </g>
                             <ng-container *ngIf="piezaCompletaValor(diente, 'pieza') !== -1">
-                                <!-- *ngFor="let rel of diente.relacion" -->
                                 <circle [ngClass]="'diente-' + diente.relacion[0]?.semanticTag + '-outline'" class="st0" cx="26" cy="27.5" r="22.246" />
                             </ng-container>
                         </svg>
@@ -359,9 +361,20 @@
                                     d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                 />
                             </g>
-                            <ng-container *ngIf="piezaCompletaValor(diente, 'pieza') !== -1">
-                                <!-- *ngFor="let rel of diente.relacion" -->
+                            <!-- *ngFor="let rel of diente.relacion" -->
+                            <!-- <ng-container *ngIf="piezaCompletaValor(diente, 'pieza') !== -1">
                                 <circle [ngClass]="'diente-' + diente.relacion[0]?.semanticTag + '-outline'" class="st0" cx="26" cy="27.5" r="22.246" />
+                            </ng-container> -->
+                            <ng-container *ngFor="let relClass of classRelacion('cuadranteInferiorIzquierdo', diente, 'pieza'); let a=index">
+                                <g *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
+                                    class="pieza" title="pieza completa">
+                                    <!-- Círculo MINI -->
+                                    <circle (click)="verRegistroDiente('cuadranteInferiorIzquierdo', diente, 'pieza')" class="evolucionada" cx="46.285" cy="7.311"
+                                        r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a" />
+                                </g>
+                                <!-- Círculo GRANDE -->
+                                <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'"
+                                />
                             </ng-container>
                         </svg>
                         <svg *ngIf="piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -383,6 +396,11 @@
                 <ng-container *ngFor="let diente of odontograma.cuadranteInferiorDerecho; let i=index ">
                     <div class="diente-container text-center">
                         <span class="text-diente">{{ diente.concepto.term }}</span>
+                        <!-- {{ diente | json }} -->
+                        <!-- {{caraRel(diente, 'palatina') | json }} -->
+                        <ng-container *ngFor="let rel of diente.relacion">
+                            <!-- {{ rel | json }} -->
+                        </ng-container>
                         <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
                             viewBox="0 0 55 50" xml:space="preserve">
@@ -396,10 +414,10 @@
                                 title="vestibular" />
                             <path (click)="seleccionarDiente(diente, 'mesial')" [ngClass]="{'seleccionada': cara(diente,'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                 d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
-                                class="diente mesial {{ caraValor(diente, 'mesial') !== -1 ? 'diente-' + diente.relacion[0]?.semanticTag : '' }}"
+                                class="diente mesial {{ caraValor(diente, 'mesial') !== -1 ? 'diente-' + diente.relacion[caraRel(diente, 'meisal')]?.semanticTag : '' }}"
                                 title="mesial" />
                             <path (click)="seleccionarDiente(diente, 'palatina')" [ngClass]="{'seleccionada': cara(diente,'palatina') !== -1}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z"
-                                class="diente palatina {{ caraValor(diente, 'palatina') !== -1 ? 'diente-' + diente.relacion[0]?.semanticTag : '' }}"
+                                class="diente palatina {{ caraValor(diente, 'palatina') !== -1 ? 'diente-' + diente.relacion[caraRel(diente, 'palatina')]?.semanticTag  : '' }}"
                                 title="palatina" />
                             <path (click)="seleccionarDiente(diente, 'oclusal')" [ngClass]="{'seleccionada': cara(diente,'oclusal') !== -1, 'registrada': caraValor(diente, 'oclusal') !== -1}"
                                 d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"

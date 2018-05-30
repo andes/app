@@ -35,93 +35,93 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     showPopOver = false;
     popOverText: any = '';
 
-    public prestacionesCaras: any = {
-        activo: true,
-        componente: 'ObservacionesComponent',
-        tipo: 'atomo',
-        esSolicitud: false,
-        style: {
-            columns: 12.0,
-            cssClass: null
-        },
-        defaultFor: [],
-        conceptosBuscar: null,
-        requeridos: [],
-        frecuentes: [],
-        params: null,
-        conceptos: [
-            {
-                id: '',
-                conceptId: '67784006',
-                term: 'prueba de sensibilidad a la caries',
-                fsn: 'prueba de sensibilidad a la caries (procedimiento)',
-                semanticTag: 'procedimiento',
-                refsetIds: [
-                    '900000000000497000'
-                ],
-            },
-            {
-                fsn: 'inserción de restauración con amalgama en el diente (procedimiento)',
-                semanticTag: 'procedimiento',
-                refsetIds: [
-                    '721145008',
-                    '900000000000497000'
-                ],
-                conceptId: '234787002',
-                term: 'restauración con amalgama'
-            },
-            {
-                fsn: 'caries dental (trastorno)',
-                semanticTag: 'trastorno',
-                refsetIds: [
-                    '721145008',
-                    '900000000000497000'
-                ],
-                conceptId: '80967001',
-                term: 'caries dentales'
-            }
-        ]
-    };
+    // public prestacionesCaras: any = {
+    //     activo: true,
+    //     componente: 'ObservacionesComponent',
+    //     tipo: 'atomo',
+    //     esSolicitud: false,
+    //     style: {
+    //         columns: 12.0,
+    //         cssClass: null
+    //     },
+    //     defaultFor: [],
+    //     conceptosBuscar: null,
+    //     requeridos: [],
+    //     frecuentes: [],
+    //     params: null,
+    //     conceptos: [
+    // {
+    //     id: '',
+    //     conceptId: '67784006',
+    //     term: 'prueba de sensibilidad a la caries',
+    //     fsn: 'prueba de sensibilidad a la caries (procedimiento)',
+    //     semanticTag: 'procedimiento',
+    //     refsetIds: [
+    //         '900000000000497000'
+    //     ],
+    // },
+    // {
+    //     fsn: 'inserción de restauración con amalgama en el diente (procedimiento)',
+    //     semanticTag: 'procedimiento',
+    //     refsetIds: [
+    //         '721145008',
+    //         '900000000000497000'
+    //     ],
+    //     conceptId: '234787002',
+    //     term: 'restauración con amalgama'
+    // },
+    // {
+    //     fsn: 'caries dental (trastorno)',
+    //     semanticTag: 'trastorno',
+    //     refsetIds: [
+    //         '721145008',
+    //         '900000000000497000'
+    //     ],
+    //     conceptId: '80967001',
+    //     term: 'caries dentales'
+    // }
+    //     ]
+    // };
 
-    public prestacionesDientes: any =
-        {
-            activo: true,
-            componente: 'ObservacionesComponent',
-            tipo: 'atomo',
-            esSolicitud: false,
-            style: {
-                columns: 12.0,
-                cssClass: null
-            },
-            defaultFor: [],
-            conceptosBuscar: null,
-            requeridos: [],
-            frecuentes: [],
-            params: null,
-            conceptos: [
-                {
-                    id: '',
-                    conceptId: '173291009',
-                    fsn: 'extracción simple de diente (procedimiento)',
-                    term: 'extracción simple de diente',
-                    semanticTag: 'procedimiento',
-                    refsetIds: [
-                        '900000000000497000'
-                    ],
-                }
-                ,
-                {
-                    'fsn': 'tratamiento de conducto completo (procedimiento)',
-                    'semanticTag': 'procedimiento',
-                    'refsetIds': [
-                        '721145008',
-                        '900000000000497000'
-                    ],
-                    'conceptId': '54258006',
-                    'term': 'tratamiento de conducto completo'
-                }
-            ]
-        };
+    // public prestacionesDientes: any =
+    //     {
+    //         activo: true,
+    //         componente: 'ObservacionesComponent',
+    //         tipo: 'atomo',
+    //         esSolicitud: false,
+    //         style: {
+    //             columns: 12.0,
+    //             cssClass: null
+    //         },
+    //         defaultFor: [],
+    //         conceptosBuscar: null,
+    //         requeridos: [],
+    //         frecuentes: [],
+    //         params: null,
+    //         conceptos: [
+    //             {
+    //                 id: '',
+    //                 conceptId: '173291009',
+    //                 fsn: 'extracción simple de diente (procedimiento)',
+    //                 term: 'extracción simple de diente',
+    //                 semanticTag: 'procedimiento',
+    //                 refsetIds: [
+    //                     '900000000000497000'
+    //                 ],
+    //             }
+    //             ,
+    //             {
+    //                 'fsn': 'tratamiento de conducto completo (procedimiento)',
+    //                 'semanticTag': 'procedimiento',
+    //                 'refsetIds': [
+    //                     '721145008',
+    //                     '900000000000497000'
+    //                 ],
+    //                 'conceptId': '54258006',
+    //                 'term': 'tratamiento de conducto completo'
+    //             }
+    //         ]
+    //     };
 
 
 
@@ -165,7 +165,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.conceptos = resultado;
                 });
 
-                this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
+                // this.prestacionesDientes = this.elementosRUPService.buscarElemento(this.prestacionesDientes.conceptos[0], false);
             }
 
 
@@ -217,19 +217,19 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
             // Esta consulta
             this.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
                 x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
                 x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteInferiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
                 x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {}) || '{}';
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
                 x.relacion = x.relacion.map(y => y.concepto);
             });
         }
@@ -369,19 +369,10 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
     }
 
-    getClassEvolucion(diente, cara) {
-        // let pieza = this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerecho.find(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara);
-        // if (pieza && pieza.concepto.semanticTag) {
-        //     return 'diente-' + pieza.concepto.semanticTag;
-        // }
-        // if (this.ultimoOdontograma) {
-        //     // console.log(this.ultimoOdontograma.valor);
-        //     return true;
-        //     // this.ultimoOdontograma.valor.piezas.find(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara);
-        // } else {
-        //     return false;
-        // }
+    getClassRegistro(diente, cara) {
+        console.log(this.prestacion.ejecucion.registros.find(x => x.relacionadoCon.find(y => y.concepto.conceptId === diente.concepto.conceptId)));
     }
+
     getClass(cuadrante, diente, cara, outline) {
         if (this.existeEnRegistro('valor', diente, 'pieza')) {
             return {
@@ -413,6 +404,16 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return -1;
     }
 
+    caraRel(diente, cara) {
+        if (this.prestacion.ejecucion.registros[0].valor && this.prestacion.ejecucion.registros[0].valor.piezas) {
+            return this.prestacion.ejecucion.registros[0].valor.piezas.findIndex(x => {
+                if (x.conceptId === diente.concepto.conceptId && x.cara === cara) {
+                    return diente.relacion;
+                }
+            });
+        }
+    }
+
     piezaCompleta(diente, cara) {
         if (this.piezasSeleccionadas.length > 0) {
             return this.piezasSeleccionadas.findIndex(x => x.diente.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
@@ -421,7 +422,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     piezaCompletaValor(diente, cara) {
-        if (this.registro.valor) {
+        if (this.registro.valor && this.registro.valor.piezas.length) {
             return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
         }
         return -1;
@@ -467,6 +468,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     odontograma: this.odontograma
                 };
 
+                debugger;
                 this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params });
 
             } else {
@@ -478,7 +480,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
             }
 
-            this.piezaSeleccionada = this.prestacionesDientes;
+            // this.piezaSeleccionada = this.prestacionesDientes;
 
         } else {
 
@@ -516,7 +518,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 this.carasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
             }
-            this.caraSeleccionada = this.prestacionesCaras;
+            // this.caraSeleccionada = this.prestacionesCaras;
 
         }
 
@@ -527,13 +529,13 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacionDienteSeleccionada) {
             let prestacionDienteEmit = this.prestacionDienteSeleccionada;
             this.emitChange(prestacionDienteEmit);
-            this.piezaSeleccionada = false;
+            // this.piezaSeleccionada = false;
         }
 
         if (this.prestacionCaraSeleccionada) {
             let prestacionCaraEmit = this.prestacionCaraSeleccionada;
             this.emitChange(prestacionCaraEmit);
-            this.caraSeleccionada = false;
+            // this.caraSeleccionada = false;
         }
         this.prestacionDienteSeleccionada = null;
         this.prestacionCaraSeleccionada = null;
