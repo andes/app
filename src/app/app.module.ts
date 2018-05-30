@@ -193,7 +193,6 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
-import { CheckBoxPorRefsetComponent } from './modules/rup/components/elementos/CheckBoxPorRefset.component';
 import { TensionSistolicaComponent } from './modules/rup/components/elementos/tensionSistolica.component';
 import { TensionDiastolicaComponent } from './modules/rup/components/elementos/tensionDiastolica.component';
 import { TensionArterialComponent } from './modules/rup/components/elementos/tensionArterial.component';
@@ -296,7 +295,6 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
-    'CheckBoxPorRefsetComponent': CheckBoxPorRefsetComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
@@ -338,7 +336,6 @@ export let RUPRegistry = {
 
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
-    CheckBoxPorRefsetComponent,
     AutocitadoComponent,
     EvolucionProblemaDefaultComponent,
     FiltradoGlomerularComponent,
