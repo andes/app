@@ -52,7 +52,6 @@ export class RUPComponent implements OnInit {
      */
     private loadComponent() {
 
-        // debugger;
         // Cargamos el componente
         const component = RUPRegistry[this.elementoRUP.componente];
         const componentFactory = this.componentFactoryResolver.resolveComponentFactory(component as any);
