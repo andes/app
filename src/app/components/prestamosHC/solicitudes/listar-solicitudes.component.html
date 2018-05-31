@@ -18,35 +18,35 @@
                                     </span>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
-                                    class="fechas">
-                                </plex-datetime>
+                            <div class="row">
+                                <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
+                                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')" name="fechaDesde" label="Desde"
+                                        class="fechas">
+                                    </plex-datetime>
+                                </div>
+                                <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
+                                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
+                                        class="fechas">
+                                    </plex-datetime>
+                                </div>
+                                <div class="col-4" (click)="toogleSort()" style="margin-top: 45px;">
+                                    <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
+                                    <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
+                                </div>
                             </div>
-                            <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
-                                <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')" name="fechaHasta" label="Hasta"
-                                    class="fechas">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4" (click)="toogleSort()" style="margin-top: 45px;">
-                                <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
-                                <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
-                                <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
-                                    name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
-                                </plex-select>
-                            </div>
-                            <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
-                                <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
-                                    label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
-                                </plex-select>
+                            <div class="row">
+                                <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
+                                    <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')" (getData)="loadPrestaciones($event)"
+                                        name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                                    </plex-select>
+                                </div>
+                                <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
+                                    <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')" (getData)="loadProfesionales($event)"
+                                        label="Profesional" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre">
+                                    </plex-select>
+                                </div>
                             </div>
                         </header>
                         <div class="plex-box-content">
@@ -103,7 +103,6 @@
                                         <td *ngIf="carpeta.datosSolicitudManual">
                                             {{carpeta.datosSolicitudManual.profesional ? carpeta.datosSolicitudManual.profesional.nombre + ', ' + carpeta.datosSolicitudManual.profesional.apellido
                                             : ''}}
-                                            <!-- , {{carpeta.datosSolicitudManual.profesional.apellido}} -->
                                         </td>
                                         <!-- Observaciones -->
                                         <td *ngIf="carpeta.datosPrestamo">
