@@ -1,5 +1,7 @@
 <ng-container *ngIf="conceptos && params">
-    <span>{{ params.titulo }}</span>
+    <b>
+        <span>{{ params.titulo }}</span>
+    </b>
 </ng-container>
 
 <ng-container *ngFor="let concepto of conceptos; let i = index">
