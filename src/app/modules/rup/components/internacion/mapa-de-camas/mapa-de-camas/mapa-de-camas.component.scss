@@ -1,3 +1,4 @@
+@import '../../../../assets/mapa-camas.css';
 /*
 ******************************
 ** MAPA DE CAMAS
@@ -330,3 +331,197 @@
     display: flex;
     align-items: center;
 }
+
+
+// -------------- CARDS CAMAS---------------
+
+$desocupada: #f7931e; 
+$ocupada: #ad0455;
+$disponible: #8cc63f;
+$reparacion: #f44336;
+$bloqueada: #f44336;
+
+
+
+.badge-desocupada,
+.badge-ocupada,
+.badge-disponible,
+.badge-reparacion,
+.badge-bloqueada {
+    background: transparent;
+    border: 1.5px solid;
+    font-size: 0.75em;
+    font-weight: normal;
+    padding: 5px;
+    text-transform: uppercase;
+}
+
+.badge-desocupada {
+    border-color:$desocupada;
+    color: #f7931e;
+}
+
+.badge-ocupada {
+    border-color: #ad0455;
+    color: #ad0455;
+}
+
+.badge-disponible {
+    border-color: #8cc63f;
+    color: #8cc63f;
+}
+
+.badge-reparacion {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+.badge-bloqueada {
+    border-color: #f44336;
+    color: #f44336;
+}
+
+button {
+&[class^="rounded"].left {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+}
+}
+
+.icon-content {
+    font-size: 14rem;
+
+    &.desocupada{
+        color:$desocupada;
+    }
+    &.ocupada{
+        color:$ocupada;
+    }
+    &.disponible{
+        color:$disponible;
+    }
+    &.reparacion{
+        color:rgb(204, 204, 204);
+    }
+    &.bloqueada{
+        color: rgb(204, 204, 204);
+    }
+}
+
+
+.data-icon {
+    position: absolute;
+    left: 60%;
+    top: 10%;
+    color: rgb(0, 0, 0);
+    z-index: 3;
+    font-size: 30px;
+    background-color: #ffffff;
+    height: 40px;
+    width: 40px;
+    border-radius: 80px;
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 0.2rem 0;
+
+    &.desocupada{
+        border: solid 2px $desocupada;
+    }
+    &.masculino{
+        border: solid 2px #5bc0de;
+    }
+    &.femenino{
+        border: solid 2px rgb(255, 192, 203);
+    }
+    &.reparacion{
+        border: solid 2px $reparacion;
+    }
+    &.bloqueada{
+        border: solid 2px $bloqueada;
+    }
+
+    i{
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.masculino{
+            color:#5bc0de;
+        }
+        &.femenino{
+            color:rgb(255, 192, 203);
+        }
+        &.reparacion{
+            color:$reparacion;
+        }
+        &.bloqueada{
+            color: $bloqueada;
+        }
+    }
+}
+
+.info-cama {
+    position: absolute;
+    left: 50%;
+    top: 56%;
+    max-width: 6rem;
+    height: 6rem;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    color: #fff;
+    z-index: 2;
+}
+
+
+.botonera-superior {
+    position: absolute;
+    left: 85%;
+
+}
+
+.icon-content {
+    align-self: center;
+}
+
+.contenedor-cama {
+    height: 15rem;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 15rem;
+}
+
+.unidad-organizativa {
+    font-size: 0.75rem;
+    padding: 0;
+}
+
+.color-data {
+    color: #000;
+}
+
+// TODO: ver las variables de colores ya definidas o definir los colores con julito @fersastre
+.cama-blo-rep {
+    color: rgb(167, 164, 164) !important;
+}
+
+.data-paciente {
+    color: #000;
+    height: 60px;
+    padding-top: 10px;
+}
+
+// TODO: ver los estilos de los botones del lateral con julito @fersastre
+.botonera-superior button {
+    padding: 6px;
+    color: #fff;
+    border-width: 0px;
+    margin-bottom: 3px;
+}
+
+.botonera-superior button:hover {
+    padding: 7px;
+    color: #000;
+    border-width: 0px;
+    margin-bottom: 3px;
+}
+

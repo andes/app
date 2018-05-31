@@ -26,6 +26,8 @@ export class CamaComponent implements OnInit {
     public opcionesDropdown: any = [];
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
+    public disabledButton = false;
+
     constructor(private plex: Plex,
         private auth: Auth,
         private camasService: CamasService,
