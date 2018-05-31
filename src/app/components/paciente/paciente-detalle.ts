@@ -32,12 +32,12 @@ export class PacienteDetalleComponent {
 
     @Output() renaperNotification: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    private _paciente: IPaciente;
+    _paciente: IPaciente;
     loading = false;
     deshabilitar = false;
     inconsistenciaDatos = false;
 
-    constructor(private pacienteService: PacienteService, private renaperService: RenaperService,  private plex: Plex) { }
+    constructor(private pacienteService: PacienteService, private renaperService: RenaperService, private plex: Plex) { }
 
     renaperVerification(patient) {
 
@@ -45,7 +45,7 @@ export class PacienteDetalleComponent {
         // En caso que el paciente ya esté validado sólo traer la foto!
         // Cancela la búsqueda anterior
 
-        window.document.getElementById('detalleContenedor').style.opacity = '0.3';
+        window.document.getElementById('detalleContenedor').classList.add('loadMode');
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
@@ -88,7 +88,7 @@ export class PacienteDetalleComponent {
                 this.deshabilitar = false;
             }
 
-            window.document.getElementById('detalleContenedor').style.opacity = '1';
+            window.document.getElementById('detalleContenedor').classList.remove('loadMode');
         });
     }
 }
