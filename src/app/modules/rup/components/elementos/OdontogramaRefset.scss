@@ -67,12 +67,12 @@ svg#cuadrante-sup-der {
 
 // :JOY:
 .diente-null {
-    fill: $plan !important;
+    // fill: none !important;
 }
 
 .diente-null-outline {
-    fill: none !important;
-    stroke: $plan !important;
+    // fill: none !important;
+    // stroke: none !important;
 }
 
 .diente-procedimiento-outline {
@@ -143,7 +143,7 @@ circle {
     fill: none;
 }
 
-$angles: (13deg: 10px);
+$angles: (13deg: 10px, 26deg: 17px, 39dg: 24px);
 $i: 1;
 // $angles: ( 13: '13deg');
 @each $rotation,
@@ -152,12 +152,26 @@ $translation in $angles {
         transform: scale(1.025, 1.025) translateX(-#{$i}px) rotateZ($rotation) translateX($translation);
     }
     .diente-offset-#{$i} {
-        transform: translateX(#{$i * 10}px);
+        &.vestibular {
+            transform: scale(1, 1) translateY(-#{$i * 8}px);
+        }
+        &.mesial {
+            transform: scale(1, 1) translate(#{$i * 8}px);
+        }
+        &.distal {
+            transform: scale(-1, 1) translate(-#{$i * 45}px);
+        }
+        &.palatina {
+            transform: scale(1, 1) translateY(#{$i * 8}px);
+        }
         z-index: #{$i * 10};
     }
     $i: ($i+1);
 }
 
+// .diente-offset- {
+//     translate(64px, 63px) rotate(-184deg);
+// }
 .pieza {
     cursor: pointer;
     &:hover {
