@@ -629,7 +629,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     beforeSave() {
         let resultado = true;
-        // debugger;
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             resultado = false;
@@ -650,7 +649,6 @@ export class PrestacionEjecucionComponent implements OnInit {
     controlParams() {
         let respuesta = true;
         let valoresConCero = [];
-        debugger;
         if (this.elementoRUP.params.reglasGuardado.requiereValores.length > 0) {
             for (let reg of this.prestacion.ejecucion.registros) {
                 let indexRegistro = this.elementoRUP.params.reglasGuardado.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
@@ -737,7 +735,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
             }
         }
-        debugger;
         if (valoresConCero.length > 0) {
             this.plex.confirm(this.elementoRUP.params.reglasGuardado.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
 
