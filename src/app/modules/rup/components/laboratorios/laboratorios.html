@@ -6,13 +6,19 @@
     </div>
     <div class="row">
         <div class="col">
-            <strong>Solicitante: </strong>
-            <div>
-                <ng-container *ngIf="laboratorio?.data.profesional">{{laboratorio?.data.profesional }}</ng-container>
+            <div class="row">
+                <div class="col">
+                    <strong>Profesional: </strong>
+                    <ng-container *ngIf="laboratorio?.data.profesional">{{laboratorio?.data.profesional.apellido }} {{laboratorio?.data.profesional.nombre }}</ng-container>
+                    <ng-container *ngIf="!laboratorio?.data.profesional && autorCDA">{{autorCDA?.name?.family}} {{autorCDA?.name?.given}}</ng-container>
+                </div>
             </div>
-            <div>
-                <strong>Organización:</strong>
-                <ng-container *ngIf="laboratorio?.data.organizacion">{{laboratorio?.data.organizacion }}</ng-container>
+            <div class="row">
+                <div class="col">
+                    <strong>Organización:</strong>
+                    <ng-container *ngIf="laboratorio?.data.organizacion">{{laboratorio?.data.organizacion.nombre }}</ng-container>
+                    <ng-container *ngIf="!laboratorio?.data.organizacion && organizacionCDA">{{organizacionCDA?.name}}</ng-container>
+                </div>
             </div>
             <div>
                 <strong>Fecha:</strong> {{ laboratorio.data.fecha | fecha }}

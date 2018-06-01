@@ -589,11 +589,6 @@
             </div>
         </ng-container>
 
-        <!-- <pre>
-            {{ laboratorios | json }}
-        </pre> -->
-
-
         <!-- Vista: LABORATORIOS -->
         <ng-container *ngIf="filtroActual === 'laboratorios'">
             <div class="vista-titulo">Laboratorios
@@ -641,12 +636,12 @@
                                                             <div class="col-10 p-0 m-0">
                                                                 <ng-container *ngIf="laboratorio">
                                                                     <div class="text-sm">Solicitante:
-                                                                        <ng-container *ngIf="laboratorio?.profesional">{{laboratorio?.profesional }}</ng-container>
+                                                                        <ng-container *ngIf="laboratorio?.profesional">{{laboratorio?.profesional?.nombre}}</ng-container>
                                                                     </div>
                                                                     <div class="text-sm">Organización:
-                                                                        <ng-container *ngIf="laboratorio?.organizacion">{{laboratorio?.organizacion }}</ng-container>
+                                                                        <ng-container *ngIf="laboratorio?.organizacion">{{laboratorio?.organizacion?.nombre }}</ng-container>
                                                                     </div>
-                                                                    <small class="sugerido">Creado: {{laboratorio?.Fecha | fecha:['DD/MM/YYYY']:true}}
+                                                                    <small class="sugerido">Fecha: {{laboratorio?.Fecha | fecha}}
                                                                     </small>
                                                                 </ng-container>
 
