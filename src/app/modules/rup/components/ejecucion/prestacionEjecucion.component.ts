@@ -140,7 +140,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
-
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
 
@@ -630,36 +629,54 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     beforeSave() {
         let resultado = true;
+        // debugger;
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
-            return false;
+            resultado = false;
         } else {
             this.prestacion.ejecucion.registros.forEach(r => {
                 if (!this.controlValido(r)) {
-
                     this.prestacionValida = false;
                     this.mostrarMensajes = true;
                     resultado = false;
                 }
             });
+
         }
 
         return resultado;
     }
 
-    /**
-     * Guardamos la prestacion y vamos hacia la pantalla de validacion
-     *
-     * @returns
-     * @memberof PrestacionEjecucionComponent
-     */
-    guardarPrestacion() {
+    controlParams() {
+        let respuesta = true;
+        let valoresConCero = [];
+        debugger;
+        if (this.elementoRUP.params.reglasGuardado.requiereValores.length > 0) {
+            for (let reg of this.prestacion.ejecucion.registros) {
+                let indexRegistro = this.elementoRUP.params.reglasGuardado.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
+                    valoresConCero.push(reg);
+                }
+            }
+        }
+        if (valoresConCero.length > 0) {
+            this.plex.confirm(this.elementoRUP.params.reglasGuardado.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+                if (respuestaAlerta) {
+                    respuesta = true;
+                } else {
+                    respuesta = false;
+                }
+                return respuesta;
+            });
+        }
 
+    }
+
+    confirmarGuardar() {
         // validamos antes de guardar
         if (!this.beforeSave()) {
             return;
         }
-
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
@@ -701,6 +718,44 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
 
         });
+    }
+    /**
+     * Guardamos la prestacion y vamos hacia la pantalla de validacion
+     *
+     * @returns
+     * @memberof PrestacionEjecucionComponent
+     */
+    guardarPrestacion() {
+
+        let respuesta = true;
+        let valoresConCero = [];
+        if (this.elementoRUP.params.reglasGuardado.requiereValores.length > 0) {
+            for (let reg of this.prestacion.ejecucion.registros) {
+                let indexRegistro = this.elementoRUP.params.reglasGuardado.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
+                    valoresConCero.push(reg);
+                }
+            }
+        }
+        debugger;
+        if (valoresConCero.length > 0) {
+            this.plex.confirm(this.elementoRUP.params.reglasGuardado.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+
+                if (!respuestaAlerta) {
+                    return false;
+                }
+
+                this.confirmarGuardar();
+
+
+
+            });
+        } else {
+            this.confirmarGuardar();
+        }
+
+
+
     }
 
     volver(ambito = 'ambulatorio') {
