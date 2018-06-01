@@ -49,9 +49,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     };
 
     ngOnInit() {
-        // this.params = this.elementosRUPService.buscarElemento(this.prestacion.solicitud.tipoPrestacion, false);
-
-        // console.log(this.params);
 
         // Traer EL odontograma
         this.snomedService.getQuery({ expression: '^721145008', field: 'term', words: 'iso designation', languageCode: 'en' }).subscribe(odontograma => {
@@ -80,6 +77,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             }
 
+
+
             if (this.registro.valor && this.registro.valor.piezas) {
                 // traer las evoluciones del odontograma (odontogramas anteriores)
             }
@@ -97,8 +96,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.armarRelaciones();
             });
-
-
         });
 
 
@@ -493,7 +490,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     // TODO: REVISAR
     piezaAnulada(conceptId) {
-        if (this.odontogramasHUDS && this.params && this.params.anularPieza) {
+        if (this.odontogramasHUDS) {
             let relacion = this.odontogramasHUDS.find(x => x.ejecucion.registros.findIndex(y => y.relacionadoCon.findIndex(z => z.conceptId === conceptId) !== -1) !== -1);
             return relacion && relacion.ejecucion.registros.find(a => this.params.anularPieza.find(b => b === a.concepto.conceptId));
         } else {
