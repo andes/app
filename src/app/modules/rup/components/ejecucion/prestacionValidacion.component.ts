@@ -14,6 +14,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
@@ -31,6 +32,7 @@ import 'rxjs/Rx';
 })
 export class PrestacionValidacionComponent implements OnInit {
 
+    elementoRUP: IElementoRUP;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
@@ -159,6 +161,14 @@ export class PrestacionValidacionComponent implements OnInit {
                     }
                 });
                 this.motivoReadOnly = true;
+            }
+
+            // Trae el elementoRUP que implementa esta Prestación
+            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+            if (this.elementoRUP.requeridos.length > 0) {
+                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
+                }
             }
 
             this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
