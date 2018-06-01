@@ -2,21 +2,23 @@
     <div class="col-8">
         <table *ngIf="diagnosticos.length>0" class="table table-striped table-sm">
             <thead>
-                <!-- <th></th> -->
                 <th>Codigo</th>
                 <th>Descripción</th>
                 <th>Descripción General</th>
                 <th style="text-align:center">Total Consultas</th>
-                <th style="text-align:center">&lt;1</th>
-                <th style="text-align:center">1</th>
+                <th style="text-align:center">&lt;6m</th>
+                <th style="text-align:center">7 a 11m</th>
+                <th style="text-align:center">12 a 23m</th>
                 <th style="text-align:center">2 a 4</th>
                 <th style="text-align:center">5 a 9</th>
                 <th style="text-align:center">10 a 14</th>
-                <th style="text-align:center">15 a 24</th>
+                <th style="text-align:center">15 a 19</th>
+                <th style="text-align:center">20 a 24</th>
                 <th style="text-align:center">25 a 34</th>
                 <th style="text-align:center">35 a 44</th>
                 <th style="text-align:center">45 a 64</th>
-                <th style="text-align:center">65 +</th>
+                <th style="text-align:center">65 a 74</th>
+                <th style="text-align:center">75 +</th>
                 <th style="text-align:center">Masculino</th>
                 <th style="text-align:center">Femenino</th>
                 <th style="text-align:center">Indeterminado</th>
@@ -36,13 +38,16 @@
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">
                         {{ diagnostico.total }}
                     </td>
-                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor1 > 0}">
-                        {{ diagnostico.sumaMenor1 }}
+                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMenor6m > 0}">
+                        {{ diagnostico.sumaMenor6m }}
                     </td>
-                    <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style="text-align:center"
+                    <td *ngIf="!diagnostico.sumaLactante" style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma711m > 0}">
+                        {{ diagnostico.suma711m }}
+                    </td>
+                    <!-- <td *ngIf="diagnostico.codigo==='A05.1' && diagnostico.sumaLactante && diagnostico.sumaLactante > 0" style="text-align:center"
                         [ngClass]="{'font-weight-bold': diagnostico.sumaLactante > 0}">
                         {{ diagnostico.sumaLactante }}
-                    </td>
+                    </td> -->
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1 > 0}">
                         {{ diagnostico.suma1 }}
                     </td>
@@ -55,8 +60,11 @@
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1014 > 0}">
                         {{ diagnostico.suma1014 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1524 > 0}">
-                        {{ diagnostico.suma1524 }}
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma1519 > 0}">
+                        {{ diagnostico.suma1519 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2024 > 0}">
+                        {{ diagnostico.suma2024 }}
                     </td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma2534 > 0}">
                         {{ diagnostico.suma2534 }}
@@ -67,8 +75,11 @@
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma4564 > 0}">
                         {{ diagnostico.suma4564 }}
                     </td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor65 > 0}">
-                        {{ diagnostico.sumaMayor65 }}
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.suma6574 > 0}">
+                        {{ diagnostico.suma6574 }}
+                    </td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMayor75 > 0}">
+                        {{ diagnostico.sumaMayor75 }}
                     </td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': diagnostico.sumaMasculino > 0}">
                         {{ diagnostico.sumaMasculino }}
@@ -90,16 +101,20 @@
                         Total de Consultas
                     </td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': true}">{{totalConsultas}}</td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMenor6m > 0}">{{totalMenor6m}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total711m > 0}">{{total711m}}</td>
+                    <!-- <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMenor1 > 0}">{{totalMenor1}}</td> -->
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total1 > 0}">{{total1}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total24 > 0}">{{total24}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total59 > 0}">{{total59}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total1014 > 0}">{{total1014}}</td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total1524 > 0}">{{total1524}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total1519 > 0}">{{total1519}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total2024 > 0}">{{total2024}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total2534 > 0}">{{total2534}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total3544 > 0}">{{total3544}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': total4564 > 0}">{{total4564}}</td>
-                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMayor65 > 0}">{{totalMayor65}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': total6574 > 0}">{{total4564}}</td>
+                    <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMayor75 > 0}">{{totalMayor65}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': totalMasculino > 0}">{{totalMasculino}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': totalFemenino > 0}">{{totalFemenino}}</td>
                     <td style="text-align:center" [ngClass]="{'font-weight-bold': totalOtro > 0}">{{totalOtro}}</td>
