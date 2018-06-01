@@ -54,7 +54,6 @@ export class ReporteC2Component implements OnInit {
         this.total2024 = this.diagnosticos.map(elem => { return elem.suma2024; }).reduce(this.add, 0);
         this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
         this.total3544 = this.diagnosticos.map(elem => { return elem.suma3544; }).reduce(this.add, 0);
-        this.total2534 = this.diagnosticos.map(elem => { return elem.suma2534; }).reduce(this.add, 0);
         this.total4564 = this.diagnosticos.map(elem => { return elem.suma4564; }).reduce(this.add, 0);
         this.total6574 = this.diagnosticos.map(elem => { return elem.suma6574; }).reduce(this.add, 0);
         this.totalMayor75 = this.diagnosticos.map(elem => { return elem.sumaMayor65; }).reduce(this.add, 0);
