@@ -322,6 +322,10 @@
 
                                     <lab [laboratorio]="registro"></lab>
                                 </tab>
+                                <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'cda'">
+
+                                    <vista-cda [registro]="registro"></vista-cda>
+                                </tab>
                             </ng-container>
                         </ng-container>
                     </tabs>
