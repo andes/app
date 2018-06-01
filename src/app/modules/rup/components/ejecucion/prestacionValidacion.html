@@ -216,7 +216,7 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                            [registro]="elemento" [soloValores]="true"></rup>
+                                            [registro]="elemento" [soloValores]="true" [params]="this.elementosRUPService.coleccionRetsetId[elemento.concepto.conceptId]"></rup>
                                     </div>
                                 </div>
                                 <div class="row">
