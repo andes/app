@@ -826,7 +826,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Búsqueda que filtra según concepto
     ejecutarAccion(accion) {
-        debugger;
         if (accion.conceptos) {
             this.tipoBusqueda = accion;
         } else {

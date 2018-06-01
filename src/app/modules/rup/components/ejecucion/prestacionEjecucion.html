@@ -207,9 +207,9 @@
                                                     </div>
 
                                                     <!-- RUP Loader -->
-                                                    <!-- (change)="prestacionChanged()" -->
+
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.buscarElemento(registro.concepto, false)"
                                                         (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro)"
                                                         (ejecutarAccion)="ejecutarAccion($event)"></rup>
                                                     <!-- (ejecutarAccion)="confirmarEliminarRegistro($event.tipoAccion, $event.opciones)" -->
