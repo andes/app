@@ -38,27 +38,169 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 .icon-rup-semantic-elementoderegistro:before {
-  content: "\68";
-}
-.icon-rup-semantic-dispositivo:before {
   content: "\61";
 }
-.icon-rup-semantic-hallazgo:before {
+.icon-rup-semantic-dispositivo:before {
   content: "\62";
 }
-.icon-rup-semantic-plan:before {
+.icon-rup-semantic-hallazgo:before {
   content: "\63";
 }
-.icon-rup-semantic-procedimiento:before {
+.icon-rup-semantic-plan:before {
   content: "\64";
 }
 .icon-rup-semantic-producto:before {
   content: "\65";
 }
-.icon-rup-semantic-todos:before {
+.icon-rup-semantic-procedimiento:before {
   content: "\66";
 }
-.icon-rup-semantic-trastorno:before {
+.icon-rup-semantic-todos:before {
   content: "\67";
+}
+.icon-rup-semantic-trastorno:before {
+  content: "\68";
+}
+.icon-andes-cama-reparacion:before {
+  content: "\69";
+}
+.icon-andes-cama:before {
+  content: "\6a";
+}
+.icon-andes-cama-bloqueada:before {
+  content: "\6b";
+}
+.icon-andes-cama-candado:before {
+  content: "\6c";
+}
+.icon-andes-cama-check:before {
+  content: "\6d";
+}
+.icon-andes-cama-desocupada:before {
+  content: "\6e";
+}
+.icon-andes-cama-femenino:before {
+  content: "\6f";
+}
+.icon-andes-cama-herramienta:before {
+  content: "\70";
+}
+.icon-andes-cama-lapiz:before {
+  content: "\71";
+}
+.icon-andes-cama-masculino:before {
+  content: "\72";
+}
+.icon-andes-cama-ocupada:before {
+  content: "\73";
+}
+.icon-andes-cama-oxigeno:before {
+  content: "\74";
+}
+.icon-andes-cama-pausada:before {
+  content: "\75";
+}
+.icon-andes-cama-reloj:before {
+  content: "\76";
+}
+.icon-andes-laboratorio:before {
+  content: "\77";
+}
+.icon-andes-marker:before {
+  content: "\78";
+}
+.icon-andes-agendas:before {
+  content: "\79";
+}
+.icon-andes-alerta:before {
+  content: "\7a";
+}
+.icon-andes-marker-salud:before {
+  content: "\41";
+}
+.icon-andes-mpi:before {
+  content: "\42";
+}
+.icon-andes-ambulancia:before {
+  content: "\43";
+}
+.icon-andes-bomberos:before {
+  content: "\44";
+}
+.icon-andes-noticia:before {
+  content: "\45";
+}
+.icon-andes-paciente:before {
+  content: "\46";
+}
+.icon-andes-confirmar:before {
+  content: "\47";
+}
+.icon-andes-defensa-civil:before {
+  content: "\48";
+}
+.icon-andes-paciente-circulo:before {
+  content: "\49";
+}
+.icon-andes-policia:before {
+  content: "\4a";
+}
+.icon-andes-farmacia:before {
+  content: "\4b";
+}
+.icon-andes-horario:before {
+  content: "\4c";
+}
+.icon-andes-profesional:before {
+  content: "\4d";
+}
+.icon-andes-profesional-circulo:before {
+  content: "\4e";
+}
+.icon-andes-hospital:before {
+  content: "\4f";
+}
+.icon-andes-huds:before {
+  content: "\50";
+}
+.icon-andes-telefono:before {
+  content: "\51";
+}
+.icon-andes-turno:before {
+  content: "\52";
+}
+.icon-andes-logo:before {
+  content: "\53";
+}
+.icon-andes-vacuna:before {
+  content: "\54";
+}
+.icon-andes-violencia-familiar:before {
+  content: "\55";
+}
+.icon-andes-rup-calificador:before {
+  content: "\56";
+}
+.icon-andes-maltrato:before {
+  content: "\57";
+}
+.icon-calendario-dia-oscuro:before {
+  content: "\58";
+}
+.icon-calendario-rango-oscuro:before {
+  content: "\59";
+}
+.icon-defensa-civil-oscuro:before {
+  content: "\5a";
+}
+.icon-farmacia-oscuro:before {
+  content: "\30";
+}
+.icon-llamar-oscuro:before {
+  content: "\31";
+}
+.icon-andes-hospital-cyan:before {
+  content: "\32";
 }
