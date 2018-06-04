@@ -673,8 +673,8 @@
                                     <g (click)="seleccionarDiente(diente, 'pieza')" (mouseenter)="showTooltip(diente, 'pieza', a)" (mouseleave)="hideTooltip()"
                                         class="pieza" title="pieza completa">
                                         <!-- Círculo MINI -->
-                                        <circle *ngIf="relClass?.concepto?.semanticTag" class="st1 {{ 'diente-' + relClass.concepto.semanticTag
-                                        + ' rotate-' + a }}" cx="46.285" cy="7.311" r="5.801" />
+                                        <circle *ngIf="relClass?.concepto?.semanticTag" class="st1" [ngClass]="'diente-' + relClass.concepto.semanticTag
+                                        + ' rotate-' + a" cx="46.285" cy="7.311" r="5.801" />
                                         <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente,
                                             'pieza')?.concepto.semanticTag + '-outline' : ''" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                         />
@@ -786,8 +786,7 @@
                                         />
                                     </g>
                                     <!-- Círculo GRANDE -->
-                                    <circle cx="26" cy="27.5" r="22.246" class="{{ 'diente-' + relClass.concepto.semanticTag
-                                    + '-outline' }}" />
+                                    <circle cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'" />
                                 </ng-container>
                             </ng-container>
                         </svg>
