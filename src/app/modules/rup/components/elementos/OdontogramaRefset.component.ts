@@ -323,14 +323,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         });
     }
 
-    getClass(cuadrante, diente, cara, outline) {
-        if (this.existeEnRegistro('valor', diente, 'pieza')) {
-            return {
-                ...outline ? { 'diente-trastorno-outline': true } : { 'diente-trastorno': true }
-            }
-        }
-    }
-
     loadPrestacionesDientes($event, tipo) {
         let conceptosSelect = this.conceptos.map(elem => {
             return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() }
