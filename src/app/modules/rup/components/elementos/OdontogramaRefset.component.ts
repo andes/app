@@ -378,19 +378,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         return -1;
     }
 
-    piezaCompletaClass(diente, cara) {
-        return this.registro.valor.piezas.find(x => x.concepto.conceptId === diente.concepto.conceptId) || false;
-    }
-
-
-    validacionClass(diente, cara) {
-        return this.getRelacionClass(diente, cara);
-        // let cl = this.registro.valor.piezas.find(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === cara);
-        // if (cl) {
-        //     return cl.concepto.semanticTag;
-        // }
-    }
-
     seleccionarDiente(diente, cara) {
 
         if (cara === 'pieza') {
