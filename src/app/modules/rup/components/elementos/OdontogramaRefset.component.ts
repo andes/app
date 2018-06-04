@@ -241,13 +241,12 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 this.popOverText.relacion = this.getRegistrosRel(diente, cara)[0];
             }
         } else {
+            // Sólo para piezas
             this.popOverText.relacion = this.getRegistrosRel(diente, 'pieza')[index];
-            // this.popOverText.relacion = ' (pieza ausente)'
         }
 
         this.popOverText.cara = cara;
         this.showPopOver = true;
-
         this.showRelacion = true;
 
     }

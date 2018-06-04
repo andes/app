@@ -74,7 +74,7 @@
                                     title="mesial" />
                                 <ng-container *ngIf="getRegistrosRelAnterior(diente, 'mesial')?.length">
                                     <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                        <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                        <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                             d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                             class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
                                             title="mesial" />
@@ -159,7 +159,7 @@
                                     title="mesial" />
                                 <ng-container *ngIf="getRegistrosRelAnterior(diente, 'mesial')?.length">
                                     <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                        <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                        <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                             d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                             class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
                                             title="mesial" />
@@ -245,7 +245,7 @@
                                     title="mesial" />
                                 <ng-container *ngIf="getRegistrosRelAnterior(diente, 'mesial')?.length">
                                     <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                        <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                        <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                             d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                             class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
                                             title="mesial" />
@@ -331,7 +331,7 @@
                                     title="mesial" />
                                 <ng-container *ngIf="getRegistrosRelAnterior(diente, 'mesial')?.length">
                                     <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                        <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                        <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                             d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                             class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
                                             title="mesial" />
@@ -433,7 +433,7 @@
                                 title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
                                         [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                         d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -539,7 +539,7 @@
                                             }}" title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()
 " (click)="seleccionarDiente(diente, 'mesial')" [ngClass]="{ 'seleccionada': cara(diente, 'mesial') !==- 1, 'registrada': caraValor(diente,
                                             'mesial') !==- 1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -645,7 +645,7 @@
                                 title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
                                         [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                         d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -741,7 +741,7 @@
                                             }}" title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" (click)="seleccionarDiente(diente, 'mesial')"
                                         [ngClass]="{ 'seleccionada': cara(diente, 'mesial') !==- 1, 'registrada': caraValor(diente,
                                             'mesial') !==- 1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -873,7 +873,7 @@
                                 title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()" [ngClass]="{'seleccionada': cara(diente, 'mesial') !== -1, 'registrada': caraValor(diente, 'mesial') !== -1}"
                                         d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
                                         title="mesial" />
@@ -974,7 +974,7 @@
                                             }}" title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()
 " [ngClass]="{ 'seleccionada': cara(diente, 'mesial') !==- 1, 'registrada': caraValor(diente,
                                             'mesial') !==- 1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -1084,7 +1084,7 @@
                                             }}" title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()
 " [ngClass]="{ 'seleccionada': cara(diente, 'mesial') !==- 1, 'registrada': caraValor(diente,
                                             'mesial') !==- 1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
@@ -1190,7 +1190,7 @@
                                             }}" title="mesial" />
                             <ng-container *ngIf="getRegistrosRel(diente, 'mesial')?.length">
                                 <ng-container *ngFor="let relMesial of getRegistrosRel(diente, 'mesial'); let m=index">
-                                    <path (mouseenter)="showTooltip(diente, 'mesial', m+1)" (mouseleave)="hideTooltip()
+                                    <path (mouseenter)="showTooltip(diente, 'mesial', m)" (mouseleave)="hideTooltip()
 " [ngClass]="{ 'seleccionada': cara(diente, 'mesial') !==- 1, 'registrada': caraValor(diente,
                                             'mesial') !==- 1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                         class="diente mesial {{ 'diente-' + relMesial.concepto.semanticTag }} diente-offset-{{m}}"
