@@ -1,7 +1,7 @@
 <ng-container *ngIf="conceptos?.length > 0 && params && !soloValores">
     <div class="container odontograma no-gutters p-0">
 
-        <div *ngIf="ultimoOdontograma" class="row">
+        <div *ngIf="ultimoOdontograma || odontograma" class="row">
             <div class="col-12">
                 <div class="ngx-pop">
                     &nbsp;
