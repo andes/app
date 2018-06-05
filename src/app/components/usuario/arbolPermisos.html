@@ -1,5 +1,5 @@
 <plex-accordion *ngIf="item.child">
-    <plex-panel (toggle)="expand($event)">
+    <plex-panel (toggle)="expand($event)" #panel>
         <div plex-accordion-title>
             {{item.title}}
             <span *ngIf="allModule">(todos)</span>
@@ -16,10 +16,10 @@
 
     <div *ngIf="item.type !== 'boolean'">
         <!-- El seleccionar todos para prestaciones se quita segun requerimientos -->
-         <h5>
+        <h5>
             {{item.title}}
             <plex-bool *ngIf="!item.avoidAll" [(ngModel)]="all" label="Seleccionar todos" type="slide"> </plex-bool>
-        </h5> 
+        </h5>
         <plex-select [multiple]="true" [readonly]="all" [(ngModel)]="seleccionados" (getData)="loadData(item.type, $event)" placeholder="Seleccione los elementos con permisos"
             (change)="selectChange()" name="plexSelect" idField="id"></plex-select>
     </div>

@@ -1,5 +1,5 @@
 import { Plex } from '@andes/plex';
-import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter, Input, ViewChildren, QueryList, OnChanges, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
@@ -11,7 +11,7 @@ let shiroTrie = require('shiro-trie');
     templateUrl: 'arbolPermisos.html'
 })
 
-export class ArbolPermisosComponent implements OnInit, OnChanges {
+export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit {
 
     private shiro = shiroTrie.new();
     private state = false;
@@ -24,9 +24,11 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
     @Input() parentPermission: String = '';
     @Input() userPermissions: String[] = [];
 
+    @ViewChild('panel') accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
-    @ViewChildren(PlexPanelComponent) accordions: QueryList<PlexPanelComponent>;
+    ngAfterViewInit() {
+    }
 
     constructor(
         private plex: Plex,
@@ -36,7 +38,13 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
     expand($event) {
         if ($event) {
             if (this.allModule) {
-                this.accordions.first.active = false;
+                this.accordions.active = false;
+            } else {
+                let index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
+                if (index >= 0) {
+                    this.userPermissions.splice(index, 1);
+                    this.userPermissions = [...this.userPermissions];
+                }
             }
         }
     }
@@ -57,6 +65,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
             } else {
                 let permisos = this.makePermission();
                 let items: String[] = this.shiro.permissions(permisos + ':?');
+
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
@@ -66,7 +75,8 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
-                                    this.seleccionados = data;
+                                    this.seleccionados = [...data];
+
                                 });
                                 break;
                         }
@@ -100,7 +110,9 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                     break;
             }
         } else {
-            event.callback(this.seleccionados || []);
+            window.setTimeout(() => {
+                event.callback(this.seleccionados || null);
+            }, 1000);
         }
     }
 
@@ -120,7 +132,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
         if (this.allModule) {
             return [this.makePermission() + ':*'];
         }
-        if (this.item.child) {
+        if (this.item.child && this.childsComponents) {
             this.childsComponents.forEach(child => {
                 results = [...results, ...child.generateString()];
             });
@@ -136,9 +148,12 @@ export class ArbolPermisosComponent implements OnInit, OnChanges {
                 }
 
                 let lists = [];
-                this.seleccionados.forEach(item => {
-                    lists.push(this.makePermission() + ':' + item._id);
-                });
+                if (this.seleccionados) {
+                    this.seleccionados.forEach(item => {
+                        lists.push(this.makePermission() + ':' + item._id);
+                    });
+                }
+
                 return lists;
             }
         }

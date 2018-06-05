@@ -19,7 +19,7 @@ export class AppComponent {
                         (data) => this.plex.updateAppStatus(data),
                         (err) => this.plex.updateAppStatus({ API: 'Error' })
                     );
-            }, 2000);
+            }, 100000);
         } else {
             this.plex.updateAppStatus({ API: 'OK' });
         }
@@ -42,7 +42,7 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:planificarAgenda:?').length > 0) {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
-        if (this.auth.getPermissions('turnos:darTurnos:?').length > 0) {
+        if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/puntoInicioTurnos' });
         }
         if (this.auth.getPermissions('mpi:?').length > 0) {

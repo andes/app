@@ -387,12 +387,14 @@ export class PuntoInicioComponent implements OnInit {
 
     // Detecta si una Agenda es futura
     esFutura(agenda: IAgenda = null) {
-        return moment(agenda.horaInicio).endOf('day').isAfter(moment(new Date()).endOf('day'));
+        let fechaAgenda = moment(agenda.horaInicio).startOf('day');
+        let fechaActual = moment(new Date()).endOf('day');
+        return fechaAgenda.isAfter(fechaActual);
     }
 
     // Detecta si "hoy" es el día de la Agenda
     diaAgenda(agenda: IAgenda) {
-        return moment(agenda.horaInicio).format('DD/MM/YYYY');
+        return moment(agenda.horaInicio).fromNow();
     }
 
 }

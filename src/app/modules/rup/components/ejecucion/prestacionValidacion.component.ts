@@ -4,7 +4,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { SnomedService } from './../../../../services/term/snomed.service';
 import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -124,6 +124,9 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
+        // this.zone.runOutsideAngular(() => {
+        //     console.log(22);
+        // });
     }
 
     redirect(pagina: string) {
@@ -136,7 +139,6 @@ export class PrestacionValidacionComponent implements OnInit {
         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
         this.servicioPrestacion.getById(id).subscribe(prestacion => {
             this.prestacion = prestacion;
-
             this.registrosOriginales = prestacion.ejecucion.registros;
 
             this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
@@ -413,9 +415,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
 
-        // this.prestacion.ejecucion.registros = relacionesOrdenadas;
         this.registrosOrdenados = relacionesOrdenadas;
-
     }
 
     reordenarRelaciones() {
