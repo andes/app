@@ -90,7 +90,7 @@ export class UsuarioUpdateComponent implements OnInit {
 
         // Si el usuario puede agregar efectores, se listan todos los disponibles
         if (this.auth.check('usuarios:agregarEfector')) {
-            this.organizacionService.get({}).subscribe(organizaciones => {
+            this.organizacionService.get({limit: 1000}).subscribe(organizaciones => {
                 this.newOrganizaciones = organizaciones;
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
                 this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
