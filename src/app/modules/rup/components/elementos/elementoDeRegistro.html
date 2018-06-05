@@ -1,9 +1,8 @@
-<label *ngIf="params?.titulo">
+<label class="title-element" *ngIf="params?.titulo">
     {{ params.titulo }}</label>
 <hr>
 <div class="row">
-
-    <div class="col-3">
+    <div class="col-12">
         <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro.valor.descripcion }" [(ngModel)]="registro.valor.descripcion"
             rows="6" id="descripcion" name="descripcion"> 
         </textarea>
@@ -15,8 +14,12 @@
             </ng-container>
         </p>
     </div>
+</div>
+
+
+<div class="row">
     <!-- Area droppable del elemento -->
-    <div class="col-9 drop-box" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
+    <div class="col-12" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
         <div *ngIf="soloValores && !registro.registros.length" class="add mt-4">
             No hay registros vinculados
         </div>
@@ -33,7 +36,7 @@
 
                 <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
                     [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                    <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
+                    <div class="rup-card2 {{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                 [dragOverClass]="'drag-target-border'" [dragData]="registro">
@@ -120,6 +123,7 @@
                 </div>
 
             </ng-container>
+
         </div>
     </div>
 </div>

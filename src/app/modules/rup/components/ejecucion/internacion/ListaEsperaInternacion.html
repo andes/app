@@ -3,7 +3,29 @@
         <div class="col-12">
             <plex-box>
                 <header>
-                    <div class="page-title">Lista de espera</div>
+                    <div class="clearfix">
+                        <div class="page-title">
+                            Lista de espera
+                        </div>
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-group">
+                                    <label for="filtros-nombre">Paciente</label>
+                                    <input type="text" class="form-control" name="nombre" [(ngModel)]="select.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
+                                        (keyup)="filtrar()" />
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <plex-select [(ngModel)]="select.estados" name="estado" [data]="filtros.estados" label="Estado" (change)="filtrar()"></plex-select>
+                            </div>
+                            <div class="col-3">
+
+                            </div>
+                            <div class="col-3">
+
+                            </div>
+                        </div>
+                    </div>
                 </header>
                 <div class="row">
                     <div class="col-12" *ngIf="prestacionesPendientes?.length">
@@ -15,6 +37,7 @@
                                     <td>Fecha de nacimiento</td>
                                     <td>Sexo</td>
                                     <td>Estado</td>
+                                    <td>Sugerencia de pase A</td>
                                     <td>Ver Internación</td>
                                     <td>Internar</td>
                                 </tr>
@@ -31,6 +54,14 @@
                                         {{prestacion.ultimoEstado}}</td>
                                     <td *ngIf="!prestacion.paseDe && !prestacion.esEgreso">
                                         Ingreso
+                                    </td>
+                                    <td>
+                                        <ng-container *ngIf="prestacion.paseA !== null">
+                                            {{prestacion.paseA.term | json }}
+                                        </ng-container>
+                                        <ng-container *ngIf="prestacion.paseA === null">
+                                            Ninguno
+                                        </ng-container>
                                     </td>
                                     <td>
                                         <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación" (click)="verInternacion(prestacion.prestacion.id)"
