@@ -162,7 +162,7 @@ $translation in $angles {
             transform: scale(-1, 1) translate(-#{$i * 45}px);
         }
         &.palatina {
-            transform: scale(1, 1) translateY(#{$i * 8}px);
+            transform: scale(1, 1) translateX(#{$i * 8}px);
         }
         z-index: #{$i * 10};
     }
