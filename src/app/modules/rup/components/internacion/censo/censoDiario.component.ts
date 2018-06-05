@@ -52,11 +52,9 @@ export class CensoDiarioComponent implements OnInit {
         private sanitizer: DomSanitizer) { }
 
     ngOnInit() {
-        console.log(this.params);
-
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
-            if (this.params) {
+            if (this.params && this.params.fecha && this.params.organizacion) {
                 this.textoVolver = 'Volver al censo mensual';
                 this.fecha = this.params.fecha;
                 this.organizacionSeleccionada = this.params.organizacion;
@@ -79,6 +77,7 @@ export class CensoDiarioComponent implements OnInit {
 
     reseteaBusqueda() {
         this.listadoCenso = [];
+        this.resumenCenso = null;
     }
 
     descargarCenso() {
@@ -108,9 +107,13 @@ export class CensoDiarioComponent implements OnInit {
 
 
     /**
-    * Vuelve a la página anterior (mapa de camas)
+    * Vuelve a la página anterior (mapa de camas o censo mensual)
     */
     volver() {
-        this.router.navigate(['/internacion/camas']);
+        if (this.params && this.params.fecha && this.params.organizacion) {
+            this.evtData.emit();
+        } else {
+            this.router.navigate(['/internacion/camas']);
+        }
     }
 }
