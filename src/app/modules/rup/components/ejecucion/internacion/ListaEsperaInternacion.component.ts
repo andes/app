@@ -64,9 +64,9 @@ export class ListaEsperaInternacionComponent implements OnInit {
     }
 
     /**
-     * Emito la prestacion y retorno al mapa de camas para seleccionar una cama 
+     * Emito la prestacion y retorno al mapa de camas para seleccionar una cama
      * desocupada
-     * @param prestacion 
+     * @param prestacion
      */
     darCama(prestacion) {
         this.prestacion.emit(prestacion);
