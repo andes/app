@@ -65,16 +65,6 @@ svg#cuadrante-sup-der {
     fill: $hallazgo !important;
 }
 
-// :JOY:
-.diente-null {
-    // fill: none !important;
-}
-
-.diente-null-outline {
-    // fill: none !important;
-    // stroke: none !important;
-}
-
 .diente-procedimiento-outline {
     fill: none !important;
     stroke: $procedimiento !important;
@@ -90,13 +80,6 @@ svg#cuadrante-sup-der {
     stroke: $hallazgo !important;
 }
 
-.evolucionada {
-    // fill: repeating-linear-gradient( 45deg, #606dbc, #606dbc 3px, #465298 3px, #465298 6px) !important;
-    // fill: rgb(133, 133, 133); // fill: url(#striped);
-    // fill: url(#pattern1);
-    // fill: rgb(133, 133, 133);
-}
-
 .evolucionada-stroke {
     stroke: rgb(133, 133, 133);
     fill: none;
@@ -110,7 +93,7 @@ svg#cuadrante-sup-der {
     stroke-width: 1;
     stroke-miterlimit: 10;
     &.seleccionada {
-        // stroke: #47d3a7 !important;
+        stroke: #36877f !important;
     }
 }
 
@@ -123,7 +106,7 @@ svg#cuadrante-sup-der {
 }
 
 .seleccionada {
-    fill: #47d3a7;
+    fill: #36877f !important;
 }
 
 .registrada {
@@ -145,7 +128,6 @@ circle {
 
 $angles: (13deg: 10px, 26deg: 17px, 39dg: 24px);
 $i: 1;
-// $angles: ( 13: '13deg');
 @each $rotation,
 $translation in $angles {
     .rotate-#{$i} {
@@ -169,9 +151,6 @@ $translation in $angles {
     $i: ($i+1);
 }
 
-// .diente-offset- {
-//     translate(64px, 63px) rotate(-184deg);
-// }
 .pieza {
     cursor: pointer;
     &:hover {
@@ -179,21 +158,6 @@ $translation in $angles {
     }
 }
 
-// .distal {
-//     /* fill: #4776d3; */
-// }
-// .vestibular {
-//     /* fill: #4776d3; */
-// }
-// .mesial {
-//     /* fill: #4776d3; */
-// }
-// .palatina {
-//     /* fill: #4776d3; */
-// }
-// .oclusal {
-//     /* fill: #4776d3; */
-// }
 .diente-container {
     display: inline-block;
     width: 50px;
