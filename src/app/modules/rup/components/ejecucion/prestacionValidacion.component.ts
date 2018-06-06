@@ -14,6 +14,7 @@ import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { LogService } from './../../../../services/log.service';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
@@ -102,7 +103,8 @@ export class PrestacionValidacionComponent implements OnInit {
         public servicioAgenda: AgendaService,
         private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
         private servicioDocumentos: DocumentosService,
-        private sanitizer: DomSanitizer) {
+        private sanitizer: DomSanitizer,
+        private logService: LogService) {
     }
 
     ngOnInit() {
@@ -240,7 +242,16 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(
+                            salida => { },
+                            error => {
+                                this.logService.post('citas', 'update', {
+                                    accion: 'codificarTurno',
+                                    data: this.prestacion.solicitud.turno,
+                                    err: error
+                                });
+                            }
+                        );
                     }
 
 
