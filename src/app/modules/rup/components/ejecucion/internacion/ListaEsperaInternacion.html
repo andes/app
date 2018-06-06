@@ -56,10 +56,11 @@
                                         Ingreso
                                     </td>
                                     <td>
-                                        <ng-container *ngIf="prestacion.paseA !== null">
-                                            {{prestacion.paseA.term | json }}
+
+                                        <ng-container *ngIf="prestacion.paseA && prestacion.paseA !== null">
+                                            {{prestacion.paseA.term }}
                                         </ng-container>
-                                        <ng-container *ngIf="prestacion.paseA === null">
+                                        <ng-container *ngIf="!prestacion.paseA || (prestacion.paseA && prestacion.paseA === null)">
                                             Ninguno
                                         </ng-container>
                                     </td>
