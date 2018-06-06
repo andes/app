@@ -67,15 +67,17 @@
                                 </div>
                             </div>
                             <div class="row">&nbsp;</div>
-                              <!-- DATOS PARA APP MOBILE DE ANDES -->
-                              <fieldset *ngIf="validado && activarApp">
+                            <!-- DATOS PARA APP MOBILE DE ANDES -->
+                            <fieldset *ngIf="validado && activarApp">
                                 <legend>Datos para App Mobile de ANDES</legend>
                                 <div class="row">
                                     <div class="col-4">
-                                        <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail" (focusout)="onFocusout('email', emailAndes)"></plex-text>
+                                        <plex-text label="Usuario Andes (E-Mail)" [(ngModel)]="emailAndes" [readonly]="!checkPass" name="usuarioAndes" placeholder="e-mail"
+                                            (focusout)="onFocusout('email', emailAndes)"></plex-text>
                                     </div>
                                     <div class="col-4">
-                                        <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes" (focusout)="onFocusout('celular', celularAndes)" ></plex-phone>
+                                        <plex-phone label="Celular para app de Andes" [(ngModel)]="celularAndes" placeholder="Ej: 2990000000" name="celularAndes"
+                                            (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
                                     </div>
                                     <div class="col-4">
                                         <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
@@ -307,8 +309,11 @@
                                                 <span *ngIf="!pac.paciente">{{pac.sexo}}</span>
                                             </td>
                                             <td>
-                                                <plex-button *ngIf="!pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac, true)"></plex-button>
-                                                <plex-button *ngIf="pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac.paciente, true)"></plex-button>
+                                                <plex-button *ngIf="!pac.paciente" title="Seleccinar Paciente" [disabled]="relacionRepetida(pac)" icon="check-circle-outline"
+                                                    type="link" (click)="seleccionarPacienteRelacionado(pac, true)"></plex-button>
+                                                <!--Búsqueda por escaneo-->
+                                                <plex-button *ngIf="pac.paciente" title="Seleccinar Paciente" [disabled]="relacionRepetida(pac.paciente)" icon="check-circle-outline"
+                                                    type="link" (click)="seleccionarPacienteRelacionado(pac.paciente, true)"></plex-button>
                                             </td>
                                         </tr>
                                     </tbody>

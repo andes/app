@@ -102,6 +102,9 @@ import {
     EventEmitter,
     HostBinding
 } from '@angular/core';
+import { resolve } from 'q';
+import { forEach } from '@angular/router/src/utils/collection';
+import { ENGINE_METHOD_DIGESTS } from 'constants';
 
 
 @Component({
@@ -503,7 +506,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {
@@ -558,7 +560,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.logService.post('mpi', 'posibleDuplicado', {
                     paciente: this.pacienteModel
                 }).subscribe(() => { });
-
             }
 
             let operacionPac: Observable<IPaciente>;
@@ -1064,10 +1065,29 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 }
             }, 200);
         }
+    };
+
+    public relacionRepetida(pacienteCantidato) {
+        //  Verifica que el paciente a agregar no se encuentre ya como pariente
+        if (this.pacienteModel.relaciones) {
+            for (let i = 0; i < this.pacienteModel.relaciones.length; i++) {
+                if (this.pacienteModel.relaciones[i].documento == pacienteCantidato.documento
+                    && this.pacienteModel.relaciones[i].nombre == pacienteCantidato.nombre
+                    && this.pacienteModel.relaciones[i].apellido == pacienteCantidato.apellido) {
+                    return true;
+                }
+            }
+        }
+
+        // Verifica que el paciente a agregar no sea él mismo
+        return (this.pacienteModel.documento == pacienteCantidato.documento
+            && this.pacienteModel.sexo == pacienteCantidato.sexo
+            && this.pacienteModel.nombre == pacienteCantidato.nombre
+            && this.pacienteModel.apellido == pacienteCantidato.apellido)
     }
 
-
     seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
+
         this.buscarPacRel = '';
         let unaRelacion = Object.assign({}, {
             relacion: null,
