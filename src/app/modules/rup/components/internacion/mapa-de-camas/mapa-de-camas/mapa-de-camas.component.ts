@@ -64,7 +64,7 @@ export class MapaDeCamasComponent implements OnInit {
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();
-        this.camasService.getCamas(this.auth.organizacion.id).subscribe(camas => {
+        this.camasService.getCamas({ idOrganizacion: this.auth.organizacion.id }).subscribe(camas => {
             this.camas = camas;
 
             this.camasService.getEstadoServicio(camas).subscribe(estado => {
@@ -222,8 +222,13 @@ export class MapaDeCamasComponent implements OnInit {
 
     onDarCama($event) {
         this.prestacion = $event;
-        this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
-        this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
+        if ($event) {
+            this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
+            this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
+        } else {
+            this.limpiarFiltros();
+            this.refresh();
+        }
         this.filtrar();
     }
 }
