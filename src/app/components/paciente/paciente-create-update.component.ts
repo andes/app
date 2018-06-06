@@ -1071,19 +1071,19 @@ export class PacienteCreateUpdateComponent implements OnInit {
         //  Verifica que el paciente a agregar no se encuentre ya como pariente
         if (this.pacienteModel.relaciones) {
             for (let i = 0; i < this.pacienteModel.relaciones.length; i++) {
-                if (this.pacienteModel.relaciones[i].documento == pacienteCantidato.documento
-                    && this.pacienteModel.relaciones[i].nombre == pacienteCantidato.nombre
-                    && this.pacienteModel.relaciones[i].apellido == pacienteCantidato.apellido) {
+                if (this.pacienteModel.relaciones[i].documento === pacienteCantidato.documento
+                    && this.pacienteModel.relaciones[i].nombre === pacienteCantidato.nombre
+                    && this.pacienteModel.relaciones[i].apellido === pacienteCantidato.apellido) {
                     return true;
                 }
             }
         }
 
         // Verifica que el paciente a agregar no sea él mismo
-        return (this.pacienteModel.documento == pacienteCantidato.documento
-            && this.pacienteModel.sexo == pacienteCantidato.sexo
-            && this.pacienteModel.nombre == pacienteCantidato.nombre
-            && this.pacienteModel.apellido == pacienteCantidato.apellido)
+        return (this.pacienteModel.documento === pacienteCantidato.documento
+            && this.pacienteModel.sexo === pacienteCantidato.sexo
+            && this.pacienteModel.nombre === pacienteCantidato.nombre
+            && this.pacienteModel.apellido === pacienteCantidato.apellido);
     }
 
     seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
