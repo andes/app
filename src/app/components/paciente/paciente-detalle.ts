@@ -119,7 +119,7 @@ export class PacienteDetalleComponent implements OnInit {
             patient.cuil = this.backUpDatos['cuil'];
             patient.estado = this.backUpDatos['estado'];
             patient.genero = this.backUpDatos['genero'];
-            this.renaperNotification.emit(false);   //desbloquea los campos requeridos
+            this.renaperNotification.emit(false);   // desbloquea los campos requeridos
         }
 
         this.deshabilitarValidar = false;
