@@ -299,7 +299,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 const prestacionCopia = this.prestacion;
 
                 // Agregamos el estado de la prestacion copiada.
-                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
 
                 // Guardamos la prestacion copia
                 this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
@@ -311,18 +311,20 @@ export class PrestacionValidacionComponent implements OnInit {
                         op: 'romperValidacion',
                         estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
                     };
-                    // Vamos a cambiar el estado de la prestación a ejecucion
-                    this.plex.alert(this.prestacion.id);
-                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-                        this.prestacion = prestacion;
 
-                        // actualizamos las prestaciones de la HUDS
-                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                    this.route.params.subscribe(params => {
+                        // Vamos a cambiar el estado de la prestación a ejecucion
+                        this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
+                            this.prestacion = prestacion;
+
+                            // actualizamos las prestaciones de la HUDS
+                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                            });
+
+                            this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                        }, (err) => {
+                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                         });
-
-                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
                     });
                 });
             }

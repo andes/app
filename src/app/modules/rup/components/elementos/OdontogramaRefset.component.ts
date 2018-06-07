@@ -51,12 +51,13 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
 
-        // Traer EL odontograma
-        this.snomedService.getQuery({ expression: '^721145008', field: 'term', words: 'iso designation', languageCode: 'en' }).subscribe(odontograma => {
+        // Traer EL odontograma, los dientes
+        this.snomedService.getQuery({ expression: '^' + this.params.refsetId, field: 'term', words: 'iso designation', languageCode: 'en' }).subscribe(odontograma => {
             odontograma.forEach(diente => {
                 let nroDiente = Number(diente.term.replace('ISO designation ', ''));
                 diente.term = nroDiente.toString();
-                if (nroDiente >= 11 && nroDiente <= 18) {
+                //  || (nroDiente >= 51 && nroDiente <= 55)
+                if ((nroDiente >= 11 && nroDiente <= 18)) {
                     this.odontograma.cuadranteSuperiorDerecho.push({ concepto: diente });
                 } else if (nroDiente >= 21 && nroDiente <= 28) {
                     this.odontograma.cuadranteSuperiorIzquierdo.push({ concepto: diente });
@@ -72,6 +73,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.odontograma.cuadranteInferiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
             this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
 
+            // Trae los hallazgos, procedimientos, etc...
             if (this.params) {
                 this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                     this.conceptos = resultado;
@@ -154,7 +156,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     walkThruKeys(obj: any) {
-        return Object.keys(obj);
+        if (typeof obj === 'object') {
+            return Object.keys(obj);
+        }
     }
 
 
@@ -216,9 +220,11 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     getRegistrosRel(diente, cara) {
         return this.prestacion.ejecucion.registros.filter(x => {
-            if (x.relacionadoCon) {
+            if (x.relacionadoCon.length) {
                 return x.relacionadoCon.find(y => {
-                    return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                    if (y && y.concpeto) {
+                        return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                    }
                 });
             }
         });
@@ -314,15 +320,17 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     getClassRegistro(diente, cara) {
-        return this.prestacion.ejecucion.registros.find(x => {
-            if (x.relacionadoCon) {
-                return x.relacionadoCon.find(y => {
-                    if (y.concepto) {
-                        return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                    }
-                });
-            }
-        });
+        if (this.prestacion.ejecucion.registros.length) {
+            return this.prestacion.ejecucion.registros.find(x => {
+                if (x.relacionadoCon.length) {
+                    return x.relacionadoCon.find(y => {
+                        if (y && y.concepto) {
+                            return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                        }
+                    });
+                }
+            });
+        }
     }
 
     loadPrestacionesDientes($event, tipo) {
