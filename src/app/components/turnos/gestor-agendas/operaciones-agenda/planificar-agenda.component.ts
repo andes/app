@@ -38,6 +38,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     public modelo: any = { nominalizada: true };
     public noNominalizada = false;
+    public dinamica = false;
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
@@ -206,6 +207,16 @@ export class PlanificarAgendaComponent implements OnInit {
 
     cambiarNominalizada(cambio) {
         this.modelo.nominalizada = !this.noNominalizada;
+        if (this.noNominalizada) {
+            this.dinamica = false;
+        }
+    }
+    seleccionarDinamica() {
+        if (this.dinamica) {
+            this.noNominalizada = false;
+            this.modelo.nominalizada = true;
+        }
+        console.log(this.dinamica)
     }
 
     calculosInicio() {
@@ -716,7 +727,11 @@ export class PlanificarAgendaComponent implements OnInit {
 
     onSave($event, clonar) {
         this.hideGuardar = true;
-        let validaBloques = true;
+        // let validaBloques = true;
+        if (this.dinamica) {
+
+        }
+
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
             // Verifico que cada bloque tenga al menos una prestacion activa
@@ -727,14 +742,14 @@ export class PlanificarAgendaComponent implements OnInit {
                     break;
                 }
             }
-            if (this.modelo.nominalizada) {
-                if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
-                    validaBloques = false;
-                    break;
-                }
-            }
+            // if (this.modelo.nominalizada) {
+            //     if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
+            //         validaBloques = false;
+            //         break;
+            //     }
+            // }
         }
-        if ($event.formValid && validaBloques) {
+        if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -769,49 +784,51 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-
-                if (bloque.pacienteSimultaneos) {
-                    bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
-                    bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
-                    bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
-                    bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
-
-                } else {
-                    bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                    bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                    bloque.restantesGestion = bloque.reservadoGestion;
-                    bloque.restantesProfesional = bloque.reservadoProfesional;
-                }
-
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
-                for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                    let turno = {
-                        estado: 'disponible',
-                        horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                        tipoTurno: undefined
-                    };
 
+                if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
-                        // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
-                        for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
-                            bloque.turnos.push(turno);
-                        }
+                        bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+                        bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+                        bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+                        bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+
                     } else {
-                        if (bloque.citarPorBloque) {
-                            // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
-                            for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
-                                if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                    if (bloque.turnos.length < bloque.cantidadTurnos) {
-                                        bloque.turnos.push(turno);
-                                    }
-                                }
+                        bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                        bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                        bloque.restantesGestion = bloque.reservadoGestion;
+                        bloque.restantesProfesional = bloque.reservadoProfesional;
+                    }
+
+                    for (let i = 0; i < bloque.cantidadTurnos; i++) {
+                        let turno = {
+                            estado: 'disponible',
+                            horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
+                            tipoTurno: undefined
+                        };
+
+                        if (bloque.pacienteSimultaneos) {
+                            // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
+                            for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                                bloque.turnos.push(turno);
                             }
                         } else {
-                            // Bloque sin simultaneos ni Citación por bloque
-                            bloque.turnos.push(turno);
+                            if (bloque.citarPorBloque) {
+                                // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
+                                for (let j = 0; j < bloque.cantidadBloque; j++) {
+                                    turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
+                                    if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
+                                        if (bloque.turnos.length < bloque.cantidadTurnos) {
+                                            bloque.turnos.push(turno);
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Bloque sin simultaneos ni Citación por bloque
+                                bloque.turnos.push(turno);
+                            }
                         }
                     }
                 }
