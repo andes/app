@@ -221,9 +221,11 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onDarCama($event) {
-        this.prestacion = $event;
-        this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
-        this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
-        this.filtrar();
+        if ($event !== null) {
+            this.prestacion = $event;
+            this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
+            this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
+            this.filtrar();
+        }
     }
 }

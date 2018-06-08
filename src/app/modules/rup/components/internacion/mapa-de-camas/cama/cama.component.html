@@ -48,6 +48,8 @@
                         <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i>
                         <!-- desocupada -->
                         <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
+                        <!-- ocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama-check {{cama.ultimoEstado.estado}}"></i>
                     </div>
                     <!-- </div> -->
                 </div>

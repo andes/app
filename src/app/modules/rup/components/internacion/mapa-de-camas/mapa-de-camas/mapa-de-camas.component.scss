@@ -439,6 +439,9 @@ button {
     &.bloqueada{
         border: solid 2px $bloqueada;
     }
+    &.disponible{
+        border: solid 2px $disponible;
+    }
 
     i{
         &.desocupada{
@@ -455,6 +458,9 @@ button {
         }
         &.bloqueada{
             color: $bloqueada;
+        }
+        &.disponible{
+            color:$disponible;
         }
     }
 }
