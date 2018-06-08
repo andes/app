@@ -59,6 +59,7 @@ export class TurnosComponent implements OnInit {
     @Output() recargarBotones = new EventEmitter<boolean>();
 
     // Propiedades públicas
+    showSeleccionarTodos = true;
     showTurnos = true;
     showLiberarTurno = false;
     showSuspenderTurno = false;
@@ -90,6 +91,7 @@ export class TurnosComponent implements OnInit {
         let agendaActualizar = this.agenda;
         // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
         this.actualizarBotones();
+        this.showSeleccionarTodos = (this.turnos.length > 0);
     }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {

@@ -68,7 +68,7 @@
         <!--Botones / Acciones-->
         <table class="table table-botones-fixed mb-0" *ngIf="agenda.nominalizada">
             <tr>
-                <td class="seleccionar-todos">
+                <td class="seleccionar-todos" *ngIf="showSeleccionarTodos">
                     <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos" titlePosition="right"></i>
                     <i *ngIf="!this.todos" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"
                         titlePosition="right"></i>
@@ -98,7 +98,7 @@
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
         <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
-            <table *ngIf="agenda.nominalizada" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
+            <table *ngIf="agenda.nominalizada && !agenda.dinamica" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
                 <thead>
                     <tr>
                         <td>Del día</td>
