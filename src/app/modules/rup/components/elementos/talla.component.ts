@@ -22,7 +22,7 @@ export class TallaComponent extends RUPComponent implements OnInit {
 
 
         if (this.registro.valor) {
-            // this.mensaje = this.getMensajes();
+            this.mensaje = this.getMensajes();
         }
     }
 
