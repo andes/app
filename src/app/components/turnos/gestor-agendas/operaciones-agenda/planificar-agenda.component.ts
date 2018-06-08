@@ -36,7 +36,7 @@ export class PlanificarAgendaComponent implements OnInit {
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    public modelo: any = { nominalizada: true };
+    public modelo: any = { nominalizada: true, dinamica: false };
     public noNominalizada = false;
     public dinamica = false;
     public bloqueActivo: Number = 0;
@@ -727,9 +727,8 @@ export class PlanificarAgendaComponent implements OnInit {
 
     onSave($event, clonar) {
         this.hideGuardar = true;
-        // let validaBloques = true;
         if (this.dinamica) {
-
+            this.modelo.dinamica = true;
         }
 
         for (let i = 0; i < this.modelo.bloques.length; i++) {
@@ -742,12 +741,6 @@ export class PlanificarAgendaComponent implements OnInit {
                     break;
                 }
             }
-            // if (this.modelo.nominalizada) {
-            //     if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
-            //         validaBloques = false;
-            //         break;
-            //     }
-            // }
         }
         if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
