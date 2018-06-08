@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
-import { AppComponent } from '../../app.component';
-
+import { environment } from '../../../environments/environment';
 @Component({
     templateUrl: 'login.html',
     styleUrls: ['login.scss'],
@@ -16,6 +14,7 @@ export class LoginComponent implements OnInit {
     public loading = false;
     public deshabilitar = false;
     public autoFocus = 1;
+    public versionAPP = environment.version;
 
     constructor(private plex: Plex, private auth: Auth, private router: Router) { }
 

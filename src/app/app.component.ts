@@ -1,5 +1,5 @@
 import { environment } from './../environments/environment';
-import { Component, OnInit, ModuleWithProviders } from '@angular/core';
+import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
@@ -87,4 +87,26 @@ export class AppComponent {
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
     }
+
+    private showRibbon() {
+        return environment.environmentName === 'demo' || environment.environmentName === 'testing';
+    }
+
+    private ribbonLabel() {
+        return environment.environmentName.toUpperCase();
+    }
+
+    private ribbonType() {
+        switch (environment.environmentName) {
+            case 'produccion':
+                return 'info';
+            case 'demo':
+                return 'success';
+            case 'testing':
+                return 'warning';
+            case 'development':
+                return 'info';
+        }
+    }
+
 }

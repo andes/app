@@ -7,7 +7,7 @@ let _package = require('../../package.json');
 
 export const environment = {
     production: false,
-    environmentName: 'testing',
+    environmentName: 'demo',
     API: '/api',
     APIStatusCheck: true,
     version: _package.version
