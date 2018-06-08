@@ -3,12 +3,13 @@
     <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row">
             <div *ngFor="let item of elementoRUP.requeridos; let i = index" class="col">
-                <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="calculoIMC()">
+                <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                    [soloValores]="soloValores" (change)="calculoIMC()">
                 </rup>
             </div>
 
             <div class="col-4">
-                <plex-float label="{{registro.nombre}}" [(ngModel)]="valorImc" required="true" name="imc" [disabled]="true">
+                <plex-float label="{{registro.concepto.term}}" [(ngModel)]="valorImc" required="true" name="imc" [disabled]="true">
                 </plex-float>
             </div>
         </div>
@@ -16,7 +17,7 @@
 
     <p>
         <span>
-        {{mensaje}}
+            {{mensaje}}
         </span>
     </p>
 </div>
@@ -25,7 +26,8 @@
     <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row">
             <div *ngFor="let item of elementoRUP.requeridos; let i = index" class="col">
-                <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]" [soloValores]="true" [paciente]="paciente">
+                <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                    [soloValores]="true" [paciente]="paciente">
                 </rup>
             </div>
         </div>
