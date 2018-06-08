@@ -254,7 +254,9 @@ export class BotonesAgendaComponent implements OnInit {
         let band = false;
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
+                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 &&
+                    this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0 &&
+                    !this.agendasSeleccionadas[x].dinamica) {
                     band = false || band;
                 } else {
                     band = true;
