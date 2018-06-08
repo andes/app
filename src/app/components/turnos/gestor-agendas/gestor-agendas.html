@@ -106,6 +106,7 @@
                                     </div>
                                 </td>
                                 <td (click)="verAgenda(agenda, false, $event)" class="text-right align-middle estado">
+                                    <span class="badge-info float-right" *ngIf="agenda.dinamica">Dinámica</span>
                                     <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                     <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{estadosAgenda[agenda.estado]?.nombre}}</span>
                                     <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
