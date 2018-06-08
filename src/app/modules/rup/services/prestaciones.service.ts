@@ -874,13 +874,13 @@ export class PrestacionesService {
     /**
   * Método get. Trae lista de objetos prestacion.
   *
-  * @param {*} params Opciones de búsqueda
+  * @param {*} idOrganizacion Opciones de búsqueda
   * @param {*} [options={}] Options a pasar a la API
   * @returns {Observable<IPrestacion[]>}
   *
   * @memberof PrestacionesService
   */
-    getInternaciones(params: any = {}, options: any = {}): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/sinCama');
+    getInternaciones(idOrganizacion: String, options: any = {}): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/sinCama/' + idOrganizacion);
     }
 }
