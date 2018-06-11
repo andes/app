@@ -1,0 +1,6 @@
+<plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="registro.valor" name="percentiloIMC"
+    label="Percentilo de IMC" suffix="%" min="0" max="100" (change)="emitChange()" required="true">
+</plex-float>
+<p *ngIf="soloValores" class="readonly">
+    <span>Percentilo de IMC</span> {{registro.valor}} %
+</p>
