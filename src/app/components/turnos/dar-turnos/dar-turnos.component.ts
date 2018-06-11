@@ -816,9 +816,23 @@ export class DarTurnosComponent implements OnInit {
                 tipoPrestacion: this.turnoTipoPrestacion,
                 paciente: pacienteSave,
                 idAgenda: this.agenda.id
-            }
+            };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(resultado => {
-                console.log(resultado)
+                this.estadoT = 'noSeleccionada';
+                let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
+                this.agenda = null;
+                this.actualizar('');
+                this.plex.toast('info', 'El turno se asignó correctamente');
+                this.hideDarTurno = false;
+                this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
+                this.actualizarPaciente();
+                if (this.paciente && this._pacienteSeleccionado) {
+                    this.cancelarDarTurno.emit(true);
+                    return false;
+                } else {
+                    this.buscarPaciente();
+                }
+                this.turnoTipoPrestacion = undefined;
                 // TODO : volver al gestor,
                 // (ERR)
 
