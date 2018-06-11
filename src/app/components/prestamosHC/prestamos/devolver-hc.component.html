@@ -4,15 +4,18 @@
             <fieldset>
                 <legend>
                     <div class="clearfix">
-                        <span class="float-left">Devolver Carpeta <b>{{prestamo._id}}</b></span>
+                        <span class="float-left">Devolver Carpeta
+                            <b>{{prestamo._id}}</b>
+                        </span>
                     </div>
                 </legend>
             </fieldset>
 
             <div class="row">
                 <div class="col-12">
-                    <plex-select label='Estado' [(ngModel)]="prestamo.datosDevolucion.estado" name="nombre" [required]="true" placeholder="Seleccione un estado..." [data]="estadosDevolucion" >
-                    </plex-select>    
+                    <plex-select label='Estado' [(ngModel)]="prestamo.datosDevolucion" name="nombre" [required]="true" placeholder="Seleccione un estado..."
+                        [data]="estadosDevolucion">
+                    </plex-select>
                 </div>
                 <div class="col-12">
                     <plex-text label="Observaciones" [(ngModel)]="prestamo.datosDevolucion.observaciones" name="observaciones" placeholder="Ingrese observaciones...">
@@ -24,10 +27,10 @@
     </section>
     <footer>
         <div class="text-right">
-            <plex-button label="Cancelar" type="danger" (click)="cancel()">
-            </plex-button>
-            <plex-button label="Guardar" type="primary" (click)="save(devolverHC)" validateForm="true">
-            </plex-button>
+            <button label="Cancelar" class="btn btn-danger" (click)="cancel()">Cancelar
+            </button>
+            <button label="Guardar" class="btn btn-primary" (click)="save()">Guardar
+            </button>
         </div>
     </footer>
 </form>
