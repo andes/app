@@ -204,7 +204,6 @@ import { FrecuenciaCardiacaComponent } from './modules/rup/components/elementos/
 import { FrecuenciaRespiratoriaComponent } from './modules/rup/components/elementos/frecuenciaRespiratoria.component';
 import { ObservacionesComponent } from './modules/rup/components/elementos/observaciones.component';
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
-import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
@@ -213,7 +212,6 @@ import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/
 import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 import { AdjuntarDocumentoComponent } from './modules/rup/components/elementos/adjuntarDocumento.component';
 import { RegistrarMedicamentoDefaultComponent } from './modules/rup/components/elementos/registrarMedicamentoDefault.component';
-import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { InformesComponent } from './modules/rup/components/elementos/informe.component';
 import { TabsComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tabs.component';
 import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/tab.component';
@@ -229,13 +227,17 @@ import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
+import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
 import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
 import { PerimetroCefalicoComponent } from './modules/rup/components/elementos/perimetroCefalico.component';
+import { IndiceDeMasaCorporalComponent } from './modules/rup/components/elementos/indiceDeMasaCorporal.component';
+import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elementos/percentiloDeMasaCorporal.component';
 import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
 import { RegistrarMedidasAntropometricasComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricas.component';
+import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -297,7 +299,6 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
-    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
     'InformesComponent': InformesComponent,
     'NuevaEvolucionProblemaComponent': NuevaEvolucionProblemaComponent,
     'ObservacionesComponent': ObservacionesComponent,
@@ -333,7 +334,10 @@ export let RUPRegistry = {
     'PercentiloPerimetroCefalicoComponent': PercentiloPerimetroCefalicoComponent,
     'TallaComponent': TallaComponent,
     'PercentiloTallaComponent': PercentiloTallaComponent,
+    'IndiceDeMasaCorporalComponent': IndiceDeMasaCorporalComponent,
+    'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
     'RegistrarMedidasAntropometricasComponent': RegistrarMedidasAntropometricasComponent,
+    'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
 };
 
 let RUPComponentsArray = [
@@ -377,7 +381,9 @@ let RUPComponentsArray = [
     CircunferenciaCinturaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
-    RegistrarMedidasAntropometricasComponent
+    PercentiloDeMasaCorporalComponent,
+    RegistrarMedidasAntropometricasComponent,
+    TensionArterialPediatricaComponent
 ];
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
