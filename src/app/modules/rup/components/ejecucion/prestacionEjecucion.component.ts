@@ -351,8 +351,9 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     verKeys(reg) {
+        // WTF
         Object.keys(reg).forEach((v, i) => {
-            console.log(v, reg[v]);
+            // console.log(v, reg[v]);
         });
     }
 
