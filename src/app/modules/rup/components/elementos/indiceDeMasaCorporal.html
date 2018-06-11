@@ -4,11 +4,13 @@
         <div class="row">
 
             <ng-container *ngIf="registro?.registros?.length">
-                <div *ngFor="let item of elementoRUP.requeridos; let i = index" class="col">
-                    <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                        [soloValores]="soloValores" (change)="calculoIMC()">
-                    </rup>
-                </div>
+                <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+                    <div [ngClass]="{'d-none': !cumpleReglasParams(item.elementoRUP), 'col': cumpleReglasParams(item.elementoRUP)}">
+                        <rup [elementoRUP]="item.elementoRUP" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                            [soloValores]="soloValores" (change)="calculoIMC()">
+                        </rup>
+                    </div>
+                </ng-container>
             </ng-container>
 
             <div class="col-4">
@@ -17,7 +19,6 @@
             </div>
         </div>
     </ng-container>
-
     <p>
         <span>
             {{mensaje}}

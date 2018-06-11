@@ -20,6 +20,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
     // utilizado para el form, asi nos permite dejar el input como disabled
     public valorImc: Number;
+    // cumpleReglasParams = true;
 
     ngOnInit() {
         if (!this.registro) {
@@ -28,20 +29,24 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             };
         }
         if (this.elementoRUP) {
+            // this.checkReglasParams();
             this.calculoIMC();
+        }
+    }
+
+    cumpleReglasParams(elementoRUP) {
+        if (this.params.reglas) {
+            if (this.params.reglas.visualizacion) {
+                if (this.params.reglas.visualizacion.ocultar) {
+                    return this.params.reglas.visualizacion.ocultar.atomos.findIndex(x => x === elementoRUP.conceptos[0].conceptId) === -1;
+                }
+            }
         }
     }
 
     calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
         // calcula el imc y/o devuelve alertas al usuario.
-        let peso = null;
-        let talla = null;
         let imc = null;
-        let key;
-        let prestacionPeso = false;
-        let prestacionTalla = false;
-        let arrayDePeso: any;
-        let arrayDeTalla: any;
 
         // busquemos los valores requeridos para la formula en la prestación actual
         if (this.registro && this.registro.registros && this.registro.registros.length > 0) {
@@ -139,7 +144,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     }
 
     buscarConceptoDeep(registros: any[], conceptId) {
-        console.log(registros, conceptId);
         if (registros) {
             for (let i = 0; i < registros.length; i++) {
                 if (registros[i].concepto.conceptId === conceptId) {
