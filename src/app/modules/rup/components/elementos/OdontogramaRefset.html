@@ -211,7 +211,8 @@
                                     d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z"
                                     class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }}"
                                     title="oclusal" />
-                                <g class="pieza" (click)="seleccionarDiente(diente, 'pieza')" title="pieza completa">
+                                <g class="pieza" (click)="seleccionarDiente(diente, 'pieza')" title="pieza completa" (mouseenter)="showTooltip(diente, 'pieza', false, 0)"
+                                    (mouseleave)="hideTooltip()">
                                     <circle class="st1" [ngClass]="{'seleccionada': piezasSeleccionadas[0]?.diente.concepto.conceptId === diente.concepto.conceptId && piezasSeleccionadas[0]?.cara === 'pieza'}"
                                         [ngClass]="piezaCompletaValor(diente, 'pieza') ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : ''"
                                         cx="46.285" cy="7.311" r="5.801" />
