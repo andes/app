@@ -138,7 +138,7 @@
                             <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
                             <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
                         </td>
-                        <td (click)="seleccionarTurno(bloque.turnos[i],false, false)">
+                        <td *ngIf="!agenda.dinamica" (click)="seleccionarTurno(bloque.turnos[i],false, false)">
                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                         </td>
                         <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">
