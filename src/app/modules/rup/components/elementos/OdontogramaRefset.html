@@ -11,7 +11,9 @@
                         <span *ngIf="popOverText?.cara && popOverText?.cara === 'pieza'">(pieza completa)</span>
                         <span *ngIf="popOverText?.cara && popOverText?.cara !== 'pieza' && popOverText?.cara !== 'anulada'">(cara {{ popOverText.cara }})</span>
                         <ng-container *ngIf="popOverText?.relacion?.length > 0 && showRelacion">
-                            <span *ngFor="let rel of popOverText?.relacion"> - {{ rel.concepto.term }} ({{ rel.concepto.semanticTag }})</span>
+                            <span *ngFor="let rel of popOverText?.relacion">
+                                <span *ngIf="rel?.concepto?.term"> - {{ rel.concepto.term }} ({{ rel.concepto.semanticTag }})</span>
+                            </span>
                         </ng-container>
                         <ng-container *ngIf="popOverText?.relacion?.concepto && showRelacion">
                             - {{ popOverText.relacion.concepto.term }} ({{ popOverText.relacion.concepto.semanticTag }})
@@ -131,14 +133,14 @@
 
 
         <!-- ODONTOGRAMA DE ESTA CONSULTA -->
-        <div *ngIf="!soloValores && prestacion.ejecucion.registros[0]?.valor?.odontograma" class="row no-gutters">
+        <div *ngIf="!soloValores" class="row no-gutters">
             <div class="col-12 no-gutters pt-3">
                 <h6>Odontograma de esta consulta</h6>
             </div>
             <!-- <pre class="text-small">
                 {{ piezasSeleccionadas | json }}
             </pre> -->
-            <ng-container *ngFor="let cuadrante of walkThruKeys(prestacion.ejecucion.registros[0].valor.odontograma)">
+            <ng-container *ngFor="let cuadrante of walkThruKeys(odontograma)">
 
                 <!-- CUADRANTE SUP DER -->
                 <div class="col-6 no-gutters">
@@ -273,7 +275,8 @@
                         <span *ngIf="popOverText?.cara && popOverText?.cara !== 'pieza'">(cara {{ popOverText.cara }})</span>
                         <span *ngIf="popOverText?.cara && popOverText?.cara === 'pieza'">(pieza completa)</span>
                         <ng-container *ngIf="popOverText?.relacion?.length > 0 && showRelacion">
-                            <span *ngFor="let rel of popOverText?.relacion"> - {{ rel.concepto.term }} ({{ rel.concepto.semanticTag }})
+                            <span *ngFor="let rel of popOverText?.relacion">
+                                <span *ngIf="rel?.concepto?.term"> - {{ rel.concepto.term }} ({{ rel.concepto.semanticTag }})</span>
                             </span>
                         </ng-container>
                         <ng-container *ngIf="popOverText?.relacion?.concepto && showRelacion">
@@ -338,33 +341,29 @@
                                             title="palatina " />
                                     </ng-container>
                                 </ng-container>
-                                <path (mouseenter)="showTooltip(diente, 'oclusal', 0) " (mouseleave)="hideTooltip()
-                                    " [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1} " d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
-                                    class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag
-                                    }} " title="oclusal " />
-                                <g class="pieza " title="pieza completa ">
-                                    <circle class="st1 " [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ?
-                                    'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : '' " cx="46.285 "
-                                        cy="7.311 " r="5.801 " />
-                                    <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente,
-                                    'pieza')?.concepto.semanticTag + '-outline' : '' " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
+                                <path (mouseenter)="showTooltip(diente, 'oclusal', 0) " (mouseleave)="hideTooltip()" [ngClass]="{ 'registrada': caraValor(diente, 'oclusal') !==- 1} "
+                                    d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
+                                    class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }} "
+                                    title="oclusal " />
+                                <g class="pieza " title="pieza completa" (mouseenter)="showTooltip(diente, 'pieza', false, 0)">
+                                    <circle class="st1 " [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : '' "
+                                        cx="46.285 " cy="7.311 " r="5.801 " />
+                                    <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : '' "
+                                        d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
                                     />
                                 </g>
                                 <ng-container *ngIf="getRegistrosRel(diente, 'pieza')?.length ">
                                     <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let a=index ">
-                                        <g (mouseenter)="showTooltip(diente, 'pieza', a) " (mouseleave)="hideTooltip()
-                                    " class="pieza " title="pieza completa ">
+                                        <g (mouseenter)="showTooltip(diente, 'pieza', false, a)" (mouseleave)="hideTooltip()" class="pieza " title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle *ngIf="relClass?.concepto?.semanticTag " cx="46.285 " cy="7.311
-                                    " r="5.801 " class="st1 " [ngClass]=" 'diente-' + relClass.concepto.semanticTag + ' rotate-'
-                                    + a " />
-                                            <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente,
-                                    'pieza')?.concepto.semanticTag + '-outline' : '' " d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
+                                            <circle *ngIf="relClass?.concepto?.semanticTag " cx="46.285 " cy="7.311" r="5.801 " class="st1 " [ngClass]=" 'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a "
+                                            />
+                                            <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag + '-outline' : '' "
+                                                d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
                                             />
                                         </g>
                                         <!-- Círculo GRANDE -->
-                                        <circle cx="26 " cy="27.5 " r="22.246 " [ngClass]=" 'diente-' + relClass.concepto.semanticTag
-                                    + '-outline' " />
+                                        <circle cx="26 " cy="27.5 " r="22.246 " [ngClass]=" 'diente-' + relClass.concepto.semanticTag+ '-outline' " />
                                     </ng-container>
                                 </ng-container>
                             </svg>
