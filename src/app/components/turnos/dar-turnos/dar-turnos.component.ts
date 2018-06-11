@@ -123,7 +123,7 @@ export class DarTurnosComponent implements OnInit {
     hoy: Date;
     bloque: IBloque;
     delDiaDisponibles: number;
-    turno: ITurno;
+    turno: any;
     programadosDisponibles: number;
     gestionDisponibles: number;
     profesionalDisponibles: number;
@@ -731,6 +731,28 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
+    turnoDinamico() {
+        this.turnoDoble = false;
+        this.turno = {};
+        if (this.paciente) {
+            this.bloque = this.agenda.bloques[0];
+            // this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
+            // this.indiceTurno = indice;
+            // this.turno = bloque.turnos[indice];
+            if (this.bloque.tipoPrestaciones.length === 1) {
+                this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
+                this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
+            }
+            if (this.opciones.tipoPrestacion) {
+                this.turno.tipoPrestacion = this.opciones.tipoPrestacion;
+                this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
+            }
+            this.estadoT = 'confirmacion';
+        } else {
+            this.plex.info('warning', 'Debe seleccionar un paciente');
+        }
+    }
+
     /**
      * DAR TURNO
      */
@@ -788,7 +810,19 @@ export class DarTurnosComponent implements OnInit {
             obraSocial: this.obraSocialPaciente
         };
         if (agd.dinamica) {
-            // TODO : servicio para guardar agendas dinámicas
+            let datosTurno = {
+                nota: this.nota,
+                motivoConsulta: this.motivoConsulta,
+                tipoPrestacion: this.turnoTipoPrestacion,
+                paciente: pacienteSave,
+                idAgenda: this.agenda.id
+            }
+            this.serviceTurno.saveDinamica(datosTurno).subscribe(resultado => {
+                console.log(resultado)
+                // TODO : volver al gestor,
+                // (ERR)
+
+            });
         } else {
             this.agenda = agd;
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';

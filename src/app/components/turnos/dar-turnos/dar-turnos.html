@@ -250,7 +250,7 @@
                                         <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}} pacientes asignados </div>
                                         <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados </div>
 
-                                        <plex-button label="Dar Turno" type="success" (click)="darTurno()"></plex-button>
+                                        <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()"></plex-button>
                                     </div>
                                 </ng-container>
                                 <!--Confirmación del turno -->
