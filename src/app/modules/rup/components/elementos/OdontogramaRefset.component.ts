@@ -220,7 +220,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     getRegistrosRel(diente, cara) {
         return this.prestacion.ejecucion.registros.filter(x => {
-            if (x.relacionadoCon.length) {
+            if (x.relacionadoCon) {
                 return x.relacionadoCon.find(y => {
                     if (y && y.concepto) {
                         return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
@@ -257,9 +257,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             if (rel.length) {
                 this.popOverText.relacion = rel[index];
             }
-        } else {
-            // Sólo para piezas
         }
+        // Sólo para piezas
         if (diente.piezaCompleta) {
             this.popOverText.relacion = !huds ? this.getRegistrosRel(diente, 'pieza')[index] : this.getRegistrosRelAnterior(diente, 'pieza')[index];
 
@@ -325,7 +324,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     getClassRegistro(diente, cara) {
         if (this.prestacion.ejecucion.registros.length) {
             return this.prestacion.ejecucion.registros.find(x => {
-                if (x.relacionadoCon.length) {
+                if (x.relacionadoCon) {
                     return x.relacionadoCon.find(y => {
                         if (y && y.concepto) {
                             return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
