@@ -18,18 +18,38 @@ export class PrestarHcComponent implements OnInit {
     @Input('prestar')
     set prestar(value: any) {
         this.prestamo = value;
+        let _prestarHC: any = {
+            destino: '',
+            responsable: '',
+            observaciones: ''
+        };
         if (value && value.datosPrestamo && value.datosPrestamo.turno.profesionales) {
 
             if (value.datosPrestamo.turno.espacioFisico) {
-                this.prestarHC.destino = value.datosPrestamo.turno.espacioFisico.nombre;
+                _prestarHC.destino = value.datosPrestamo.turno.espacioFisico.nombre;
             }
 
-            this.prestarHC.responsable = '';
+            _prestarHC.responsable = '';
             value.datosPrestamo.turno.profesionales.forEach(profesional => {
-                this.prestarHC.responsable += profesional.apellido + ', ' + profesional.nombre + ' - ';
+                _prestarHC.responsable += profesional.apellido + ', ' + profesional.nombre + ' - ';
             });
-            this.prestarHC.responsable = this.prestarHC.responsable.substring(0, this.prestarHC.responsable.length - 3);
+            _prestarHC.responsable = _prestarHC.responsable.substring(0, _prestarHC.responsable.length - 3);
+
+            if (value.datosPrestamo.observaciones) {
+                _prestarHC.observaciones = value.datosPrestamo.observaciones;
+            }
+        } else if (value && value.datosSolicitudManual && value.datosSolicitudManual) {
+            if (value.datosSolicitudManual.espacioFisico) {
+                _prestarHC.destino = value.datosSolicitudManual.espacioFisico.nombre;
+            }
+            if (value.datosSolicitudManual.profesional) {
+                _prestarHC.responsable = value.datosSolicitudManual.profesional.apellido + ', ' + value.datosSolicitudManual.profesional.nombre;
+            }
+            if (value.datosSolicitudManual.observaciones) {
+                _prestarHC.observaciones = value.datosSolicitudManual.observaciones;
+            }
         }
+        this.prestarHC = _prestarHC;
     }
 
     get prestar(): any {
@@ -39,7 +59,7 @@ export class PrestarHcComponent implements OnInit {
     prestarHC: any = {
         destino: '',
         responsable: '',
-        observacionesPrestamo: ''
+        observaciones: ''
     };
 
     constructor(
@@ -54,6 +74,8 @@ export class PrestarHcComponent implements OnInit {
 
     save(event) {
         this.prestamo.organizacion = this.auth.organizacion;
+        this.prestamo.datosSolicitudManual.observaciones = this.prestarHC.observaciones;
+        this.prestamo.datosPrestamo = { observaciones: this.prestarHC.observaciones };
         this.prestamosService.prestarCarpeta(this.prestamo).subscribe(carpeta => {
             this._carpeta = carpeta;
             this.plex.toast('success', 'La Carpeta se prestó correctamente', 'Información', 1000);

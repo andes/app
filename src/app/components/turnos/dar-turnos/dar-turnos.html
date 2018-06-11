@@ -300,7 +300,6 @@
                                         <hr>
                                         <footer *ngIf="!hideDarTurno && estadoT === 'confirmacion'" class="row">
                                             <div class="col acciones-dar-turno">
-                                                <plex-button *ngIf="mostrarCalendario" label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
                                                 <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
                                                 <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
                                             </div>
@@ -348,7 +347,14 @@
     </section>
 
     <footer *ngIf="autorizado && showDarTurnos">
-        <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
+            </div>
+            <div class="col text-right" *ngIf="opciones.tipoPrestacion || opciones.profesional">
+                <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
+            </div>
+        </div>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
 </form>
