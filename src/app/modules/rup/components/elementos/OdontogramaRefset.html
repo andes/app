@@ -39,9 +39,6 @@
             </div>
             <ng-container *ngIf="ultimoOdontograma && showUltimoOdontograma && relaciones">
                 <!-- CUADRANTE SUP DER -->
-                <!-- <pre class="text-small">
-                    getRegistrosRel: {{ getRegistrosRelAnterior(diente, 'mesial') | json }}
-                </pre> -->
                 <ng-container *ngFor="let cuadrante of walkThruKeys(ultimoOdontograma.valor.odontograma)">
                     <div class="col-6 no-gutters" [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
                         <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma[cuadrante]; let i=index">
