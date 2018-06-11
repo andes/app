@@ -88,15 +88,15 @@ export class AppComponent {
         this.initStatusCheck();
     }
 
-    private showRibbon() {
+    public showRibbon() {
         return environment.environmentName === 'demo' || environment.environmentName === 'testing';
     }
 
-    private ribbonLabel() {
+    public ribbonLabel() {
         return environment.environmentName.toUpperCase();
     }
 
-    private ribbonType() {
+    public ribbonType() {
         switch (environment.environmentName) {
             case 'produccion':
                 return 'info';
