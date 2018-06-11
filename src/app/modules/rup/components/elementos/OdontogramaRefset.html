@@ -131,7 +131,7 @@
 
 
         <!-- ODONTOGRAMA DE ESTA CONSULTA -->
-        <div *ngIf="!soloValores" class="row no-gutters">
+        <div *ngIf="!soloValores && prestacion.ejecucion.registros[0]?.valor?.odontograma" class="row no-gutters">
             <div class="col-12 no-gutters pt-3">
                 <h6>Odontograma de esta consulta</h6>
             </div>
