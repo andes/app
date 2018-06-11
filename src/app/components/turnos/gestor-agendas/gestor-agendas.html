@@ -109,7 +109,7 @@
                                     <span class="badge-info float-right" *ngIf="agenda.dinamica">Dinámica</span>
                                     <span class="badge-danger float-right" *ngIf="!agenda.nominalizada">No Nominalizada</span>
                                     <span class="badge-{{estadosAgenda[agenda.estado]?.class}} float-right">{{estadosAgenda[agenda.estado]?.nombre}}</span>
-                                    <span class="badge-danger bg-danger float-right" *ngIf="turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
+                                    <span class="badge-danger bg-danger float-right" *ngIf="!agenda.nominalizada && turnosSuspendidos && turnosSuspendidos[i].count > 0" title="Hay {{ turnosSuspendidos[i].count | pluralizar:['turno','turnos'] }} a reasignar">
                                         <span class="text-white">
                                             <strong>{{ turnosSuspendidos[i].count }}</strong>
                                         </span>
