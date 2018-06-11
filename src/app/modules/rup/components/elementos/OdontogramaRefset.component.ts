@@ -257,9 +257,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             if (rel.length) {
                 this.popOverText.relacion = rel[index];
             }
-        } else {
-            // Sólo para piezas
         }
+        // Sólo para piezas
         if (diente.piezaCompleta) {
             this.popOverText.relacion = !huds ? this.getRegistrosRel(diente, 'pieza')[index] : this.getRegistrosRelAnterior(diente, 'pieza')[index];
 
