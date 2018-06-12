@@ -238,6 +238,7 @@ import { PercentiloDeMasaCorporalComponent } from './modules/rup/components/elem
 import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/elementos/percentiloPerimetroCefalico.component';
 import { RegistrarMedidasAntropometricasComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricas.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
+import { PercentiloDeTensionArterialComponent } from './modules/rup/components/elementos/percentiloDeTensionArterial.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -338,6 +339,7 @@ export let RUPRegistry = {
     'PercentiloDeMasaCorporalComponent': PercentiloDeMasaCorporalComponent,
     'RegistrarMedidasAntropometricasComponent': RegistrarMedidasAntropometricasComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
+    'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
 };
 
 let RUPComponentsArray = [
@@ -383,7 +385,8 @@ let RUPComponentsArray = [
     PercentiloTallaComponent,
     PercentiloDeMasaCorporalComponent,
     RegistrarMedidasAntropometricasComponent,
-    TensionArterialPediatricaComponent
+    TensionArterialPediatricaComponent,
+    PercentiloDeTensionArterialComponent
 ];
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
