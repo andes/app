@@ -821,35 +821,7 @@ export class DarTurnosComponent implements OnInit {
             };
             this.serviceTurno.saveDinamica(datosTurno).subscribe(
                 resultado => {
-                    this.estadoT = 'noSeleccionada';
-                    let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
-                    this.agenda = null;
-                    this.actualizar('');
-                    this.plex.toast('info', 'El turno se asignó correctamente');
-                    this.hideDarTurno = false;
-                    if (environment.production === true) {
-                        let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                        let horario = moment(this.turno.horaInicio).format('HH:mm');
-                        // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-                        let mensaje = this.paciente.apellido + ' el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.nombre +
-                            ' el dia ' + dia + ' a las ' + horario + ' hs. ';
-                        if (agendaReturn.espacioFisico) {
-                            mensaje = mensaje + 'en ' + agendaReturn.espacioFisico.nombre + '.';
-                        }
-                        this.enviarSMS(pacienteSave, mensaje);
-                    } else {
-                        this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-                    }
-                    this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
-                    this.actualizarPaciente();
-                    if (this.paciente && this._pacienteSeleccionado) {
-                        this.cancelarDarTurno.emit(true);
-                        return false;
-                    } else {
-                        this.buscarPaciente();
-                    }
-                    this.turnoTipoPrestacion = undefined;
-
+                    this.afterSaveTurno(pacienteSave);
                 },
                 error => {
                     this.agenda = null;
@@ -870,8 +842,7 @@ export class DarTurnosComponent implements OnInit {
             this.agenda = agd;
             this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
             this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
-            let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
-            let agendaid = this.agenda.id;
+
             // Datos del Turno
             let datosTurno = {
                 idAgenda: this.agenda.id,
@@ -884,61 +855,7 @@ export class DarTurnosComponent implements OnInit {
                 motivoConsulta: this.motivoConsulta
             };
             this.serviceTurno.save(datosTurno, { showError: false }).subscribe(resultado => {
-                this.estadoT = 'noSeleccionada';
-                let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
-                this.agenda = null;
-                this.actualizar('');
-                this.plex.toast('info', 'El turno se asignó correctamente');
-                this.hideDarTurno = false;
-                // Enviar SMS sólo en Producción
-                if (environment.production === true) {
-                    let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
-                    let horario = moment(this.turno.horaInicio).format('HH:mm');
-                    // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-                    let mensaje = this.paciente.apellido + ' el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.nombre +
-                        ' el dia ' + dia + ' a las ' + horario + ' hs. ';
-                    if (agendaReturn.espacioFisico) {
-                        mensaje = mensaje + 'en ' + agendaReturn.espacioFisico.nombre + '.';
-                    }
-                    this.enviarSMS(pacienteSave, mensaje);
-                } else {
-                    this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
-                }
-                if (this._solicitudPrestacion) {
-                    let params = {
-                        op: 'asignarTurno',
-                        idTurno: this.turno.id
-                    };
-                    this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
-                        this.volverValidacion.emit(prestacion);
-                    });
-                }
-                if (this.turnoDoble) {
-                    if (turnoSiguiente.estado === 'disponible') {
-                        let patch: any = {
-                            op: 'darTurnoDoble',
-                            turnos: [turnoSiguiente.id]
-                        };
-                        // Patchea el turno doble
-                        this.serviceAgenda.patch(agendaid, patch).subscribe((agendaActualizada) => {
-                            if (agendaActualizada) {
-                                this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
-                                this.plex.toast('info', 'Se asignó un turno doble');
-                            }
-                        });
-                    }
-                } else {
-                    // Esto parece estar al pedo, pero si no está dentro del else no se refrescan los cambios del turno doble.
-                    this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
-                }
-                this.actualizarPaciente();
-                if (this.paciente && this._pacienteSeleccionado) {
-                    this.cancelarDarTurno.emit(true);
-                    return false;
-                } else {
-                    this.buscarPaciente();
-                }
-                this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
+                this.afterSaveTurno(pacienteSave);
             }, (err) => {
                 this.hideDarTurno = false;
                 // Si el turno no pudo ser otorgado, se verifica si el bloque permite citar por segmento
@@ -964,33 +881,94 @@ export class DarTurnosComponent implements OnInit {
         }
     }
 
-    enviarSMS(paciente: any, mensaje) {
-        let smsParams = {
-            telefono: paciente.telefono,
-            mensaje: mensaje,
-        };
-        this.smsService.enviarSms(smsParams).subscribe(
-            sms => {
-                this.resultado = sms;
+    private afterSaveTurno(pacienteSave) {
+        this.enviarSMS(pacienteSave);
+        this.estadoT = 'noSeleccionada';
+        let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
+        this.agenda = null;
+        this.actualizar('');
+        this.plex.toast('info', 'El turno se asignó correctamente');
+        this.hideDarTurno = false;
 
-                // "if 0 errores"
-                if (this.resultado === '0') {
-                    if (paciente.alias) {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
-                    } else {
-                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+        if (this._solicitudPrestacion) {
+            let params = {
+                op: 'asignarTurno',
+                idTurno: this.turno.id
+            };
+            this.servicioPrestacionPaciente.patch(this._solicitudPrestacion.id, params).subscribe(prestacion => {
+                this.volverValidacion.emit(prestacion);
+            });
+        }
+        if (this.turnoDoble) {
+            let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+            let agendaid = this.agenda.id;
+            if (turnoSiguiente.estado === 'disponible') {
+                let patch: any = {
+                    op: 'darTurnoDoble',
+                    turnos: [turnoSiguiente.id]
+                };
+                // Patchea el turno doble
+                this.serviceAgenda.patch(agendaid, patch).subscribe((agendaActualizada) => {
+                    if (agendaActualizada) {
+                        this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
+                        this.plex.toast('info', 'Se asignó un turno doble');
                     }
-                } else {
-                    this.plex.toast('danger', 'ERROR: SMS no enviado');
-                }
-            },
-            err => {
-                if (err) {
-                    this.plex.toast('danger', 'ERROR: Servicio caído');
-
-                }
+                });
             }
-        );
+        } else {
+            // Esto parece estar al pedo, pero si no está dentro del else no se refrescan los cambios del turno doble.
+            this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
+        }
+        this.actualizarPaciente();
+        if (this.paciente && this._pacienteSeleccionado) {
+            this.cancelarDarTurno.emit(true);
+            return false;
+        } else {
+            this.buscarPaciente();
+        }
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoPrestacion
+    }
+
+    enviarSMS(paciente: any) {
+        // Enviar SMS sólo en Producción
+        if (environment.production === true) {
+            let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+            let horario = moment(this.turno.horaInicio).format('HH:mm');
+            // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
+            let mensaje = this.paciente.apellido + ' el ' + this.agenda.organizacion.nombre + ' le recuerda su turno de ' + this.turnoTipoPrestacion.nombre +
+                ' el dia ' + dia + ' a las ' + horario + ' hs. ';
+            if (this.agenda.espacioFisico) {
+                mensaje = mensaje + 'en ' + this.agenda.espacioFisico.nombre + '.';
+            }
+            let smsParams = {
+                telefono: paciente.telefono,
+                mensaje: mensaje,
+            };
+            this.smsService.enviarSms(smsParams).subscribe(
+                sms => {
+                    this.resultado = sms;
+
+                    // "if 0 errores"
+                    if (this.resultado === '0') {
+                        if (paciente.alias) {
+                            this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                        } else {
+                            this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                        }
+                    } else {
+                        this.plex.toast('danger', 'ERROR: SMS no enviado');
+                    }
+                },
+                err => {
+                    if (err) {
+                        this.plex.toast('danger', 'ERROR: Servicio caído');
+
+                    }
+                }
+            );
+        } else {
+            this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
+        }
     }
 
     tieneTurnos(bloque: IBloque): boolean {
