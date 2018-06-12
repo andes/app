@@ -45,6 +45,7 @@ export interface IAgenda {
     nota: String;
     nominalizada: Boolean;
     dinamica: Boolean;
+    cupo: Number;
     avisos: [{
         profenionalId: String,
         estado: String,

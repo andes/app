@@ -252,8 +252,7 @@
                                         <br>
                                         <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
                                         <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
-                                        <div *ngIf="agenda.cupo === 0"> No quedan cupos disponibles </div>
-
+                                        <div *ngIf="agenda.cupo === -1"> Agenda con cupos no limitados </div>
                                         <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()"></plex-button>
                                     </div>
                                 </ng-container>

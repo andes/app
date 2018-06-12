@@ -53,6 +53,13 @@
                             <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                         </div>
                     </div>
+                    <div *ngIf="mostrarHeaderCompleto && agenda.dinamica" class="row">
+                        <div class="col-12">
+                            <label>Cupos disponibles</label>
+                            <span *ngIf="agenda.cupo > -1">{{agenda.cupo}}</span>
+                            <span *ngIf="agenda.cupo == -1">Sin límite</span>
+                        </div>
+                    </div>
                 </div>
                 <!--Nota-->
                 <div *ngIf="agenda.nota" class="alert alert-default mb-0">
