@@ -57,10 +57,10 @@
                                     </td>
                                     <td>
 
-                                        <ng-container *ngIf="prestacion.paseA && prestacion.paseA !== null">
-                                            {{prestacion.paseA.term }}
+                                        <ng-container *ngIf="prestacion.paseA">
+                                            {{prestacion.paseA?.term }}
                                         </ng-container>
-                                        <ng-container *ngIf="!prestacion.paseA || (prestacion.paseA && prestacion.paseA === null)">
+                                        <ng-container *ngIf="!prestacion.paseA">
                                             Ninguno
                                         </ng-container>
                                     </td>
