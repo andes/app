@@ -80,9 +80,6 @@ export class AppComponent {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
-        // Inicializa el environment
-        this.plex.setAppEnv(environment.production);
-
         // Inicializa el menú
         this.checkPermissions();
 
