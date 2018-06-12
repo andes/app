@@ -616,5 +616,19 @@ export class PrestacionValidacionComponent implements OnInit {
         return results;
     }
 
+
+    /**
+     * Determina si muestra el label motivo de consulta.
+     */
+
+    showMotivo(elemento) {
+        if (this.elementoRUPprestacion.motivoConsoltaOpcional) {
+            return false;
+        }
+        let last = this.prestacion.estados.length - 1;
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor.estado !== 'transformado';
+
+    }
+
 }
 
