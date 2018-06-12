@@ -96,9 +96,11 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
+                    if (this.ultimoOdontograma && this.ultimoOdontograma.valor) {
+                    }
                 }
-                this.armarRelaciones();
             });
+            this.armarRelaciones();
         });
 
 
