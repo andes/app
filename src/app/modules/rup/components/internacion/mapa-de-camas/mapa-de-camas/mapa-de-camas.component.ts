@@ -26,11 +26,8 @@ export class MapaDeCamasComponent implements OnInit {
     public layout: String = 'grid';
     public organizacion: IOrganizacion;
     public prestacion: any;
-
     public fecha = new Date;
-
     public readOnly = false;
-
     public loader = true;
 
     // filtros para el mapa de cama
@@ -72,17 +69,14 @@ export class MapaDeCamasComponent implements OnInit {
         this.limpiarFiltros();
         this.loader = true;
         this.camasService.getCamas({ idOrganizacion: this.auth.organizacion.id, fecha: this.fecha }).subscribe(camas => {
-            console.log(camas);
             this.camas = camas;
             this.loader = false;
             if (camas) {
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
                     this.estadoServicio = estado;
                 });
-
                 // creamos copia para reestablecer luego de los filtros
                 this.camasCopy = JSON.parse(JSON.stringify(this.camas));
-
                 // seteamos las opciones para los filtros del mapa de camas
                 this.setOpcionesFiltros(camas);
             }
