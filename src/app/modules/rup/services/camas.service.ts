@@ -29,6 +29,7 @@ export class CamasService {
             idOrganizacion: idOrganizacion,
             fecha: fecha
         }
+
         return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
 
