@@ -217,7 +217,6 @@ export class PlanificarAgendaComponent implements OnInit {
             this.noNominalizada = false;
             this.modelo.nominalizada = true;
         }
-        console.log(this.dinamica)
     }
 
     calculosInicio() {
