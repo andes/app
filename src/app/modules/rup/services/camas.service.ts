@@ -6,7 +6,7 @@ import { ICamaEstado } from '../interfaces/ICamaEstado';
 
 @Injectable()
 export class CamasService {
-
+    public showListaEspera = false;
     private camasUrl = '/core/tm/camas';  // URL to web api
     constructor(private server: Server) { }
 
