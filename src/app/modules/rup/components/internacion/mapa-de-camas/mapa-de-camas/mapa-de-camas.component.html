@@ -1,4 +1,4 @@
-<ng-container *ngIf="!showListaEspera">
+<ng-container *ngIf="!camasService.showListaEspera">
     <form class="plex-layout">
         <section>
             <plex-box>
@@ -10,14 +10,14 @@
                                     Mapa de camas
                                 </div>
                                 <div class="text-right" *ngIf="!prestacion">
-                                    <plex-button class="" type="primary" label="Lista de espera" (click)="showListaEspera = true;"></plex-button>
+                                    <plex-button class="" type="primary" label="Lista de espera" (click)="camasService.showListaEspera = true;"></plex-button>
                                     <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
                                     <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                                     <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                                     <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                                 </div>
                                 <div class="text-right" *ngIf="prestacion">
-                                    <plex-button class="" type="primary" label="Cancelar" (click)="showListaEspera = true; prestacion = null;"></plex-button>
+                                    <plex-button class="" type="primary" label="Cancelar" (click)="camasService.showListaEspera = true; prestacion = null;"></plex-button>
                                 </div>
                             </div>
                             <div class="row" *ngIf="camas">
@@ -67,6 +67,6 @@
         </section>
     </form>
 </ng-container>
-<ng-container *ngIf="showListaEspera">
-    <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='showListaEspera = $event'></listaEsperaInternacion>
+<ng-container *ngIf="camasService.showListaEspera">
+    <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
 </ng-container>

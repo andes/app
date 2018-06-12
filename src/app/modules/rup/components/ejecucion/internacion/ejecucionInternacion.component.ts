@@ -138,7 +138,8 @@ export class EjecucionInternacionComponent implements OnInit {
      * Vuelve a la página anterior
      */
     cancelar() {
-        this.router.navigate(['internacion/camas']);
+        this.location.back();
+        // this.router.navigate(['internacion/camas']);
     }
 
     comprobarEgresoParaValidar() {
