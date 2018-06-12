@@ -249,6 +249,10 @@
                                         <br>
                                         <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}} pacientes asignados </div>
                                         <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados </div>
+                                        <br>
+                                        <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
+                                        <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
+                                        <div *ngIf="agenda.cupo === 0"> No quedan cupos disponibles </div>
 
                                         <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()"></plex-button>
                                     </div>
