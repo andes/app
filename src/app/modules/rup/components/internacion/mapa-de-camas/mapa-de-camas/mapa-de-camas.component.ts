@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Auth } from '@andes/auth';
-import { Plex } from '@andes/plex';
+import { Plex, SelectEvent } from '@andes/plex';
 
 import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
@@ -12,7 +12,7 @@ import { CamasService } from '../../../../services/camas.service';
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
     styleUrls: ['./mapa-de-camas.component.scss'],
-    encapsulation: ViewEncapsulation.None, // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
 
@@ -27,9 +27,9 @@ export class MapaDeCamasComponent implements OnInit {
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
-    public readOnly = false;
     public loader = true;
 
+    public historicoMode = false;
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -198,7 +198,6 @@ export class MapaDeCamasComponent implements OnInit {
      */
 
     onGestionCamaClick() {
-        let org = this.auth.organizacion.id;
         this.router.navigate(['tm/organizacion/cama']);
     }
 
@@ -212,6 +211,10 @@ export class MapaDeCamasComponent implements OnInit {
 
     public censoMensual() {
         this.router.navigate(['rup/internacion/censo/mensual']);
+    }
+
+    public verHistorico() {
+        this.historicoMode = true;
     }
 
     /**
@@ -236,10 +239,7 @@ export class MapaDeCamasComponent implements OnInit {
 
     mapaDeCamaXFecha(reset) {
         if (reset) {
-            this.readOnly = false;
-            this.fecha = new Date;
-        } else {
-            this.readOnly = true;
+            this.historicoMode = false;
         }
         this.refresh();
     }

@@ -1,86 +1,95 @@
 <ng-container *ngIf="!camasService.showListaEspera">
     <form class="plex-layout">
         <section>
-            <plex-box>
-                <div class="row">
-                    <div class="col">
-                        <header>
-                            <div class="clearfix">
-                                <div class="page-title">
-                                    Mapa de camas
-                                </div>
-                                <div class="text-right" *ngIf="!prestacion">
-                                    <plex-button class="" type="primary" label="Lista de espera" (click)="camasService.showListaEspera = true;"></plex-button>
-                                    <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
-                                    <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
-                                    <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
-                                    <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
-                                </div>
-                                <div class="text-right" *ngIf="prestacion">
-                                    <plex-button class="" type="primary" label="Cancelar" (click)="camasService.showListaEspera = true; prestacion = null;"></plex-button>
-                                </div>
-                            </div>
-                            <!-- TODO: Ver estilos con julito ,@FerSastre -->
-                            <div class="row">
-                                <div class="col-3">
-                                    <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)">
-                                    </plex-datetime>
-                                </div>
+            <div class="row">
+                <div class="col-10">
+                    <plex-box>
+                        <div class="row">
+                            <div class="col">
+                                <header>
+                                    <div class="clearfix">
+                                        <div class="page-title">
+                                            Mapa de camas
+                                        </div>
+                                    </div>
+                                    <!-- TODO: Ver estilos con julito ,@FerSastre -->
+                                    
 
-                                <div class="col-3">
-                                    <plex-button *ngIf="readOnly" type="primary" label="Volver al Mapa actual" (click)="mapaDeCamaXFecha(true)"></plex-button>
-                                </div>
-                            </div>
+                                    <div class="row" *ngIf="camas">
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <label for="filtros-nombre">Paciente</label>
+                                                <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
+                                                    (keyup)="filtrar()" />
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
+                                                (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
+                                        </div>
+                                        <div class="col-2">
+                                            <div class="form-group">
+                                                <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
+                                                    *ngIf="filtros.opciones.servicios.length"></plex-select>
+                                            </div>
+                                        </div>
 
-                            <div class="row" *ngIf="camas">
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <label for="filtros-nombre">Paciente</label>
-                                        <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
-                                            (keyup)="filtrar()" />
+                                        <div class="col-2">
+                                            <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
+                                                *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
+                                                *ngIf="filtros.opciones.estados.length"></plex-select>
+                                        </div>
+                                        <div class="col-2 actions-icons">
+                                            <plex-button type="primary" label="Limpiar filtros" (click)="refresh()"></plex-button>
+                                        </div>
+                                    </div>
+                                    <hr />
+                                </header>
+                                <!-- Loader -->
+                                <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
+                                <!-- En caso de que no hay resultados -->
+                                <div *ngIf="!loader && !camas">
+                                    No se encontraron resultados
+                                </div>
+                                <div class="row" *ngIf="!loader">
+                                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12" *ngFor="let cama of camas; let i = index">
+                                        <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
                                     </div>
                                 </div>
-                                <div class="col-2">
-                                    <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
-                                        (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
-                                </div>
-                                <div class="col-2">
-                                    <div class="form-group">
-                                        <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
-                                            *ngIf="filtros.opciones.servicios.length"></plex-select>
-                                    </div>
-                                </div>
 
-                                <div class="col-2">
-                                    <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
-                                        *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
-                                </div>
-
-                                <div class="col-2">
-                                    <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
-                                        *ngIf="filtros.opciones.estados.length"></plex-select>
-                                </div>
-                                <div class="col-2 actions-icons">
-                                    <plex-button type="primary" label="Limpiar filtros" (click)="refresh()"></plex-button>
-                                </div>
-                            </div>
-                            <hr />
-                        </header>
-                        <!-- Loader -->
-                        <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
-                        <!-- En caso de que no hay resultados -->
-                        <div *ngIf="!loader && !camas">
-                            No se encontraron resultados
-                        </div>
-                        <div class="row" *ngIf="!loader">
-                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12" *ngFor="let cama of camas; let i = index">
-                                <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="readOnly" (evtCama)="updateCama($event, i)"></app-cama>
                             </div>
                         </div>
-
-                    </div>
+                    </plex-box>
                 </div>
-            </plex-box>
+                <div class="col-2">
+                    <plex-box>
+                        <header>
+                            <h3>Acciones</h3>
+                        </header>
+                        <ng-container *ngIf="!prestacion && !historicoMode">
+                            <plex-button type="primary btn-block" label="Lista de espera" (click)="!camasService.showListaEspera = true;"></plex-button>
+                            <plex-button class="" type="primary btn-block mt-2" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
+                            <plex-button class="" type="primary btn-block mt-2" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
+                            <plex-button class="" type="primary btn-block mt-2" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
+                            <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()" ></plex-button>
+                            <plex-button label="Crear cama" type="primary btn-block mt-2" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
+                        </ng-container>
+                        <ng-container *ngIf="prestacion">
+                            <plex-button class="" type="primary btn-block mt-2" label="Cancelar" (click)="!camasService.showListaEspera = true; prestacion = null;"></plex-button>
+                        </ng-container>
+                        <ng-container *ngIf="historicoMode">
+
+                            <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
+                            <plex-button type="primary btn-block mt-2" label="Cancelar" (click)="mapaDeCamaXFecha(true)"></plex-button>
+
+                        </ng-container>
+                    </plex-box>
+                </div>
+            </div>
         </section>
     </form>
 </ng-container>
