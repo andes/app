@@ -20,6 +20,20 @@ export class CamasService {
 
 
     /**
+     * Busca todas las camas segun la fehca y hora que pasemos.
+     * @param idOrganizacion 
+     * @param fecha 
+     */
+    getCamasXFecha(idOrganizacion, fecha): Observable<ICama[]> {
+        let params = {
+            idOrganizacion: idOrganizacion,
+            fecha: fecha
+        }
+        return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
+    }
+
+
+    /**
      * @param cama recibe una cama para agregar a la organizacion
      */
     addCama(cama: ICama): Observable<ICama> {
