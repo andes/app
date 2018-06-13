@@ -240,6 +240,7 @@ export class MapaDeCamasComponent implements OnInit {
     mapaDeCamaXFecha(reset) {
         if (reset) {
             this.historicoMode = false;
+            this.fecha = new Date();
         }
         this.refresh();
     }

@@ -2,7 +2,7 @@
     <form class="plex-layout">
         <section>
             <div class="row">
-                <div class="col-10">
+                <div class="col-8 col-md-10">
                     <plex-box>
                         <div class="row">
                             <div class="col">
@@ -56,7 +56,7 @@
                                     No se encontraron resultados
                                 </div>
                                 <div class="row" *ngIf="!loader">
-                                    <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12" *ngFor="let cama of camas; let i = index">
+                                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngFor="let cama of camas; let i = index">
                                         <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
                                     </div>
                                 </div>
@@ -65,7 +65,7 @@
                         </div>
                     </plex-box>
                 </div>
-                <div class="col-2">
+                <div class="col-4 col-md-2">
                     <plex-box>
                         <header>
                             <h3>Acciones</h3>
