@@ -17,6 +17,7 @@ import { NgModel } from '@angular/forms';
 export class PucoComponent implements OnInit, OnDestroy {
 
     public loading = false;
+    public errorSearchTerm = false; // true si se ingresan caracteres alfabeticos
     public usuarios: ArrayType[];
     private timeoutHandle: number;
     @Input() autofocus: Boolean = true;
@@ -47,8 +48,8 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.usuarios = [];
             this.loading = false;
         }
-
         if (this.searchTerm && /^([0-9])*$/.test(this.searchTerm.toString())) {
+            this.errorSearchTerm = false;
             let search = this.searchTerm.trim();
 
             this.loading = true;
@@ -77,7 +78,8 @@ export class PucoComponent implements OnInit, OnDestroy {
         }
         else {
             if (this.searchTerm) {
-                this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
+                this.errorSearchTerm = true;
+                // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
             }
         }
     }

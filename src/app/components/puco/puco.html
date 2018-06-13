@@ -12,11 +12,16 @@
             </div>
             <!--Loader-->
             <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-            <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading" class="alert alert-danger">
+            <!-- Error paciente no encontrado -->
+            <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading && !errorSearchTerm" class="alert alert-danger">
                 <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
             </div>
+            <!-- Error por ingreso de caracteres -->
+            <div *ngIf="errorSearchTerm && searchTerm && !loading" class="alert alert-danger">
+                <i class="mdi mdi-account-alert"></i> Este campo sólo admite caracteres numéricos.
+            </div>
             <!--Tabla de resultados por SimpleQuery -->
-            <table *ngIf="usuarios && usuarios.length" class="table table-striped">
+            <table *ngIf="usuarios && usuarios.length && !errorSearchTerm" class="table table-striped">
                 <thead>
                     <tr>
                         <th>Apellido y nombre</th>
