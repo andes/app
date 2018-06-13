@@ -27,7 +27,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
     @ViewChild('panel') accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
     }
 
     constructor(
@@ -39,7 +39,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
         if ($event) {
             if (this.allModule) {
                 this.accordions.active = false;
-            }else {
+            } else {
                 let index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
                 if (index >= 0) {
                     this.userPermissions.splice(index, 1);
@@ -75,7 +75,8 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
-                                    this.seleccionados = data;
+                                    this.seleccionados = [...data];
+
                                 });
                                 break;
                         }
@@ -109,7 +110,9 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                     break;
             }
         } else {
-            event.callback(this.seleccionados || []);
+            window.setTimeout(() => {
+                event.callback(this.seleccionados || null);
+            }, 1000);
         }
     }
 
