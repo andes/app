@@ -1,0 +1,6 @@
+<plex-bool *ngIf="!soloValores" required="true" [(ngModel)]="registro.valor" name="trastorno" label="Trastorno" (change)="emitChange()">
+</plex-bool>
+
+<p *ngIf="soloValores" class="readonly">
+    <span>Desarrollo Psicomotor Trastorno</span> {{registro.valor}}
+</p>

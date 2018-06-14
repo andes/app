@@ -234,6 +234,9 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { PercentiloTallaComponent } from './modules/rup/components/elementos/percentiloTalla.component';
+import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
+import { DesarrolloPsicomotorNormalComponent } from './modules/rup/components/elementos/desarrolloPsicomotorNormal.component';
+import { DesarrolloPsicomotorTrastornoComponent } from './modules/rup/components/elementos/desarrolloPsicomotorTrastorno.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -330,6 +333,9 @@ export let RUPRegistry = {
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
     'PercentiloTallaComponent': PercentiloTallaComponent,
+    'DesarrolloPsicomotorComponent': DesarrolloPsicomotorComponent,
+    'DesarrolloPsicomotorNormalComponent': DesarrolloPsicomotorNormalComponent,
+    'DesarrolloPsicomotorTrastornoComponent': DesarrolloPsicomotorTrastornoComponent,
 };
 
 let RUPComponentsArray = [
@@ -371,7 +377,10 @@ let RUPComponentsArray = [
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
     PercentiloPesoComponent,
-    PercentiloTallaComponent
+    PercentiloTallaComponent,
+    DesarrolloPsicomotorComponent,
+    DesarrolloPsicomotorNormalComponent,
+    DesarrolloPsicomotorTrastornoComponent
 ];
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
