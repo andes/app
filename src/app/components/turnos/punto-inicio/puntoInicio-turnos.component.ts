@@ -54,7 +54,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     constructor(
         public servicePaciente: PacienteService,
-        // public servicioAgenda: AgendaService,
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,

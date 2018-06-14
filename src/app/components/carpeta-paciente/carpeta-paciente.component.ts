@@ -42,10 +42,15 @@ export class CarpetaPacienteComponent implements OnInit {
             // Hay paciente?
             if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
                 this.paciente = this.turnoSeleccionado.paciente;
-                // Traer las carpetas del paciente que haya en MPI
-                this.getCarpetas(this.paciente);
+                // Obtenemos el paciente completo. (entró por parametro el turno)
+                this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+                    this.paciente = resultado;
+                    this.getCarpetas(this.paciente);
+                });
+
             } else {
                 if (this.pacienteSeleccionado) {
+                    // entró paciente por parámetro, no hace falta hacer otro get paciente.
                     this.paciente = this.pacienteSeleccionado;
                     this.getCarpetas(this.paciente);
                 } else {
@@ -57,33 +62,30 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     private getCarpetas(paciente) {
-        this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
-            if (resultado.carpetaEfectores.length > 0) {
-                // Filtramos y traemos sólo la carpeta de la organización actual
-                this.carpetaEfectores = resultado.carpetaEfectores;
-                this.indiceCarpeta = resultado.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
-                if (this.indiceCarpeta > -1) {
-                    this.carpetaPaciente = resultado.carpetaEfectores[this.indiceCarpeta];
-                    this.nroCarpetaOriginal = resultado.carpetaEfectores[this.indiceCarpeta].nroCarpeta;
+        if (paciente.carpetaEfectores.length > 0) {
+            // Filtramos y traemos sólo la carpeta de la organización actual
+            this.carpetaEfectores = paciente.carpetaEfectores;
+            this.carpetaPaciente = paciente.carpetaEfectores.find(x => {
+                return (x.organizacion as any)._id === this.auth.organizacion.id;
+            });
+            this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
+
+        }
+        if (this.indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaPaciente = carpeta;
                 }
-            }
-            if (this.indiceCarpeta === -1) {
-                // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-                this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                    if (carpeta.nroCarpeta) {
-                        this.carpetaPaciente = carpeta;
-                    }
-                });
-            }
-        });
+            });
+        }
     }
 
 
     guardarCarpetaPaciente() {
-
         if (this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
 
-            this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim(); // quitamos los espacios
+            this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
             } else {
@@ -95,7 +97,6 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.plex.toast('success', 'Nuevo número de carpeta establecido');
             }, error => {
                 this.plex.toast('danger', 'El número de carpeta ya existe');
-                console.log(error);
             });
         } else {
             this.guardarCarpetaEmit.emit(true);
