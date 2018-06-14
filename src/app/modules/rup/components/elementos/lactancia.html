@@ -24,4 +24,7 @@
     <ng-container *ngIf="registro.valor && !registro.valor.length">
         {{registro.valor.concepto.term}}
     </ng-container>
+    <ng-container *ngIf="!registro.valor">
+        No se registro valor
+    </ng-container>
 </p>
