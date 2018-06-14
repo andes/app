@@ -13,6 +13,10 @@ export interface IElementoRUP {
     tipo: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
+
+    // Indica si no muestra el motivo de consulta al validar
+    motivoConsoltaOpcional: Boolean;
+
     // Indica los parámetros para instanciar el componente
     params: { [key: string]: any };
     // Indica el estilo para aplicar al componente

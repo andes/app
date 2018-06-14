@@ -2,7 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Auth } from '@andes/auth';
-import { Plex, SelectEvent } from '@andes/plex';
+import { Plex } from '@andes/plex';
 
 import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
@@ -12,7 +12,7 @@ import { CamasService } from '../../../../services/camas.service';
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
     styleUrls: ['./mapa-de-camas.component.scss'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    encapsulation: ViewEncapsulation.None, // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
 
@@ -47,14 +47,12 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    public showListaEspera = false;
-
     constructor(
         private auth: Auth,
         private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
-        private camasService: CamasService) { }
+        public camasService: CamasService) { }
 
     ngOnInit() {
         this.refresh();
