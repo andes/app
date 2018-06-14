@@ -13,7 +13,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     talla: any;
     registroTalla: any;
     registroPeso: any;
-    public mensaje = '';
+    public alerta = '';
     private pesoConceptId = '27113001';
     private tallaConceptId = '14456009';
     registro: any = {};
@@ -23,19 +23,31 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     // cumpleReglasParams = true;
 
     ngOnInit() {
-        if (!this.registro) {
-            this.registro = {
-                valor: 0
-            };
+        // if (this.registro.valor == null) {
+        //     this.registro.valor = 0;
+        // }
+
+        if (!this.soloValores) {
+            // Observa cuando cambia la propiedad 'percentiloPeso' en otro elemento RUP
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                if (this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                    if (this.elementoRUP) {
+                        // this.checkReglasParams();
+                        this.calculoIMC();
+                    }
+                }
+            });
         }
-        if (this.elementoRUP) {
-            // this.checkReglasParams();
-            this.calculoIMC();
+        if (this.registro.valor) {
+            this.mensaje = this.getMensajes();
+            console.log(this.mensaje);
         }
     }
 
     cumpleReglasParams(elementoRUP) {
-        if (this.params.reglas) {
+        if (this.params && this.params.reglas) {
             if (this.params.reglas.visualizacion) {
                 if (this.params.reglas.visualizacion.ocultar) {
                     return this.params.reglas.visualizacion.ocultar.atomos.findIndex(x => x === elementoRUP.conceptos[0].conceptId) === -1;
@@ -107,39 +119,37 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             }
         }
         if (this.conceptosRequeridos.length === 2) {
-
             this.peso = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.pesoConceptId).valor;
             this.talla = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.tallaConceptId).valor;
-
-
         }
 
         // Si encuentro las prestaciones que necesito. peso-talla
         if (this.peso && this.talla) {
             this.talla = this.talla / 100; // Paso a metros;
             imc = this.peso / Math.pow(this.talla, 2);
-            this.mensaje = '';
+            this.alerta = '';
             this.registro.valor = Number(imc.toFixed(2));
             this.valorImc = this.registro['valor'];
             this.emitChange(false);
         } else {
+            this.registro.valor = null;
             // Buscamos si las prestaciones en ejecucion tienen datos como para calcular el imc
             switch (true) {
                 // Mostramos el  Alerta de talla
-                case (this.peso !== null && this.talla === null):
-                    this.mensaje = 'Falta completar el campo talla';
+                case (this.peso && this.talla === null):
+                    this.alerta = 'Falta completar el campo talla';
                     break;
                 // Mostramos alerta de peso.
-                case (this.talla !== null && this.peso === null):
-                    this.mensaje = 'Falta completar el campo peso';
+                case (this.talla && this.peso === null):
+                    this.alerta = 'Falta completar el campo peso';
                     break;
                 // Se muestra alerta de talla y de peso
                 default:
-                    this.mensaje = 'Falta completar el campo talla y el campo peso';
+                    this.alerta = 'Falta completar el campo talla y el campo peso';
                     break;
             }
-        }
 
+        }
 
     }
 
@@ -147,7 +157,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         if (registros) {
             for (let i = 0; i < registros.length; i++) {
                 if (registros[i].concepto.conceptId === conceptId) {
-                    console.log(registros[i]);
                     this.conceptosRequeridos.push(registros[i]);
                 } else {
                     this.buscarConceptoDeep(registros[i].registros, conceptId);
