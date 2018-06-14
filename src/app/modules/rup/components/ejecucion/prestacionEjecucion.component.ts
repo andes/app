@@ -603,7 +603,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (registro.registros.length <= 0) {
             registro.valido = (registro.valor !== null) ? true : false;
             if (!registro.valido) {
-                console.log(registro);
                 this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
                 this.colapsarPrestaciones('expand');
             }
