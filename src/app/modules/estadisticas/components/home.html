@@ -1,17 +1,17 @@
-<section>
-    <plex-box>
+<plex-layout>
+    <plex-layout-main>
         <header>
             <div class="clearfix">
                 <div class="page-title">Estadísticas</div>
             </div>
-        </header> 
+        </header>
         <div>
             <turnos-filtros (filter)="filter($event)" [params]="filtros"></turnos-filtros>
             <div class="row">
                 <div class="col-4" *ngIf="sexoData.length > 0">
                     <h3>Por sexo</h3>
                     <div>
-                        <canvas  baseChart [data]="sexoData" [labels]="sexoLabels" chartType="pie"></canvas>
+                        <canvas baseChart [data]="sexoData" [labels]="sexoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
                 <div class="col-4" *ngIf="edadData.length > 0">
@@ -23,7 +23,7 @@
                 <div class="col-4" *ngIf="estadoData.length > 0">
                     <h3>Por estado</h3>
                     <div>
-                        <canvas baseChart [data]="estadoData"   [labels]="estadoLabels" chartType="pie"></canvas>
+                        <canvas baseChart [data]="estadoData" [labels]="estadoLabels" chartType="pie"></canvas>
                     </div>
                 </div>
             </div>
@@ -31,7 +31,7 @@
                 <div class="col-10">
                     <h3>Por profesionales</h3>
                     <div>
-                        <canvas  baseChart [data]="profesionalData" [options]="barOptions"  [labels]="profesionalLabels" chartType="bar"></canvas>
+                        <canvas baseChart [data]="profesionalData" [options]="barOptions" [labels]="profesionalLabels" chartType="bar"></canvas>
                     </div>
                 </div>
             </div>
@@ -39,7 +39,7 @@
                 <div class="col-8">
                     <h3>Por administrativos</h3>
                     <div>
-                        <canvas  baseChart [data]="administrativosData"  [options]="barOptions"  [labels]="administrativosLabels" chartType="bar"></canvas>
+                        <canvas baseChart [data]="administrativosData" [options]="barOptions" [labels]="administrativosLabels" chartType="bar"></canvas>
                     </div>
                 </div>
             </div>
@@ -47,11 +47,10 @@
                 <div class="col-8">
                     <h3>Por prestaciones</h3>
                     <div>
-                        <canvas  baseChart [data]="prestacionData"  [options]="barOptions"  [labels]="prestacionLabels" chartType="bar"></canvas>
+                        <canvas baseChart [data]="prestacionData" [options]="barOptions" [labels]="prestacionLabels" chartType="bar"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-    </plex-box>
-</section>
-
+    </plex-layout-main>
+</plex-layout>
