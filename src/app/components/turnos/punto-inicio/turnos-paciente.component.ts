@@ -27,11 +27,11 @@ export class TurnosPacienteComponent implements OnInit {
     puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
-
-    _paciente: IPaciente;
+    todaysdate: Date;
+    _turnos: any;
     _operacion: string;
     tituloOperacion = 'Operaciones de Turnos';
-    turnosPaciente = [];
+    turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
     @Input('operacion')
@@ -42,15 +42,15 @@ export class TurnosPacienteComponent implements OnInit {
         return this._operacion;
     }
 
-    @Input('paciente')
-    set paciente(value: IPaciente) {
+    @Input('turnos')
+    set turnos(value: any) {
         if (value) {
-            this._paciente = value;
-            this.getTurnosPaciente(this._paciente);
+            this._turnos = value;
+            this.turnosPaciente = value;
         }
     }
-    get paciente(): IPaciente {
-        return this._paciente;
+    get turnos(): any {
+        return this._turnos;
     }
     @Output() showArancelamientoForm = new EventEmitter<any>();
 
@@ -61,6 +61,8 @@ export class TurnosPacienteComponent implements OnInit {
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
+        this.todaysdate = new Date();
+        this.todaysdate.setHours(0, 0, 0, 0);
     }
 
     cambiarMotivo() {
@@ -87,23 +89,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.showArancelamientoForm.emit(turno);
     }
 
-    getTurnosPaciente(paciente) {
-        if (paciente.id) {
-            let datosTurno = { pacienteId: paciente.id };
-            // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
-                });
-                this.ultimosTurnos = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
-                });
-                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
-                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
-                });
-            });
-        }
-    }
+
 
     eventosTurno(turno, operacion) {
         let mensaje = '';
@@ -118,7 +104,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
 
             let agenda = resultado;
-            let datosTurno = { pacienteId: this._paciente.id };
+            let datosTurno = { pacienteId: this._turnos.id };
             this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
                     return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
@@ -158,7 +144,6 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     saveLiberarTurno(agenda: any, pac) {
-        this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
 
