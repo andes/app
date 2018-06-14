@@ -19,6 +19,8 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     nroCarpeta: any;
     public _paciente: IPaciente;
+    turnosPaciente: any;
+    ultimosTurnos: any;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;
@@ -84,6 +86,15 @@ export class EstadisticasPacientesComponent implements OnInit {
                     });
                     this.turnosOtorgados = turnos.length;
                     this.inasistencias = cantInasistencias;
+                    this.turnosPaciente = turnos.filter(t => {
+                        return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                    });
+                    this.ultimosTurnos = turnos.filter(t => {
+                        return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+                    });
+                    this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
+                        return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
+                    });
                 });
 
                 if (this._paciente && this._paciente.id) {
