@@ -1,29 +1,9 @@
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
-import * as enumerados from './../../utils/enumerados';
-// Services
-import { BarrioService } from './../../services/barrio.service';
-import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
-import { PaisService } from './../../services/pais.service';
-import { ProvinciaService } from './../../services/provincia.service';
-import { LocalidadService } from './../../services/localidad.service';
-// Interfaces
-import { IPais } from './../../interfaces/IPais';
-import { IBarrio } from './../../interfaces/IBarrio';
-import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IUbicacion } from './../../interfaces/IUbicacion';
-import { IEdificio } from './../../interfaces/IEdificio';
-import { IDireccion } from './../../interfaces/IDireccion';
-import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
-import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
-import { IProvincia } from './../../interfaces/IProvincia';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SectoresItemComponent } from './sectores-item/sectores-item.component';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
 import { CamasService } from '../../modules/rup/services/camas.service';
 
@@ -52,8 +32,7 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     constructor(
         private organizacionService: OrganizacionService,
-        private tipoEstablecimientoService: TipoEstablecimientoService,
-        public plex: Plex, private server: Server,
+        public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
         public CamaService: CamasService,
@@ -151,7 +130,7 @@ export class OrganizacionSectoresComponent implements OnInit {
                     }
                 });
             } else {
-                this.plex.alert('El sector contiene camas', 'No se puede borrar')
+                this.plex.alert('El sector contiene camas', 'No se puede borrar');
             }
         });
 
