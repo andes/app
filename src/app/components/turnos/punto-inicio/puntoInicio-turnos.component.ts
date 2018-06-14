@@ -96,7 +96,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.servicePaciente.getById(paciente.id).subscribe(
                     pacienteMPI => {
                         this.paciente = pacienteMPI;
-                        if (!this.paciente.scan) {
+                        // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
+                        if (!this.paciente.scan && paciente.scan) {
                             this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                         }
                         this.showMostrarEstadisticasAgendas = false;
