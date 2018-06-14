@@ -38,7 +38,7 @@ export class ListaEsperaInternacionComponent implements OnInit {
         public prestacionService: PrestacionesService) { }
 
     ngOnInit() {
-        this.prestacionService.getInternaciones(this.auth.organizacion.id).subscribe(data => {
+        this.prestacionService.getInternacionesPendientes().subscribe(data => {
             this.prestacionesPendientes = data;
             // creamos copia para reestablecer luego de los filtros
             this.prestacionesPendientesCopy = JSON.parse(JSON.stringify(this.prestacionesPendientes));
