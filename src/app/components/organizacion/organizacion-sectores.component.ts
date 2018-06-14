@@ -25,6 +25,7 @@ import { IProvincia } from './../../interfaces/IProvincia';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SectoresItemComponent } from './sectores-item/sectores-item.component';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
+import { CamasService } from '../../modules/rup/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -55,6 +56,7 @@ export class OrganizacionSectoresComponent implements OnInit {
         public plex: Plex, private server: Server,
         public snomed: SnomedService,
         private router: Router,
+        public CamaService: CamasService,
         private route: ActivatedRoute
     ) { }
 
@@ -82,7 +84,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Devuelve se la organizacion tiene sectores
      */
 
-    hasItems () {
+    hasItems() {
         return this.organizacion.mapaSectores && this.organizacion.mapaSectores.length > 0;
     }
 
@@ -107,7 +109,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Agrega un sector root
      */
 
-    onAddParent () {
+    onAddParent() {
         this.disabledPanel = false;
     }
 
@@ -140,10 +142,20 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
 
     removeItem($event) {
-        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-        if (index >= 0) {
-            this.organizacion.mapaSectores.splice(index, 1);
-        }
+        this.CamaService.camaXsector($event.id).subscribe(camas => {
+            if (camas.length <= 0) {
+                this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+                    let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                    if (confirmar && index >= 0) {
+                        this.organizacion.mapaSectores.splice(index, 1);
+                    }
+                });
+            } else {
+                this.plex.alert('El sector contiene camas', 'No se puede borrar')
+            }
+        });
+
+
     }
 
     /**
@@ -174,12 +186,12 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Crea un sector item para agregar al arbol de sectores
      */
-    createObject (): ISectores {
+    createObject(): ISectores {
         if (!this.tipoSector) {
             return null;
         }
         if (this.unidadID !== this.tipoSector.conceptId) {
-            return  {
+            return {
                 nombre: this.itemName,
                 tipoSector: this.tipoSector,
                 hijos: []
@@ -201,7 +213,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Cancela el modo edición
      */
 
-    onDissmis () {
+    onDissmis() {
         this.clearForm();
         this.selectedItem = null;
         this.disabledPanel = true;
