@@ -12,7 +12,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 
 export class CarpetaPacienteComponent implements OnInit {
 
-    indiceCarpeta: number;
+    indiceCarpeta = -1;
     carpetaEfectores = [];
     nroCarpetaOriginal: string;
     @Input() turnoSeleccionado: ITurno;
@@ -65,8 +65,12 @@ export class CarpetaPacienteComponent implements OnInit {
         if (paciente.carpetaEfectores.length > 0) {
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
-            this.carpetaPaciente = paciente.carpetaEfectores.find(x => {
-                return (x.organizacion as any)._id === this.auth.organizacion.id;
+            this.carpetaPaciente = paciente.carpetaEfectores.find((elemento, indice) => {
+                let resultado = (elemento.organizacion as any)._id === this.auth.organizacion.id;
+                if (resultado) {
+                    this.indiceCarpeta = indice;
+                }
+                return resultado;
             });
             this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
 
