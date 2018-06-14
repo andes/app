@@ -1,6 +1,6 @@
 {
     "project": {
-        "version": "1.0.0-beta.17",
+        "version": "3.0.0",
         "name": "andes_app"
     },
     "apps": [
@@ -39,6 +39,7 @@
             "environments": {
                 "dev": "environments/environment.ts",
                 "test": "environments/environment.test.ts",
+                "demo": "environments/environment.demo.ts",
                 "prod": "environments/environment.prod.ts"
             }
         }
