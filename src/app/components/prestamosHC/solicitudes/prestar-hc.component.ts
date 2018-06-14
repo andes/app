@@ -74,7 +74,9 @@ export class PrestarHcComponent implements OnInit {
 
     save(event) {
         this.prestamo.organizacion = this.auth.organizacion;
-        this.prestamo.datosSolicitudManual.observaciones = this.prestarHC.observaciones;
+        if (this.prestamo && this.prestamo.datosSolicitudManual ) {
+            this.prestamo.datosSolicitudManual.observaciones = this.prestarHC.observaciones;
+        }
         this.prestamo.datosPrestamo = { observaciones: this.prestarHC.observaciones };
         this.prestamosService.prestarCarpeta(this.prestamo).subscribe(carpeta => {
             this._carpeta = carpeta;
