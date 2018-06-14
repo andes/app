@@ -3,6 +3,7 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ITurno } from './../../interfaces/turnos/ITurno';
 import { PacienteService } from './../../services/paciente.service';
+import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'carpeta-paciente',
@@ -15,15 +16,14 @@ export class CarpetaPacienteComponent implements OnInit {
     carpetaEfectores = [];
     nroCarpetaOriginal: string;
     @Input() turnoSeleccionado: ITurno;
+    @Input() pacienteSeleccionado: IPaciente;
     @Output() guardarCarpetaEmit = new EventEmitter<boolean>();
     @Output() cancelarCarpetaEmit = new EventEmitter<boolean>();
 
     autorizado: any;
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
-
-    pacienteTurno: any;
     carpetaPaciente: any;
-
+    paciente: any;
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
@@ -40,31 +40,44 @@ export class CarpetaPacienteComponent implements OnInit {
                 nroCarpeta: ''
             };
             // Hay paciente?
-            if (this.turnoSeleccionado.paciente.id) {
+            if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
+                this.paciente = this.turnoSeleccionado.paciente;
                 // Traer las carpetas del paciente que haya en MPI
-                this.servicioPaciente.getById(this.turnoSeleccionado.paciente.id).subscribe(paciente => {
-                    this.pacienteTurno = paciente;
-                    if (paciente.carpetaEfectores.length > 0) {
-                        // Filtramos y traemos sólo la carpeta de la organización actual
-                        this.carpetaEfectores = paciente.carpetaEfectores;
-                        this.indiceCarpeta = paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
-                        if (this.indiceCarpeta > -1) {
-                            this.carpetaPaciente = paciente.carpetaEfectores[this.indiceCarpeta];
-                            this.nroCarpetaOriginal = paciente.carpetaEfectores[this.indiceCarpeta].nroCarpeta;
-                        }
-                    }
-                    if (this.indiceCarpeta === -1) {
-                        // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-                        this.servicioPaciente.getNroCarpeta({ documento: this.turnoSeleccionado.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                            if (carpeta.nroCarpeta) {
-                                this.carpetaPaciente = carpeta;
-                            }
-                        });
+                this.getCarpetas(this.paciente);
+            } else {
+                if (this.pacienteSeleccionado) {
+                    this.paciente = this.pacienteSeleccionado;
+                    this.getCarpetas(this.paciente);
+                } else {
+                    this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
+                }
+            }
+
+        }
+    }
+
+    private getCarpetas(paciente) {
+        this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+            if (resultado.carpetaEfectores.length > 0) {
+                // Filtramos y traemos sólo la carpeta de la organización actual
+                this.carpetaEfectores = resultado.carpetaEfectores;
+                this.indiceCarpeta = resultado.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+                if (this.indiceCarpeta > -1) {
+                    this.carpetaPaciente = resultado.carpetaEfectores[this.indiceCarpeta];
+                    this.nroCarpetaOriginal = resultado.carpetaEfectores[this.indiceCarpeta].nroCarpeta;
+                }
+            }
+            if (this.indiceCarpeta === -1) {
+                // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+                this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                    if (carpeta.nroCarpeta) {
+                        this.carpetaPaciente = carpeta;
                     }
                 });
             }
-        };
+        });
     }
+
 
     guardarCarpetaPaciente() {
 
@@ -77,8 +90,9 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.carpetaEfectores.push(this.carpetaPaciente);
             }
 
-            this.servicioPaciente.patch(this.turnoSeleccionado.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(resultadoCarpeta => {
+            this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);
+                this.plex.toast('success', 'Nuevo número de carpeta establecido');
             }, error => {
                 this.plex.toast('danger', 'El número de carpeta ya existe');
                 console.log(error);
