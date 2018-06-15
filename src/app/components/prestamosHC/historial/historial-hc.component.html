@@ -63,6 +63,9 @@
                                         <td>
                                             <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
                                         </td>
+                                        <td *ngIf="movimiento.datosSolicitudManual">
+                                            {{movimiento.datosSolicitudManual.observaciones}}
+                                        </td>
                                         <td>
                                             {{movimiento.datosDevolucion.estado}}
                                         </td>
