@@ -881,6 +881,6 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     getInternacionesPendientes(options: any = {}): Observable<IPrestacion[]> {
-        return this.server.get(this.prestacionesUrl + '/sin-cama', options);
+        return this.server.get(this.prestacionesUrl + '/sincama', options);
     }
 }
