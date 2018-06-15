@@ -1176,4 +1176,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.showMobile = band;
     }
 
+    renaperNotification(event) {
+        this.validado = event;
+    }
+
 }

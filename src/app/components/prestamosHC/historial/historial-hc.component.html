@@ -35,14 +35,28 @@
                                         <td>
                                             {{movimiento.createdAt | date:'dd-MM-yyyy'}}
                                         </td>
-                                        <td *ngIf="movimiento.estado == 'En archivo'">
-                                            Devuelta por: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        <td *ngIf="!movimiento.datosSolicitudManual">
+                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}} {{movimiento.datosPrestamo.turno.profesionales |
+                                            enumerar:['apellido','nombre'] }}
+                                            <br>
+                                            <span class="badge-success float-left">Solicitud Automática</span>
                                         </td>
-                                        <td *ngIf="movimiento.estado == 'Prestada'">
-                                            Prestada a: {{movimiento.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }}
+                                        <td *ngIf="movimiento.datosSolicitudManual">
+                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
+                                            <span *ngIf="movimiento.datosSolicitudManual.profesional">
+                                                {{movimiento.datosSolicitudManual.profesional.apellido}}, {{movimiento.datosSolicitudManual.profesional.nombre}}
+                                            </span>
+                                            <span *ngIf="!movimiento.datosSolicitudManual.profesional">
+                                                {{movimiento.datosSolicitudManual.responsable.apellido}}, {{movimiento.datosSolicitudManual.responsable.nombre}}
+                                            </span>
+                                            <br>
+                                            <span class="badge-warning float-left">Solicitud Manual</span>
                                         </td>
-                                        <td>
+                                        <td *ngIf="!movimiento.datosSolicitudManual">
                                             {{movimiento.datosDevolucion.observaciones}}
+                                        </td>
+                                        <td *ngIf="movimiento.datosSolicitudManual">
+                                            {{movimiento.datosSolicitudManual.observaciones}}
                                         </td>
                                         <td>
                                             {{movimiento.datosDevolucion.estado}}
