@@ -6,7 +6,7 @@ import { ICamaEstado } from '../interfaces/ICamaEstado';
 
 @Injectable()
 export class CamasService {
-
+    public showListaEspera = false;
     private camasUrl = '/core/tm/camas';  // URL to web api
     constructor(private server: Server) { }
 
@@ -16,6 +16,21 @@ export class CamasService {
 
     getCamas(params): Observable<ICama[]> {
         return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
+
+
+    /**
+     * Busca todas las camas segun la fehca y hora que pasemos.
+     * @param idOrganizacion
+     * @param fecha
+     */
+    getCamasXFecha(idOrganizacion, fecha): Observable<ICama[]> {
+        let params = {
+            idOrganizacion: idOrganizacion,
+            fecha: fecha
+        };
+
+        return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
 
 

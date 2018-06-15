@@ -18,6 +18,7 @@ export class CamaComponent implements OnInit {
 
     @Input() cama: any;
     @Input() prestacion: any;
+    @Input() readOnly: boolean;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion: any;
@@ -146,7 +147,7 @@ export class CamaComponent implements OnInit {
             idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
         };
 
-        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama._id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
@@ -200,7 +201,7 @@ export class CamaComponent implements OnInit {
             sugierePase: this.PaseAunidadOrganizativa
         };
 
-        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama._id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
 
 

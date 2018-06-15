@@ -1,4 +1,4 @@
-<ng-container *ngIf="!showListaEspera">
+<ng-container *ngIf="!camasService.showListaEspera">
     <form class="plex-layout">
         <section>
             <plex-box>
@@ -10,16 +10,28 @@
                                     Mapa de camas
                                 </div>
                                 <div class="text-right" *ngIf="!prestacion">
-                                    <plex-button class="" type="primary" label="Lista de espera" (click)="showListaEspera = true;"></plex-button>
+                                    <plex-button class="" type="primary" label="Lista de espera" (click)="camasService.showListaEspera = true;"></plex-button>
                                     <plex-button class="" type="primary" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
                                     <plex-button class="" type="primary" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                                     <plex-button class="" type="primary" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                                     <plex-button label="Nueva Cama" type="primary" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                                 </div>
                                 <div class="text-right" *ngIf="prestacion">
-                                    <plex-button class="" type="primary" label="Cancelar" (click)="showListaEspera = true; prestacion = null;"></plex-button>
+                                    <plex-button class="" type="primary" label="Cancelar" (click)="camasService.showListaEspera = true; prestacion = null;"></plex-button>
                                 </div>
                             </div>
+                            <!-- TODO: Ver estilos con julito ,@FerSastre -->
+                            <div class="row">
+                                <div class="col-3">
+                                    <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)">
+                                    </plex-datetime>
+                                </div>
+
+                                <div class="col-3">
+                                    <plex-button *ngIf="readOnly" type="primary" label="Volver al Mapa actual" (click)="mapaDeCamaXFecha(true)"></plex-button>
+                                </div>
+                            </div>
+
                             <div class="row" *ngIf="camas">
                                 <div class="col-2">
                                     <div class="form-group">
@@ -54,10 +66,15 @@
                             </div>
                             <hr />
                         </header>
-
-                        <div class="row">
-                            <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-12 " *ngFor="let cama of camas; let i = index">
-                                <app-cama [prestacion]="prestacion" [cama]="cama" (evtCama)="updateCama($event, i)"></app-cama>
+                        <!-- Loader -->
+                        <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
+                        <!-- En caso de que no hay resultados -->
+                        <div *ngIf="!loader && !camas">
+                            No se encontraron resultados
+                        </div>
+                        <div class="row" *ngIf="!loader">
+                            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12" *ngFor="let cama of camas; let i = index">
+                                <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="readOnly" (evtCama)="updateCama($event, i)"></app-cama>
                             </div>
                         </div>
 
@@ -67,6 +84,6 @@
         </section>
     </form>
 </ng-container>
-<ng-container *ngIf="showListaEspera">
-    <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='showListaEspera = $event'></listaEsperaInternacion>
+<ng-container *ngIf="camasService.showListaEspera">
+    <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
 </ng-container>

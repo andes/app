@@ -155,7 +155,7 @@
 <footer>
     <div class="row">
         <div class="col-6 text-left">
-            <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="cancelar() "></plex-button>
+            <plex-button class="float-left " type="primary " label="Volver" (click)="cancelar() "></plex-button>
         </div>
         <div class="col-6 text-right">
             <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar Internación" (click)="guardarPrestacion() "

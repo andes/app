@@ -48,11 +48,13 @@
                         <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i>
                         <!-- desocupada -->
                         <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
+                        <!-- ocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama-check {{cama.ultimoEstado.estado}}"></i>
                     </div>
                     <!-- </div> -->
                 </div>
                 <!-- Botonera laterar derecho -->
-                <div class="col-2 botonera-superior">
+                <div class="col-2 botonera-superior" *ngIf="!readOnly">
                     <!-- Liberar la cama -->
                     <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
                         *ngIf="cama.ultimoEstado?.idInternacion">
@@ -78,26 +80,26 @@
             <div class="footer row">
                 <div class="col-12 text-center">
                     <!-- devolver cama -->
-                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente">
+                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
                     <!-- disponible -->
                     <plex-button type="success" label="Internar paciente" title="Agregar paciente en cama" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
-                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible'">
+                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly">
                     </plex-button>
                     <!-- Preparar cama -->
                     <plex-button type="success" label="Preparar cama" title="Preparar cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                        *ngIf="cama.ultimoEstado.estado == 'desocupada'">
+                        *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
                     </plex-button>
                     <!-- Ver internacion -->
-                    <plex-button type="success" label="Ver internación" title="Ver internación" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?.id">
+                    <plex-button type="success" label="Ver internación" title="Ver internación" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?._id">
                     </plex-button>
                     <!-- Desbloquear cama -->
                     <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
-                        *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada'">
+                        *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly">
                     </plex-button>
                     <!-- Confirmar reparacion -->
                     <plex-button type="success" label="Confirmar reparación" title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; SetFecha()"
-                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
+                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion' && !readOnly">
                     </plex-button>
                 </div>
             </div>
