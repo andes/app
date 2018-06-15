@@ -28,8 +28,8 @@
                     </header>
                     <form class="plex-layout" #form="ngForm">
                         <div>
-                            <plex-select name="servicio" [required]="true" [data]="tiposSectores" idField="conceptId" labelField="term" [(ngModel)]="tipoSector" label="Tipo de sector"
-                                (change)="onSectorChange()" [readonly]="disabledPanel">
+                            <plex-select name="servicio" [required]="true" [data]="tiposSectores" idField="conceptId" labelField="term" [(ngModel)]="tipoSector"
+                                label="Tipo de sector" (change)="onSectorChange()" [readonly]="disabledPanel">
                             </plex-select>
                         </div>
 

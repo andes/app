@@ -1,30 +1,11 @@
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
-import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
-import * as enumerados from './../../utils/enumerados';
-// Services
-import { BarrioService } from './../../services/barrio.service';
-import { TipoEstablecimientoService } from './../../services/tipoEstablecimiento.service';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
-import { PaisService } from './../../services/pais.service';
-import { ProvinciaService } from './../../services/provincia.service';
-import { LocalidadService } from './../../services/localidad.service';
-// Interfaces
-import { IPais } from './../../interfaces/IPais';
-import { IBarrio } from './../../interfaces/IBarrio';
-import { ILocalidad } from './../../interfaces/ILocalidad';
-import { IUbicacion } from './../../interfaces/IUbicacion';
-import { IEdificio } from './../../interfaces/IEdificio';
-import { IDireccion } from './../../interfaces/IDireccion';
-import { IContacto } from './../../interfaces/IContacto';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
-import { ITipoEstablecimiento } from './../../interfaces/ITipoEstablecimiento';
-import { IProvincia } from './../../interfaces/IProvincia';
 import { Router, ActivatedRoute } from '@angular/router';
-import { SectoresItemComponent } from './sectores-item/sectores-item.component';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
+import { CamasService } from '../../modules/rup/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',
@@ -51,10 +32,10 @@ export class OrganizacionSectoresComponent implements OnInit {
 
     constructor(
         private organizacionService: OrganizacionService,
-        private tipoEstablecimientoService: TipoEstablecimientoService,
-        public plex: Plex, private server: Server,
+        public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
+        public CamaService: CamasService,
         private route: ActivatedRoute
     ) { }
 
@@ -82,7 +63,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Devuelve se la organizacion tiene sectores
      */
 
-    hasItems () {
+    hasItems() {
         return this.organizacion.mapaSectores && this.organizacion.mapaSectores.length > 0;
     }
 
@@ -107,7 +88,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Agrega un sector root
      */
 
-    onAddParent () {
+    onAddParent() {
         this.disabledPanel = false;
     }
 
@@ -140,10 +121,20 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
 
     removeItem($event) {
-        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-        if (index >= 0) {
-            this.organizacion.mapaSectores.splice(index, 1);
-        }
+        this.CamaService.camaXsector($event.id).subscribe(camas => {
+            if (camas.length <= 0) {
+                this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+                    let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                    if (confirmar && index >= 0) {
+                        this.organizacion.mapaSectores.splice(index, 1);
+                    }
+                });
+            } else {
+                this.plex.alert('El sector contiene camas', 'No se puede borrar');
+            }
+        });
+
+
     }
 
     /**
@@ -174,12 +165,12 @@ export class OrganizacionSectoresComponent implements OnInit {
     /**
      * Crea un sector item para agregar al arbol de sectores
      */
-    createObject (): ISectores {
+    createObject(): ISectores {
         if (!this.tipoSector) {
             return null;
         }
         if (this.unidadID !== this.tipoSector.conceptId) {
-            return  {
+            return {
                 nombre: this.itemName,
                 tipoSector: this.tipoSector,
                 hijos: []
@@ -201,7 +192,7 @@ export class OrganizacionSectoresComponent implements OnInit {
      * Cancela el modo edición
      */
 
-    onDissmis () {
+    onDissmis() {
         this.clearForm();
         this.selectedItem = null;
         this.disabledPanel = true;
