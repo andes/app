@@ -1089,7 +1089,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
 
         // Verifica que el paciente a agregar no sea él mismo
-        return (this.pacienteModel.id === pacienteCantidato.id)
+        return (this.pacienteModel.id === pacienteCantidato.id);
     }
 
     seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
