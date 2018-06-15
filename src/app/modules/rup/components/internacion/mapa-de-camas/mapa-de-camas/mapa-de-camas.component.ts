@@ -26,6 +26,9 @@ export class MapaDeCamasComponent implements OnInit {
     public layout: String = 'grid';
     public organizacion: IOrganizacion;
     public prestacion: any;
+    public fecha = new Date;
+    public readOnly = false;
+    public loader = true;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -62,18 +65,19 @@ export class MapaDeCamasComponent implements OnInit {
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();
-        this.camasService.getCamas({ idOrganizacion: this.auth.organizacion.id }).subscribe(camas => {
+        this.loader = true;
+        this.camasService.getCamasXFecha(this.auth.organizacion.id, this.fecha).subscribe(camas => {
             this.camas = camas;
-
-            this.camasService.getEstadoServicio(camas).subscribe(estado => {
-                this.estadoServicio = estado;
-            });
-
-            // creamos copia para reestablecer luego de los filtros
-            this.camasCopy = JSON.parse(JSON.stringify(this.camas));
-
-            // seteamos las opciones para los filtros del mapa de camas
-            this.setOpcionesFiltros(camas);
+            this.loader = false;
+            if (camas) {
+                this.camasService.getEstadoServicio(camas).subscribe(estado => {
+                    this.estadoServicio = estado;
+                });
+                // creamos copia para reestablecer luego de los filtros
+                this.camasCopy = JSON.parse(JSON.stringify(this.camas));
+                // seteamos las opciones para los filtros del mapa de camas
+                this.setOpcionesFiltros(camas);
+            }
         }, (err) => {
             if (err) {
                 this.plex.info('danger', err, 'Error');
@@ -85,8 +89,8 @@ export class MapaDeCamasComponent implements OnInit {
     /**
      * Limpiamos los filtros del mapa de camas
      *
-     * @memberof MapaDeCamasComponent
-     */
+ * @memberof MapaDeCamasComponent
+ */
     public limpiarFiltros() {
         this.filtros.habitacion = null;
         this.filtros.oxigeno = false;
@@ -228,5 +232,15 @@ export class MapaDeCamasComponent implements OnInit {
             this.refresh();
         }
         this.filtrar();
+    }
+
+    mapaDeCamaXFecha(reset) {
+        if (reset) {
+            this.readOnly = false;
+            this.fecha = new Date;
+        } else {
+            this.readOnly = true;
+        }
+        this.refresh();
     }
 }
