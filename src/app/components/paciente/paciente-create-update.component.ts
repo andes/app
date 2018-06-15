@@ -105,7 +105,9 @@ import {
 import { resolve } from 'q';
 import { forEach } from '@angular/router/src/utils/collection';
 import { ENGINE_METHOD_DIGESTS } from 'constants';
-
+import {
+    matching
+} from '@andes/match';
 
 @Component({
     selector: 'paciente-create-update',
@@ -126,6 +128,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
     tipoComunicacion: any[];
     parentescoModel: any[];
     relacionesBorradas: any[];
+    match = new matching();
+    weights = {
+        identity: 0.3,
+        name: 0.3,
+        gender: 0.1,
+        birthDate: 0.3
+    };
+    tipoDeMatching = 'Levenshtein';
 
     provincias: IProvincia[] = [];
     obrasSociales: IFinanciador[] = [];
@@ -908,6 +918,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             fechaNacimiento: fechaNacimiento
         };
     }
+
     public buscar() {
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
@@ -1058,7 +1069,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         this.loading = false;
                         this.PacientesRel = resultado;
                         this.esEscaneado = false;
-                        // }
                     }, (err) => {
                         this.loading = false;
                     });
@@ -1068,22 +1078,18 @@ export class PacienteCreateUpdateComponent implements OnInit {
     };
 
     public relacionRepetida(pacienteCantidato) {
-        //  Verifica que el paciente a agregar no se encuentre ya como pariente
+        // // Verifica que el paciente a agregar no se encuentre ya como pariente
         if (this.pacienteModel.relaciones) {
+
             for (let i = 0; i < this.pacienteModel.relaciones.length; i++) {
-                if (this.pacienteModel.relaciones[i].documento === pacienteCantidato.documento
-                    && this.pacienteModel.relaciones[i].nombre === pacienteCantidato.nombre
-                    && this.pacienteModel.relaciones[i].apellido === pacienteCantidato.apellido) {
+                if (this.pacienteModel.relaciones[i].referencia === pacienteCantidato.id) {
                     return true;
                 }
             }
         }
 
         // Verifica que el paciente a agregar no sea él mismo
-        return (this.pacienteModel.documento === pacienteCantidato.documento
-            && this.pacienteModel.sexo === pacienteCantidato.sexo
-            && this.pacienteModel.nombre === pacienteCantidato.nombre
-            && this.pacienteModel.apellido === pacienteCantidato.apellido);
+        return (this.pacienteModel.id === pacienteCantidato.id)
     }
 
     seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
