@@ -26,7 +26,9 @@
                                     <tr>
                                         <th>Fecha</th>
                                         <th>Movimiento</th>
+                                        <th>Ubicación</th>
                                         <th>Observaciones</th>
+                                        <th>Observaciones de Prestamo Manual</th>
                                         <th>Estado de devolución</th>
                                     </tr>
                                 </thead>
@@ -52,11 +54,14 @@
                                             <br>
                                             <span class="badge-warning float-left">Solicitud Manual</span>
                                         </td>
-                                        <td *ngIf="!movimiento.datosSolicitudManual">
-                                            {{movimiento.datosDevolucion.observaciones}}
+                                        <td>
+                                            <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.espacioFisico.nombre}}</span>
                                         </td>
-                                        <td *ngIf="movimiento.datosSolicitudManual">
-                                            {{movimiento.datosSolicitudManual.observaciones}}
+                                        <td>
+                                            {{movimiento.estado == 'En archivo' ? movimiento.datosDevolucion.observaciones : movimiento.datosPrestamo.observaciones}}
+                                        </td>
+                                        <td>
+                                            <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
                                         </td>
                                         <td>
                                             {{movimiento.datosDevolucion.estado}}
