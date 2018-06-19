@@ -74,7 +74,6 @@ export class ListaEsperaInternacionComponent implements OnInit {
     }
 
     filtrar() {
-        console.log(this.prestacionesPendientes[0]);
         // if (this.select.estados || this.select.nombre) {
         const regex_nombre = new RegExp('.*' + this.select.nombre + '.*', 'ig');
         this.prestacionesPendientes = this.prestacionesPendientesCopy.filter((p) => {
