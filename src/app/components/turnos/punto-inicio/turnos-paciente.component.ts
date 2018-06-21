@@ -105,7 +105,7 @@ export class TurnosPacienteComponent implements OnInit {
 
             let agenda = resultado;
             let datosTurno = { pacienteId: this._turnos.id };
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
+            this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
                 this.turnosPaciente = turnos.filter(t => {
                     return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
                 });

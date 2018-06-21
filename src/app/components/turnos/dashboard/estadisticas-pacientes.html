@@ -149,7 +149,7 @@
                         <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} |
                             <span>{{turno.estado}}</span>
                         </div>
-                        <div>{{turno.tipoPrestacion.nombre}}</div>
+                        <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
                         <div *ngFor="let profesional of turno.profesionales">
                             {{profesional | profesional}}
                         </div>

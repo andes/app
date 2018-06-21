@@ -10,7 +10,7 @@
         <div>
             <div *ngFor="let turno of turnosPaciente; let indiceTurno = index">
 
-                <div *ngIf="turno.tipoPrestacion.term" class="accordion-dashboard">
+                <div *ngIf="turno.tipoPrestacion?.term" class="accordion-dashboard">
 
                     <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                         <!-- Panel -->
