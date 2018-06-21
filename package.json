@@ -5,13 +5,13 @@
     "angular-cli": {},
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve --aot",
         "test": "ng test",
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build:prod": "ng build --env=prod --prod --aot=true",
-        "build:test": "ng build --env=test",
-        "build:demo": "ng build --env=demo"
+        "build:test": "ng build --env=test --aot",
+        "build:demo": "ng build --env=demo --aot"
     },
     "repository": {
         "type": "git",
@@ -53,7 +53,7 @@
         "zone.js": "^0.8.20"
     },
     "devDependencies": {
-        "@angular/cli": "^1.7.3",
+        "@angular/cli": "^1.7.4",
         "@angular/compiler-cli": "^5.0.0",
         "@types/jasmine": "^2.2.30",
         "@types/node": "^9.4.7",

@@ -1,0 +1,34 @@
+<plex-layout>
+    <plex-layout-main>
+        <header>
+            <div class="clearfix">
+                <div class="page-title">Estadísticas - RUP</div>
+            </div>
+        </header>
+        <div class="row">
+            <div class="col-3">
+                <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
+            </div>
+            <div class="col-3">
+                <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
+            </div>
+            <div class="col-4">
+                <plex-select [data]="prestaciones" idField="conceptId" labelField="term"  label="Prestacion" [(ngModel)]="prestacion" (change)="onPrestacionChange()" ></plex-select>
+            </div>    
+            <div class="col-1">
+                <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar"></plex-bool>
+            </div>
+            <div class="col-1">
+                <plex-button type="success" label="Filtrar" (click)="onChange()"></plex-button>
+            </div>
+        </div>
+        <div class="row" *ngIf="detallar && prestacionesHijas.length > 0">
+            <ng-container *ngFor="let hijo of prestacionesHijas">
+                <div class="col-3">
+                    <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
+                </div>
+            </ng-container>
+        </div>
+
+    </plex-layout-main>
+</plex-layout>
