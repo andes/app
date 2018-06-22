@@ -2,6 +2,12 @@
     <div class="col-12">
         <plex-text label="Número de Carpeta" name="nroCarpeta" [(ngModel)]="carpetaPaciente.nroCarpeta">
         </plex-text>
+        <ul class="list-group">
+            <li *ngFor="let carpeta of carpetaEfectores" class="list-group-item">
+                {{carpeta.organizacion.nombre}}: {{carpeta.nroCarpeta}}
+            </li>
+        </ul>
+
     </div>
 
     <hr>
