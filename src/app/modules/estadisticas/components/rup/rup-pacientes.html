@@ -5,30 +5,88 @@
                 <div class="page-title">Estadísticas - RUP</div>
             </div>
         </header>
-        <div class="row">
-            <div class="col-3">
-                <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
-            </div>
-            <div class="col-3">
-                <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
-            </div>
-            <div class="col-4">
-                <plex-select [data]="prestaciones" idField="conceptId" labelField="term"  label="Prestacion" [(ngModel)]="prestacion" (change)="onPrestacionChange()" ></plex-select>
-            </div>    
-            <div class="col-1">
-                <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar"></plex-bool>
-            </div>
-            <div class="col-1">
-                <plex-button type="success" label="Filtrar" (click)="onChange()"></plex-button>
-            </div>
-        </div>
-        <div class="row" *ngIf="detallar && prestacionesHijas.length > 0">
-            <ng-container *ngFor="let hijo of prestacionesHijas">
+        <ng-container *ngIf="!showData">
+            <div class="row">
                 <div class="col-3">
-                    <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
+                    <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
                 </div>
-            </ng-container>
-        </div>
+                <div class="col-3">
+                    <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
+                </div>
+                <div class="col-4">
+                    <plex-select [data]="prestaciones" idField="conceptId" labelField="term"  label="Prestacion" [(ngModel)]="prestacion" (change)="onPrestacionChange()" ></plex-select>
+                </div>    
+                <div class="col-1">
+                    <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar"></plex-bool>
+                </div>
+                <div class="col-1">
+                    <plex-button type="success" label="Filtrar" (click)="onChange()"></plex-button>
+                </div>
+            </div>
+            <div class="row" *ngIf="detallar && prestacionesHijas.length > 0">
+                <ng-container *ngFor="let hijo of prestacionesHijas">
+                    <div class="col-3">
+                        <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
+                    </div>
+                </ng-container>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="showData">
+            <div class="row">
+                <div class="col-3">
+                    Desde: {{ desde | date: 'dd/MM/yyyy' }}
+                </div>
+                <div class="col-3">
+                    Hasta: {{ hasta | date: 'dd/MM/yyyy' }}
+                </div>
+                <div class="col-3">
+                    Prestación: {{ prestacion.term }}
+                </div>
+                <div class="col-3">
+                    <plex-button type="info" label="Filtrar" (click)="showData = false;" ></plex-button>
+                </div>
+            </div>
+        </ng-container>
+        <plex-tabs *ngIf="showData">
+            <plex-tab label="Prestaciones">
+                <div *ngFor="let presta of tablas">
+                    <h2> {{presta.prestacion.term}} </h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Sexo/Edad </th>
+                                <th>0</th><th>10</th><th>20</th><th>30</th><th>40</th><th>50</th><th>60</th><th>70</th><th>80</th><th>90</th><th>Total</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let row of presta.data; let i = index;">
+                            <td scope="row" > {{ i === 0 ?  'Masculino' :  (i === 1 ? 'Femenino' : 'Total')  }} </td>
+                            <td *ngFor="let column of row">
+                                {{ column }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </plex-tab>
+            <plex-tab label="Registros">
+                <h2> Conceptos utilizados </h2>
+                <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Concepto </th>
+                                <th> SemanticTag </th>
+                                <th> Cantidad </th>
+                                <th> Relaciones </th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let row of registros; let i = index;">
+                            <td> {{ row.concepto.term  }} </td>
+                            <td> {{ row.concepto.semanticTag  }} </td>
+                            <td> {{ row.count  }} </td>
+                            <td> {{ row.relaciones.length  }} - {{ buscarRelaciones(row) }} </td>
+                        </tr>
+                    </table>
+            </plex-tab>
+        </plex-tabs>
 
     </plex-layout-main>
 </plex-layout>

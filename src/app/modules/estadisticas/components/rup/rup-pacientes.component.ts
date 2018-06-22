@@ -9,6 +9,8 @@ import { SnomedService } from '../../../../services/term/snomed.service';
 export class RupPacientesComponent implements AfterViewInit {
     @HostBinding('class.plex-layout') layout = true;
 
+    showData = false;
+
     // Filtros
     public desde: Date = moment(new Date()).startOf('month').toDate();
     public hasta: Date = new Date();
@@ -21,6 +23,9 @@ export class RupPacientesComponent implements AfterViewInit {
     public filtros = {
 
     };
+
+    public registros = [];
+    public tablas: any = [];
 
     constructor(public estService: EstRupService, public snomed: SnomedService) { }
 
@@ -38,9 +43,61 @@ export class RupPacientesComponent implements AfterViewInit {
     }
 
     onChange() {
+        this.tablas = [];
+        this.registros = [];
+
         let prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
         this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
-            console.log(resultados);
+            this.showData = true;
+            this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
+            this.registros = resultados.registros;
         });
     }
+
+    /*
+        decada: 7
+        sexo: "femenino"
+    */
+
+    createTable (prestaciones, data) {
+        prestaciones.forEach((prestacion) => {
+            let items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
+            if (items.length > 0) {
+                let info = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
+
+                items.forEach((item) => {
+                    let d = item._id.decada > 9 ? 9 : item._id.decada;
+                    let s = item._id.sexo === 'masculino' ? 0 : 1;
+
+                    info[s][d] += item.count;
+                    info[s][10] += item.count; // total file
+                    info[2][d] += item.count; // total columna
+                    info[2][10] += item.count; // total prestacion
+                });
+
+
+                let table = {
+                    prestacion: prestacion,
+                    data: info
+                };
+
+                this.tablas.push(table);
+
+            }
+        });
+    }
+
+    buscarRelaciones (row) {
+        let names = [];
+        row.relaciones.forEach((item) => {
+            this.registros.forEach((reg) => {
+                let i = reg.ids.indexOf(item);
+                if (i >= 0) {
+                    names.push(reg.concepto.term);
+                }
+            });
+        });
+        return names;
+    }
+
 }
