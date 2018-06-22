@@ -7,11 +7,12 @@ import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'carpeta-paciente',
-    templateUrl: 'carpeta-paciente.html'
+    templateUrl: 'carpeta-paciente.html',
+    styles: [' .fondoNegro { background-color: #002738 !important; color: white;} .btnEdit {margin-top: 2.45em;}']
 })
 
 export class CarpetaPacienteComponent implements OnInit {
-
+    idOrganizacion = this.auth.organizacion.id;
     indiceCarpeta = -1;
     carpetaEfectores = [];
     nroCarpetaOriginal: string;
@@ -24,6 +25,7 @@ export class CarpetaPacienteComponent implements OnInit {
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
     carpetaPaciente: any;
     paciente: any;
+    showEdit = false;
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
@@ -99,16 +101,27 @@ export class CarpetaPacienteComponent implements OnInit {
             this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(resultadoCarpeta => {
                 this.guardarCarpetaEmit.emit(true);
                 this.plex.toast('success', 'Nuevo número de carpeta establecido');
+                this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
             }, error => {
                 this.plex.toast('danger', 'El número de carpeta ya existe');
+                this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
             });
         } else {
             this.guardarCarpetaEmit.emit(true);
         }
+        this.showEdit = false;
     }
 
     cancelar() {
         this.cancelarCarpetaEmit.emit(true);
     }
 
+    cerrarEdicion() {
+        this.showEdit = false;
+        this.guardarCarpetaEmit.emit(true);
+    }
+
+    editar() {
+        this.showEdit = true;
+    }
 }
