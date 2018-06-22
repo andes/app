@@ -55,19 +55,28 @@
                                             <span class="badge-warning float-left">Solicitud Manual</span>
                                         </td>
                                         <td>
-                                            <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.espacioFisico.nombre}}</span>
+                                            <span *ngIf="movimiento.datosSolicitudManual">
+                                                {{movimiento.datosSolicitudManual.espacioFisico.nombre}}
+                                            </span>
+                                            <span *ngIf="!movimiento.datosSolicitudManual">
+                                                {{movimiento.datosPrestamo.turno.espacioFisico?.nombre}} {{movimiento.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{movimiento.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
+                                            </span>
                                         </td>
                                         <td>
-                                            {{movimiento.estado == 'En archivo' ? movimiento.datosDevolucion.observaciones : movimiento.datosPrestamo.observaciones}}
+                                            <span *ngIf="movimiento.estado === 'En archivo'">
+                                                {{movimiento.datosDevolucion.observaciones}}
+                                            </span>
+                                            <span *ngIf="movimiento.estado === 'Prestada'">
+                                                {{movimiento.datosPrestamo.observaciones}}
+                                            </span>
                                         </td>
                                         <td>
                                             <span *ngIf="movimiento.datosSolicitudManual">{{movimiento.datosSolicitudManual.observaciones}}</span>
                                         </td>
-                                        <td *ngIf="movimiento.datosSolicitudManual">
-                                            {{movimiento.datosSolicitudManual.observaciones}}
-                                        </td>
                                         <td>
-                                            {{movimiento.datosDevolucion.estado}}
+                                            <span *ngIf="movimiento.estado === 'En archivo'">
+                                                {{movimiento.datosDevolucion.estado}}
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
