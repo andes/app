@@ -8,7 +8,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 @Component({
     selector: 'carpeta-paciente',
     templateUrl: 'carpeta-paciente.html',
-    styles: [' .fondoNegro { background-color: #002738 !important; color: white;} .btnEdit {margin-top: 2.45em;}']
+    styles: [' .fondoNegro { background-color: #002738 !important; color: white;} .btnEdit {margin-top: 0.5em; margin-left: 0.5em; margin-right: 0.5em;}']
 })
 
 export class CarpetaPacienteComponent implements OnInit {
@@ -16,6 +16,7 @@ export class CarpetaPacienteComponent implements OnInit {
     indiceCarpeta = -1;
     carpetaEfectores = [];
     nroCarpetaOriginal: string;
+    showList = true;
     @Input() turnoSeleccionado: ITurno;
     @Input() pacienteSeleccionado: IPaciente;
     @Output() guardarCarpetaEmit = new EventEmitter<boolean>();
@@ -48,7 +49,8 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
                     this.paciente = resultado;
                     this.getCarpetas(this.paciente);
-                });
+                }
+                );
 
             } else {
                 if (this.pacienteSeleccionado) {
@@ -67,13 +69,16 @@ export class CarpetaPacienteComponent implements OnInit {
         if (paciente.carpetaEfectores.length > 0) {
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
-            this.carpetaPaciente = paciente.carpetaEfectores.find((elemento, indice) => {
+            let result = paciente.carpetaEfectores.find((elemento, indice) => {
                 let resultado = (elemento.organizacion as any)._id === this.auth.organizacion.id;
                 if (resultado) {
                     this.indiceCarpeta = indice;
                 }
                 return resultado;
             });
+            if (result) { // se encontró una carpeta existente?
+                this.carpetaPaciente = result;
+            }
             this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
 
         }
@@ -110,6 +115,7 @@ export class CarpetaPacienteComponent implements OnInit {
             this.guardarCarpetaEmit.emit(true);
         }
         this.showEdit = false;
+        this.showList = true;
     }
 
     cancelar() {
@@ -123,5 +129,9 @@ export class CarpetaPacienteComponent implements OnInit {
 
     editar() {
         this.showEdit = true;
+    }
+
+    crearCarpetaPaciente() {
+        this.showList = false;
     }
 }
