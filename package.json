@@ -9,8 +9,8 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "build:prod": "ng build --env=prod --prod --aot=true",
-    "build:test": "ng build --env=test",
+    "build:prod": "ng build --configuration=production",
+    "build:test": "ng build --configuration=test",
     "build:demo": "ng build --env=demo"
   },
   "repository": {
@@ -50,6 +50,7 @@
     "ng2-drag-drop": "^1.5.1",
     "ng2-slugify": "^0.1.0",
     "rxjs": "^6.2.1",
+    "rxjs-compat": "^6.2.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
