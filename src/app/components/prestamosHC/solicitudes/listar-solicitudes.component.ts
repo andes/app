@@ -215,9 +215,9 @@ export class ListarSolicitudesComponent implements OnInit {
             let existeSolicitud = false;
             if (x.fecha.getMonth() === carpeta.fecha.getMonth() && x.fecha.getDate() === carpeta.fecha.getDate() && x.paciente.documento === carpeta.paciente.documento) {
                 // Si la carpeta seleccionada tiene la misma fecha que otra carpeta ya seleccionada, no permite la seleccion
-                existeSolicitud = true
+                existeSolicitud = true;
             }
-            return existeSolicitud
+            return existeSolicitud;
         });
     }
 
@@ -229,7 +229,7 @@ export class ListarSolicitudesComponent implements OnInit {
                     this.plex.toast('danger', 'No se puede prestar la carpeta del paciente más de una vez para el mismo día', 'Información', 2000);
                 } else {
                     this.carpetasSeleccionadas.push(carpeta);
-                    this.mostrarMsjMultiCarpeta = false
+                    this.mostrarMsjMultiCarpeta = false;
                 }
             } else {
                 let estaSelect = false;
@@ -237,7 +237,7 @@ export class ListarSolicitudesComponent implements OnInit {
                     if (carpeta.idSolicitud === undefined) {
                         estaSelect = x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id;
                         if (this.switchDiaPaciente(carpeta) >= 0) {
-                            this.mostrarMsjMultiCarpeta = false
+                            this.mostrarMsjMultiCarpeta = false;
                         }
                     }
                     return estaSelect;
@@ -257,9 +257,9 @@ export class ListarSolicitudesComponent implements OnInit {
                     this.carpetasSeleccionadas.push(carpeta);
                 }
                 if (diaPaciente >= 0) {
-                    this.mostrarMsjMultiCarpeta = true
+                    this.mostrarMsjMultiCarpeta = true;
                 }
-            })
+            });
         } else {
             this.carpetasSeleccionadas = [];
         }
