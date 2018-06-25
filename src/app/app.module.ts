@@ -239,10 +239,13 @@ import { PercentiloPerimetroCefalicoComponent } from './modules/rup/components/e
 import { RegistrarMedidasAntropometricasComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricas.component';
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { PercentiloDeTensionArterialComponent } from './modules/rup/components/elementos/percentiloDeTensionArterial.component';
-import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/ConsultaDeNinoSanoM2A.component';
+import { ConsultaDeNinoSanoComponent } from './modules/rup/components/elementos/consultaDeNinoSano.component';
+import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoM2A.component';
+import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
 import { DesarrolloPsicomotorNormalComponent } from './modules/rup/components/elementos/desarrolloPsicomotorNormal.component';
 import { DesarrolloPsicomotorTrastornoComponent } from './modules/rup/components/elementos/desarrolloPsicomotorTrastorno.component';
+import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -301,6 +304,14 @@ import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 
+
+import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
+
+/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+registerLocaleData(localeEs, 'es');
+
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'EvolucionProblemaDefaultComponent': EvolucionProblemaDefaultComponent,
@@ -344,10 +355,13 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasComponent': RegistrarMedidasAntropometricasComponent,
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
+    'ConsultaDeNinoSanoComponent': ConsultaDeNinoSanoComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
+    'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
     'DesarrolloPsicomotorComponent': DesarrolloPsicomotorComponent,
     'DesarrolloPsicomotorNormalComponent': DesarrolloPsicomotorNormalComponent,
     'DesarrolloPsicomotorTrastornoComponent': DesarrolloPsicomotorTrastornoComponent,
+    'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
 };
 
 let RUPComponentsArray = [
@@ -395,19 +409,16 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasComponent,
     TensionArterialPediatricaComponent,
     PercentiloDeTensionArterialComponent,
+    ConsultaDeNinoSanoComponent,
     ConsultaDeNinoSanoM2AComponent,
+    ConsultaDeNinoSanoE2Y3AComponent,
     DesarrolloPsicomotorComponent,
     DesarrolloPsicomotorNormalComponent,
-    DesarrolloPsicomotorTrastornoComponent
+    DesarrolloPsicomotorTrastornoComponent,
+    RegistrarMedidasAntropometricasNinoM2AComponent
 ];
 
-import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 
-/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
-import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
-
-registerLocaleData(localeEs, 'es');
 
 
 // Main module
