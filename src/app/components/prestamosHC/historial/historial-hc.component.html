@@ -64,10 +64,10 @@
                                         </td>
                                         <td>
                                             <span *ngIf="movimiento.estado === 'En archivo'">
-                                                {{movimiento.datosDevolucion.observaciones}}
+                                                {{movimiento.datosDevolucion?.observaciones}}
                                             </span>
                                             <span *ngIf="movimiento.estado === 'Prestada'">
-                                                {{movimiento.datosPrestamo.observaciones}}
+                                                {{movimiento.datosPrestamo?.observaciones}}
                                             </span>
                                         </td>
                                         <td>
@@ -75,7 +75,7 @@
                                         </td>
                                         <td>
                                             <span *ngIf="movimiento.estado === 'En archivo'">
-                                                {{movimiento.datosDevolucion.estado}}
+                                                {{movimiento.datosDevolucion?.estado}}
                                             </span>
                                         </td>
                                     </tr>
