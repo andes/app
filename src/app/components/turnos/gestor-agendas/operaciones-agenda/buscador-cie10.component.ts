@@ -75,7 +75,7 @@ export class BuscadorCie10Component implements OnInit, OnDestroy {
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
                 return;
-            };
+            }
 
             // levantamos el valor que escribimos en el input
             // let search = this.searchTerm.trim();

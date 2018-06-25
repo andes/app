@@ -28,9 +28,7 @@
         ],
         "no-arg": true,
         "no-bitwise": true,
-        "no-console": [
-            true
-        ],
+        "no-console": [false, "log", "error"],
         "no-construct": true,
         "no-debugger": true,
         "no-duplicate-variable": true,

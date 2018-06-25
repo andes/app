@@ -70,7 +70,7 @@ export class UsuarioUpdateComponent implements OnInit {
                         });
                     } else {
                         this.loadUser();
-                    };
+                    }
                 }
             } else {
                 this.router.navigate(['./inicio']);

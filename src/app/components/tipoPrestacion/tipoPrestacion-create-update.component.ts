@@ -32,7 +32,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
     @Input('seleccion') seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
 
-    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { };
+    constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { }
 
     // ****************************************** //
     ngOnInit() {
@@ -129,14 +129,14 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 .replace(/\s/g, '-');
             this.modelo.componente.ruta = 'rup/' + granularidadString + '/' + nombreCarpeta + '/' + this.modelo.key + '.component.ts';
         } // else
-    }; // ruta()
+    } // ruta()
 
 
     // ****************************************** //
     // listado de tipos de prestaciones a utilizar
     utilizarTipoPrestaciones(event) {
         this.tipoPrestacionService.get({}).subscribe(event.callback);
-    }; // utilizarTipoPrestacion(event)
+    } // utilizarTipoPrestacion(event)
 
 
     getTiposProblemas(event) {
@@ -176,14 +176,14 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
                 this.data.emit(tipoPrestacion);
             } // if (tipoPrestacion)
         }); // post
-    }; // onSave()
+    } // onSave()
 
 
     // ****************************************** //
     onCancel() {
         this.data.emit(null);
         return false;
-    }; // onCancel()
+    } // onCancel()
 
 
 

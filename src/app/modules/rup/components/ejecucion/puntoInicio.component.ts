@@ -374,7 +374,7 @@ export class PuntoInicioComponent implements OnInit {
                     if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
                     ) {
                         return p;
-                    };
+                    }
                 });
                 _prestaciones.forEach(unaPrestacion => {
                     this.comprobarPrestacionesPendientes(unaPrestacion);

@@ -684,12 +684,12 @@ export class PlanificarAgendaComponent implements OnInit {
             let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
             query.organizacion = efector.id;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
@@ -709,7 +709,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.validarTodo();
         if (this.modelo.id === '0') {
             delete this.modelo.id;
-        };
+        }
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
     }

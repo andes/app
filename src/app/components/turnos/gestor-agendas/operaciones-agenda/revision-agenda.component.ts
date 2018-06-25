@@ -314,7 +314,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
-        };
+        }
         let datosTurno = {};
         if (this.diagnosticos) {
             this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;

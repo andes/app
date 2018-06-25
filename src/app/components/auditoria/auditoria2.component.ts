@@ -159,7 +159,7 @@ export class Auditoria2Component implements OnInit {
                         }
                     }
                 });
-            };
+            }
         });
     }
 

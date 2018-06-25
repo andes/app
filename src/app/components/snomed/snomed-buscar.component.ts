@@ -151,7 +151,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
                 return;
-            };
+            }
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);

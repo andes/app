@@ -814,7 +814,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     if (!resultado) {
                         this.save(valid);
                         this.disableGuardar = true;
-                    };
+                    }
                 });
             } else {
                 this.save(valid);
@@ -996,7 +996,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     }
 
                                 } else {
-                                    ///Cargar como paciente validado pq está escaneado
+                                    /// Cargar como paciente validado pq está escaneado
                                     this.buscarPacRel = '';
                                     this.PacientesRel = null;
                                     let pacienteGuardar: any = {

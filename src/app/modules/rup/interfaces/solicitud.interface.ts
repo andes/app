@@ -29,4 +29,4 @@ export class ISolicitud {
     organizacionDestino: any;
     profesionalesDestino: any[];
 
-};
+}

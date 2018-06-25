@@ -66,7 +66,7 @@ export class CarpetaPacienteComponent implements OnInit {
                     }
                 });
             }
-        };
+        }
     }
 
     guardarCarpetaPaciente() {

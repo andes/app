@@ -29,7 +29,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     // Getter que previene el error de AOT
     // https://github.com/angular/angular-cli/issues/6099
-    get formData(): any { return this.createForm; };
+    get formData(): any { return this.createForm; }
 
     createForm: FormGroup;
     // Definición de arreglos

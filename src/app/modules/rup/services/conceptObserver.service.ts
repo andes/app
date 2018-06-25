@@ -20,7 +20,7 @@ export class ConceptObserverService {
     if (!this.observers[registro.concepto.conceptId]) {
 
       this.observers[registro.concepto.conceptId] = new BehaviorSubject<IPrestacionRegistro>(registro);
-    };
+    }
     // Filtra para que notifique al mismo elemento que lo generó el cambio
     return this.observers[registro.concepto.conceptId].pipe(filter((value, index) => value !== registro));
   }
@@ -47,4 +47,4 @@ export class ConceptObserverService {
     this.observers = {};
   }
 
-};
+}

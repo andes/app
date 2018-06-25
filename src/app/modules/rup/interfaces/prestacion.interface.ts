@@ -69,4 +69,4 @@ export class IPrestacion {
     public completarRegistros() {
         throw Error('No implementado');
     }
-};
+}

@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
     .pane{
       padding: 1em;
       background: white;
-    }   
+    }
   `],
   template: `
     <div [hidden]="!active" class="pane pl-0 pr-0">
