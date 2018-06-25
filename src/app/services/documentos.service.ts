@@ -30,7 +30,7 @@ export class DocumentosService {
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
         return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options).pipe(
             map(this.extractData),
-            catchError(this.handleError),);
+            catchError(this.handleError));
     }
 
     private handleError(error: any) {
