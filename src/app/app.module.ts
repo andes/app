@@ -69,6 +69,7 @@ import { LogService } from './services/log.service';
 import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
+import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -228,6 +229,8 @@ import { EgresoInternacionComponent } from './modules/rup/components/elementos/e
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
+import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -251,6 +254,10 @@ import { ArbolPermisosComponent } from './components/usuario/arbolPermisos.compo
 
 // REPORTES
 import { ReporteC2Component } from './components/reportes/reporteC2.component';
+import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
+import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
+import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
+
 
 // Locales
 import { AppComponent } from './app.component';
@@ -281,6 +288,7 @@ import { HistorialCarpetasComponent } from './components/prestamosHC/historial/h
 import { PrestarHcComponent } from './components/prestamosHC/solicitudes/prestar-hc.component';
 import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver-hc.component';
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
+import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -314,6 +322,8 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
+    'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
 };
 
 let RUPComponentsArray = [
@@ -349,12 +359,17 @@ let RUPComponentsArray = [
     EjecucionInternacionComponent,
     EgresoInternacionComponent,
     PasesCamaComponent,
-    InformeEpicrisisComponent
+    InformeEpicrisisComponent,
+    OdontologiaDefaultComponent,
+    CircunferenciaCinturaComponent
 ];
+
+import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+
 registerLocaleData(localeEs, 'es');
 
 
@@ -371,6 +386,7 @@ registerLocaleData(localeEs, 'es');
         Ng2DragDropModule,
         ChartsModule,
         routing,
+        EstadisticaModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })
@@ -407,6 +423,9 @@ registerLocaleData(localeEs, 'es');
         SolicitudTurnoVentanillaComponent, ListaSolicitudTurnoVentanillaComponent, ActivarAppComponent,
         BusquedaUsuarioComponent, UsuarioCreateComponent, UsuarioUpdateComponent,
         ReporteC2Component,
+        ConsultaDiagnosticoComponent,
+        CantidadConsultaXPrestacionComponent,
+        EncabezadoReportesComponent,
         ListarTurnosComponent, ListarCarpetasComponent,
         MapaEspacioFisicoComponent, SuspenderAgendaComponent,
         ResumenComponent,
@@ -436,6 +455,7 @@ registerLocaleData(localeEs, 'es');
         DevolverHcComponent,
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
+        SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent
     ],
@@ -487,6 +507,7 @@ registerLocaleData(localeEs, 'es');
         SisaService,
         SintysService,
         AnsesService,
+        RenaperService,
         LogPacienteService,
         UsuarioService,
         PermisosService,

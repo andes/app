@@ -54,5 +54,5 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 this.registro.valor.solicitudPrestacion['autocitado'] = true;
             }
         }
-    } 
+    }
 }

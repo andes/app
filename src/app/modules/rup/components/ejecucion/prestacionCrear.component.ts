@@ -156,10 +156,10 @@ export class PrestacionCrearComponent implements OnInit {
         let params = {
             disponiblesProfesional: true,
             idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
-            fechaDesde: moment(new Date()).startOf('day'),
-            fechaHasta: moment(new Date()).endOf('month'),
+            fechaDesde: moment(new Date()).startOf('day').toDate(),
             estados: ['disponible', 'publicada'],
-            organizacion: this.auth.organizacion.id
+            organizacion: this.auth.organizacion.id,
+            profesionales: [this.auth.profesional.id]
         };
         this.servicioAgenda.get(params).subscribe(agendas => {
             this.agendasAutocitar = agendas;

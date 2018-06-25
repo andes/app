@@ -54,11 +54,9 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
     comprobarFecha(agenda: IAgenda): Boolean {
         // Genero una fecha 48 horas en el futuro...
         let fechaLimite = moment(new Date()).add(2, 'days');
-
         if (agenda.horaInicio <= fechaLimite.toDate()) {
             return false;
         }
-
         return true;
     }
 

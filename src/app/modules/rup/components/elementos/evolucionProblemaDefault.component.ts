@@ -96,7 +96,7 @@ export class EvolucionProblemaDefaultComponent extends RUPComponent implements O
                         this.origenTransformacion(this.registro.valor.idRegistroTransformado);
                     }
                 } else {
-                    this.registro.valor.estado = 'activo';
+                    // this.registro.valor.estado = 'activo';
                     this.friendlyDate(this.registro.valor.fechaInicio);
                 }
             }

@@ -2,7 +2,6 @@ import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import * as moment from 'moment';
-
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 
@@ -20,6 +19,7 @@ export class EstadisticasAgendasComponent implements OnInit {
     cantTurnosSuspendidos = 0;
     turnosVerificados = 0;
     turnosCodificados = 0;
+    turnosAuditados = 0;
     // Inicialización
     constructor(public serviceTurno: TurnoService, public plex: Plex, public auth: Auth) { }
 
@@ -74,11 +74,10 @@ export class EstadisticasAgendasComponent implements OnInit {
     cantidadTurnosCodificados() {
         let datosTurno = { codificado: true };
         this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-            this.turnosCodificados = turnos.length;
+            this.turnosAuditados = turnos.filter(item => item.asistencia &&
+                (item.asistencia === 'noAsistio' || item.asistencia === 'sinDatos' ||
+                    (item.diagnostico.codificaciones[0] && item.diagnostico.codificaciones[0].codificacionAuditoria && item.diagnostico.codificaciones[0].codificacionAuditoria.codigo))).length;
         });
     }
 
-
-
 }
-
