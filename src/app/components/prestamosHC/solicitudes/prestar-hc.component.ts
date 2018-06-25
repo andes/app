@@ -72,7 +72,7 @@ export class PrestarHcComponent implements OnInit {
 
     }
 
-    save(event) {
+    save() {
         this.prestamo.organizacion = this.auth.organizacion;
         if (this.prestamo && this.prestamo.datosSolicitudManual) {
             this.prestamo.datosSolicitudManual.observaciones = this.prestarHC.observaciones;
