@@ -17,6 +17,9 @@ import { PacienteService } from '../../../../../services/paciente.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { InternacionService } from '../../../services/internacion.service';
 import { CamasService } from '../../../services/camas.service';
+import { DocumentosService } from '../../../../../services/documentos.service';
+import { saveAs } from 'file-saver';
+import { Slug } from 'ng2-slugify';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',
@@ -96,6 +99,9 @@ export class EjecucionInternacionComponent implements OnInit {
         'semanticTag': 'elemento de registro'
     };
 
+    // Usa el keymap 'default'
+    private slug = new Slug('default');
+
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -106,6 +112,7 @@ export class EjecucionInternacionComponent implements OnInit {
         private servicioPaciente: PacienteService,
         public elementosRUPService: ElementosRUPService,
         public servicioInternacion: InternacionService,
+        private servicioDocumentos: DocumentosService,
         private location: Location) { }
 
     ngOnInit() {
@@ -288,6 +295,17 @@ export class EjecucionInternacionComponent implements OnInit {
                 this.router.navigate(['rup/ejecucion', epicrisis[0].id]);
             }
         });
+    }
+
+
+    descargarPulsera() {
+        this.servicioPrestacion.internacionesXPaciente(this.prestacion.paciente, 'ejecucion').subscribe(internacion => {
+            let nombreArchivo = 'pulsera';
+            let content = this.servicioInternacion.getCodigoPulsera(this.auth.organizacion, internacion);
+            let blob = new Blob([content], { type: 'text/plain' });
+            saveAs(blob, nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.txt');
+        });
+
     }
 
 }
