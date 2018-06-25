@@ -7,7 +7,7 @@
             </header>
             <p>Consultas de afiliación a obras sociales de salud.</p>
             <div class="buscador">
-                <plex-text [(ngModel)]="searchTerm" name="searchTerm" (keyup)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
+                <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
                     prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
             </div>
             <!--Loader-->
@@ -36,17 +36,20 @@
                         <td *ngIf="usuario.dni; else sinDatos">
                             {{usuario.dni}}
                         </td>
-                        <td *ngIf="usuario.financiador; else programaProFe">
+                        <td *ngIf="usuario.financiador; else programaIC">
                             {{usuario.financiador}}
                         </td>
-                        <td *ngIf="usuario.transmite; else sinDatos">
+                        <td *ngIf="usuario.transmite && usuario.transmite == 'S'; else noTransmite">
                             Si
                         </td>
                         <ng-template #sinDatos>
                             <td>SIN DATOS</td>
                         </ng-template>
-                        <ng-template #programaProFe>
-                            <td>Programa Pro Fe</td>
+                        <ng-template #programaIC>
+                            <td>Programa Incluir Salud</td>
+                        </ng-template>
+                        <ng-template #noTransmite>
+                            <td>No</td>
                         </ng-template>
                     </tr>
                 </tbody>

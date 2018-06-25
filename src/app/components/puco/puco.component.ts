@@ -5,8 +5,10 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { ObraSocialService } from './../../services/obraSocial.service';
+import { ProfeService } from './../../services/profe.service';
 import { ArrayType } from '@angular/compiler/src/output/output_ast';
 import { NgModel } from '@angular/forms';
+import { PacienteService } from './../../services/paciente.service';
 
 @Component({
     selector: 'puco',
@@ -19,7 +21,9 @@ export class PucoComponent implements OnInit, OnDestroy {
     public loading = false;
     public errorSearchTerm = false; // true si se ingresan caracteres alfabeticos
     public usuarios: ArrayType[];
-    private timeoutHandle: number;
+    private resPuco: ArrayType[];
+    private resProfe: ArrayType[];
+    private timeoutHandle: number; ;
     @Input() autofocus: Boolean = true;
 
     // termino a buscar ..
@@ -28,8 +32,11 @@ export class PucoComponent implements OnInit, OnDestroy {
     // ultima request que se almacena con el subscribe
     private lastRequest: ISubscription;
 
-    constructor(private obraSocialService: ObraSocialService, private auth: Auth, private plex: Plex) {
-    }
+    constructor(
+        private obraSocialService: ObraSocialService,
+        private profeService: ProfeService,
+        private auth: Auth,
+        private plex: Plex) { }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -45,38 +52,36 @@ export class PucoComponent implements OnInit, OnDestroy {
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
-            this.usuarios = [];
-            this.loading = false;
         }
+        // Se limpian los resultados de la busqueda anterior
+        this.usuarios = [];
+
         if (this.searchTerm && /^([0-9])*$/.test(this.searchTerm.toString())) {
+
+            this.loading = true;
             this.errorSearchTerm = false;
             let search = this.searchTerm.trim();
 
-            this.loading = true;
             this.timeoutHandle = window.setTimeout(() => {
+                this.timeoutHandle = null;
 
-                let apiMethod = Observable.forkJoin([
-                    this.obraSocialService.getPuco({ dni: search }),
-                    this.obraSocialService.getProFe({ dni: search })]).subscribe(t => {
+                Observable.forkJoin([
+                    this.obraSocialService.get({ dni: search }),
+                    this.profeService.get({ dni: search })]).subscribe(t => {
                         this.loading = false;
-                        let resultadosPuco = t[0];
-                        let resultadosProFE = t[1];
-                        this.usuarios = resultadosPuco.concat(resultadosProFE);
-                        let idTimeOut = this.timeoutHandle;
+                        this.resPuco = t[0];
+                        this.resProfe = t[1];
 
-                        if (this.lastRequest) {
-                            this.lastRequest.unsubscribe();
-                        }
-                        if (this.usuarios.length > 0) {
-                            this.loading = false;
+                        if (this.resProfe) {
+                            this.usuarios = this.resPuco.concat(this.resProfe);
+                        } else {
+                            this.usuarios = this.resPuco;
                         }
                     });
-
             }, err => {
                 this.plex.toast('error', 'No se pudo realizar la búsqueda', '', 5000);
-            }, 600);
-        }
-        else {
+            }, 200);
+        } else {
             if (this.searchTerm) {
                 this.errorSearchTerm = true;
                 // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
