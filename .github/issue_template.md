@@ -13,12 +13,12 @@
 2. 
 3. 
 
-### Agregar captura de pantalla, si fuera relevante
+<!-- Agregar captura de pantalla, si fuera relevante  -->
 
+<!-- Código relevante 
 
-#### Código relevante
 
   ```
-  // TODO: Código que considere importante incorporar.
-  ```
+  // TODO: Código que considere importante incorporar.  
+  ``` -->
 
