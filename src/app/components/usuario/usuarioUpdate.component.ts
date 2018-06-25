@@ -125,9 +125,11 @@ export class UsuarioUpdateComponent implements OnInit {
     }
 
     onOrgChange() {
+        this.hidePermisos = true;
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
+        setImmediate(() => this.hidePermisos = false);
     }
 
     newEfector() {
