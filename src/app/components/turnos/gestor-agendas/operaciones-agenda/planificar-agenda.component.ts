@@ -51,7 +51,7 @@ export class PlanificarAgendaComponent implements OnInit {
     showBloque = true;
     showMapaEspacioFisico = false;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -118,7 +118,7 @@ export class PlanificarAgendaComponent implements OnInit {
     // }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }

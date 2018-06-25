@@ -10,7 +10,7 @@ import { IEspecialidad } from './../../interfaces/IEspecialidad';
 })
 export class EspecialidadCreateUpdateComponent implements OnInit {
     public modelo: any = {};
-    @Input('seleccion') seleccion: IEspecialidad;
+    @Input() seleccion: IEspecialidad;
     @Output() data: EventEmitter<IEspecialidad> = new EventEmitter<IEspecialidad>();
     // createForm: FormGroup;
     constructor(private formBuilder: FormBuilder, private especialidadService: EspecialidadService) { }

@@ -35,7 +35,7 @@ export class CalendarioComponent {
     }
 
     // Propiedades
-    @Input('fecha') fecha: Date;
+    @Input() fecha: Date;
     @Input() _solicitudPrestacion: any;
     @Input('agenda')
     set agenda(value: IAgenda) {
@@ -64,7 +64,7 @@ export class CalendarioComponent {
     get estado(): String {
         return this._estado;
     }
-    @Output('agendaChanged') agendaChanged = new EventEmitter();
+    @Output() agendaChanged = new EventEmitter();
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
     private agendaPorFecha(fecha: moment.Moment): IAgenda {

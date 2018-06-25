@@ -110,9 +110,9 @@ import {
 })
 export class PacienteCreateUpdateComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: IPaciente;
-    @Input('isScan') isScan: IPaciente;
-    @Input('escaneado') escaneado: Boolean;
+    @Input() seleccion: IPaciente;
+    @Input() isScan: IPaciente;
+    @Input() escaneado: Boolean;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     foto = '';

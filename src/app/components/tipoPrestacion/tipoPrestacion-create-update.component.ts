@@ -29,7 +29,7 @@ export class TipoPrestacionCreateUpdateComponent implements OnInit {
     // private showRegla: boolean = false;
     // private arrayReglas: any = [];
     // Parámetros In/Out
-    @Input('seleccion') seleccion: ITipoPrestacion;
+    @Input() seleccion: ITipoPrestacion;
     @Output() data: EventEmitter<ITipoPrestacion> = new EventEmitter<ITipoPrestacion>();
 
     constructor(private formBuilder: FormBuilder, private tipoPrestacionService: TipoPrestacionService) { }

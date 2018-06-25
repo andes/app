@@ -87,7 +87,7 @@ export class RUPComponent implements OnInit {
         public sanitazer: DomSanitizer,
         public snomedService: SnomedService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
-        public Cie10Service: Cie10Service,
+        public cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService
     ) { }
 

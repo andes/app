@@ -46,7 +46,7 @@ export class PanelAgendaComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService,
-        public OrganizacionService: OrganizacionService,
+        public organizacionService: OrganizacionService,
         public router: Router,
         public auth: Auth) {
     }

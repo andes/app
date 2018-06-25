@@ -21,7 +21,7 @@ import * as enumerados from './../../utils/enumerados';
     templateUrl: 'profesional-create-update.html'
 })
 export class ProfesionalCreateUpdateComponent implements OnInit {
-    @Input('seleccion') seleccion: IProfesional;
+    @Input() seleccion: IProfesional;
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
     public fechaNacimiento: Date;
