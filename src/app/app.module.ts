@@ -240,6 +240,9 @@ import { RegistrarMedidasAntropometricasComponent } from './modules/rup/componen
 import { TensionArterialPediatricaComponent } from './modules/rup/components/elementos/tensionArterialPediatrica.component';
 import { PercentiloDeTensionArterialComponent } from './modules/rup/components/elementos/percentiloDeTensionArterial.component';
 import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/elementos/ConsultaDeNinoSanoM2A.component';
+import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
+import { DesarrolloPsicomotorNormalComponent } from './modules/rup/components/elementos/desarrolloPsicomotorNormal.component';
+import { DesarrolloPsicomotorTrastornoComponent } from './modules/rup/components/elementos/desarrolloPsicomotorTrastorno.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -342,6 +345,9 @@ export let RUPRegistry = {
     'TensionArterialPediatricaComponent': TensionArterialPediatricaComponent,
     'PercentiloDeTensionArterialComponent': PercentiloDeTensionArterialComponent,
     'ConsultaDeNinoSanoM2AComponent': ConsultaDeNinoSanoM2AComponent,
+    'DesarrolloPsicomotorComponent': DesarrolloPsicomotorComponent,
+    'DesarrolloPsicomotorNormalComponent': DesarrolloPsicomotorNormalComponent,
+    'DesarrolloPsicomotorTrastornoComponent': DesarrolloPsicomotorTrastornoComponent,
 };
 
 let RUPComponentsArray = [
@@ -389,7 +395,10 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasComponent,
     TensionArterialPediatricaComponent,
     PercentiloDeTensionArterialComponent,
-    ConsultaDeNinoSanoM2AComponent
+    ConsultaDeNinoSanoM2AComponent,
+    DesarrolloPsicomotorComponent,
+    DesarrolloPsicomotorNormalComponent,
+    DesarrolloPsicomotorTrastornoComponent
 ];
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
