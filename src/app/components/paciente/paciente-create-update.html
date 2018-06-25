@@ -365,7 +365,7 @@
             <div class="col-3">
                 <plex-box>
                     <div *ngIf='!showMobile'>
-                        <paciente-detalle [paciente]="pacienteModel" (renaperNotification)="renaperNotification($event)"></paciente-detalle>
+                        <paciente-detalle [paciente]="pacienteModel" (renaperNotification)="renaperNotification($event)" [mostrarRenaper]="true"></paciente-detalle>
 
                         <!-- Pacientes candidatos -->
                         <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">

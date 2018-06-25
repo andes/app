@@ -64,7 +64,7 @@
         <div class="col">
             <label>Servicio de fuente auténtica RENAPER</label>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12" *ngIf="mostrarRenaper">
             <plex-button type="primary btn-sm" [disabled]="deshabilitarValidar" icon="account" label="Validar con servicios de Renaper"
                 (click)="renaperVerification(_paciente)"></plex-button>
             <plex-button type="primary btn-sm" [disabled]="!deshabilitarValidar" icon="undo" label="Deshacer" (click)="setDatosOriginales(_paciente)"></plex-button>
