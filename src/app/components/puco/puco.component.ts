@@ -72,10 +72,15 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.resPuco = t[0];
                         this.resProfe = t[1];
 
-                        if (this.resProfe) {
-                            this.usuarios = this.resPuco.concat(this.resProfe);
-                        } else {
+                        if (this.resPuco) {
                             this.usuarios = this.resPuco;
+                        }
+                        if (this.resProfe) {
+                            if (this.resPuco) {
+                                this.usuarios = this.resPuco.concat(this.resProfe);
+                            } else {
+                                this.usuarios = this.resProfe;
+                            }
                         }
                     });
             }, err => {
