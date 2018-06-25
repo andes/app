@@ -1,10 +1,4 @@
 import {
-    Plex
-} from '@andes/plex';
-import {
-    Observable
-} from 'rxjs/Rx';
-import {
     Component,
     AfterViewInit,
     HostBinding
@@ -12,9 +6,6 @@ import {
 import {
     Auth
 } from '@andes/auth';
-import {
-    Wizard
-} from './../../classes/wizard.class';
 import {
     AppComponent
 } from './../../app.component';
@@ -34,7 +25,7 @@ export class InicioComponent implements AfterViewInit {
     public denied = false;
     public accessList: any = [];
 
-    constructor(private plex: Plex, public auth: Auth, public appComponent: AppComponent) { }
+    constructor(public auth: Auth, public appComponent: AppComponent) { }
 
     ngAfterViewInit() {
         window.setTimeout(() => {
