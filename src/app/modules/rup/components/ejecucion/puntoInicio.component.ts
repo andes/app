@@ -1,9 +1,10 @@
+
+import {forkJoin as observableForkJoin,  Observable } from 'rxjs';
 import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -83,7 +84,7 @@ export class PuntoInicioComponent implements OnInit {
      * Actualiza el listado de agendas y prestaciones
      */
     actualizar() {
-        Observable.forkJoin(
+        observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),

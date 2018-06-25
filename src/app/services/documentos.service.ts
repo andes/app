@@ -1,6 +1,10 @@
+
+import {throwError as observableThrowError} from 'rxjs';
+
+import {catchError, map} from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
@@ -24,16 +28,16 @@ export class DocumentosService {
         });
 
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
-            .map(this.extractData)
-            .catch(this.handleError);
+        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options).pipe(
+            map(this.extractData),
+            catchError(this.handleError),);
     }
 
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
         console.error(errMsg);
-        return Observable.throw(errMsg);
+        return observableThrowError(errMsg);
     }
     protected extractData(res: Response) {
         return res.blob();

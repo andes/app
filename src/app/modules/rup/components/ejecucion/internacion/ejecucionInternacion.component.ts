@@ -1,7 +1,7 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
 import { CamasService } from './../../../../../services/camas.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -13,7 +13,7 @@ import { FinanciadorService } from '../../../../../services/financiador.service'
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../../../services/term/snomed.service';
-import { take } from 'rxjs/operator/take';
+
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 

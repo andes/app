@@ -16,7 +16,7 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { Cie10Service } from './../../../../services/term/cie10.service';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 
 @Component({

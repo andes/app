@@ -1,3 +1,5 @@
+
+import {debounceTime} from 'rxjs/operators';
 import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -36,7 +38,7 @@ export class EspacioFisicoComponent implements OnInit {
             activo: ['']
         });
         // Genera la busqueda con el evento change.
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadEspaciosFisicos(false);
