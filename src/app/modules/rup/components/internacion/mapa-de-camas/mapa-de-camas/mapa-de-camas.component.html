@@ -2,7 +2,8 @@
     <form class="plex-layout">
         <section>
             <div class="row">
-                <div class="col-8 col-md-10">
+                <!-- [ngClass]="{'col-md-10': showMenu, 'col-md-12': !showMenu}" -->
+                <div class="col">
                     <plex-box>
                         <div class="row">
                             <div class="col">
@@ -13,41 +14,91 @@
                                         </div>
                                     </div>
                                     <!-- TODO: Ver estilos con julito ,@FerSastre -->
-                                    
+
 
                                     <div class="row" *ngIf="camas">
-                                        <div class="col-2">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="filtros-nombre">Paciente</label>
                                                 <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
                                                     (keyup)="filtrar()" />
                                             </div>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-md-2">
                                             <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
                                                 (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
                                         </div>
-                                        <div class="col-2">
+                                        <div class="col-md-2">
                                             <div class="form-group">
                                                 <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
                                                     *ngIf="filtros.opciones.servicios.length"></plex-select>
                                             </div>
                                         </div>
 
-                                        <div class="col-2">
+                                        <div class="col-md-2">
                                             <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
                                                 *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
                                         </div>
 
-                                        <div class="col-2">
-                                            <plex-select [(ngModel)]="filtros.estado" name="estado" [data]="filtros.opciones.estados" label="Estado" (change)="filtrar()"
-                                                *ngIf="filtros.opciones.estados.length"></plex-select>
-                                        </div>
-                                        <div class="col-2 actions-icons">
+                                        <div class="col-md-3">
+                                            <label>
+                                                Estados:
+                                            </label>
+                                            <div class="d-flex estados-container" *ngIf="cantidadXEstado">
+                                                <div>
+                                                    <span class="count disponible">{{cantidadXEstado['disponible'].length}}</span>
+                                                    <button class="estados-icon{{ (filtroActive === 'disponible') ? '-active' : ''}} disponible" (click)="filtroEstados('disponible')"
+                                                        title="Camas disponibles">
+                                                        <i class="icon icon-andes-cama-check disponible"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <span class="count desocupada">{{cantidadXEstado['desocupada'].length}}</span>
+                                                    <button title="Camas desocupada" class="estados-icon{{ (filtroActive === 'desocupada') ? '-active' : ''}} desocupada" (click)="filtroEstados('desocupada')">
+                                                        <i class="icon icon-andes-cama-reloj desocupada"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <span class="count reparacion">{{cantidadXEstado['reparacion'].length}}</span>
+                                                    <button title="Camas en reparacion" class="estados-icon{{ (filtroActive === 'reparacion') ? '-active' : ''}} reparacion"
+                                                        (click)="filtroEstados('reparacion')">
+                                                        <i class="icon icon-andes-cama-herramienta reparacion"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <span class="count bloqueada">{{cantidadXEstado['bloqueada'].length}}</span>
+                                                    <button title="Camas bloqueadas" class="estados-icon{{ (filtroActive === 'bloqueada') ? '-active' : ''}} bloqueada" (click)="filtroEstados('bloqueada')">
+                                                        <i class="icon icon-andes-cama-candado bloqueada"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <span class="count ocupada">{{cantidadXEstado['ocupada'].length}}</span>
+                                                    <button title="Camas ocupadas" class="estados-icon{{ (filtroActive === 'ocupada') ? '-active' : ''}} ocupada" (click)="filtroEstados('ocupada')">
+                                                        <i class="icon icon-andes-paciente ocupada"></i>
+                                                    </button>
+                                                </div>
+                                                <div>
+                                                    <span class="count oxigeno">{{cantidadXEstado['oxigeno'].length}}</span>
+                                                    <button title="Camas con oxigeno" class="estados-icon{{ (filtroActive === 'oxigeno') ? '-active' : ''}} oxigeno" (click)="filtroEstados('oxigeno')">
+                                                        <i class="icon icon-andes-cama-oxigeno oxigeno"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="col-md-1 actions-icons">
+                                                    <plex-button type="primary" title="limpiar filtros" label="Limpiar" (click)="refresh()"></plex-button>
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-1 actions-icons">
                                             <plex-button type="primary" label="Limpiar filtros" (click)="refresh()"></plex-button>
+                                        </div> -->
+                                        </div>
+                                        <div class="col-md-1 actions-icons">
+                                            <button class="rounded left btn-primary btnMenu" (click)="showMenu=!showMenu">
+                                                <i class="mdi mdi-chevron-double-{{!showMenu ? 'left' : 'right' }}"></i>
+                                            </button>
                                         </div>
                                     </div>
                                     <hr />
+
                                 </header>
                                 <!-- Loader -->
                                 <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
@@ -56,7 +107,7 @@
                                     No se encontraron resultados
                                 </div>
                                 <div class="row" *ngIf="!loader">
-                                    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12" *ngFor="let cama of camas; let i = index">
+                                    <div class="" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu}" *ngFor="let cama of camas; let i = index">
                                         <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
                                     </div>
                                 </div>
@@ -65,7 +116,7 @@
                         </div>
                     </plex-box>
                 </div>
-                <div class="col-4 col-md-2">
+                <div class="col-4 col-md-2" *ngIf="showMenu">
                     <plex-box>
                         <header>
                             <h3>Acciones</h3>
@@ -75,7 +126,7 @@
                             <plex-button class="" type="primary btn-block mt-2" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
                             <plex-button class="" type="primary btn-block mt-2" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                             <plex-button class="" type="primary btn-block mt-2" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
-                            <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()" ></plex-button>
+                            <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()"></plex-button>
                             <plex-button label="Crear cama" type="primary btn-block mt-2" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                         </ng-container>
                         <ng-container *ngIf="prestacion">

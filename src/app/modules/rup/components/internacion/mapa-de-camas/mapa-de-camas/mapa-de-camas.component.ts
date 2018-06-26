@@ -28,8 +28,11 @@ export class MapaDeCamasComponent implements OnInit {
     public prestacion: any;
     public fecha = new Date;
     public loader = true;
-
+    public showMenu = false;
     public historicoMode = false;
+    public filtroActive;
+    public cantidadXEstado;
+
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -59,6 +62,7 @@ export class MapaDeCamasComponent implements OnInit {
 
     ngOnInit() {
         this.refresh();
+
     }
 
     refresh() {
@@ -68,6 +72,8 @@ export class MapaDeCamasComponent implements OnInit {
         this.loader = true;
         this.camasService.getCamasXFecha(this.auth.organizacion.id, this.fecha).subscribe(camas => {
             this.camas = camas;
+            console.log(this.camas);
+            this.countFiltros();
             this.loader = false;
             if (camas) {
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
@@ -92,6 +98,7 @@ export class MapaDeCamasComponent implements OnInit {
  * @memberof MapaDeCamasComponent
  */
     public limpiarFiltros() {
+        this.filtroActive = '';
         this.filtros.habitacion = null;
         this.filtros.oxigeno = false;
         this.filtros.desinfectada = false;
@@ -244,4 +251,32 @@ export class MapaDeCamasComponent implements OnInit {
         }
         this.refresh();
     }
+
+    filtroEstados(estado) {
+        this.filtroActive = estado;
+        if (estado === 'oxigeno') {
+            this.camas = this.camasCopy.filter(c => c.equipamiento.find(e => e.conceptId === '261746005'));
+        } else {
+            let objEstado = {
+                nombre: estado,
+                id: estado
+            }
+            this.filtros.estado = objEstado;
+            this.filtrar();
+        }
+    }
+
+    countFiltros() {
+        console.log(this.camas);
+        this.cantidadXEstado = {
+            ocupada: this.camas.filter(c => c.ultimoEstado.estado === 'ocupada'),
+            desocupada: this.camas.filter(c => c.ultimoEstado.estado === 'desocupada'),
+            reparacion: this.camas.filter(c => c.ultimoEstado.estado === 'reparacion'),
+            bloqueada: this.camas.filter(c => c.ultimoEstado.estado === 'bloqueada'),
+            oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
+            disponible: this.camas.filter(c => c.ultimoEstado.estado == 'disponible')
+        };
+        // console.log(cantidadXEstado['ocupada'].length, 'asdsad');
+    }
+
 }
