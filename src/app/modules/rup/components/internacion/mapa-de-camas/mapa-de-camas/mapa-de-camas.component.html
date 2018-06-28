@@ -47,43 +47,43 @@
                                             <div class="d-flex estados-container" *ngIf="cantidadXEstado">
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'disponible') ? 'inactive' :  ''}} count disponible">{{cantidadXEstado['disponible'].length}}</span>
-                                                    <button class="{{(inactive && filtros.estado?.id !== 'disponible') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'disponible' || filtros.estado?.id === 'disponible') ? '-active' : ''}} disponible"
-                                                        (click)="filtroEstados('disponible')" title="Camas disponibles">
+                                                    <button class="{{(inactive && filtros.estado?.id !== 'disponible') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'disponible') ? '-active' : ''}} disponible"
+                                                        (click)="filtroEstados('disponible', inactive)" title="Camas disponibles">
                                                         <i class="icon icon-andes-cama-check disponible"></i>
                                                     </button>
                                                 </div>
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'desocupada') ? 'inactive' :  ''}} count desocupada">{{cantidadXEstado['desocupada'].length}}</span>
-                                                    <button title="Camas desocupada" class="{{(inactive && filtros.estado.id !== 'desocupada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'desocupada') ? '-active' : ''}} desocupada"
-                                                        (click)="filtroEstados('desocupada')">
+                                                    <button title="Camas desocupada" class="{{(inactive && filtros.estado?.id !== 'desocupada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'desocupada') ? '-active' : ''}} desocupada"
+                                                        (click)="filtroEstados('desocupada', inactive)">
                                                         <i class="icon icon-andes-cama-reloj desocupada"></i>
                                                     </button>
                                                 </div>
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'reparacion') ? 'inactive' :  ''}} count reparacion">{{cantidadXEstado['reparacion'].length}}</span>
-                                                    <button title="Camas en reparacion" class="{{(inactive && filtros.estado.id !== 'reparacion') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'reparacion') ? '-active' : ''}} reparacion"
-                                                        (click)="filtroEstados('reparacion')">
+                                                    <button title="Camas en reparacion" class="{{(inactive && filtros.estado?.id !== 'reparacion') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'reparacion') ? '-active' : ''}} reparacion"
+                                                        (click)="filtroEstados('reparacion', inactive)">
                                                         <i class="icon icon-andes-cama-herramienta reparacion"></i>
                                                     </button>
                                                 </div>
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'bloqueadas') ? 'inactive' :  ''}} count bloqueada">{{cantidadXEstado['bloqueada'].length}}</span>
-                                                    <button title="Camas bloqueadas" class="{{(inactive && filtros.estado.id !== 'bloqueada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'bloqueada') ? '-active' : ''}} bloqueada"
-                                                        (click)="filtroEstados('bloqueada')">
+                                                    <button title="Camas bloqueadas" class="{{(inactive && filtros.estado?.id !== 'bloqueada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'bloqueada') ? '-active' : ''}} bloqueada"
+                                                        (click)="filtroEstados('bloqueada', inactive)">
                                                         <i class="icon icon-andes-cama-candado bloqueada"></i>
                                                     </button>
                                                 </div>
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'ocupada') ? 'inactive' :  ''}} count ocupada">{{cantidadXEstado['ocupada'].length}}</span>
-                                                    <button title="Camas ocupadas" class="{{(inactive && filtros.estado.id !== 'ocupada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'ocupada') ? '-active' : ''}} ocupada"
-                                                        (click)="filtroEstados('ocupada')">
+                                                    <button title="Camas ocupadas" class="{{(inactive && filtros.estado?.id !== 'ocupada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'ocupada') ? '-active' : ''}} ocupada"
+                                                        (click)="filtroEstados('ocupada', inactive)">
                                                         <i class="icon icon-andes-paciente ocupada"></i>
                                                     </button>
                                                 </div>
                                                 <div>
                                                     <span class="{{(inactive && filtros.estado?.id !== 'oxigeno') ? 'inactive' :  ''}} count oxigeno">{{cantidadXEstado['oxigeno'].length}}</span>
-                                                    <button title="Camas con oxigeno" class="{{(inactive && filtros.estado.id !== 'oxigeno') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'oxigeno') ? '-active' : ''}} oxigeno"
-                                                        (click)="filtroEstados('oxigeno')">
+                                                    <button title="Camas con oxigeno" class="{{(inactive && filtros.estado?.id !== 'oxigeno') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'oxigeno') ? '-active' : ''}} oxigeno"
+                                                        (click)="filtroEstados('oxigeno', inactive)">
                                                         <i class="icon icon-andes-cama-oxigeno oxigeno"></i>
                                                     </button>
                                                 </div>
@@ -142,6 +142,59 @@
                             <plex-button type="primary btn-block mt-2" label="Cancelar" (click)="mapaDeCamaXFecha(true)"></plex-button>
 
                         </ng-container>
+
+                        <h3>Estado del servicio</h3>
+                        <hr> aca va el resumen
+                        <div class="container-resumen">
+                            <div class="subcontainer-resumen">
+                                <div>
+                                    <i class="icon icon-andes-cama"></i>
+                                </div>
+                                <div class="resumen">
+                                    <h3>127</h3>
+                                    <p>Camas totales</p>
+                                </div>
+                            </div>
+                            <div class="subcontainer-resumen">
+                                <div>
+                                    <i class="icon icon-andes-cama"></i>
+                                </div>
+                                <div class="resumen">
+                                    <h3>127</h3>
+                                    <p>Camas totales</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <h3>Estado del servicio</h3>
+                        <hr> aca va el resumen
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-6 resumen">
+                                            <i class="icon icon-andes-cama"></i>
+                                        </div>
+                                        <div class="col-6 resumen">
+                                            <h1>127</h1>
+                                            <p>Camas totales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-6 resumen">
+                                            <i class="icon icon-andes-cama"></i>
+                                        </div>
+                                        <div class="col-6 resumen">
+                                            <h1>127</h1>
+                                            <p>Camas totales</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+
                     </plex-box>
                 </div>
             </div>

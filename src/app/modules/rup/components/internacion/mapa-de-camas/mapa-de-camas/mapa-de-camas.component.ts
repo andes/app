@@ -231,8 +231,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.prestacion = $event;
         if ($event) {
             this.inactive = true;
-            this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
-            this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
+            this.filtroEstados('disponible');
         } else {
             this.limpiarFiltros();
             this.refresh();
@@ -248,17 +247,29 @@ export class MapaDeCamasComponent implements OnInit {
         this.refresh();
     }
 
-    filtroEstados(estado) {
-        this.filtroActive = estado;
-        if (estado === 'oxigeno') {
-            this.camas = this.camasCopy.filter(c => c.equipamiento.find(e => e.conceptId === '261746005'));
-        } else {
-            let objEstado = {
-                nombre: estado,
-                id: estado
-            };
-            this.filtros.estado = objEstado;
-            this.filtrar();
+    /**
+     * filtra los estados de las camas
+     * @param estado String del estado de la cama
+     * @param darCama boolean para ver si viene de lista de espera.
+     */
+    filtroEstados(estado, darCama = false) {
+        if (!darCama) {
+            if (this.filtroActive === estado) {
+                this.filtroActive = '';
+                this.camas = this.camasCopy;
+            } else {
+                this.filtroActive = estado;
+                if (estado === 'oxigeno') {
+                    this.camas = this.camasCopy.filter(c => c.equipamiento.find(e => e.conceptId === '261746005'));
+                } else {
+                    let objEstado = {
+                        nombre: estado,
+                        id: estado
+                    };
+                    this.filtros.estado = objEstado;
+                    this.filtrar();
+                }
+            }
         }
     }
 
