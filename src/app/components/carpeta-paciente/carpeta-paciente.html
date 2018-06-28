@@ -2,10 +2,10 @@
     <br>
     <div class="col-12" *ngIf="showList">
 
-        <h5>Organización | Número de carpeta</h5>
+        <h5 *ngIf="carpetaEfectores?.length > 0">Organización | Número de carpeta</h5>
         <ul class="list-group">
             <li *ngFor="let carpeta of carpetaEfectores" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion.id }" class="list-group-item">
-                <div class="row">
+                <div class="row" *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta!=''">
                     <div class="col-10">
                         {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
                     </div>
@@ -31,7 +31,7 @@
             </li>
         </ul>
         <hr>
-        <div class="row" *ngIf="!carpetaPaciente || carpetaPaciente?.nroCarpeta?.length === 0">
+        <div class="row" *ngIf="showNuevaCarpeta">
             <div class="col-12">
                 <h6>
                     <strong>
@@ -57,7 +57,7 @@
             <div class="col-12 float-right">
                 <plex-button type="danger" label="Cancelar" (click)="cancelar()">
                 </plex-button>
-                <plex-button type="success" label="Guardar" (click)="guardarCarpetaPaciente()" title="Guardar Carpeta">
+                <plex-button type="success" label="Guardar" (click)="guardarCarpetaPaciente(true)" title="Guardar Carpeta">
                 </plex-button>
             </div>
         </div>

@@ -12,21 +12,23 @@ import { IPaciente } from '../../interfaces/IPaciente';
 })
 
 export class CarpetaPacienteComponent implements OnInit {
-    idOrganizacion = this.auth.organizacion.id;
-    indiceCarpeta = -1;
-    carpetaEfectores = [];
-    nroCarpetaOriginal: string;
-    showList = true;
     @Input() turnoSeleccionado: ITurno;
     @Input() pacienteSeleccionado: IPaciente;
     @Output() guardarCarpetaEmit = new EventEmitter<boolean>();
     @Output() cancelarCarpetaEmit = new EventEmitter<boolean>();
 
+    idOrganizacion = this.auth.organizacion.id;
+    indiceCarpeta = -1;
+    carpetaEfectores = [];
+    nroCarpetaOriginal: string;
+    showList = true;
+    showNuevaCarpeta = false;
     autorizado: any;
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
     carpetaPaciente: any;
     paciente: any;
     showEdit = false;
+    nroCarpetaSugerido: string;
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
@@ -66,7 +68,7 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     private getCarpetas(paciente) {
-        if (paciente.carpetaEfectores.length > 0) {
+        if (paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
             let result = paciente.carpetaEfectores.find((elemento, indice) => {
@@ -82,7 +84,7 @@ export class CarpetaPacienteComponent implements OnInit {
             this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
 
         }
-        if (this.indiceCarpeta === -1) {
+        if (this.indiceCarpeta === -1) { // buscamos en la colección de carpetas importadas desde SIPS
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
@@ -90,12 +92,17 @@ export class CarpetaPacienteComponent implements OnInit {
                 }
             });
         }
+        if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
+            this.showNuevaCarpeta = true;
+            this.servicioPaciente.getSiguienteCarpeta().subscribe((sugerenciaCarpeta: string) => {
+                this.nroCarpetaSugerido = '' + sugerenciaCarpeta;
+            });
+        }
     }
 
 
-    guardarCarpetaPaciente() {
+    guardarCarpetaPaciente(nuevaCarpeta = false) {
         if (this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
-
             this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
@@ -103,14 +110,24 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.carpetaEfectores.push(this.carpetaPaciente);
             }
 
-            this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(resultadoCarpeta => {
-                this.guardarCarpetaEmit.emit(true);
-                this.plex.toast('success', 'Nuevo número de carpeta establecido');
-                this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
-            }, error => {
-                this.plex.toast('danger', 'El número de carpeta ya existe');
-                this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
-            });
+            this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
+                resultadoCarpeta => {
+                    this.guardarCarpetaEmit.emit(true);
+                    this.plex.toast('success', 'Nuevo número de carpeta establecido');
+                    this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
+                    this.showNuevaCarpeta = false;
+                    if (nuevaCarpeta) {
+                        this.servicioPaciente.incrementarNroCarpeta().subscribe();
+                    }
+                },
+                error => {
+                    this.plex.toast('danger', 'El número de carpeta ya existe');
+                    if (this.indiceCarpeta < 0) {
+                        this.carpetaEfectores.pop();
+                    }
+                    this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+                }
+            );
         } else {
             this.guardarCarpetaEmit.emit(true);
         }
@@ -119,7 +136,9 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     cancelar() {
+        this.carpetaPaciente.nroCarpeta = '';
         this.cancelarCarpetaEmit.emit(true);
+        this.showList = true;
     }
 
     cerrarEdicion() {
@@ -133,5 +152,6 @@ export class CarpetaPacienteComponent implements OnInit {
 
     crearCarpetaPaciente() {
         this.showList = false;
+        this.carpetaPaciente.nroCarpeta = this.nroCarpetaSugerido;
     }
 }
