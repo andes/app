@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
+import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 
 @Injectable()
 export class PrestacionesService {
@@ -101,6 +102,9 @@ export class PrestacionesService {
 
     }
 
+
+
+
     findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
         return this.findValuesHelper(obj, key, []);
     }
@@ -141,7 +145,7 @@ export class PrestacionesService {
      */
     getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
-            let registros = [];
+            let registros: IPrestacionRegistro[] = [];
 
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
@@ -149,7 +153,6 @@ export class PrestacionesService {
 
                 }
             });
-            let registroSalida = [];
             let registroEncontrado = this.findValues(registros, key);
             if (registroEncontrado && registroEncontrado.length > 0) {
                 return registroEncontrado[0];
@@ -569,10 +572,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -590,10 +593,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -617,10 +620,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
