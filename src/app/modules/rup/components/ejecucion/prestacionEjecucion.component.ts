@@ -1,9 +1,6 @@
-import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ObjectID } from 'bson';
-import { DropdownItem } from '@andes/plex';
+import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
@@ -121,6 +118,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
+
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -140,6 +138,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
 
@@ -397,10 +396,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+
+        if (elementoRUP && elementoRUP.params) {
+            if (elementoRUP.params.reglasCargar) {
+                if (elementoRUP.params.reglasCargar.evolucionable) {
+                    // console.log(this.servicioPrestacion.getByPacienteKey(this.paciente.id, elementoRUP.conceptos.map(x => x.conceptId)));
+                }
+            }
+        }
+
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
+
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
@@ -648,19 +657,19 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     controlParams() {
         let respuesta = true;
-        if (this.elementoRUP.params.reglasGuardado && this.elementoRUP.params.reglasGuardado.requiereValores.length) {
+        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length) {
 
             let valoresConCero = [];
-            if (this.elementoRUP.params.reglasGuardado.requiereValores.length > 0) {
+            if (this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
                 for (let reg of this.prestacion.ejecucion.registros) {
-                    let indexRegistro = this.elementoRUP.params.reglasGuardado.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                    let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
                     if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
                         valoresConCero.push(reg);
                     }
                 }
             }
             if (valoresConCero.length > 0) {
-                this.plex.confirm(this.elementoRUP.params.reglasGuardado.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+                this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
                     if (respuestaAlerta) {
                         respuesta = true;
                     } else {
@@ -732,16 +741,16 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         let respuesta = true;
         let valoresConCero = [];
-        if (this.elementoRUP.params.reglasGuardado.requiereValores.length > 0) {
+        if (this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
             for (let reg of this.prestacion.ejecucion.registros) {
-                let indexRegistro = this.elementoRUP.params.reglasGuardado.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
                 if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
                     valoresConCero.push(reg);
                 }
             }
         }
         if (valoresConCero.length > 0) {
-            this.plex.confirm(this.elementoRUP.params.reglasGuardado.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+            this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
 
                 if (!respuestaAlerta) {
                     return false;
