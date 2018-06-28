@@ -80,6 +80,7 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
+import { ProfeService } from './services/profe.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -129,6 +130,10 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+
+// PUCO/ObraSocial
+import { PucoComponent } from './components/puco/puco.component';
+
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -457,7 +462,8 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         CamaEstadoComponent,
-        OcuparCamaComponent
+        OcuparCamaComponent,
+        PucoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -495,6 +501,7 @@ registerLocaleData(localeEs, 'es');
         AdjuntosService,
         TipoPrestacionService,
         ObraSocialService,
+        ProfeService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
