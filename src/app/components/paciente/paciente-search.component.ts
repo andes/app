@@ -48,6 +48,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
      * Indica si el componente llamador requiere ocultar el footer
      */
     @Input() hideFooter = false;
+    /**
+     * Label del botón "cancelar"
+     */
+    @Input() btnCancelarLabel = 'Cancelar';
     // Eventos
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();

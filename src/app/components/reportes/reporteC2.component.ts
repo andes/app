@@ -90,12 +90,12 @@ export class ReporteC2Component implements OnInit {
         for (let i = 0; i < this.seleccionada.length; i++) {
             this.seleccionada[i] = false;
         }
-        if (this.diagnostico.ficha !== null) {
-            this.seleccionada[indice] = true;
-            this.listaPacientes = true;
-        } else {
-            this.listaPacientes = false;
-        }
+        // if (this.diagnostico.ficha !== null) {
+        this.seleccionada[indice] = true;
+        this.listaPacientes = true;
+        // } else {
+        //     this.listaPacientes = false;
+        // }
     }
 
 
