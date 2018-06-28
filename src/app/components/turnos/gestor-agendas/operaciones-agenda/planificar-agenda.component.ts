@@ -62,6 +62,9 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
+            if (this._editarAgenda.dinamica) { // hay que chequear si existe la prop dinamica porque es nueva en el esquema.
+                this.dinamica = true;
+            }
         } else {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
