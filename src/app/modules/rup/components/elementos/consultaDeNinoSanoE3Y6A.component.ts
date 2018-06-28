@@ -5,7 +5,7 @@ import { RUPComponent } from './../core/rup.component';
     selector: 'rup-consulta-nino-sano-m2a',
     templateUrl: '../core/rup.html'
 })
-export class ConsultaDeNinoSanoComponent extends RUPComponent implements OnInit {
+export class ConsultaDeNinoSanoE3Y6AComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         this.registro.valor = {
             valido: true

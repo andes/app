@@ -15,7 +15,8 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     registroPeso: any;
     public alerta = '';
     private pesoConceptId = '27113001';
-    private tallaConceptId = '14456009';
+    // private tallaConceptId = '14456009';
+    private tallaConceptId = '276353004';
     registro: any = {};
 
     // utilizado para el form, asi nos permite dejar el input como disabled
@@ -42,7 +43,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
-            console.log(this.mensaje);
         }
     }
 
@@ -56,7 +56,10 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         }
     }
 
-    calculoIMC() { // Evalua las instancias en las que se pueden capturar los valores
+    // Evalua las instancias en las que se pueden capturar los valores
+    calculoIMC() {
+
+
         // calcula el imc y/o devuelve alertas al usuario.
         let imc = null;
 
@@ -74,9 +77,12 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     }
                 });
             }
+            console.log('this.registroPeso', this.registroPeso);
 
             // this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
             this.registroTalla = this.registro.registros.find(r => r.concepto.conceptId === this.tallaConceptId);
+            console.log('REGISTROS', this.registro.registros[1].concepto);
+            console.log('this.registroTalla', this.registroTalla);
 
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
@@ -87,6 +93,8 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     }
                 });
             }
+
+
         } else {
 
             // let this.registroPeso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.pesoConceptId);
@@ -117,11 +125,13 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     }
                 });
             }
+            console.log('this.talla 2', this.talla);
         }
         if (this.conceptosRequeridos.length === 2) {
             this.peso = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.pesoConceptId).valor;
             this.talla = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.tallaConceptId).valor;
         }
+
 
         // Si encuentro las prestaciones que necesito. peso-talla
         if (this.peso && this.talla) {

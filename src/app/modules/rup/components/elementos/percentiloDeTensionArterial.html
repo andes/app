@@ -1,6 +1,6 @@
 <plex-float *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 100" [(ngModel)]="registro.valor" name="percentiloDeTensionArterial"
-    label="Percentilo de Tensión Arterial" suffix="%" min="0" max="100" (change)="emitChange()" required="true">
+    label="Percentilo de Tensión Arterial" min="0" max="100" (change)="emitChange()" required="true">
 </plex-float>
 <p *ngIf="soloValores" class="readonly">
-    <span>Percentilo de Tensión Arterial</span> {{registro.valor}} %
+    <span>Percentilo de Tensión Arterial</span> {{registro.valor}}
 </p>
