@@ -1,9 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
-
 import { Auth } from '@andes/auth';
 import { Plex, SelectEvent } from '@andes/plex';
-
 import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
@@ -32,6 +30,7 @@ export class MapaDeCamasComponent implements OnInit {
     public historicoMode = false;
     public filtroActive;
     public cantidadXEstado;
+    public inactive = false;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -72,7 +71,6 @@ export class MapaDeCamasComponent implements OnInit {
         this.loader = true;
         this.camasService.getCamasXFecha(this.auth.organizacion.id, this.fecha).subscribe(camas => {
             this.camas = camas;
-            console.log(this.camas);
             this.countFiltros();
             this.loader = false;
             if (camas) {
@@ -125,7 +123,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @returns
      * @memberof MapaDeCamasComponent
      */
-    public setOpcionesFiltros(camas) {
+    public setOpcionesFiltros(camas: any) {
         if (!camas) {
             return;
         }
@@ -170,16 +168,13 @@ export class MapaDeCamasComponent implements OnInit {
      */
     public filtrar() {
         const regex_nombre = new RegExp('.*' + this.filtros.nombre + '.*', 'ig');
-
-        let _desinfectada = (this.filtros.desinfectada) ? false : null;
-
         this.camas = this.camasCopy.filter((i) => {
             return (
                 (!this.filtros.sector || i.sectores.findIndex((_s) => _s.id === this.filtros.sector.id) >= 0) &&
                 (!this.filtros.tipoCama || (this.filtros.tipoCama && i.tipoCama.conceptId === this.filtros.tipoCama.id)) &&
                 (!this.filtros.estado || (this.filtros.estado && i.ultimoEstado.estado === this.filtros.estado.id)) &&
                 (!this.filtros.servicio || !this.filtros.servicio || (this.filtros.servicio.id && i.ultimoEstado.unidadOrganizativa && i.ultimoEstado.unidadOrganizativa.conceptId === this.filtros.servicio.id)) &&
-                (!this.filtros.nombre || (this.filtros.nombre && i.ultimoEstado && (regex_nombre.test(i.ultimoEstado.paciente.nombre) || (regex_nombre.test(i.ultimoEstado.paciente.apellido)) || (regex_nombre.test(i.ultimoEstado.paciente.documento)))))
+                (!this.filtros.nombre || (this.filtros.nombre && i.ultimoEstado && i.ultimoEstado.paciente && (regex_nombre.test(i.ultimoEstado.paciente.nombre) || (regex_nombre.test(i.ultimoEstado.paciente.apellido)) || (regex_nombre.test(i.ultimoEstado.paciente.documento)))))
             );
         });
     }
@@ -192,7 +187,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @param {any} index Indice de la cama en el array de camas
      * @memberof MapaDeCamasComponent
      */
-    public updateCama(e, index) {
+    public updateCama(e: any, index: any) {
         if (e) {
             this.camas[index] = e;
         } else {
@@ -235,6 +230,7 @@ export class MapaDeCamasComponent implements OnInit {
     onDarCama($event) {
         this.prestacion = $event;
         if ($event) {
+            this.inactive = true;
             this.filtros.estado = { 'id': 'disponible', 'nombre': 'disponible' };
             this.filtros.opciones.estados = [{ 'id': 'disponible', 'nombre': 'disponible' }];
         } else {
@@ -260,23 +256,21 @@ export class MapaDeCamasComponent implements OnInit {
             let objEstado = {
                 nombre: estado,
                 id: estado
-            }
+            };
             this.filtros.estado = objEstado;
             this.filtrar();
         }
     }
 
     countFiltros() {
-        console.log(this.camas);
         this.cantidadXEstado = {
             ocupada: this.camas.filter(c => c.ultimoEstado.estado === 'ocupada'),
             desocupada: this.camas.filter(c => c.ultimoEstado.estado === 'desocupada'),
             reparacion: this.camas.filter(c => c.ultimoEstado.estado === 'reparacion'),
             bloqueada: this.camas.filter(c => c.ultimoEstado.estado === 'bloqueada'),
             oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
-            disponible: this.camas.filter(c => c.ultimoEstado.estado == 'disponible')
+            disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
         };
-        // console.log(cantidadXEstado['ocupada'].length, 'asdsad');
     }
 
 }

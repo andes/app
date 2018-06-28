@@ -608,6 +608,8 @@ button {
 }
 
 
+
+
 .estados-icon-active {
     font-size: 30px;
     border: solid 2px #ffffff;
@@ -683,6 +685,10 @@ button {
     &.oxigeno{
         background-color: #5bc0de;
     }
-
-
+    
+}
+.inactive {
+    cursor: not-allowed;
+    opacity: .65;
+    // filter: grayscale(75%);
 }

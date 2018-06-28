@@ -146,7 +146,7 @@ export class CamaComponent implements OnInit {
             idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
         };
 
-        this.camasService.cambiaEstado(cama._id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
 
@@ -200,7 +200,7 @@ export class CamaComponent implements OnInit {
             sugierePase: this.PaseAunidadOrganizativa
         };
 
-        this.camasService.cambiaEstado(cama._id, dto).subscribe(camaActualizada => {
+        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
 
 

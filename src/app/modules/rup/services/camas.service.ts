@@ -127,4 +127,17 @@ export class CamasService {
             observer.complete();
         });
     }
+
+
+    /**
+     *
+     * retorna un array con las camas que ocupan el sector.
+     * @param idSector
+     */
+    camaXsector(idSector): Observable<any> {
+        let params = {
+            sectorId: idSector
+        };
+        return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
 }
