@@ -108,7 +108,6 @@ export class PuntoInicioComponent implements OnInit {
                 // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
-            debugger;
             this.agendas = data[0];
             this.prestaciones = data[1];
 
