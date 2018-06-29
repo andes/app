@@ -228,7 +228,7 @@
 
                         </tbody>
                     </table>
-                    <ng-container *ngIf="agendaSeleccionada.dinamica && agendaSeleccionada.cupo && (getCantidadPacientes(agendaSeleccionada) < agendaSeleccionada.cupo)">
+                    <ng-container *ngIf="agendaSeleccionada.dinamica && agendaSeleccionada.cupo && ((getCantidadPacientes(agendaSeleccionada) < agendaSeleccionada.cupo) || agendaSeleccionada.cupo < 0)">
                         <plex-button label="AGREGAR PACIENTE" type="primary" class="float-right mr-1" (click)="buscarPaciente()"></plex-button>
                     </ng-container>
                     <ng-container>
