@@ -261,14 +261,19 @@
                         <div class="page-title">Agenda Dinámica</div>
                     </header>
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-12">
                             <plex-text [(ngModel)]="elementoActivo.descripcion" name="descripcion" label="Descripción">
                             </plex-text>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
-                            <plex-int [(ngModel)]="cupoMaximo" name="cupoMaximo" min="0" max="1000" required="false" label="Cupo Máximo">
+                        <div class="col-12">
+                            <plex-bool [(ngModel)]="setCupo" name="cupo" label="Cupo máximo"> </plex-bool>
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="setCupo">
+                        <div class="col-12">
+                            <plex-int [(ngModel)]="cupoMaximo" name="cupoMaximo" min="1" max="1000" [required]="true">
                             </plex-int>
                         </div>
                     </div>

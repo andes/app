@@ -51,7 +51,8 @@ export class PlanificarAgendaComponent implements OnInit {
     textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
     showMapaEspacioFisico = false;
-    cupoMaximo: Number = 0;
+    cupoMaximo: Number;
+    setCupo = false;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -732,7 +733,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
-            this.modelo.cupo = (this.cupoMaximo > 0) ? this.cupoMaximo : -1;
+            this.modelo.cupo = (this.setCupo) ? this.cupoMaximo : -1;
         }
 
         for (let i = 0; i < this.modelo.bloques.length; i++) {
