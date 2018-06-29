@@ -108,7 +108,6 @@ export class PuntoInicioComponent implements OnInit {
                 // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
-            debugger;
             this.agendas = data[0];
             this.prestaciones = data[1];
 
@@ -411,6 +410,7 @@ export class PuntoInicioComponent implements OnInit {
     // Paciente seleccionado para la carga en agendas dinamicas
     onPacienteSelected(paciente: IPaciente) {
         if (paciente.id) {
+
             let pacienteSave = {
                 id: paciente.id,
                 documento: paciente.documento,
@@ -429,21 +429,23 @@ export class PuntoInicioComponent implements OnInit {
     darTurno(paciente) {
         let idAgendaSeleccionada = this.agendaSeleccionada.id;
         if (this.agendaSeleccionada.dinamica) {
-            let datosTurno = {
-                nota: '',
-                motivoConsulta: '',
-                tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
-                paciente: paciente,
-                idAgenda: this.agendaSeleccionada.id
-            };
-            this.serviceTurno.saveDinamica(datosTurno).subscribe(
-                resultado => {
-                    this.buscandoPaciente = false;
-                    this.actualizar();
-                },
-                error => {
+            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+                let datosTurno = {
+                    nota: '',
+                    motivoConsulta: '',
+                    tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
+                    paciente: paciente,
+                    idAgenda: this.agendaSeleccionada.id
+                };
+                this.serviceTurno.saveDinamica(datosTurno).subscribe(
+                    resultado => {
+                        this.buscandoPaciente = false;
+                        this.actualizar();
+                    },
+                    error => {
 
-                });
+                    });
+            });
         }
     }
 
