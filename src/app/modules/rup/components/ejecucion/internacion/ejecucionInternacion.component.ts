@@ -15,8 +15,8 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { PacienteService } from '../../../../../services/paciente.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
-import { InternacionService } from '../../../services/internacion.service';
 import { CamasService } from '../../../services/camas.service';
+import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',
@@ -96,6 +96,8 @@ export class EjecucionInternacionComponent implements OnInit {
         'semanticTag': 'elemento de registro'
     };
 
+    public epicrisisEjecucion;
+
     constructor(private router: Router, private route: ActivatedRoute,
         private plex: Plex, public auth: Auth,
         public camasService: CamasService,
@@ -118,8 +120,6 @@ export class EjecucionInternacionComponent implements OnInit {
             });
 
         });
-
-
     }
 
     inicializar(id) {
@@ -129,6 +129,10 @@ export class EjecucionInternacionComponent implements OnInit {
             // Carga la información completa del paciente
             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                 this.paciente = paciente;
+            });
+            // recuperamos si tiene una epicrisis en ejecucion.
+            this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacion.id }).subscribe(prestacionExiste => {
+                this.epicrisisEjecucion = prestacionExiste;
             });
             this.comprobarEgresoParaValidar();
         });
@@ -272,22 +276,14 @@ export class EjecucionInternacionComponent implements OnInit {
      * Nos rutea a la ejecucion de RUP.
      */
     generaEpicrisis() {
-        let epicrisis;
-        let params = {
-            idPrestacionOrigen: this.prestacion.id
-        };
-        this.servicioPrestacion.get(params).subscribe(prestacionExiste => {
-            epicrisis = prestacionExiste;
-            if (!epicrisis.length) {
-                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
-                nuevaPrestacion.solicitud.prestacionOrigen = this.prestacion.id;
-                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                    this.router.navigate(['rup/ejecucion', prestacion.id]);
-                });
-            } else {
-                this.router.navigate(['rup/ejecucion', epicrisis[0].id]);
-            }
-        });
+        if (!this.epicrisisEjecucion.length) {
+            let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
+            nuevaPrestacion.solicitud.prestacionOrigen = this.prestacion.id;
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                this.router.navigate(['rup/ejecucion', prestacion.id]);
+            });
+        } else {
+            this.router.navigate(['rup/ejecucion', this.epicrisisEjecucion[0].id]);
+        }
     }
-
 }
