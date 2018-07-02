@@ -1,0 +1,49 @@
+<section class="plex-layout">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="page-title">Visualización de mapeos</div>
+                </header>
+                <!-- Select de organizaciones -->
+
+                <plex-select [(ngModel)]="organizacion" [data]="organizaciones" (change)="actualizarListaMapeos(organizacion)" placeholder="Seleccione una organizacion..">
+                </plex-select>
+                <table *ngIf="mapeos && mapeos.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tipo de prestación</th>
+                            <th>ID Snomed</th>
+                            <th>Especialidad Sips</th>
+                            <th>Código</th>
+                            <th>ID Sips</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let unMapeo of mapeos">
+                            <td>
+                                {{unMapeo.snomed.fsn}}</td>
+                            <td>
+                                {{unMapeo.snomed.conceptId}}</td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length">{{unMapeo.organizaciones[0].nombreEspecialidad}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length && !unMapeo.organizaciones[0].idEspecialidad">{{unMapeo.organizaciones[0].codigo}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].idEspecialidad">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
+                            </td>
+                            <td>
+                                <plex-button type="primary" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </plex-box>
+        </div>
+    </div>
+</section>
