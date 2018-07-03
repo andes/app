@@ -87,9 +87,9 @@
                                                         <i class="icon icon-andes-cama-oxigeno oxigeno"></i>
                                                     </button>
                                                 </div>
-                                                <div class="col-md-1 actions-icons">
+                                                <!-- <div class="col-md-1 actions-icons">
                                                     <plex-button type="primary" title="limpiar filtros" label="Limpiar" (click)="refresh()"></plex-button>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <!-- <div class="col-md-1 actions-icons">
                                             <plex-button type="primary" label="Limpiar filtros" (click)="refresh()"></plex-button>
@@ -111,7 +111,8 @@
                                     No se encontraron resultados
                                 </div>
                                 <div class="row" *ngIf="!loader">
-                                    <div class="" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu}" *ngFor="let cama of camas; let i = index">
+                                    <div (click)="selecionarCama(cama)" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
+                                        *ngFor="let cama of camas; let i = index">
                                         <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
                                     </div>
                                 </div>
@@ -120,81 +121,164 @@
                         </div>
                     </plex-box>
                 </div>
-                <div class="col-4 col-md-2" *ngIf="showMenu">
+                <div class="col-3" *ngIf="showMenu">
+
+
+
+
                     <plex-box>
-                        <header>
-                            <h3>Acciones</h3>
-                        </header>
-                        <ng-container *ngIf="!prestacion && !historicoMode">
-                            <plex-button type="primary btn-block" label="Lista de espera" (click)="!camasService.showListaEspera = true;"></plex-button>
-                            <plex-button class="" type="primary btn-block mt-2" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
-                            <plex-button class="" type="primary btn-block mt-2" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
-                            <plex-button class="" type="primary btn-block mt-2" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
-                            <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()"></plex-button>
-                            <plex-button label="Crear cama" type="primary btn-block mt-2" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
-                        </ng-container>
-                        <ng-container *ngIf="prestacion">
-                            <plex-button class="" type="primary btn-block mt-2" label="Cancelar" (click)="!camasService.showListaEspera = true; prestacion = null;"></plex-button>
-                        </ng-container>
-                        <ng-container *ngIf="historicoMode">
 
-                            <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
-                            <plex-button type="primary btn-block mt-2" label="Cancelar" (click)="mapaDeCamaXFecha(true)"></plex-button>
+                        <ng-container *ngIf="camaSeleccionada">
+                            <header>
+                                <h3>Detalle de cama</h3>
+                            </header>
+                            <hr>
+                            <div class="text-center info-cama-menu">
 
-                        </ng-container>
+                                <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
+                                    {{camaSeleccionada.ultimoEstado.estado}}
+                                </span>
+                                <h3>Cama</h3>
+                                <h2>
+                                    {{camaSeleccionada.nombre}}
+                                </h2>
 
-                        <h3>Estado del servicio</h3>
-                        <hr> aca va el resumen
-                        <div class="container-resumen">
-                            <div class="subcontainer-resumen">
-                                <div>
-                                    <i class="icon icon-andes-cama"></i>
+                                <div class="data-paciente">
+                                    <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
+                                        <b>
+                                            {{camaSeleccionada.ultimoEstado.paciente.apellido}}
+                                        </b>
+                                        <br> {{camaSeleccionada.ultimoEstado.paciente.nombre}}
+                                    </p>
                                 </div>
-                                <div class="resumen">
-                                    <h3>127</h3>
-                                    <p>Camas totales</p>
-                                </div>
-                            </div>
-                            <div class="subcontainer-resumen">
-                                <div>
-                                    <i class="icon icon-andes-cama"></i>
-                                </div>
-                                <div class="resumen">
-                                    <h3>127</h3>
-                                    <p>Camas totales</p>
-                                </div>
-                            </div>
-                        </div>
+                                {{camaSeleccionada.sectores[0].nombre}}
+                                <hr>
+                                <p>
 
-                        <!-- <h3>Estado del servicio</h3>
-                        <hr> aca va el resumen
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-6 resumen">
-                                            <i class="icon icon-andes-cama"></i>
-                                        </div>
-                                        <div class="col-6 resumen">
-                                            <h1>127</h1>
-                                            <p>Camas totales</p>
-                                        </div>
+                                    {{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}
+                                </p>
+
+
+
+                                <!-- Ver internacion -->
+                                <plex-button type="success" label="Ver internación" title="Ver internación">
+                                </plex-button>
+
+                                <div class="d-flex justify-content-center">
+
+                                    <div class="cama-seleccion-icon">
+                                        <!-- reparacion -->
+                                        <i class="icon icon-andes-cama-oxigeno"></i>
+                                    </div>
+                                    <div class="cama-seleccion-icon">
+                                        <!-- reparacion -->
+                                        <i class="icon icon-andes-cama-herramienta"></i>
+                                    </div>
+                                    <div class="cama-seleccion-icon">
+                                        <!-- reparacion -->
+                                        <i class="icon icon-andes-cama-herramienta"></i>
                                     </div>
                                 </div>
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-6 resumen">
-                                            <i class="icon icon-andes-cama"></i>
-                                        </div>
-                                        <div class="col-6 resumen">
-                                            <h1>127</h1>
-                                            <p>Camas totales</p>
-                                        </div>
+
+
+
+                            </div>
+
+
+
+                        </ng-container>
+
+
+
+                        <ng-container *ngIf="!camaSeleccionada">
+                            <header>
+                                <h3>Acciones</h3>
+                            </header>
+                            <ng-container *ngIf="!prestacion && !historicoMode">
+                                <plex-button type="primary btn-block" label="Lista de espera" (click)="!camasService.showListaEspera = true;"></plex-button>
+                                <plex-button class="" type="primary btn-block mt-2" label="Ingresar Paciente" (click)="ingresarPaciente()" *ngIf="checkAuth('alta')"></plex-button>
+                                <plex-button class="" type="primary btn-block mt-2" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
+                                <plex-button class="" type="primary btn-block mt-2" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
+                                <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()"></plex-button>
+                                <plex-button label="Crear cama" type="primary btn-block mt-2" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="prestacion">
+                                <plex-button class="" type="primary btn-block mt-2" label="Cancelar" (click)="!camasService.showListaEspera = true; prestacion = null;"></plex-button>
+                            </ng-container>
+                            <ng-container *ngIf="historicoMode">
+
+                                <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
+                                <plex-button type="primary btn-block mt-2" label="Cancelar" (click)="mapaDeCamaXFecha(true)"></plex-button>
+
+                            </ng-container>
+
+                            <div class="pt-3">
+                                <h3>Estado del servicio</h3>
+                                <hr>
+                            </div>
+
+                            <div class="container-resumen">
+                                <div class="subcontainer-resumen">
+                                    <div>
+                                        <i class="icon icon-andes-cama"></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{camasCopy.length}}</h3>
+                                        <p>Camas totales</p>
+                                    </div>
+                                </div>
+                                <div class="subcontainer-resumen disponible">
+                                    <div>
+                                        <i class="icon icon-andes-cama"></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{cantidadXEstado['disponible'].length}}</h3>
+                                        <p>Camas disponibles</p>
                                     </div>
                                 </div>
                             </div>
-                        </div> -->
+                            <div class="container-resumen">
+                                <div class="subcontainer-resumen desocupada">
+                                    <div>
+                                        <i class="icon icon-andes-cama-desocupada"></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{cantidadXEstado['desocupada'].length}}</h3>
+                                        <p>Camas desocupadas</p>
+                                    </div>
+                                </div>
+                                <div class="subcontainer-resumen bloqueada">
+                                    <div>
+                                        <i class="icon icon-andes-cama-bloqueada"></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{cantidadXEstado['bloqueada'].length}}</h3>
+                                        <p>Camas bloqueadas</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="container-resumen">
+                                <div class="subcontainer-resumen ocupada">
+                                    <div>
+                                        <i class="icon icon-andes-cama-ocupada"></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{cantidadXEstado['ocupada'].length}}</h3>
+                                        <p>Camas ocupadas</p>
+                                    </div>
+                                </div>
+                                <div class="subcontainer-resumen reparacion">
+                                    <div>
+                                        <i class="icon icon-andes-cama-reparacion "></i>
+                                    </div>
+                                    <div class="texto-resumen">
+                                        <h3>{{cantidadXEstado['reparacion'].length}}</h3>
+                                        <p>Camas en reparacion</p>
+                                    </div>
+                                </div>
+                            </div>
 
+                        </ng-container>
                     </plex-box>
                 </div>
             </div>

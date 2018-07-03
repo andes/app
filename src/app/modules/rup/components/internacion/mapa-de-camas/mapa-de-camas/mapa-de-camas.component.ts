@@ -31,6 +31,7 @@ export class MapaDeCamasComponent implements OnInit {
     public filtroActive;
     public cantidadXEstado;
     public inactive = false;
+    public camaSeleccionada;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -63,6 +64,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.refresh();
 
     }
+
 
     refresh() {
         // verificar permisos
@@ -188,6 +190,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e: any, index: any) {
+        this.countFiltros();
         if (e) {
             this.camas[index] = e;
         } else {
@@ -282,6 +285,16 @@ export class MapaDeCamasComponent implements OnInit {
             oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
             disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
         };
+    }
+
+    selecionarCama(cama) {
+        console.log(cama);
+        if (this.camaSeleccionada === cama) {
+            this.camaSeleccionada = null;
+        } else {
+            this.showMenu = true;
+            this.camaSeleccionada = cama;
+        }
     }
 
 }

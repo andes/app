@@ -605,6 +605,9 @@ button {
 .estados-container{
     position: absolute;
     top: 35px;
+    div{
+        margin: 2px;
+    }
 }
 
 
@@ -701,19 +704,68 @@ button {
     .subcontainer-resumen {
         display: flex;
         flex-direction: row;
-
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.ocupada{
+            color:$ocupada;
+        }
+        &.disponible{
+            color:$disponible;
+        }
+        &.reparacion{
+            color:rgb(204, 204, 204);
+        }
+        &.bloqueada{
+            color: rgb(204, 204, 204);
+        }
         i{ 
             font-size: 80px;
         }
 
-        p {
-            font-size: 13px;
-            margin-left: 2px;
+        .texto-resumen {
+            width: 100px;
+            p {
+                font-size: 13px;
+                margin-left: 2px;
+            }
+
         }
     }
 }
+    .selected{
+        background-color: #000;
+    }
 
-@media screen and (max-width: 1280px) and (min-width: 768px) {
+
+
+    .cama-seleccion-icon {
+        color: rgb(0, 0, 0);
+        font-size: 30px;
+        background-color: #ffffff;
+        height: 40px;
+        width: 40px;
+        border-radius: 80px;
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 0.2rem 0;
+        border: solid 2px #000;
+    
+    }
+    .info-cama-menu {
+        h2 {
+            font-size: 5rem;
+        }
+        span{
+            font-size: 1rem;
+            padding: 10px;
+            margin: 10px;
+        }
+    }
+
+
+
+@media screen and (max-width: 1400px) and (min-width: 768px) {
     .container-resumen {
         display: flex;
         flex-direction: column!important;
