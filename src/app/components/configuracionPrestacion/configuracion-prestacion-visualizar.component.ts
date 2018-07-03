@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { ConfiguracionPrestacionService } from './../../services/term/configuracionPrestacion.service';
 import { IOrganizacion } from '../../interfaces/IOrganizacion';
@@ -8,9 +8,11 @@ import { IOrganizacion } from '../../interfaces/IOrganizacion';
     templateUrl: 'configuracion-prestacion-visualizar.html',
 })
 export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     public organizaciones: IOrganizacion[] = [];
     public mapeos: any[] = [];
+    public showCrear = false;
 
     constructor(
         private organizacionService: OrganizacionService,
@@ -37,5 +39,19 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     }
 
     public eliminarMapeo(unMapeo) {
+        let query = null;
+        if (unMapeo.organizaciones[0].idEspecialidad) {
+            query = { 'idOrganizacion': unMapeo.organizaciones[0].id, 'conceptIdSnomed': unMapeo.snomed.conceptId, 'idEspecialidad': unMapeo.organizaciones[0].idEspecialidad };
+        }
+        if (unMapeo.organizaciones[0].codigo) {
+            query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, codigo: unMapeo.organizaciones[0].codigo };
+        }
+        this.configuracionPrestacionService.put(query).subscribe(resultado => {
+            console.log('service: ', resultado);
+        });
+    }
+
+    public mostrarCrearMapeo() {
+        this.showCrear = true;
     }
 }

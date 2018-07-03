@@ -1,4 +1,4 @@
-<section class="plex-layout">
+<section class="plex-layout" *ngIf="!showCrear">
     <div class="row">
         <!--Panel central-->
         <div class="col">
@@ -37,7 +37,7 @@
                                 <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].idEspecialidad">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
                             </td>
                             <td>
-                                <plex-button type="primary" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
+                                <plex-button type="danger" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
                             </td>
                         </tr>
                     </tbody>
@@ -47,3 +47,12 @@
         </div>
     </div>
 </section>
+
+
+<footer *ngIf="!showCrear">
+    <div class="float-right">
+        <plex-button label="Agregar mapeo" type="primary" (click)="showCrear = true"></plex-button>
+    </div>
+</footer>
+
+<configuracion-prestacion-crear *ngIf="showCrear"></configuracion-prestacion-crear>

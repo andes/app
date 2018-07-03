@@ -1,0 +1,21 @@
+<section class="plex-layout">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="page-title">Agregar nuevo mapeo</div>
+                </header>
+                <!-- Select de organizaciones -->
+
+                <plex-select [(ngModel)]="organizacion" [data]="organizaciones" placeholder="Seleccione una organizacion..">
+                </plex-select>
+                <plex-select [(ngModel)]="tipoPrestacion" [data]="tipoPrestaciones" placeholder="Seleccione tipo de prestación..">
+                </plex-select>
+                <plex-select [(ngModel)]="especialidad" [data]="especialidades" placeholder="Seleccione especialidad..">
+                </plex-select>
+                <plex-button label="Agregar" type="primary" (click)="agregarNuevoMapeo(organizacion, tipoPrestacion, especialidad)"></plex-button>
+            </plex-box>
+        </div>
+    </div>
+</section>

@@ -11,11 +11,13 @@ export class ConfiguracionPrestacionService {
         return this.server.get(this.configPres, { params: params, showError: true });
     }
 
-    put(params: any): Observable<any[]> {
-        return this.server.put(this.configPres, { params: params, showError: true });
+    put(params: any): Observable<any> {
+        console.log('put: ', params);
+        return this.server.put(this.configPres, { query: params, showError: true });
     }
 
     post(params: any): Observable<any[]> {
+        console.log('post: ', params);
         return this.server.post(this.configPres, { params: params, showError: true });
     }
 }
