@@ -750,11 +750,30 @@ button {
         font-size: 1.5rem;
         padding: 0.2rem 0;
         border: solid 2px #000;
-    
+        p  {
+        font-size: 8px;
+        }
     }
     .info-cama-menu {
         h2 {
             font-size: 5rem;
+            font-weight: bold;
+
+            &.desocupada{
+                color:$desocupada;
+            }
+            &.ocupada{
+                color:$ocupada;
+            }
+            &.disponible{
+                color:$disponible;
+            }
+            &.reparacion{
+                color:rgb(204, 204, 204);
+            }
+            &.bloqueada{
+                color: rgb(204, 204, 204);
+            }
         }
         span{
             font-size: 1rem;
