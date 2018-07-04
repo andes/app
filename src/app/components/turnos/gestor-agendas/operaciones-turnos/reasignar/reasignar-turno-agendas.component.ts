@@ -2,9 +2,6 @@ import { environment } from './../../../../../../environments/environment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Observable } from 'rxjs/Rx';
-import { CalendarioComponent } from './../../../dar-turnos/calendario.component';
-import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
@@ -206,10 +203,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         };
         this.smsService.enviarSms(smsParams).subscribe(sms => {
             let resultado = sms;
-
             // "if 0 errores"
             if (resultado === '0') {
-                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
             } else {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
