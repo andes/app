@@ -16,7 +16,7 @@ export class HomeComponent implements AfterViewInit {
     }
 
     toRUP() {
-        this.router.navigate(['estadisticas/rup']);
+        this.router.navigate(['estadisticas/ambulatorio']);
     }
 
     toCITAS() {

@@ -14,14 +14,13 @@ let routes = [
         component: CitasComponent
     },
     {
-        path: 'rup',
+        path: 'ambulatorio',
         component: RupPacientesComponent
     }
 ];
 
 @NgModule({
     imports: [RouterModule.forChild(routes)],
-    exports: [RouterModule],
     providers: []
 })
 export class EstadisticasRouting { }

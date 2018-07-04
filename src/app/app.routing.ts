@@ -123,7 +123,7 @@ const appRoutes: Routes = [
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
 
   // Estadisticas
-  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+  
 
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
@@ -156,6 +156,9 @@ const appRoutes: Routes = [
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
+
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+
   { path: '**', redirectTo: 'inicio' }
 ];
 
