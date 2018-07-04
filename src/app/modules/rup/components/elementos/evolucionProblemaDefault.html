@@ -41,7 +41,8 @@
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Evolución" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
+                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [html]="true" [readonly]="false" (change)="emitChange()">
+                </plex-text>
             </div>
         </div>
 
@@ -118,7 +119,8 @@
     <div class="row">&nbsp;</div>
     <div class="row" *ngIf="registro.valor.evolucion">
         <div class="col-8 readonly">
-            <span>Evolución </span> {{ registro.valor.evolucion }}
+            <span>Evolución </span>
+            <span [innerHTML]="registro.valor.evolucion"></span>
         </div>
         <div class="col-4 readonly" *ngIf="registro.concepto.semanticTag === 'trastorno'">
             <span>Inicio aproximado </span>
