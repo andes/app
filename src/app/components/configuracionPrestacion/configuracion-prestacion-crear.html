@@ -8,14 +8,32 @@
                 </header>
                 <!-- Select de organizaciones -->
 
-                <plex-select [(ngModel)]="organizacion" [data]="organizaciones" placeholder="Seleccione una organizacion..">
-                </plex-select>
-                <plex-select [(ngModel)]="tipoPrestacion" [data]="tipoPrestaciones" placeholder="Seleccione tipo de prestación..">
-                </plex-select>
-                <plex-select [(ngModel)]="especialidad" [data]="especialidades" placeholder="Seleccione especialidad..">
-                </plex-select>
-                <plex-button label="Agregar" type="primary" (click)="agregarNuevoMapeo(organizacion, tipoPrestacion, especialidad)"></plex-button>
+                <div class="col">
+                    <label>Organización:</label>
+                    <plex-select [(ngModel)]="organizacion" [data]="organizaciones" placeholder="Seleccione una organizacion..">
+                    </plex-select>
+                </div>
+                <div class="col">
+                    <label>Tipo de prestación:</label>
+                    <plex-select [(ngModel)]="tipoPrestacion" [data]="tipoPrestaciones" placeholder="Seleccione tipo de prestación..">
+                    </plex-select>
+                </div>
+                <div class="col">
+                    <label>Especialidad SIPS:</label>
+                    <plex-select [(ngModel)]="especialidad" [data]="especialidades" placeholder="Seleccione especialidad..">
+                    </plex-select>
+                </div>
+
+
+
             </plex-box>
         </div>
     </div>
 </section>
+
+<footer>
+    <div class="float-right">
+        <plex-button label="Cancelar" type="danger" (click)="botonVolver()"></plex-button>
+        <plex-button label="Agregar nuevo mapeo" type="success" (click)="agregarNuevoMapeo(organizacion, tipoPrestacion, especialidad)"></plex-button>
+    </div>
+</footer>

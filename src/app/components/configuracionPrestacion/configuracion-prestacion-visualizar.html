@@ -51,8 +51,8 @@
 
 <footer *ngIf="!showCrear">
     <div class="float-right">
-        <plex-button label="Agregar mapeo" type="primary" (click)="showCrear = true"></plex-button>
+        <plex-button label="Agregar mapeo" type="info" (click)="mostrarCrearMapeo(true)"></plex-button>
     </div>
 </footer>
 
-<configuracion-prestacion-crear *ngIf="showCrear"></configuracion-prestacion-crear>
+<configuracion-prestacion-crear *ngIf="showCrear" (data)="showCrear = false"></configuracion-prestacion-crear>

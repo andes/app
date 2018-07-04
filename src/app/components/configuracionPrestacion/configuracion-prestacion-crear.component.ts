@@ -1,9 +1,10 @@
-import { Component, OnInit, HostBinding } from '@angular/core';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { ConfiguracionPrestacionService } from './../../services/term/configuracionPrestacion.service';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 import { PrestacionLegacyService } from './../../services/prestacionLegacy.service';
 import { IOrganizacion } from '../../interfaces/IOrganizacion';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'configuracion-prestacion-crear',
@@ -16,8 +17,10 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
     public tipoPrestaciones: any[] = [];    // conceptoTurneable
     public especialidades: any[] = [];  // prestacionesLegacy
 
+    @Output() data: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     constructor(
+        public plex: Plex,
         private organizacionService: OrganizacionService,
         private tipoPrestacionService: TipoPrestacionService,
         private prestacionLegacyService: PrestacionLegacyService,
@@ -39,10 +42,15 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
     }
 
     public agregarNuevoMapeo(unaOrganizacion, unTipoPrestacion, unaEspecialidad) {
-        let nuevaCP = /*JSON.parse(JSON.stringify(*/{ organizacion: unaOrganizacion, conceptSnomed: unTipoPrestacion, prestacionLegacy: unaEspecialidad }/*)))*/;
+        let nuevaCP = { organizacion: unaOrganizacion, conceptSnomed: unTipoPrestacion, prestacionLegacy: unaEspecialidad };
         console.log(nuevaCP);
         this.configuracionPrestacionService.post(nuevaCP).subscribe(resultado => {
-            return resultado;
+
+            this.plex.toast('success', '', 'Mapeo agregado exitosamente');
         });
+    }
+
+    public botonVolver() {
+        this.data.emit(false);
     }
 }

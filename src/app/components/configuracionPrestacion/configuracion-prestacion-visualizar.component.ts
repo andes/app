@@ -41,17 +41,21 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     public eliminarMapeo(unMapeo) {
         let query = null;
         if (unMapeo.organizaciones[0].idEspecialidad) {
-            query = { 'idOrganizacion': unMapeo.organizaciones[0].id, 'conceptIdSnomed': unMapeo.snomed.conceptId, 'idEspecialidad': unMapeo.organizaciones[0].idEspecialidad };
+            query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, idEspecialidad: unMapeo.organizaciones[0].idEspecialidad };
         }
         if (unMapeo.organizaciones[0].codigo) {
             query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, codigo: unMapeo.organizaciones[0].codigo };
         }
         this.configuracionPrestacionService.put(query).subscribe(resultado => {
-            console.log('service: ', resultado);
+
         });
     }
 
-    public mostrarCrearMapeo() {
-        this.showCrear = true;
+    public mostrarCrearMapeo(bool) {
+        this.showCrear = bool;
+    }
+
+    public ocultarCrearMapeo(bool) {
+        this.showCrear = bool;
     }
 }
