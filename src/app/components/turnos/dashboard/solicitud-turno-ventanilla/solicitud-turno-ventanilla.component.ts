@@ -14,6 +14,7 @@ import { OrganizacionService } from './../../../../services/organizacion.service
 
 // Interfaces
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { debug } from 'util';
 
 @Component({
     selector: 'solicitud-turno-ventanilla',
@@ -118,34 +119,34 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 event.callback(resultado);
             });
         }
-        // this.servicioOrganizacion.get({}).subscribe(organizaciones => {
-        //     event.callback(organizaciones);
-        // });
     }
 
-    // loadProfesionales(event) {
-    //     this.servicioProfesional.get({}).subscribe(profesionales => {
-    //         event.callback(profesionales);
-    //     });
-    // }
-
     loadProfesionales(event) {
-        let listaProfesionales = [];
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.solicitud.profesional.concat(resultado) : this.modelo.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
-            });
+            this.servicioProfesional.get(query).subscribe(event.callback);
         } else {
-            event.callback(this.modelo.solicitud.profesional);
+            event.callback([]);
         }
+
+        // let listaProfesionales = [];
+        // if (event.query) {
+        //     let query = {
+        //         nombreCompleto: event.query
+        //     };
+        //     this.servicioProfesional.get(query).subscribe(resultado => {
+        //         if (this.modelo.profesionales) {
+        //             listaProfesionales = (resultado) ? this.modelo.solicitud.profesional.concat(resultado) : this.modelo.profesionales;
+        //         } else {
+        //             listaProfesionales = resultado;
+        //         }
+        //         event.callback(listaProfesionales);
+        //     });
+        // } else {
+        //     event.callback(this.modelo.solicitud.profesional);
+        // }
     }
 
     loadProfesionalesMulti(event) {
@@ -185,12 +186,13 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     guardarSolicitud($event) {
-
         if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
 
             delete this.modelo.solicitud.organizacion.$order;
             delete this.modelo.solicitud.profesional.$order;
             delete this.modelo.solicitud.tipoPrestacion.$order;
+            this.registros.solicitudPrestacion.profesionales = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino : [this.modelo.solicitud.profesional];
+
             if (this.registros.solicitudPrestacion.profesionales) {
                 this.registros.solicitudPrestacion.profesionales.filter(profesional => {
                     return delete profesional.$order;
@@ -206,8 +208,8 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 tipo: 'solicitud'
             };
 
-            this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino[0];
+            this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino ? this.modelo.solicitud.organizacionDestino : this.modelo.solicitud.organizacion;
+            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino[0] : this.modelo.solicitud.profesional;
 
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {

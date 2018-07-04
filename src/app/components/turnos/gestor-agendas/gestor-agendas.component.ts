@@ -530,11 +530,6 @@ export class GestorAgendasComponent implements OnInit {
         this.showGestorAgendas = false;
     }
 
-    darTurnos() {
-        this.showGestorAgendas = false;
-        this.showDarTurnos = true;
-    }
-
     actualizarEstadoEmit(estado) {
         // Se suspende una agenda completa
         if (estado === 'suspendida') {

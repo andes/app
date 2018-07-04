@@ -28,15 +28,15 @@
             <span>Indicaciones</span>
             {{ registro.valor.solicitudPrestacion.indicaciones || '(ninguna)' }}
         </div>
-        <div>
+        <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">
             <span>Organización a la cual se solicita</span>
-            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
+            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
                 {{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}
             </ng-container>
         </div>
-        <div>
+        <div *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino">
             <span>Profesional/es</span>
-            <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
+            <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.profesionalesDestino && registro?.valor?.solicitudPrestacion?.profesionalesDestino.length">
                 <ng-container *ngFor="let profesional of registro.valor?.solicitudPrestacion?.profesionalesDestino">
                     {{ profesional.apellido }}, {{ profesional.nombre }}
                 </ng-container>

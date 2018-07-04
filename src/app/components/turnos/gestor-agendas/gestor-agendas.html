@@ -156,7 +156,6 @@
     <!--Footer-->
     <footer *ngIf="showGestorAgendas">
         <plex-button type="primary" label="Crear una nueva agenda" (click)="insertarAgenda()"></plex-button>
-        <plex-button *ngIf="btnDarTurnos" type="primary" label="Dar Turnos" (click)="darTurnos()"></plex-button>
         <div class="float-right" *ngIf="showEditarAgendaPanel && agendasSeleccionadas?.length === 1">
             <plex-button type="danger" label="Cancelar" (click)="guardarAgendaPanel.cancelar()"></plex-button>
             <plex-button type="success" label="Guardar" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>

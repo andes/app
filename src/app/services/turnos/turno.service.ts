@@ -11,6 +11,7 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
+        console.log(params);
         return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 

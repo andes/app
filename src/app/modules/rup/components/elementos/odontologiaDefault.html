@@ -1,0 +1,47 @@
+<div *ngIf="!soloValores && registro.valor">
+    <div class="row">
+        <div class="col">
+            <plex-select [(ngModel)]="registro.valor.piezaDental" name="piezaDental" required="true" label="Pieza dental" (getData)="loadPiezasDentales($event)"
+                idField="term" labelField="term">
+            </plex-select>
+        </div>
+        <div class="col">
+            <plex-select [(ngModel)]="registro.valor.caraDental" [multiple]="true" name="caraDental" required="true" label="Cara del diente"
+                (getData)="loadCarasDentales($event)" idField="term" labelField="term">
+            </plex-select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <plex-text label="Observaciones" multiline="true" autoFocus="1" required="true" [(ngModel)]="registro.valor.observaciones"></plex-text>
+        </div>
+    </div>
+</div>
+
+<ng-container *ngIf="soloValores" class="readonly">
+    <div class="row">
+        <div class="col" *ngIf="registro.valor.piezaDental">
+            <label>Pieza dental</label>
+            <ng-container>
+                {{registro.valor.piezaDental.term}}
+            </ng-container>
+        </div>
+        <div class="col" *ngIf="registro.valor.caraDental">
+            <label>Cara del diente</label>
+            <ng-container *ngFor="let cara of registro.valor.caraDental">
+                {{cara.term }}
+                <br>
+            </ng-container>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <label>Observaciones</label>
+            <ng-container>
+                {{registro.valor.observaciones}}
+            </ng-container>
+        </div>
+    </div>
+
+</ng-container>
