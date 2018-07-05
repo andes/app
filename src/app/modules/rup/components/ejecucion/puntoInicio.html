@@ -188,6 +188,8 @@
                             <td class="text-right">
                                 <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
 
+                                    <plex-button type="info" *ngIf="mostrarBtnTurnero" (click)="llamarTurnero(turno)"> Llamar </plex-button>
+
                                     <plex-button (click)="routeTo('vista', turno.paciente.id)" label="VER HUDS" type="primary btn-sm">
                                     </plex-button>
 

@@ -51,6 +51,9 @@ export class PuntoInicioComponent implements OnInit {
     public paciente: any;
     public mostrarBtnTurnero = false;
     public ultimoLlamado;
+
+    public espaciosFisicosTurnero = [];
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
@@ -58,18 +61,29 @@ export class PuntoInicioComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnero: TurneroService,
-    public servicioOrganizacion: OrganizacionService) { }
+        public servicioOrganizacion: OrganizacionService) { }
 
     ngOnInit() {
 
-        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe(res => {
-let organizacion: any = res;
-if (organizacion.turnero === true) {
-    this.mostrarBtnTurnero = true;
-    this.conexionPantalla();
-}
-
+        this.servicioTurnero.get({}).subscribe((pantallas) => {
+            pantallas.forEach((pantalla: any) => {
+                pantalla.espaciosFisicos.forEach((ef) => {
+                    let i = this.espaciosFisicosTurnero.findIndex((e) => e === ef.id);
+                    if (i < 0) {
+                        this.espaciosFisicosTurnero.push(ef.id);
+                    }
+                });
+            }); 
         });
+
+        // this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe(res => {
+        //     let organizacion: any = res;
+        //     if (organizacion.turnero === true) {
+        //         this.mostrarBtnTurnero = true;
+        //         this.conexionPantalla();
+        //     }
+
+        // });
 
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
@@ -90,9 +104,9 @@ if (organizacion.turnero === true) {
                 });
             }
         }
-
-
     }
+
+
 
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
@@ -173,7 +187,7 @@ if (organizacion.turnero === true) {
             this.filtrar();
 
             if (this.agendas.length) {
-                this.agendaSeleccionada = this.agendas[0];
+                this.cargarTurnos(this.agendas[0]);
             }
 
             // recorremos agenda seleccionada para ver si tienen planes pendientes y mostrar en la vista..
@@ -351,8 +365,15 @@ if (organizacion.turnero === true) {
 
     cargarTurnos(agenda) {
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
+        if (agenda) {
+            let i = this.espaciosFisicosTurnero.findIndex( (e) => e === agenda.espacioFisico.id);
+            if (i >= 0 ) {
+                this.mostrarBtnTurnero = true;
+                return;
+            }
+        }
+        this.mostrarBtnTurnero = false;
     }
-
 
     routeTo(action, id) {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
@@ -406,17 +427,24 @@ if (organizacion.turnero === true) {
         }
         return prestaciones;
     }
-
-    // TURNERO
-    conexionPantalla() {
-        let datosPantalla = {
-            pantalla: 'puntoInicio',
-            // prestaciones: ['268565007','32132', '231321']
-            prestaciones: []
+ 
+    llamarTurnero(turno) {
+        this.dniLlamado = turno.paciente.documento;
+        // this.volverALlamar = true;
+        let turnoProximo = {
+            horaInicio: turno.horaInicio,
+            paciente: turno.paciente,
+            horaLlamada: new Date(),
+            profesional: this.agendaSeleccionada.profesionales[0],
+            tipoPrestacion: turno.tipoPrestacion,
+            espacioFisico: this.agendaSeleccionada.espacioFisico
         };
-        this.servicioTurnero.getTurno(datosPantalla).subscribe(turno => {
-        });
-
+        this.servicioTurnero.llamar(turnoProximo);
+        // this.ultimoLlamado = turnoProximo;
+        // this.servicioTurnero.post(turnoProximo).subscribe();
+        // setTimeout(() => {
+        //     this.dniLlamado = null;
+        // }, 2200);
     }
 
     // TURNERO
@@ -433,7 +461,7 @@ if (organizacion.turnero === true) {
             espacioFisico: this.agendaSeleccionada.espacioFisico
         };
         this.ultimoLlamado = turnoProximo;
-        this.servicioTurnero.post(turnoProximo).subscribe();
+        // this.servicioTurnero.post(turnoProximo).subscribe();
         setTimeout(() => {
             this.dniLlamado = null;
         }, 2200);
@@ -464,7 +492,7 @@ if (organizacion.turnero === true) {
                 espacioFisico: this.agendaSeleccionada.espacioFisico
             };
             this.ultimoLlamado = turnoProximo;
-            this.servicioTurnero.post(turnoProximo).subscribe();
+            // this.servicioTurnero.post(turnoProximo).subscribe();
 
             this.index++;
             setTimeout(() => {
@@ -505,11 +533,11 @@ if (organizacion.turnero === true) {
         //         espacioFisico: this.agendaSeleccionada.espacioFisico
         //     };
         this.dniLlamado = this.ultimoLlamado.paciente.documento;
-            this.servicioTurnero.post(this.ultimoLlamado).subscribe();
+        // this.servicioTurnero.post(this.ultimoLlamado).subscribe();
 
-            setTimeout(() => {
-                this.dniLlamado = null;
-            }, 2200);
+        setTimeout(() => {
+            this.dniLlamado = null;
+        }, 2200);
 
 
 

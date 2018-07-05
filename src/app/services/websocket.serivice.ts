@@ -1,9 +1,7 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import * as io from 'socket.io-client'; 
-import { Router } from '@angular/router';
-import { Auth } from '@andes/auth';
+import * as io from 'socket.io-client';
 
 @Injectable()
 export class WebSocketService {
