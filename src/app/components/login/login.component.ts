@@ -33,6 +33,7 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['selectOrganizacion']);
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
+                    this.password = null;
                     this.loading = false;
                     this.deshabilitar = false;
                 });
