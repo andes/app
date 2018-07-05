@@ -309,6 +309,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.carpetaPrestadaEmit.emit(solicitudCarpeta);
             this.carpetaSeleccionada = solicitudCarpeta;
             this.verPrestar = true;
+            this.verSolicitudManual = false;
         }
     }
 
