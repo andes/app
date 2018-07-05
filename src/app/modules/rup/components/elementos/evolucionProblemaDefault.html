@@ -73,13 +73,14 @@
         </div>
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-8">
+                <br>
+                <strong>Evolución:</strong>
+                <span [innerHTML]="unaEvolucion.evolucion"></span>
+            </div>
+            <div class="col-4 text-right">
                 <br>
                 <strong>Profesional:</strong> {{unaEvolucion.profesional }}
-            </div>
-            <div class="col-6">
-                <br>
-                <strong>Evolución:</strong> {{unaEvolucion.evolucion}}
             </div>
         </div>
     </ng-container>
@@ -144,7 +145,8 @@
                 </div>
                 <div *ngFor="let evolucion of registro.evoluciones" class="row ml-1">
                     <div class="col-6">
-                        <b>Evolución: </b> {{ evolucion.evolucion }}
+                        <b>Evolución: </b>
+                        <span [innerHTML]="evolucion.evolucion"></span>
                     </div>
                     <div class="col-6">
                         <div class="col-12">
