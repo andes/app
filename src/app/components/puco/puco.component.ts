@@ -20,6 +20,7 @@ export class PucoComponent implements OnInit, OnDestroy {
 
     public loading = false;
     public errorSearchTerm = false; // true si se ingresan caracteres alfabeticos
+    public periodos = [];
     public usuarios: ArrayType[];
     private resPuco: ArrayType[];
     private resProfe: ArrayType[];
