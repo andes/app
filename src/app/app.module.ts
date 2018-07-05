@@ -51,6 +51,9 @@ import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
+
+import { WebSocketService } from './services/websocket.serivice';
+
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
 import { OcupacionService } from './services/ocupacion/ocupacion.service';
@@ -374,6 +377,7 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 
+
 registerLocaleData(localeEs, 'es');
 
 
@@ -473,6 +477,7 @@ registerLocaleData(localeEs, 'es');
         Plex,
         Server,
         Auth,
+        WebSocketService,
         RoutingGuard,
         OrganizacionService,
         OcupacionService,

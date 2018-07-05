@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { environment } from '../../../environments/environment';
+import { WebSocketService } from '../../services/websocket.serivice';
 @Component({
     templateUrl: 'login.html',
     styleUrls: ['login.scss'],
@@ -16,7 +17,7 @@ export class LoginComponent implements OnInit {
     public autoFocus = 1;
     public versionAPP = environment.version;
 
-    constructor(private plex: Plex, private auth: Auth, private router: Router) { }
+    constructor(private plex: Plex, private auth: Auth, private router: Router, public ws: WebSocketService) { }
 
     ngOnInit() {
         this.auth.logout();
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit {
                 .subscribe((data) => {
                     this.plex.updateUserInfo({ usuario: this.auth.usuario });
                     this.router.navigate(['selectOrganizacion']);
+                    this.ws.auth(window.sessionStorage.getItem('jwt'));
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
                     this.loading = false;
