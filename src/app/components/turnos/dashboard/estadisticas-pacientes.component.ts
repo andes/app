@@ -112,8 +112,8 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     private sortTurnos(turnos) {
         turnos = turnos.sort((a, b) => {
-            let inia = a.horaInicio ? new Date(a.horaInicio.setHours(0, 0, 0, 0)) : null;
-            let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
+            let inia = a.horaInicio ? new Date(a.horaInicio) : null;
+            let inib = b.horaInicio ? new Date(b.horaInicio) : null;
             {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
