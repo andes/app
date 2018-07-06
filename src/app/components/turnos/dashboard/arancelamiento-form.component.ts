@@ -39,7 +39,12 @@ export class ArancelamientoFormComponent implements OnInit {
             this.obraSocial = resultado.nombre;
             this.codigoOs = resultado.codigo;
             this.showForm = true;
+            setTimeout(() => {
+                this.imprimir();
+                this.volverAPuntoInicio.emit();
+            }, 100);
         });
+
     }
 
     getNroCarpeta() {
