@@ -15,18 +15,15 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     registroPeso: any;
     public alerta = '';
     private pesoConceptId = '27113001';
-    // private tallaConceptId = '14456009';
     private tallaConceptId = '276353004';
     registro: any = {};
 
     // utilizado para el form, asi nos permite dejar el input como disabled
     public valorImc: Number;
-    // cumpleReglasParams = true;
 
     ngOnInit() {
-        // if (this.registro.valor == null) {
-        //     this.registro.valor = 0;
-        // }
+
+        this.registro.valido = true;
 
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'percentiloPeso' en otro elemento RUP
@@ -35,7 +32,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     this.registro.valor = data.valor;
                     this.emitChange(false);
                     if (this.elementoRUP) {
-                        // this.checkReglasParams();
                         this.calculoIMC();
                     }
                 }
@@ -59,7 +55,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     // Evalua las instancias en las que se pueden capturar los valores
     calculoIMC() {
 
-
         // calcula el imc y/o devuelve alertas al usuario.
         let imc = null;
 
@@ -77,12 +72,9 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     }
                 });
             }
-            console.log('this.registroPeso', this.registroPeso);
 
             // this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
             this.registroTalla = this.registro.registros.find(r => r.concepto.conceptId === this.tallaConceptId);
-            console.log('REGISTROS', this.registro.registros[1].concepto);
-            console.log('this.registroTalla', this.registroTalla);
 
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
@@ -94,13 +86,11 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                 });
             }
 
-
         } else {
 
             // let this.registroPeso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.pesoConceptId);
             this.registroPeso = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.pesoConceptId);
 
-            console.log('this.registroPeso', this.registroPeso);
 
             if (this.registroPeso && this.registroPeso.valor) {
                 this.peso = this.registroPeso.valor;
@@ -114,7 +104,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
             this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
 
-            console.log('this.registroTalla', this.registroTalla);
 
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
@@ -125,13 +114,11 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     }
                 });
             }
-            console.log('this.talla 2', this.talla);
         }
         if (this.conceptosRequeridos.length === 2) {
             this.peso = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.pesoConceptId).valor;
             this.talla = this.conceptosRequeridos.find(x => x.concepto.conceptId === this.tallaConceptId).valor;
         }
-
 
         // Si encuentro las prestaciones que necesito. peso-talla
         if (this.peso && this.talla) {
@@ -158,9 +145,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                     this.alerta = 'Falta completar el campo talla y el campo peso';
                     break;
             }
-
         }
-
     }
 
     buscarConceptoDeep(registros: any[], conceptId) {
