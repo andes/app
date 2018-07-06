@@ -13,7 +13,7 @@ import { PacienteService } from './../../services/paciente.service';
 @Component({
     selector: 'puco',
     templateUrl: 'puco.html',
-    // styleUrls: ['puco.css']
+    styleUrls: ['puco.scss']
 })
 
 export class PucoComponent implements OnInit, OnDestroy {
