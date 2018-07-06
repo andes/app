@@ -29,7 +29,9 @@ export class PrestacionesService {
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
     public conceptosNoConcurrio = [
         '397710003',
-        '281399006'
+        '281399006',
+        '270426007',
+        '275694009'
     ];
 
     public conceptosTurneables: any[];
