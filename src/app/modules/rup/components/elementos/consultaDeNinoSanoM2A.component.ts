@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
 
 @Component({
     selector: 'rup-consulta-nino-sano-m2a',
@@ -22,8 +21,6 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
     registroClon: any;
 
     ngOnInit() {
-
-        console.log('init', this.registro.registros);
 
         this.route.url.subscribe(urlParts => {
             if (urlParts[1].path === 'validacion') {
@@ -73,7 +70,6 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
 
     buscarConceptoDeep(registros: any[], target: string, conceptId) {
         if (registros) {
-            // this[String(target)] = [];
             for (let i = 0; i < registros.length; i++) {
                 if (registros[i].concepto.conceptId === conceptId) {
                     this[String(target)].push(registros[i]);
