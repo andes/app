@@ -6,11 +6,11 @@
         (change)="emitChange()"></textarea>
 </ng-container>
 
-<p *ngIf="soloValores" class="readonly">
-    <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
-    <!-- <br> -->
+<p *ngIf="soloValores && !registro.valor" class="readonly">
     <span>Observaciones</span>
-    <ng-container>
-        {{registro.valor}}
-    </ng-container>
+    sin valor
+</p>
+<p *ngIf="soloValores && registro.valor" class="readonly">
+    <span>Observaciones</span>
+    {{ registro.valor }}
 </p>
