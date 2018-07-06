@@ -81,6 +81,19 @@
                 <strong>Evolución:</strong> {{unaEvolucion.evolucion}}
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <hr>
+                <label>Informe Del Encuentro:</label>
+                <ng-container *ngIf="unaEvolucion.informeRequerido.valor;then showMensaje else showContenidoValor"></ng-container>
+                <ng-template #showContenidoValor>
+                    No tiene registrado el informe
+                </ng-template>
+                <ng-template #showMensaje>
+                    {{unaEvolucion.informeRequerido.valor}}
+                </ng-template>
+            </div>
+        </div>
     </ng-container>
 </div>
 
