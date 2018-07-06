@@ -35,7 +35,6 @@ export class PrestacionesService {
     public conceptosTurneables: any[];
 
     constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
-
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
         });
@@ -101,9 +100,6 @@ export class PrestacionesService {
         }
 
     }
-
-
-
 
     findValues(obj, key) { // funcion para buscar una key y recupera un array con sus valores.
         return this.findValuesHelper(obj, key, []);
