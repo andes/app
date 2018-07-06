@@ -16,8 +16,17 @@ export class TurneroService {
     ) { }
 
 
-    llamar(turno) {
-        this.ws.emit('turnero-proximo-llamado', turno);
+    llamar(agenda, turno) {
+        let turnoProximo = {
+            id: turno.id,
+            horaInicio: turno.horaInicio,
+            paciente: turno.paciente,
+            horaLlamada: new Date(),
+            profesional: agenda.profesionales[0],
+            tipoPrestacion: turno.tipoPrestacion,
+            espacioFisico: agenda.espacioFisico
+        };
+        this.ws.emit('turnero-proximo-llamado', turnoProximo);
     }
 
     get(params: any): Observable<any> {

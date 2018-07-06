@@ -142,6 +142,11 @@
                                     </span>
                                     <br />
                                 </div>
+
+                                <plex-button size="sm" type="info" [disabled]="llamandoTurno" title="LLamar" *ngIf="mostrarBtnTurnero && turno.paciente?.documento" (click)="llamarTurnero(turno)">
+                                    <plex-icon name="bell-ring-outline" ></plex-icon>
+                                </plex-button>
+
                             </td>
                             <td>
                                 <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>
@@ -187,8 +192,6 @@
                             </td>
                             <td class="text-right">
                                 <ng-container *ngIf="turno.tipoPrestacion && turno.paciente?.id">
-
-                                    <plex-button type="info" *ngIf="mostrarBtnTurnero" (click)="llamarTurnero(turno)"> Llamar </plex-button>
 
                                     <plex-button (click)="routeTo('vista', turno.paciente.id)" label="VER HUDS" type="primary btn-sm">
                                     </plex-button>
