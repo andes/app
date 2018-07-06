@@ -242,8 +242,6 @@ import { ConsultaDeNinoSanoM2AComponent } from './modules/rup/components/element
 import { ConsultaDeNinoSanoE2Y3AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoE2Y3A.component';
 import { ConsultaDeNinoSanoE3Y6AComponent } from './modules/rup/components/elementos/consultaDeNinoSanoE3Y6A.component';
 import { DesarrolloPsicomotorComponent } from './modules/rup/components/elementos/desarrolloPsicomotor.component';
-import { DesarrolloPsicomotorNormalComponent } from './modules/rup/components/elementos/desarrolloPsicomotorNormal.component';
-import { DesarrolloPsicomotorTrastornoComponent } from './modules/rup/components/elementos/desarrolloPsicomotorTrastorno.component';
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
@@ -359,8 +357,6 @@ export let RUPRegistry = {
     'ConsultaDeNinoSanoE2Y3AComponent': ConsultaDeNinoSanoE2Y3AComponent,
     'ConsultaDeNinoSanoE3Y6AComponent': ConsultaDeNinoSanoE3Y6AComponent,
     'DesarrolloPsicomotorComponent': DesarrolloPsicomotorComponent,
-    'DesarrolloPsicomotorNormalComponent': DesarrolloPsicomotorNormalComponent,
-    'DesarrolloPsicomotorTrastornoComponent': DesarrolloPsicomotorTrastornoComponent,
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
@@ -414,8 +410,6 @@ let RUPComponentsArray = [
     ConsultaDeNinoSanoE2Y3AComponent,
     ConsultaDeNinoSanoE3Y6AComponent,
     DesarrolloPsicomotorComponent,
-    DesarrolloPsicomotorNormalComponent,
-    DesarrolloPsicomotorTrastornoComponent,
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent
