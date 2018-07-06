@@ -3,7 +3,7 @@ import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-consulta-nino-sano-m2a',
-    templateUrl: 'consultaNinoSanoM2A.html'
+    templateUrl: 'consultaDeNinoSanoM2A.html'
 })
 export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnInit {
     ninoSanoHUDS: any;
@@ -26,11 +26,15 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
             estado: 'validada'
         };
 
+        this.ultimaConsulta = JSON.parse(JSON.stringify(this.registro));
+
         if (!this.validacion) {
             this.prestacionesService.get(params).subscribe(consultasPaciente => {
                 this.ninoSanoHUDS = consultasPaciente.reverse();
                 if (this.ninoSanoHUDS && this.ninoSanoHUDS.length > 0) {
                     this.ultimaConsultaIndex = this.ninoSanoHUDS.length - 1;
+
+                    console.log(this.ultimaConsultaIndex);
 
                     const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
                     this.ultimaConsulta = this.ninoSanoHUDS[this.ultimaConsultaIndex].ejecucion.registros.find(x => {
@@ -42,9 +46,9 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
                         this.registro.registros = JSON.parse(JSON.stringify(this.ultimaConsulta.registros));
                         if (new Date(this.ultimaConsulta.updatedAt).getTime() > new Date(this.prestacion.updatedAt ? this.prestacion.updatedAt : this.prestacion.createdAt).getTime()) {
                             this.ultimaConsulta.registros = this.registro.registros;
-                        } else {
-                            this.ultimaConsulta.registros = this.registro.registros;
                         }
+                    } else {
+                        this.ultimaConsulta = JSON.parse(JSON.stringify(this.registro));
                     }
                 }
             });
