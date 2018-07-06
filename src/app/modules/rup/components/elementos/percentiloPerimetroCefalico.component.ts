@@ -9,9 +9,6 @@ import * as moment from 'moment';
 export class PercentiloPerimetroCefalicoComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
-        if (this.registro.valor == null) {
-            this.registro.valor = 0;
-        }
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
                 if (this.registro.valor !== data.valor) {

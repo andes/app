@@ -6,10 +6,6 @@ import { RUPComponent } from './../core/rup.component';
 })
 export class PercentiloDeTensionArterialComponent extends RUPComponent implements OnInit {
     ngOnInit() {
-        if (this.registro.valor == null) {
-            this.registro.valor = 0;
-        }
-
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'percentiloPeso' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
