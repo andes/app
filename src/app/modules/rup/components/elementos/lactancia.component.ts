@@ -4,34 +4,30 @@ import { RUPComponent } from './../core/rup.component';
 @Component({
     selector: 'rup-lactancia',
     templateUrl: 'lactancia.html',
-    styles: [
-        `
-            plex-bool {
-                top: 0 !important;
-            }
-        `
-    ] // Le aplico al style top 0 por que el componente plex-bool trae un top: 35px y se sale del content
+
 })
 export class LactanciaComponent extends RUPComponent implements OnInit {
     public conceptos: any[] = [];
 
     ngOnInit() {
-        if (!this.registro.valor) {
-            this.registro.valor = [];
-        }
+        if (this.registro) {
+            if (!this.registro.valor) {
+                this.registro.valor = [];
+            }
 
-        if (this.params) {
-            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
-                this.conceptos = resultado;
-                if (!this.registro.valor.length) { // La primera vez, siempre crea los registro.valor por cada concepto y ser utilizado en el html por el (ngModel)
-                    for (let i in this.conceptos) {
-                        let concepto = this.conceptos[i];
-                        let a = this.estaSeleccionado(concepto);
-                        this.registro.valor[i] = {};
-                        this.registro.valor[i] = a;
+            if (this.params) {
+                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+                    this.conceptos = resultado;
+                    if (!this.registro.valor.length) { // La primera vez, siempre crea los registro.valor por cada concepto y ser utilizado en el html por el (ngModel)
+                        for (let i in this.conceptos) {
+                            let concepto = this.conceptos[i];
+                            let a = this.estaSeleccionado(concepto);
+                            this.registro.valor[i] = {};
+                            this.registro.valor[i] = a;
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -62,5 +58,9 @@ export class LactanciaComponent extends RUPComponent implements OnInit {
                 }
             }
         }
+    }
+
+    tieneValor() {
+        return this.registro.valor.find(x => x.checkbox === true);
     }
 }
