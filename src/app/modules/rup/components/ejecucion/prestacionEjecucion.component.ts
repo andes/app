@@ -609,25 +609,26 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     private controlValido(registro) {
-        if (registro.registros.length <= 0) {
-            registro.valido = (registro.valor !== null) ? true : false;
-            if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
-                this.colapsarPrestaciones('expand');
-            }
-        } else {
+        return true;
+        // if (registro.registros.length <= 0) {
+        //     registro.valido = (registro.valor !== null) ? true : false;
+        //     if (registro.concepto && !registro.valido) {
+        //         this.plex.toast('danger', 'Registro incompleto: ' + registro.concepto.term, 'Error', 3000);
+        //         this.colapsarPrestaciones('expand');
+        //     }
+        // } else {
 
-            let total = registro.registros.length;
-            let contadorValiddos = 0;
-            registro.registros.forEach(r => {
-                let res = this.controlValido(r);
-                if (res) {
-                    contadorValiddos++;
-                }
-            });
-            registro.valido = (contadorValiddos === total) ? true : false;
-        }
-        return registro.valido;
+        //     let total = registro.registros.length;
+        //     let contadorValiddos = 0;
+        //     registro.registros.forEach(r => {
+        //         let res = this.controlValido(r);
+        //         if (res) {
+        //             contadorValiddos++;
+        //         }
+        //     });
+        //     registro.valido = (contadorValiddos === total) ? true : false;
+        // }
+        // return registro.valido;
     }
 
     /**
@@ -668,16 +669,17 @@ export class PrestacionEjecucionComponent implements OnInit {
                     }
                 }
             }
-            if (valoresConCero.length > 0) {
-                this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
-                    if (respuestaAlerta) {
-                        respuesta = true;
-                    } else {
-                        respuesta = false;
-                    }
-                    return respuesta;
-                });
-            }
+            // if (valoresConCero.length > 0) {
+            //     this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+            //         if (respuestaAlerta) {
+            //             respuesta = true;
+            //         } else {
+            //             respuesta = false;
+            //         }
+            //         return respuesta;
+            //     });
+            // }
+            return respuesta;
         } else {
             return respuesta;
         }
@@ -691,7 +693,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+            if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
         });
@@ -741,7 +743,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         let respuesta = true;
         let valoresConCero = [];
-        if (this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
+        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
             for (let reg of this.prestacion.ejecucion.registros) {
                 let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
                 if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
