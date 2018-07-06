@@ -6,9 +6,10 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'RegistrarMedidasAntropometricasNinoM2A.html'
 })
 export class RegistrarMedidasAntropometricasNinoM2AComponent extends RUPComponent implements OnInit {
+
+
     ngOnInit() {
-        this.registro.valor = {
-            valido: true
-        };
+        this.registro.valido = true;
     }
+
 }
