@@ -19,7 +19,7 @@ import { EstadisticasRouting } from './estadisticas.routing';
 import { CommonModule } from '@angular/common';
 import { EstRupService } from './services/rup-estadisticas.service';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
-import { SnomedService } from '../../services/term/snomed.service';
+import { SnomedService } from './services/snomed.service';
 
 @NgModule({
     imports: [

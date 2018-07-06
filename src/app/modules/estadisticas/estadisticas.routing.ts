@@ -6,7 +6,7 @@ import { RupPacientesComponent } from './components/rup/rup-pacientes.component'
 
 let routes = [
     {
-        path: 'home',
+        path: '',
         component: HomeComponent
     },
     {

@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 import { EstRupService } from '../../services/rup-estadisticas.service';
-import { SnomedService } from '../../../../services/term/snomed.service';
+import { SnomedService } from '../../services/snomed.service';
 
 @Component({
     templateUrl: 'rup-pacientes.html',
