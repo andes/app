@@ -15,7 +15,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     registroPeso: any;
     public alerta = '';
     private pesoConceptId = '27113001';
-    private tallaConceptId = '276353004';
+    private tallaConceptId = '14456009';
     registro: any = {};
 
     // utilizado para el form, asi nos permite dejar el input como disabled
@@ -52,6 +52,12 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         }
     }
 
+    existeConcepto(elementoRUP, conceptId) {
+        return elementoRUP.conceptos.find(c => {
+            return c.conceptId === conceptId;
+        });
+    }
+
     // Evalua las instancias en las que se pueden capturar los valores
     calculoIMC() {
 
@@ -75,6 +81,11 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
             // this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
             this.registroTalla = this.registro.registros.find(r => r.concepto.conceptId === this.tallaConceptId);
+
+            // const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
+            // this.registroTalla = this.registro.registros.find(r => {
+            //     return (this.existeConcepto(elementoRUP, r.concepto.conceptId) ? r : null);
+            // });
 
             if (this.registroTalla && this.registroTalla.valor) {
                 this.talla = this.registroTalla.valor;
@@ -103,6 +114,11 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             }
 
             this.registroTalla = this.buscarConceptoDeep(this.prestacion.ejecucion.registros, this.tallaConceptId);
+
+            // const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
+            // this.registroTalla = this.registro.registros.find(r => {
+            //     return (this.existeConcepto(elementoRUP, r.concepto.conceptId) ? r : null);
+            // });
 
 
             if (this.registroTalla && this.registroTalla.valor) {
