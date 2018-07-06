@@ -9,16 +9,7 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
     ninoSanoHUDS: any;
     ultimaConsulta: any;
     ultimaConsultaIndex: number;
-    valoresUltimaConsulta: any = [];
-    ultimaConsultaLactancia: any = [];
-    ultimaConsultaDesPsicomotor: any = [];
-    valoresUltimaConsultaLactancia: any = [];
-    valoresUltimaConsultaDesPsicomotor: any = [];
-    valoresUltimaConsultaClon: any;
     validacion = false;
-    lactanciaRegistrada = false;
-    desarrolloPiscoRegistrado: any;
-    registroClon: any;
 
     ngOnInit() {
 
