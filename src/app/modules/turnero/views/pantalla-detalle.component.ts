@@ -15,7 +15,7 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
     public nuevaPantalla = {
         nombre: '',
         espaciosFisicos: []
-    }
+    };
 
     constructor(
         public pantallasService: PantallaService,

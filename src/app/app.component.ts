@@ -90,7 +90,7 @@ export class AppComponent {
 
         let token = window.sessionStorage.getItem('jwt');
         if (token) {
-            this.ws.auth(token)
+            this.ws.auth(token);
         }
 
     }

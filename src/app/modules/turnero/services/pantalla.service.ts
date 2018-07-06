@@ -12,7 +12,7 @@ export class PantallaService {
             this._select = this.pantallas.find((item) => item.id === this._selectID);
             if (this._select) {
                 this._select = JSON.parse(JSON.stringify(this._select));
-                if (!this._select.espaciosFisicos) { 
+                if (!this._select.espaciosFisicos) {
                     this._select.espaciosFisicos = [];
                 }
                 return this._select;

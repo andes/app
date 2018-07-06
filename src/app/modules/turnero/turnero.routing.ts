@@ -1,5 +1,5 @@
 import { RouterModule } from '@angular/router';
-import { NgModule } from '@angular/core'; 
+import { NgModule } from '@angular/core';
 
 import { PantallasComponent } from './views/pantallas.component';
 import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
@@ -11,7 +11,7 @@ let routes = [
         children: [{
             path: 'edit/:id',
             component: PantallaDetalleComponent
-        },{
+        }, {
             path: 'create',
             component: PantallaDetalleComponent
         }]
