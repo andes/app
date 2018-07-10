@@ -149,7 +149,10 @@
                             <b>Estado: </b> {{ evolucion.estado }}
                         </div>
                         <div class="col-12">
-                            <b>Fecha: </b> {{ evolucion.fechaCarga | fromNow }} /
+                            <b>Fecha de Inicio estimada: </b> {{ evolucion.fechaInicio | fromNow }}
+                            <br>
+                            <b>Fecha de Carga: </b> {{ evolucion.fechaCarga | fromNow }}
+                            <br>
                             <b>Profesional: </b> {{evolucion.profesional }}
                         </div>
                     </div>
