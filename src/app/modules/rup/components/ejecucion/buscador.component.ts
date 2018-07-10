@@ -456,7 +456,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     // filtroBuscadorSnomed(filtro: any[], tipo = null) {
     public filtroBuscadorSnomed(key) {
         this.filtroActual = key;
-
         // this.filtrarResultados(this.busquedaActual);
     }
 
