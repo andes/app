@@ -78,7 +78,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
 // Home de Estadisticas
-import { HomeComponent } from './modules/estadisticas/components/home.component';
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -122,9 +122,6 @@ const appRoutes: Routes = [
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
 
-  // Estadisticas
-  { path: 'estadisticas', component: HomeComponent, canActivate: [RoutingGuard] },
-
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
@@ -156,6 +153,9 @@ const appRoutes: Routes = [
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
+
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+
   { path: '**', redirectTo: 'inicio' }
 ];
 
