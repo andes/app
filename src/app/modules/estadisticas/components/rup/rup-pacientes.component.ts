@@ -31,31 +31,34 @@ export class RupPacientesComponent implements AfterViewInit {
     constructor(public estService: EstRupService, public snomed: SnomedService) { }
 
     ngAfterViewInit() {
-        this.snomed.getQuery({expression: '<1651000013107'}).subscribe((result) => {
+        this.snomed.getQuery({ expression: '<1651000013107' }).subscribe((result) => {
             this.prestaciones = result;
         });
     }
 
-    onPrestacionChange () {
-        this.snomed.getQuery({expression: '<<'  + this.prestacion.conceptId }).subscribe((result) => {
+    onPrestacionChange() {
+        this.snomed.getQuery({ expression: '<<' + this.prestacion.conceptId }).subscribe((result) => {
             result.forEach((item) => { item.check = true; });
             this.prestacionesHijas = result;
         });
     }
 
     onChange() {
-        this.tablas = [];
-        this.registros = [];
+        if (this.prestacion) {
+            this.tablas = [];
+            this.registros = [];
 
-        let prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
-        this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
-            this.showData = true;
-            if (this.detallar) {
-                this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
-            }
-            this.crearTotales(this.prestacionesHijas, resultados.pacientes);
-            this.registros = resultados.registros;
-        });
+            let prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
+            this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
+                this.showData = true;
+                if (this.detallar) {
+                    this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);
+                }
+                this.crearTotales(this.prestacionesHijas, resultados.pacientes);
+                this.registros = resultados.registros;
+            });
+        }
+
     }
 
     /*
@@ -63,7 +66,7 @@ export class RupPacientesComponent implements AfterViewInit {
         sexo: "femenino"
     */
 
-    createTable (prestaciones, data) {
+    createTable(prestaciones, data) {
         prestaciones.forEach((prestacion) => {
             let items = data.filter(item => item.prestacion.conceptId === prestacion.conceptId);
             if (items.length > 0) {
@@ -109,14 +112,14 @@ export class RupPacientesComponent implements AfterViewInit {
             }
         });
         let table = {
-            prestacion: {term: this.detallar ?  'Totalizado' : this.prestacion.term  },
+            prestacion: { term: this.detallar ? 'Totalizado' : this.prestacion.term },
             data: info
         };
 
         this.tablas.push(table);
     }
 
-    buscarRelaciones (row) {
+    buscarRelaciones(row) {
         let names = [];
         row.relaciones.forEach((item) => {
             this.registros.forEach((reg) => {
