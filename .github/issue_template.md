@@ -1,16 +1,24 @@
-## Asignar label (bug o mejora y prioridad_alta si corresponde) y project (Integracion, Citas, Rup, Mpi).
+<!--Deberá seleccionar el proyecto al que pertenece el issue (Integración, Citas, Rup, Mpi), junto con un Label de identificación (bug, feature, enhancement, etc.) -->
+
+<!--Asignar Revisor/es: Miembro del equipo responsable de solucionar el issue. -->
+
+### Comportamiento actual
+* Resumen del problema.
+
+### Resultado esperado 
+* ¿Que espera que suceda?
+
+### Pasos para reproducir el problema 
+1. 
+2. 
+3. 
+
+<!-- Agregar captura de pantalla, si fuera relevante  -->
+
+<!-- Código relevante 
 
 
-## Asignar Revisor/es
+  ```
+  // TODO: Código que considere importante incorporar.  
+  ``` -->
 
-
-## Describir el comportamiento actual: resumen del problema. 
-
-
-## Describir el comportamiento esperado. 
-
-
-## Listar los pasos para reproducir el problema. 
-
-
-## Agregar captura de pantalla, si fuera relevante.
