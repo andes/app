@@ -1,9 +1,7 @@
 <ng-container *ngIf="!soloValores">
-    <label for="observaciones">
-        Observación
-    </label>
-    <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
-        (change)="emitChange()"></textarea>
+    <plex-text label="Observaciones" [(ngModel)]="registro.valor" id="observaciones" name="observaciones" [html]="true" [readonly]="false"
+        placeholder="Ingrese una evolución">
+    </plex-text>
 </ng-container>
 
 <p *ngIf="soloValores" class="readonly">
@@ -11,6 +9,6 @@
     <!-- <br> -->
     <span>Observaciones</span>
     <ng-container>
-        {{registro.valor}}
+        <span [innerHTML]="registro.valor"></span>
     </ng-container>
 </p>
