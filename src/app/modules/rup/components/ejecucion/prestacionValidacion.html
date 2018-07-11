@@ -68,9 +68,9 @@
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
                         <div class="col">
-                            <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }}
+                            <!-- <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }} -->
                             <br>
-                            <b>Desde la Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                            <b>Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
                             <br>
                             <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
                         </div>

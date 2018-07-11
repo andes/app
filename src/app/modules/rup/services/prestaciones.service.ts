@@ -29,7 +29,9 @@ export class PrestacionesService {
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
     public conceptosNoConcurrio = [
         '397710003',
-        '281399006'
+        '281399006',
+        '270426007',
+        '275694009'
     ];
 
     public conceptosTurneables: any[];
@@ -570,10 +572,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -591,10 +593,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -618,10 +620,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -653,7 +655,6 @@ export class PrestacionesService {
             planes.forEach(plan => {
 
                 if (plan.semanticTag !== 'metadato fundacional') {
-
 
                     // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
                     let existePrestacion = null;

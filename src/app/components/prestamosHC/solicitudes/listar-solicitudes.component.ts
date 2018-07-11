@@ -1,16 +1,25 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
 import { PrestarHcComponent } from './prestar-hc.component';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
-import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
-import { ProfesionalService } from '../../../services/profesional.service';
+import { SolicitudManualComponent } from './solicitud-manual-hc.component';
 import { enumToArray } from '../../../utils/enums';
 import { EstadosCarpetas } from './../enums';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
 
+// Servicios
+import { PrestamosService } from './../../../services/prestamosHC/prestamos-hc.service';
+import { PacienteService } from '../../../services/paciente.service';
+import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
+import { ProfesionalService } from '../../../services/profesional.service';
+import { ObraSocialService } from './../../../services/obraSocial.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
+
+// Interfaces
+import { IPaciente } from './../../../interfaces/IPaciente';
+import { debug } from 'util';
 
 @Component({
     selector: 'app-listar-solicitudes',
@@ -31,6 +40,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public carpetaSeleccionada: any;
     public carpetasSeleccionadas = [];
     public marcarTodas: Boolean = false;
+    public changeCarpeta = false;
 
     public filters: any = {
         organizacion: this.auth.organizacion._id
@@ -38,6 +48,7 @@ export class ListarSolicitudesComponent implements OnInit {
 
     public verPrestar: Boolean = false;
     public verDevolver: Boolean = false;
+    public verSolicitudManual: Boolean = false;
     public verImprimirSolicitudes: Boolean = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
@@ -62,6 +73,17 @@ export class ListarSolicitudesComponent implements OnInit {
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() imprimirSolicitudesEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
+
+    private _pacienteSeleccionado: any;
+    private paciente: IPaciente;
+    obraSocialPaciente: IObraSocial;
+    pacientesSearch = false;
+    seleccion = null;
+    esEscaneado = false;
+    carpetaEfector: any;
+
 
     constructor(
         public plex: Plex,
@@ -69,7 +91,9 @@ export class ListarSolicitudesComponent implements OnInit {
         public servicioPrestacion: TipoPrestacionService,
         public servicioEspacioFisico: EspacioFisicoService,
         public servicioProfesional: ProfesionalService,
-        public auth: Auth) {
+        public auth: Auth,
+        public servicePaciente: PacienteService,
+        public servicioOS: ObraSocialService) {
     }
 
     ngOnInit() {
@@ -176,15 +200,28 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     estaSeleccionada(carpeta: any) {
-        return this.carpetasSeleccionadas.findIndex(x => x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id) >= 0;
+        return this.carpetasSeleccionadas.findIndex(x => {
+            let estaSelect = false;
+            if (x.tipo !== 'Manual' && carpeta.tipo !== 'Manual') {
+                estaSelect = x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id;
+            }
+            return estaSelect;
+        }) >= 0;
+
     }
 
     switchSeleccionCarpeta(carpeta: any) {
-        if (carpeta.estado !== 'Prestada') {
+        if (carpeta.estado !== 'Prestada' && carpeta.tipo !== 'Manual') {
             if (!this.estaSeleccionada(carpeta)) {
                 this.carpetasSeleccionadas.push(carpeta);
             } else {
-                this.carpetasSeleccionadas.splice(this.carpetasSeleccionadas.findIndex(x => x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id), 1);
+                let estaSelect = false;
+                this.carpetasSeleccionadas.splice(this.carpetasSeleccionadas.findIndex(x => {
+                    if (carpeta.idSolicitud === undefined) {
+                        estaSelect = x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id;
+                    }
+                    return estaSelect;
+                }), 1);
             }
             // Si solo una carpeta es seleccionada con checkbox, se muestran el box de detalles de devolución; caso contrario, el box de detalles se ocultas
             this.carpetasSeleccionadas.length === 1 ? this.prestar(this.carpetasSeleccionadas[0]) : this.verPrestar = false;
@@ -222,6 +259,12 @@ export class ListarSolicitudesComponent implements OnInit {
         this.imprimirSolicitudesEmit.emit(this.carpetas);
     }
 
+    showSolicitudManual() {
+        this.verSolicitudManual = false;
+        this.pacientesSearch = true;
+        this.verPrestar = false;
+    }
+
     volverAListado() {
         this.verImprimirSolicitudes = false;
     }
@@ -256,12 +299,69 @@ export class ListarSolicitudesComponent implements OnInit {
         this.sortCarpetas();
     }
 
+    onCancelSolicitar(event) {
+        this.verSolicitudManual = false;
+        this.verPrestar = false;
+    }
+
     onCancelPrestar(event) {
         this.verPrestar = false;
+    }
+
+    cancelarPacienteSearch() {
+        this.pacientesSearch = false;
     }
 
     onCarpeta(value) {
         this.recargarPrestamosEmit.emit(true);
         this.getCarpetas({}, null);
+    }
+
+    buscarPaciente() {
+        this.verSolicitudManual = false;
+        this.pacientesSearch = true;
+    }
+
+    afterSearch(paciente: IPaciente): void {
+        this.paciente = paciente;
+        this.pacientesSearch = false;
+        if (paciente.id) {
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    if (this.obtenerCarpetaPaciente()) {
+                        this.verSolicitudManual = true;
+                    } else {
+                        this.verSolicitudManual = false;
+                        this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                    }
+                });
+        } else {
+            this.seleccion = paciente;
+            this.esEscaneado = true;
+            this.escaneado.emit(this.esEscaneado);
+            this.selected.emit(this.seleccion);
+            this.verSolicitudManual = false;
+        }
+    }
+
+    obtenerCarpetaPaciente() {
+        let indiceCarpeta = -1;
+        if (this.paciente.carpetaEfectores.length > 0) {
+            // Filtro por organizacion
+            indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
+            if (indiceCarpeta > -1) {
+                this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+            }
+        }
+        if (indiceCarpeta === -1) {
+            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
+            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
+                if (carpeta.nroCarpeta) {
+                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                }
+            });
+        }
+        return (this.carpetaEfector ? true : false);
     }
 }

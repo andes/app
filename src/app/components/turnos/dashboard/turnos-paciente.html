@@ -1,15 +1,5 @@
 <fieldset>
     <legend>{{ tituloOperacion }}</legend>
-    <header *ngIf="!showLiberarTurno && !showMotivoConsulta">
-        <div class="row">
-            <div *ngIf="paciente.nombre" class="col">
-                <h5> Turnos próximos del paciente:
-                    <span class="text-info">{{ paciente | paciente }}</span>
-                </h5>
-            </div>
-        </div>
-    </header>
-
     <plex-box *ngIf="!showLiberarTurno && !showMotivoConsulta">
         <plex-tabs>
             <plex-tab icon="list" label="Turnos">
@@ -77,7 +67,6 @@
             </plex-tab>
             <plex-tab icon="history" label="Historial del paciente">
                 <fieldset>
-                    <legend class="pt-3 text-center">Últimos turnos del paciente</legend>
                     <ul class="list-group">
                         <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                             <div class="list-group-item-text">

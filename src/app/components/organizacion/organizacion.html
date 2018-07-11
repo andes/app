@@ -4,38 +4,37 @@
       <plex-box type="primary">
         <header>
           <div class="page-title">Organizaciones</div>
+          <form [formGroup]="searchForm">
+            <div class="row">
+              <div class="col-6">
+                <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
+                </plex-text>
+              </div>
+              <div class="col-4">
+                <label>Habilitado</label>
+                <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
+              </div>
+            </div>
+          </form>
+          <table style="table-layout:fixed" class="table table-fixed">
+            <thead>
+              <tr>
+                <th width="20%" >Codigo Sisa</th>
+                <th width="30%" >Nombre</th>
+                <th width="10%" >Complejidad</th>
+                <th width="10%" >Habilitado</th>
+                <th width="20%" class="text-center">Acciones</th>
+              </tr>
+            </thead>
+          </table>
         </header>
-        <form [formGroup]="searchForm">
-          <div class="row">
-            <div class="col-6">
-              <plex-text formControlName="nombre" label="Nombre" placeholder="Ingresar nombre...">
-              </plex-text>
-            </div>
-            <div class="col-4">
-              <label>Habilitado</label>
-              <plex-bool type="slide" formControlName="activo" name="activo"></plex-bool>
-            </div>
-          </div>
-        </form>
-        <!--// TODO: hay que resolver el tema de plex-scroll-->
-        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-        <table *ngIf="datos && datos.length" class="table table-striped">
-          <thead>
-            <tr>
-              <th>Codigo Sisa</th>
-              <th>Nombre</th>
-              <th>Complejidad</th>
-              <th>Habilitado</th>
-              <th class="text-center">Acciones</th>
-              <!-- <th>Ver listado de camas</th> -->
-            </tr>
-          </thead>
+        <table *ngIf="datos && datos.length" class="table table-fixed">
           <tbody>
             <tr class="hover" *ngFor="let organizacion of datos">
               <td>{{organizacion.codigo.sisa}}</td>
               <td>{{organizacion.nombre}}</td>
               <td>
-                <p class="text-center">{{organizacion.nivelComplejidad}}</p>
+                <p >{{organizacion.nivelComplejidad}}</p>
               </td>
               <td>
                 <plex-bool type="slide" [(ngModel)]="organizacion.activo" label="" name="organizacion.activo" (click)="activate(organizacion)"></plex-bool>

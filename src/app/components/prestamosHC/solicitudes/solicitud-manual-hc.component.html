@@ -1,0 +1,53 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <plex-box>
+            <fieldset>
+                <legend>
+                    <div class="clearfix">
+                        <span class="float-left">Solicitud de prestamo de Carpeta </span>
+                    </div>
+                </legend>
+            </fieldset>
+
+            <div class="row">
+                <div class="col-12">
+                    <plex-text label="Paciente" [(ngModel)]="paciente.apellido + ' ' + paciente.nombre + ' - ' + paciente.documento" name="paciente"
+                        [disabled]="true" [required]="true">
+                    </plex-text>
+                </div>
+                <div class="col-12">
+                    <plex-text label="Nro Carpeta" [(ngModel)]="carpetaEfector.nroCarpeta" name="nro-carpeta" [disabled]="true" [required]="true">
+                    </plex-text>
+                </div>
+                <div class="col-12">
+                    <plex-select [(ngModel)]="tipoPrestacion" (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación" ngModelOptions="{standalone: true}">
+                    </plex-select>
+                </div>
+                <div class="col-12">
+                    <plex-select [(ngModel)]="espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico"
+                        labelField="nombre + '(' + servicio.nombre + ')'" ngModelOptions="{standalone: true}">
+                    </plex-select>
+                </div>
+                <div class="col-12">
+                    <plex-select [(ngModel)]="profesional" name="profesional" (getData)="loadProfesionales($event)" label="Profesional" placeholder="Escriba el apellido del Profesional"
+                        labelField="apellido + ' ' + nombre">
+                    </plex-select>
+                </div>
+                <div class="col-12">
+                    <plex-text [(ngModel)]="observaciones" label="Observaciones" name="observaciones" placeholder="Ingrese observaciones...">
+                    </plex-text>
+                </div>
+            </div>
+        </plex-box>
+
+    </section>
+    <footer>
+        <div class="text-right">
+            <plex-button label="Cancelar" type="danger" (click)="cancel()">
+            </plex-button>
+
+            <plex-button label="Guardar" type="primary" (click)="save(paciente)" validateForm="true">
+            </plex-button>
+        </div>
+    </footer>
+</form>

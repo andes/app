@@ -19,6 +19,8 @@ export class ArancelamientoFormComponent implements OnInit {
     obraSocial: string;
     codigoOs: string;
     showForm = false;
+    idOrganizacion = this.auth.organizacion.id;
+
     @Input('turno')
     set turno(value: any) {
         this.turnoSeleccionado = value;
@@ -38,6 +40,17 @@ export class ArancelamientoFormComponent implements OnInit {
             this.codigoOs = resultado.codigo;
             this.showForm = true;
         });
+    }
+
+    getNroCarpeta() {
+        if (this.turnoSeleccionado.paciente && this.turnoSeleccionado.paciente.carpetaEfectores && this.turnoSeleccionado.paciente.carpetaEfectores.length > 0) {
+            let resultado: any = this.turnoSeleccionado.paciente.carpetaEfectores.filter((carpeta: any) => {
+                return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
+            });
+            return resultado[0].nroCarpeta;
+        } else {
+            return null;
+        }
     }
 
     cancelar() {
