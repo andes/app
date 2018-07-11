@@ -9,7 +9,12 @@ export class WebSocketService {
     public token = null;
     public events: Observable<any>;
 
-    public messages = [];
+    public messages = [
+        'turnero-activated',
+        'turnero-create',
+        'turnero-update',
+        'turnero-remove'
+    ];
 
     constructor () {
         this.socket = io(environment.WS);
@@ -46,6 +51,12 @@ export class WebSocketService {
         this.emit('auth', { token });
     }
 
+    join (room) {
+        this.socket.emit('room', { name: room });
+    }
 
+    leave (room) {
+        this.socket.emit('leave', { name: room });
+    }
 
 }
