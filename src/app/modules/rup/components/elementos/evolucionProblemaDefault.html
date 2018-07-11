@@ -139,7 +139,13 @@
                         <b>{{registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1)}}</b>
                     </div>
                     <div class="col-4 text-right">
-                        <b>Fecha de Inicio estimada: </b> {{ registro.evoluciones[0].fechaInicio | fecha }}
+                        <b>Fecha de Inicio estimada: </b>
+                        <ng-container *ngIf="registro?.evoluciones[0].fechaInicio">
+                            {{ registro.evoluciones[0].fechaInicio | fromNow }}
+                        </ng-container>
+                        <ng-container *ngIf="!registro?.evoluciones[0].fechaInicio">
+                            Sin registro
+                        </ng-container>
                     </div>
                     <hr>
                 </div>
