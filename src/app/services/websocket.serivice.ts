@@ -2,6 +2,8 @@ import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
+import * as Wildcard from 'socketio-wildcard';
+let patch = require('socketio-wildcard')(io.Manager);
 
 @Injectable()
 export class WebSocketService {
@@ -9,21 +11,15 @@ export class WebSocketService {
     public token = null;
     public events: Observable<any>;
 
-    public messages = [
-        'turnero-activated',
-        'turnero-create',
-        'turnero-update',
-        'turnero-remove'
-    ];
-
     constructor () {
+        let patch = Wildcard(io.Manager);
         this.socket = io(environment.WS);
+        patch(this.socket);
         this.events = new Observable(observer => {
 
-            this.messages.forEach((event) => {
-                this.socket.on(event, (data) => {
-                    observer.next({event, data});
-                });
+            this.socket.on('*', packet => {
+                let data = packet.data;
+                observer.next({ event: data[0], data: data[1] });
             });
 
             return () => {
