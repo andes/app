@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as io from 'socket.io-client';
 import * as Wildcard from 'socketio-wildcard';
-let patch = require('socketio-wildcard')(io.Manager);
 
 @Injectable()
 export class WebSocketService {
