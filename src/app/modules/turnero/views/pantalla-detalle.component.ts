@@ -42,10 +42,16 @@ export class PantallaDetalleComponent implements OnInit, OnDestroy {
             this.espaciosFisicos = data;
         });
         this.id = this.route.snapshot.params['id'];
-        this.pantallasService.select(this.id);
+
+        // uso setImmediate por un detalle de angular.
+        setImmediate(() => {
+            this.pantallasService.select(this.id);
+        });
 
         this.sub = this.route.params.subscribe(params => {
-            this.pantallasService.select(params['id']);
+            setImmediate(() => {
+                this.pantallasService.select(params['id']);
+            });
         });
     }
 
