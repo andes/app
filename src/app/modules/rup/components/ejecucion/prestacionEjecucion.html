@@ -104,7 +104,7 @@
 
                                                             <b class="clearfix" *ngIf="registro.relacionadoCon[0]">Relacionado con: </b>
                                                             <ng-container *ngFor="let relacion of registro.relacionadoCon">
-                                                                <span class="badge badge-info">
+                                                                <span *ngIf="!relacion?.conceptos" class="badge badge-info">
                                                                     {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara
                                                                     + ')' : relacion) }}
                                                                 </span>

@@ -109,14 +109,14 @@
             <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
             <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
             <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">(
-                <span *ngFor="let c of busquedaRefSet.conceptos">{{ c.concepto.fsn }} </span>)
+                <span *ngFor="let c of busquedaRefSet.conceptos">
+                    <!-- TODO: manejar 100% desde la prestación -->
+                    <span *ngIf="c.cara">diente </span>{{ c.concepto.term }},
+                    <span *ngIf="c.cara">{{ c.cara }}</span>
+                </span>)
             </i>
 
             <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
-                <!-- <ng-container *ngIf="searchTerm">
-                    No se han encontrado resultados.
-                </ng-container> -->
-
                 <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
 
                 <p class="text-center" *ngIf="search && (busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes')">

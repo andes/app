@@ -474,8 +474,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     // filtroBuscadorSnomed(filtro: any[], tipo = null) {
     public filtroBuscadorSnomed(key) {
         this.filtroActual = key;
-
-        // this.filtrarResultados(this.busquedaActual);
     }
 
     /**
@@ -488,16 +486,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
         let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         // let filtro = this.getFiltroSeleccionado();
 
+        // Devolvemos los tipos de filtros
         if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
-            // devolvemos si querésmos que se genere una relación
-            this.tagBusqueda.emit(this.busquedaRefSet);
+            // Devolvemos si queremos que se genere una relación
+            this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
+            // this.tagBusqueda.emit(filtro);
             this.busquedaRefSet = null;
         } else {
-            // devolvemos los tipos de filtros
+            // Devolvemos los tipos de filtros
             this.tagBusqueda.emit(filtro);
         }
 
-        // devolvemos el concepto SNOMED
+        // Devolvemos el concepto SNOMED
         this.evtData.emit(concepto);
 
     }

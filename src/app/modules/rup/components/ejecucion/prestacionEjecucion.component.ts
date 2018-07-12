@@ -38,7 +38,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public conceptoARelacionar = [];
 
     // Tipo de busqueda
-    public tipoBusqueda: any;
+    public tipoBusqueda: any = [];
 
     // Variable para mostrar el div dropable en el momento que se hace el drag
     public isDraggingConcepto: Boolean = false;
@@ -547,14 +547,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
                                             if (resultado && resultado.relacionadoCon) {
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
-                                                resultado.relacionadoCon = this.tipoBusqueda.conceptos;
+                                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
                                             }
                                         } else {
                                             resultado = this.cargarNuevoRegistro(snomedConcept);
                                             if (resultado && resultado.relacionadoCon) {
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                                resultado.relacionadoCon = this.tipoBusqueda.conceptos;
+                                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
                                             }
                                         }
@@ -565,7 +565,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (resultado && resultado.relacionadoCon) {
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                resultado.relacionadoCon = this.tipoBusqueda.conceptos;
+                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                 // }
                             }
                         }
@@ -580,7 +580,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
                         }
                     } else {
-                        resultado.relacionadoCon = this.tipoBusqueda;
+                        resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                     }
                 }
 
