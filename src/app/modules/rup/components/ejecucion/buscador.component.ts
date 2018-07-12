@@ -439,10 +439,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
      */
     public seleccionarConcepto(concepto: any) {
         let copiaConcepto = JSON.parse(JSON.stringify(concepto));
+        let filtro;
         if (copiaConcepto.plan) {
             delete copiaConcepto.plan;
+            filtro = ['planes'];
+        } else {
+            filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         }
-        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         // devolvemos los tipos de filtros
         this.tagBusqueda.emit(filtro);
         // devolvemos el concepto SNOMED
