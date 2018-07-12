@@ -1,0 +1,64 @@
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>{{ registro.data.prestacion.snomed.term }}</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Profesional: </strong>
+            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional.apellido }} {{registro?.data.profesional.nombre }}</ng-container>
+            <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}} {{autorCDA?.name?.given}}</ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <strong>Organización:</strong>
+            <ng-container *ngIf="registro?.data.organizacion">{{registro?.data.organizacion.nombre }}</ng-container>
+            <ng-container *ngIf="!registro?.data.organizacion && organizacionCDA">{{organizacionCDA?.name}}</ng-container>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <strong>Fecha:</strong> {{ registro.data.fecha | fecha }}
+        </div>
+    </div>
+
+    <div class="row">&nbsp;</div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <strong>Registros de la consulta:</strong>
+        </div>
+    </div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <ng-container *ngIf="codificacionCDA.code.$">
+                {{codificacionCDA.code.$.code }} - {{codificacionCDA.code.$.displayName}}
+            </ng-container>
+        </div>
+    </div>
+    <div class="row" *ngIf="codificacionCDA">
+        <div class="col">
+            <ng-container *ngIf="codificacionCDA.title && codificacionCDA.text">
+                {{codificacionCDA.title }}: {{codificacionCDA.text}}
+            </ng-container>
+        </div>
+    </div>
+    <div class="row" *ngIf="registro?.data?.adjuntos">
+        <div class="col" *ngIf="registro?.data?.adjuntos.length > 0">
+            <strong>Adjuntos:</strong>
+            <ul>
+                <ng-container *ngFor="let archivo of registro.data.adjuntos">
+                    <li>
+                        <a href="javascript:void(0)" (click)="descargar(archivo)">
+                            Descargar documento adjunto
+                            <i class="mdi mdi-36px mdi-file-pdf"></i>
+                        </a>
+                    </li>
+
+                </ng-container>
+            </ul>
+        </div>
+    </div>
+</div>

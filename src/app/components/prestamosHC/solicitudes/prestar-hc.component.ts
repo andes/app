@@ -72,12 +72,16 @@ export class PrestarHcComponent implements OnInit {
 
     }
 
-    save(event) {
+    save() {
         this.prestamo.organizacion = this.auth.organizacion;
-        if (this.prestamo && this.prestamo.datosSolicitudManual ) {
+        if (this.prestamo && this.prestamo.datosSolicitudManual) {
             this.prestamo.datosSolicitudManual.observaciones = this.prestarHC.observaciones;
         }
-        this.prestamo.datosPrestamo = { observaciones: this.prestarHC.observaciones };
+        if (this.prestamo.datosPrestamo) {
+            this.prestamo.datosPrestamo.observaciones = this.prestarHC.observaciones;
+        } else {
+            this.prestamo.datosPrestamo = { observaciones: this.prestarHC.observaciones };
+        }
         this.prestamosService.prestarCarpeta(this.prestamo).subscribe(carpeta => {
             this._carpeta = carpeta;
             this.plex.toast('success', 'La Carpeta se prestó correctamente', 'Información', 1000);
