@@ -375,12 +375,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
 
                     // relacionadoCon está populado, y debe comprobarse el id
-                    if (registro.relacionadoCon[0].id === _registro.id) {
-                        registro.relacionadoCon = [];
+                    let indexRel = registro.relacionadoCon.findIndex(x => x.id === _registro.id);
+                    if (indexRel !== -1) {
+                        registro.relacionadoCon.slice(indexRel, 1);
                     }
-                    if (registro.relacionadoCon[0] === _registro.concepto.conceptId) {
-                        registro.relacionadoCon = [];
-                    }
+                    // if (registro.relacionadoCon[0] === _registro.concepto.conceptId) {
+                    //     registro.relacionadoCon = [];
+                    // }
                 }
             });
 
