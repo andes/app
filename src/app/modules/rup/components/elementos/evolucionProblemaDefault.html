@@ -82,7 +82,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col" *ngIf="unaEvolucion.informeRequerido">
                 <hr>
                 <label>Informe Del Encuentro:</label>
                 <ng-container *ngIf="unaEvolucion.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
