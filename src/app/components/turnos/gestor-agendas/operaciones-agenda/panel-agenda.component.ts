@@ -169,7 +169,6 @@ export class PanelAgendaComponent implements OnInit {
 
     espaciosChange(agenda) {
 
-        // TODO: ver límite
         let query: any = {
             limit: 20,
             activo: true,
