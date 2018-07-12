@@ -137,46 +137,19 @@
                                 <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
                                     <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
                                 </div>
-
-                            </div>
-                            <div class="actions">
-                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
                                 <div class="float-left" *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
-                                    <b>Relacionado con:</b>
+                                    <b class="clearfix" *ngIf="elemento.relacionadoCon[0]">Relacionado con: </b>
                                     <ng-container *ngFor="let relacion of elemento.relacionadoCon">
-                                        <!-- <span class="badge badge-info">
-                                            {{ relacion?.term ? relacion.term : relacion }}
-                                        </span> -->
-
                                         <span class="badge badge-info">
                                             {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara
                                             + ')' : relacion) }}
                                         </span>
-                                        <!-- <span class="badge badge-info">
-                                            <ng-container *ngIf="relacion?.concepto?.term">
-                                                {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
-                                                <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
-                                                <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
-                                            </ng-container>
-                                        </span>
-
-                                        <ng-container *ngIf="relacion?.valor?.piezas && elemento?.concepto?.conceptId === '173291009'">
-                                            <span *ngFor="let pieza of relacion.valor.piezas">
-                                                <span *ngIf="pieza.cara === 'pieza'" class="badge badge-info">
-                                                    {{ pieza.concepto.term }} / pieza completa
-                                                </span>
-                                            </span>
-                                        </ng-container>
-                                        <ng-container *ngIf="relacion?.valor?.piezas && elemento?.concepto?.conceptId === '67784006'">
-                                            <span *ngFor="let pieza of relacion.valor.piezas">
-                                                <span *ngIf="pieza.cara !== 'pieza'" class="badge badge-info">
-                                                    {{ pieza.concepto.term }} / cara {{ pieza.cara }}
-                                                </span>
-                                            </span>
-                                        </ng-container> -->
                                     </ng-container>
                                 </div>
+                            </div>
+                            <div class="actions">
+                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
