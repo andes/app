@@ -12,7 +12,7 @@
         <div class="col-6">
             <!-- Espacio Físico -->
             <plex-select [(ngModel)]="agenda.espacioFisico" name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico"
-                placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio.descripcion + ')'"
+                placeholder="Seleccione un espacio" labelField="nombre + ' - ' + servicio.nombre + ' (' + edificio ? edificio.descripcion : '' + ')'"
                 (change)="validarSolapamientos('espacioFisico')">
             </plex-select>
         </div>
