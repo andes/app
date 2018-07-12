@@ -212,13 +212,20 @@
                                                 </span>
                                             </label>
                                             <label *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
-                                                title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="primera-vez ml-2">
-                                                Indicar primera vez
-                                                <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                    'mdi-toggle-switch': elemento.esPrimeraVez,
-                                                    'mdi-toggle-switch-off': !elemento.esPrimeraVez
-                                                }">
-                                                </span>
+                                                class="custom-control custom-radio" title="Indicar si es primera vez">
+                                                Es primera vez?
+                                                <label class="custom-control custom-radio">
+                                                    <input class="custom-control-input" name="esPrimeraVez-{{elemento.id}}" value="Si" [checked]="elemento.esPrimeraVez === 'Si'"
+                                                        (click)="primeraVez(elemento, 'Si')" type="radio">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description"> Si</span>
+                                                </label>
+                                                <label class="custom-control custom-radio">
+                                                    <input class="custom-control-input" name="esPrimeraVez-{{elemento.id}}" value="No" [checked]="checkInicial && elemento.esPrimeraVez === 'No'"
+                                                        (click)="primeraVez(elemento, 'No')" type="radio">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description"> No</span>
+                                                </label>
                                             </label>
                                         </ng-container>
                                     </div>
