@@ -53,10 +53,10 @@
                                         title="distal" />
                                     <ng-container *ngIf="getRegistrosRelAnterior(diente, 'distal')?.length">
                                         <ng-container *ngFor="let reldistal of getRegistrosRelAnterior(diente, 'distal'); let d=index">
-                                            <path (mouseenter)="showTooltip(diente, 'distal', true, d)" (mouseleave)="hideTooltip()" [ngClass]="{'registrada': caraValor(diente, 'distal') !== -1}"
-                                                d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
+                                            <path [ngClass]="{'registrada': caraValor(diente, 'distal') !== -1}" d="M40.967,12.533l-9.34,9.339c1.44,1.44,2.331,3.43,2.331,5.627c0,2.198-0.891,4.188-2.332,5.628l9.34,9.34c3.831-3.831,6.2-9.123,6.2-14.968C47.167,21.655,44.797,16.363,40.967,12.533z"
                                                 class="diente distal {{ 'diente-' + reldistal.concepto.semanticTag }} diente-offset-{{d}}"
-                                                title="distal" />
+                                                title="distal" (mouseenter)="showTooltip(diente, 'distal', true, d)" (mouseleave)="hideTooltip()"
+                                            />
                                         </ng-container>
                                     </ng-container>
                                     <path (mouseenter)="showTooltip(diente, 'vestibular', true)" (mouseleave)="hideTooltip()" (click)="verRegistroDiente(cuadrante, diente, 'vestibular')"

@@ -20,7 +20,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     ultimoOdontogramaCompleto: any[];
     showRelacion: boolean;
     relacionesActuales: IPrestacionRegistro[];
-    relaciones: IPrestacionRegistro[];
+    relaciones: IPrestacionRegistro[] = [];
     ultimoOdontogramaIndex: number;
     tooltip: any;
     ultimoOdontograma: IPrestacionRegistro;
@@ -95,15 +95,17 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             };
 
             this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
+
                 this.odontogramasHUDS = odontogramasPaciente;
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
                     if (this.ultimoOdontograma && this.ultimoOdontograma.valor) {
+                        console.log(odontogramasPaciente);
                     }
                 }
+                this.armarRelaciones();
             });
-            this.armarRelaciones();
         });
 
 
@@ -118,17 +120,20 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.relacionesActuales = this.registro.registros;
 
             this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
             this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
             this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
             this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.conceptId ? z.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
+
+            console.log(this.relaciones);
 
         }
 
