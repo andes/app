@@ -92,7 +92,7 @@
                     No tiene registrado el informe
                 </ng-template>
                 <ng-template #showMensaje>
-                    {{unaEvolucion.informeRequerido.valor}}
+                    <span [innerHTML]="unaEvolucion.informeRequerido.valor"></span>
                 </ng-template>
             </div>
         </div>
