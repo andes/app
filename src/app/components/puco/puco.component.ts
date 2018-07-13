@@ -59,7 +59,9 @@ export class PucoComponent implements OnInit, OnDestroy {
         for (let i = 0; i < this.cantidadPeriodos; i++) {
             let periodoAux = moment(periodoActual).subtract(i, 'month').format('YYYY/MM/DD');
             this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
+            this.periodoSelect = this.periodos[0];
         }
+
         this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo actual
         this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];
 
@@ -127,25 +129,28 @@ export class PucoComponent implements OnInit, OnDestroy {
 
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
+                if (this.periodoSelect) {
+                    Observable.forkJoin([
+                        this.obraSocialService.get({ dni: search, periodo: this.periodoSelect.version }),
+                        this.profeService.get({ dni: search, periodo: this.periodoSelect.version })]).subscribe(t => {
+                            this.loading = false;
+                            this.resPuco = t[0];
+                            this.resProfe = t[1];
 
-                Observable.forkJoin([
-                    this.obraSocialService.get({ dni: search, periodo: this.periodoSelect.version }),
-                    this.profeService.get({ dni: search, periodo: this.periodoSelect.version })]).subscribe(t => {
-                        this.loading = false;
-                        this.resPuco = t[0];
-                        this.resProfe = t[1];
-
-                        if (this.resPuco) {
-                            this.usuarios = this.resPuco;
-                        }
-                        if (this.resProfe) {
                             if (this.resPuco) {
-                                this.usuarios = this.resPuco.concat(this.resProfe);
-                            } else {
-                                this.usuarios = this.resProfe;
+                                this.usuarios = this.resPuco;
                             }
-                        }
-                    });
+                            if (this.resProfe) {
+                                if (this.resPuco) {
+                                    this.usuarios = this.resPuco.concat(this.resProfe);
+                                } else {
+                                    this.usuarios = this.resProfe;
+                                }
+                            }
+                        });
+                } else {    // Cuando se quiere buscar un dni sin ingresar un periodo
+                    this.loading = false;
+                }
             }, 200);
         } else {
             if (this.searchTerm) {
