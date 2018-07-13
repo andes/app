@@ -183,8 +183,7 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.codigosCie10[registro.id] = codigo;
                         });
                     }
-
-                    if (registro.esPrimeraVez === '') {
+                    if (!registro.esPrimeraVez) {
                         this.checkInicial = false;
                     } else {
                         this.checkInicial = true;
@@ -205,13 +204,12 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
-        let existeC2 = this.prestacion.ejecucion.registros.find(p => (p.esPrimeraVez === '' && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
+        let existeC2 = this.prestacion.ejecucion.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
 
         if (existeC2) {
-            this.plex.toast('info', existeC2.concepto.semanticTag.toUpperCase() + '. Debe indicar si es primera vez.');
+            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
         if (!existeDiagnostico) {
@@ -392,6 +390,7 @@ export class PrestacionValidacionComponent implements OnInit {
     primeraVez(elem, value) {
         // this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
         elem.esPrimeraVez = value;
+
     }
 
     mostrarDatosSolicitud(bool) {
