@@ -421,6 +421,24 @@ export class PrestacionesService {
         });
     }
 
+    getByPacienteLaboratorios(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
+    }
+
+    getCDAByPaciente(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
+    }
+
 
     /**
      * Método getUnHallazgoPaciente x Concepto obtiene un hallazgo cronico o activo con todas sus evoluciones

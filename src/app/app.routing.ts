@@ -43,6 +43,9 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
+// ... Obras sociales
+import { PucoComponent } from './components/puco/puco.component';
+
 // ... RUP
 import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
@@ -78,7 +81,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
 // Home de Estadisticas
-import { HomeComponent } from './modules/estadisticas/components/home.component';
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -95,6 +98,8 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  // Obras sociales
+  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
@@ -121,9 +126,6 @@ const appRoutes: Routes = [
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
-
-  // Estadisticas
-  { path: 'estadisticas', component: HomeComponent, canActivate: [RoutingGuard] },
 
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
@@ -156,6 +158,9 @@ const appRoutes: Routes = [
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
+
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+
   { path: '**', redirectTo: 'inicio' }
 ];
 
