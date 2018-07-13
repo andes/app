@@ -31,11 +31,11 @@
         </div>
     </div>
 </section>
-<footer *ngIf="!showUpdate && userModel.usuario !== ''">
+<footer *ngIf="!showUpdate">
     <div class="text-right">
         <plex-button icon="close-circle-outline" label="Cancelar" type="danger" (click)="onCancel()">
         </plex-button>
-        <plex-button icon="content-save" label="Guardar" type="success" (click)="onSave()">
+        <plex-button *ngIf="userModel.usuario !== ''" icon="content-save" label="Guardar" type="success" (click)="onSave()">
         </plex-button>
 
     </div>
