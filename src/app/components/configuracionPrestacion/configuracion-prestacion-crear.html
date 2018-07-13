@@ -1,35 +1,24 @@
-<section class="plex-layout">
-    <div class="row">
-        <!--Panel central-->
+<plex-layout main="12">
+    <plex-layout-main>
+        <header>
+            <h3>Agregar nuevo mapeo</h3>
+        </header>
+        <!-- Select de organizaciones -->
+
         <div class="col">
-            <plex-box>
-                <header>
-                    <div class="page-title">Agregar nuevo mapeo</div>
-                </header>
-                <!-- Select de organizaciones -->
-
-                <div class="col">
-                    <label>Organización:</label>
-                    <plex-select [(ngModel)]="organizacion" [data]="organizaciones" placeholder="Seleccione una organizacion..">
-                    </plex-select>
-                </div>
-                <div class="col">
-                    <label>Tipo de prestación:</label>
-                    <plex-select [(ngModel)]="tipoPrestacion" [data]="tipoPrestaciones" placeholder="Seleccione tipo de prestación..">
-                    </plex-select>
-                </div>
-                <div class="col">
-                    <label>Especialidad SIPS:</label>
-                    <plex-select [(ngModel)]="especialidad" [data]="especialidades" placeholder="Seleccione especialidad..">
-                    </plex-select>
-                </div>
-
-
-
-            </plex-box>
+            <plex-select [(ngModel)]="organizacion" label="Organización" required="true" [data]="organizaciones" placeholder="Seleccione una organizacion..">
+            </plex-select>
         </div>
-    </div>
-</section>
+        <div class="col">
+            <plex-select [(ngModel)]="tipoPrestacion" label="Tipo de prestación" required="true" [data]="tipoPrestaciones" placeholder="Seleccione tipo de prestación..">
+            </plex-select>
+        </div>
+        <div class="col">
+            <plex-select [(ngModel)]="especialidad" label="Especialidad SIPS:" required="true" [data]="especialidades" placeholder="Seleccione especialidad..">
+            </plex-select>
+        </div>
+    </plex-layout-main>
+</plex-layout>
 
 <footer>
     <div class="float-right">
