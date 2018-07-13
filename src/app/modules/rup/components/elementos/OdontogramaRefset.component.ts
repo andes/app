@@ -320,7 +320,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 if (x.relacionadoCon) {
                     return x.relacionadoCon.find(y => {
                         if (y && y.concepto && y.cara) {
-                            // console.log('y.cara', y.cara);
                             return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
                         }
                     });

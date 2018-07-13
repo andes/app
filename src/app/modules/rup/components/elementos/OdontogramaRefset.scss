@@ -9,7 +9,7 @@
     background: rgba(133, 133, 133, 0.4);
     border-radius: 5px;
     .title {
-        height: 40px;
+        height: 28px;
     }
     width: 100%;
     transition: all 1s;
@@ -57,6 +57,10 @@ svg#cuadrante-sup-der {
     fill: $procedimiento !important;
 }
 
+.diente-plan {
+    fill: $plan !important;
+}
+
 .diente-trastorno {
     fill: $trastorno !important; // fill: #ff4a1a;
 }
@@ -68,6 +72,11 @@ svg#cuadrante-sup-der {
 .diente-procedimiento-outline {
     fill: none !important;
     stroke: $procedimiento !important;
+}
+
+.diente-plan-outline {
+    fill: none !important;
+    stroke: $plan !important;
 }
 
 .diente-trastorno-outline {
@@ -119,6 +128,9 @@ svg#cuadrante-sup-der {
     }
     &.pieza-procedimiento {
         fill: $procedimiento
+    }
+    &.pieza-plan {
+        fill: $plan
     }
 }
 

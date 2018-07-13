@@ -210,6 +210,7 @@
                                     <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let a=index">
                                         <g class="pieza" title="pieza completa">
                                             <!-- Círculo MINI -->
+
                                             <circle (mouseenter)="showTooltip(diente, 'pieza', false, a)" (mouseleave)="hideTooltip()" *ngIf="relClass?.concepto?.semanticTag"
                                                 class="st1" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
                                                 [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311"
@@ -244,7 +245,7 @@
                 <!-- <a class="btn btn-sm btn-success" (click)="habilitarSeleccionMultipleEmit($event)">
                     Agregar relaciones
                 </a> -->
-                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Permitir selección múltiple"></plex-bool>
+                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Activar selección múltiple"></plex-bool>
             </div>
         </div>
         <!-- FIN ODONTOGRAMA DE ESTA CONSULTA -->

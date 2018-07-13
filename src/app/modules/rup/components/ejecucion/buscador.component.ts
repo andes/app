@@ -489,7 +489,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // Devolvemos los tipos de filtros
         if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
             // Devolvemos si queremos que se genere una relación
-            this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
+            // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
+            this.tagBusqueda.emit(this.busquedaRefSet);
             // this.tagBusqueda.emit(filtro);
             this.busquedaRefSet = null;
         } else {
