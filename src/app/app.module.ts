@@ -81,6 +81,9 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
+import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
+
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -516,6 +519,8 @@ registerLocaleData(localeEs, 'es');
         TipoPrestacionService,
         ObraSocialService,
         ProfeService,
+        PeriodoPadronesPucoService,
+        PeriodoPadronesProfeService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
