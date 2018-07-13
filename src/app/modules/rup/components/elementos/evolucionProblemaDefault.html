@@ -93,7 +93,7 @@
             <div class="row no-gutters">
                 <div class="col">
                     <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
-                    <small class="badge badge-info" *ngIf="registro.esPrimeraVez === 'Si'">Primera vez</small>
+                    <small class="badge badge-info" *ngIf="registro.esPrimeraVez">Primera vez</small>
                     <small class="badge badge-success">
                         <ng-container *ngIf="hallazgoHudsCompleto">
                             {{ hallazgoHudsCompleto.evoluciones[0].estado }}

@@ -94,8 +94,6 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
-    // Indica si es un registro nuevo o si ya tiene valores
-    checkInicial;
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -182,11 +180,6 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.SNOMED.getCie10(parametros).subscribe(codigo => {
                             this.codigosCie10[registro.id] = codigo;
                         });
-                    }
-                    if (!registro.esPrimeraVez) {
-                        this.checkInicial = false;
-                    } else {
-                        this.checkInicial = true;
                     }
                 });
 
