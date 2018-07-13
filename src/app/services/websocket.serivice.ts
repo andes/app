@@ -43,7 +43,9 @@ export class WebSocketService {
 
     auth (token) {
         this.token = token;
-        this.emit('auth', { token });
+        // Hack: En algunas maquinas no me funciona el emit inmediato.
+        setTimeout(this.emit.bind(this, 'auth', {token}), 1000);
+
     }
 
     join (room) {
@@ -52,6 +54,12 @@ export class WebSocketService {
 
     leave (room) {
         this.socket.emit('leave', { name: room });
+    }
+
+    close () {
+        this.token = null;
+        this.socket.close();
+        this.socket.open();
     }
 
 }

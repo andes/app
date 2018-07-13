@@ -21,6 +21,7 @@ export class LoginComponent implements OnInit {
 
     ngOnInit() {
         this.auth.logout();
+        this.ws.close();
     }
 
 
