@@ -53,50 +53,52 @@ export class PucoComponent implements OnInit, OnDestroy {
         }
     }
     ngOnInit() {
-        let periodoActual = new Date();
 
-        // Se cargan las opciones de periodo del select
-        for (let i = 0; i < this.cantidadPeriodos; i++) {
-            let periodoAux = moment(periodoActual).subtract(i, 'month').format('YYYY/MM/DD');
-            this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
-            this.periodoSelect = this.periodos[0];
-        }
+        Observable.forkJoin([
+            this.periodoPadronesPucoService.get({}),
+            this.periodoPadronesProfeService.get({})]).subscribe(padrones => {
 
-        this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo actual
-        this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];
+                let arrAux = padrones[0].concat(padrones[1]);
+                arrAux.sort((a, b) => a.version < b.version);
+                let periodoMasActual = new Date(arrAux[0].version); // el padron mas actual entre puco y profe
 
-
-        // Se cargan periodos de de actualizaciones de PUCO
-        this.periodoPadronesPucoService.get({ desde: this.periodoMasAntiguo.version }).subscribe(rta => {
-            if (rta.length) {
-                for (let i = 0; i < rta.length; i++) {
-                    // let formatoFecha = moment(new Date((String(rta[i].version)).substring(0, 4) + '/' + (String(rta[i].version)).substring(4, 6) + '/' + (String(rta[i].version)).substring(6, 8))).format('MMMM YYYY');
-
-                    if (i === rta.length - 1) {
-                        this.listaPeriodosPuco += moment(rta[i].version).format('MMMM [de] YYYY');
-                    } else {
-                        this.listaPeriodosPuco += moment(rta[i].version).format('MMMM [de] YYYY') + ', ';
-                    }
+                for (let i = 0; i < this.cantidadPeriodos; i++) {
+                    let periodoAux = moment(periodoMasActual).subtract(i, 'month').format('YYYY/MM/DD');
+                    this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
+                    this.periodoSelect = this.periodos[0];
                 }
-                this.ultimaActualizacionPuco = moment(rta[0].version).format('DD/MM/YYYY'); // moment(new Date((String(rta[0].version)).substring(0, 4) + '/' + (String(rta[0].version)).substring(4, 6) + '/' + (String(rta[0].version)).substring(6, 8))).format('DD/MM/YYYY');
-            }
-        });
+                this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo mas actual
+                this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];
 
-        // Carga periodos de de actualizaciones de Incluir Salud
-        this.periodoPadronesProfeService.get({ desde: this.periodoMasAntiguo.version }).subscribe(rta => {
-            if (rta.length) {
-                for (let i = 0; i < rta.length; i++) {
-                    // let formatoFecha = moment(new Date((String(rta[i].version)).substring(0, 4) + '/' + (String(rta[i].version)).substring(4, 6) + '/' + (String(rta[i].version)).substring(6, 8))).format('MMMM YYYY');
 
-                    if (i === rta.length - 1) {
-                        this.listaPeriodosProfe += moment(rta[i].version).format('MMMM [de] YYYY');
-                    } else {
-                        this.listaPeriodosProfe += moment(rta[i].version).format('MMMM [de] YYYY') + ', ';
+                // Se almacenan los padrones de puco
+                if (padrones[0].length) {
+                    for (let i = 0; i < padrones[0].length; i++) {
+
+                        if (i === padrones[0].length - 1) {
+                            this.listaPeriodosPuco += moment(padrones[0][i].version).format('MMMM [de] YYYY');
+                        } else {
+                            this.listaPeriodosPuco += moment(padrones[0][i].version).format('MMMM [de] YYYY') + ', ';
+                        }
                     }
+                    this.ultimaActualizacionPuco = moment(padrones[0][0].version).format('DD/MM/YYYY');
                 }
-                this.ultimaActualizacionProfe = moment(rta[0].version).format('DD/MM/YYYY'); // moment(new Date((String(rta[0].version)).substring(0, 4) + '/' + (String(rta[0].version)).substring(4, 6) + '/' + (String(rta[0].version)).substring(6, 8))).format('DD/MM/YYYY');
-            }
-        });
+
+
+                // Se almacenan los padrones de incluid salud
+                if (padrones[1].length) {
+                    for (let i = 0; i < padrones[1].length; i++) {
+
+                        if (i === padrones[1].length - 1) {
+                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY');
+                        } else {
+                            this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
+                        }
+                    }
+                    this.ultimaActualizacionProfe = moment(padrones[1][0].version).format('DD/MM/YYYY');
+                }
+
+            });
     }
 
     public setPeriodo(periodo) {
@@ -110,6 +112,10 @@ export class PucoComponent implements OnInit, OnDestroy {
                 this.buscar();
             }
         }
+    }
+
+    public formatearFecha(fecha) {
+        return moment(fecha).format('DD/MM/YYYY');
     }
 
     buscar(): void {

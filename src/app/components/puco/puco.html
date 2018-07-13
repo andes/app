@@ -46,7 +46,7 @@
                         {{usuario.financiador}}
                     </td>
                     <td *ngIf="usuario.fechaAlta; else sinDatos">
-                        Fecha de alta: {{usuario.fechaAlta}}
+                        Fecha de alta: {{usuario.fechaAlta | date: 'dd/MM/yyyy'}}
                     </td>
                     <ng-template #sinDatos>
                         <td>SIN DATOS</td>
@@ -83,15 +83,16 @@
                 </div>
             </div>
 
-        </plex-box>
-        <div class="row float-right boton-reporte">
-            <div class="col">
-                <sugerencias>
-                    <plex-button label='Reportar un problema' type='primary' title="Sugerencias" icon="book-open-page-variant" position="right"
-                        (click)="sugerencias()"></plex-button>
-                </sugerencias>
+
+            <div class="row">
+                <div class="col">
+                    <sugerencias>
+                        <plex-button label='Reportar un problema' type='primary' title="Sugerencias" icon="book-open-page-variant" position="right"
+                            (click)="sugerencias()"></plex-button>
+                    </sugerencias>
+                </div>
             </div>
-        </div>
+        </plex-box>
     </plex-layout-sidebar>
 
 </plex-layout>
