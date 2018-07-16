@@ -18,6 +18,15 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
+
+                                    <div class="float-right" *ngIf="registro.data.relacionadoCon[0]?.concepto">
+                                        Relacionado con:
+                                        <span class="badge badge-info">
+                                            {{registro.data.relacionadoCon[0].concepto.term}}
+                                        </span>
+                                    </div>
+
+
                                     <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
                                         [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
                                     </rup>
@@ -88,7 +97,6 @@
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
-
                                     <lab [laboratorio]="registro"></lab>
                                 </tab>
 

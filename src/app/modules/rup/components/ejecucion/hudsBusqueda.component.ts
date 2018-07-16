@@ -179,6 +179,8 @@ export class HudsBusquedaComponent implements OnInit {
             case 'hallazgo':
             case 'producto':
                 registro.class = registro.concepto.semanticTag;
+                console.log(this.registrosHuds, 'RHUDS');
+
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto && (r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'trastorno' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento' || r.data.concepto.semanticTag === 'entidad observable') && r.data.concepto.id === registro.concepto.id) {
                         if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {

@@ -279,6 +279,16 @@ export class PrestacionesService {
             }
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
+                    // buscamos las relaciones y buscamos el concepto para mostrar la relacion  TODO: "AGREGAR AL RESTO, POR AHORA SOLOFUNCIONA CON PROCEDIMIENTOS"
+                    prestacion.ejecucion.registros.forEach(reg => {
+                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                            if (typeof reg.relacionadoCon[0] === 'string') {
+                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                    return prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                });
+                            }
+                        }
+                    });
 
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
@@ -286,6 +296,8 @@ export class PrestacionesService {
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
 
                     registros = [...registros, ...agregar];
+
+
                 }
             });
             let registroSalida = [];
@@ -589,10 +601,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -610,10 +622,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -637,10 +649,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
