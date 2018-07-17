@@ -46,7 +46,6 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
         if (unaOrganizacion && unTipoPrestacion && unaEspecialidad) {
             let nuevaCP = { organizacion: unaOrganizacion, conceptSnomed: unTipoPrestacion, prestacionLegacy: unaEspecialidad };
             this.configuracionPrestacionService.post(nuevaCP).subscribe(resultado => {
-                console.log(resultado);
                 this.plex.toast('success', '', 'Mapeo agregado exitosamente');
                 this.data.emit(unaOrganizacion);
             });

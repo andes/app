@@ -44,10 +44,8 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     public eliminarMapeo(unMapeo) {
         this.plex.confirm('¿Eliminar mapeo con ' + unMapeo.organizaciones[0].nombreEspecialidad + '?').then(value => {
             if (value) {
-                if (unMapeo.organizaciones[0].idEspecialidad) {
-                    let query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, idEspecialidad: unMapeo.organizaciones[0].idEspecialidad };
-
-                    this.configuracionPrestacionService.put(query).subscribe(respuesta => {
+                if (unMapeo) {
+                    this.configuracionPrestacionService.put({ idTipoPrestacion: unMapeo.id, idOrganizacion: unMapeo.organizaciones[0].id }).subscribe(respuesta => {
                         if (respuesta) {
                             let index = this.mapeos.findIndex(elem => elem._id === unMapeo.id);
                             this.mapeos.splice(index, 1);
@@ -63,9 +61,9 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     }
 
     public afterCrearMapeo(unaOrganizacion) {
-        debugger;
         if (unaOrganizacion) {
             this.actualizarListaMapeos(unaOrganizacion);
+            this.organizacionSelect = unaOrganizacion;
         }
         this.showCrear = false;
     }
