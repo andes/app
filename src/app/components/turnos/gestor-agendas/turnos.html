@@ -286,7 +286,19 @@
 </agregar-nota-turno>
 
 <!-- Muestra el panel de Carpeta Paciente -->
-<div class="clear"></div>
-<carpeta-paciente *ngIf="showCarpetaPaciente" [turnoSeleccionado]="turnosSeleccionados[0]" (guardarCarpetaEmit)="cancelarCarpeta($event)"
-    (cancelarCarpetaEmit)="cancelarCarpeta($event)">
-</carpeta-paciente>
+<div *ngIf="showCarpetaPaciente && turnosSeleccionados[0].paciente">
+    <fieldset>
+        <legend>Editar número de carpeta del paciente</legend>
+        <div class="col-12">
+            <label>Paciente</label>
+        </div>
+        <div class=" col-12 ">
+            <span>
+                {{turnosSeleccionados[0].paciente | paciente}}
+            </span>
+        </div>
+    </fieldset>
+    <carpeta-paciente [turnoSeleccionado]="turnosSeleccionados[0] " (guardarCarpetaEmit)="cancelarCarpeta($event)
+        " (cancelarCarpetaEmit)="cancelarCarpeta($event) ">
+    </carpeta-paciente>
+</div>
