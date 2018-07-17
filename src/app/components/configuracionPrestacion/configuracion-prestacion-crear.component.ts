@@ -9,6 +9,7 @@ import { Plex } from '@andes/plex';
 @Component({
     selector: 'configuracion-prestacion-crear',
     templateUrl: 'configuracion-prestacion-crear.html',
+    // styleUrls: ['configuracion-prestacion-crear.css']
 })
 export class ConfiguracionPrestacionCrearComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
@@ -42,12 +43,14 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
     }
 
     public agregarNuevoMapeo(unaOrganizacion, unTipoPrestacion, unaEspecialidad) {
-        let nuevaCP = { organizacion: unaOrganizacion, conceptSnomed: unTipoPrestacion, prestacionLegacy: unaEspecialidad };
-        console.log(nuevaCP);
-        this.configuracionPrestacionService.post(nuevaCP).subscribe(resultado => {
-
-            this.plex.toast('success', '', 'Mapeo agregado exitosamente');
-        });
+        if (unaOrganizacion && unTipoPrestacion && unaEspecialidad) {
+            let nuevaCP = { organizacion: unaOrganizacion, conceptSnomed: unTipoPrestacion, prestacionLegacy: unaEspecialidad };
+            this.configuracionPrestacionService.post(nuevaCP).subscribe(resultado => {
+                console.log(resultado);
+                this.plex.toast('success', '', 'Mapeo agregado exitosamente');
+                this.data.emit(unaOrganizacion);
+            });
+        }
     }
 
     public botonVolver() {

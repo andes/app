@@ -5,9 +5,12 @@
             <h3>Visualización de mapeos</h3>
         </header>
         <!-- Select de organizaciones -->
-
-        <plex-select [(ngModel)]="organizacion" [data]="organizaciones" (change)="actualizarListaMapeos(organizacion)" placeholder="Seleccione una organizacion..">
-        </plex-select>
+        <div class="row">
+            <div class="col">
+                <plex-select [(ngModel)]="organizacionSelect" [data]="organizaciones" (change)="actualizarListaMapeos(organizacionSelect)"
+                    placeholder="Seleccione una organizacion.."></plex-select>
+            </div>
+        </div>
         <table *ngIf="mapeos && mapeos.length" class="table table-striped">
             <thead>
                 <tr>
@@ -29,10 +32,10 @@
                         <span *ngIf="unMapeo.organizaciones.length">{{unMapeo.organizaciones[0].nombreEspecialidad}}</span>
                     </td>
                     <td>
-                        <span *ngIf="unMapeo.organizaciones.length && !unMapeo.organizaciones[0].idEspecialidad">{{unMapeo.organizaciones[0].codigo}}</span>
+                        <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo !== 0">{{unMapeo.organizaciones[0].codigo}}</span>
                     </td>
                     <td>
-                        <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].idEspecialidad">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
+                        <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo === 0">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
                     </td>
                     <td>
                         <plex-button type="danger" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
@@ -46,9 +49,11 @@
 
 
 <footer *ngIf="!showCrear">
-    <div class="float-right">
-        <plex-button label="Agregar mapeo" type="primary" (click)="mostrarCrearMapeo(true)"></plex-button>
+    <div class="row">
+        <div class="col">
+            <plex-button class="float-right" label="Agregar mapeo" type="primary" (click)="mostrarCrearMapeo(true)"></plex-button>
+        </div>
     </div>
 </footer>
 
-<configuracion-prestacion-crear *ngIf="showCrear" (data)="showCrear = false"></configuracion-prestacion-crear>
+<configuracion-prestacion-crear *ngIf="showCrear" (data)="afterCrearMapeo($event)"></configuracion-prestacion-crear>

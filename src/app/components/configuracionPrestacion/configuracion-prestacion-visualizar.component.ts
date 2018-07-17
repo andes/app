@@ -2,6 +2,7 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { ConfiguracionPrestacionService } from './../../services/term/configuracionPrestacion.service';
 import { IOrganizacion } from '../../interfaces/IOrganizacion';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'configuracion-prestacion-visualizar',
@@ -11,10 +12,12 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 
     public organizaciones: IOrganizacion[] = [];
+    public organizacionSelect;
     public mapeos: any[] = [];
     public showCrear = false;
 
     constructor(
+        public plex: Plex,
         private organizacionService: OrganizacionService,
         private configuracionPrestacionService: ConfiguracionPrestacionService) { }
 
@@ -39,15 +42,19 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
     }
 
     public eliminarMapeo(unMapeo) {
-        let query = null;
-        if (unMapeo.organizaciones[0].idEspecialidad) {
-            query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, idEspecialidad: unMapeo.organizaciones[0].idEspecialidad };
-        }
-        if (unMapeo.organizaciones[0].codigo) {
-            query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, codigo: unMapeo.organizaciones[0].codigo };
-        }
-        this.configuracionPrestacionService.put(query).subscribe(resultado => {
+        this.plex.confirm('¿Eliminar mapeo con ' + unMapeo.organizaciones[0].nombreEspecialidad + '?').then(value => {
+            if (value) {
+                if (unMapeo.organizaciones[0].idEspecialidad) {
+                    let query = { idOrganizacion: unMapeo.organizaciones[0].id, conceptIdSnomed: unMapeo.snomed.conceptId, idEspecialidad: unMapeo.organizaciones[0].idEspecialidad };
 
+                    this.configuracionPrestacionService.put(query).subscribe(respuesta => {
+                        if (respuesta) {
+                            let index = this.mapeos.findIndex(elem => elem._id === unMapeo.id);
+                            this.mapeos.splice(index, 1);
+                        }
+                    });
+                }
+            }
         });
     }
 
@@ -55,7 +62,11 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
         this.showCrear = bool;
     }
 
-    public ocultarCrearMapeo(bool) {
-        this.showCrear = bool;
+    public afterCrearMapeo(unaOrganizacion) {
+        debugger;
+        if (unaOrganizacion) {
+            this.actualizarListaMapeos(unaOrganizacion);
+        }
+        this.showCrear = false;
     }
 }
