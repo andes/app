@@ -171,7 +171,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     classRelacion(diente, cara) {
-
         return this.relaciones.find(x => {
             if (x.relacionadoCon) {
                 return x.relacionadoCon.find(y => {
@@ -179,7 +178,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
             }
         });
-
     }
 
     getTipoHUDS(st) {
@@ -476,10 +474,21 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     habilitarSeleccionMultiple(e) {
         this.seleccionMultiple = !this.seleccionMultiple;
         this.piezasSeleccionadas = [];
+        this.comprobarSelecciones();
     }
 
     estaSeleccionada(diente, cara) {
         return this.piezasSeleccionadas.findIndex(x => x.diente.concepto.conceptId === diente.concepto.conceptId && x.cara === cara) !== -1;
+    }
+
+    comprobarSelecciones() {
+        for (let item of this.piezasSeleccionadas) {
+            let indexSeleccionada = this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === item.concepto.conceptId && x.cara === item.cara);
+            if (indexSeleccionada !== -1) {
+                this.registro.valor.piezas.splice(indexSeleccionada, 1);
+            }
+        }
+        return false;
     }
 
 }
