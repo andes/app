@@ -180,7 +180,7 @@ export class HudsBusquedaComponent implements OnInit {
             case 'producto':
                 registro.class = registro.concepto.semanticTag;
                 console.log(this.registrosHuds, 'RHUDS');
-
+                console.log(registro, 'el REGISTRO');
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto && (r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'trastorno' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento' || r.data.concepto.semanticTag === 'entidad observable') && r.data.concepto.id === registro.concepto.id) {
                         if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
@@ -190,6 +190,8 @@ export class HudsBusquedaComponent implements OnInit {
                         }
                     }
                 });
+
+                console.log(index, 'elinde');
                 break;
             case 'prestacion':
                 // Se populan las relaciones usando el _id
@@ -250,7 +252,7 @@ export class HudsBusquedaComponent implements OnInit {
             tipo: tipo,
             data: registro
         };
-
+        console.log(elemento, 'elementoooo');
 
         // si no existe lo agregamos
         if (index === -1) {

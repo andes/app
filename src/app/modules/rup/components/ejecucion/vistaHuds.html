@@ -19,7 +19,7 @@
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
 
-                                    <div class="float-right" *ngIf="registro.data.relacionadoCon[0]?.concepto">
+                                    <div class="float-right" *ngIf="registro.data.relacionadoCon && registro.data.relacionadoCon.length > 0">
                                         Relacionado con:
                                         <span class="badge badge-info">
                                             {{registro.data.relacionadoCon[0].concepto.term}}
