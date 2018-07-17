@@ -24,7 +24,7 @@ export class IniciarInternacionComponent implements OnInit {
 
 
     public ocupaciones = [];
-    public obraSocial = { nombre: "", codigo: "" };
+    public obraSocial = { nombre: '', codigo: '' };
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -155,8 +155,8 @@ export class IniciarInternacionComponent implements OnInit {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
                         this.paciente = paciente;
-                        this.obraSocialService.get(this.paciente.documento).subscribe(resultado => {
-                            this.obraSocial = resultado;
+                        this.obraSocialService.get(this.paciente.documento).subscribe(os => {
+                            this.obraSocial = os;
                         });
                         this.buscandoPaciente = false;
                     });
