@@ -642,7 +642,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         } else {
-            console.log(this.prestacion.ejecucion.registros);
             this.prestacion.ejecucion.registros.forEach(r => {
                 if (!this.controlValido(r)) {
 
