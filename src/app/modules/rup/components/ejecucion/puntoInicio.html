@@ -99,7 +99,7 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <header>
-            <div class="page-title">Detalle de la agenda</div> 
+            <div class="page-title">Detalle de la agenda</div>
         </header>
 
         <ng-container *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda'">
@@ -358,7 +358,7 @@
                             </plex-button>
 
                             <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)"
-                                label="VER REGISTROS" type="primary btn-sm">
+                                label="CONTINUAR REGISTRO" type="primary btn-sm">
                             </plex-button>
 
                             <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" (click)="routeTo('validacion', prestacion.id)"
