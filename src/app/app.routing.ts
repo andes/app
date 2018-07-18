@@ -79,6 +79,7 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -144,6 +145,10 @@ const appRoutes: Routes = [
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
+
+  // TOP
+  { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
+
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

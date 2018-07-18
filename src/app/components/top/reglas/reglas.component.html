@@ -1,3 +1,35 @@
-<p>
-  reglas works!
-</p>
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <div class="row">
+            <!--Panel de Agendas-->
+            <div class="col-12">
+                <plex-box>
+                    <div class="page-title">Configuración de Reglas</div>
+                    <div class="row">
+                        <div class="col-8">
+                            <label>Organizacion Destino</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <span>{{organizacionDestino.nombre}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)" label="Prestación Destino"
+                                placeholder="Tipos de Prestación Destino" [required]="true">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <plex-bool [(ngModel)]="auditable" name="auditable" label="Auditable">
+                            </plex-bool>
+                        </div>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+</form>
