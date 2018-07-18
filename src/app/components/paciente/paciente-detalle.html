@@ -60,11 +60,11 @@
             <span>{{ _paciente.cuil }}</span>
         </div>
     </div>
-    <div class="row mb-1" *ngIf="_paciente.documento && _paciente.sexo">
+    <div class="row mb-1" *ngIf="_paciente.documento && _paciente.sexo && mostrarRenaper">
         <div class="col">
             <label>Servicio de fuente auténtica RENAPER</label>
         </div>
-        <div class="col-md-12" *ngIf="mostrarRenaper">
+        <div class="col-md-12">
             <plex-button type="primary btn-sm" [disabled]="deshabilitarValidar" icon="account" label="Validar con servicios de Renaper"
                 (click)="renaperVerification(_paciente)"></plex-button>
             <plex-button type="primary btn-sm" [disabled]="!deshabilitarValidar" icon="undo" label="Deshacer" (click)="setDatosOriginales(_paciente)"></plex-button>
