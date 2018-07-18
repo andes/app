@@ -81,6 +81,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -468,7 +469,8 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        PucoComponent
+        PucoComponent,
+        ReglasComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
