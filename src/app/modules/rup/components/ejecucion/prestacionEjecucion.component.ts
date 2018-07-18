@@ -601,7 +601,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     private controlValido(registro) {
-        debugger;
         if (registro.registros.length <= 0) {
             if (registro.valor) {
                 registro.valido = true;
