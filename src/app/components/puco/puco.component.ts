@@ -22,9 +22,9 @@ export class PucoComponent implements OnInit, OnDestroy {
     public periodos = [];   // select
     public periodoSelect;
     public listaPeriodosPuco = '';   // solo para sidebar
-    public ultimaActualizacionPuco;
+    public ultimaActualizacionPuco: Date;
     public listaPeriodosProfe = '';   // solo para sidebar
-    public ultimaActualizacionProfe;
+    public ultimaActualizacionProfe: Date;
     public cantidadPeriodos = 6;    // cantidad de versiones de padrones que se traen desde la DB
     public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
     public usuarios = [];
@@ -81,7 +81,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                             this.listaPeriodosPuco += moment(padrones[0][i].version).format('MMMM [de] YYYY') + ', ';
                         }
                     }
-                    this.ultimaActualizacionPuco = moment(padrones[0][0].version).format('DD/MM/YYYY');
+                    this.ultimaActualizacionPuco = padrones[0][0].version;
                 }
 
 
@@ -95,7 +95,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                             this.listaPeriodosProfe += moment(padrones[1][i].version).format('MMMM [de] YYYY') + ', ';
                         }
                     }
-                    this.ultimaActualizacionProfe = moment(padrones[1][0].version).format('DD/MM/YYYY');
+                    this.ultimaActualizacionProfe = padrones[1][0].version;
                 }
 
             });
@@ -114,8 +114,21 @@ export class PucoComponent implements OnInit, OnDestroy {
         }
     }
 
-    public formatearFecha(fecha) {
-        return moment(fecha).format('DD/MM/YYYY');
+    /* Verifica que el periodo seleccionado para la búsqueda corresponda a un padrón ya actualizado.
+    * De ser asi retorna dicho periodo, de lo contrario retorna el periodo correspondiente a un padrón
+    * actualizado lo mas cercano posible.
+    */
+    verificarPeriodo(periodo1, periodo2) {
+        periodo1 = new Date(periodo1);
+        periodo2 = new Date(periodo2);
+        let p1 = new Date(periodo1.getFullYear(), periodo1.getMonth(), 1);
+        let p2 = new Date(periodo2.getFullYear(), periodo2.getMonth(), 1);
+
+        if (moment(p1).diff(p2) > 0) {
+            return periodo2;
+        } else {
+            return periodo1;
+        }
     }
 
     buscar(): void {
@@ -123,6 +136,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         // Cancela la búsqueda anterior
         if (this.timeoutHandle) {
             window.clearTimeout(this.timeoutHandle);
+            this.loading = false;
         }
         // Se limpian los resultados de la busqueda anterior
         this.usuarios = [];
@@ -136,9 +150,12 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
                 if (this.periodoSelect) {
+                    let periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
+                    let periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
+
                     Observable.forkJoin([
-                        this.obraSocialService.get({ dni: search, periodo: this.periodoSelect.version }),
-                        this.profeService.get({ dni: search, periodo: this.periodoSelect.version })]).subscribe(t => {
+                        this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
+                        this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
                             this.loading = false;
                             this.resPuco = t[0];
                             this.resProfe = t[1];
@@ -157,7 +174,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                 } else {    // Cuando se quiere buscar un dni sin ingresar un periodo
                     this.loading = false;
                 }
-            }, 200);
+            }, 400);
         } else {
             if (this.searchTerm) {
                 this.errorSearchTerm = true;
