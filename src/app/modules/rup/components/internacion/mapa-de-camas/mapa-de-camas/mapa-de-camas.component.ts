@@ -297,4 +297,8 @@ export class MapaDeCamasComponent implements OnInit {
         }
     }
 
+    verEgreso(idInternacion) {
+        console.log(idInternacion);
+        this.router.navigate(['internacion/egreso/' + idInternacion]);
+    }
 }

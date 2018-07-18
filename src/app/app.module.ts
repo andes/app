@@ -227,7 +227,6 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/componen
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
@@ -274,11 +273,14 @@ import { routing, appRoutingProviders } from './app.routing';
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
+// INTERNACION
+import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
 // Mapa de camas
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { CamaComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama.component';
 import { CamaEstadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camaEstado.component';
 import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
+
 
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
@@ -322,7 +324,6 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
-    'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
@@ -363,7 +364,6 @@ let RUPComponentsArray = [
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
-    EgresoInternacionComponent,
     PasesCamaComponent,
     CensoDiarioComponent,
     CensoMensualComponent,
@@ -467,7 +467,8 @@ registerLocaleData(localeEs, 'es');
         OcuparCamaComponent,
         OrganizacionSectoresComponent,
         SectoresItemComponent,
-        ListaEsperaInternacionComponent
+        ListaEsperaInternacionComponent,
+        EgresoInternacionComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

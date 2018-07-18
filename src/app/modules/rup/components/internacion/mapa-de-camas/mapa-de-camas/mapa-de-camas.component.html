@@ -132,6 +132,7 @@
                             <header>
                                 <h3>Detalle de cama</h3>
                             </header>
+
                             <hr>
                             <div class="text-center info-cama-menu">
 
@@ -154,14 +155,15 @@
                                 {{camaSeleccionada.sectores[0].nombre}}
                                 <hr>
                                 <p>
-
                                     {{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}
                                 </p>
 
-
-
                                 <!-- Ver internacion -->
-                                <plex-button type="success" label="Ver internación" title="Ver internación">
+                                <plex-button type="success" label="Ver internación">
+                                </plex-button>
+
+                                <!-- Ver egreso -->
+                                <plex-button type="danger" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)">
                                 </plex-button>
 
                                 <div class="d-flex justify-content-center">
