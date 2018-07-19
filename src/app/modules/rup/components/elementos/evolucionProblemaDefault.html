@@ -151,10 +151,19 @@
         <div class="col">
             <ng-container *ngIf="registro?.evoluciones">
                 <div class="row">
-                    <div class="col-12 title" *ngIf="registro.concepto">
+                    <div class="col-8 title" *ngIf="registro.concepto">
                         <b>{{registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1)}}</b>
-                        <hr>
                     </div>
+                    <div class="col-4 text-right">
+                        <b>Fecha de Inicio estimada: </b>
+                        <ng-container *ngIf="registro?.evoluciones[0].fechaInicio">
+                            {{ registro.evoluciones[0].fechaInicio | fromNow }}
+                        </ng-container>
+                        <ng-container *ngIf="!registro?.evoluciones[0].fechaInicio">
+                            Sin registro
+                        </ng-container>
+                    </div>
+                    <hr>
                 </div>
                 <div *ngFor="let evolucion of registro.evoluciones" class="row ml-1">
                     <div class="col-6">
@@ -162,13 +171,9 @@
                         <span [innerHTML]="evolucion.evolucion"></span>
                     </div>
                     <div class="col-6">
-                        <div class="col-12">
-                            <b>Estado: </b> {{ evolucion.estado }}
-                        </div>
-                        <div class="col-12">
-                            <b>Fecha: </b> {{ evolucion.fechaCarga | fromNow }} /
-                            <b>Profesional: </b> {{evolucion.profesional }}
-                        </div>
+                        <b>Fecha de Carga: </b> {{ evolucion.fechaCarga | fecha }}
+                        <br>
+                        <b>Profesional: </b> {{evolucion.profesional }}
                     </div>
                     <div class="col-12">&nbsp;</div>
                 </div>

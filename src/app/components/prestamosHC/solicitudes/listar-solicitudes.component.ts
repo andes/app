@@ -83,7 +83,7 @@ export class ListarSolicitudesComponent implements OnInit {
     seleccion = null;
     esEscaneado = false;
     carpetaEfector: any;
-
+    mostrarMsjMultiCarpeta = false;
 
     constructor(
         public plex: Plex,
@@ -210,15 +210,35 @@ export class ListarSolicitudesComponent implements OnInit {
 
     }
 
+    switchDiaPaciente(carpeta: any) {
+        return this.carpetasSeleccionadas.findIndex(x => {
+            let existeSolicitud = false;
+            if (x.fecha.getMonth() === carpeta.fecha.getMonth() && x.fecha.getDate() === carpeta.fecha.getDate() && x.paciente.documento === carpeta.paciente.documento) {
+                // Si la carpeta seleccionada tiene la misma fecha que otra carpeta ya seleccionada, no permite la seleccion
+                existeSolicitud = true;
+            }
+            return existeSolicitud;
+        });
+    }
+
     switchSeleccionCarpeta(carpeta: any) {
         if (carpeta.estado !== 'Prestada' && carpeta.tipo !== 'Manual') {
             if (!this.estaSeleccionada(carpeta)) {
-                this.carpetasSeleccionadas.push(carpeta);
+                let diaPaciente = this.switchDiaPaciente(carpeta);
+                if (diaPaciente >= 0) {
+                    this.plex.toast('danger', 'No se puede prestar la carpeta del paciente más de una vez para el mismo día', 'Información', 2000);
+                } else {
+                    this.carpetasSeleccionadas.push(carpeta);
+                    this.mostrarMsjMultiCarpeta = false;
+                }
             } else {
                 let estaSelect = false;
                 this.carpetasSeleccionadas.splice(this.carpetasSeleccionadas.findIndex(x => {
                     if (carpeta.idSolicitud === undefined) {
                         estaSelect = x.datosPrestamo.turno.id === carpeta.datosPrestamo.turno.id;
+                        if (this.switchDiaPaciente(carpeta) >= 0) {
+                            this.mostrarMsjMultiCarpeta = false;
+                        }
                     }
                     return estaSelect;
                 }), 1);
@@ -230,9 +250,19 @@ export class ListarSolicitudesComponent implements OnInit {
 
     switchMarcarTodas() {
         this.marcarTodas = !this.marcarTodas;
-        this.carpetasSeleccionadas = this.marcarTodas ? this.carpetas.filter(function (el) {
-            return el.estado === 'En archivo';
-        }) : [];
+        if (this.marcarTodas) {
+            this.carpetas.forEach(carpeta => {
+                let diaPaciente = this.switchDiaPaciente(carpeta);
+                if (carpeta.estado === 'En archivo' && carpeta.tipo === 'Automatica' && diaPaciente === -1) {
+                    this.carpetasSeleccionadas.push(carpeta);
+                }
+                if (diaPaciente >= 0) {
+                    this.mostrarMsjMultiCarpeta = true;
+                }
+            });
+        } else {
+            this.carpetasSeleccionadas = [];
+        }
         this.verPrestar = false;
     }
 
@@ -279,6 +309,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.carpetaPrestadaEmit.emit(solicitudCarpeta);
             this.carpetaSeleccionada = solicitudCarpeta;
             this.verPrestar = true;
+            this.verSolicitudManual = false;
         }
     }
 
