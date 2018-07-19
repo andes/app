@@ -128,6 +128,8 @@ export class CarpetaPacienteComponent implements OnInit {
                 }
             );
         } else {
+            this.plex.alert('', 'Ingrese un número de carpeta válido');
+            this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
             this.guardarCarpetaEmit.emit(true);
         }
         this.showEdit = false;
