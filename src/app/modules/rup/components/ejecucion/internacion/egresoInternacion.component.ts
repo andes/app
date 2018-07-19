@@ -6,6 +6,7 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 import { ActivatedRoute } from '@angular/router';
 import { InternacionService } from '../../../services/internacion.service';
 import { Location } from '@angular/common';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
 
 @Component({
     selector: 'rup-egresoInternacion',
@@ -13,6 +14,8 @@ import { Location } from '@angular/common';
 })
 export class EgresoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
+    public listaUnidadesOrganizativas: any[]
+    public copiaListaUnidadesOrganizativas = [];
     public listaProcedimientosQuirurgicos: any[];
     public listaTipoEgreso = [{ id: 'Alta médica', nombre: 'Alta médica' }, { id: 'Defunción', nombre: 'Defunción' },
     { id: 'Traslado', nombre: 'Traslado' }, { id: 'Retiro Voluntario', nombre: 'Retiro Voluntario' }, { id: 'Otro', nombre: 'Otro' }];
@@ -44,15 +47,14 @@ export class EgresoInternacionComponent implements OnInit {
     public prestacion;
 
     constructor(
-
         public servicioPrestacion: PrestacionesService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         public Cie10Service: Cie10Service,
         private route: ActivatedRoute,
         private location: Location,
         public servicioInternacion: InternacionService,
-        // public servicioOrganizacion: OrganizacionService,
-        public plex: Plex
+        public plex: Plex,
+        public servicioOrganizacion: OrganizacionService
     ) { }
 
     ngOnInit() {
@@ -105,6 +107,7 @@ export class EgresoInternacionComponent implements OnInit {
                 nombre: event.query
             };
             this.Cie10Service.get(query).subscribe((datos) => {
+                // mapeamos para mostrar el codigo primero y luego la descripcion
                 datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(datos);
             });
@@ -113,14 +116,11 @@ export class EgresoInternacionComponent implements OnInit {
             if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
                 callback.push(this.registro.valor.InformeEgreso.diagnosticoPrincipal);
             }
-
             if (this.registro.valor.InformeEgreso.otrosDiagnosticos) {
                 this.registro.valor.InformeEgreso.otrosDiagnosticos.forEach(element => {
                     callback.push(element);
                 });
-
             }
-
             if (this.registro.valor.InformeEgreso.causaExterna && this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
                 callback.push(this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo);
             }
@@ -165,10 +165,13 @@ export class EgresoInternacionComponent implements OnInit {
      */
     cancelar() {
         this.location.back();
-        // this.router.navigate(['internacion/camas']);
     }
 
 
+    /**
+     * Guardamos la prestacion y retornamos 
+     * al mapa de camas
+     */
     guardarPrestacion() {
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
@@ -186,6 +189,10 @@ export class EgresoInternacionComponent implements OnInit {
         });
     }
 
+    /**Validamos la prestacion
+     * desocupamos la cama si corresponde 
+     * y regresamos al mapa de camas
+     */
     validar() {
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
@@ -225,7 +232,6 @@ export class EgresoInternacionComponent implements OnInit {
                     // Vamos a cambiar el estado de la prestación a ejecucion
                     this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                         this.prestacion = prestacion;
-
                         // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                     }, (err) => {
                         this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
@@ -234,6 +240,11 @@ export class EgresoInternacionComponent implements OnInit {
             }
         });
     }
+
+    /**
+     * Si validamos la prestacion con el informe de egreso cargado
+     * desocupamos la cama del paciente
+     */
     desocuparCama() {
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
@@ -242,6 +253,30 @@ export class EgresoInternacionComponent implements OnInit {
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
             this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
 
+        }
+    }
+
+    /**
+     * Cuando selecciona tipo de egreso
+     * Se fija si es traslado y carga el select
+     * de unidades organizativas
+     */
+    selecOrganizacionDestino() {
+        if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado') {
+            // nos fijamos si ya tenemos la info en la copia.
+            if (this.copiaListaUnidadesOrganizativas.length) {
+                console.log('hghghggghhghghghg');
+                this.listaUnidadesOrganizativas = this.copiaListaUnidadesOrganizativas;
+            } else {
+                let params;
+                this.servicioOrganizacion.get(params).subscribe(organizaciones => {
+                    this.listaUnidadesOrganizativas = organizaciones;
+                    // Dejamos una copia para no volver a llamar a la API.
+                    this.copiaListaUnidadesOrganizativas = JSON.parse(JSON.stringify(this.listaUnidadesOrganizativas));
+                });
+            }
+        } else {
+            this.listaUnidadesOrganizativas = [];
         }
     }
 }

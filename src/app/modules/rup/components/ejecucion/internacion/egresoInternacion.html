@@ -12,9 +12,14 @@
                             <plex-datetime label="Fecha y hora " type="datetime" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso">
                             </plex-datetime>
                         </div>
-                        <div class="col-8">
-                            <plex-select label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso" name="InformeEgreso.tipoEgreso"
-                                [data]="listaTipoEgreso" placeholder="Seleccione...">
+                        <div class="col-4">
+                            <plex-select (change)="selecOrganizacionDestino()" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
+                                name="InformeEgreso.tipoEgreso" [data]="listaTipoEgreso" placeholder="Seleccione...">
+                            </plex-select>
+                        </div>
+                        <div class="col-4">
+                            <plex-select *ngIf="listaUnidadesOrganizativas?.length > 0" label="Unidad organizativa de destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
+                                name="InformeEgreso.UnidadOrganizativaDestino" [data]="listaUnidadesOrganizativas" placeholder="Seleccione...">
                             </plex-select>
                         </div>
                     </div>
@@ -47,18 +52,14 @@
                             <div class="col-1 pt-4">
                                 <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeProcedimiento(i)"></plex-button>
                             </div>
-
                         </div>
                         <plex-button label="Agregar" type="primary btn-sm" icon="" (click)="addProcedimientoQuirurgico()"></plex-button>
                     </ng-container>
-
-
-
                     <div class="row">
                         <div class="col-12">
-                            <label>Otras circunstancias que prolongan la internación</label>
-                            <textarea rows="2" class="form-control" placeholder="" required [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias"
-                                name="Otras circunstancias"></textarea>
+                            <plex-select label="Otras circunstancias que prolongan la internación" [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias"
+                                name="otrasCircunstancias" (getData)="codigoCIE10($event)" placeholder="buscar...">
+                            </plex-select>
                         </div>
                     </div>
                     <div class="row">
