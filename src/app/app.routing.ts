@@ -79,6 +79,8 @@ import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.comp
 
 // Home de Estadisticas
 import { HomeComponent } from './modules/estadisticas/components/home.component';
+import { PantallasComponent } from './modules/turnero/views/pantallas.component';
+import { PantallaDetalleComponent } from './modules/turnero/views/pantalla-detalle.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -158,7 +160,20 @@ const appRoutes: Routes = [
   { path: 'login', component: LoginComponent },
 
 
-  { path: 'turnero', loadChildren: './modules/turnero/turnero.module#TurneroModule', canActivate: [RoutingGuard]},
+  // { path: 'turnero', loadChildren: './modules/turnero/turnero.module#TurneroModule', canActivate: [RoutingGuard]},
+
+  {
+      path: 'turnero',
+      component: PantallasComponent,
+      children: [{
+          path: 'edit/:id',
+          component: PantallaDetalleComponent
+      }, {
+          path: 'create',
+          component: PantallaDetalleComponent
+      }]
+  },
+
 
   { path: '**', redirectTo: 'inicio' }
 ];

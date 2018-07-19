@@ -376,6 +376,9 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { PantallasComponent } from './modules/turnero/views/pantallas.component';
+import { PantallaDetalleComponent } from './modules/turnero/views/pantalla-detalle.component';
+import { PantallaService } from './modules/turnero/services/pantalla.service';
 
 
 registerLocaleData(localeEs, 'es');
@@ -465,7 +468,9 @@ registerLocaleData(localeEs, 'es');
         ImprimirSolicitudesComponent,
         SolicitudManualComponent,
         CamaEstadoComponent,
-        OcuparCamaComponent
+        OcuparCamaComponent,
+        PantallasComponent,
+        PantallaDetalleComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -525,7 +530,8 @@ registerLocaleData(localeEs, 'es');
         TurneroService,
         CamasService,
         PrestamosService,
-        ProcedimientosQuirurgicosService
+        ProcedimientosQuirurgicosService,
+        PantallaService
 
     ]
 })

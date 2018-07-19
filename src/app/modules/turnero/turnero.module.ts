@@ -13,6 +13,7 @@ import { TurneroRouting } from './turnero.routing';
 import { PantallaService } from './services/pantalla.service';
 import { PantallasComponent } from './views/pantallas.component';
 import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
+import { WebSocketService } from '../../services/websocket.serivice';
 
 @NgModule({
     imports: [
@@ -34,7 +35,8 @@ import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
     ],
     exports: [],
     providers: [
-        PantallaService
+        PantallaService,
+        WebSocketService
     ]
 })
 export class TurneroModule {

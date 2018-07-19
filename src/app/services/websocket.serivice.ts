@@ -22,7 +22,7 @@ export class WebSocketService {
             });
 
             return () => {
-                this.socket.disconnect();
+                // this.socket.disconnect();
             };
         });
         this.socket.on('connect', () => {
@@ -44,16 +44,19 @@ export class WebSocketService {
     auth (token) {
         this.token = token;
         // Hack: En algunas maquinas no me funciona el emit inmediato.
-        setTimeout(this.emit.bind(this, 'auth', {token}), 1000);
+        setTimeout(this.emit.bind(this, 'auth', { token }), 1000);
 
     }
 
     join (room) {
-        this.socket.emit('room', { name: room });
+        setTimeout(this.emit.bind(this, 'room', { name: room }), 1200);
+        // this.socket.emit('room', { name: room });
     }
 
     leave (room) {
-        this.socket.emit('leave', { name: room });
+        setTimeout(() => {
+            this.emit('leave', { name: room });
+        }, 1000);
     }
 
     close () {
