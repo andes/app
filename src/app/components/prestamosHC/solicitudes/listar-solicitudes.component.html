@@ -140,6 +140,7 @@
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
         <button type="primary" class="btn btn-primary" label="Prestar Carpetas" (click)="prestarCarpetas()">Prestar Carpetas</button>
+        <span class="badge-warning float-right" *ngIf="mostrarMsjMultiCarpeta">Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma fecha.</span>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"></pacientesSearch>
 </form>

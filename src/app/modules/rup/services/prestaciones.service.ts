@@ -189,14 +189,17 @@ export class PrestacionesService {
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             }
-            prestaciones.forEach(prestacion => {
+            prestaciones.forEach((prestacion: any) => {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
                             registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    // COnceptId del informe requerido en en todas las prestaciones ambulatorias
+                    if (agregar.length > 0) {
+                        agregar[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+                    }
                     registros = [...registros, ...agregar];
-
                 }
             });
             let registroSalida = [];
@@ -229,7 +232,8 @@ export class PrestacionesService {
                             idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                             idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
                             origen: registro.valor.origen ? registro.valor.origen : null,
-                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null
+                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                         }]
                     };
                     registroSalida.push(dato);
@@ -245,7 +249,8 @@ export class PrestacionesService {
                         idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                         idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
                         origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado
+                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                        informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -422,6 +427,24 @@ export class PrestacionesService {
         });
     }
 
+    getByPacienteLaboratorios(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
+    }
+
+    getCDAByPaciente(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
+    }
+
 
     /**
      * Método getUnHallazgoPaciente x Concepto obtiene un hallazgo cronico o activo con todas sus evoluciones
@@ -571,10 +594,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -592,10 +615,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -619,10 +642,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []

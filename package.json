@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "3.2.1",
+    "version": "3.3.1",
     "description": "Aplicación web Angular2 para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -10,8 +10,8 @@
         "lint": "ng lint",
         "e2e": "ng e2e",
         "build:prod": "ng build --env=prod --prod --aot=true",
-        "build:test": "ng build --env=test",
-        "build:demo": "ng build --env=demo"
+        "build:test": "ng build --env=test --aot",
+        "build:demo": "ng build --env=demo --aot"
     },
     "repository": {
         "type": "git",
@@ -26,7 +26,7 @@
         "@agm/core": "^1.0.0-beta.2",
         "@andes/auth": "^2.0.0",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "^3.2.1",
+        "@andes/plex": "^3.2.3",
         "@andes/shared": "^2.0.0",
         "@angular/animations": "^5.0.0",
         "@angular/cdk": "^5.2.4",
@@ -53,7 +53,7 @@
         "zone.js": "^0.8.20"
     },
     "devDependencies": {
-        "@angular/cli": "^1.7.3",
+        "@angular/cli": "^1.7.4",
         "@angular/compiler-cli": "^5.0.0",
         "@types/jasmine": "^2.2.30",
         "@types/node": "^9.4.7",

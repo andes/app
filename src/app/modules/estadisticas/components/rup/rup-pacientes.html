@@ -1,0 +1,101 @@
+<plex-layout>
+    <plex-layout-main>
+        <header>
+            <div class="clearfix">
+                <div class="page-title">Estadísticas - RUP</div>
+            </div>
+        </header>
+        <ng-container *ngIf="!showData">
+            <div class="row">
+                <div class="col-3">
+                    <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde"></plex-datetime>
+                </div>
+                <div class="col-3">
+                    <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta"></plex-datetime>
+                </div>
+                <div class="col-4">
+                    <plex-select [data]="prestaciones" idField="conceptId" labelField="term"  label="Prestacion" [(ngModel)]="prestacion" (change)="onPrestacionChange()" ></plex-select>
+                </div>    
+                <div class="col-1">
+                    <plex-bool [(ngModel)]="detallar" type="checkbox" label="Detallar" class="vertical-center"></plex-bool>
+                </div>
+                <div class="col-1">
+                    <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center"></plex-button>
+                </div>
+            </div>
+            <div *ngIf="detallar && prestacionesHijas.length > 0">
+                <div class="row">
+                    <div class="col">
+                        <h4>Prestaciones descendientes</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <ng-container *ngFor="let hijo of prestacionesHijas">
+                        <div class="col-3">
+                            <plex-bool [(ngModel)]="hijo.check" type="checkbox" [label]="hijo.term"></plex-bool>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="showData">
+            <div class="row m-3 alert alert-info" >
+                <div class="col-3">
+                    Desde: {{ desde | date: 'dd/MM/yyyy' }}
+                </div>
+                <div class="col-3">
+                    Hasta: {{ hasta | date: 'dd/MM/yyyy' }}
+                </div>
+                <div class="col-3">
+                    Prestación: {{ prestacion.term }}
+                </div>
+                <div class="col-3">
+                    <plex-button type="info" label="Filtrar" (click)="showData = false;" ></plex-button>
+                </div>
+            </div>
+        </ng-container>
+        <plex-tabs *ngIf="showData">
+            <plex-tab label="Prestaciones">
+                <div class="mt-3" *ngFor="let presta of tablas">
+                    <h2> {{presta.prestacion.term}} </h2>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Sexo/Edad </th>
+                                <th>0</th><th>10</th><th>20</th><th>30</th><th>40</th><th>50</th><th>60</th><th>70</th><th>80</th><th>90</th><th>Total</th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let row of presta.data; let i = index;">
+                            <td scope="row" > {{ i === 0 ?  'Masculino' :  (i === 1 ? 'Femenino' : 'Total')  }} </td>
+                            <td *ngFor="let column of row">
+                                {{ column }}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </plex-tab>
+            <plex-tab label="Registros">
+                <h2 class="mt-3"> Conceptos utilizados </h2>
+                <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th> Concepto </th>
+                                <th> SemanticTag </th>
+                                <th> Cantidad </th>
+                                <th> Cant. Rel. </th>
+                                <th> Relaciones </th>
+                            </tr>
+                        </thead>
+                        <tr *ngFor="let row of registros; let i = index;">
+                            <td> {{ row.concepto.term  }} </td>
+                            <td> {{ row.concepto.semanticTag  }} </td>
+                            <td> {{ row.count  }} </td>
+                            <td> {{ row.relaciones.length  }} </td>
+                            <td> {{ buscarRelaciones(row) }} </td>
+                        </tr>
+                    </table>
+            </plex-tab>
+        </plex-tabs>
+
+    </plex-layout-main>
+</plex-layout>
