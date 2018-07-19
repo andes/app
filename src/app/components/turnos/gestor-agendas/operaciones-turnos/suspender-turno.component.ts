@@ -7,6 +7,7 @@ import { ITurno } from './../../../../interfaces/turnos/ITurno';
 import { ListaEsperaService } from '../../../../services/turnos/listaEspera.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
 import { SmsService } from './../../../../services/turnos/sms.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'suspender-turno',
@@ -34,7 +35,7 @@ export class SuspenderTurnoComponent implements OnInit {
     public seleccionadosSMS = [];
     public suspendio = false;
 
-    constructor(public plex: Plex, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
+    constructor(public plex: Plex, public auth: Auth, public listaEsperaService: ListaEsperaService, public serviceAgenda: AgendaService, public smsService: SmsService) { }
 
     ngOnInit() {
 
@@ -136,7 +137,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
                         let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
                         let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                        let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+                        let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                         this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
                     };
                 } else {
@@ -199,7 +200,11 @@ export class SuspenderTurnoComponent implements OnInit {
 
                 // "if 0 errores"
                 if (this.resultado === '0') {
-                    this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                    if (paciente.alias) {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.alias + ' ' + paciente.apellido);
+                    } else {
+                        this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
+                    }
                 } else {
                     this.plex.toast('danger', 'ERROR: SMS no enviado');
                 }
