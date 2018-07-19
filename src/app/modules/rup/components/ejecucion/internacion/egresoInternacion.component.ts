@@ -57,16 +57,11 @@ export class EgresoInternacionComponent implements OnInit {
 
     ngOnInit() {
         this.route.params.subscribe(params => {
-            // console.log(params.id);
             this.servicioPrestacion.getById(params.id).subscribe(prestacion => {
                 this.prestacion = prestacion;
-                console.log(prestacion.ejecucion.registros);
                 // Buscamos si la prestacion ya tiene una informe del alta guardado.
                 let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
-                console.log(existeRegistro);
                 this.registro.valor = existeRegistro ? existeRegistro.valor : null;
-                console.log(this.registro);
-
                 if (!this.registro.valor) {
                     this.registro.valor = {
                         InformeEgreso: {
@@ -85,7 +80,11 @@ export class EgresoInternacionComponent implements OnInit {
                                     fecha: null
                                 }
                             ],
-                            causaExterna: {}
+                            causaExterna: {
+                                producidaPor: null,
+                                lugar: null,
+                                comoSeProdujo: null
+                            }
                         }
                     };
                 }
@@ -106,6 +105,7 @@ export class EgresoInternacionComponent implements OnInit {
                 nombre: event.query
             };
             this.Cie10Service.get(query).subscribe((datos) => {
+                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(datos);
             });
         } else {
@@ -182,13 +182,11 @@ export class EgresoInternacionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            this.desocuparCama();
             this.cancelar();
         });
     }
 
     validar() {
-
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
                 return false;
@@ -197,6 +195,8 @@ export class EgresoInternacionComponent implements OnInit {
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                    this.desocuparCama();
+                    this.cancelar();
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
                 });
@@ -238,10 +238,8 @@ export class EgresoInternacionComponent implements OnInit {
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.registro.concepto.conceptId);
-
-        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' &&
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-
             this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
 
         }
