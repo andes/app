@@ -291,7 +291,7 @@ export class RevisionAgendaComponent implements OnInit {
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });
-        if (turnoSinCodificar === undefined) {
+        if (!turnoSinCodificar) {
             // Se cambia de estado la agenda a Auditada
             let patch = {
                 'op': this.estadoCodificado.id,
