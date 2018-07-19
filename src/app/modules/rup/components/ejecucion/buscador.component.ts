@@ -24,6 +24,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     @Input() showFrecuentesTipoPrestacion;
     @Input() conceptoFrecuente;
     @Input() prestacion: IPrestacion;
+    @Input() esEjecucion: boolean;  // Si true, no se muestra el filtro de búsqueda "Elemento de registro"
     /**
      * Devuelve un elemento seleccionado.
      */

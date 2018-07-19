@@ -32,6 +32,7 @@ export class HudsBusquedaComponent implements OnInit {
 
     @Input() paciente: any;
     @Input() prestacionActual: any;
+    @Input() esEjecucion: boolean;  // Si true, no se muestra el filtro de búsqueda "Elemento de registro"
 
     // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
