@@ -82,7 +82,9 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import {ReglaService} from './services/top/reglas.service';
 
+// TOP
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
@@ -108,6 +110,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+
 
 
 // Componentes
@@ -531,7 +534,7 @@ registerLocaleData(localeEs, 'es');
         PrestamosService,
         ProcedimientosQuirurgicosService,
         CDAService,
-
+        ReglaService
     ]
 })
 
