@@ -141,7 +141,7 @@
                             </div>
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnostico principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                     <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                 </small>
@@ -194,8 +194,8 @@
                                                 Motivo de consulta principal
                                             </small> -->
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
-                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">
-                                                Motivo de consulta principal
+                                                title="Establecer como procedimiento / diagnostico principal" class="diagnostico-principal">
+                                                Procedimiento / diagnostico principal
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                     'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                     'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
@@ -252,7 +252,7 @@
                                     <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
-                                            Motivo de consulta principal
+                                            Procedimiento / diagnostico principal
                                         </small>
                                     </small>
                                 </div>
