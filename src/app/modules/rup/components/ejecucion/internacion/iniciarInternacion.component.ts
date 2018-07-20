@@ -156,7 +156,7 @@ export class IniciarInternacionComponent implements OnInit {
                         let callback = (resultado) ? resultado : null;
                         event.callback([callback]);
                     }
-                })
+                });
             } else {
                 event.callback([]);
             }
