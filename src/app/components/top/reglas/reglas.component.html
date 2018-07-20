@@ -32,12 +32,11 @@
                     </div> -->
                     <div *ngFor="let regla of reglas" class="row">
                         <div class="col-4">
+                            <label *ngIf="regla.origen && regla.origen.organizacion">Organización Origen</label>
                             <plex-accordion *ngIf="regla.origen && regla.origen.organizacion">
                                 <plex-panel (toggle)="expand($event)" #panel>
                                     <div plex-accordion-title>
                                         {{regla.origen.organizacion.nombre}}
-                                        <!-- <span *ngIf="allModule">(todos)</span>
-                                    <plex-bool *ngIf="!item.avoidAll" class="float-right" (change)="expand($event)" [(ngModel)]="allModule" type="slide"> </plex-bool> -->
                                     </div>
                                     <table class="table table-striped table-sm">
                                         <thead>
@@ -48,15 +47,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr *ngFor="let prestacion of regla.origen.prestaciones; let indiceChild = index">
-                                                {{prestacion | json}}
+                                            <tr *ngFor="let prestacion of regla.origen.prestaciones; let indice = index">
                                                 <td>
                                                     {{prestacion.term}}
                                                 </td>
                                                 <td>
-                                                    <plex-bool [(ngModel)]="prestacion.auditable" name="prestacion.auditable" label="Auditable">
+                                                    <plex-bool [(ngModel)]="prestacion.auditable" name="prestacion.auditable{{indice}}" label="Auditable">
                                                     </plex-bool>
-                                                    {{prestacion.auditable}}
                                                 </td>
                                             </tr>
                                         </tbody>
