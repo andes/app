@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
   selector: 'reglas',
@@ -11,12 +12,14 @@ import { TipoPrestacionService } from '../../../services/tipoPrestacion.service'
 })
 export class ReglasComponent implements OnInit {
   organizacionDestino = this.auth.organizacion;
-  auditable = false;
+  prestacionDestino;
+  reglas = [];
   constructor(
     private auth: Auth,
     private plex: Plex,
     private servicioPrestacion: TipoPrestacionService,
-    private servicioProfesional: ProfesionalService
+    private servicioProfesional: ProfesionalService,
+    private servicioReglas: ReglaService
   ) { }
 
   ngOnInit() {
@@ -42,5 +45,21 @@ export class ReglasComponent implements OnInit {
     }
   }
 
+  cargarReglas() {
+    let query: any = {};
+    this.reglas = [];
+    query.idDestino = this.organizacionDestino.id;
+    if (this.prestacionDestino && this.prestacionDestino.conceptId) {
+      query.prestacionDestino = this.prestacionDestino.conceptId;
+    }
+    this.servicioReglas.get(query).subscribe((reglas: any) => {
+      console.log('reglas ', reglas);
+      this.reglas = reglas;
+    });
+  }
+
+  expand() {
+    console.log('expando');
+  }
 
 }
