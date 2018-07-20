@@ -417,8 +417,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                 nuevoRegistro.relacionadoCon.push(registroRequerido);
             }
         }
+        //
+        if (nuevoRegistro.id) {
+            this.itemsRegistros[nuevoRegistro.id].collapse = true;
+        }
 
-
+        //
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
@@ -554,7 +558,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             let existeEjecucion = this.prestacion.ejecucion.registros.find((registro) => {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
-
 
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
@@ -763,7 +766,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.ejecutarConcepto(e.dragData);
                 });
             }
-
         }
     }
 
