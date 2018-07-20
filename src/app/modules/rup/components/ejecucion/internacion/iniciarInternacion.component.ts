@@ -15,6 +15,7 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { CamasService } from '../../../services/camas.service';
+import { ProfesionalService } from '../../../../../services/profesional.service';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -96,7 +97,8 @@ export class IniciarInternacionComponent implements OnInit {
         nivelInstruccion: null,
         asociado: null,
         obraSocial: null,
-        motivo: null
+        motivo: null,
+        profesional: null
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -107,7 +109,9 @@ export class IniciarInternacionComponent implements OnInit {
         public financiadorService: FinanciadorService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
-        private location: Location) { }
+        private location: Location,
+        public servicioProfesional: ProfesionalService,
+    ) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -132,6 +136,31 @@ export class IniciarInternacionComponent implements OnInit {
         this.financiadorService.get().subscribe(resultado => {
             this.obrasSociales = resultado;
         });
+    }
+
+    loadProfesionales(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                listaProfesionales = resultado;
+                event.callback(listaProfesionales);
+            });
+        } else {
+            if (this.auth.profesional) {
+                this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
+                    if (resultado) {
+                        this.informeIngreso.profesional = resultado[0];
+                        let callback = (resultado) ? resultado : null;
+                        event.callback([callback]);
+                    }
+                })
+            } else {
+                event.callback([]);
+            }
+        }
     }
 
     buscarRegistroInforme(internacion) {
