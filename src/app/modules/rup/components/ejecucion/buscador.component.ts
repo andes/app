@@ -92,7 +92,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public busquedaActual: any;
 
     // objeto de resultados
-    public results = { 'misFrecuentes': [], 'sugeridos': [], 'busquedaGuiada': [], 'buscadorBasico': [] };
+    public results = { 'misFrecuentes': [], 'sugeridos': [], 'busquedaGuiada': [], 'buscadorBasico': [], 'frecuentesTP': [] };
     public resultsAux: any;
 
     // public totalesTodos: Number = 0;
@@ -165,7 +165,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 }
             });
 
+            let queryFTP = {
+                'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+            };
 
+            // buscar los frecuentes agrupados por tipo de prestacion, sin filtrar profesional
+            this.frecuentesProfesionalService.getXPrestacion(queryFTP).subscribe((resultados: any) => {
+
+                this.results['frecuentesTP']['todos'] = resultados;
+                this.filtrarResultados('frecuentesTP');
+
+                this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
+            });
 
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
