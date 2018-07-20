@@ -5,7 +5,7 @@ import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 
 @Component({
-  selector: 'app-reglas',
+  selector: 'reglas',
   templateUrl: './reglas.component.html',
   styleUrls: ['./reglas.component.css']
 })
