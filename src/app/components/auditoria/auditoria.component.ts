@@ -89,6 +89,7 @@ export class AuditoriaComponent implements OnInit {
         this.mostrarPaciente = false;
         this.enableVinculados = false;
         this.checkMpi = false;
+        // Trae todos los pacientes temporales activos y temporales
         this.pacienteService.getAuditoria({
             estado: 'temporales',
             activo: true
@@ -97,6 +98,7 @@ export class AuditoriaComponent implements OnInit {
                 this.pacTemporales = resultado;
             }
         });
+        // Trae solo los pacientes que tienen vinculaciones
         this.pacienteService.getAuditoriaVinculados({
             activo: true
         }).subscribe(resultado => {
@@ -197,9 +199,9 @@ export class AuditoriaComponent implements OnInit {
     }
 
     async validarMpi(pacienteSeleccionado) {
-        this.pacienteService.get({
-            type: 'suggest',
-            claveBlocking: pacienteSeleccionado.claveBlocking[0], // Usamos esta clave ya que hay temporales migrados que no poseen clave de blocking (deberá reemplazarse por CB)
+        this.pacienteService.getPacientesValidados({
+            tipoBusqueda: 'claveBlocking', // Usamos un texto para identificar el blocking
+            claveBlocking: pacienteSeleccionado.claveBlocking,
             documento: pacienteSeleccionado.documento ? pacienteSeleccionado.documento : null,
             nombre: pacienteSeleccionado.nombre,
             apellido: pacienteSeleccionado.apellido,
