@@ -298,7 +298,10 @@
             </span>
         </div>
     </fieldset>
-    <carpeta-paciente [turnoSeleccionado]="turnosSeleccionados[0] " (guardarCarpetaEmit)="cancelarCarpeta($event)
-        " (cancelarCarpetaEmit)="cancelarCarpeta($event) ">
+    <carpeta-paciente [turnoSeleccionado]="turnosSeleccionados[0] " (guardarCarpetaEmit)="afterComponenteCarpeta($event)
+        " (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
     </carpeta-paciente>
+    <div class="col-12 text-center">
+        <plex-button type="warning" class="text-center" icon="mdi mdi-arrow-left" title="volver" (click)="afterComponenteCarpeta()"></plex-button>
+    </div>
 </div>

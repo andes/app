@@ -295,7 +295,7 @@ export class TurnosComponent implements OnInit {
     }
 
     // Se usa tanto para guardar como cancelar
-    cancelarCarpeta() {
+    afterComponenteCarpeta() {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
         this.serviceAgenda.getById(this.agenda.id).subscribe(ag => {
             this.agenda = ag;
