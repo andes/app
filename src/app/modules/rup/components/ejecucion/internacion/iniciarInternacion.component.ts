@@ -86,6 +86,7 @@ export class IniciarInternacionComponent implements OnInit {
     public buscandoPaciente = false;
     public cama = null;
     public organizacion = null;
+    public origenExterno = false;
 
     public informeIngreso = {
         fechaIngreso: new Date(),
@@ -96,7 +97,8 @@ export class IniciarInternacionComponent implements OnInit {
         nivelInstruccion: null,
         asociado: null,
         obraSocial: null,
-        motivo: null
+        motivo: null,
+        organizacionOrigen: null
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -208,6 +210,10 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
+            if (this.informeIngreso.organizacionOrigen === 'consultorio externo' || this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
+                this.plex.info('warning', 'Debe seleccionar una organización');
+                return;
+            }
 
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
@@ -261,5 +267,24 @@ export class IniciarInternacionComponent implements OnInit {
 
     onReturn() {
         this.router.navigate(['/internacion/camas']);
+    }
+
+    changeOrigenHospitalizacion(event) {
+        if (event.value.id === 'consultorio externo' || event.value.id === 'traslado') {
+            this.origenExterno = true;
+        } else {
+            this.origenExterno = false;
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 }
