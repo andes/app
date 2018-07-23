@@ -1,7 +1,7 @@
 <form *ngIf="!buscandoPaciente" class="plex-layout" #form="ngForm">
     <section>
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
                 <plex-box>
                     <div class="row" *ngIf="!paciente">
                         <div class="col">
@@ -16,6 +16,22 @@
                         <fieldset>
                             <legend>Datos de ingreso</legend>
                         </fieldset>
+                        <div class="row ">
+                            <div class="col-4 ">
+                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
+                                    label="Fecha Ingreso">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
+                                        " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                                </plex-select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
                                 <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
@@ -45,23 +61,6 @@
                                 </plex-select>
                             </div>
                         </div>
-
-                        <div class="row ">
-                            <div class="col-4 ">
-                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
-                                    label="Fecha Ingreso">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
-                                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
-                                </plex-select>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col">
                                 <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="informeIngreso.motivo">
@@ -69,24 +68,24 @@
                             </div>
                         </div>
                         <div class="row">&nbsp;</div>
-                        <ng-container *ngIf="cama">
+                        <!-- <ng-container *ngIf="cama">
                             <fieldset>
                                 <legend>Ocupar cama</legend>
                             </fieldset>
                             <cama-estado *ngIf="cama && organizacion" [cama]="cama" [organizacion]="organizacion"></cama-estado>
-                        </ng-container>
+                        </ng-container> -->
                     </div>
                 </plex-box>
 
             </div>
-            <div class="col-4">
+            <!-- <div class="col-4">
                 <plex-box>
                     <fieldset *ngIf="paciente">
                         <legend>Datos del paciente</legend>
                         <paciente-detalle-actualizar *ngIf="paciente" [paciente]="paciente"></paciente-detalle-actualizar>
                     </fieldset>
                 </plex-box>
-            </div>
+            </div> -->
         </div>
     </section>
 
