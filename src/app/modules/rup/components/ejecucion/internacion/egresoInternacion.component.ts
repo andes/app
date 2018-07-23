@@ -14,7 +14,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 })
 export class EgresoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
-    public listaUnidadesOrganizativas: any[]
+    public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
     public listaProcedimientosQuirurgicos: any[];
     public listaTipoEgreso = [{ id: 'Alta médica', nombre: 'Alta médica' }, { id: 'Defunción', nombre: 'Defunción' },
@@ -169,7 +169,7 @@ export class EgresoInternacionComponent implements OnInit {
 
 
     /**
-     * Guardamos la prestacion y retornamos 
+     * Guardamos la prestacion y retornamos
      * al mapa de camas
      */
     guardarPrestacion() {
@@ -190,7 +190,7 @@ export class EgresoInternacionComponent implements OnInit {
     }
 
     /**Validamos la prestacion
-     * desocupamos la cama si corresponde 
+     * desocupamos la cama si corresponde
      * y regresamos al mapa de camas
      */
     validar() {
@@ -265,7 +265,6 @@ export class EgresoInternacionComponent implements OnInit {
         if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado') {
             // nos fijamos si ya tenemos la info en la copia.
             if (this.copiaListaUnidadesOrganizativas.length) {
-                console.log('hghghggghhghghghg');
                 this.listaUnidadesOrganizativas = this.copiaListaUnidadesOrganizativas;
             } else {
                 let params;
@@ -279,6 +278,37 @@ export class EgresoInternacionComponent implements OnInit {
             this.listaUnidadesOrganizativas = [];
         }
     }
+
+
+    showProcedimientos_causas() {
+        let regexCIECausasExternas = new RegExp('^S|^T');
+        let regexCIEProcedimientosQuirurgicos = new RegExp('^F'); // TODO VER CON NANCY DE ESTADISTICAS
+
+        if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
+            this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
+        }
+        if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
+            this.procedimientosObstetricos = regexCIEProcedimientosQuirurgicos.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
+        }
+    }
+
+    searchComoSeProdujo(event) {
+        if (event && event.query) {
+            let query = {
+                nombre: event.query,
+                codigoDesde: 'V00',
+                codigoHasta: 'Y98'
+            };
+            this.Cie10Service.get(query).subscribe((datos) => {
+                // mapeamos para mostrar el codigo primero y luego la descripcion
+                datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
+                event.callback(datos);
+            });
+        }
+        if (this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo) {
+            event.callback([this.registro.valor.InformeEgreso.causaExterna.comoSeProdujo]);
+        } else {
+            event.callback([]);
+        }
+    }
 }
-
-

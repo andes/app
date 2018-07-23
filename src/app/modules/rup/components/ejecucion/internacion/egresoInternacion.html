@@ -25,8 +25,8 @@
                     </div>
                     <div class="row">
                         <div class="col">
-                            <plex-select label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="diagnosticoPrincipal"
-                                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
+                            <plex-select (change)="showProcedimientos_causas()" label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal"
+                                name="diagnosticoPrincipal" (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
@@ -74,11 +74,11 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12">
                             <plex-bool type="slide" [(ngModel)]="ExisteCausaExterna" label="¿ Existen causas externas ?" name="Causa Externa"></plex-bool>
                         </div>
-                    </div>
+                    </div> -->
                     <div *ngIf="ExisteCausaExterna" class="row">
                         <div class="col-4">
                             <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
@@ -92,17 +92,17 @@
                         </div>
                         <div class="col-4">
                             <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
-                                (getData)="codigoCIE10($event)" placeholder="Buscar..." labelField="nombre">
+                                (getData)="searchComoSeProdujo($event)" placeholder="Buscar..." labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
 
                     <div class="row">&nbsp;</div>
-                    <div class="row">
+                    <!-- <div class="row">
                         <div class="col-12">
                             <plex-bool type="slide" [(ngModel)]="procedimientosObstetricos" label="¿ Se realizaron procediminetos obstétricos ?" name="Procedimientos Obstetricos"></plex-bool>
                         </div>
-                    </div>
+                    </div> -->
                     <div *ngIf="procedimientosObstetricos">
                         <div class="row">
                             <div class="col-3">
