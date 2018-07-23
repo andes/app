@@ -135,7 +135,7 @@ export class BotonesAgendaComponent implements OnInit {
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
-            editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
+            editarAgenda: (this.cantidadSeleccionadas === 1) && !this.agendasSeleccionadas[0].dinamica && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
             suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
@@ -176,7 +176,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     // Comprueba que haya algún turno con paciente, en estado suspendido
     hayTurnosSuspendidos() {
-        if (!this.agendasSeleccionadas[0].dinamica){
+        if (!this.agendasSeleccionadas[0].dinamica) {
             for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
                 for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
                     if (this.agendasSeleccionadas[x].bloques[y].turnos) {
