@@ -62,8 +62,15 @@
                                 </plex-datetime>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
-                                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen" [data]="origenHospitalizacion " placeholder="Seleccione... "
+                                    label="Origen hospitalización " (change)="changeOrigenHospitalizacion($event)">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="origenExterno">
+                            <div class="col">
+                                <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización"
+                                    placeholder="Seleccione la organización" labelField="nombre" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
