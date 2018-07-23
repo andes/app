@@ -7,7 +7,7 @@ import { TipoPrestacionService } from '../../../services/tipoPrestacion.service'
 import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
-  selector: 'app-reglas',
+  selector: 'reglas',
   templateUrl: './reglas.component.html',
   styleUrls: ['./reglas.component.css']
 })
