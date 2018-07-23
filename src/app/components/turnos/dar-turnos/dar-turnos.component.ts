@@ -55,7 +55,7 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
-                this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
                     this.obraSocialPaciente = resultado;
                 });
                 this.mostrarCalendario = false;
@@ -74,7 +74,7 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });
@@ -741,8 +741,8 @@ export class DarTurnosComponent implements OnInit {
                     this.actualizar('');
                     return false;
                 } else {
-                    this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
-                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+                        this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
                         let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
@@ -810,8 +810,7 @@ export class DarTurnosComponent implements OnInit {
             if (environment.production === true) {
                 let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
                 let horario = moment(this.turno.horaInicio).format('HH:mm');
-                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-                let mensaje = this.paciente.apellido + ' el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.nombre +
+                let mensaje = this.paciente.apellido + ' ' + this.paciente.nombre + ', el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.term +
                     ' el dia ' + dia + ' a las ' + horario + ' hs. ';
                 if (agendaReturn.espacioFisico) {
                     mensaje = mensaje + 'en ' + agendaReturn.espacioFisico.nombre + '.';
@@ -938,7 +937,7 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });
@@ -963,7 +962,7 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });

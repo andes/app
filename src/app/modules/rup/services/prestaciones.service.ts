@@ -28,7 +28,9 @@ export class PrestacionesService {
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
     public conceptosNoConcurrio = [
         '397710003',
-        '281399006'
+        '281399006',
+        '270426007',
+        '275694009'
     ];
 
     public conceptosTurneables: any[];
@@ -187,14 +189,17 @@ export class PrestacionesService {
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             }
-            prestaciones.forEach(prestacion => {
+            prestaciones.forEach((prestacion: any) => {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
                             registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    // COnceptId del informe requerido en en todas las prestaciones ambulatorias
+                    if (agregar.length > 0) {
+                        agregar[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+                    }
                     registros = [...registros, ...agregar];
-
                 }
             });
             let registroSalida = [];
@@ -227,7 +232,8 @@ export class PrestacionesService {
                             idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                             idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
                             origen: registro.valor.origen ? registro.valor.origen : null,
-                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null
+                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                         }]
                     };
                     registroSalida.push(dato);
@@ -243,7 +249,8 @@ export class PrestacionesService {
                         idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                         idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
                         origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado
+                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                        informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -418,6 +425,24 @@ export class PrestacionesService {
             this.cacheMedicamentos[idPaciente] = registroSalida;
             return registroSalida;
         });
+    }
+
+    getByPacienteLaboratorios(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
+    }
+
+    getCDAByPaciente(idPaciente, conceptId = null) {
+        let opt = {};
+        if (conceptId) {
+            opt = { params: { prestacion: conceptId } };
+        }
+
+        return this.server.get(`/modules/cda/paciente/${idPaciente}`, opt);
     }
 
 

@@ -74,11 +74,6 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <!-- <div class="row">
-                        <div class="col-12">
-                            <plex-bool type="slide" [(ngModel)]="ExisteCausaExterna" label="¿ Existen causas externas ?" name="Causa Externa"></plex-bool>
-                        </div>
-                    </div> -->
                     <div *ngIf="ExisteCausaExterna" class="row">
                         <div class="col-4">
                             <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
@@ -98,11 +93,6 @@
                     </div>
 
                     <div class="row">&nbsp;</div>
-                    <!-- <div class="row">
-                        <div class="col-12">
-                            <plex-bool type="slide" [(ngModel)]="procedimientosObstetricos" label="¿ Se realizaron procediminetos obstétricos ?" name="Procedimientos Obstetricos"></plex-bool>
-                        </div>
-                    </div> -->
                     <div *ngIf="procedimientosObstetricos">
                         <div class="row">
                             <div class="col-3">
