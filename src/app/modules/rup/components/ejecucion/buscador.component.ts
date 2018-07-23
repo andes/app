@@ -152,7 +152,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
                 // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
                 if (resultados && resultados.length) {
-                    const frecuentesProfesional = resultados[0].frecuentes.map(res => {
+                    const frecuentesProfesional = resultados.map(res => {
                         let concepto = res.concepto;
                         concepto.frecuencia = res.frecuencia;
                         return concepto;
@@ -172,7 +172,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // buscar los frecuentes agrupados por tipo de prestacion, sin filtrar profesional
             this.frecuentesProfesionalService.getXPrestacion(queryFTP).subscribe((resultados: any) => {
 
-                this.results['frecuentesTP']['todos'] = resultados;
+                this.results['frecuentesTP']['todos'] = resultados.map(res => {
+                    let concepto = res.concepto;
+                    concepto.frecuencia = res.frecuencia;
+                    return concepto;
+                });
                 this.filtrarResultados('frecuentesTP');
 
                 this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
@@ -269,7 +273,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             } else {
                 this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
             }
-            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
             }
         }

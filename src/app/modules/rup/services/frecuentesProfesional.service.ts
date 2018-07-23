@@ -59,7 +59,7 @@ export class FrecuentesProfesionalService {
 
         let opt = { params: params, options };
 
-        return this.server.get(urlPrestacion, opt);
+        return this.server.get(url, opt);
     }
 
 
