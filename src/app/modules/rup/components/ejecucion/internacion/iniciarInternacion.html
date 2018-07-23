@@ -47,9 +47,7 @@
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [(ngModel)]="informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
-                                    label="Obra Social ">
-                                </plex-select>
+                                <plex-text [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
                             </div>
                         </div>
 
