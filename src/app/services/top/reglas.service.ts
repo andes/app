@@ -23,12 +23,8 @@ export class ReglaService {
     //     return this.server.patch(this.reglaUrl + '/' + id, cambios);
     // }
 
-    save(regla: any): Observable<any> {
-        if (regla.id) {
-            return this.server.put(this.reglaUrl + '/' + regla.id, regla);
-        } else {
-            return this.server.post(this.reglaUrl, regla);
-        }
+    save(reglas: any): Observable<any> {
+        return this.server.post(this.reglaUrl, reglas);
     }
 
 }
