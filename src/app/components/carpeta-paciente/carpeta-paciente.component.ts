@@ -14,7 +14,7 @@ import { IPaciente } from '../../interfaces/IPaciente';
 export class CarpetaPacienteComponent implements OnInit {
     @Input() turnoSeleccionado: ITurno;
     @Input() pacienteSeleccionado: IPaciente;
-    @Output() guardarCarpetaEmit = new EventEmitter<boolean>();
+    @Output() guardarCarpetaEmit = new EventEmitter<any>();
     @Output() cancelarCarpetaEmit = new EventEmitter<boolean>();
 
     idOrganizacion = this.auth.organizacion.id;
@@ -32,7 +32,6 @@ export class CarpetaPacienteComponent implements OnInit {
     constructor(public auth: Auth, public plex: Plex, public servicioPaciente: PacienteService) { }
 
     ngOnInit() {
-
         // Verificamos permiso para editar carpeta de un paciente
         this.autorizado = this.auth.check(this.permisosRequeridos);
 
@@ -112,7 +111,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
             this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
                 resultadoCarpeta => {
-                    this.guardarCarpetaEmit.emit(true);
+                    this.guardarCarpetaEmit.emit(this.carpetaEfectores);
                     this.plex.toast('success', 'Nuevo número de carpeta establecido');
                     this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
                     this.showNuevaCarpeta = false;
@@ -129,7 +128,9 @@ export class CarpetaPacienteComponent implements OnInit {
                 }
             );
         } else {
-            this.guardarCarpetaEmit.emit(true);
+            this.plex.alert('', 'Ingrese un número de carpeta válido');
+            this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
+            this.guardarCarpetaEmit.emit(false);
         }
         this.showEdit = false;
         this.showList = true;
@@ -143,7 +144,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
     cerrarEdicion() {
         this.showEdit = false;
-        this.guardarCarpetaEmit.emit(true);
+        this.guardarCarpetaEmit.emit(false);
     }
 
     editar() {

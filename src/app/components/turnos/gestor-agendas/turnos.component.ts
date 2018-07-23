@@ -295,14 +295,14 @@ export class TurnosComponent implements OnInit {
     }
 
     // Se usa tanto para guardar como cancelar
-    cancelarCarpeta() {
+    afterComponenteCarpeta(carpetas) {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
-        this.serviceAgenda.getById(this.agenda.id).subscribe(ag => {
-            this.agenda = ag;
-            this.showCarpetaPaciente = false;
-            this.showTurnos = true;
-        });
-        // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
+        if (carpetas) {
+            this.turnosSeleccionados[0].paciente.carpetaEfectores = carpetas;
+            // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
+        }
+        this.showCarpetaPaciente = false;
+        this.showTurnos = true;
     }
 
     eventosTurno(operacion) {

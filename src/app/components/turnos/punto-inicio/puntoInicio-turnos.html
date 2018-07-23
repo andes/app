@@ -7,13 +7,7 @@
                     <div class="clearfix">
                         <div class="page-title">PUNTO DE INICIO | GESTIÓN DE PACIENTES</div>
                     </div>
-
                 </header>
-                <!-- <div class="row">
-                    <div class="col-12">
-                        <plex-button icon="printer" type="info" label="Imprimir"></plex-button>
-                    </div>
-                </div> -->
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
                         <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud" [puedeDarTurno]="puedeDarTurno"
@@ -35,9 +29,6 @@
                 <div *ngIf="showIngresarSolicitud" type="info">
                     <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
                 </div>
-                <!-- <div *ngIf="showMostrarTurnosPaciente && paciente" type="info">
-                    <turnos-paciente [paciente]="paciente" [operacion]="operacionTurnos" (showArancelamientoForm)="showArancelamientoForm($event)"></turnos-paciente>
-                </div> -->
                 <div *ngIf="showActivarApp" type="info">
                     <activar-app [paciente]="paciente"></activar-app>
                 </div>
@@ -62,4 +53,4 @@
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
-    (cancelarDarTurno)="cancelarDarTurno()"></dar-turnos>
+    (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
