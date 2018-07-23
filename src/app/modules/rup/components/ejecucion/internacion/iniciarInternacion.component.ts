@@ -8,13 +8,13 @@ import { Location } from '@angular/common';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { FinanciadorService } from '../../../../../services/financiador.service';
 import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
 import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { CamasService } from '../../../services/camas.service';
+import { ObraSocialService } from '../../../../../services/obraSocial.service';
 
 @Component({
     templateUrl: 'iniciarInternacion.html'
@@ -24,7 +24,7 @@ export class IniciarInternacionComponent implements OnInit {
 
 
     public ocupaciones = [];
-    public obrasSociales = [];
+    public obraSocial = { nombre: '', codigo: '' };
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -104,7 +104,7 @@ export class IniciarInternacionComponent implements OnInit {
         public camasService: CamasService,
         private servicioPrestacion: PrestacionesService,
         private organizacionService: OrganizacionService,
-        public financiadorService: FinanciadorService,
+        public obraSocialService: ObraSocialService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
         private location: Location) { }
@@ -126,11 +126,6 @@ export class IniciarInternacionComponent implements OnInit {
         // Cargamos todas las ocupaciones
         this.ocupacionService.get().subscribe(rta => {
             this.ocupaciones = rta;
-        });
-
-        // Se cargan los combos
-        this.financiadorService.get().subscribe(resultado => {
-            this.obrasSociales = resultado;
         });
     }
 
@@ -160,6 +155,9 @@ export class IniciarInternacionComponent implements OnInit {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
                         this.paciente = paciente;
+                        this.obraSocialService.get(this.paciente.documento).subscribe(os => {
+                            this.obraSocial = os;
+                        });
                         this.buscandoPaciente = false;
                     });
                 }
@@ -214,7 +212,6 @@ export class IniciarInternacionComponent implements OnInit {
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
             this.informeIngreso.asociado = ((typeof this.informeIngreso.asociado === 'string')) ? this.informeIngreso.asociado : (Object(this.informeIngreso.asociado).nombre);
             this.informeIngreso.ocupacionHabitual = ((typeof this.informeIngreso.ocupacionHabitual === 'string')) ? this.informeIngreso.ocupacionHabitual : (Object(this.informeIngreso.ocupacionHabitual).nombre);
-            this.informeIngreso.obraSocial = ((typeof this.informeIngreso.obraSocial === 'string')) ? this.informeIngreso.obraSocial : (Object(this.informeIngreso.obraSocial).nombre);
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
             // armamos el elemento data a agregar al array de registros
             let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
@@ -228,6 +225,7 @@ export class IniciarInternacionComponent implements OnInit {
             let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
             nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
             nuevaPrestacion.paciente['_id'] = this.paciente.id;
+            nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigo, nombre: this.obraSocial.nombre };
             this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                 if (this.cama) {
                     // vamos a actualizar el estado de la cama
