@@ -1,7 +1,3 @@
-<header *ngIf="prestacion">
-    <header-paciente *ngIf="prestacion.paciente" (evtData)="cambioDePaciente($event)" [cambiarPaciente]="false" [paciente]="prestacion.paciente"></header-paciente>
-</header>
-
 <section>
     <div class="row" *ngIf="prestacion && registro.valor">
         <div class="col-12">
