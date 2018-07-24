@@ -3,7 +3,7 @@ import { IPaciente } from '../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
 import { ObraSocialService } from '../../../services/obraSocial.service';
 import { ProfeService } from '../../../services/profe.service';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'paciente-panel',
