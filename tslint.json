@@ -3,7 +3,6 @@
         "node_modules/codelyzer"
     ],
     "rules": {
-        "ordered-imports": true,
         "callable-types": true,
         "class-name": true,
         "comment-format": [
