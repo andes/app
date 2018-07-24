@@ -367,6 +367,10 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { formTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
+import { ArbolItem } from './components/formularioTerapeutico/arbolItem';
+import { FormTerapeuticoDetallePage } from './components/formularioTerapeutico/form-terapeutico-detalle';
 
 registerLocaleData(localeEs, 'es');
 
@@ -454,7 +458,12 @@ registerLocaleData(localeEs, 'es');
         HistorialCarpetasComponent,
         ImprimirSolicitudesComponent,
         CamaEstadoComponent,
-        OcuparCamaComponent
+        OcuparCamaComponent,
+
+        //form Terapeutico
+        formTerapeuticoComponent,
+        ArbolItem,
+        FormTerapeuticoDetallePage
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -511,7 +520,8 @@ registerLocaleData(localeEs, 'es');
         DocumentosService,
         CamasService,
         PrestamosService,
-        ProcedimientosQuirurgicosService
+        ProcedimientosQuirurgicosService,
+        FormTerapeuticoService
 
     ]
 })

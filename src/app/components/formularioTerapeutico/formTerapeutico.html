@@ -1,0 +1,18 @@
+<section>
+
+    <div class="row">
+        <div class="col">
+            <plex-box>
+                <div *ngFor="let indice of indices">
+                    <arbolItem [indice]="indice"  (enviarDetalle)="detallesMedicamento($event)" [deep]="0"></arbolItem>
+                </div>
+            </plex-box>
+        </div>
+        <div class="col-4" *ngIf='detalleMedicamento'>
+            <plex-box>
+               <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
+            </plex-box>
+        </div>
+    </div>
+
+</section>
