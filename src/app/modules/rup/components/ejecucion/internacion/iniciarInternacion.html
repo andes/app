@@ -17,6 +17,13 @@
                             <legend>Datos de ingreso</legend>
                         </fieldset>
                         <div class="row">
+                            <div class="col-12">
+                                <plex-select label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional" (getData)="loadProfesionales($event)"
+                                    labelField="apellido+' '+nombre">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
                                 <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
                                     [data]="situacionesLaborales" placeholder="Seleccione... ">
@@ -40,9 +47,7 @@
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [(ngModel)]="informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
-                                    label="Obra Social ">
-                                </plex-select>
+                                <plex-text [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
                             </div>
                         </div>
 
@@ -57,8 +62,15 @@
                                 </plex-datetime>
                             </div>
                             <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
-                                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen" [data]="origenHospitalizacion " placeholder="Seleccione... "
+                                    label="Origen hospitalización " (change)="changeOrigenHospitalizacion($event)">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="origenExterno">
+                            <div class="col">
+                                <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización"
+                                    placeholder="Seleccione la organización" labelField="nombre" [required]="true">
                                 </plex-select>
                             </div>
                         </div>
