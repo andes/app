@@ -33,6 +33,13 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-12">
+                                <plex-select label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional" (getData)="loadProfesionales($event)"
+                                    labelField="apellido+' '+nombre">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
                                 <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
                                     [data]="situacionesLaborales" placeholder="Seleccione... ">

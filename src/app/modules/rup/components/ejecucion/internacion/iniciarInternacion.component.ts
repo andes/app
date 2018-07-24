@@ -14,6 +14,7 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { take } from 'rxjs/operator/take';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { CamasService } from '../../../services/camas.service';
+import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 
 @Component({
@@ -86,6 +87,7 @@ export class IniciarInternacionComponent implements OnInit {
     public buscandoPaciente = false;
     public cama = null;
     public organizacion = null;
+    public origenExterno = false;
 
     public informeIngreso = {
         fechaIngreso: new Date(),
@@ -96,7 +98,9 @@ export class IniciarInternacionComponent implements OnInit {
         nivelInstruccion: null,
         asociado: null,
         obraSocial: null,
-        motivo: null
+        motivo: null,
+        organizacionOrigen: null,
+        profesional: null
     };
 
     constructor(private router: Router, private route: ActivatedRoute,
@@ -107,7 +111,9 @@ export class IniciarInternacionComponent implements OnInit {
         public obraSocialService: ObraSocialService,
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
-        private location: Location) { }
+        private location: Location,
+        public servicioProfesional: ProfesionalService,
+    ) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {
@@ -127,6 +133,31 @@ export class IniciarInternacionComponent implements OnInit {
         this.ocupacionService.get().subscribe(rta => {
             this.ocupaciones = rta;
         });
+    }
+
+    loadProfesionales(event) {
+        let listaProfesionales = [];
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(resultado => {
+                listaProfesionales = resultado;
+                event.callback(listaProfesionales);
+            });
+        } else {
+            if (this.auth.profesional) {
+                this.servicioProfesional.get({ id: this.auth.profesional.id }).subscribe(resultado => {
+                    if (resultado) {
+                        this.informeIngreso.profesional = resultado[0];
+                        let callback = (resultado) ? resultado : null;
+                        event.callback([callback]);
+                    }
+                });
+            } else {
+                event.callback([]);
+            }
+        }
     }
 
     buscarRegistroInforme(internacion) {
@@ -206,6 +237,10 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
                 return;
             }
+            if (this.informeIngreso.organizacionOrigen === 'consultorio externo' || this.informeIngreso.organizacionOrigen === 'traslado' && !this.informeIngreso.organizacionOrigen) {
+                this.plex.info('warning', 'Debe seleccionar una organización');
+                return;
+            }
 
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
@@ -259,5 +294,24 @@ export class IniciarInternacionComponent implements OnInit {
 
     onReturn() {
         this.router.navigate(['/internacion/camas']);
+    }
+
+    changeOrigenHospitalizacion(event) {
+        if (event.value.id === 'consultorio externo' || event.value.id === 'traslado') {
+            this.origenExterno = true;
+        } else {
+            this.origenExterno = false;
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.organizacionService.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
     }
 }
