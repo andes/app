@@ -6,7 +6,7 @@ import { SugerenciasService } from './../../services/sendmailsugerencias.service
 
 @Component({
     selector: 'sugerencias',
-    templateUrl: 'sugerencias.html',
+    templateUrl: 'sugerencias.html'
 })
 
 export class SugerenciasComponent {
@@ -15,7 +15,7 @@ export class SugerenciasComponent {
 
     sugerencias() {
         swal({
-            title: 'Enviar sugerencias via email',
+            title: 'Escriba un comentario',
             input: 'textarea',
             inputPlaceholder: 'Explique brevemente la sugerencia o error...',
             showCancelButton: true,
@@ -34,7 +34,7 @@ export class SugerenciasComponent {
                             } else {
                                 swal({
                                     type: 'error',
-                                    title: 'Hubo un error y no se envió el mensaje.',
+                                    title: 'Hubo un error y el mensaje no pudo ser enviado.',
                                     html: 'Error: ' + result.mensaje
                                 });
                             };
@@ -43,7 +43,7 @@ export class SugerenciasComponent {
                             if (err) {
                                 swal({
                                     type: 'error',
-                                    title: 'Hubo un error. No se envió el mensaje.',
+                                    title: 'Hubo un error. El mensaje no pudo ser enviado.',
                                     html: 'Error: ' + err
                                 });
                             }

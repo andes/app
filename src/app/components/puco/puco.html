@@ -66,33 +66,30 @@
         <header>
             <h3>Información</h3>
         </header>
-        <plex-box>
-            <div class="row">
-                <div class="col">
-                    <h5>PUCO</h5>
-                    <p>Última actualización: {{ultimaActualizacionPuco | date: 'dd/MM/yyyy'}}</p>
-                    <p>Padrones disponibles: {{listaPeriodosPuco}}</p>
-                </div>
+        <div class="row">
+            <div class="col">
+                <h5>PUCO</h5>
+                <p>Última actualización: {{ultimaActualizacionPuco | date: 'dd/MM/yyyy'}}</p>
+                <p>Padrones disponibles: {{listaPeriodosPuco}}</p>
             </div>
-            <br>
-            <div class="row">
-                <div class="col">
-                    <h5>Incluir Salud</h5>
-                    <p>Última actualización: {{ultimaActualizacionProfe | date: 'dd/MM/yyyy'}}</p>
-                    <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
-                </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <h5>Incluir Salud</h5>
+                <p>Última actualización: {{ultimaActualizacionProfe | date: 'dd/MM/yyyy'}}</p>
+                <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
             </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <sugerencias>
+                    <plex-button label='Reportar un problema' type='primary' title="Sugerencias" icon="book-open-page-variant" position="right"
+                        (click)="sugerencias()"></plex-button>
+                </sugerencias>
+            </div>
+        </div>
 
-
-            <div class="row">
-                <div class="col">
-                    <sugerencias>
-                        <plex-button label='Reportar un problema' type='primary' title="Sugerencias" icon="book-open-page-variant" position="right"
-                            (click)="sugerencias()"></plex-button>
-                    </sugerencias>
-                </div>
-            </div>
-        </plex-box>
     </plex-layout-sidebar>
 
 </plex-layout>
