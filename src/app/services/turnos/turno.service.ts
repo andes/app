@@ -18,6 +18,9 @@ export class TurnoService {
     getTurnos(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
     }
+    getHistorial(params: any): Observable<any[]> {
+        return this.server.get(this.turnoUrl + '/historial', { params: params, showError: true });
+    }
 
     save(turno: any, options: any = {}): Observable<IAgenda> {
         if (typeof options.showError === 'undefined') {

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { EdadPipe } from './../../../pipes/edad.pipe';
+import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-import { ObraSocialService } from './../../../services/obraSocial.service';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 
 @Component({
     selector: 'arancelamiento-form',
