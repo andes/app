@@ -72,6 +72,7 @@ export class PuntoInicioComponent implements OnInit {
                         this.redirect('inicio');
                     }
                     this.tiposPrestacion = data;
+                    localStorage.removeItem('idAgenda');
                     this.actualizar();
                 });
             }

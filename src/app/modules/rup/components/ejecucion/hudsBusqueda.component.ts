@@ -2,6 +2,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
+import * as moment from 'moment';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 @Component({
@@ -12,6 +13,8 @@ import { Auth } from '@andes/auth';
     encapsulation: ViewEncapsulation.None
 })
 export class HudsBusquedaComponent implements OnInit {
+    laboratoriosFS: any;
+    laboratorios: any;
     colapsadoOtros = true;
     colapsadoActivos = true;
     colapsadoCronicos = true;
@@ -24,6 +27,8 @@ export class HudsBusquedaComponent implements OnInit {
     hallazgosNoActivosAux: any;
     filtroActual: any = 'todos';
     public loading = false;
+
+    public cdas = [];
 
     @Input() paciente: any;
     @Input() prestacionActual: any;
@@ -97,7 +102,8 @@ export class HudsBusquedaComponent implements OnInit {
         procedimiento: ['procedimiento', 'entidad observable', 'régimen/tratamiento'],
         plan: ['procedimiento', 'régimen/tratamiento'],
         producto: ['producto'],
-        elementoderegistro: ['elemento de registro']
+        elementoderegistro: ['elemento de registro'],
+        laboratorios: ['laboratorios'],
     };
 
     constructor(private servicioPrestacion: PrestacionesService,
@@ -159,10 +165,16 @@ export class HudsBusquedaComponent implements OnInit {
         this.evtData.emit(resultado);
     }
 
+    devolverLaboratorio(laboratorio) {
+        let resultado = {
+            tipo: 'laboratorio',
+            data: laboratorio
+        };
+        this.evtData.emit(resultado);
+    }
+
     devolverRegistrosHuds(registro, tipo) {
-
         let index;
-
         switch (tipo) {
             case 'hallazgo':
             case 'producto':
@@ -179,30 +191,50 @@ export class HudsBusquedaComponent implements OnInit {
                 break;
             case 'prestacion':
                 // Se populan las relaciones usando el _id
-                if (registro.ejecucion.registros) {
-                    registro.ejecucion.registros.forEach(reg => {
-                        if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
-                            if (typeof reg.relacionadoCon[0] === 'string') {
-                                reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                    return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
-                                });
+                if (registro.tipo === 'rup') {
+                    registro = registro.data;
+                    if (registro.ejecucion.registros) {
+                        registro.ejecucion.registros.forEach(reg => {
+                            if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                                if (typeof reg.relacionadoCon[0] === 'string') {
+                                    reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                    });
+                                }
                             }
-                        }
+                        });
+                    }
+
+                    index = this.registrosHuds.findIndex(r => {
+                        return (r.data.id === registro.id);
+                    });
+
+                } else {
+                    tipo = 'cda';
+                    registro = registro.data;
+                    index = this.registrosHuds.findIndex(r => {
+                        return (r.data.id === registro.id);
                     });
                 }
-
-                index = this.registrosHuds.findIndex(r => {
-                    return (r.data.id === registro.id);
-                });
                 registro.class = 'plan';
-
                 break;
             case 'procedimiento':
                 registro.class = registro.concepto.semanticTag;
                 index = this.registrosHuds.findIndex(r => {
                     if ((r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento') && r.data.concepto.id === registro.concepto.id) {
-                        console.log(r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt);
                         if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+                break;
+            case 'laboratorio':
+                registro.class = 'laboratorio';
+                index = this.registrosHuds.findIndex(r => {
+                    if (r.tipo === 'cda' && r.data.prestacion.snomed.semanticTag === 'elemento de registro') {
+                        if (r.data.fecha === registro.fecha) {
                             return 1;
                         } else {
                             return 0;
@@ -217,7 +249,6 @@ export class HudsBusquedaComponent implements OnInit {
             data: registro
         };
 
-        // console.log(elemento);
 
         // si no existe lo agregamos
         if (index === -1) {
@@ -409,6 +440,28 @@ export class HudsBusquedaComponent implements OnInit {
             });
         }
 
+        // Ordenar LABORATORIOS
+        // (fecha === createddAt)
+        // (alfa === concepto.term)
+        if (this.filtroActual === 'laboratorios') {
+            this.laboratorios.sort((a, b) => {
+                console.log(a.createdAt);
+                if (tipoOrden === 'fecha') {
+                    if (this.ordenDesc) {
+                        return b.createdAt - a.createdAt;
+                    } else {
+                        return a.createdAt - b.createdAt;
+                    }
+                } else if (tipoOrden === 'alfa') {
+                    if (this.ordenDesc) {
+                        return b.concepto.term.localeCompare(a.concepto.term);
+                    } else {
+                        return a.concepto.term.localeCompare(b.concepto.term);
+                    }
+                }
+            });
+        }
+
 
         this.ordenDesc = !this.ordenDesc;
     }
@@ -436,6 +489,18 @@ export class HudsBusquedaComponent implements OnInit {
     listarPrestaciones() {
         this.servicioPrestacion.getByPaciente(this.paciente.id, false).subscribe(prestaciones => {
             this.prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
+            this.prestaciones = this.prestaciones.map(p => {
+                return {
+                    data: p,
+                    tipo: 'rup',
+                    prestacion: p.solicitud.tipoPrestacion,
+                    profesional: p.estados[p.estados.length - 1].createdBy.nombreCompleto,
+                    fecha: p.estados[p.estados.length - 1].createdAt,
+                    estado: p.estados[p.estados.length - 1].tipo
+                };
+            });
+            this.buscarCDAPacientes();
+
         });
     }
 
@@ -449,6 +514,7 @@ export class HudsBusquedaComponent implements OnInit {
             this.listarProcedimientos();
             this.listarMedicamentos();
             this.listarElementosDeRegistro();
+
         });
     }
 
@@ -510,6 +576,42 @@ export class HudsBusquedaComponent implements OnInit {
         });
     }
 
+    // Trae los cdas registrados para el paciente
+    buscarCDAPacientes() {
+        this.servicioPrestacion.getCDAByPaciente(this.paciente.id).subscribe(registros => {
+            this.cdas = registros;
+            this.listarLaboratorios();
+            let otrasPrestaciones = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId !== '4241000179101')];
+            let filtro = otrasPrestaciones.map(op => {
+                op.id = op.cda_id;
+                return {
+                    data: op,
+                    tipo: 'cda',
+                    prestacion: op.prestacion.snomed,
+                    profesional: op.profesional ? op.profesional : '',
+                    fecha: op.fecha,
+                    estado: 'validada'
+                };
+            });
+
+            this.prestaciones = [...this.prestaciones, ...filtro];
+
+            // vamos a ordenar la prestaciones por fecha
+            this.prestaciones = this.prestaciones.sort(
+                function (a, b) {
+                    a = a.fecha;
+                    b = b.fecha;
+                    return b - a;
+                });
+        });
+    }
+
+    // Trae los medicamentos registrados para el paciente
+    listarLaboratorios() {
+        this.laboratorios = [... this.cdas.filter(cda => cda.prestacion.snomed.conceptId === '4241000179101')];
+
+    }
+
     buscarTranformacion(transformado) {
         let listaCompleta = [... this.hallazgosNoActivos, ... this.problemasActivos];
         let hallazgoEncontrado = listaCompleta.find(h => h.evoluciones[0].idRegistro === transformado.evoluciones[0].idRegistroGenerado);
@@ -542,6 +644,11 @@ export class HudsBusquedaComponent implements OnInit {
             this.hallazgosCronicos = this.hallazgosCronicos.filter(h => {
                 return h.concepto.semanticTag === this.filtroActual;
             });
+        } else {
+            if (this.filtroActual === 'laboratorios') {
+                this.listarLaboratorios();
+            }
+
         }
     }
 
