@@ -4,7 +4,7 @@
         <div class="col">
             <plex-box>
                 <div *ngFor="let indice of indices">
-                    <arbolItem [indice]="indice"  (enviarDetalle)="detallesMedicamento($event)" [deep]="0"></arbolItem>
+                    <arbolItem [indice]="indice"  (enviarDetalle)="detallesMedicamento($event)" (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)' [deep]="0"></arbolItem>
                 </div>
             </plex-box>
         </div>
@@ -13,6 +13,13 @@
                <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
             </plex-box>
         </div>
+        <div class="col-4" *ngIf='idMedicamentoPadre'>
+            <plex-box>
+               <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
+            </plex-box>
+        </div>
     </div>
+
+
 
 </section>

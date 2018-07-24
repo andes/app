@@ -24,11 +24,11 @@
         </div>
 
         <div *ngIf="!esHoja()" [ngClass]="'child-nested-' + deep">
-                <button class="btn btn-success text-right">Agregar</button>
+                <button class="btn btn-success text-right" (click)='agregarMedicamento()'>Agregar</button>
                 <hr>
             <!-- <span>{{ indice.descripcion }} sadasdas</span> -->
             <span>
-                <arbolItem class="arbol-hijo" [indice]="i" [deep]="deep + 1" *ngFor="let i of hijos" (enviarDetalle)="enviarDetalle.emit($event)"></arbolItem>
+                <arbolItem class="arbol-hijo" [indice]="i" [deep]="deep + 1" *ngFor="let i of hijos" (enviarDatosMedicamento)="enviarDatosMedicamento.emit($event)" (enviarDetalle)="enviarDetalle.emit($event)"></arbolItem>
             </span>
         </div>
     </plex-panel>

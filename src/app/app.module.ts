@@ -371,6 +371,7 @@ import { formTerapeuticoComponent } from './components/formularioTerapeutico/for
 import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
 import { ArbolItem } from './components/formularioTerapeutico/arbolItem';
 import { FormTerapeuticoDetallePage } from './components/formularioTerapeutico/form-terapeutico-detalle';
+import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 
 registerLocaleData(localeEs, 'es');
 
@@ -463,7 +464,8 @@ registerLocaleData(localeEs, 'es');
         //form Terapeutico
         formTerapeuticoComponent,
         ArbolItem,
-        FormTerapeuticoDetallePage
+        FormTerapeuticoDetallePage,
+        AddformTerapeuticoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

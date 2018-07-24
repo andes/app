@@ -7,10 +7,10 @@ import { FormTerapeuticoService } from './../../services/formTerapeutico/formTer
 
 
 @Component({
-    selector: 'app-formTerapeutico',
-    templateUrl: './formTerapeutico.html'
+    selector: 'app-addFormTerapeutico',
+    templateUrl: './add-form-terapeutico.html'
 })
-export class formTerapeuticoComponent implements OnInit {
+export class AddformTerapeuticoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: Number;
@@ -19,34 +19,31 @@ export class formTerapeuticoComponent implements OnInit {
     private padres: any[];
     private hijos: any[];
     public detalleMedicamento: any;
-    public idMedicamentoPadre: any;
+    public datosParaAgregar = {
+        nombre: null,
+        indicaciones: null,
+        complejidad: null,
+        nodo: null,
+        medicamento: null,
+        carroDeEmergencia: null
+    }
+
+    @Output() objNuevoMedicamento =  new EventEmitter(); 
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioFormTerapeutico: FormTerapeuticoService) { }
 
 
     ngOnInit() {
-        this.servicioFormTerapeutico.get({ tree: 1, root: 1 }).subscribe((data: any) => {
-            console.log(data)
-            this.indices = data
 
-        });
     }
 
-    detallesMedicamento(data) {
-        this.detalleMedicamento = data;
-        this.idMedicamentoPadre = null;
-        console.log("padre", data)
+
+    agregar(){
+        console.log(this.datosParaAgregar)
+        this.objNuevoMedicamento.emit(this.datosParaAgregar);
     }
 
-    recibeMedicamenteAgregar(data) {
-        this.idMedicamentoPadre = data
-        this.detalleMedicamento = null;
-        console.log("recibe", data)
-    }
-
-    agregar(data){
-        console.log(data)
-    }
 
 }

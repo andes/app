@@ -15,6 +15,7 @@ export class ArbolItem implements OnInit {
     private padres: any[];
     private hijos: any[];
     @Output() enviarDetalle = new EventEmitter();
+    @Output() enviarDatosMedicamento = new EventEmitter();
     @Input()indice: any;
     @Input() deep: Number;
     medicamentoSelect;
@@ -45,6 +46,10 @@ export class ArbolItem implements OnInit {
     this.enviarDetalle.emit(this.medicamentoSelect)
     console.log(this.medicamentoSelect)
 
+    }
+
+    agregarMedicamento(indice){
+        this.enviarDatosMedicamento.emit(this.indice._id)
     }
 
 }
