@@ -17,7 +17,7 @@
     <span class="text-capitalize">{{ registro.nombre }}</span>
     <ng-container *ngFor="let reg of registro.valor">
         <ng-container *ngIf="reg.checkbox">
-            - {{ reg.concepto.term }}
+            {{ reg.concepto.term }}
             <br>
         </ng-container>
     </ng-container>
