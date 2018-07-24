@@ -33,8 +33,6 @@ export class PacienteListadoComponent {
             } else {
                 this.listado = value as IPaciente[];
             }
-            this.listado[1] = {} as any;
-            Object.assign(this.listado[1], this.listado[0], { id: 'xxxx', apellido: 'Garmonda', nombre: 'Porota' });
         } else {
             this.listado = [];
         }
