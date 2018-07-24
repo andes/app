@@ -1,12 +1,15 @@
-<plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="registro.valor" (change)="emitChange()" name="talla" label="Talla" suffix="cm" required="true" min="1" max="240">
-</plex-float>
+<form #form="ngForm">
+    <plex-float autoFocus=1 *ngIf="!soloValores" placeholder="Ingrese un valor entre 0 y 240" [(ngModel)]="registro.valor" (change)="emitChange()"
+        name="talla" label="Talla" suffix="cm" [required]="esRequerido" min="1" max="240">
+    </plex-float>
 
-<p *ngIf="soloValores" class="readonly">
-    <span>Talla</span> {{registro.valor}} cm
-</p>
+    <p *ngIf="soloValores" class="readonly">
+        <span>Talla</span> {{registro.valor}} cm
+    </p>
 
-<p *ngIf="mensaje && mensaje.texto">
-    <span class="badge-{{mensaje.class}}">
-    {{mensaje.texto}}
-    </span>
-</p>
+    <p *ngIf="mensaje && mensaje.texto">
+        <span class="badge-{{mensaje.class}}">
+            {{mensaje.texto}}
+        </span>
+    </p>
+</form>

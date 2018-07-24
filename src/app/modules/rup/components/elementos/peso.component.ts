@@ -6,6 +6,8 @@ import * as moment from 'moment';
     templateUrl: 'peso.html'
 })
 export class PesoComponent extends RUPComponent implements OnInit {
+    public esRequerido: boolean;
+
     ngOnInit() {
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
@@ -19,6 +21,10 @@ export class PesoComponent extends RUPComponent implements OnInit {
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
         }
+
+        if (this.params !== null) {
+            this.esRequerido = this.params.required;
+        } else { this.esRequerido = true; }
     }
 
     // getMensajes() {

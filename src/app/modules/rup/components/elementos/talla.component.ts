@@ -7,6 +7,7 @@ import * as moment from 'moment';
     templateUrl: 'talla.html'
 })
 export class TallaComponent extends RUPComponent implements OnInit {
+    public esRequerido: boolean;
 
     ngOnInit() {
         if (!this.soloValores) {
@@ -20,10 +21,9 @@ export class TallaComponent extends RUPComponent implements OnInit {
             });
         }
 
-
-        if (this.registro.valor) {
-            // this.mensaje = this.getMensajes();
-        }
+        if (this.params !== null) {
+            this.esRequerido = this.params.required;
+        } else { this.esRequerido = true; }
     }
 
     /*

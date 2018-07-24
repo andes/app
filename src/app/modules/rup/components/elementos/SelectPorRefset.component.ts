@@ -14,12 +14,11 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = {};
+            this.registro.valor = [];
         }
         if (this.params) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptos = resultado;
-
             });
         }
     }
@@ -30,8 +29,21 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         });
         $event.callback(conceptosSelect);
     }
+
     selectRadio(concepto) {
         this.registro.valor = { concepto: concepto };
     }
+
+
+    // public validate() {
+    //     let resultado = false;
+    //     if (this.params.required) {
+    //         if (this.registro.valor) {
+    //             resultado = (this.registro.valor.multiple && this.registro.valor.lenght) || (!this.registro.valor.multiple && this.registro.valor.conceptId);
+    //         }
+    //     } else { resultado = true; }
+
+    //     return resultado;
+    // }
 
 }

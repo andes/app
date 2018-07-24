@@ -1,6 +1,6 @@
 import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ObjectID } from 'bson';
 import { DropdownItem } from '@andes/plex';
@@ -15,6 +15,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -26,6 +27,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 export class PrestacionEjecucionComponent implements OnInit {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
@@ -652,17 +654,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
-        } else {
-            this.prestacion.ejecucion.registros.forEach(r => {
-                if (!this.controlValido(r)) {
-
-                    this.prestacionValida = false;
-                    this.mostrarMensajes = true;
-                    resultado = false;
-                }
-            });
         }
-
         return resultado;
     }
 
@@ -675,7 +667,15 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
 
         // validamos antes de guardar
-        if (!this.beforeSave()) {
+        let flag = true;
+        this.rupElements.forEach((item) => {
+
+            let instance = item.rupInstance;
+            flag = flag && (instance.soloValores || instance.validate());
+        });
+        // validamos antes de guardar
+        if (!this.beforeSave() || !flag) {
+            this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
 
