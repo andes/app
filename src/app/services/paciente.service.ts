@@ -37,9 +37,11 @@ export class PacienteService {
      */
     getMatch(params: PacienteSearch): Observable<IPacienteMatch[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true }).map((value) => {
-            // type: 'simplequery',
-            debugger;
-            return value;
+            if (params.type === 'simplequery') {
+                return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
+            } else {
+                return value;
+            }
         });
     }
 

@@ -5,11 +5,8 @@ import { DocumentoEscaneado, DocumentoEscaneados } from './../../../components/p
 import { LogService } from './../../../services/log.service';
 import { IPacienteMatch } from '../interfaces/IPacienteMatch.inteface';
 import { Plex } from '@andes/plex';
+import { PacienteBuscarResultado } from '../interfaces/PacienteBuscarResultado.inteface';
 
-interface PacienteBuscarResultado {
-    err: any;
-    pacientes: IPacienteMatch[];
-}
 
 interface PacienteEscaneado {
     documento: string;
@@ -26,7 +23,6 @@ interface PacienteEscaneado {
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
-    private intervalHandle: number;
 
     // Propiedades públicas
     public textoLibre: string = null;
@@ -44,7 +40,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        clearInterval(this.intervalHandle);
+        clearInterval(this.timeoutHandle);
     }
 
     /**
@@ -130,16 +126,15 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let textoLibre = this.textoLibre.trim();
+        let textoLibre = this.textoLibre && this.textoLibre.trim();
         if (!textoLibre) {
             return;
         }
 
         // Inicia búsqueda
-        this.searchStart.emit();
-
-        if (this.textoLibre && this.textoLibre.trim()) {
+        if (textoLibre) {
             this.timeoutHandle = window.setTimeout(() => {
+                this.searchStart.emit();
                 this.timeoutHandle = null;
 
                 // Si matchea una expresión regular, busca inmediatamente el paciente
@@ -176,7 +171,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                                     return this.searchEnd.emit({ pacientes: [], err: null });
                                 }
                                 // 1.3.2. Busca a uno con el mismo código de barras
-                                let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === this.textoLibre);
+                                let match = resultadoSuggest.find(i => i.paciente.scan && i.paciente.scan === textoLibre);
                                 if (match) {
                                     // TODO: this.logService.post('mpi', 'validadoScan', { pacienteDB: datoDB, pacienteScan: pacienteEscaneado }).subscribe(() => { });
                                     return this.searchEnd.emit({ pacientes: [match], err: null });
@@ -208,7 +203,7 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                     // 2. Busca por texto libre
                     this.pacienteService.getMatch({
                         type: 'multimatch',
-                        cadenaInput: this.textoLibre
+                        cadenaInput: textoLibre
                     }).subscribe(
                         resultado => this.searchEnd.emit({ pacientes: resultado, err: null }),
                         (err) => this.searchEnd.emit({ pacientes: [], err: err })
