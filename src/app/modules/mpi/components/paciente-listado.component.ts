@@ -11,9 +11,10 @@ import { Plex } from '@andes/plex';
 export class PacienteListadoComponent {
     private _pacientes: IPacienteMatch[] | IPaciente[];
     private seleccionado: IPacienteMatch | IPaciente;
-    private listado: IPaciente[]; // Contiene un listado plano de pacientes
 
     // Propiedades públicas
+    public listado: IPaciente[]; // Contiene un listado plano de pacientes
+
     /**
      * Listado de pacientes para mostrar. Acepta una lista de pacientes o un resultado de una búsqueda
      *
@@ -33,7 +34,7 @@ export class PacienteListadoComponent {
                 this.listado = value as IPaciente[];
             }
             this.listado[1] = {} as any;
-            Object.assign(this.listado[1], this.listado[0], {id: 'xxxx', apellido: 'Garmonda', nombre: 'Porota'});
+            Object.assign(this.listado[1], this.listado[0], { id: 'xxxx', apellido: 'Garmonda', nombre: 'Porota' });
         } else {
             this.listado = [];
         }
