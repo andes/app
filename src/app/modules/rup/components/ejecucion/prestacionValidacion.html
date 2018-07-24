@@ -194,8 +194,8 @@
                                                 Motivo de consulta principal
                                             </small> -->
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
-                                                title="Establecer como procedimiento / diagnostico principal" class="diagnostico-principal">
-                                                Procedimiento / diagnostico principal
+                                                title="Establecer como procedimiento / diagnóstico principal" class="diagnostico-principal">
+                                                Procedimiento / diagnóstico principal
                                                 <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
                                                     'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
                                                     'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
