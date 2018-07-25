@@ -186,18 +186,11 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     guardarSolicitud($event) {
-        if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
 
-            delete this.modelo.solicitud.organizacion.$order;
-            delete this.modelo.solicitud.profesional.$order;
-            delete this.modelo.solicitud.tipoPrestacion.$order;
+        // TODO MANEJAR AUTOCITACION
+        if ($event.formValid) {
+
             this.registros.solicitudPrestacion.profesionales = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino : [this.modelo.solicitud.profesional];
-
-            if (this.registros.solicitudPrestacion.profesionales) {
-                this.registros.solicitudPrestacion.profesionales.filter(profesional => {
-                    return delete profesional.$order;
-                });
-            }
 
             this.modelo.solicitud.registros = {
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
@@ -207,9 +200,6 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
                 },
                 tipo: 'solicitud'
             };
-
-            this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino ? this.modelo.solicitud.organizacionDestino : this.modelo.solicitud.organizacion;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino[0] : this.modelo.solicitud.profesional;
 
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {

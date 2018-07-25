@@ -302,16 +302,6 @@ export class SolicitudesComponent implements OnInit {
 
         if ($event.formValid && this.organizacionDestino._id && this.profesionalDestino._id) {
 
-            // Se limpian keys del bendito plex-select
-            delete this.modelo.solicitud.organizacion.$order;
-            delete this.modelo.solicitud.profesional.$order;
-            delete this.modelo.solicitud.tipoPrestacion.$order;
-            if (this.registros.solicitudPrestacion.profesionales) {
-                this.registros.solicitudPrestacion.profesionales.filter(profesional => {
-                    return delete profesional.$order;
-                });
-            }
-
             this.modelo.solicitud.registros = {
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,
