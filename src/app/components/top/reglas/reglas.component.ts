@@ -65,7 +65,7 @@ export class ReglasComponent implements OnInit {
   cargarReglas() {
     let query: any = {};
     this.limpiarForm();
-    query.idDestino = this.organizacionDestino.id;
+    query.organizacionDestino = this.organizacionDestino.id;
     if (this.prestacionDestino && this.prestacionDestino.conceptId) {
       query.prestacionDestino = this.prestacionDestino.conceptId;
       this.servicioReglas.get(query).subscribe((reglas: any) => {
