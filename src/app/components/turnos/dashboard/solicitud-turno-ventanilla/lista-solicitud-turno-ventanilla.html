@@ -23,14 +23,14 @@
                                 {{ prestacion.solicitud.tipoPrestacion.term }}
                             </td>
                             <td>
-                                {{ prestacion.solicitud.profesional | profesional }} - {{ prestacion.solicitud.organizacion.nombre }}
+                                {{ prestacion.solicitud.profesional | profesional }} - {{ prestacion?.solicitud?.organizacion?.nombre }}
                                 <span class="text-danger" *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado === true">(autocitado)</span>
                             </td>
                             <td>
-                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion.solicitud.organizacion.id)" type="success"
+                                <plex-button *ngIf="!prestacion.solicitud?.turno && (auth.organizacion.id === prestacion?.solicitud?.organizacion?.id)" type="success"
                                     label="DAR TURNO" (click)="solicitudPrestacionDarTurno(prestacion)" title="Dar turno"></plex-button>
-                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id === prestacion.solicitud.organizacion.id)" class="badge badge-success">Turno Dado</span>
-                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion.solicitud.organizacion.id)" class="badge badge-info">Turno Dado</span>
+                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id === prestacion?.solicitud?.organizacion?.id)" class="badge badge-success">Turno Dado</span>
+                                <span *ngIf="prestacion.solicitud?.turno && (auth.organizacion.id !== prestacion?.solicitud?.organizacion?.id)" class="badge badge-info">Turno Dado</span>
                             </td>
                         </tr>
                     </tbody>
