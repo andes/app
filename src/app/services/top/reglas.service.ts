@@ -18,11 +18,6 @@ export class ReglaService {
         return this.server.get(this.reglaUrl + '/' + id, null);
     }
 
-    // patch(id: String, cambios: any): Observable<any> {
-    //     console.log(this.reglaUrl);
-    //     return this.server.patch(this.reglaUrl + '/' + id, cambios);
-    // }
-
     save(reglas: any): Observable<any> {
         return this.server.post(this.reglaUrl, reglas);
     }
