@@ -118,7 +118,6 @@ import { SelectOrganizacionComponent } from './components/login/selectOrganizaci
 import { InicioComponent } from './components/inicio/inicio.component';
 
 // Sugerencias
-import { SugerenciasComponent } from './components/sugerencias/sugerencias.component';
 import { SugerenciasService } from './services/sendmailsugerencias.service';
 
 // ... Tablas Maestras
@@ -432,7 +431,6 @@ registerLocaleData(localeEs, 'es');
         ReasignarTurnoComponent, ReasignarTurnoAutomaticoComponent, EstadisticasAgendasComponent, EstadisticasPacientesComponent,
         AuditoriaComponent,
         PermisosComponent, ArbolPermisosComponent,
-        SugerenciasComponent,
         // AuditoriaPorBloqueComponent,
         PuntoInicioComponent,
         Auditoria2Component,

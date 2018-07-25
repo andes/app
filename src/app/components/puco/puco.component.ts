@@ -7,7 +7,7 @@ import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { PeriodoPadronesPucoService } from '../../services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from '../../services/periodoPadronesProfe.service';
-import { Moment } from 'moment';
+import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 
 @Component({
     selector: 'puco',
@@ -44,6 +44,7 @@ export class PucoComponent implements OnInit, OnDestroy {
         private profeService: ProfeService,
         private periodoPadronesPucoService: PeriodoPadronesPucoService,
         private periodoPadronesProfeService: PeriodoPadronesProfeService,
+        private sugerenciasService: SugerenciasService,
         private plex: Plex) { }
 
     /* limpiamos la request que se haya ejecutado */
@@ -182,4 +183,9 @@ export class PucoComponent implements OnInit, OnDestroy {
             }
         }
     };
+
+    // Boton reporte de errores/sugerencias
+    sugerencias() {
+        this.sugerenciasService.post();
+    }
 }
