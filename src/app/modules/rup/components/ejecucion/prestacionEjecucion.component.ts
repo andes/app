@@ -139,8 +139,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     this.paciente = paciente;
                                 });
                             }
-
-
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 

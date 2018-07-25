@@ -153,7 +153,7 @@
                                                 </div>
 
                                                 <!-- ... Body -->
-                                                <div class="content" *ngIf="paciente">
+                                                <div class="content" *ngIf="paciente || (prestacion.noNominalizada)">
 
                                                     <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
                                                         <div class="row">
