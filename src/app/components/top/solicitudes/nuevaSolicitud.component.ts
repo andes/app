@@ -8,6 +8,7 @@ import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { ISolicitud } from '../../../modules/rup/interfaces/solicitud.interface';
+import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
     selector: 'nueva-solicitud',
@@ -20,6 +21,7 @@ export class NuevaSolicitudComponent {
     autocitado: boolean;
     motivo: '';
     fecha: any;
+    arrayPrestacionesDestino = [];
 
     modelo: any = {
         paciente: {
@@ -56,7 +58,9 @@ export class NuevaSolicitudComponent {
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
-        public servicioTurnos: TurnoService
+        private servicioTurnos: TurnoService,
+        private servicioReglas: ReglaService
+
     ) { }
 
 
@@ -74,6 +78,16 @@ export class NuevaSolicitudComponent {
                 event.callback(resultado);
             });
         }
+    }
+
+    onSelect() {
+        this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
+            .subscribe(
+                res => {
+                    this.arrayPrestacionesDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
+                    console.log(this.arrayPrestacionesDestino);
+                }
+            );
     }
 
     loadProfesionales(event) {
