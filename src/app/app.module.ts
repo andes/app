@@ -82,7 +82,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
-import {ReglaService} from './services/top/reglas.service';
+import { ReglaService } from './services/top/reglas.service';
 
 // TOP
 // ... Usuarios
@@ -290,7 +290,8 @@ import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.
 import { CamasService } from './services/camas.service';
 
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
+import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -462,6 +463,7 @@ registerLocaleData(localeEs, 'es');
         LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
+        NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,

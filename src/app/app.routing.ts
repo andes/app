@@ -73,7 +73,7 @@ import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasList
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
 
