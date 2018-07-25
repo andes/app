@@ -5,6 +5,7 @@ import { Plex, SelectEvent } from '@andes/plex';
 import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
+import { PrestacionesService } from '../../../../services/prestaciones.service';
 
 @Component({
     selector: 'app-mapa-de-camas',
@@ -32,6 +33,12 @@ export class MapaDeCamasComponent implements OnInit {
     public cantidadXEstado;
     public inactive = false;
     public camaSeleccionada;
+    // Muestra el componente egreso en el sidebar
+    public showEgreso = false;
+    // Muesta/oculta el loader del sidebar
+    public showLoaderSidebar = false;
+
+    public prestacionPorInternacion;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -54,6 +61,7 @@ export class MapaDeCamasComponent implements OnInit {
     };
 
     constructor(
+        public servicioPrestacion: PrestacionesService,
         private auth: Auth,
         private plex: Plex,
         private router: Router,
@@ -298,7 +306,16 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     verEgreso(idInternacion) {
-        console.log(idInternacion);
-        this.router.navigate(['internacion/egreso/' + idInternacion]);
+        this.showLoaderSidebar = true;
+        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+            this.prestacionPorInternacion = prestacion;
+            this.showLoaderSidebar = false;
+            this.showEgreso = true;
+        });
+        // this.router.navigate(['internacion/egreso/' + idInternacion]);
+    }
+
+    cerrarEgreso(event) {
+        this.showEgreso = event;
     }
 }
