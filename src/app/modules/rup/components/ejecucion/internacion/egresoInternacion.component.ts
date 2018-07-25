@@ -95,6 +95,8 @@ export class EgresoInternacionComponent implements OnInit {
         }
         //     });
         // });
+
+        this.showProcedimientos_causas();
         let params;
         // // Cargamos todos los procedimientos.
         this.procedimientosQuirurgicosService.get(params).subscribe(rta => {

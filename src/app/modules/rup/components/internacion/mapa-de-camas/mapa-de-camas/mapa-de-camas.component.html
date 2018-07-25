@@ -172,7 +172,7 @@
                                 </plex-button>
 
                                 <!-- Ver egreso -->
-                                <plex-button type="danger" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)">
+                                <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="danger" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)">
                                 </plex-button>
 
                                 <div class="d-flex justify-content-center">
