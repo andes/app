@@ -5,8 +5,6 @@
                 <!-- [ngClass]="{'col-md-10': showMenu, 'col-md-12': !showMenu}" -->
                 <div class="col">
                     <plex-box>
-                        <!-- <div class="row">
-                            <div class="col"> -->
                         <header>
                             <div class="clearfix">
                                 <div class="page-title">
@@ -14,8 +12,6 @@
                                 </div>
                             </div>
                             <!-- TODO: Ver estilos con julito ,@FerSastre -->
-
-
                             <div class="row" *ngIf="camas">
                                 <div class="col-md-2">
                                     <div class="form-group">
@@ -116,9 +112,7 @@
                                 <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
                             </div>
                         </div>
-                        <!-- 
-                            </div>
-                        </div> -->
+
                     </plex-box>
                 </div>
 
