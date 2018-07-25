@@ -146,6 +146,15 @@ export class RUPComponent implements OnInit {
      * Busca una referencia al formulario, y lo valida.
     */
     public validateForm() {
+        if (this.formulario) {
+            for (let key in this.formulario.controls) {
+                let frm = this.formulario.controls[key];
+                frm.markAsTouched();
+                if (frm.validator) {
+                    frm.validator({ value: frm.value });
+                }
+            }
+        }
         return !this.formulario || !this.formulario.invalid;
     }
 

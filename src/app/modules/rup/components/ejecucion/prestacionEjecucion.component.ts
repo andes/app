@@ -665,7 +665,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
-
         // validamos antes de guardar
         let flag = true;
         this.rupElements.forEach((item) => {
