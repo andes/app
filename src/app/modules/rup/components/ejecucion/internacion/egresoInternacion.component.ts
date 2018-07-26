@@ -14,6 +14,10 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 })
 export class EgresoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
+
+    @Input() prestacion;
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
+
     public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
     public listaProcedimientosQuirurgicos: any[];
@@ -44,7 +48,6 @@ export class EgresoInternacionComponent implements OnInit {
         },
         valor: null
     };
-    public prestacion;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -58,40 +61,42 @@ export class EgresoInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            this.servicioPrestacion.getById(params.id).subscribe(prestacion => {
-                this.prestacion = prestacion;
-                // Buscamos si la prestacion ya tiene una informe del alta guardado.
-                let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
-                this.registro.valor = existeRegistro ? existeRegistro.valor : null;
-                if (!this.registro.valor) {
-                    this.registro.valor = {
-                        InformeEgreso: {
-                            fechaEgreso: null,
-                            nacimientos: [
-                                {
-                                    pesoAlNacer: null,
-                                    condicionAlNacer: null,
-                                    terminacion: null,
-                                    sexo: null
-                                }
-                            ],
-                            procedimientosQuirurgicos: [
-                                {
-                                    procedimiento: null,
-                                    fecha: null
-                                }
-                            ],
-                            causaExterna: {
-                                producidaPor: null,
-                                lugar: null,
-                                comoSeProdujo: null
-                            }
+        // this.route.params.subscribe(params => {
+        //     this.servicioPrestacion.getById(params.id).subscribe(prestacion => {
+        //         this.prestacion = prestacion;
+        // Buscamos si la prestacion ya tiene una informe del alta guardado.
+        let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
+        this.registro.valor = existeRegistro ? existeRegistro.valor : null;
+        if (!this.registro.valor) {
+            this.registro.valor = {
+                InformeEgreso: {
+                    fechaEgreso: null,
+                    nacimientos: [
+                        {
+                            pesoAlNacer: null,
+                            condicionAlNacer: null,
+                            terminacion: null,
+                            sexo: null
                         }
-                    };
+                    ],
+                    procedimientosQuirurgicos: [
+                        {
+                            procedimiento: null,
+                            fecha: null
+                        }
+                    ],
+                    causaExterna: {
+                        producidaPor: null,
+                        lugar: null,
+                        comoSeProdujo: null
+                    }
                 }
-            });
-        });
+            };
+        }
+        //     });
+        // });
+
+        this.showProcedimientos_causas();
         let params;
         // // Cargamos todos los procedimientos.
         this.procedimientosQuirurgicosService.get(params).subscribe(rta => {
@@ -161,10 +166,10 @@ export class EgresoInternacionComponent implements OnInit {
 
 
     /**
-     * Vuelve a la página anterior
+     * Emite un false para ocultar el componente
      */
     cancelar() {
-        this.location.back();
+        this.data.emit(false);
     }
 
 
@@ -172,21 +177,22 @@ export class EgresoInternacionComponent implements OnInit {
      * Guardamos la prestacion y retornamos
      * al mapa de camas
      */
-    guardarPrestacion() {
-        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
-        if (!existeEgreso) {
-            registros.push(this.registro);
+    guardarPrestacion(isvalid) {
+        if (isvalid) {
+            let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+            let existeEgreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
+            if (!existeEgreso) {
+                registros.push(this.registro);
+            }
+            let params: any = {
+                op: 'registros',
+                registros: registros
+            };
+            this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
+                this.cancelar();
+            });
         }
-        let params: any = {
-            op: 'registros',
-            registros: registros
-        };
-
-        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
-            this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
-            this.cancelar();
-        });
     }
 
     /**Validamos la prestacion
