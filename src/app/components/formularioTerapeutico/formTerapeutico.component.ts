@@ -21,7 +21,7 @@ export class formTerapeuticoComponent implements OnInit {
     private padres: any[];
     private hijos: any[];
     public detalleMedicamento: any;
-    public idMedicamentoPadre: any;
+    public datosArbol: any;
     public newMedicamento: any;
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
@@ -37,11 +37,11 @@ export class formTerapeuticoComponent implements OnInit {
 
     detallesMedicamento(data) {
         this.detalleMedicamento = data;
-        this.idMedicamentoPadre = null;
+        this.datosArbol = null;
     }
 
     recibeMedicamenteAgregar(data) {
-        this.idMedicamentoPadre = data;
+        this.datosArbol = data;
         this.detalleMedicamento = null;
     }
 
@@ -55,14 +55,11 @@ export class formTerapeuticoComponent implements OnInit {
         } else {
             data.carroEmergencia = '';
         }
-        data.idpadre = this.idMedicamentoPadre.indice._id;
+        data.idpadre = this.datosArbol.indice._id;
 
         this.servicioFormTerapeutico.post(data).subscribe((salida: any) => {
-            console.log(salida);
-            debugger;
             this.plex.toast('success', 'El medicamento se agrego correctamente', 'Información', 3000);
-
-            this.idMedicamentoPadre.hijos.push(salida);
+            this.datosArbol.hijos.push(salida);
             // this.idMedicamentoPadre.hijos = [this.idMedicamentoPadre.hijos];
 
         });
@@ -74,7 +71,6 @@ export class formTerapeuticoComponent implements OnInit {
 
         });
     }
-
 
 
 

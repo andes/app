@@ -15,7 +15,7 @@ export class ArbolItem implements OnInit, OnChanges {
     @Output() enviarDetalle = new EventEmitter();
     @Output() enviarDatosMedicamento = new EventEmitter();
     @Output() hijosOutPut = new EventEmitter();
-    @Output() refreshOutPut = new EventEmitter();
+    @Output() borradoOutPut = new EventEmitter();
     @Input() indice: any;
     @Input() newMedicamento: any;
     @Input() deep: Number;
@@ -67,13 +67,9 @@ export class ArbolItem implements OnInit, OnChanges {
         });
     }
 
-    pushMedicamento(medicamentoEntrante) {
-        // this.hijos[0].arbol = [...this.hijos[0].arbol];
-        // console.log(medicamentoEntrante)
-        console.log(this.hijos);
 
 
-    }
+
 
 
 

@@ -1,6 +1,11 @@
-
-
-<h1 > Detalle Medicamento </h1>
+<header>
+    <!--Busqueda de Pacientes-->
+    <div class="row">
+        <div class="clearfix col-12">
+            <div class="page-title"> Detalle Medicamento</div>
+        </div>
+    </div>
+</header>
 <div class="badgeContainer">
     <span class="badge badge-info" *ngIf="medicamento?.concepto?.term.split(', ').length >= 2">{{ medicamento?.concepto?.term.split(', ')[1] }}</span>
     <span class="badge badge-success" *ngIf="medicamento?.concepto?.term.split(', ').length >= 3">{{ medicamento?.concepto?.term.split(', ')[2] }}</span>
@@ -25,13 +30,13 @@
 <div class="andes-container-secundario">
     <div class="andes-container-bloque">
         <div class="titulo-prefix">Carro de Emergencia</div>
-        <div class="andes-monosilabo" *ngIf="medicamento?.carroEmergencia === true">Si</div>
-        <div class="andes-monosilabo" *ngIf="medicamento?.carroEmergencia !== true">No</div>
+        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia">Si</div>
+        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia === ''">No</div>
     </div>
     <div class="andes-container-bloque">
         <div *ngIf="medicamento?.nivelComplejidad !== ''">
             <div class="titulo-prefix">Complejidad</div>
-            <div class="andes-monosilabo">{{medicamento?.nivelComplejidad}}</div>
+            <div class="andes-texto">{{medicamento?.nivelComplejidad}}</div>
         </div>
     </div>
 </div>
@@ -41,4 +46,3 @@
         <div class="andes-texto"> {{medicamento?.requisitos}}</div>
     </div>
 </div>
-

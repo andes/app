@@ -461,7 +461,7 @@ registerLocaleData(localeEs, 'es');
         CamaEstadoComponent,
         OcuparCamaComponent,
 
-        //form Terapeutico
+        // form Terapeutico
         formTerapeuticoComponent,
         ArbolItem,
         FormTerapeuticoDetallePage,

@@ -15,10 +15,6 @@ export class AddformTerapeuticoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: Number;
-    private indices;
-    private titulo;
-    private padres: any[];
-    private hijos: any[];
     public detalleMedicamento: any;
     public datosParaAgregar = {
         concepto: null,
@@ -28,7 +24,7 @@ export class AddformTerapeuticoComponent implements OnInit {
         medicamento: true,
         carroEmergencia: null,
         idpadre: null
-    }
+    };
     public busqueda;
     public conceptos = [];
     public conceptoSeleccionado;
@@ -48,34 +44,19 @@ export class AddformTerapeuticoComponent implements OnInit {
 
 
     agregar() {
-        console.log(this.datosParaAgregar)
         this.objNuevoMedicamento.emit(this.datosParaAgregar);
     }
 
 
-    // loadMedicamentos(data) {
-    //     let search = this.busqueda
-    //     console.log(this.busqueda)
-    //     this.SNOMED.get({
-    //         search: search,
-    //         semanticTag: ['producto']
-    //     }).subscribe((salida: any) => {
-    //         console.log(salida)
-    //         this.conceptos = salida
-
-    //     });
-    // }
 
 
     selectConcept(unConcepto) {
-        console.log(unConcepto)
         this.conceptoSeleccionado = unConcepto;
         this.datosParaAgregar.concepto = unConcepto;
-        this.busqueda = unConcepto.term
+        this.busqueda = unConcepto.term;
     }
 
     loadMedicamentos(event) {
-        console.log(event)
         if (event && event.query) {
             let query = {
                 search: event.query,
@@ -84,8 +65,7 @@ export class AddformTerapeuticoComponent implements OnInit {
             this.SNOMED.get(
                 query
             ).subscribe((salida: any) => {
-                console.log(salida)
-                this.conceptos = salida
+                this.conceptos = salida;
                 event.callback(salida);
 
             });

@@ -135,7 +135,7 @@ const appRoutes: Routes = [
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
 
-  //formulario terapeutico
+  // formulario terapeutico
   { path: 'formularioTerapeutico', component: formTerapeuticoComponent, canActivate: [RoutingGuard] },
 
   // Reportes

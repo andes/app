@@ -61,10 +61,9 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
 
-        //faltan permisos
+        // faltan permisos
         accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
-       
-       
+
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
         accessList.forEach((permiso) => {

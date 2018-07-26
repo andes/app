@@ -16,7 +16,7 @@
                     </div>
                 </header>
                 <div *ngFor="let indice of indices">
-                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (refreshOutPut)='refresh($event)' (enviarDetalle)="detallesMedicamento($event)"
+                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (borradoOutPut)='borrar($event)' (enviarDetalle)="detallesMedicamento($event)"
                         (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)'
                         [deep]="0"></arbolItem>
                 </div>
@@ -27,7 +27,7 @@
                 <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
             </plex-box>
         </div>
-        <div class="col-4" *ngIf='idMedicamentoPadre'>
+        <div class="col-4" *ngIf='datosArbol'>
             <plex-box>
                 <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
             </plex-box>
