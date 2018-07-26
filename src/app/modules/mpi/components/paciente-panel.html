@@ -37,10 +37,33 @@
     <div class="row mb-1">
         <div class="col">
             <label>Cobertura social</label>
-            <plex-loader *ngIf="coberturaSocialLoading" type="linear"></plex-loader>
-            <div *ngIf="!coberturaSocialLoading">
-                <span *ngIf="!coberturaSocialError">{{ coberturaSocial }}</span>
-                <span *ngIf="coberturaSocialError" class="text-warning">No disponible en este momento</span>
+            <plex-loader *ngIf="coberturaSocial.loading" type="linear"></plex-loader>
+            <div *ngIf="!coberturaSocial.loading">
+                <span *ngIf="!coberturaSocial.error">{{ coberturaSocial.data }}</span>
+                <span *ngIf="coberturaSocial.error" class="text-warning">No disponible en este momento</span>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-1">
+        <div class="col">
+            <label>Relaciones</label>
+            <plex-loader *ngIf="relaciones.loading" type="linear"></plex-loader>
+            <div *ngIf="!relaciones.loading">
+                <span *ngIf="relaciones.error" class="text-warning">No disponibles en este momento</span>
+                <span *ngIf="relaciones.data && !relaciones.data.length">No hay ninguna relación registrada</span>
+                <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm table-hover">
+                    <tbody>
+                        <tr class="hover" *ngFor="let relacion of relaciones.data" (click)="seleccionarRelacionado(relacion)">
+                            <td>
+                                {{relacion.relacion.nombre}}
+                            </td>
+                            <td>
+                                <span>{{relacion.apellido}}, {{relacion.nombre}}</span>
+                                <span *ngIf="relacion?.documento !== ''" class="d-block">{{relacion.documento}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
