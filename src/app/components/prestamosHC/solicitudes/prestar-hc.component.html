@@ -4,22 +4,23 @@
             <fieldset>
                 <legend>
                     <div class="clearfix">
-                        <span class="float-left">Prestar Carpeta</span>
+                        <span class="float-left">Prestar Carpeta N° {{prestamo.numero}}</span>
                     </div>
                 </legend>
             </fieldset>
 
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Destino" [(ngModel)]="prestarHC.destino" name="destino" placeholder="Ingrese el destino..." [disabled]="true" >
+                    <plex-text label="Destino" [(ngModel)]="prestarHC.destino" name="destino" placeholder="Ingrese el destino..." [disabled]="true">
                     </plex-text>
                 </div>
                 <div class="col-12">
-                    <plex-text label="Responsable" [(ngModel)]="prestarHC.responsable" name="responsable" placeholder="Ingrese un responsable..."  [disabled]="true" >
+                    <plex-text label="Responsable" [(ngModel)]="prestarHC.responsable" name="responsable" placeholder="Ingrese un responsable..."
+                        [disabled]="true">
                     </plex-text>
                 </div>
                 <div class="col-12">
-                    <plex-text label="Observaciones" [(ngModel)]="prestamo.datosPrestamo.observaciones" name="observaciones" placeholder="Ingrese observaciones..." >
+                    <plex-text label="Observaciones" [(ngModel)]="prestarHC.observaciones" name="observaciones" placeholder="Ingrese observaciones...">
                     </plex-text>
                 </div>
             </div>
@@ -31,7 +32,7 @@
             <plex-button label="Cancelar" type="danger" (click)="cancel()">
             </plex-button>
 
-            <plex-button label="Guardar" type="primary" (click)="save(prestarHC)" validateForm="true">
+            <plex-button label="Guardar" type="primary" (click)="save()" validateForm="true">
             </plex-button>
         </div>
     </footer>

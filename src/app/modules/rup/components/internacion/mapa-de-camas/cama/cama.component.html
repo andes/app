@@ -38,14 +38,15 @@
                             </p>
                         </div>
                     </div>
-                    <!-- Iconos redondos sobre la cama -->
-                    <div class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
+                    <!-- Iconos redondos sobre la cama 
+                    Agrego el *ngIf para ocultar el icono del sexo, lo dejo por si se usa otro-->
+                    <div *ngIf="cama.ultimoEstado.estado !== 'ocupada'" class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
                         <!-- reparacion -->
                         <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama-herramienta {{cama.ultimoEstado.estado}}"></i>
                         <!-- Bloqueada -->
                         <i *ngIf="cama.ultimoEstado.estado === 'bloqueada'" class="icon icon-andes-cama-candado {{cama.ultimoEstado.estado}}"></i>
                         <!-- ocupada -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i>
+                        <!-- <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i> -->
                         <!-- desocupada -->
                         <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
                         <!-- ocupada -->
@@ -54,7 +55,7 @@
                     <!-- </div> -->
                 </div>
                 <!-- Botonera laterar derecho -->
-                <div class="col-2 botonera-superior" *ngIf="!readOnly">
+                <div class="d-flex flex-column botonera-superior" *ngIf="!readOnly">
                     <!-- Liberar la cama -->
                     <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
                         *ngIf="cama.ultimoEstado?.idInternacion">
@@ -106,7 +107,7 @@
             <hr>
         </div>
         <!-- TODO: ver estilo de las cards de la parte de atras con julito @fersastre -->
-        <div class="back">
+        <div class="back" *ngIf="cama.$rotar">
             <!-- Header del back de las tarjetas -->
             <div class="header">
                 <div class="float-left">

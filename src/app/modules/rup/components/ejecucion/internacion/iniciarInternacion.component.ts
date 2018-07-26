@@ -186,7 +186,7 @@ export class IniciarInternacionComponent implements OnInit {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
                         this.paciente = paciente;
-                        this.obraSocialService.get(this.paciente.documento).subscribe(os => {
+                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
                             this.obraSocial = os;
                         });
                         this.buscandoPaciente = false;

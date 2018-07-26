@@ -23,9 +23,16 @@
         font-size: 20px;
     }
 }
-
+.btnMenu {
+    position: absolute;
+    right: 0;
+    padding-left: 20px;
+    i {
+       font-size: 1.6rem; 
+    }
+}
 .cama-container {
-    margin: 10px 0 20px 0;
+    margin: 10px 0 70px 0;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
@@ -408,7 +415,6 @@ button {
     }
 }
 
-
 .data-icon {
     position: absolute;
     left: 60%;
@@ -480,7 +486,7 @@ button {
 
 .botonera-superior {
     position: absolute;
-    left: 85%;
+    right: 0;
 
 }
 
@@ -531,3 +537,257 @@ button {
     margin-bottom: 3px;
 }
 
+.estados-icon {
+    font-size: 30px;
+    background-color: #ffffff;
+    height: 32px;
+    width: 32px;
+    border-radius: 80px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.2rem 0;
+    margin-left: 2px;
+    cursor: pointer;
+
+    &.desocupada{
+        border: solid 2px $desocupada;
+    }
+    &.masculino{
+        border: solid 2px #5bc0de;
+    }
+    &.femenino{
+        border: solid 2px rgb(255, 192, 203);
+    }
+    &.reparacion{
+        border: solid 2px $reparacion;
+    }
+    &.bloqueada{
+        border: solid 2px $bloqueada;
+    }
+    &.disponible{
+        border: solid 2px $disponible;
+    }
+    &.ocupada{
+        border: solid 2px $ocupada;
+    }
+    &.oxigeno{
+        border: solid 2px #5bc0de;
+    }
+
+    i{
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.masculino{
+            color:#5bc0de;
+        }
+        &.femenino{
+            color:rgb(255, 192, 203);
+        }
+        &.reparacion{
+            color:$reparacion;
+        }
+        &.bloqueada{
+            color: $bloqueada;
+        }
+        &.disponible{
+            color:$disponible;
+        }
+        &.ocupada{
+            color:$ocupada;
+        }
+        &.oxigeno{
+            color:5bc0de;
+        }
+    }
+}
+
+.estados-container{
+    position: absolute;
+    top: 35px;
+    div{
+        margin: 2px;
+    }
+}
+
+
+
+
+.estados-icon-active {
+    font-size: 30px;
+    border: solid 2px #ffffff;
+    height: 32px;
+    width: 32px;
+    border-radius: 80px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.2rem 0;
+    margin-left: 2px;
+    cursor: pointer;
+
+    &.desocupada{
+        background-color:$desocupada;
+    }
+    &.masculino{
+        background-color: #5bc0de;
+    }
+    &.femenino{
+        background-color: rgb(255, 192, 203);
+    }
+    &.reparacion{
+        background-color: $reparacion;
+    }
+    &.bloqueada{
+        background-color:$bloqueada;
+    }
+    &.disponible{
+        background-color: $disponible;
+    }
+    &.ocupada{
+        background-color: $ocupada;
+    }
+    &.oxigeno{
+        background-color: #5bc0de;
+    }
+
+    i{
+       color: #ffffff;
+    }
+}
+.count {
+    position: absolute;
+    top: 28px;
+    font-size: 9px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    text-align: center;
+    color: #ffffff;
+
+    &.desocupada{
+        background-color: $desocupada;
+    }
+    &.masculino{
+        background-color: #5bc0de;
+    }
+    &.femenino{
+        background-color: rgb(255, 192, 203);
+    }
+    &.reparacion{
+        background-color: $reparacion;
+    }
+    &.bloqueada{
+        background-color: $bloqueada;
+    }
+    &.disponible{
+        background-color: $disponible;
+    }
+    &.ocupada{
+        background-color: $ocupada;
+    }
+    &.oxigeno{
+        background-color: #5bc0de;
+    }
+    
+}
+.inactive {
+    cursor: not-allowed;
+    opacity: .65;
+    // filter: grayscale(75%);
+}
+
+.container-resumen {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+
+    .subcontainer-resumen {
+        display: flex;
+        flex-direction: row;
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.ocupada{
+            color:$ocupada;
+        }
+        &.disponible{
+            color:$disponible;
+        }
+        &.reparacion{
+            color:rgb(204, 204, 204);
+        }
+        &.bloqueada{
+            color: rgb(204, 204, 204);
+        }
+        i{ 
+            font-size: 80px;
+        }
+
+        .texto-resumen {
+            width: 100px;
+            p {
+                font-size: 13px;
+                margin-left: 2px;
+            }
+
+        }
+    }
+}
+    .selected{
+        background-color: #000;
+    }
+
+
+
+    .cama-seleccion-icon {
+        color: rgb(0, 0, 0);
+        font-size: 30px;
+        background-color: #ffffff;
+        height: 40px;
+        width: 40px;
+        border-radius: 80px;
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 0.2rem 0;
+        border: solid 2px #000;
+        p  {
+        font-size: 8px;
+        }
+    }
+    .info-cama-menu {
+        h2 {
+            font-size: 5rem;
+            font-weight: bold;
+
+            &.desocupada{
+                color:$desocupada;
+            }
+            &.ocupada{
+                color:$ocupada;
+            }
+            &.disponible{
+                color:$disponible;
+            }
+            &.reparacion{
+                color:rgb(204, 204, 204);
+            }
+            &.bloqueada{
+                color: rgb(204, 204, 204);
+            }
+        }
+        span{
+            font-size: 1rem;
+            padding: 10px;
+            margin: 10px;
+        }
+    }
+
+
+
+@media screen and (max-width: 1400px) and (min-width: 768px) {
+    .container-resumen {
+        display: flex;
+        flex-direction: column!important;
+    }
+
+}
