@@ -11,7 +11,7 @@ import { FormTerapeuticoService } from './../../services/formTerapeutico/formTer
     styleUrls: ['form-terapeutico-detalle.scss']
 })
 
-export class FormTerapeuticoDetallePage implements OnInit,OnChanges {
+export class FormTerapeuticoDetallePage implements OnInit, OnChanges {
     mostrarMenu = false;
     private item;
     private padres;
@@ -20,7 +20,7 @@ export class FormTerapeuticoDetallePage implements OnInit,OnChanges {
 
 
     ngOnInit() {
-        console.log(this.medicamento)
+        console.log(this.medicamento);
      }
 
      ngOnChanges(changes: any) {

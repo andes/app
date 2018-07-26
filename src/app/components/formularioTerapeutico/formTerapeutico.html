@@ -1,21 +1,35 @@
 <section>
 
+
     <div class="row">
         <div class="col">
             <plex-box>
+                <header>
+                    <!--Busqueda de Pacientes-->
+                    <div class="row">
+                        <div class="clearfix col-10">
+                            <div class="page-title">ARBOL | FORMULARIO TERAPEUTICO</div>
+                        </div>
+                        <div class="col-2">
+                            <button (click)='plegar()' class="btn btn-info">Plegar arbol</button>
+                        </div>
+                    </div>
+                </header>
                 <div *ngFor="let indice of indices">
-                    <arbolItem [indice]="indice"  (enviarDetalle)="detallesMedicamento($event)" (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)' [deep]="0"></arbolItem>
+                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (refreshOutPut)='refresh($event)' (enviarDetalle)="detallesMedicamento($event)"
+                        (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)'
+                        [deep]="0"></arbolItem>
                 </div>
             </plex-box>
         </div>
         <div class="col-4" *ngIf='detalleMedicamento'>
             <plex-box>
-               <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
+                <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
             </plex-box>
         </div>
         <div class="col-4" *ngIf='idMedicamentoPadre'>
             <plex-box>
-               <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
+                <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
             </plex-box>
         </div>
     </div>

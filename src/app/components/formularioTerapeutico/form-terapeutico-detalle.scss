@@ -98,3 +98,16 @@ $celeste-claro: #f4feff;
         font-size: 1.8rem;
         height: auto;
     }
+
+
+    .andes-container {
+        display: flex;
+        .andes-wraper {
+            flex-basis: 100%;
+          
+        }
+    }
+
+    .badgeContainer{
+        font-size:1.2em;
+    }

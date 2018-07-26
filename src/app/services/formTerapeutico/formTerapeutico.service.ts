@@ -17,5 +17,16 @@ export class FormTerapeuticoService {
         return this.server.get(this.formTerapeuticoUrl + '/formularioTerapeutico', {params: params});
     }
 
+    put(data) {
+        console.log(data)
+        return this.server.put(this.formTerapeuticoUrl + '/' + data._id, {params: data});
+    }
+
+
+    post(data) {
+        console.log(data)
+        return this.server.post(this.formTerapeuticoUrl, {params: data});
+    }
+
 
 }
