@@ -81,6 +81,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -529,6 +530,7 @@ registerLocaleData(localeEs, 'es');
         PrestamosService,
         ProcedimientosQuirurgicosService,
         CDAService,
+        FacturacionAutomaticaService,
 
     ]
 })
