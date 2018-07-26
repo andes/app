@@ -54,7 +54,7 @@ export class NuevaSolicitudComponent {
     arrayReglasOrigen: { id: any; nombre: any; }[];
     arrayOrganizacionesOrigen: { id: any; nombre: any; }[];
     dataOrganizacionesOrigen = [];
-    dataTipoPrestacionesOrigen: { id: any; nombre: any; };
+    dataTipoPrestacionesOrigen = [];
     constructor(
         private router: Router,
         private plex: Plex,
@@ -98,7 +98,8 @@ export class NuevaSolicitudComponent {
         if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
-                    res => {
+                res => {
+                    debugger;
                         this.arrayOrganizacionesOrigen = res;
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
                     }
@@ -107,8 +108,8 @@ export class NuevaSolicitudComponent {
     }
 
     onSelectOrganizacionOrigen() {
-        console.log(this.modelo.solicitud.organizacionOrigen);
-        this.dataTipoPrestacionesOrigen = this.arrayOrganizacionesOrigen.find(org => org.id === this.modelo.solicitud.organizacionOrigen.id);
+        let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
+        this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.id, nombre: elem.term }; });
     }
 
     loadProfesionales(event) {
@@ -140,7 +141,11 @@ export class NuevaSolicitudComponent {
             if (this.autocitado) {
                 this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
             }
-            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            if (this.tipoSolicitud === 'entrada') {
+                this.modelo.solicitud.organizacion = this.auth.organizacion;
+            } else {
+                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            }
             this.modelo.solicitud.registros.push({
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,

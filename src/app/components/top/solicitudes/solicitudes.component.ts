@@ -34,6 +34,8 @@ export class SolicitudesComponent implements OnInit {
     public auditarArray = [];
     public visualizar = [];
     tipoSolicitud: any;
+    prestacionesSalida: any;
+    prestacionesEntrada: any;
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -126,6 +128,9 @@ export class SolicitudesComponent implements OnInit {
             };
             this.servicioPrestacion.get(params).subscribe(resultado => {
                 this.prestaciones = resultado;
+                this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
+                this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
+
                 for (let i = 0; i < this.prestaciones.length; i++) {
 
                     switch (this.prestaciones[i].estados[this.prestaciones[i].estados.length - 1].tipo) {

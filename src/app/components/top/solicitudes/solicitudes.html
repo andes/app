@@ -47,7 +47,7 @@
                                     <th>Operaciones</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let prestacion of prestaciones; let i=index" class="hover" (click)="seleccionar(i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                    <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover" (click)="seleccionar(i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
                                         <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
                                         <td>{{prestacion.paciente | paciente}}</td>
                                         <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
@@ -105,7 +105,8 @@
                                     <th>Turno</th>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let prestacion of prestaciones; let i=index" class="hover" (click)="seleccionar(i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                    <tr *ngFor="let prestacion of prestacionesSalida; let i=index" class="hover" (click)="seleccionar(i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+
                                         <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
                                         <td>{{prestacion.paciente | paciente}}</td>
                                         <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
