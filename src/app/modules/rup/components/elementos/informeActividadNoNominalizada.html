@@ -6,7 +6,6 @@
 - Otra temática (ver campo anterior)
 - Profesionales intervinientes
 - Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
-
 -->
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores && registro.valor">
@@ -26,9 +25,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-6">
+            <div class="col-6" *ngIf="listaActividades">
                 <plex-select [required]="true" label="Tipo actividad: " [(ngModel)]="registro.valor.informe.tipoActividad" name="tipoActividad"
-                    (getData)="loadActividades($event)" placeholder="Seleccione... ">
+                    [data]="listaActividades" placeholder="Seleccione... ">
                 </plex-select>
             </div>
             <div class="col-6 ">

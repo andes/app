@@ -9,6 +9,7 @@ import { RUPComponent } from './../core/rup.component';
 export class InformeActividadNoNominalizadaComponent extends RUPComponent implements OnInit {
 
     public elegirOtraActividad = false;
+    public listaActividades = [];
     public tematicas = [
         { id: 'Adicciones', nombre: 'Adicciones' },
         { id: 'Adolescencia', nombre: 'Adolescencia' },
@@ -34,6 +35,10 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
                 informe: {}
             };
         }
+
+        this.snomedService.getQuery({ expression: '^2051000013106' }).subscribe(result => {
+            this.listaActividades = result;
+        });
 
     }
 
