@@ -1,12 +1,14 @@
 <form class="plex-layout" #form="ngForm">
 
     <section>
+        <label *ngIf="showSeleccionarPaciente">Paciente</label>
         <pacientesSearch *ngIf="showSeleccionarPaciente" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)"></pacientesSearch>
 
         <fieldset>
             <div class="row" *ngIf="paciente?.id">
                 <div class="col-12">
-                    <label>Paciente</label> {{ paciente | paciente }}
+                    <label>Paciente</label>
+                    {{ paciente | paciente }}
                     <span>Documento:
                         <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number }}</span>
                         <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span>
