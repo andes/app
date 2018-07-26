@@ -18,7 +18,7 @@ export class SolicitudesComponent implements OnInit {
 
     paciente: any;
     turnoSeleccionado: any[];
-    solicitudSelccionada: any;
+    solicitudSeleccionada: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
     solicitudTurno: any;
@@ -78,12 +78,12 @@ export class SolicitudesComponent implements OnInit {
         }
 
         this.prestaciones[indice].seleccionada = true;
-        this.solicitudSelccionada = this.prestaciones[indice];
+        this.solicitudSeleccionada = this.prestaciones[indice];
 
         if (this.prestaciones[indice].solicitud && this.prestaciones[indice].solicitud.turno) {
 
             let params = {
-                id: this.solicitudSelccionada.solicitud.turno
+                id: this.solicitudSeleccionada.solicitud.turno
             };
 
             this.servicioTurnos.getTurnos(params).subscribe(turno => {

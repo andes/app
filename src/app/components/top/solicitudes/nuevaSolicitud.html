@@ -11,10 +11,10 @@
                                 <div class="page-title float-left">Nueva Solicitud de {{tipoSolicitud}} </div>
                             </div>
                         </header>
-
+                        <label *ngIf="showSeleccionarPaciente">Paciente</label>
                         <pacientesSearch *ngIf="showSeleccionarPaciente" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
                         </pacientesSearch>
-
+                        
                         <div class="row" *ngIf="paciente?.id">
                             <div class="col-8">
                                 <label>Paciente</label> {{ paciente | paciente }}
