@@ -3,7 +3,10 @@
 
         <div class="row">
             <!--Panel de Agendas-->
-            <div class="col">
+            <div class="col" *ngIf="showCargarSolicitud">
+                <nueva-solicitud [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
+            </div>
+            <div class="col" *ngIf="!showCargarSolicitud">
                 <plex-box>
                     <header>
                         <div class="clearfix">
@@ -13,20 +16,18 @@
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarSolicitudes()" name="fechaDesde" label="Desde" class="fechas">
                                 </plex-datetime>
-                                <!-- <span class="mdi mdi-chevron-left hover" (click)="cambiarDia('fechaDesde', 1, 'restar')"></span> -->
-                                <!-- <span class="mdi mdi-chevron-right hover" (click)="cambiarDia('fechaDesde', 1, 'sumar')"></span> -->
                             </div>
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
-                                <!-- <span class="mdi mdi-chevron-left hover" (click)="cambiarDia('fechaHasta', 1, 'restar')"></span> -->
-                                <!-- <span class="mdi mdi-chevron-right hover" (click)="cambiarDia('fechaHasta', 1, 'sumar')"></span> -->
                             </div>
 
                         </div>
                     </header>
                     <plex-tabs>
                         <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box">
+                            <plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud" (click)="formularioSolicitud('entrada')"></plex-button>
+
                             <ng-container *ngIf="!prestaciones.length">
                                 <tr>
                                     <td colspan="3">
@@ -82,7 +83,7 @@
                             </table>
                         </plex-tab>
                         <plex-tab label="Solicitudes de Salida" icon="arrow-up-box">
-                            <plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud nueva" (click)="formularioSolicitud()"></plex-button>
+                            <plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud" (click)="formularioSolicitud('salida')"></plex-button>
                             <ng-container *ngIf="!prestaciones.length">
                                 <tr>
                                     <td colspan="3">
@@ -90,9 +91,7 @@
                                     </td>
                                 </tr>
                             </ng-container>
-                            <span *ngIf="showCargarSolicitud">
-                                <nueva-solicitud (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
-                            </span>
+
 
                             <table *ngIf="prestaciones?.length" class="table table-striped table-sm">
                                 <thead>
@@ -144,7 +143,7 @@
                     </plex-tabs>
                 </plex-box>
             </div>
-            <div *ngIf="solicitudSelccionada" class="col-3">
+            <div *ngIf="solicitudSelccionada && !showCargarSolicitud" class="col-3">
                 <plex-box>
                     <header>
                         <div class="clearfix">
@@ -180,6 +179,7 @@
                     </div>
                 </plex-box>
             </div>
+
         </div>
     </section>
 </form>

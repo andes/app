@@ -33,6 +33,7 @@ export class SolicitudesComponent implements OnInit {
     public darTurnoArray = [];
     public auditarArray = [];
     public visualizar = [];
+    tipoSolicitud: any;
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -188,7 +189,9 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    formularioSolicitud() {
+    formularioSolicitud(tipoSolicitud) {
+        console.log(tipoSolicitud);
+        this.tipoSolicitud = tipoSolicitud;
         this.showCargarSolicitud = true;
         this.showBotonCargarSolicitud = false;
     }

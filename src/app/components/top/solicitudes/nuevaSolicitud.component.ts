@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -48,8 +48,13 @@ export class NuevaSolicitudComponent {
             { tipo: 'pendiente' }
         ]
     };
-
+    @Input() tipoSolicitud: string;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
+    arrayPrestacionesOrigen: { id: any; nombre: any; }[];
+    arrayReglasOrigen: { id: any; nombre: any; }[];
+    arrayOrganizacionesOrigen: { id: any; nombre: any; }[];
+    dataOrganizacionesOrigen = [];
+    dataTipoPrestacionesOrigen: { id: any; nombre: any; };
     constructor(
         private router: Router,
         private plex: Plex,
@@ -81,13 +86,29 @@ export class NuevaSolicitudComponent {
     }
 
     onSelect() {
-        this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
-            .subscribe(
-                res => {
-                    this.arrayPrestacionesDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                    console.log(this.arrayPrestacionesDestino);
-                }
-            );
+        if (this.tipoSolicitud === 'salida' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacionOrigen && this.modelo.solicitud.tipoPrestacionOrigen.conceptId) {
+            this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
+                .subscribe(
+                    res => {
+                        this.arrayPrestacionesDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
+                        console.log(this.arrayPrestacionesDestino);
+                    }
+                );
+        }
+        if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
+            this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
+                .subscribe(
+                    res => {
+                        this.arrayOrganizacionesOrigen = res;
+                        this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
+                    }
+                );
+        }
+    }
+
+    onSelectOrganizacionOrigen() {
+        console.log(this.modelo.solicitud.organizacionOrigen);
+        this.dataTipoPrestacionesOrigen = this.arrayOrganizacionesOrigen.find(org => org.id === this.modelo.solicitud.organizacionOrigen.id);
     }
 
     loadProfesionales(event) {

@@ -1,100 +1,138 @@
 <form class="plex-layout" #form="ngForm">
 
     <section>
-        <pacientesSearch *ngIf="showSeleccionarPaciente" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)"></pacientesSearch>
+        <div class="row">
+            <!--Panel de Agendas-->
+            <div class="col">
+                <plex-box>
+                    <fieldset>
+                        <header>
+                            <div class="clearfix">
+                                <div class="page-title float-left">Nueva Solicitud de {{tipoSolicitud}} </div>
+                            </div>
+                        </header>
 
-        <fieldset>
-            <div class="row" *ngIf="paciente?.id">
-                <div class="col-12">
-                    <label>Paciente</label> {{ paciente | paciente }}
-                    <span>Documento:
-                        <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number }}</span>
-                        <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span>
-                    </span>
-                    <span>Fecha de nacimiento
-                        <span *ngIf="paciente.fechaNacimiento !== null">{{ paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ paciente | edad }})</span>
-                        <span *ngIf="paciente.fechaNacimiento === null">Sin fecha de nacimiento</span>
-                    </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                </div>
-            </div>
+                        <pacientesSearch *ngIf="showSeleccionarPaciente" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
+                        </pacientesSearch>
 
-            <!-- Fecha Origen -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud" label="Fecha de solicitud" [required]="true"></plex-datetime>
-                </div>
-            </div>
+                        <div class="row" *ngIf="paciente?.id">
+                            <div class="col-8">
+                                <label>Paciente</label> {{ paciente | paciente }}
+                                <span>Documento:
+                                    <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number }}</span>
+                                    <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span>
+                                </span>
+                                <span>Fecha de nacimiento
+                                    <span *ngIf="paciente.fechaNacimiento !== null">{{ paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ paciente | edad }})</span>
+                                    <span *ngIf="paciente.fechaNacimiento === null">Sin fecha de nacimiento</span>
+                                </span>
+                            </div>
+                        </div>
 
-            <!-- Tipo Prestación origen -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacion" (change)="onSelect()" (getData)="loadTipoPrestaciones($event)"
-                        label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen" [required]="true">
-                    </plex-select>
-                </div>
-            </div>
+                        <!-- Fecha Origen -->
+                        <div class="row">
+                            <div class="col-4">
+                                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fechaSolicitud" label="Fecha de solicitud" [required]="true"></plex-datetime>
+                            </div>
+                        </div>
 
-            <!-- Profesional Origen -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen" (getData)="loadProfesionales($event)"
-                        label="Profesional solicitante" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
-                        [required]="true">
-                    </plex-select>
-                </div>
-            </div>
+                        <!-- Tipo Prestación Destino -->
+                        <div class="row" *ngIf="tipoSolicitud == 'entrada'">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                                    label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true"
+                                    (change)="onSelect()">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <!-- Organización Origen -->
+                        <div class="row" *ngIf="tipoSolicitud == 'entrada'">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen" [data]="dataOrganizacionesOrigen"
+                                    label="Organización origen" placeholder="Seleccione la organización" labelField="nombre"
+                                    (change)="onSelectOrganizacionOrigen()" [required]="true">
+                                </plex-select>
+                            </div>
+                        </div>
 
-            <!-- Tipo Prestación Destino -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" [data]="arrayPrestacionesDestino" label="Tipo de Prestación Solicitada"
-                        placeholder="Tipos de Prestación solicitada" [required]="true">
-                    </plex-select>
-                </div>
-            </div>
+                        <!-- Tipo Prestación origen -->
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-select *ngIf="tipoSolicitud == 'salida'" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacion"
+                                    (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
+                                    placeholder="Tipos de Prestación Origen" [required]="true">
+                                </plex-select>
+                                <plex-select *ngIf="tipoSolicitud == 'entrada'" [data]="dataTipoPrestacionesOrigen" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                                    name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
+                                    [required]="true">
+                                </plex-select>
+                            </div>
+                        </div>
 
-            <!-- Autocitado? -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-bool [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
-                </div>
-            </div>
 
-            <!-- Organización Destino -->
-            <div class="row">
-                <div class="col-12">
-                    <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" (getData)="loadOrganizacion($event)"
-                        label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true">
-                    </plex-select>
-                </div>
-            </div>
 
-            <!-- Profesional Destino -->
-            <div class="row" *ngIf="!autocitado">
-                <div class="col-12">
-                    <plex-select [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
-                        placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre">
-                    </plex-select>
-                </div>
-            </div>
+                        <!-- Profesional Origen -->
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.profesionalOrigen" name="profesionalOrigen" (getData)="loadProfesionales($event)"
+                                    label="Profesional solicitante" placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre"
+                                    [required]="true">
+                                </plex-select>
+                            </div>
+                        </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
-                    <label for="registros">Notas / Diagnóstico / Motivo</label>
-                    <textarea class="form-control" [(ngModel)]="motivo" name="motivo" id="registros" rows="5"></textarea>
-                </div>
+                        <!-- Tipo Prestación Destino -->
+                        <div class="row" *ngIf="tipoSolicitud == 'salida'">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" [data]="arrayPrestacionesDestino" label="Tipo de Prestación Solicitada"
+                                    placeholder="Tipos de Prestación solicitada" [required]="true">
+                                </plex-select>
+                            </div>
+                        </div>
+
+                        <!-- Autocitado? -->
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-bool [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
+                            </div>
+                        </div>
+
+                        <!-- Organización Destino -->
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" (getData)="loadOrganizacion($event)"
+                                    label="Organización destino" placeholder="Seleccione la organización" labelField="nombre"
+                                    [required]="true">
+                                </plex-select>
+                            </div>
+                        </div>
+
+                        <!-- Profesional Destino -->
+                        <div class="row" *ngIf="!autocitado">
+                            <div class="col-6">
+                                <plex-select [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino" name="profesional" (getData)="loadProfesionales($event)"
+                                    placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre">
+                                </plex-select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
+                                <label for="registros">Notas / Diagnóstico / Motivo</label>
+                                <textarea class="form-control" [(ngModel)]="motivo" name="motivo" id="registros" rows="5"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-3 float-right">
+                            <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+                            </plex-button>
+                            <plex-button type="success" label="Guardar" (click)="guardarSolicitud($event);" title="Guardar Solicitud" validateForm="true">
+                            </plex-button>
+                        </div>
+                    </fieldset>
+                </plex-box>
             </div>
-            <div class="mt-3 float-right">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
-                </plex-button>
-                <plex-button type="success" label="Guardar" (click)="guardarSolicitud($event);" title="Guardar Solicitud" validateForm="true">
-                </plex-button>
-            </div>
-        </fieldset>
+        </div>
     </section>
 </form>
