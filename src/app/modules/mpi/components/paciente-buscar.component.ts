@@ -23,8 +23,6 @@ interface PacienteEscaneado {
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
-
-    // Propiedades públicas
     public textoLibre: string = null;
     public autoFocus = 0;
 

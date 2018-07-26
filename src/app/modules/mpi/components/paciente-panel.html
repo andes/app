@@ -51,15 +51,12 @@
             <div *ngIf="!relaciones.loading">
                 <span *ngIf="relaciones.error" class="text-warning">No disponibles en este momento</span>
                 <span *ngIf="relaciones.data && !relaciones.data.length">No hay ninguna relación registrada</span>
-                <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm table-hover">
+                <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm" [ngClass]="{'table-hover': permitirseleccionarRelacion}">
                     <tbody>
-                        <tr class="hover" *ngFor="let relacion of relaciones.data" (click)="seleccionarRelacionado(relacion)">
+                        <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data" (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)">
                             <td>
-                                {{relacion.relacion.nombre}}
-                            </td>
-                            <td>
-                                <span>{{relacion.apellido}}, {{relacion.nombre}}</span>
-                                <span *ngIf="relacion?.documento !== ''" class="d-block">{{relacion.documento}}</span>
+                                <span class="mr-1">{{relacion.apellido}}, {{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
+                                <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>
                             </td>
                         </tr>
                     </tbody>
