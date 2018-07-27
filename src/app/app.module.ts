@@ -83,6 +83,7 @@ import { SmsService } from './services/turnos/sms.service';
 import { ConfigPrestacionService } from './services/turnos/configPrestacion.service';
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
+import { ProfeService } from './services/profe.service';
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -108,6 +109,8 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+import { CDAService } from './modules/rup/services/CDA.service';
+
 
 // turnero
 import { TurneroService } from './services/turnero.service';
@@ -136,6 +139,10 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+
+// PUCO/ObraSocial
+import { PucoComponent } from './components/puco/puco.component';
+
 
 // ... Turnos
 import { TurnosComponent } from './components/turnos/gestor-agendas/turnos.component';
@@ -197,7 +204,11 @@ import { PrestacionValidacionComponent } from './modules/rup/components//ejecuci
 import { PrestacionEjecucionComponent } from './modules/rup/components//ejecucion/prestacionEjecucion.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
+import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
+
+// Legacy para RUP
+import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
 // import { RUPRegistry } from './modules/rup/components/core/rup-.registry';
 // TODO: ver con JGabriel!!!
 import { SelectPorRefsetComponent } from './modules/rup/components/elementos/SelectPorRefset.component';
@@ -450,6 +461,7 @@ registerLocaleData(localeEs, 'es');
         HudsBusquedaComponent,
         BuscadorComponent,
         VistaHudsComponent,
+        VistaCDAComponent,
         HudsBusquedaPacienteComponent,
         // RUP
         ...RUPComponentsArray,
@@ -457,6 +469,7 @@ registerLocaleData(localeEs, 'es');
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
@@ -470,7 +483,8 @@ registerLocaleData(localeEs, 'es');
         CamaEstadoComponent,
         OcuparCamaComponent,
         PantallasComponent,
-        PantallaDetalleComponent
+        PantallaDetalleComponent,
+        PucoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
@@ -509,6 +523,7 @@ registerLocaleData(localeEs, 'es');
         AdjuntosService,
         TipoPrestacionService,
         ObraSocialService,
+        ProfeService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
@@ -531,8 +546,8 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
-        PantallaService
-
+        PantallaService,
+        CDAService
     ]
 })
 

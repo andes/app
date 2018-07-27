@@ -142,11 +142,6 @@
                                     </span>
                                     <br />
                                 </div>
-
-                                <plex-button size="sm" type="info" [disabled]="llamandoTurno" title="LLamar" *ngIf="mostrarBtnTurnero && turno.paciente?.documento" (click)="llamarTurnero(turno)">
-                                    <plex-icon name="bell-ring-outline" ></plex-icon>
-                                </plex-button>
-
                             </td>
                             <td>
                                 <span *ngIf="turno.paciente?.id">{{ turno.paciente | paciente }} </span>

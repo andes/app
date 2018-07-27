@@ -35,11 +35,27 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioOS.get(this.turnoSeleccionado.paciente.documento).subscribe(resultado => {
+        this.servicioOS.get({dni: this.turnoSeleccionado.paciente.documento}).subscribe(resultado => {
             this.obraSocial = resultado.nombre;
             this.codigoOs = resultado.codigo;
             this.showForm = true;
+            setTimeout(() => {
+                this.imprimir();
+                this.volverAPuntoInicio.emit();
+            }, 100);
         });
+
+    }
+
+    getNroCarpeta() {
+        if (this.turnoSeleccionado.paciente && this.turnoSeleccionado.paciente.carpetaEfectores && this.turnoSeleccionado.paciente.carpetaEfectores.length > 0) {
+            let resultado: any = this.turnoSeleccionado.paciente.carpetaEfectores.filter((carpeta: any) => {
+                return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
+            });
+            return resultado[0].nroCarpeta;
+        } else {
+            return null;
+        }
     }
 
     getNroCarpeta() {

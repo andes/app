@@ -43,6 +43,9 @@ import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
+// ... Obras sociales
+import { PucoComponent } from './components/puco/puco.component';
+
 // ... RUP
 import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
 import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoInicio.component';
@@ -97,6 +100,8 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  // Obras sociales
+  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
@@ -159,9 +164,6 @@ const appRoutes: Routes = [
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
 
-
-  // { path: 'turnero', loadChildren: './modules/turnero/turnero.module#TurneroModule', canActivate: [RoutingGuard]},
-
   {
       path: 'turnero',
       component: PantallasComponent,
@@ -174,6 +176,7 @@ const appRoutes: Routes = [
       }]
   },
 
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
 
   { path: '**', redirectTo: 'inicio' }
 ];
