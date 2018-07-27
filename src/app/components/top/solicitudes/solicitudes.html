@@ -191,5 +191,5 @@
 </form>
 
 <!-- Calendario para dar turnos -->
-<!-- <dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
-    [opcionesVolver]="{ label: labelVolver, componente: 'solicitudes'}" [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos> -->
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
+    [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>

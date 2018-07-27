@@ -195,7 +195,6 @@ export class SolicitudesComponent implements OnInit {
     }
 
     formularioSolicitud(tipoSolicitud) {
-        console.log(tipoSolicitud);
         this.tipoSolicitud = tipoSolicitud;
         this.showCargarSolicitud = true;
         this.showBotonCargarSolicitud = false;
@@ -207,6 +206,7 @@ export class SolicitudesComponent implements OnInit {
         this.showCargarSolicitud = false;
         this.showBotonCargarSolicitud = true;
         this.showCargarSolicitud = false;
+        this.cargarSolicitudes();
     }
 
 }
