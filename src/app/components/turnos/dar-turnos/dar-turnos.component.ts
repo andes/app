@@ -55,11 +55,7 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
-<<<<<<< HEAD
-                this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
-=======
                 this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
->>>>>>> f1417b325f2f61bfd3785dcefee320f14e74b05d
                     this.obraSocialPaciente = resultado;
                 });
                 this.mostrarCalendario = false;
@@ -78,11 +74,7 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-<<<<<<< HEAD
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
-=======
                     this.servicioOS.get({dni : this.paciente.documento}).subscribe(resultado => {
->>>>>>> f1417b325f2f61bfd3785dcefee320f14e74b05d
                         this.obraSocialPaciente = resultado;
                     });
                 });
