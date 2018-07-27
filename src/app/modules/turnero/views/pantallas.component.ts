@@ -64,7 +64,6 @@ export class PantallasComponent implements OnInit, OnDestroy  {
 
     ngOnDestroy() {
         this.sub.unsubscribe();
-        console.log('destroy')
         this.ws.leave('turnero');
     }
 
