@@ -16,14 +16,20 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
 import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
+import { PacienteService } from '../../../../../services/paciente.service';
 
 @Component({
+    selector: 'rup-iniciarInternacion',
     templateUrl: 'iniciarInternacion.html'
 })
 export class IniciarInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
+    @Input() paciente;
+    @Input() camaSelected;
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
+    showEditarCarpetaPaciente = false;
     public ocupaciones = [];
     public obraSocial = { nombre: '', codigo: '' };
     public origenHospitalizacion = [
@@ -83,12 +89,12 @@ export class IniciarInternacionComponent implements OnInit {
     };
 
     // Paciente sleccionado
-    public paciente: IPaciente;
+    // public paciente: IPaciente;
     public buscandoPaciente = false;
     public cama = null;
     public organizacion = null;
     public origenExterno = false;
-
+    public carpetaPaciente = null;
     public informeIngreso = {
         fechaIngreso: new Date(),
         horaIngreso: null,
@@ -113,20 +119,59 @@ export class IniciarInternacionComponent implements OnInit {
         public snomedService: SnomedService,
         private location: Location,
         public servicioProfesional: ProfesionalService,
+        public pacienteService: PacienteService
     ) { }
 
     ngOnInit() {
-        this.route.params.subscribe(params => {
-            if (params && params['id']) {
-                let id = params['id'];
-                this.camasService.getCama(id).subscribe(cama => {
-                    this.cama = cama;
-                });
-            }
-            this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
-                this.organizacion = organizacion;
-            });
+        if (this.paciente.id) {
+            this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
+                // Si el paciente ya tiene una internacion en ejecucion
+                if (resultado) {
+                    if (resultado.cama) {
+                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        this.router.navigate(['/internacion/camas']);
+                    } else {
+                        // y no esta ocupando cama lo pasamos directamente a ocupar una cama
+                        this.plex.alert('El paciente tiene una internación en ejecución');
+                        this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
+                    }
+                } else {
+                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
+                    this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada').subscribe(datosInternacion => {
+                        if (datosInternacion) {
+                            this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
+                        }
+                        // Se busca la obra social del paciente y se le asigna
+                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                            this.obraSocial = os;
+                        });
+                        this.pacienteService.getNroCarpeta({}).subscribe(carpeta => {
 
+                        });
+                        this.buscandoPaciente = false;
+                    });
+                }
+            });
+        } else {
+            this.plex.alert('El paciente debe ser registrado en MPI');
+        }
+        if (this.camaSelected) {
+            let camaId = this.camaSelected;
+            this.camasService.getCama(camaId).subscribe(cama => {
+                this.cama = cama;
+            });
+        } else {
+            this.route.params.subscribe(params => {
+                if (params && params['id']) {
+                    let id = params['id'];
+                    this.camasService.getCama(id).subscribe(cama => {
+                        this.cama = cama;
+                    });
+                }
+            });
+        }
+        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            this.organizacion = organizacion;
         });
 
         // Cargamos todas las ocupaciones
@@ -166,48 +211,16 @@ export class IniciarInternacionComponent implements OnInit {
         return informe;
     }
 
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-            this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
-                // Si el paciente ya tiene una internacion en ejecucion
-                if (resultado) {
-                    if (resultado.cama) {
-                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
-                        this.router.navigate(['/internacion/camas']);
-                    } else {
-                        // y no esta ocupando cama lo pasamos directamente a ocupar una cama
-                        this.plex.alert('El paciente tiene una internación en ejecución');
-                        this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
-                    }
-                } else {
-                    // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
-                    this.servicioPrestacion.internacionesXPaciente(paciente, 'validada').subscribe(datosInternacion => {
-                        if (datosInternacion) {
-                            this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
-                        }
-                        this.paciente = paciente;
-                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                            this.obraSocial = os;
-                        });
-                        this.buscandoPaciente = false;
-                    });
-                }
-                //
-            });
-        } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
-        }
-    }
 
     onPacienteCancel() {
         this.buscandoPaciente = false;
     }
 
     /**
-     * Vuelve a la página anterior
+     * Emite un false para ocultar el componente
      */
     cancelar() {
-        this.location.back();
+        this.data.emit(false);
     }
 
 
@@ -313,5 +326,14 @@ export class IniciarInternacionComponent implements OnInit {
         } else {
             event.callback([]);
         }
+    }
+
+    // Se usa tanto para guardar como cancelar
+    afterComponenteCarpeta(carpetas) {
+        // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
+        if (carpetas) {
+            this.paciente.carpetaEfectores = carpetas;
+        }
+        this.showEditarCarpetaPaciente = false;
     }
 }

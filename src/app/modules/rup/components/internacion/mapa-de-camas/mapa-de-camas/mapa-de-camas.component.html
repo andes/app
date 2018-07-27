@@ -1,4 +1,4 @@
-<ng-container *ngIf="!camasService.showListaEspera">
+<ng-container *ngIf="!camasService.showListaEspera && !buscandoPaciente">
     <form class="plex-layout">
         <section>
             <div class="row">
@@ -109,7 +109,8 @@
                         <div class="row" *ngIf="!loader">
                             <div (click)="selecionarCama(cama)" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                                 *ngFor="let cama of camas; let i = index">
-                                <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)"></app-cama>
+                                <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)" (buscarPaciente)="ingresarPaciente()"
+                                    (camaSelected)="onCamaSelected($event)"></app-cama>
                             </div>
                         </div>
 
@@ -119,25 +120,18 @@
 
 
                 <!-- SIDEBAR -->
-                <div class="col-4" *ngIf="showMenu">
-
-
-
-
+                <div class="col-4" *ngIf="showMenu && !buscandoPaciente">
                     <plex-box>
-
                         <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-
-
                         <ng-container *ngIf="showEgreso">
                             <rup-egresoInternacion (data)="cerrarEgreso($event)" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
                         </ng-container>
 
+                        <ng-container *ngIf="showIngreso">
+                            <rup-iniciarInternacion (data)="cerrarIgreso($event)" [paciente]="pacienteSelected" [camaSelected]="camaSelected"></rup-iniciarInternacion>
+                        </ng-container>
 
-
-
-
-                        <ng-container *ngIf="camaSeleccionada && !showEgreso && !showLoaderSidebar">
+                        <ng-container *ngIf="camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
                             <header>
                                 <h3>Detalle de cama</h3>
                             </header>
@@ -204,7 +198,7 @@
 
 
 
-                        <ng-container *ngIf="!camaSeleccionada && !showEgreso && !showLoaderSidebar">
+                        <ng-container *ngIf="!camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
                             <header>
                                 <h3>Acciones</h3>
                             </header>
@@ -299,6 +293,9 @@
         </section>
     </form>
 </ng-container>
-<ng-container *ngIf="camasService.showListaEspera">
+<ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">
     <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
 </ng-container>
+<!-- Búsqueda de pacientes -->
+<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="false"></pacientesSearch>

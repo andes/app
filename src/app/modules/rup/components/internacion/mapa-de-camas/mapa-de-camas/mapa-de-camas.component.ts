@@ -40,6 +40,12 @@ export class MapaDeCamasComponent implements OnInit {
 
     public prestacionPorInternacion;
 
+    // Muestra el componente ingreso en el sidebar
+    public showIngreso = false;
+    public buscandoPaciente = false;
+    public pacienteSelected;
+    public camaSelected;
+
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -215,7 +221,8 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     public ingresarPaciente() {
-        this.router.navigate(['rup/internacion/crear']);
+        this.buscandoPaciente = true;
+        // this.router.navigate(['rup/internacion/crear']);
     }
 
     public censoDiario() {
@@ -296,11 +303,11 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     selecionarCama(cama) {
-        console.log(cama);
         if (this.camaSeleccionada === cama) {
             this.camaSeleccionada = null;
         } else {
             this.showMenu = true;
+            this.showIngreso = false;
             this.camaSeleccionada = cama;
         }
     }
@@ -317,5 +324,24 @@ export class MapaDeCamasComponent implements OnInit {
 
     cerrarEgreso(event) {
         this.showEgreso = event;
+    }
+
+    cerrarIgreso(event) {
+        this.showIngreso = event;
+    }
+
+    onPacienteCancel() {
+        this.buscandoPaciente = false;
+    }
+
+    onPacienteSelected(event) {
+        this.pacienteSelected = event;
+        this.buscandoPaciente = false;
+        this.showIngreso = true;
+        this.showMenu = true;
+    }
+
+    onCamaSelected(event) {
+        this.camaSelected = event;
     }
 }

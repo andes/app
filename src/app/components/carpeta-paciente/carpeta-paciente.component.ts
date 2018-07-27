@@ -67,7 +67,7 @@ export class CarpetaPacienteComponent implements OnInit {
     }
 
     private getCarpetas(paciente) {
-        if (paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
+        if (paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
             let result = paciente.carpetaEfectores.find((elemento, indice) => {
