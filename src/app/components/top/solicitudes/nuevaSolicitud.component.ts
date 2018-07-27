@@ -18,10 +18,10 @@ export class NuevaSolicitudComponent {
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
-    autocitado: boolean;
     motivo: '';
     fecha: any;
     arrayPrestacionesDestino = [];
+    autocitado = false;
 
     modelo: any = {
         paciente: {
