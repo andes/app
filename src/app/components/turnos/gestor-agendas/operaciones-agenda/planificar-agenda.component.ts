@@ -716,7 +716,7 @@ export class PlanificarAgendaComponent implements OnInit {
         this.showBloque = true;
     }
 
-    onSave($event, clonar, form) {
+    onSave($event, clonar) {
         this.hideGuardar = true;
         let validaBloques = true;
         for (let i = 0; i < this.modelo.bloques.length; i++) {
