@@ -85,7 +85,6 @@ export class CamaComponent implements OnInit {
      * @memberof CamaComponent
      */
     public iniciarPrestacion(cama) {
-
         if (cama.ultimoEstado.estado !== 'disponible') {
             this.plex.info('warning', 'Debe desinfectar la cama antes de poder internar un paciente', 'Error');
         } else {
