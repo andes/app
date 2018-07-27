@@ -74,15 +74,15 @@ export class SolicitudesComponent implements OnInit {
         return this.prestaciones.findIndex(x => x.id === solicitud._id);
     }
 
-    seleccionar(indice) {
+    seleccionar(arrayPrestaciones, indice) {
         for (let i = 0; i < this.prestaciones.length; i++) {
             this.prestaciones[i].seleccionada = false;
         }
+        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
+        this.prestaciones[indicePrestacion].seleccionada = true;
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion];
 
-        this.prestaciones[indice].seleccionada = true;
-        this.solicitudSeleccionada = this.prestaciones[indice];
-
-        if (this.prestaciones[indice].solicitud && this.prestaciones[indice].solicitud.turno) {
+        if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
 
             let params = {
                 id: this.solicitudSeleccionada.solicitud.turno

@@ -11,10 +11,14 @@
                                 <div class="page-title float-left">Nueva Solicitud de {{tipoSolicitud}} </div>
                             </div>
                         </header>
-                        <label *ngIf="showSeleccionarPaciente">Paciente</label>
-                        <pacientesSearch *ngIf="showSeleccionarPaciente" [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
-                        </pacientesSearch>
 
+                        <div class="row">
+                            <div class="col-8" *ngIf="showSeleccionarPaciente">
+                                <label *ngIf="showSeleccionarPaciente">Paciente</label>
+                                <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
+                                </pacientesSearch>
+                            </div>
+                        </div>
                         <div class="row" *ngIf="paciente?.id">
                             <div class="col-8">
                                 <label>Paciente</label> {{ paciente | paciente }}
@@ -44,6 +48,8 @@
                                     (change)="onSelect()">
                                 </plex-select>
                             </div>
+                        </div>
+                        <div class="row" *ngIf="tipoSolicitud == 'entrada'">
                             <!-- Organización Origen -->
                             <div class="col-6">
                                 <plex-select [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen" [data]="dataOrganizacionesOrigen"
@@ -90,6 +96,9 @@
                                     [required]="true">
                                 </plex-select>
                             </div>
+
+                        </div>
+                        <div class="row" *ngIf="tipoSolicitud == 'salida'">
                             <!-- Tipo Prestación Destino -->
                             <div class="col-6">
                                 <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" [data]="arrayPrestacionesDestino" label="Tipo de Prestación Solicitada"

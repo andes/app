@@ -98,8 +98,7 @@ export class NuevaSolicitudComponent {
         if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
-                res => {
-                    debugger;
+                    res => {
                         this.arrayOrganizacionesOrigen = res;
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
                     }
