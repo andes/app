@@ -30,9 +30,12 @@ export class SolicitudesComponent implements OnInit {
     public prestaciones = [];
     public fechaDesde: Date = new Date();
     public fechaHasta: Date = new Date();
-    public darTurnoArray = [];
-    public auditarArray = [];
-    public visualizar = [];
+    public darTurnoArraySalida = [];
+    public darTurnoArrayEntrada = [];
+    public auditarArraySalida = [];
+    public auditarArrayEntrada = [];
+    public visualizarSalida = [];
+    public visualizarEntrada = [];
     tipoSolicitud: any;
     prestacionesSalida: any;
     prestacionesEntrada: any;
@@ -78,23 +81,21 @@ export class SolicitudesComponent implements OnInit {
         for (let i = 0; i < this.prestaciones.length; i++) {
             this.prestaciones[i].seleccionada = false;
         }
+
         let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
         this.prestaciones[indicePrestacion].seleccionada = true;
         this.solicitudSeleccionada = this.prestaciones[indicePrestacion];
 
         if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
-
             let params = {
                 id: this.solicitudSeleccionada.solicitud.turno
             };
-
             this.servicioTurnos.getTurnos(params).subscribe(turno => {
                 this.turnoSeleccionado = turno[0];
             });
         } else {
             this.turnoSeleccionado = null;
         }
-
     }
 
     darTurno(prestacionSolicitud) {
@@ -102,6 +103,24 @@ export class SolicitudesComponent implements OnInit {
         this.solicitudTurno = prestacionSolicitud;
         this.pacienteSeleccionado = prestacionSolicitud.paciente;
         this.showDarTurnos = true;
+    }
+    cancelar(prestacionSolicitud) {
+        this.plex.confirm('¿Realmente quiere cancelar la solicitud?', 'Atención').then((confirmar) => {
+            if (confirmar) {
+                let cambioEstado: any = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'anulada' }
+                };
+                // CAMBIEMOS el estado de la prestacion a 'anulada'
+                this.servicioPrestacion.patch(prestacionSolicitud.id, cambioEstado).subscribe(prestacion => {
+                    this.plex.toast('info', 'Prestación cancelada');
+                    this.cargarSolicitudes();
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible iniciar la prestación');
+                });
+            }
+        });
+
     }
 
     volverDarTurno() {
@@ -131,57 +150,111 @@ export class SolicitudesComponent implements OnInit {
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
                 this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
 
-                for (let i = 0; i < this.prestaciones.length; i++) {
+                for (let i = 0; i < this.prestacionesSalida.length; i++) {
 
-                    switch (this.prestaciones[i].estados[this.prestaciones[i].estados.length - 1].tipo) {
+                    switch (this.prestacionesSalida[i].estados[this.prestacionesSalida[i].estados.length - 1].tipo) {
                         case 'pendiente':
 
                             // Se puede auditar?
-                            this.auditarArray[i] = false;
+                            this.auditarArraySalida[i] = false;
 
                             // Hay turno?
-                            if (this.prestaciones[i].solicitud.turno !== null) {
+                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
                                 // Se puede visualizar?
-                                this.visualizar[i] = true;
+                                this.visualizarSalida[i] = true;
                             } else {
                                 // Se puede dar turno?
-                                this.darTurnoArray[i] = true;
+                                this.darTurnoArraySalida[i] = true;
 
                                 // Se puede visualizar?
-                                this.visualizar[i] = false;
+                                this.visualizarSalida[i] = false;
                             }
                             break;
                         case 'auditoria':
 
                             // Se puede dar turno?
-                            this.darTurnoArray[i] = false;
+                            this.darTurnoArraySalida[i] = false;
 
                             // Se puede visualizar?
-                            this.visualizar[i] = false;
+                            this.visualizarSalida[i] = false;
 
                             // Se puede auditar?
-                            this.auditarArray[i] = true;
+                            this.auditarArraySalida[i] = true;
 
                             // Hay turno?
-                            if (this.prestaciones[i].solicitud.turno !== null) {
+                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
                                 // Se puede visualizar?
-                                this.visualizar[i] = true;
+                                this.visualizarSalida[i] = true;
                             } else {
                                 // Se puede visualizar?
-                                this.visualizar[i] = false;
+                                this.visualizarSalida[i] = false;
                             }
                             break;
                         case 'validada':
 
                             // Hay turno?
-                            if (this.prestaciones[i].solicitud.turno !== null) {
+                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
                                 // Se puede visualizar?
-                                this.visualizar[i] = true;
+                                this.visualizarSalida[i] = true;
                             }
                             // Se puede dar turno?
-                            this.darTurnoArray[i] = false;
+                            this.darTurnoArraySalida[i] = false;
                             // Se puede auditar?
-                            this.auditarArray[i] = false;
+                            this.auditarArraySalida[i] = false;
+                            break;
+                    }
+                }
+                for (let i = 0; i < this.prestacionesEntrada.length; i++) {
+
+                    switch (this.prestacionesEntrada[i].estados[this.prestacionesEntrada[i].estados.length - 1].tipo) {
+                        case 'pendiente':
+
+                            // Se puede auditar?
+                            this.auditarArrayEntrada[i] = false;
+
+                            // Hay turno?
+                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizarEntrada[i] = true;
+                            } else {
+                                // Se puede dar turno?
+                                this.darTurnoArrayEntrada[i] = true;
+
+                                // Se puede visualizar?
+                                this.visualizarEntrada[i] = false;
+                            }
+                            break;
+                        case 'auditoria':
+
+                            // Se puede dar turno?
+                            this.darTurnoArrayEntrada[i] = false;
+
+                            // Se puede visualizar?
+                            this.visualizarEntrada[i] = false;
+
+                            // Se puede auditar?
+                            this.auditarArrayEntrada[i] = true;
+
+                            // Hay turno?
+                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizarEntrada[i] = true;
+                            } else {
+                                // Se puede visualizar?
+                                this.visualizarEntrada[i] = false;
+                            }
+                            break;
+                        case 'validada':
+
+                            // Hay turno?
+                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                                // Se puede visualizar?
+                                this.visualizarEntrada[i] = true;
+                            }
+                            // Se puede dar turno?
+                            this.darTurnoArrayEntrada[i] = false;
+                            // Se puede auditar?
+                            this.auditarArrayEntrada[i] = false;
                             break;
                     }
                 }
@@ -207,6 +280,7 @@ export class SolicitudesComponent implements OnInit {
         this.showCargarSolicitud = false;
         this.showBotonCargarSolicitud = true;
         this.showCargarSolicitud = false;
+        this.cargarSolicitudes();
     }
 
 }
