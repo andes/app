@@ -20,9 +20,9 @@ export class NuevaSolicitudComponent {
     paciente: any;
     motivo: '';
     fecha: any;
-    arrayPrestacionesDestino = [];
+    arrayReglasDestino = [];
     autocitado = false;
-
+    prestacionDestino: any;
     modelo: any = {
         paciente: {
             id: '',
@@ -55,6 +55,7 @@ export class NuevaSolicitudComponent {
     arrayOrganizacionesOrigen: { id: any; nombre: any; }[];
     dataOrganizacionesOrigen = [];
     dataTipoPrestacionesOrigen = [];
+    dataReglasDestino: { id: any; nombre: any; }[];
     constructor(
         private router: Router,
         private plex: Plex,
@@ -90,8 +91,8 @@ export class NuevaSolicitudComponent {
             this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
                 .subscribe(
                     res => {
-                        this.arrayPrestacionesDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                        console.log(this.arrayPrestacionesDestino);
+                        this.arrayReglasDestino = res;
+                        this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
                     }
                 );
         }
@@ -109,6 +110,13 @@ export class NuevaSolicitudComponent {
     onSelectOrganizacionOrigen() {
         let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
         this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.id, nombre: elem.term }; });
+    }
+
+    onSelectPrestacionDestino() {
+        if (this.prestacionDestino) {
+            let regla = this.arrayReglasDestino.find(rule => { return rule.destino.prestacion.conceptId === this.prestacionDestino.id; });
+            this.modelo.solicitud.tipoPrestacion = regla.destino.prestacion;
+        }
     }
 
     loadProfesionales(event) {

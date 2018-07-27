@@ -130,6 +130,9 @@
                                                     <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
                                                     <td>{{prestacion.solicitud.profesional | profesional}}</td>
                                                     <td class="text-center">
+                                                        <span *ngIf="!prestacion.solicitud.turno">
+                                                            <span class="badge badge-danger"> {{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                        </span>
                                                         <span *ngIf="auditarArraySalida[i]">
                                                             <span class="badge badge-danger">Auditoría pendiente</span>
                                                         </span>
@@ -155,7 +158,7 @@
             </div>
 
             <!-- SIDEBAR -->
-            <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud" class="col-3">
+            <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud && solicitudSeleccionada.turno" class="col-3">
                 <plex-box>
                     <header>
                         <div class="clearfix">

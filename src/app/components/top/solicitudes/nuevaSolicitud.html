@@ -100,8 +100,8 @@
                         <div class="row" *ngIf="tipoSolicitud == 'salida'">
                             <!-- Tipo Prestación Destino -->
                             <div class="col-6">
-                                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" [data]="arrayPrestacionesDestino" label="Tipo de Prestación Solicitada"
-                                    placeholder="Tipos de Prestación solicitada" [required]="true">
+                                <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
+                                    placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionDestino()">
                                 </plex-select>
                             </div>
                         </div>
