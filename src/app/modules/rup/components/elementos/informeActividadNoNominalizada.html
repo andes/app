@@ -12,22 +12,22 @@
         <div class="row">
             <div class="col-4 ">
                 <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true" [autoFocus]="autoFocus " name="fecha"
-                    label="Fecha:">
+                    label="Fecha">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
-                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio" label="Hora inicio: ">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio" label="Hora inicio ">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
-                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin" label="Hora fin:">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin" label="Hora fin">
                 </plex-datetime>
             </div>
         </div>
         <div class="row">
-            <div class="col-6" *ngIf="listaActividades">
-                <plex-select [required]="true" label="Tipo actividad: " [(ngModel)]="registro.valor.informe.tipoActividad" name="tipoActividad"
-                    [data]="listaActividades" placeholder="Seleccione... ">
+            <div class="col-6" *ngIf="listaActividades && listaActividades.length">
+                <plex-select [required]="true" label="Tipo actividad " [(ngModel)]="registro.valor.informe.tipoActividad" name="tipoActividad"
+                    [data]="listaActividades" idField="conceptId" labelField="term" placeholder="Seleccione... ">
                 </plex-select>
             </div>
             <div class="col-6 ">
@@ -51,9 +51,59 @@
         </div>
         <div class="row">
             <div class="col-12">
+                <!--  [height]="100" -->
                 <plex-text label="Resumen de la actividad" name="resumen" [required]="true" [html]="true" [(ngModel)]="registro.valor.informe.resumen">
                 </plex-text>
             </div>
         </div>
     </ng-container>
 </form>
+
+<ng-container *ngIf="soloValores && registro.valor && registro.valor.informe ">
+    <div class="row">
+        <div class="col-3 ">
+            <label>Fecha</label>
+            {{registro.valor.informe?.fecha | date}}
+        </div>
+        <div class="col-3 ">
+            <label>Hora inicio</label>
+            {{registro.valor.informe?.horaIngreso | date: 'HH:mm'}}
+        </div>
+        <div class="col-3 ">
+            <label>Hora fin</label>
+            {{registro.valor.informe?.horaFin | date: 'HH:mm'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label>Tipo actividad</label>
+            {{registro.valor.informe?.tipoActividad?.term}}
+        </div>
+        <div class="col-6" *ngIf="registro.valor.informe?.tematica !== 'Otra'">
+            <label>Tématica</label>
+            {{registro.valor.informe?.tematica}}
+        </div>
+        <div class="col-6" *ngIf="registro.valor.informe?.tematica === 'Otra'">
+            <label>Tématica</label>
+            {{registro.valor.informe?.otraTematica}}
+        </div>
+    </div>
+    <div class="row" *ngIf="registro.valor.informe?.profesionales">
+        <div class="col-12">
+            <label>Profesional/es</label>
+            <ng-container *ngIf="registro.valor.informe?.profesionales && registro.valor.informe?.profesionales.length">
+                <ng-container *ngFor="let profesional of registro.valor.informe?.profesionales">
+                    {{ profesional.apellido }}, {{ profesional.nombre }}
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>Resumen de la actividad</label>
+            <ng-container>
+                <span [innerHTML]="registro.valor.informe.resumen"></span>
+            </ng-container>
+        </div>
+    </div>
+</ng-container>

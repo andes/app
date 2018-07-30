@@ -89,8 +89,8 @@
                     </td>
                     <td colspan="2">
                         <span class="badge-info float-right">
-                            <ng-container *ngIf="fueraDeAgenda.length === 1">1 paciente</ng-container>
-                            <ng-container *ngIf="fueraDeAgenda.length > 1">{{fueraDeAgenda.length}} pacientes</ng-container>
+                            <ng-container *ngIf="fueraDeAgenda.length === 1">1 prestación</ng-container>
+                            <ng-container *ngIf="fueraDeAgenda.length > 1">{{fueraDeAgenda.length}} prestaciones</ng-container>
                         </span>
                     </td>
                 </tr>
@@ -99,7 +99,7 @@
     </plex-layout-main>
     <plex-layout-sidebar>
         <header>
-            <div class="page-title">Detalle de la agenda</div> 
+            <div class="page-title">Detalle de la agenda</div>
         </header>
 
         <ng-container *ngIf="agendaSeleccionada && agendaSeleccionada !== 'fueraAgenda'">

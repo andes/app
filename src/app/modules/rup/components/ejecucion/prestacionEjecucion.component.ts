@@ -695,31 +695,33 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
+            if (!this.prestacion.noNominalizada) {
+                // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
+                if (this.idAgenda) {
+                    localStorage.removeItem('idAgenda');
 
-            // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
-            if (this.idAgenda) {
-                localStorage.removeItem('idAgenda');
-                // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
-                let cambios;
-                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                    cambios = {
-                        op: 'noAsistio',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
-                } else {
-                    cambios = {
-                        op: 'darAsistencia',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
+                    // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
+                    let cambios;
+                    if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
+                        cambios = {
+                            op: 'noAsistio',
+                            turnos: [this.prestacion.solicitud.turno]
+                        };
+                    } else {
+                        cambios = {
+                            op: 'darAsistencia',
+                            turnos: [this.prestacion.solicitud.turno]
+                        };
+                    }
+                    this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
                 }
-                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
-            }
-
-            // Actualizamos las prestaciones de la HUDS
-            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                // Actualizamos las prestaciones de la HUDS
+                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                    this.router.navigate(['rup/validacion', this.prestacion.id]);
+                });
+            } else {
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
-            });
-
+            }
         });
     }
 
