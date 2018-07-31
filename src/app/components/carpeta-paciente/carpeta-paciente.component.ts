@@ -24,7 +24,7 @@ export class CarpetaPacienteComponent implements OnInit {
     showList = true;
     showNuevaCarpeta = false;
     autorizado = false;
-    permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
+    permisosRequeridos = 'turnos:puntoInicio:puedeEditarCarpeta';
     carpetaPaciente: any;
     paciente: any;
     showEdit = false;
@@ -34,7 +34,7 @@ export class CarpetaPacienteComponent implements OnInit {
     ngOnInit() {
         // Verificamos permiso para editar carpeta de un paciente
         this.autorizado = this.auth.check(this.permisosRequeridos);
-
+        debugger;
         if (this.autorizado) {
             this.carpetaPaciente = {
                 organizacion: {
