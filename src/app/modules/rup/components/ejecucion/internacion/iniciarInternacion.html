@@ -24,6 +24,22 @@
                                 </div>
                             </div>
                         </fieldset>
+                        <div class="row ">
+                            <div class="col-4 ">
+                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
+                                    label="Fecha Ingreso">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
+                                </plex-datetime>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
+                                        " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                                </plex-select>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12">
                                 <plex-select label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional" (getData)="loadProfesionales($event)"
@@ -56,30 +72,6 @@
                             </div>
                             <div class="col-4 ">
                                 <plex-text [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
-                            </div>
-                        </div>
-
-                        <div class="row ">
-                            <div class="col-4 ">
-                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
-                                    label="Fecha Ingreso">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen" [data]="origenHospitalizacion " placeholder="Seleccione... "
-                                    label="Origen hospitalización " (change)="changeOrigenHospitalizacion($event)">
-                                </plex-select>
-                            </div>
-                        </div>
-                        <div class="row" *ngIf="origenExterno">
-                            <div class="col">
-                                <plex-select [(ngModel)]="informeIngreso.organizacionOrigen" name="organizacion" (getData)="loadOrganizacion($event)" label="Organización"
-                                    placeholder="Seleccione la organización" labelField="nombre" [required]="true">
-                                </plex-select>
                             </div>
                         </div>
                         <div class="row">
