@@ -9,7 +9,7 @@
                     <div class="col-10">
                         {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
                     </div>
-                    <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit" class="col-2">
+                    <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" class="col-2">
                         <plex-button type="info" title="Editar" icon="mdi mdi-pencil" (click)="editar()">
                         </plex-button>
                     </div>

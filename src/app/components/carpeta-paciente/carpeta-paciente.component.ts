@@ -23,7 +23,7 @@ export class CarpetaPacienteComponent implements OnInit {
     nroCarpetaOriginal: string;
     showList = true;
     showNuevaCarpeta = false;
-    autorizado: any;
+    autorizado = false;
     permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
     carpetaPaciente: any;
     paciente: any;
@@ -101,7 +101,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
-        if (this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
+        if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
             this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
