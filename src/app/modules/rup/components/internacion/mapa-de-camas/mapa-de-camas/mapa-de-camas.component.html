@@ -123,10 +123,11 @@
                 <div class="col-4" *ngIf="showMenu && !buscandoPaciente">
                     <plex-box>
                         <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-                        <ng-container *ngIf="showEgreso">
+                        <!-- Egreso -->
+                        <ng-container *ngIf="showEgreso && !showIngreso">
                             <rup-egresoInternacion (data)="cerrarEgreso($event)" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
                         </ng-container>
-
+                        <!-- Ingreso -->
                         <ng-container *ngIf="showIngreso">
                             <rup-iniciarInternacion (data)="cerrarIgreso($event)" [paciente]="pacienteSelected" [camaSelected]="camaSelected"></rup-iniciarInternacion>
                         </ng-container>
