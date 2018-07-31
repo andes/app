@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { PacienteService } from '../../../../../../services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
+import { PrestacionesService } from '../../../../services/prestaciones.service';
 
 @Component({
     selector: 'app-cama',
@@ -18,6 +19,8 @@ export class CamaComponent implements OnInit {
 
     @Input() cama: any;
     @Input() prestacion: any;
+    // Lo usamos para pasar el id de la organizacion y la fecha del mapa de camas que tenemos en la vista.
+    @Input() params: any;
     @Input() readOnly: boolean;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
 
@@ -28,13 +31,17 @@ export class CamaComponent implements OnInit {
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
     public disabledButton = false;
+    public camaSeleccionPase;
+
+    public listaCamasDisponibles;
 
     constructor(private plex: Plex,
         private auth: Auth,
         private camasService: CamasService,
         private router: Router,
         public organizacionService: OrganizacionService,
-        private pacienteService: PacienteService) { }
+        private pacienteService: PacienteService,
+        private PrestacionesService: PrestacionesService) { }
 
     ngOnInit() {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
@@ -135,6 +142,8 @@ export class CamaComponent implements OnInit {
     }
 
     public cambiarEstado(cama, estado) {
+
+
         let dto = {
             fecha: this.fecha,
             estado: estado,
@@ -202,7 +211,15 @@ export class CamaComponent implements OnInit {
 
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
-
+            // TODO Lo comiteo comentado porque aun falta completar la funcionalidad!
+            // if (this.camaSeleccionPase) {
+            // this.PrestacionesService.getById(this.cama.ultimoEstado.idInternacion).subscribe(resp => {
+            //     // console.log(resp);
+            //     // this.cama = this.camaSeleccionPase;
+            //     // this.prestacion = resp;
+            //     // this.darCama();
+            // });
+            // }
 
             this.plex.toast('success', 'Cama desocupada', 'Cambio estado');
 
@@ -246,6 +263,12 @@ export class CamaComponent implements OnInit {
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
             });
+        });
+    }
+
+    selectCamasDisponibles() {
+        this.camasService.getCamasDisponibles(this.params.idOrganizacion, this.params.fecha).then((resultado) => {
+            this.listaCamasDisponibles = resultado;
         });
     }
 

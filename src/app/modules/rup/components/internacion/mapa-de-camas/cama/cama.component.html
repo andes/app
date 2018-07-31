@@ -57,7 +57,7 @@
                 <!-- Botonera laterar derecho -->
                 <div class="d-flex flex-column botonera-superior" *ngIf="!readOnly">
                     <!-- Liberar la cama -->
-                    <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
+                    <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha(); selectCamasDisponibles()"
                         *ngIf="cama.ultimoEstado?.idInternacion">
                         <i class="mdi mdi-close-box"></i>
                     </button>
@@ -219,6 +219,9 @@
                             </p>
                             <plex-select name="unidadOrganizativa" [required]="true" [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
                                 [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa">
+                            </plex-select>
+                            <plex-select *ngIf="listaCamasDisponibles?.length" name="camasDisponibles" [data]="listaCamasDisponibles" idField="nombre"
+                                labelField="nombre" [(ngModel)]="camaSeleccionPase" label="Camas Disponibles">
                             </plex-select>
                         </div>
                     </div>
