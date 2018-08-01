@@ -835,15 +835,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     // Búsqueda que filtra según concepto
-    ejecutarAccion(accion) {
-        if (accion.conceptos) {
-            this.tipoBusqueda = accion;
+    ejecutarAccion(data) {
+        if (data.conceptos) {
+            // tipoBusqueda
+            this.tipoBusqueda = data;
+            this.registrosHuds = [...this.registrosHuds, data];
         } else {
-            this.registrosHuds = [...this.registrosHuds, accion];
+            this.tipoBusqueda = [];
         }
-
-
-
     }
 
     cargaItems(registroActual, indice) {
