@@ -100,9 +100,13 @@
                             <div class="list-group">
                                 <div *ngFor="let prestacion of regla.origen.prestaciones; let i=index" class="list-group-item justify-content-between hover"
                                     [ngClass]="{active: i==prestacionActiva}" (click)="activarPrestacion(i)">
-                                    <div>
-                                        <span *ngIf="prestacion.term">{{prestacion.term}}</span>
+                                    <div class="col-8">
+                                        <span *ngIf="prestacion.prestacion?.term">{{prestacion.prestacion.term}}</span>
                                     </div>
+                                    <div class="col-2">
+                                        <plex-bool [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"></plex-bool>
+                                    </div>
+
                                     <plex-button icon="delete" type="primary" (click)="deletePrestacion(i)">
                                     </plex-button>
                                 </div>

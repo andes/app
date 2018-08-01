@@ -17,6 +17,7 @@ export class ReglasComponent implements OnInit {
   prestacionOrigen;
   reglas = [];
   prestaciones = [];
+  auditable = false;
   reglaActiva = -1;
   regla: any = {};
   prestacionActiva = -1;
@@ -108,11 +109,14 @@ export class ReglasComponent implements OnInit {
     console.log('origen ', this.regla.origen);
     console.log('prestacionOrigen ', this.prestacionOrigen);
     this.prestaciones = [];
+    debugger
     if (this.regla.origen.prestaciones) {
       this.prestaciones = this.regla.origen.prestaciones;
     }
-    this.prestaciones.push(this.prestacionOrigen);
+    this.auditable = this.regla.origen.auditable;
+    this.prestaciones.push({prestacion: this.prestacionOrigen, auditable: this.auditable});
     this.regla.origen.prestaciones = this.prestaciones;
+    console.log('regla.origen.prestaciones ', this.regla.origen.prestaciones);
     this.prestacionOrigen = {};
 
   }
