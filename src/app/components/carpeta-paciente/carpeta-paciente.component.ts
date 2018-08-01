@@ -34,36 +34,33 @@ export class CarpetaPacienteComponent implements OnInit {
     ngOnInit() {
         // Verificamos permiso para editar carpeta de un paciente
         this.autorizado = this.auth.check(this.permisosRequeridos);
-        debugger;
-        if (this.autorizado) {
-            this.carpetaPaciente = {
-                organizacion: {
-                    _id: this.auth.organizacion.id,
-                    nombre: this.auth.organizacion.nombre
-                },
-                nroCarpeta: ''
-            };
-            // Hay paciente?
-            if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
-                this.paciente = this.turnoSeleccionado.paciente;
-                // Obtenemos el paciente completo. (entró por parametro el turno)
-                this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
-                    this.paciente = resultado;
-                    this.getCarpetas(this.paciente);
-                }
-                );
-
-            } else {
-                if (this.pacienteSeleccionado) {
-                    // entró paciente por parámetro, no hace falta hacer otro get paciente.
-                    this.paciente = this.pacienteSeleccionado;
-                    this.getCarpetas(this.paciente);
-                } else {
-                    this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
-                }
+        this.carpetaPaciente = {
+            organizacion: {
+                _id: this.auth.organizacion.id,
+                nombre: this.auth.organizacion.nombre
+            },
+            nroCarpeta: ''
+        };
+        // Hay paciente?
+        if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
+            this.paciente = this.turnoSeleccionado.paciente;
+            // Obtenemos el paciente completo. (entró por parametro el turno)
+            this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+                this.paciente = resultado;
+                this.getCarpetas(this.paciente);
             }
+            );
 
+        } else {
+            if (this.pacienteSeleccionado) {
+                // entró paciente por parámetro, no hace falta hacer otro get paciente.
+                this.paciente = this.pacienteSeleccionado;
+                this.getCarpetas(this.paciente);
+            } else {
+                this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
+            }
         }
+
     }
 
     private getCarpetas(paciente) {
