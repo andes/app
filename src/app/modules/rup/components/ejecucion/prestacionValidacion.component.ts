@@ -239,11 +239,13 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.motivoReadOnly = true;
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                    if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
-                    }
-
-
+                    this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                        result => {
+                            let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                            if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
+                                this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                            }
+                        });
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
