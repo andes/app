@@ -411,6 +411,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.piezasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
+                this.emitEjecutarAccion(false);
+
             }
 
         } else {
@@ -456,6 +458,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.piezasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
+                this.emitEjecutarAccion(false);
             }
 
         }
