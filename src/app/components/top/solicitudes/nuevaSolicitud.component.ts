@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -14,7 +14,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
     selector: 'nueva-solicitud',
     templateUrl: './nuevaSolicitud.html',
 })
-export class NuevaSolicitudComponent {
+export class NuevaSolicitudComponent implements OnInit {
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
@@ -48,7 +48,20 @@ export class NuevaSolicitudComponent {
             { tipo: 'pendiente' }
         ]
     };
-    @Input() tipoSolicitud: string;
+    // @Input() tipoSolicitud: string;
+    private _tipoSolicitud;
+    @Input('tipoSolicitud')
+    set tipoSolicitud(value: any) {
+        this._tipoSolicitud = value;
+        if (this._tipoSolicitud === 'entrada') {
+            this.modelo.solicitud.organizacion = this.auth.organizacion;
+        } else {
+            this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+        }
+    }
+    get tipoSolicitud() {
+        return this._tipoSolicitud;
+    }
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     arrayPrestacionesOrigen: { id: any; nombre: any; }[];
     arrayReglasOrigen: { id: any; nombre: any; }[];
@@ -69,6 +82,11 @@ export class NuevaSolicitudComponent {
 
     ) { }
 
+    ngOnInit() {
+        console.log('modelo.solicitud ', this.modelo.solicitud);
+    }
+
+
 
     seleccionarPaciente(paciente: any): void {
         this.paciente = paciente;
@@ -83,6 +101,8 @@ export class NuevaSolicitudComponent {
             this.servicioOrganizacion.get(query).subscribe(resultado => {
                 event.callback(resultado);
             });
+        } else {
+            event.callback([]);
         }
     }
 
@@ -109,7 +129,7 @@ export class NuevaSolicitudComponent {
 
     onSelectOrganizacionOrigen() {
         let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
-        this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.id, nombre: elem.term }; });
+        this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
     }
 
     onSelectPrestacionDestino() {
@@ -148,11 +168,11 @@ export class NuevaSolicitudComponent {
             if (this.autocitado) {
                 this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
             }
-            if (this.tipoSolicitud === 'entrada') {
-                this.modelo.solicitud.organizacion = this.auth.organizacion;
-            } else {
-                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-            }
+            // if (this.tipoSolicitud === 'entrada') {
+            //     this.modelo.solicitud.organizacion = this.auth.organizacion;
+            // } else {
+            //     this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            // }
             this.modelo.solicitud.registros.push({
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,

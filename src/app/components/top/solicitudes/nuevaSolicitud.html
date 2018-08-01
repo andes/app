@@ -8,7 +8,7 @@
                     <fieldset>
                         <header>
                             <div class="clearfix">
-                                <div class="page-title float-left">Nueva Solicitud de {{tipoSolicitud}} </div>
+                                <div class="page-title float-left">Nueva Solicitud de {{tipoSolicitud}}</div>
                             </div>
                         </header>
 
@@ -61,8 +61,8 @@
                         <!-- Tipo Prestación origen -->
                         <div class="row">
                             <div class="col-6">
-                                <plex-select *ngIf="tipoSolicitud == 'salida'" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" name="tipoPrestacion"
-                                    (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
+                                <plex-select *ngIf="tipoSolicitud == 'salida'" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen" 
+                                name="tipoPrestacion" (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
                                     placeholder="Tipos de Prestación Origen" [required]="true">
                                 </plex-select>
                                 <plex-select *ngIf="tipoSolicitud == 'entrada'" [data]="dataTipoPrestacionesOrigen" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
