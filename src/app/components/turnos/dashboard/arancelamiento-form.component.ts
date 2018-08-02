@@ -36,9 +36,11 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            this.obraSocial = resultado.financiador;
-            this.codigoOs = resultado.codigoFinanciador;
-            this.showForm = true;
+            if (resultado) {
+                this.obraSocial = resultado[0].financiador;
+                this.codigoOs = resultado[0].codigoFinanciador;
+                this.showForm = true;
+            }
         });
     }
 
