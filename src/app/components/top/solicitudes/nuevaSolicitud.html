@@ -13,7 +13,7 @@
                         </header>
 
                         <div class="row">
-                            <div class="col-12" *ngIf="showSeleccionarPaciente">
+                            <div class="col-8" *ngIf="showSeleccionarPaciente">
                                 <label *ngIf="showSeleccionarPaciente">Paciente</label>
                                 <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
                                 </pacientesSearch>
@@ -45,7 +45,7 @@
                             <div class="col-6">
                                 <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true"
-                                    (change)="onSelect()">
+                                    (change)="onSelectPrestacionOrigen()">
                                 </plex-select>
                             </div>
                         </div>
@@ -65,7 +65,10 @@
                                 name="tipoPrestacion" (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
                                     placeholder="Tipos de Prestación Origen" [required]="true">
                                 </plex-select>
-                                <plex-select *ngIf="tipoSolicitud == 'entrada'" [data]="dataTipoPrestacionesOrigen" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                                <!-- <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
+                                    placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionDestino()">
+                                </plex-select> -->
+                                <plex-select *ngIf="tipoSolicitud == 'entrada'" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen" 
                                     name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
                                     [required]="true">
                                 </plex-select>

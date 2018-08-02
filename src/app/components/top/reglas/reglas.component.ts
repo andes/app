@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../services/organizacion.service';
 import { ProfesionalService } from './../../../services/profesional.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -32,8 +32,7 @@ export class ReglasComponent implements OnInit {
     private servicioReglas: ReglaService
   ) { }
 
-  ngOnInit() {
-  }
+  @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
   loadTipoPrestaciones(event) {
     this.servicioPrestacion.get({ turneable: 1 }).subscribe((data) => {
@@ -109,12 +108,11 @@ export class ReglasComponent implements OnInit {
     console.log('origen ', this.regla.origen);
     console.log('prestacionOrigen ', this.prestacionOrigen);
     this.prestaciones = [];
-    debugger
     if (this.regla.origen.prestaciones) {
       this.prestaciones = this.regla.origen.prestaciones;
     }
     this.auditable = this.regla.origen.auditable;
-    this.prestaciones.push({prestacion: this.prestacionOrigen, auditable: this.auditable});
+    this.prestaciones.push({ prestacion: this.prestacionOrigen, auditable: this.auditable });
     this.regla.origen.prestaciones = this.prestaciones;
     console.log('regla.origen.prestaciones ', this.regla.origen.prestaciones);
     this.prestacionOrigen = {};
@@ -140,6 +138,10 @@ export class ReglasComponent implements OnInit {
     this.reglas = [];
     this.reglaActiva = -1;
     this.regla = {};
+  }
+
+  cancelar() {
+    this.cancel.emit();
   }
 
   onSave($event) {

@@ -39,6 +39,7 @@ export class SolicitudesComponent implements OnInit {
     tipoSolicitud: any;
     prestacionesSalida: any;
     prestacionesEntrada: any;
+    showEditarReglas = false;
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -85,7 +86,6 @@ export class SolicitudesComponent implements OnInit {
         let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
         this.prestaciones[indicePrestacion].seleccionada = true;
         this.solicitudSeleccionada = this.prestaciones[indicePrestacion];
-
         if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
             let params = {
                 id: this.solicitudSeleccionada.solicitud.turno
@@ -129,8 +129,17 @@ export class SolicitudesComponent implements OnInit {
         this.solicitudTurno = null;
     }
 
+    volverReglas() {
+        this.cargarSolicitudes();
+        this.showEditarReglas = false;
+    }
+
     auditar() {
 
+    }
+
+    editarReglas() {
+        this.showEditarReglas = true;
     }
 
     cargarSolicitudes() {
@@ -258,7 +267,7 @@ export class SolicitudesComponent implements OnInit {
                             break;
                     }
                 }
-                console.log('prestaciones ', this.prestaciones);
+                // console.log('prestaciones ', this.prestaciones);
             }, err => {
                 if (err) {
                     console.log(err);
