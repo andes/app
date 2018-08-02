@@ -6,6 +6,7 @@ import { FrecuentesProfesionalService } from '../../services/frecuentesProfesion
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
+import { ISnomedSearchResult } from '../../interfaces/snomedSearchResult.interface';
 
 @Component({
     selector: 'rup-buscador',
@@ -94,7 +95,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public busquedaActual: any;
 
     // objeto de resultados
-    public results = { 'misFrecuentes': [], 'sugeridos': [], 'busquedaGuiada': [], 'buscadorBasico': [] };
+    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], busquedaGuiada: [], buscadorBasico: [] };
     public resultsAux: any;
 
     // public totalesTodos: Number = 0;
@@ -104,9 +105,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     private opcionDesplegada: String = null;
 
     public search; // buscador de sugeridos y mis frecuentes
-    ultimoTipoBusqueda: any;
-
-
+    private ultimoTipoBusqueda: any;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -194,9 +193,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     ngOnChanges(changes: SimpleChanges) {
-        if (this.ultimoTipoBusqueda !== this.busquedaActual) {
-            this.results.buscadorBasico = [];
-        }
+        // if (this.ultimoTipoBusqueda !== this.busquedaActual) {
+        this.results.buscadorBasico = [];
+        this.resultsAux.buscadorBasico = [];
+        this.results[this.busquedaActual] = [];
+        // }
         if (changes.frecuentesTipoPrestacion && changes.frecuentesTipoPrestacion.currentValue) {
             if (typeof this.results.sugeridos['todos'] === 'undefined') {
                 this.results.sugeridos['todos'] = [];
@@ -247,6 +248,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
+            alert(1);
             let search = this.search.toLowerCase();
             // filtramos uno a uno los conceptos segun el string de busqueda
             Object.keys(this.conceptos).forEach(concepto => {
@@ -259,6 +261,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
                 return registro.term.toLowerCase().indexOf(search) >= 0;
             });
+
         } else {
             // si el string de busqueda esta vacio, reiniciamos los resultados desde la copia auxiliar
             // y seteamos en los filtros actuales
@@ -357,7 +360,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         // si limpio la busqueda, reinicio el buscador sugerido y misFrecuentes
         if (resultadosSnomed.items.length === 0) {
-            this.results['sugerido'] = this.resultsAux.sugerido;
+            this.results['sugeridos'] = this.resultsAux.sugeridos;
             this.results['misFrecuentes'] = this.resultsAux.misFrecuentes;
             this.results['buscadorBasico'] = [];
 
@@ -429,9 +432,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @memberof BuscadorComponent
      */
     public getCantidadResultados(semanticTag) {
-        if (this.results && this.busquedaActual
-            && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
-
+        if (this.results && this.busquedaActual && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
             return this.results[this.busquedaActual][semanticTag].length;
         }
 
