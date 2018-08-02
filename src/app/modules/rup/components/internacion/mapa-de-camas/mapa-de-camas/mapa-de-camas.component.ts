@@ -27,7 +27,7 @@ export class MapaDeCamasComponent implements OnInit {
     public prestacion: any;
     public fecha = new Date;
     public loader = true;
-    public showMenu = false;
+    public showMenu = true;
     public historicoMode = false;
     public filtroActive;
     public cantidadXEstado;
