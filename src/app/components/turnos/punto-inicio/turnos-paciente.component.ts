@@ -82,7 +82,8 @@ export class TurnosPacienteComponent implements OnInit {
             let data = {
                 motivoConsulta: turno.motivoConsulta
             };
-            this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
+            let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
+            this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
 
             });
         }

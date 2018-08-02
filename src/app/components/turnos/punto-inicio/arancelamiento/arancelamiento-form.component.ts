@@ -35,7 +35,7 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioOS.get({dni: this.turnoSeleccionado.paciente.documento}).subscribe(resultado => {
+        this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
             this.obraSocial = resultado.nombre;
             this.codigoOs = resultado.codigo;
             this.showForm = true;
