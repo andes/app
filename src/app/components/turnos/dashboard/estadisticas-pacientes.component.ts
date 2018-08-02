@@ -33,6 +33,9 @@ export class EstadisticasPacientesComponent implements OnInit {
     get agenda(): any {
         return this._paciente;
     }
+
+    @Output() showArancelamientoForm = new EventEmitter<any>();
+
     pacienteSeleccionado: IPaciente;
     public fechaDesde: any;
     public fechaHasta: any;
@@ -68,6 +71,11 @@ export class EstadisticasPacientesComponent implements OnInit {
             nroCarpeta: ''
         };
         this.getPaciente();
+
+    }
+
+    arancelamiento(turno) {
+        this.showArancelamientoForm.emit(turno);
 
     }
 

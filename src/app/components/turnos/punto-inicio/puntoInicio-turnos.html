@@ -24,7 +24,7 @@
                     <estadisticas-agendas></estadisticas-agendas>
                 </div>
                 <div *ngIf="showMostrarEstadisticasPacientes" type="info">
-                    <estadisticas-pacientes [paciente]="paciente"></estadisticas-pacientes>
+                    <estadisticas-pacientes [paciente]="paciente" (showArancelamientoForm)="showArancelamientoForm($event)"></estadisticas-pacientes>
                 </div>
                 <div *ngIf="showIngresarSolicitud" type="info">
                     <solicitud-turno-ventanilla [paciente]="paciente" (cancelarSolicitudVentanilla)="cancelarSolicitudVentanilla($event)" (mostrarDarTurnoSolicitud)="darTurnoSolicitud($event)"></solicitud-turno-ventanilla>
