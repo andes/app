@@ -52,7 +52,7 @@ export class TurnosPacienteComponent implements OnInit {
     get turnos(): any {
         return this._turnos;
     }
-    @Output() showArancelamientoForm = new EventEmitter<any>();
+    @Output() asistenciaChanged = new EventEmitter<any>();
 
 
     // Inicialización
@@ -87,7 +87,6 @@ export class TurnosPacienteComponent implements OnInit {
 
             });
         }
-        this.showArancelamientoForm.emit(turno);
     }
 
 
@@ -98,37 +97,26 @@ export class TurnosPacienteComponent implements OnInit {
         let patch: any = {
             op: operacion,
             turnos: [turno._id],
-            // 'idTurno': turno._id
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
-
-            let agenda = resultado;
-            let datosTurno = { pacienteId: this._turnos.id };
-            this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
-                });
-                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
-                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
-                });
-                // this.turnosPaciente = turnos;
-                switch (operacion) {
-                    case 'darAsistencia':
-                        mensaje = 'Se registro la asistencia del paciente';
-                        tipoToast = 'success';
-                        break;
-                    case 'sacarAsistencia':
-                        mensaje = 'Se registro la inasistencia del paciente';
-                        tipoToast = 'warning';
-                        break;
-                }
-                if (mensaje !== '') {
-                    this.plex.toast(tipoToast, mensaje);
-                }
-            });
+            this.asistenciaChanged.emit();
+            switch (operacion) {
+                case 'darAsistencia':
+                    mensaje = 'Se registro la asistencia del paciente';
+                    tipoToast = 'success';
+                    break;
+                case 'sacarAsistencia':
+                    mensaje = 'Se registro la inasistencia del paciente';
+                    tipoToast = 'warning';
+                    break;
+            }
+            if (mensaje !== '') {
+                this.plex.toast(tipoToast, mensaje);
+            }
         });
+        // });
 
     }
 
