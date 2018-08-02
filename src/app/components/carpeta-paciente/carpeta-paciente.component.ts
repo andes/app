@@ -23,8 +23,8 @@ export class CarpetaPacienteComponent implements OnInit {
     nroCarpetaOriginal: string;
     showList = true;
     showNuevaCarpeta = false;
-    autorizado: any;
-    permisosRequeridos = 'turnos:agenda:puedeEditarCarpeta';
+    autorizado = false;
+    permisosRequeridos = 'turnos:puntoInicio:puedeEditarCarpeta';
     carpetaPaciente: any;
     paciente: any;
     showEdit = false;
@@ -34,40 +34,37 @@ export class CarpetaPacienteComponent implements OnInit {
     ngOnInit() {
         // Verificamos permiso para editar carpeta de un paciente
         this.autorizado = this.auth.check(this.permisosRequeridos);
-
-        if (this.autorizado) {
-            this.carpetaPaciente = {
-                organizacion: {
-                    _id: this.auth.organizacion.id,
-                    nombre: this.auth.organizacion.nombre
-                },
-                nroCarpeta: ''
-            };
-            // Hay paciente?
-            if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
-                this.paciente = this.turnoSeleccionado.paciente;
-                // Obtenemos el paciente completo. (entró por parametro el turno)
-                this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
-                    this.paciente = resultado;
-                    this.getCarpetas(this.paciente);
-                }
-                );
-
-            } else {
-                if (this.pacienteSeleccionado) {
-                    // entró paciente por parámetro, no hace falta hacer otro get paciente.
-                    this.paciente = this.pacienteSeleccionado;
-                    this.getCarpetas(this.paciente);
-                } else {
-                    this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
-                }
+        this.carpetaPaciente = {
+            organizacion: {
+                _id: this.auth.organizacion.id,
+                nombre: this.auth.organizacion.nombre
+            },
+            nroCarpeta: ''
+        };
+        // Hay paciente?
+        if (this.turnoSeleccionado && this.turnoSeleccionado.paciente.id) {
+            this.paciente = this.turnoSeleccionado.paciente;
+            // Obtenemos el paciente completo. (entró por parametro el turno)
+            this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
+                this.paciente = resultado;
+                this.getCarpetas(this.paciente);
             }
+            );
 
+        } else {
+            if (this.pacienteSeleccionado) {
+                // entró paciente por parámetro, no hace falta hacer otro get paciente.
+                this.paciente = this.pacienteSeleccionado;
+                this.getCarpetas(this.paciente);
+            } else {
+                this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
+            }
         }
+
     }
 
     private getCarpetas(paciente) {
-        if (paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
+        if (paciente && paciente.carpetaEfectores && paciente.carpetaEfectores.length > 0) { // este paciente tiene carpetas?
             // Filtramos y traemos sólo la carpeta de la organización actual
             this.carpetaEfectores = paciente.carpetaEfectores;
             let result = paciente.carpetaEfectores.find((elemento, indice) => {
@@ -101,7 +98,7 @@ export class CarpetaPacienteComponent implements OnInit {
 
 
     guardarCarpetaPaciente(nuevaCarpeta = false) {
-        if (this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
+        if (this.autorizado && this.carpetaPaciente.nroCarpeta && this.carpetaPaciente.nroCarpeta !== '' && this.carpetaPaciente.nroCarpeta !== this.nroCarpetaOriginal) {
             this.carpetaPaciente.nroCarpeta = this.carpetaPaciente.nroCarpeta.trim();
             if (this.indiceCarpeta > -1) {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
