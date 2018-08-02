@@ -27,8 +27,12 @@ export class IniciarInternacionComponent implements OnInit {
 
     @Input() paciente;
     @Input() camaSelected;
+    @Input() prestacion;
+    @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
 
+    // soloValores = false;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
     public obraSocial = { nombre: '', codigo: '' };
@@ -97,7 +101,6 @@ export class IniciarInternacionComponent implements OnInit {
     public carpetaPaciente = null;
     public informeIngreso = {
         fechaIngreso: new Date(),
-        horaIngreso: null,
         origen: null,
         ocupacionHabitual: null,
         situacionLaboral: null,
@@ -123,7 +126,13 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        if (this.paciente.id) {
+        if (this.prestacion) {
+            let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+            if (existeRegistro) {
+                this.paciente = this.prestacion.paciente;
+                this.informeIngreso = existeRegistro.valor.informeIngreso;
+            }
+        } else if (this.paciente.id) {
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
@@ -144,9 +153,6 @@ export class IniciarInternacionComponent implements OnInit {
                         // Se busca la obra social del paciente y se le asigna
                         this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
                             this.obraSocial = os;
-                        });
-                        this.pacienteService.getNroCarpeta({}).subscribe(carpeta => {
-
                         });
                         this.buscandoPaciente = false;
                     });
@@ -267,8 +273,6 @@ export class IniciarInternacionComponent implements OnInit {
             // el concepto snomed del tipo de prestacion para la internacion
             let conceptoSnomed = this.tipoPrestacionSeleccionada;
 
-            this.informeIngreso.fechaIngreso = this.combinarFechas(this.informeIngreso.fechaIngreso, this.informeIngreso.horaIngreso);
-            delete this.informeIngreso.horaIngreso;
             // creamos la prestacion de internacion y agregamos el registro de ingreso
             let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
             nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
@@ -290,12 +294,16 @@ export class IniciarInternacionComponent implements OnInit {
 
                     this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                         this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                        this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                        // this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                        this.refreshCamas.emit();
+                        this.data.emit(false)
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                     });
                 } else {
-                    this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                    // this.router.navigate(['rup/internacion/ver', prestacion.id]);
+                    this.data.emit(false)
+                    this.refreshCamas.emit();
                 }
 
             }, (err) => {

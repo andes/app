@@ -110,7 +110,7 @@
                             <div (click)="selecionarCama(cama)" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                                 *ngFor="let cama of camas; let i = index">
                                 <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" (evtCama)="updateCama($event, i)" (buscarPaciente)="ingresarPaciente()"
-                                    (camaSelected)="onCamaSelected($event)"></app-cama>
+                                    (camaSelected)="onCamaSelected($event)" (verInternacionEmit)="cerrarIgreso($event)"></app-cama>
                             </div>
                         </div>
 
@@ -120,7 +120,7 @@
 
 
                 <!-- SIDEBAR -->
-                <div class="col-4" *ngIf="showMenu && !buscandoPaciente">
+                <div class="col-4" *ngIf="!buscandoPaciente">
                     <plex-box>
                         <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                         <!-- Egreso -->
@@ -128,8 +128,9 @@
                             <rup-egresoInternacion (data)="cerrarEgreso($event)" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
                         </ng-container>
                         <!-- Ingreso -->
-                        <ng-container *ngIf="showIngreso">
-                            <rup-iniciarInternacion (data)="cerrarIgreso($event)" [paciente]="pacienteSelected" [camaSelected]="camaSelected"></rup-iniciarInternacion>
+                        <ng-container *ngIf="showIngreso && !showEgreso">
+                            <rup-iniciarInternacion (data)="cerrarIgreso($event)" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
+                                [soloValores]="editarIngreso" (refreshCamas)="refresh()"></rup-iniciarInternacion>
                         </ng-container>
 
                         <ng-container *ngIf="camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
@@ -163,7 +164,10 @@
                                 </p>
 
                                 <!-- Ver internacion -->
-                                <plex-button type="success" label="Ver internación">
+                                <plex-button type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)">
+                                </plex-button>
+                                <!-- Editar internacion -->
+                                <plex-button type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)">
                                 </plex-button>
 
                                 <!-- Ver egreso -->
@@ -199,7 +203,7 @@
 
 
 
-                        <ng-container *ngIf="!camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
+                        <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
                             <header>
                                 <h3>Acciones</h3>
                             </header>

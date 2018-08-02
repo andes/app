@@ -92,7 +92,7 @@
                         *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
                     </plex-button>
                     <!-- Ver internacion -->
-                    <plex-button type="success" label="Ver internación" title="Ver internación" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?._id">
+                    <plex-button type="success" label="Ver internación" title="Ver internación" *ngIf="cama.ultimoEstado?.paciente?._id">
                     </plex-button>
                     <!-- Desbloquear cama -->
                     <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"

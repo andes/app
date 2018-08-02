@@ -881,7 +881,7 @@ export class PrestacionesService {
     */
     public internacionesXPaciente(paciente, estado) {
         let opt = { params: { estado: estado, ambitoOrigen: 'internacion' }, options: {} };
-        return this.server.get('/modules/rup/internaciones/ultima/' + paciente.id, opt);
+        return this.server.get('/modules/rup/internaciones/ultima/' + (paciente.id ? paciente.id : paciente._id), opt);
     }
 
 

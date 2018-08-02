@@ -22,6 +22,7 @@ export class CamaComponent implements OnInit {
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
     @Output() buscarPaciente: EventEmitter<any> = new EventEmitter<any>();
     @Output() camaSelected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion: any;
     public PaseAunidadOrganizativa: any;
@@ -118,7 +119,8 @@ export class CamaComponent implements OnInit {
      */
     public verPrestacion(cama) {
         if (cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.idInternacion) {
-            this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
+            this.verInternacionEmit.emit(true);
+            // this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
         }
     }
 

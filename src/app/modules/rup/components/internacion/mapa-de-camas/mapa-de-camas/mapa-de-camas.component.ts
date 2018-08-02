@@ -45,6 +45,9 @@ export class MapaDeCamasComponent implements OnInit {
     public buscandoPaciente = false;
     public pacienteSelected;
     public camaSelected;
+    public camaInternacion;
+    public loadCountFiltros = false;
+    public editarIngreso;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -300,6 +303,7 @@ export class MapaDeCamasComponent implements OnInit {
             oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
             disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
         };
+        this.loadCountFiltros = true;
     }
 
     selecionarCama(cama) {
@@ -318,8 +322,20 @@ export class MapaDeCamasComponent implements OnInit {
             this.prestacionPorInternacion = prestacion;
             this.showLoaderSidebar = false;
             this.showEgreso = true;
+            this.showIngreso = false;
         });
         // this.router.navigate(['internacion/egreso/' + idInternacion]);
+    }
+
+    verIngreso(soloValores, idInternacion) {
+        this.showLoaderSidebar = true;
+        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+            this.prestacionPorInternacion = prestacion;
+            this.showLoaderSidebar = false;
+            this.showEgreso = false;
+            this.showIngreso = true;
+            this.editarIngreso = soloValores
+        });
     }
 
     cerrarEgreso(event) {

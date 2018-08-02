@@ -5,14 +5,14 @@
                 <plex-box>
                     <div *ngIf="paciente">
                         <fieldset>
-                            <legend>Datos de ingreso</legend>
+                            <legend class="text-info">Datos de ingreso</legend>
                             <br>
                             <h5>Paciente:</h5>
                             <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
                             <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
-                        para una mejor visualizacion de la carga de datos -->
+                                para una mejor visualizacion de la carga de datos -->
                             <div class="row">
-                                <div class="col" *ngIf="true">
+                                <div class="col" *ngIf="!soloValores">
                                     <!-- <div class="panel panel-default"> -->
                                     <!-- <div class="clear"></div> -->
                                     <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
@@ -24,60 +24,87 @@
                                 </div>
                             </div>
                         </fieldset>
-                        <div class="row ">
-                            <div class="col-4 ">
-                                <plex-datetime type="date" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
-                                    label="Fecha Ingreso">
+                        <div class="row">
+                            <div class="col-6">
+                                <plex-datetime *ngIf="!soloValores" type="datetime" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
+                                    name="fechaIngreso " label="Fecha Ingreso">
                                 </plex-datetime>
+                                <div *ngIf="soloValores">
+                                    <b>Fecha Ingreso:</b> {{informeIngreso.fechaIngreso | fecha}}
+                                </div>
                             </div>
-                            <div class="col-4 ">
-                                <plex-datetime type="time" [(ngModel)]="informeIngreso.horaIngreso " [required]="true" name="horaIngreso " label="Hora Ingreso ">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.origen " name="origen
-                                        " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                            <div class="col-6">
+                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.origen" name="origen" [data]="origenHospitalizacion"
+                                    placeholder="Seleccione..." label="Origen hospitalización" idField="nombre" labelField="nombre">
                                 </plex-select>
+                                <div *ngIf="soloValores">
+                                    <b>Origen Hospitalización:</b> {{informeIngreso.origen}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-12">
-                                <plex-select label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional" (getData)="loadProfesionales($event)"
+                                <plex-select *ngIf="!soloValores" label="Profesional" [(ngModel)]="informeIngreso.profesional" name="profesional" (getData)="loadProfesionales($event)"
                                     labelField="apellido+' '+nombre">
                                 </plex-select>
+                                <div *ngIf="soloValores && informeIngreso.profesional">
+                                    <b>Profesional:</b> {{informeIngreso.profesional.nombreCompleto}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
-                                <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
-                                    [data]="situacionesLaborales" placeholder="Seleccione... ">
+                                <plex-select *ngIf="!soloValores" [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
+                                    name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... " idField="nombre"
+                                    labelField="nombre">
                                 </plex-select>
+                                <div *ngIf="soloValores">
+                                    <b>Situacion Laboral:</b> {{informeIngreso.situacionLaboral}}
+                                </div>
                             </div>
                             <div class="col-6 ">
-                                <plex-select [required]="true" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
-                                    [data]="ocupaciones" placeholder="Seleccione... " labelField="nombre">
+                                <plex-select *ngIf="!soloValores" [required]="true" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
+                                    name="ocupacionHabitual" [data]="ocupaciones" placeholder="Seleccione... " idField="nombre"
+                                    labelField="nombre">
                                 </plex-select>
-                            </div>
-                        </div>
-                        <div class="row ">
-                            <div class="col-4 ">
-                                <plex-select [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
-                                    placeholder="Seleccione..." label="Nivel instrucción">
-                                </plex-select>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-select [required]="true " [(ngModel)]="informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado " placeholder="Seleccione... "
-                                    label="Asociado a ">
-                                </plex-select>
-                            </div>
-                            <div class="col-4 ">
-                                <plex-text [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
+                                <div *ngIf="soloValores">
+                                    <b>Ocupación Habitual:</b> {{informeIngreso.ocupacionHabitual}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col-4 ">
+                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
+                                    [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción" idField="nombre"
+                                    labelField="nombre">
+                                </plex-select>
+                                <div *ngIf="soloValores">
+                                    <b>Nivel Instrucción:</b> {{informeIngreso.nivelInstruccion}}
+                                </div>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.asociado" name="obraSocial" [data]="pacienteAsociado"
+                                    placeholder="Seleccione... " label="Asociado a" idField="nombre" labelField="nombre">
+                                </plex-select>
+                                <div *ngIf="soloValores">
+                                    <b>Asociado:</b> {{informeIngreso.asociado}}
+                                </div>
+                            </div>
+                            <div class="col-4 ">
+                                <plex-text *ngIf="!soloValores" [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
+                                <div *ngIf="soloValores">
+                                    <b>Obra Social:</b> {{obraSocial.nombre}}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
                             <div class="col">
-                                <plex-text label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="informeIngreso.motivo">
+                                <plex-text *ngIf="!soloValores" label="Motivo de Internación" name="motivo" multiline="true" [(ngModel)]="informeIngreso.motivo">
                                 </plex-text>
+                                <div *ngIf="soloValores">
+                                    <b>Motivo:</b> {{informeIngreso.motivo}}
+                                </div>
                             </div>
                         </div>
                         <div class="row">&nbsp;</div>
@@ -106,10 +133,14 @@
     <!--Footer-->
     <footer *ngIf="!buscandoPaciente">
 
-        <div class="float-right ">
+        <div class="float-right" *ngIf="!soloValores">
             <plex-button type="danger " label="CANCELAR " (click)="cancelar() ">
             </plex-button>
             <plex-button label="INICIAR INTERNACION " *ngIf="paciente " validateForm="true " type="success " (click)="guardar($event) ">
+            </plex-button>
+        </div>
+        <div class="float-right" *ngIf="soloValores">
+            <plex-button type="danger " label="Volver" (click)="cancelar()">
             </plex-button>
         </div>
     </footer>
