@@ -33,6 +33,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     public carasSeleccionadas: any[] = [];
     public conceptos: any[] = [];
 
+    public cuadrantes = ['cuadranteSuperiorDerecho', 'cuadranteSuperiorIzquierdo', 'cuadranteInferiorDerecho', 'cuadranteInferiorIzquierdo'];
+
     showPopOver = false;
     popOverText: any = '';
 
@@ -129,11 +131,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
             this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-
                 x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
-
-            console.log(this.relaciones);
 
         }
 
@@ -163,6 +162,43 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (typeof obj === 'object') {
             return Object.keys(obj);
         }
+    }
+
+    odontogramaAnterior() {
+        let params: IPrestacionGetParams = {
+            idPaciente: this.paciente.id,
+            conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
+            estado: 'validada'
+        };
+        this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
+            this.odontogramasHUDS = odontogramasPaciente;
+            if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
+                if (this.ultimoOdontogramaIndex > 0) {
+                    this.ultimoOdontogramaIndex--;
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.armarRelaciones();
+                }
+            }
+        });
+
+    }
+
+    odontogramaSiguiente() {
+        let params: IPrestacionGetParams = {
+            idPaciente: this.paciente.id,
+            conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
+            estado: 'validada'
+        };
+        this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
+            this.odontogramasHUDS = odontogramasPaciente;
+            if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
+                if (this.ultimoOdontogramaIndex < this.odontogramasHUDS.length - 1) {
+                    this.ultimoOdontogramaIndex++;
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.armarRelaciones();
+                }
+            }
+        });
     }
 
     getRelacion(cuadrante, diente, cara) {
@@ -271,43 +307,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.showUltimoOdontograma = !this.showUltimoOdontograma;
     }
 
-    odontogramaAnterior() {
-        let params: IPrestacionGetParams = {
-            idPaciente: this.paciente.id,
-            conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
-            estado: 'validada'
-        };
-        this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-            this.odontogramasHUDS = odontogramasPaciente;
-            if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
-                if (this.ultimoOdontogramaIndex > 0) {
-                    this.ultimoOdontogramaIndex--;
-                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
-                    this.armarRelaciones();
-                }
-            }
-        });
-
-    }
-
-    odontogramaSiguiente() {
-        let params: IPrestacionGetParams = {
-            idPaciente: this.paciente.id,
-            conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
-            estado: 'validada'
-        };
-        this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-            this.odontogramasHUDS = odontogramasPaciente;
-            if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
-                if (this.ultimoOdontogramaIndex < this.odontogramasHUDS.length - 1) {
-                    this.ultimoOdontogramaIndex++;
-                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
-                    this.armarRelaciones();
-                }
-            }
-        });
-    }
-
     tieneEvolucion(diente, cara) {
         return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
     }
@@ -411,7 +410,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.piezasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-                this.emitEjecutarAccion(false);
+                if (this.piezasSeleccionadas.length === 0) {
+                    this.emitEjecutarAccion(false);
+                }
 
             }
 
@@ -458,7 +459,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.piezasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-                this.emitEjecutarAccion(false);
+                if (this.piezasSeleccionadas.length === 0) {
+                    this.emitEjecutarAccion(false);
+                }
             }
 
         }
