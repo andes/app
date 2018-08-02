@@ -110,7 +110,7 @@
                             <div (click)="selecionarCama(cama)" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                                 *ngFor="let cama of camas; let i = index">
                                 <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id }"
-                                    (evtCama)="updateCama($event, i)"></app-cama>
+                                    (evtCama)="updateCama($event)"></app-cama>
                             </div>
                         </div>
 

@@ -194,13 +194,15 @@ export class MapaDeCamasComponent implements OnInit {
      * Metodo que se ejecuta luego que el EventEmitter de CamasComponent
      * devuelve la cama modificada
      * @param {any} e EventEmmiter result
-     * @param {any} index Indice de la cama en el array de camas
      * @memberof MapaDeCamasComponent
      */
-    public updateCama(e: any, index: any) {
+    public updateCama(e: any) {
         this.countFiltros();
+        console.log(e, 'aaaaaaaaaeeeeeeee');
+        // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
+        let i = this.camas.findIndex(c => c.id === e.id);
         if (e) {
-            this.camas[index] = e;
+            this.camas[i] = e;
         } else {
             this.refresh();
         }
@@ -296,7 +298,6 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     selecionarCama(cama) {
-        console.log(cama);
         if (this.camaSeleccionada === cama) {
             this.camaSeleccionada = null;
         } else {
