@@ -13,11 +13,12 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 @Component({
     selector: 'solicitudes',
     templateUrl: './solicitudes.html',
+    styles: [' .blue  {color: #00A8E0 }']
 })
 export class SolicitudesComponent implements OnInit {
 
     paciente: any;
-    turnoSeleccionado: any[];
+    turnoSeleccionado: any;
     solicitudSeleccionada: any;
     pacienteSeleccionado: any;
     showDarTurnos: boolean;
@@ -41,6 +42,9 @@ export class SolicitudesComponent implements OnInit {
     prestacionesEntrada: any;
     showEditarReglas = false;
     public panelIndex = 0;
+    pacienteSolicitud: any;
+    activeTab = 0;
+    showSidebar = false;
 
     constructor(
         private auth: Auth,
@@ -73,6 +77,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cambio(activeTab) {
+        this.activeTab = activeTab;
+        this.showSidebar = false;
         console.log('lalala', activeTab);
     }
 
@@ -88,20 +94,21 @@ export class SolicitudesComponent implements OnInit {
         for (let i = 0; i < this.prestaciones.length; i++) {
             this.prestaciones[i].seleccionada = false;
         }
-        debugger;
         let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
         this.prestaciones[indicePrestacion].seleccionada = true;
-        this.solicitudSeleccionada = this.prestaciones[indicePrestacion];
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
         if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
             let params = {
-                id: this.solicitudSeleccionada.solicitud.turno
+                id: this.solicitudSeleccionada.turno
             };
             this.servicioTurnos.getTurnos(params).subscribe(turno => {
-                this.turnoSeleccionado = turno[0];
+                this.turnoSeleccionado = turno[0].bloques[0].turnos[0];
             });
         } else {
             this.turnoSeleccionado = null;
         }
+        this.showSidebar = true;
     }
 
     darTurno(prestacionSolicitud) {
@@ -283,7 +290,8 @@ export class SolicitudesComponent implements OnInit {
     }
 
     formularioSolicitud(tipoSolicitud) {
-        this.tipoSolicitud = tipoSolicitud;
+
+        this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
         this.showCargarSolicitud = true;
         this.showBotonCargarSolicitud = false;
     }

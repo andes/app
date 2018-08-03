@@ -21,8 +21,11 @@
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
-                            <div class="col-3  d-flex">
-                                <plex-button class="align-self-end" icon="ruler" type="success" (click)="editarReglas()" title="Editar reglas"> </plex-button>
+                            <div class="col-1  d-flex">
+                                <plex-button class="align-self-end" icon="ruler" type="info" (click)="editarReglas()" title="Editar reglas"> </plex-button>
+                            </div>
+                            <div class="col-1 d-flex">
+                                <plex-button title="Nueva Solicitud" icon="plus" class="align-self-end" type="success" (click)="formularioSolicitud('activeTab')"></plex-button>
                             </div>
                         </div>
                         <br>
@@ -31,9 +34,7 @@
                         <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box" (click)="panelIndex = 0">
                             <fieldset>
                                 <div class="row">
-                                    <div class="col-12 ">
-                                        <plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud" (click)="formularioSolicitud('entrada')"></plex-button>
-                                    </div>
+
                                     <div class="col-12">
                                         <ng-container *ngIf="!prestaciones.length">
                                             <tr>
@@ -96,9 +97,7 @@
                         <plex-tab label="Solicitudes de Salida" icon="arrow-up-box" (click)="panelIndex = 1">
                             <fieldset>
                                 <div class="row">
-                                    <div class="col-12 text-left">
-                                        <plex-button *ngIf="showBotonCargarSolicitud" type="info" label="Cargar Solicitud" (click)="formularioSolicitud('salida')"></plex-button>
-                                    </div>
+
                                     <div class="col-12">
                                         <ng-container *ngIf="!prestaciones.length">
                                             <tr>
@@ -162,7 +161,7 @@
 
             <!-- SIDEBAR -->
 
-            <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud && solicitudSeleccionada.solicitud.turno" class="col-3">
+            <div *ngIf="showSidebar && solicitudSeleccionada?.turno" class="col-3">
                 <plex-box>
                     <!-- <header>
                         <div class="clearfix">
@@ -173,13 +172,12 @@
 
                     <header>
                         <div class="row">
-                            <div class="col">
-                                <h5>
-                                    <span style="color: #00A8E0">{{turnoSeleccionado.solicitud.turno.paciente.nombre}} {{turnoSeleccionado.solicitud.turno.paciente.apellido}}</span>
-                                </h5>
+                            <div class="col text-center">
+                                <h4>
+                                    <span *ngIf="activeTab == 0" class="blue"></span>
+                                </h4>
                             </div>
                         </div>
-                        <hr>
                     </header>
 
                     <div class="container-fluid">
@@ -187,22 +185,62 @@
                             <div class="col">
                             </div>
                         </div>
-                        <div *ngIf="turnoSeleccionado?.bloques && turnoSeleccionado?.bloques[0].turnos " class="row">
-                            <div class="col">
-                                <b>Fecha:</b>
-                                {{ turnoSeleccionado.bloques[0].turnos[0].horaInicio | fecha }}
+                        <div *ngIf="turnoSeleccionado" class="row">
+                            <div class="col-12 text-left">
+                                <!-- Auditada? -->
+                                <span *ngIf="solicitudSeleccionada.auditada">
+                                    <b>Estado auditoría</b>
+                                    <br> {{ solicitudSeleccionada.auditoria.estado }}
+                                    <br>
+                                    <b>Auditor</b>
+                                    <br> {{ solicitudSeleccionada.auditoria.auditor.nombre }} {{ solicitudSeleccionada.auditoria.auditor.apellido
+                                    }}
+                                    <br>
+                                    <hr>
+                                </span>
+
+                                <!-- Auditada? -->
+
+                                <h5>
+                                    <span class="blue"> {{pacienteSolicitud?.nombre}} {{pacienteSolicitud?.apellido}} </span>
+                                </h5>
                                 <br>
-                                <b>Hora:</b>
-                                {{ turnoSeleccionado.bloques[0].turnos[0].horaInicio | date: 'HH:mm' }}
+
+                                <b>Fecha Solicitud</b>
+                                <br> {{ solicitudSeleccionada.horaInicio | fecha }}
                                 <br>
-                                <b>Organización:</b>
-                                {{ turnoSeleccionado.organizacion.nombre }}
+                                <b>Fecha Turno</b>
+                                <br> {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm'
+                                }}
+
+                                <hr>
+                                <h3> Origen </h3>
+
+                                <b>Profesional</b>
+                                <br> {{ solicitudSeleccionada.profesionalOrigen?.nombre }} {{ solicitudSeleccionada.profesionalOrigen?.apellido
+                                }}
                                 <br>
-                                <b>Tipo de Prestación:</b>
-                                {{ turnoSeleccionado.bloques[0].turnos[0].tipoPrestacion.term }}
+                                <b>Tipo de Prestación</b>
+                                <br> {{ solicitudSeleccionada.tipoPrestacionOrigen?.term }}
                                 <br>
-                                <b>Profesional(es):</b>
-                                {{ turnoSeleccionado.profesionales | enumerar:['apellido', 'nombre'] }}
+                                <b>Organización</b>
+                                <br>
+                                <i class="mdi mdi-hospital-building"></i> {{ solicitudSeleccionada.organizacionOrigen?.nombre }}
+
+                                <hr>
+                                <h3> Destino </h3>
+
+                                <b>Profesional</b>
+                                <br> {{ solicitudSeleccionada.profesional?.nombre }} {{ solicitudSeleccionada.profesional?.apellido
+                                }}
+                                <br>
+                                <b>Tipo de Prestación</b>
+                                <br> {{ solicitudSeleccionada.tipoPrestacion?.term }}
+                                <br>
+                                <b>Organización</b>
+                                <br>
+                                <i class="mdi mdi-hospital-building"></i> {{ solicitudSeleccionada.organizacion?.nombre }}
+                                <br>
                             </div>
                         </div>
                     </div>
