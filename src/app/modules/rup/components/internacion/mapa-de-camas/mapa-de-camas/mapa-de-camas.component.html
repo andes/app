@@ -14,11 +14,8 @@
                             <!-- TODO: Ver estilos con julito ,@FerSastre -->
                             <div class="row" *ngIf="camas">
                                 <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="filtros-nombre">Paciente</label>
-                                        <input type="text" class="form-control" name="nombre" [(ngModel)]="filtros.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
-                                            (keyup)="filtrar()" />
-                                    </div>
+                                    <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente">
+                                    </plex-text>
                                 </div>
                                 <div class="col-md-2">
                                     <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
@@ -26,8 +23,8 @@
                                 </div>
                                 <div class="col-md-2">
                                     <div class="form-group">
-                                        <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Servicio" (change)="filtrar()"
-                                            *ngIf="filtros.opciones.servicios.length"></plex-select>
+                                        <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Unidad Organizativa"
+                                            (change)="filtrar()" *ngIf="filtros.opciones.servicios.length"></plex-select>
                                     </div>
                                 </div>
 

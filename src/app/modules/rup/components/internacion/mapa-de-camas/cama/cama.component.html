@@ -71,10 +71,10 @@
                         <i class="mdi mdi-lock"></i>
                     </button>
                     <!-- enviar a reparacion -->
-                    <button class="rounded left btn-warning" title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion' ; SetFecha()"
+                    <!-- <button class="rounded left btn-warning" title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion' ; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion') || cama.ultimoEstado.estado == 'desocupada'">
                         <i class="mdi mdi-wrench"></i>
-                    </button>
+                    </button> -->
                 </div>
             </div>
             <!-- Botonera del frente de las card -->
@@ -318,9 +318,10 @@
                         </p>
                         <div class="main">
                             <div class="form-group">
-                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual bloquea la cama?" required [(ngModel)]="cama.$motivo"
-                                    name="motivoBloqueo" id="motivoBloqueo" #motivoBloqueo="ngModel"></textarea>
-                                <div [hidden]="motivoBloqueo.valid || (motivoBloqueo.pristine && !formBloqueo.submitted)" class="alert alert-danger">Indique motivo por el cual bloquea la cama</div>
+                                <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo" idField="name" labelField="name" [(ngModel)]="cama.$motivo"
+                                    label="Motivo del bloqueo">
+                                </plex-select>
+
                             </div>
                         </div>
                     </div>

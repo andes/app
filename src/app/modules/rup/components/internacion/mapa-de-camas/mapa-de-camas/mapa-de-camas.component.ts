@@ -207,7 +207,6 @@ export class MapaDeCamasComponent implements OnInit {
      */
     public updateCama(e: any) {
         this.countFiltros();
-        console.log(e, 'aaaaaaaaaeeeeeeee');
         // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
         let i = this.camas.findIndex(c => c.id === e.id);
         if (e) {
@@ -220,7 +219,6 @@ export class MapaDeCamasComponent implements OnInit {
     /**
      * Ir al ABM de camas
      */
-
     onGestionCamaClick() {
         this.router.navigate(['tm/organizacion/cama']);
     }
