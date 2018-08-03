@@ -77,6 +77,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
     }
+
     printArancelamiento(turno) {
         if (this.cambioMotivo) {
             let data = {
@@ -87,8 +88,8 @@ export class TurnosPacienteComponent implements OnInit {
 
             });
         }
+        this.showArancelamientoForm.emit(turno);
     }
-
 
 
     eventosTurno(turno, operacion) {
