@@ -7,7 +7,6 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { ISolicitud } from '../../../modules/rup/interfaces/solicitud.interface';
 import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
@@ -23,6 +22,8 @@ export class NuevaSolicitudComponent implements OnInit {
     arrayReglasDestino = [];
     autocitado = false;
     prestacionDestino: any;
+    prestacionOrigen: any;
+
     modelo: any = {
         paciente: {
             id: '',
@@ -41,14 +42,12 @@ export class NuevaSolicitudComponent implements OnInit {
             turno: null,
             tipoPrestacion: null,
             tipoPrestacionOrigen: null,
-            prestacionOrigen: null,
             registros: []
         },
-        estados: [
-            { tipo: 'pendiente' }
-        ]
+        estados: [],
+        prestacionOrigen: null
     };
-    // @Input() tipoSolicitud: string;
+
     private _tipoSolicitud;
     @Input('tipoSolicitud')
     set tipoSolicitud(value: any) {
@@ -69,6 +68,8 @@ export class NuevaSolicitudComponent implements OnInit {
     dataOrganizacionesOrigen = [];
     dataTipoPrestacionesOrigen = [];
     dataReglasDestino: { id: any; nombre: any; }[];
+    dataReglasOrigen: { id: any; nombre: any; }[];
+
     constructor(
         private router: Router,
         private plex: Plex,
@@ -83,10 +84,7 @@ export class NuevaSolicitudComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        console.log('modelo.solicitud ', this.modelo.solicitud);
     }
-
-
 
     seleccionarPaciente(paciente: any): void {
         this.paciente = paciente;
@@ -117,19 +115,49 @@ export class NuevaSolicitudComponent implements OnInit {
                 );
         }
         if (this.tipoSolicitud === 'entrada' && this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
-            this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
-                .subscribe(
-                    res => {
-                        this.arrayOrganizacionesOrigen = res;
-                        this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
-                    }
-                );
+            if (this.prestacionOrigen) {
+                // let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.conceptId === this.prestacionOrigen.id; });
+                let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
+
+                if (regla.auditable) {
+                    this.modelo.estados.push({ tipo: 'auditoria' });
+                } else {
+                    this.modelo.estados.push({ tipo: 'pendiente' });
+                }
+                this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
+            }
+            // this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
+            //     .subscribe(
+            //         res => {
+            //             this.arrayReglasOrigen = res;
+            //             let aux = (res as any).origen.prestaciones;
+            //             this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
+            //         }
+            //     );
         }
     }
 
     onSelectOrganizacionOrigen() {
         let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
+        // this.arrayReglasOrigen = regla.origen.prestaciones.map(elem => { return elem.prestacion; });
+        this.arrayReglasOrigen = regla.origen.prestaciones;
         this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+    }
+
+    onSelectPrestacionOrigen() {
+        this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
+            .subscribe(
+                res => {
+                    this.arrayOrganizacionesOrigen = res;
+                    this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
+                    // let aux = (res as any).origen.prestaciones;
+                    // this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
+                }
+            );
+        // if (this.prestacionOrigen) {
+        //     let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.conceptId === this.prestacionDestino.id; });
+        //     this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
+        // }
     }
 
     onSelectPrestacionDestino() {
@@ -192,38 +220,12 @@ export class NuevaSolicitudComponent implements OnInit {
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             };
+            console.log('modelo ', this.modelo);
+
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.newSolicitudEmitter.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                // this.showCargarSolicitud = false;
-                // this.showBotonCargarSolicitud = true;
-
-                // this.modelo = {
-                //     paciente: this.paciente,
-                //     profesional: {},
-                //     organizacion: {},
-                //     solicitud: {
-                //         fecha: null,
-                //         paciente: {},
-                //         organizacion: {},
-                //         organizacionOrigen: this.auth.organizacion,
-                //         profesional: {},
-                //         profesionalOrigen: {},
-                //         turno: null
-                //     },
-                //     estados: [
-                //         { tipo: 'pendiente' }
-                //     ]
-                // };
-                // this.registros = {
-                //     solicitudPrestacion: {
-                //         profesionales: [],
-                //         motivo: '',
-                //         autocitado: false,
-                //     }
-                // };
-
             });
 
         } else {
@@ -232,30 +234,6 @@ export class NuevaSolicitudComponent implements OnInit {
     }
 
     cancelar() {
-        // this.modelo = {
-        //     paciente: this.paciente,
-        //     profesional: {},
-        //     organizacion: this.auth.organizacion,
-        //     solicitud: {
-        //         fecha: null,
-        //         paciente: {},
-        //         organizacion: {},
-        //         organizacionOrigen: this.auth.organizacion,
-        //         profesional: {},
-        //         profesionalOrigen: {},
-        //         turno: null
-        //     },
-        //     estados: [
-        //         { tipo: 'pendiente' }
-        //     ]
-        // };
-        // this.registros = {
-        //     solicitudPrestacion: {
-        //         profesionales: [],
-        //         motivo: '',
-        //         autocitado: false
-        //     }
-        // };
         this.newSolicitudEmitter.emit();
     }
 }

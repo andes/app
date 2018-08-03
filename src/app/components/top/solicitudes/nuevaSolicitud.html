@@ -13,14 +13,12 @@
                         </header>
 
                         <div class="row">
-                            <div class="col-12" *ngIf="showSeleccionarPaciente">
+                            <div *ngIf="showSeleccionarPaciente" class="col-8">
                                 <label *ngIf="showSeleccionarPaciente">Paciente</label>
                                 <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
                                 </pacientesSearch>
                             </div>
-                        </div>
-                        <div class="row" *ngIf="paciente?.id">
-                            <div class="col-8">
+                            <div *ngIf="paciente?.id" class="col-8">
                                 <label>Paciente</label> {{ paciente | paciente }}
                                 <span>Documento:
                                     <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number }}</span>
@@ -32,6 +30,19 @@
                                 </span>
                             </div>
                         </div>
+                        <!-- <div class="row" *ngIf="paciente?.id">
+                            <div class="col-8">
+                                <label>Paciente</label> {{ paciente | paciente }}
+                                <span>Documento:
+                                    <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number }}</span>
+                                    <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span>
+                                </span>
+                                <span>Fecha de nacimiento
+                                    <span *ngIf="paciente.fechaNacimiento !== null">{{ paciente.fechaNacimiento | date:'dd-MM-yyyy' }} ({{ paciente | edad }})</span>
+                                    <span *ngIf="paciente.fechaNacimiento === null">Sin fecha de nacimiento</span>
+                                </span>
+                            </div>
+                        </div> -->
 
                         <!-- Fecha Origen -->
                         <div class="row">
@@ -45,7 +56,7 @@
                             <div class="col-6">
                                 <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true"
-                                    (change)="onSelect()">
+                                    (change)="onSelectPrestacionOrigen()">
                                 </plex-select>
                             </div>
                         </div>
@@ -65,7 +76,10 @@
                                 name="tipoPrestacion" (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen"
                                     placeholder="Tipos de Prestación Origen" [required]="true">
                                 </plex-select>
-                                <plex-select *ngIf="tipoSolicitud == 'entrada'" [data]="dataTipoPrestacionesOrigen" [(ngModel)]="modelo.solicitud.tipoPrestacionOrigen"
+                                <!-- <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
+                                    placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionDestino()">
+                                </plex-select> -->
+                                <plex-select *ngIf="tipoSolicitud == 'entrada'" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen" 
                                     name="tipoPrestacion" (change)="onSelect()" label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
                                     [required]="true">
                                 </plex-select>

@@ -1,7 +1,7 @@
 <form *ngIf="!showDarTurnos" class="plex-layout" #form="ngForm">
     <section>
 
-        <div class="row">
+        <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
             <div class="col" *ngIf="showCargarSolicitud">
                 <nueva-solicitud [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
@@ -21,11 +21,14 @@
                                 <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarSolicitudes()" name="fechaHasta" label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
-
+                            <div class="col-3  d-flex">
+                                <plex-button class="align-self-end" icon="ruler" type="success" (click)="editarReglas()" title="Editar reglas"> </plex-button>
+                            </div>
                         </div>
+                        <br>
                     </header>
-                    <plex-tabs>
-                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box">
+                    <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
+                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box"  (click)="panelIndex = 0">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 ">
@@ -90,7 +93,7 @@
                                 </div>
                             </fieldset>
                         </plex-tab>
-                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box">
+                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box"  (click)="panelIndex = 1">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 text-left">
@@ -158,7 +161,12 @@
             </div>
 
             <!-- SIDEBAR -->
+<<<<<<< HEAD
             <div *ngIf=" !showCargarSolicitud && solicitudSeleccionada?.solicitud?.turno" class="col-4">
+=======
+
+            <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud && solicitudSeleccionada.solicitud.turno" class="col-3">
+>>>>>>> 6ad9b5b95865d77f40bf7d9a9b20fac4d16971f4
                 <plex-box>
                     <!-- <header>
                         <div class="clearfix">
@@ -206,6 +214,8 @@
             </div>
 
         </div>
+        <!-- Configuración de Reglas -->
+        <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
     </section>
 </form>
 
