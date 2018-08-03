@@ -125,6 +125,8 @@
                     </ng-container>
 
                     <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                        <a name="{{ elemento.concepto.conceptId }}"></a>
+
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
