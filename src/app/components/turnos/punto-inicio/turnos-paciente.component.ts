@@ -27,11 +27,11 @@ export class TurnosPacienteComponent implements OnInit {
     puedeLiberarTurno: boolean;
     agenda: IAgenda;
     showLiberarTurno: boolean;
-
-    _paciente: IPaciente;
+    todaysdate: Date;
+    _turnos: any;
     _operacion: string;
     tituloOperacion = 'Operaciones de Turnos';
-    turnosPaciente = [];
+    turnosPaciente: any;
     turnosSeleccionados: any[] = [];
     showPuntoInicio = true;
     @Input('operacion')
@@ -42,17 +42,17 @@ export class TurnosPacienteComponent implements OnInit {
         return this._operacion;
     }
 
-    @Input('paciente')
-    set paciente(value: IPaciente) {
+    @Input('turnos')
+    set turnos(value: any) {
         if (value) {
-            this._paciente = value;
-            this.getTurnosPaciente(this._paciente);
+            this._turnos = value;
+            this.turnosPaciente = value;
         }
     }
-    get paciente(): IPaciente {
-        return this._paciente;
+    get turnos(): any {
+        return this._turnos;
     }
-    @Output() showArancelamientoForm = new EventEmitter<any>();
+    @Output() asistenciaChanged = new EventEmitter<any>();
 
 
     // Inicialización
@@ -61,6 +61,8 @@ export class TurnosPacienteComponent implements OnInit {
     ngOnInit() {
         this.puedeRegistrarAsistencia = this.auth.getPermissions('turnos:turnos:registrarAsistencia').length > 0;
         this.puedeLiberarTurno = this.auth.getPermissions('turnos:turnos:liberarTurno').length > 0;
+        this.todaysdate = new Date();
+        this.todaysdate.setHours(0, 0, 0, 0);
     }
 
     cambiarMotivo() {
@@ -80,30 +82,14 @@ export class TurnosPacienteComponent implements OnInit {
             let data = {
                 motivoConsulta: turno.motivoConsulta
             };
-            this.serviceTurno.patch(turno.agenda_id, turno.bloque_id, turno.id, data).subscribe(resultado => {
+            let bloqueId = (turno.bloque_id) ? turno.bloque_id : -1;
+            this.serviceTurno.patch(turno.agenda_id, bloqueId, turno.id, data).subscribe(resultado => {
 
             });
         }
-        this.showArancelamientoForm.emit(turno);
     }
 
-    getTurnosPaciente(paciente) {
-        if (paciente.id) {
-            let datosTurno = { pacienteId: paciente.id };
-            // Obtenemos los turnos del paciente, quitamos los viejos y aplicamos orden descendente
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
-                });
-                this.ultimosTurnos = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
-                });
-                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
-                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
-                });
-            });
-        }
-    }
+
 
     eventosTurno(turno, operacion) {
         let mensaje = '';
@@ -111,37 +97,26 @@ export class TurnosPacienteComponent implements OnInit {
         let patch: any = {
             op: operacion,
             turnos: [turno._id],
-            // 'idTurno': turno._id
         };
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
-
-            let agenda = resultado;
-            let datosTurno = { pacienteId: this._paciente.id };
-            this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                this.turnosPaciente = turnos.filter(t => {
-                    return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
-                });
-                this.turnosPaciente = this.turnosPaciente.sort((a, b) => {
-                    return moment(a.horaInicio).isAfter(moment(b.horaInicio)) ? 0 : 1;
-                });
-                // this.turnosPaciente = turnos;
-                switch (operacion) {
-                    case 'darAsistencia':
-                        mensaje = 'Se registro la asistencia del paciente';
-                        tipoToast = 'success';
-                        break;
-                    case 'sacarAsistencia':
-                        mensaje = 'Se registro la inasistencia del paciente';
-                        tipoToast = 'warning';
-                        break;
-                }
-                if (mensaje !== '') {
-                    this.plex.toast(tipoToast, mensaje);
-                }
-            });
+            this.asistenciaChanged.emit();
+            switch (operacion) {
+                case 'darAsistencia':
+                    mensaje = 'Se registro la asistencia del paciente';
+                    tipoToast = 'success';
+                    break;
+                case 'sacarAsistencia':
+                    mensaje = 'Se registro la inasistencia del paciente';
+                    tipoToast = 'warning';
+                    break;
+            }
+            if (mensaje !== '') {
+                this.plex.toast(tipoToast, mensaje);
+            }
         });
+        // });
 
     }
 
@@ -158,7 +133,6 @@ export class TurnosPacienteComponent implements OnInit {
     }
 
     saveLiberarTurno(agenda: any, pac) {
-        this.getTurnosPaciente(pac);
         this.showLiberarTurno = false;
     }
 
