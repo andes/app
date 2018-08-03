@@ -52,7 +52,7 @@ export class TurnosPacienteComponent implements OnInit {
     get turnos(): any {
         return this._turnos;
     }
-    @Output() asistenciaChanged = new EventEmitter<any>();
+    @Output() turnosPacienteChanged = new EventEmitter<any>();
     @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
@@ -102,7 +102,7 @@ export class TurnosPacienteComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
-            this.asistenciaChanged.emit();
+            this.turnosPacienteChanged.emit();
             switch (operacion) {
                 case 'darAsistencia':
                     mensaje = 'Se registro la asistencia del paciente';
@@ -129,12 +129,9 @@ export class TurnosPacienteComponent implements OnInit {
         });
     }
 
-    cancelaLiberarTurno() {
+    afterLiberarTurno() {
         this.showLiberarTurno = false;
-    }
-
-    saveLiberarTurno(agenda: any, pac) {
-        this.showLiberarTurno = false;
+        this.turnosPacienteChanged.emit();
     }
 
     isToday(turno) {
