@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding, DebugElement } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
@@ -36,8 +36,8 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            this.obraSocial = resultado.nombre;
-            this.codigoOs = resultado.codigo;
+            this.obraSocial = resultado.financiador;
+            this.codigoOs = resultado.codigoFinanciador;
             this.showForm = true;
             setTimeout(() => {
                 this.imprimir();
