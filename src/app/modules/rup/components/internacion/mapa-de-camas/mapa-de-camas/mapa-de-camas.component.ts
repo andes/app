@@ -355,6 +355,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.buscandoPaciente = false;
         this.showIngreso = true;
         this.showMenu = true;
+        this.prestacionPorInternacion = null;
     }
 
     onCamaSelected(event) {

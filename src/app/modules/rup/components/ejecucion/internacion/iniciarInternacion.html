@@ -83,11 +83,11 @@
                                 </div>
                             </div>
                             <div class="col-4 ">
-                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.asociado" name="obraSocial" [data]="pacienteAsociado"
+                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
                                     placeholder="Seleccione... " label="Asociado a" idField="nombre" labelField="nombre">
                                 </plex-select>
                                 <div *ngIf="soloValores">
-                                    <b>Asociado:</b> {{informeIngreso.asociado}}
+                                    <b>Asociado a:</b> {{informeIngreso.asociado}}
                                 </div>
                             </div>
                             <div class="col-4 ">
