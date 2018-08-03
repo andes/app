@@ -31,6 +31,8 @@ export class CamaComponent implements OnInit {
     public fecha = new Date();
     public disabledButton = false;
     public camaSeleccionPase;
+    // lista de los motivos del bloque, luego los va a traer desde snomed
+    public listaMotivosBloqueo = [{ id: 'Bolqueo', name: 'Bloqueo' }, { id: 'Se envia a reparar', name: 'Se envia a reparar' }];
 
     public listaCamasDisponibles;
 
@@ -232,11 +234,11 @@ export class CamaComponent implements OnInit {
     }
 
     /**
-     * Funcion que sirve para asignarle una 
-     * cama a un paciente. 
-     * @param paciente 
-     * @param idInternacion 
-     * @param cama 
+     * Funcion que sirve para asignarle una
+     * cama a un paciente.
+     * @param paciente
+     * @param idInternacion
+     * @param cama
      */
     darCama(paciente = null, idInternacion = null, cama = null) {
         let dto: any;
