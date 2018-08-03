@@ -28,7 +28,7 @@
                         <br>
                     </header>
                     <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
-                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box"  (click)="panelIndex = 0">
+                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box" (click)="panelIndex = 0">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 ">
@@ -93,7 +93,7 @@
                                 </div>
                             </fieldset>
                         </plex-tab>
-                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box"  (click)="panelIndex = 1">
+                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box" (click)="panelIndex = 1">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 text-left">
@@ -161,12 +161,8 @@
             </div>
 
             <!-- SIDEBAR -->
-<<<<<<< HEAD
-            <div *ngIf=" !showCargarSolicitud && solicitudSeleccionada?.solicitud?.turno" class="col-4">
-=======
 
             <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud && solicitudSeleccionada.solicitud.turno" class="col-3">
->>>>>>> 6ad9b5b95865d77f40bf7d9a9b20fac4d16971f4
                 <plex-box>
                     <!-- <header>
                         <div class="clearfix">
