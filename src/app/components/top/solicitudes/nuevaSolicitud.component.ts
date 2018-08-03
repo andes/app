@@ -44,7 +44,8 @@ export class NuevaSolicitudComponent implements OnInit {
             tipoPrestacionOrigen: null,
             registros: []
         },
-        estados: []
+        estados: [],
+        prestacionOrigen: null
     };
 
     private _tipoSolicitud;

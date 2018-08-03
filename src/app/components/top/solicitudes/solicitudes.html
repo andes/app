@@ -27,8 +27,8 @@
                         </div>
                         <br>
                     </header>
-                    <plex-tabs>
-                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box">
+                    <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
+                        <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box"  (click)="panelIndex = 0">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 ">
@@ -93,7 +93,7 @@
                                 </div>
                             </fieldset>
                         </plex-tab>
-                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box">
+                        <plex-tab label="Solicitudes de Salida" icon="arrow-up-box"  (click)="panelIndex = 1">
                             <fieldset>
                                 <div class="row">
                                     <div class="col-12 text-left">

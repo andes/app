@@ -40,6 +40,8 @@ export class SolicitudesComponent implements OnInit {
     prestacionesSalida: any;
     prestacionesEntrada: any;
     showEditarReglas = false;
+    public panelIndex = 0;
+
     constructor(
         private auth: Auth,
         private plex: Plex,
@@ -68,6 +70,10 @@ export class SolicitudesComponent implements OnInit {
                 break;
         }
         this.cargarSolicitudes();
+    }
+
+    cambio(activeTab) {
+        console.log('lalala', activeTab);
     }
 
     refreshSelection(value, tipo) {

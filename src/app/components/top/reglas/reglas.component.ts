@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../services/organizacion.service';
 import { ProfesionalService } from './../../../services/profesional.service';
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -11,7 +11,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
   templateUrl: './reglas.component.html',
   styleUrls: ['./reglas.component.css']
 })
-export class ReglasComponent implements OnInit {
+export class ReglasComponent {
   organizacionDestino = this.auth.organizacion;
   prestacionDestino;
   prestacionOrigen;
