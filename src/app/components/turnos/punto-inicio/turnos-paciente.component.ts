@@ -52,8 +52,8 @@ export class TurnosPacienteComponent implements OnInit {
     get turnos(): any {
         return this._turnos;
     }
-    @Output() asistenciaChanged = new EventEmitter<any>();
-
+    @Output() turnosPacienteChanged = new EventEmitter<any>();
+    @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
@@ -77,6 +77,7 @@ export class TurnosPacienteComponent implements OnInit {
         this.turnoArancelamiento = turno;
         this.showMotivoConsulta = true;
     }
+
     printArancelamiento(turno) {
         if (this.cambioMotivo) {
             let data = {
@@ -87,8 +88,8 @@ export class TurnosPacienteComponent implements OnInit {
 
             });
         }
+        this.showArancelamientoForm.emit(turno);
     }
-
 
 
     eventosTurno(turno, operacion) {
@@ -101,7 +102,7 @@ export class TurnosPacienteComponent implements OnInit {
 
         // Patchea los turnosSeleccionados (1 o más turnos)
         this.serviceAgenda.patch(turno.agenda_id, patch).subscribe(resultado => {
-            this.asistenciaChanged.emit();
+            this.turnosPacienteChanged.emit();
             switch (operacion) {
                 case 'darAsistencia':
                     mensaje = 'Se registro la asistencia del paciente';
@@ -128,12 +129,9 @@ export class TurnosPacienteComponent implements OnInit {
         });
     }
 
-    cancelaLiberarTurno() {
+    afterLiberarTurno() {
         this.showLiberarTurno = false;
-    }
-
-    saveLiberarTurno(agenda: any, pac) {
-        this.showLiberarTurno = false;
+        this.turnosPacienteChanged.emit();
     }
 
     isToday(turno) {
