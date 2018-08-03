@@ -53,7 +53,7 @@ export class TurnosPacienteComponent implements OnInit {
         return this._turnos;
     }
     @Output() asistenciaChanged = new EventEmitter<any>();
-
+    @Output() showArancelamientoForm = new EventEmitter<any>();
 
     // Inicialización
     constructor(public serviceTurno: TurnoService, public serviceAgenda: AgendaService, public plex: Plex, public auth: Auth) { }
