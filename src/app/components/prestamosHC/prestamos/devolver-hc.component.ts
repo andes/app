@@ -41,16 +41,14 @@ export class DevolverHcComponent implements OnInit {
     }
 
     save() {
-        if (this.prestamo.datosDevolucion.estado !== '') {
-            this.prestamo.datosPrestamo = this.prestamo.datosPrestamo;
-            this.prestamo.organizacion = this.auth.organizacion;
-
-            this.prestamosService.devolverCarpeta(this.prestamo).subscribe(carpeta => {
-                this.plex.toast('success', 'La Carpeta se devolvió correctamente', 'Información', 1000);
-                this.cancelDevolverEmit.emit(true);
-                this.carpetaDevueltaEmit.emit();
-            });
-        }
+        this.prestamo.datosPrestamo = this.prestamo.datosPrestamo;
+        this.prestamo.organizacion = this.auth.organizacion;
+        this.prestamo.datosDevolucion = { estado: this.devolverHC.estado.nombre, observaciones: this.devolverHC.observaciones };
+        this.prestamosService.devolverCarpeta(this.prestamo).subscribe(carpeta => {
+            this.plex.toast('success', 'La Carpeta se devolvió correctamente', 'Información', 1000);
+            this.cancelDevolverEmit.emit(true);
+            this.carpetaDevueltaEmit.emit();
+        });
     }
 
     cancel() {

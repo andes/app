@@ -47,7 +47,7 @@
 
                         <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}">
                             <i class="icon icon-rup-semantic-plan"></i>
-                            PLANES
+                            PRESTACIONES
                         </button>
                     </li>
 
@@ -66,6 +66,15 @@
                         <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" class="btn btn-block p-0 btn-otro">
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                             ELEM. REG.
+                        </button>
+                    </li>
+
+                    <li class="">
+                        <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'laboratorios'}">{{ getCantidadResultados('laboratorios')}}</small>
+
+                        <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}" class="btn btn-block p-0 btn-laboratorio">
+                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                            LABORATORIOS
                         </button>
                     </li>
                 </ul>
@@ -356,7 +365,7 @@
 
         <!-- Vista: PLANES -->
         <ng-container *ngIf="filtroActual === 'planes'">
-            <div *ngIf="prestaciones.length > 0" class="vista-titulo">Planes
+            <div *ngIf="prestaciones.length > 0" class="vista-titulo"> Prestaciones
                 <div class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
                         <i class="mdi mdi-calendar-clock"></i>
@@ -386,16 +395,14 @@
                                                     <i class="icon icon-rup-semantic-plan"></i>
                                                 </div>
                                                 <div class="col p-0 pl-2 float-left">
-                                                    {{ prestacion.solicitud.tipoPrestacion.term }}
+                                                    {{ prestacion.prestacion.term }}
 
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <div class="sugerido">
-                                                                <small>Creada: {{ prestacion.estados[prestacion.estados.length -
-                                                                    1].createdAt | fecha }}</small>
+                                                                <small>Fecha: {{ prestacion.fecha | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{ prestacion.estados[prestacion.estados.length
-                                                                    - 1].createdBy.nombreCompleto}}</small>
+                                                                <small>Profesional: {{ prestacion.profesional | profesional}}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -405,7 +412,7 @@
 
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <small class="badge badge-{{prestacion.estados[prestacion.estados.length - 1].tipo}} text-default p-1">{{prestacion.estados[prestacion.estados.length - 1].tipo}} </small>
+                                                <small class="badge badge-{{prestacion.estado}} text-default p-1">{{prestacion.estado}} </small>
 
                                             </div>
                                         </div>
@@ -579,6 +586,83 @@
                     </ng-container>
                 </ul>
                 <div *ngIf="elementosRegistro.length === 0">No hay Elementos de registro registrados</div>
+            </div>
+        </ng-container>
+
+        <!-- Vista: LABORATORIOS -->
+        <ng-container *ngIf="filtroActual === 'laboratorios'">
+            <div class="vista-titulo">Laboratorios
+                <div *ngIf="laboratorios?.length > 0" class="float-right">
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha')">
+                        <i class="mdi mdi-calendar-clock"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('alfa')">
+                        <i class="mdi mdi-sort-alphabetical"></i>
+                    </button>
+                    <button class="btn btn-primary btn-sm p-0" (click)="colapsarRegistros()">
+                        <i class="mdi mdi-menu-down"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="laboratorios && laboratorios.length > 0 && colapsado" class="conceptos hover list-unstyled">
+
+                <ul class="conceptos list-unstyled">
+                    <ng-container *ngFor="let laboratorio of laboratorios; let iCronico = index">
+                        <li>
+                            <div class="rup-card mini laboratorio" [ngClass]="{'active': estaEnTabs(laboratorio, 'laboratorio')}">
+                                <div class="rup-header">
+                                    <div class="rup-border rup-border-laboratorio">
+
+                                        <div class="row p-0 m-0 border-secondary border-left-0">
+                                            <div class="col-10 p-0 m-0">
+                                                <div class="row m-0 p-0">
+
+                                                    <ng-container *ngIf="emitirConceptos">
+                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <ng-container *ngIf="!emitirConceptos">
+                                                        <div class="icon-rup">
+                                                            <i class="icon mdi mdi-flask-empty-outline"></i>
+                                                        </div>
+                                                    </ng-container>
+                                                    <div class="col p-0 pl-2 float-left" (click)="devolverRegistrosHuds(laboratorio, 'laboratorio')">
+                                                        {{ laboratorio?.prestacion.snomed.term }}
+
+                                                        <div class="row p-0 m-0">
+                                                            <div class="col-10 p-0 m-0">
+                                                                <ng-container *ngIf="laboratorio">
+                                                                    <div class="text-sm">Solicitante:
+                                                                        <ng-container *ngIf="laboratorio?.profesional">{{laboratorio?.profesional?.nombre}}</ng-container>
+                                                                    </div>
+                                                                    <div class="text-sm">Organización:
+                                                                        <ng-container *ngIf="laboratorio?.organizacion">{{laboratorio?.organizacion?.nombre }}</ng-container>
+                                                                    </div>
+                                                                    <small class="sugerido">Fecha: {{laboratorio?.Fecha | fecha}}
+                                                                    </small>
+                                                                </ng-container>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+                    </ng-container>
+                </ul>
+                <div *ngIf="laboratorios.length === 0">No hay Laboratorios registrados</div>
             </div>
         </ng-container>
     </div>

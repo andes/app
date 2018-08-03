@@ -424,8 +424,18 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
 
-    relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+    relacionadoConPadreDeep(registros: any[], conceptId) {
+        if (registros) {
+            for (let i = 0; i < registros.length; i++) {
+                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
+                    return i;
+                } else {
+                    this.relacionadoConPadreDeep(registros[i].registros, conceptId);
+                }
+            }
+            return false;
+        }
+
     }
 
     armarRelaciones(registros) {
@@ -456,6 +466,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
+
+
 
     reordenarRelaciones() {
         let rel: any;

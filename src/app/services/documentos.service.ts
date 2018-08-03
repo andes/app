@@ -16,11 +16,9 @@ export class DocumentosService {
     constructor(private http: Http) { }
 
     /**
-     * 
-     * @param html string código HTML
-     * @param scssFile (opcional) string nombre referencia a una hoja de estilos
+     * @param html HTML que se envía a la API para que genere y devuelva un PDF "institucionalizado"
      */
-    descargar(html: string, scssFile = null): Observable<any> {
+    descargar(html: string): Observable<any> {
 
         let htmlPdf = { html: Buffer.from(html).toString('base64') };
         let headers = new Headers({
