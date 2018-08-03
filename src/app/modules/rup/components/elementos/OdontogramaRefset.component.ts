@@ -401,8 +401,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
                 }
 
-                // this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params });
-
             } else {
 
                 if (this.piezaCompletaValor(diente, cara) !== -1) {
@@ -459,9 +457,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
                 this.piezasSeleccionadas.splice(index, 1);
                 this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-                if (this.piezasSeleccionadas.length === 0) {
-                    this.emitEjecutarAccion(false);
-                }
+                // if (this.piezasSeleccionadas.length === 0) {
+                this.emitEjecutarAccion(false);
+                // }
             }
 
         }
