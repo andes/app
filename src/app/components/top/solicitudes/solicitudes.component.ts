@@ -81,7 +81,7 @@ export class SolicitudesComponent implements OnInit {
         for (let i = 0; i < this.prestaciones.length; i++) {
             this.prestaciones[i].seleccionada = false;
         }
-
+        debugger;
         let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
         this.prestaciones[indicePrestacion].seleccionada = true;
         this.solicitudSeleccionada = this.prestaciones[indicePrestacion];

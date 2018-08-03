@@ -158,13 +158,24 @@
             </div>
 
             <!-- SIDEBAR -->
-            <div *ngIf="solicitudSeleccionada  && !showCargarSolicitud && solicitudSeleccionada.turno" class="col-3">
+            <div *ngIf=" !showCargarSolicitud && solicitudSeleccionada?.solicitud?.turno" class="col-4">
                 <plex-box>
-                    <header>
+                    <!-- <header>
                         <div class="clearfix">
                             <div *ngIf="turnoSeleccionado" class="page-title float-left">Datos del Turno</div>
 
                         </div>
+                    </header> -->
+
+                    <header>
+                        <div class="row">
+                            <div class="col">
+                                <h5>
+                                    <span style="color: #00A8E0">{{turnoSeleccionado.solicitud.turno.paciente.nombre}} {{turnoSeleccionado.solicitud.turno.paciente.apellido}}</span>
+                                </h5>
+                            </div>
+                        </div>
+                        <hr>
                     </header>
 
                     <div class="container-fluid">
