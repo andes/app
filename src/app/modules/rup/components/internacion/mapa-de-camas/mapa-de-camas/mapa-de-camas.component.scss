@@ -1,4 +1,29 @@
 @import '../../../../assets/font.css';
+
+/*--------------------------------------------------------------
+# ANDES - Variables cromaticas
+--------------------------------------------------------------*/
+
+$andes-negro:black;
+$andes-azul-oscuro: #062837;
+$andes-azul: #2CA2DA;
+$andes-cyan: #66DFFF;
+
+// Neutros
+$andes-gris: #7d7d7d;
+$andes-blanco: #ffffff;
+
+
+// Extensiones
+$andes-celeste: #d7f1fd;
+$andes-rojo: #cb0053;
+$andes-violeta: #662482;
+$andes-violeta-claro: #982f98;
+$andes-magenta: #e3007e;
+$andes-verde: #8CC63F;
+$andes-verde-claro: #63c7b7;
+
+
 /*
 ******************************
 ** MAPA DE CAMAS
@@ -740,16 +765,15 @@ button {
 
 
     .cama-seleccion-icon {
-        color: rgb(0, 0, 0);
+        color: $andes-cyan;
         font-size: 30px;
-        background-color: #ffffff;
         height: 40px;
         width: 40px;
         border-radius: 80px;
         text-align: center;
         font-size: 1.5rem;
         padding: 0.2rem 0;
-        border: solid 2px #000;
+        border: solid 2px $andes-cyan;
         p  {
         font-size: 8px;
         }
@@ -789,5 +813,164 @@ button {
         display: flex;
         flex-direction: column!important;
     }
+
+}
+
+
+// ------------------------------------
+// EXTENSIONES
+// ------------------------------------
+
+// Estilos sidebar
+
+#panel-lateral 
+plex-box > DIV {
+
+    h3,h4,h5,h5,p {
+        color: white;
+    }
+
+    &.plex-box {
+        padding: 1rem!important;
+        background-color: $andes-azul-oscuro;
+
+
+        .plex-box-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;   
+        }
+
+    }
+
+
+
+
+
+  header {
+	
+	// background-color: $andes-azul;
+    color: white;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+// Contenedor tabs 
+plex-tabs.andes-contenedor-tabs {
+
+	// tab
+	.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+		display: flex;
+		flex-direction: row;     
+		
+		padding: 1rem;
+		width: 100%;
+		color: white;
+		text-transform: uppercase;
+		text-align: center;
+		background-color: $andes-azul;
+
+		&:hover {
+			background-color: $andes-celeste;
+		}
+	}
+
+	// Tab body
+	.andes-tab {
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		justify-content: space-between; 
+
+		padding: 1rem;
+		text-align: center;
+		height: auto;
+
+		.sidebar-contenedor-texto {
+			height: 200px;
+			justify-content: space-between;
+
+			.andes-sidebar-prefix {
+				color: white;
+			}
+	
+			.andes-sidebar-numero {
+	
+			}
+	
+			.andes-sidebar-subfix {
+				color: white;
+				text-transform: uppercase;
+			}
+			
+			.andes-contenedor-botones {
+				align-self: flex-end;
+	
+			}
+		}
+	}
+
+}
+
+
+.sidebar-contenedor-texto {
+    height: 200px;
+    justify-content: space-between;
+
+    .andes-sidebar-prefix {
+        color: white;
+    }
+
+    .andes-sidebar-numero {
+
+    }
+
+    .andes-sidebar-subfix {
+        color: white;
+        text-transform: uppercase;
+    }
+}
+
+
+.andes-contenedor-botones {
+    align-self: flex-end;
+}
+
+// Iconos
+.andes-contenedor-iconos {
+    display: flex;
+    flex-direction: row;
+}
+
+.andes-contenedor-botones {
+    display: flex;
+    width: 100%;
+    height: 100px;
+
+	&.horizontal {
+		flex-direction: row;
+	}
+
+	&.vertical {
+		flex-direction: column;
+	}
+
+    &.between {
+        justify-content: space-between;
+    }
+
+	&.start {
+		justify-content: flex-start;
+	}
+
+	&.end {
+		justify-content: flex-end;
+	}
+}
+
+// GLOBALES
+
+
 
 }

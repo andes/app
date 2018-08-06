@@ -118,8 +118,8 @@
                 </div>
 
                 <!-- SIDEBAR -->
-                <div class="col-4" *ngIf="showMenu !buscandoPaciente">
-                    <plex-box>
+                <div id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
+                    <plex-box class="">
                         <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                         <!-- Egreso -->
                         <ng-container *ngIf="showEgreso && !showIngreso">
@@ -134,7 +134,6 @@
                             <header>
                                 <h3>Detalle de cama</h3>
                             </header>
-                            <hr>
                             <div class="text-center info-cama-menu">
                                 <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
                                     {{camaSeleccionada.ultimoEstado.estado}}
@@ -152,26 +151,14 @@
                                     </p>
                                 </div>
                                 {{camaSeleccionada.sectores[0].nombre}}
-                                <hr>
                                 <p>
                                     {{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}
                                 </p>
 
-                                <!-- Ver internacion -->
-                                <plex-button type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)">
-                                </plex-button>
-                                <!-- Editar internacion -->
-                                <plex-button type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)">
-                                </plex-button>
-
-                                <!-- Ver egreso -->
-                                <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="danger" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)">
-                                </plex-button>
-
-                                <div class="d-flex justify-content-center">
-
+                                <!-- Iconos estado cama-->
+                                <div class="andes-contenedor-iconos">
                                     <div class="cama-seleccion-icon">
-                                        <!-- reparacion -->
+                                        <!-- oxigeno -->
                                         <i class="icon icon-andes-cama-oxigeno"></i>
                                         <p>Oxigeno</p>
                                     </div>
@@ -187,6 +174,19 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- Botonera inferior -->
+                            <section class="andes-contenedor-botones vertical">
+                                <div class="andes-contenedor-botones horizontal between">
+                                    <!-- Editar internacion -->
+                                    <plex-button type="danger" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                    <!-- Ver egreso -->
+                                    <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="info" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                </div>
+                                <div class="">
+                                    <!-- Ver internacion -->
+                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                </div>
+                            </section>
                         </ng-container>
 
                         <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
