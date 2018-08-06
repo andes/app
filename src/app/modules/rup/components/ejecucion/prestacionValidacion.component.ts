@@ -427,7 +427,7 @@ export class PrestacionValidacionComponent implements OnInit {
     relacionadoConPadreDeep(registros: any[], conceptId) {
         if (registros) {
             for (let i = 0; i < registros.length; i++) {
-                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
+                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0] && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
                     return i;
                 } else {
                     this.relacionadoConPadreDeep(registros[i].registros, conceptId);
