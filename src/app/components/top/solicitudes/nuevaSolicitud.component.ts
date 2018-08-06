@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -14,6 +14,8 @@ import { ReglaService } from '../../../services/top/reglas.service';
     templateUrl: './nuevaSolicitud.html',
 })
 export class NuevaSolicitudComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
+
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
@@ -193,14 +195,15 @@ export class NuevaSolicitudComponent implements OnInit {
     guardarSolicitud($event) {
 
         if ($event.formValid) {
+            if (this.tipoSolicitud === 'entrada') {
+                this.modelo.solicitud.organizacion = this.auth.organizacion;
+            } else {
+                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            }
             if (this.autocitado) {
                 this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionOrigen;
             }
-            // if (this.tipoSolicitud === 'entrada') {
-            //     this.modelo.solicitud.organizacion = this.auth.organizacion;
-            // } else {
-            //     this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-            // }
             this.modelo.solicitud.registros.push({
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,
