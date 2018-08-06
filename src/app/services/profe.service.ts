@@ -4,21 +4,19 @@ import { Observable } from 'rxjs/Rx';
 import { IBarrio } from './../interfaces/IBarrio';
 
 @Injectable()
-export class ObraSocialService {
+export class ProfeService {
     private url = '/modules/obraSocial';  // URL to web api
 
     constructor(private server: Server) { }
     /**
-     * Obtiene los datos de la obra social asociada a un paciente
+     * Obtiene los datos del plan programa Incluir Salud de un paciente
      *
      * @param {*} dni
      * @returns {Observable<any>}
-     * @memberof ObraSocialService
+     * @memberof ProfeService
      */
 
     get(opciones: any): Observable<any> {
-        return this.server.get(this.url + '/puco/', { params: opciones });
+        return this.server.get(this.url + '/profe/', { params: opciones });
     }
-
-
 }
