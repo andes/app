@@ -95,7 +95,13 @@ export class PrestacionValidacionComponent implements OnInit {
     public gruposGuiada: any[] = [];
 
     // Array con opciones para indicar si es primera vez
-    opcionPrimeraVez = [
+    public opcionDiagnosticoPrincipal = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
+
+    // Array con opciones para indicar si es primera vez
+    public opcionPrimeraVez = [
         { id: true, label: 'Si' },
         { id: false, label: 'No' }
     ];
