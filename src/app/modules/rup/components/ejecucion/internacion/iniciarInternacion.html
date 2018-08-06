@@ -135,7 +135,7 @@
         <div class="float-right" *ngIf="!soloValores">
             <plex-button type="danger " label="CANCELAR " (click)="cancelar() ">
             </plex-button>
-            <plex-button label="INICIAR INTERNACION " *ngIf="paciente " validateForm="true " type="success " (click)="guardar($event) ">
+            <plex-button label="{{btnIniciarGuardar}}" *ngIf="paciente " validateForm="true " type="success " (click)="guardar($event) ">
             </plex-button>
         </div>
         <div class="float-right" *ngIf="soloValores">

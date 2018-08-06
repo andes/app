@@ -238,11 +238,11 @@ export class CamaComponent implements OnInit {
     }
 
     /**
-     * Funcion que sirve para asignarle una 
-     * cama a un paciente. 
-     * @param paciente 
-     * @param idInternacion 
-     * @param cama 
+     * Función que sirve para asignarle una cama a un paciente
+     *
+     * @param paciente paciente que será asignado a una cama
+     * @param idInternacion internación que está siendo ejecutada
+     * @param cama cama que será asignada a un paciente
      */
     darCama(paciente = null, idInternacion = null, cama = null) {
         let dto: any;
