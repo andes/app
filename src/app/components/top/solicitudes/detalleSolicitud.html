@@ -1,0 +1,64 @@
+<plex-box>
+    <header>
+        <div class="clearfix">
+            <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
+        </div>
+    </header>
+    <div class="row">
+        <div class="col-12 text-left">
+            <!-- Auditada? -->
+            <span *ngIf="solicitudSeleccionada.auditada">
+                <b>Estado auditoría</b>
+                <br> {{ solicitudSeleccionada.auditoria.estado }}
+                <br>
+                <b>Auditor</b>
+                <br> {{ solicitudSeleccionada.auditoria.auditor.nombre }} {{ solicitudSeleccionada.auditoria.auditor.apellido
+                }}
+                <br>
+                <hr>
+            </span>
+
+            <!-- Auditada? -->
+
+            <h5>
+                <span class="blue"> {{pacienteSolicitud?.nombre}} {{pacienteSolicitud?.apellido}} </span>
+            </h5>
+            <br>
+
+            <b>Fecha Solicitud</b>
+            <br> {{ solicitudSeleccionada.horaInicio | fecha }}
+            <br>
+            <b>Fecha Turno</b>
+            <br> {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
+
+            <hr>
+            <h3> Origen </h3>
+
+            <b>Profesional</b>
+            <br> {{ solicitudSeleccionada.profesionalOrigen?.nombre }} {{ solicitudSeleccionada.profesionalOrigen?.apellido }}
+            <br>
+            <b>Tipo de Prestación</b>
+            <br> {{ solicitudSeleccionada.tipoPrestacionOrigen?.term }}
+            <br>
+            <b>Organización</b>
+            <br> {{ solicitudSeleccionada.organizacionOrigen?.nombre }}
+
+            <hr>
+            <h3> Destino </h3>
+
+            <b>Profesional</b>
+            <span *ngIf="solicitudSeleccionada.profesional">
+                <br> {{ solicitudSeleccionada.profesional?.nombre }} {{ solicitudSeleccionada.profesional?.apellido}}</span>
+            <span *ngIf="!solicitudSeleccionada.profesional"> - </span>
+            <br>
+            <b>Tipo de Prestación</b>
+            <br> {{ solicitudSeleccionada.tipoPrestacion?.term }}
+            <br>
+            <b>Organización</b>
+            <br>
+            <span *ngIf="solicitudSeleccionada.organizacion"> {{ solicitudSeleccionada.organizacion?.nombre }}</span>
+            <span *ngIf="!solicitudSeleccionada.organizacion"> - </span>
+            <br>
+        </div>
+    </div>
+</plex-box>

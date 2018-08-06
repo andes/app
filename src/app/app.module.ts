@@ -291,6 +291,7 @@ import { CamasService } from './services/camas.service';
 
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
+import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
 import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 
 // Componentes RUP
@@ -463,6 +464,7 @@ registerLocaleData(localeEs, 'es');
         LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
+        DetalleSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,

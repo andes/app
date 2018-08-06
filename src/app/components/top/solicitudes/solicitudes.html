@@ -1,6 +1,5 @@
 <form *ngIf="!showDarTurnos" class="plex-layout" #form="ngForm">
     <section>
-
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
             <div class="col" *ngIf="showCargarSolicitud">
@@ -158,95 +157,11 @@
                     </plex-tabs>
                 </plex-box>
             </div>
-
             <!-- SIDEBAR -->
-
-            <div *ngIf="showSidebar && solicitudSeleccionada?.turno" class="col-3">
-                <plex-box>
-                    <!-- <header>
-                        <div class="clearfix">
-                            <div *ngIf="turnoSeleccionado" class="page-title float-left">Datos del Turno</div>
-
-                        </div>
-                    </header> -->
-
-                    <header>
-                        <div class="row">
-                            <div class="col text-center">
-                                <h4>
-                                    <span *ngIf="activeTab == 0" class="blue"></span>
-                                </h4>
-                            </div>
-                        </div>
-                    </header>
-
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col">
-                            </div>
-                        </div>
-                        <div *ngIf="turnoSeleccionado" class="row">
-                            <div class="col-12 text-left">
-                                <!-- Auditada? -->
-                                <span *ngIf="solicitudSeleccionada.auditada">
-                                    <b>Estado auditoría</b>
-                                    <br> {{ solicitudSeleccionada.auditoria.estado }}
-                                    <br>
-                                    <b>Auditor</b>
-                                    <br> {{ solicitudSeleccionada.auditoria.auditor.nombre }} {{ solicitudSeleccionada.auditoria.auditor.apellido
-                                    }}
-                                    <br>
-                                    <hr>
-                                </span>
-
-                                <!-- Auditada? -->
-
-                                <h5>
-                                    <span class="blue"> {{pacienteSolicitud?.nombre}} {{pacienteSolicitud?.apellido}} </span>
-                                </h5>
-                                <br>
-
-                                <b>Fecha Solicitud</b>
-                                <br> {{ solicitudSeleccionada.horaInicio | fecha }}
-                                <br>
-                                <b>Fecha Turno</b>
-                                <br> {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm'
-                                }}
-
-                                <hr>
-                                <h3> Origen </h3>
-
-                                <b>Profesional</b>
-                                <br> {{ solicitudSeleccionada.profesionalOrigen?.nombre }} {{ solicitudSeleccionada.profesionalOrigen?.apellido
-                                }}
-                                <br>
-                                <b>Tipo de Prestación</b>
-                                <br> {{ solicitudSeleccionada.tipoPrestacionOrigen?.term }}
-                                <br>
-                                <b>Organización</b>
-                                <br>
-                                <i class="mdi mdi-hospital-building"></i> {{ solicitudSeleccionada.organizacionOrigen?.nombre }}
-
-                                <hr>
-                                <h3> Destino </h3>
-
-                                <b>Profesional</b>
-                                <br> {{ solicitudSeleccionada.profesional?.nombre }} {{ solicitudSeleccionada.profesional?.apellido
-                                }}
-                                <br>
-                                <b>Tipo de Prestación</b>
-                                <br> {{ solicitudSeleccionada.tipoPrestacion?.term }}
-                                <br>
-                                <b>Organización</b>
-                                <br>
-                                <i class="mdi mdi-hospital-building"></i> {{ solicitudSeleccionada.organizacion?.nombre }}
-                                <br>
-                            </div>
-                        </div>
-                    </div>
-                </plex-box>
+            <div *ngIf="showSidebar && solicitudSeleccionada?.turno && turnoSeleccionado && !showCargarSolicitud" class="col-3">
+                <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [solicitudSeleccionada]="solicitudSeleccionada" [turnoSeleccionado]="turnoSeleccionado"
+                    (afterDetalleSolicitud)="afterDetalleSolicitud($event)"></detalle-solicitud>
             </div>
-
         </div>
         <!-- Configuración de Reglas -->
         <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>

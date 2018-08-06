@@ -37,7 +37,7 @@ export class SolicitudesComponent implements OnInit {
     public auditarArrayEntrada = [];
     public visualizarSalida = [];
     public visualizarEntrada = [];
-    tipoSolicitud: any;
+    tipoSolicitud = 'entrada';
     prestacionesSalida: any;
     prestacionesEntrada: any;
     showEditarReglas = false;
@@ -79,7 +79,6 @@ export class SolicitudesComponent implements OnInit {
     cambio(activeTab) {
         this.activeTab = activeTab;
         this.showSidebar = false;
-        console.log('lalala', activeTab);
     }
 
     refreshSelection(value, tipo) {
@@ -303,6 +302,10 @@ export class SolicitudesComponent implements OnInit {
         this.showBotonCargarSolicitud = true;
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
+    }
+
+    afterDetalleSolicitud(event) {
+        this.showSidebar = false;
     }
 
 }
