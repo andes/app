@@ -623,7 +623,7 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            this.servicioDocumentos.descargar(content, this.nombreArchivo).subscribe(data => {
+            this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
