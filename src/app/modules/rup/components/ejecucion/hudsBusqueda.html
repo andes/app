@@ -60,15 +60,14 @@
                         </button>
                     </li>
 
-                    <!--li class="">
+                    <li class="">
                         <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
 
                         <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" class="btn btn-block p-0 btn-otro">
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                             ELEM. REG.
                         </button>
-                    </li-->
-
+                    </li>
                     <li class="">
                         <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'laboratorios'}">{{ getCantidadResultados('laboratorios')}}</small>
 

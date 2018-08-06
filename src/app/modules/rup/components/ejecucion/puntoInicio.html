@@ -206,7 +206,7 @@
                                         titlePosition="top"></plex-button>
 
                                     <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion)"
-                                        label="VER REGISTROS" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
+                                        label="CONTINUAR REGISTRO" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
                                     <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                                         label="VER RESÚMEN" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
@@ -297,10 +297,10 @@
                                             titlePosition="top"></plex-button>
 
                                         <plex-button *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno.tipoPrestacion)"
-                                            label="Ver Registros" type="primary btn-sm" (click)="routeTo('ejecucion', sobreturno.prestacion.id)"></plex-button>
+                                            label="CONTINUAR REGISTRO" type="primary btn-sm" (click)="routeTo('ejecucion', sobreturno.prestacion.id)"></plex-button>
 
                                         <plex-button *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno.tipoPrestacion)"
-                                            label="Ver Resúmen" type="success btn-sm" (click)="routeTo('validacion', sobreturno.prestacion.id)"></plex-button>
+                                            label="VER RESUMEN" type="success btn-sm" (click)="routeTo('validacion', sobreturno.prestacion.id)"></plex-button>
 
                                     </ng-container>
                                 </td>
