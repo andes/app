@@ -94,6 +94,11 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
+    // Array con opciones para indicar si es primera vez
+    opcionPrimeraVez = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -378,12 +383,6 @@ export class PrestacionValidacionComponent implements OnInit {
         }
 
         // }
-    }
-
-    primeraVez(elem, value) {
-        // this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
-        elem.esPrimeraVez = value;
-
     }
 
     mostrarDatosSolicitud(bool) {
