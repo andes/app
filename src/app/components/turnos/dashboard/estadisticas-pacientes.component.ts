@@ -19,6 +19,8 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     nroCarpeta: any;
     public _paciente: IPaciente;
+    turnosPaciente: any;
+    ultimosTurnos: any;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;
@@ -73,20 +75,29 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this._paciente = pacienteMPI;
-                let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
-                let cantInasistencias = 0;
-                // Se muestra la cantidad de turnos otorgados e inasistencias
-                this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                    turnos.forEach(turno => {
-                        if (turno.asistencia && turno.asistencia === 'noAsistio') {
-                            cantInasistencias++;
-                        }
-                    });
-                    this.turnosOtorgados = turnos.length;
-                    this.inasistencias = cantInasistencias;
-                });
-
                 if (this._paciente && this._paciente.id) {
+                    let datosTurno = { pacienteId: this._paciente.id };
+                    let cantInasistencias = 0;
+                    // Se muestra la cantidad de turnos otorgados e inasistencias
+                    this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
+                        turnos.forEach(turno => {
+                            if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                                cantInasistencias++;
+                            }
+                        });
+                        this.turnosOtorgados = turnos.length;
+                        this.inasistencias = cantInasistencias;
+                        this.sortTurnos(turnos);
+                        this.turnosPaciente = turnos.filter(t => {
+                            return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                        });
+
+                        this.ultimosTurnos = turnos.filter(t => {
+                            return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+                        });
+
+                    });
+
                     // Se muestra la cantidad de turnos anulados
                     let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
                     this.serviceLogPaciente.get(datosLog).subscribe(logs => {
@@ -97,6 +108,17 @@ export class EstadisticasPacientesComponent implements OnInit {
                 }
                 this.obtenerCarpetaPaciente();
             });
+    }
+
+    private sortTurnos(turnos) {
+        turnos = turnos.sort((a, b) => {
+            let inia = a.horaInicio ? new Date(a.horaInicio) : null;
+            let inib = b.horaInicio ? new Date(b.horaInicio) : null;
+            {
+                return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
+            }
+            ;
+        });
     }
 
     editarNroCarpeta() {
@@ -111,6 +133,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this._paciente.carpetaEfectores[indiceCarpeta];
                 this.nroCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                this.nuevaCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
             }
         }
 
@@ -120,13 +143,15 @@ export class EstadisticasPacientesComponent implements OnInit {
                 if (carpeta.nroCarpeta) {
                     this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
                     this.nroCarpeta = carpeta.nroCarpeta;
+                    this.nuevaCarpeta = carpeta.nroCarpeta;
                 }
             });
         }
     }
 
     nuevoNroCarpeta() {
-        if (this.nuevaCarpeta !== '') {
+        if (this.nuevaCarpeta && this.nuevaCarpeta !== '') {
+            this.nuevaCarpeta = this.nuevaCarpeta.trim();
             this.carpetaEfector = {
                 organizacion: {
                     _id: this.auth.organizacion.id,

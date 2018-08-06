@@ -4,20 +4,39 @@
             <plex-box>
                 <header>
                     <div class="row">
-                        <div class="col-4">{{solicitudes[0].fecha | date: 'dd/MM/yyyy'}}</div>
+                        <div class="col-6">LISTADO DE SOLICITUDES DE CARPETAS DE PACIENTES</div>
+                        <div class="col-6 text-right">{{solicitudes[0].fecha | date: 'dd/MM/yyyy'}}</div>
                     </div>
                 </header>
                 <table *ngFor="let solicitud of solicitudes">
                     <thead>
                         <th colspan="14">
-                            <span>* {{ solicitud.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }} - {{ solicitud.numero }}</span>
+                            <span *ngIf="!solicitud.datosSolicitudManual">
+                                * PROFESIONAL | {{ solicitud.datosPrestamo.turno.profesionales | enumerar:['apellido','nombre'] }} -> {{ solicitud.numero
+                                }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                            </span>
+                            <span *ngIf="solicitud.datosSolicitudManual">
+                                <span *ngIf="solicitud.datosSolicitudManual.profesional">
+                                    * PROFESIONAL | {{ solicitud.datosSolicitudManual.profesional.apellido }}, {{ solicitud.datosSolicitudManual.profesional.nombre
+                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                </span>
+                                <span *ngIf="!solicitud.datosSolicitudManual.profesional">
+                                    * ADMINISTRATIVO | {{ solicitud.datosSolicitudManual.responsable.apellido }}, {{ solicitud.datosSolicitudManual.responsable.nombre
+                                    }} -> {{ solicitud.numero }} | {{solicitud.paciente.apellido}} {{solicitud.paciente.nombre}}
+                                </span>
+                            </span>
                         </th>
                     </thead>
                     <tbody>
                         <ng-container *ngFor="let bloque of solicitud.bloques">
                             <tr *ngFor="let turno of bloque.turnos; let i=index">
-                                <td *ngIf="turno.estado === 'asignado' && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores[0]  &&  turno.paciente.carpetaEfectores[0].nroCarpeta !== '' && !turno.paciente.carpetaEfectores[0].nroCarpeta.includes('PDR')">
-                                    {{ turno.paciente.carpetaEfectores[0].nroCarpeta }} - {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                <td *ngIf="turno.estado === 'asignado' && turno.paciente?.carpetaEfectores?.length > 0">
+                                    <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                        <span *ngIf="carpeta.organizacion?._id == idOrganizacion && carpeta.nroCarpeta!==null && 
+                                        carpeta.nroCarpeta !== '' && !carpeta.nroCarpeta.includes('PDR')">
+                                            {{carpeta.nroCarpeta}} - {{ turno.paciente.apellido + ", " + turno.paciente.nombre }}
+                                        </span>
+                                    </span>
                                 </td>
                             </tr>
                         </ng-container>
@@ -29,12 +48,12 @@
     </div>
 
     <footer>
-        <div class="row">
-            <div class="col text-left">
-                <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
-                <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
+        <div class="row ">
+            <div class="col text-left ">
+                <plex-button type="danger " label="Cancelar " (click)="cancelar() "></plex-button>
+                <plex-button type="success " label="Imprimir " (click)="imprimir() "></plex-button>
             </div>
-            <div class="col-1 text-right">
+            <div class="col-1 text-right ">
             </div>
         </div>
     </footer>

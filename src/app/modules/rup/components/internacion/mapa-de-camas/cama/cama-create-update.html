@@ -76,9 +76,13 @@
         </div>
     </section>
     <footer>
-        <div class="text-right">
-            <plex-button label="Cancelar" type="danger" (click)="cancel()"></plex-button>
-            <plex-button label="Guardar" type="success" (click)="save($event)" validateForm="true"></plex-button>
+        <div class="row">
+            <div class="col-6">
+                <plex-button label="Cancelar" type="danger" (click)="cancel()"></plex-button>
+            </div>
+            <div class="col-6 text-right">
+                <plex-button label="Guardar" type="success" (click)="save($event)" validateForm="true"></plex-button>
+            </div>
         </div>
     </footer>
 </form>

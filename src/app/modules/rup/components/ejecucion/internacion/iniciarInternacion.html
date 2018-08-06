@@ -1,20 +1,28 @@
-<form *ngIf="!buscandoPaciente" class="plex-layout" #form="ngForm">
+<form class="plex-layout" #formIngreso="ngForm">
     <section>
         <div class="row">
-            <div class="col-12">
+            <div class="col">
                 <plex-box>
-                    <div class="row" *ngIf="!paciente">
-                        <div class="col">
-                            <fieldset>
-                                <legend>Datos del paciente</legend>
-                            </fieldset>
-                            <plex-button *ngIf="!paciente" label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true">
-                            </plex-button>
-                        </div>
-                    </div>
                     <div *ngIf="paciente">
                         <fieldset>
                             <legend>Datos de ingreso</legend>
+                            <br>
+                            <h5>Paciente:</h5>
+                            <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
+                            <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
+                        para una mejor visualizacion de la carga de datos -->
+                            <div class="row">
+                                <div class="col" *ngIf="true">
+                                    <!-- <div class="panel panel-default"> -->
+                                    <!-- <div class="clear"></div> -->
+                                    <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                                    </carpeta-paciente>
+                                    <!-- </div> -->
+                                </div>
+                                <div class="col" *ngIf="showEditarCarpetaPaciente">
+                                    <plex-text [(ngModel)]="carpetaPaciente" labelField=""></plex-text>
+                                </div>
+                            </div>
                         </fieldset>
                         <div class="row ">
                             <div class="col-4 ">
@@ -106,7 +114,3 @@
         </div>
     </footer>
 </form>
-
-<!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente " (selected)="onPacienteSelected($event) " (cancel)="onPacienteCancel()
-                                " [mostrarCancelar]="true " [modoCompleto]="true " [bloquearCreate]="false "></pacientesSearch>
