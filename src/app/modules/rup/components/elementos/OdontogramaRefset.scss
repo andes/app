@@ -72,6 +72,12 @@ svg#cuadrante-sup-der {
     fill: $hallazgo !important;
 }
 
+.diente-null-outline {
+    fill: none !important;
+    stroke: #36877f !important;
+    stroke-width: 2;
+}
+
 .diente-procedimiento-outline {
     fill: none !important;
     stroke: $procedimiento !important;
@@ -119,6 +125,12 @@ svg#cuadrante-sup-der {
 
 .seleccionada {
     fill: #36877f !important;
+}
+
+.seleccionada-outline {
+    fill: none !important;
+    stroke: #36877f !important;
+    stroke-width: 2;
 }
 
 .registrada {

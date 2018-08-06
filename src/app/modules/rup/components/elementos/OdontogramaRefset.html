@@ -210,28 +210,30 @@
                                     class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }}"
                                     title="oclusal" />
 
-                                <g class="pieza" (click)="seleccionarDiente(diente, 'pieza')" title="pieza completa" (mouseenter)="showTooltip(diente, 'pieza', false, 0)"
+
+                                <!-- PIEZA -->
+                                <g class="pieza" (click)="seleccionarPieza(diente, 'pieza')" title="pieza completa" (mouseenter)="showTooltip(diente, false, 0)"
                                     (mouseleave)="hideTooltip()">
-                                    <circle class="st1" [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="piezaCompletaValor(diente, 'pieza') ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : ''"
-                                        cx="46.285" cy="7.311" r="5.801" />
-                                    <path [ngClass]="piezaCompletaValor(diente, 'pieza') ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : ''"
-                                        d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                    <circle class="st1" [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311" r="5.801" />
+                                    <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                     />
+                                    <!-- Círculo GRANDE -->
+                                    <circle cx="26" cy="27.5" r="22.246" [ngClass]="{'seleccionada-outline': estaSeleccionada(diente, 'pieza')}" />
                                 </g>
                                 <ng-container *ngIf="getRegistrosRel(diente, 'pieza')?.length">
-                                    <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let a=index">
-                                        <g class="pieza" title="pieza completa">
+                                    <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let pc=index">
+                                        <g title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle (mouseenter)="showTooltip(diente, 'pieza', false, a)" (mouseleave)="hideTooltip()" *ngIf="relClass?.concepto?.semanticTag"
-                                                class="st1" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a"
+                                            <circle (mouseenter)="showTooltip(diente, false, pc)" (mouseleave)="hideTooltip()" *ngIf="relClass?.concepto?.semanticTag"
+                                                class="st1 {{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
                                                 [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311"
                                                 r="5.801" />
-                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : ''"
+                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="piezaCompletaValor(diente) !==- 1 ? 'diente-' + getClassRegistro(diente)?.concepto.semanticTag + '-outline' : ''"
                                                 d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                             />
                                         </g>
-                                        <!-- Círculo GRANDE -->
-                                        <circle cx="26" cy="27.5" r="22.246" [ngClass]="'diente-' + relClass.concepto.semanticTag + '-outline'" />
+
+
                                     </ng-container>
                                 </ng-container>
                             </svg>
@@ -253,7 +255,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Activar selección múltiple"></plex-bool>
+                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Activar selección múltiple" (click)="limpiarSeleccion(e)"></plex-bool>
             </div>
         </div>
         <!-- FIN ODONTOGRAMA DE ESTA CONSULTA -->
@@ -337,14 +339,14 @@
                                     </ng-container>
                                 </ng-container>
                                 <path (mouseenter)="showTooltip(diente, 'palatina', false, 0)" (mouseleave)="hideTooltip()" [ngClass]="{'registrada': caraValor(diente, 'palatina') !== -1}"
-                                    d=" M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z "
+                                    d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z "
                                     class="diente palatina {{ caraValor(diente, 'palatina') !==- 1 ? 'diente-' + getClassRegistro(diente,'palatina')?.concepto.semanticTag : '' }}"
                                     title="palatina" />
                                 <ng-container *ngIf="getRegistrosRel(diente, 'palatina')?.length">
                                     <ng-container *ngFor="let relpalatina of getRegistrosRel(diente, 'palatina'); let p=index">
                                         <path (click)="jumpToId(getClassRegistro(diente,'palatina')?.concepto.conceptId)" (mouseenter)="showTooltip(diente, 'palatina', false, p)"
-                                            (mouseleave)="hideTooltip()
-                                " [ngClass]="{ 'registrada': caraValor(diente, 'palatina') !==- 1}" d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z "
+                                            (mouseleave)="hideTooltip()" [ngClass]="{ 'registrada': caraValor(diente, 'palatina') !==- 1}"
+                                            d="M26,35.458c-2.198,0-4.188-0.891-5.627-2.331l-9.34,9.34c3.831,3.831,9.122,6.2,14.967,6.2c5.845,0,11.136-2.369,14.966-6.199l-9.34-9.34C30.187,34.567,28.198,35.458,26,35.458z "
                                             class="diente palatina {{ 'diente-' + relpalatina.concepto.semanticTag }} diente-offset-{{p}} "
                                             title="palatina" />
                                     </ng-container>
@@ -353,10 +355,14 @@
                                     d="M26,19.542c-2.198,0-4.188,0.891-5.628,2.331c-1.44,1.44-2.33,3.43-2.33,5.627c0,2.198,0.891,4.188,2.331,5.627s3.429,2.331,5.627,2.331c2.197,0,4.187-0.89,5.626-2.33c1.44-1.44,2.332-3.43,2.332-5.628c0-2.197-0.891-4.187-2.331-5.627C30.188,20.433,28.198,19.542,26,19.542z "
                                     class="diente oclusal {{ 'diente-' + getClassRegistro(diente, 'oclusal')?.concepto.semanticTag }} "
                                     title="oclusal" />
+
+                                <!-- PIEZA COMPLETA -->
                                 <g class="pieza" title="pieza completa" (click)="jumpToId(getClassRegistro(diente,'pieza')?.concepto.conceptId)" (mouseenter)="showTooltip(diente, 'pieza', false, 0)">
-                                    <circle class="st1" [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : '' "
+                                    <!-- Círculo MINI -->
+                                    <circle class="st1" [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag : '' "
                                         cx="46.285" cy="7.311" r="5.801" />
-                                    <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : '' "
+                                    <!-- Asterisco -->
+                                    <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente, 'pieza')?.concepto.semanticTag + '-outline' : '' "
                                         d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
                                     />
                                 </g>
@@ -366,7 +372,7 @@
                                             <!-- Círculo MINI -->
                                             <circle *ngIf="relClass?.concepto?.semanticTag" cx="46.285" cy="7.311" r="5.801" class="st1" [ngClass]=" 'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a "
                                             />
-                                            <path [ngClass]="piezaCompletaValor(diente, 'pieza') !==- 1 ? 'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag + '-outline' : '' "
+                                            <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag + '-outline' : '' "
                                                 d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
                                             />
                                         </g>
@@ -394,3 +400,7 @@
     </div>
 
 </ng-container>
+
+<pre>
+    {{ fixRelaciones() }}
+</pre>

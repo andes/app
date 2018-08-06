@@ -244,28 +244,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    getRegistrosRel(diente, cara) {
-        return this.prestacion.ejecucion.registros.filter(x => {
-            if (x.relacionadoCon) {
-                return x.relacionadoCon.find(y => {
-                    if (y && y.concepto) {
-                        return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                    }
-                });
-            }
-        });
-    }
-
-    getRegistrosRelAnterior(diente, cara) {
-        return this.relaciones.filter(x => {
-            if (x.relacionadoCon) {
-                return x.relacionadoCon.find(y => {
-                    return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                });
-            }
-        });
-    }
-
     // (mouseenter)
     showTooltip(diente, cara, huds = false, index = -1) {
         this.popOverText = {};
@@ -309,6 +287,28 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     tieneEvolucion(diente, cara) {
         return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
+    }
+
+    getRegistrosRel(diente, cara) {
+        return this.prestacion.ejecucion.registros.filter(x => {
+            if (x.relacionadoCon) {
+                return x.relacionadoCon.find(y => {
+                    if (y && y.concepto) {
+                        return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                    }
+                });
+            }
+        });
+    }
+
+    getRegistrosRelAnterior(diente, cara) {
+        return this.relaciones.filter(x => {
+            if (x.relacionadoCon) {
+                return x.relacionadoCon.find(y => {
+                    return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                });
+            }
+        });
     }
 
     getClassRegistro(diente, cara) {
@@ -364,106 +364,124 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     seleccionarDiente(diente, cara) {
 
-        if (cara === 'pieza') {
+        let index = this.cara(diente, cara);
+        let indexValor = this.caraValor(diente, cara);
 
-            let index = this.piezaCompleta(diente, 'pieza');
-            let indexValor = this.piezaCompletaValor(diente, 'pieza');
+        // Variable para evitar que los dientes tengan un mismo puntero en memoria
+        let wisdomTooth;
+        if (index === -1) {
+            const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: cara }));
 
-            diente.piezaCompleta = true;
-            delete diente.cara;
-
-            if (index === -1) {
-
-                if (!this.seleccionMultiple) {
-                    this.piezasSeleccionadas = [{ diente: diente, cara: cara }];
-                } else {
-                    this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente, cara: cara }];
-                }
-
-                // this.piezasSeleccionadas = [{ diente: diente, cara: cara }];
-                let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
-
-                if (this.piezaCompletaValor(diente, cara) === -1) {
-                    piezas.push({
-                        concepto: diente.concepto,
-                        cara: cara
-                    });
-                }
-
-                this.prestacion.ejecucion.registros[0].valor = {
-                    piezas: piezas,
-                    odontograma: this.odontograma
-                };
-
-                if (!this.seleccionMultiple) {
-                    this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-                } else {
-                    this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-                }
-
+            if (!this.seleccionMultiple) {
+                this.piezasSeleccionadas = [dienteSel];
             } else {
+                this.piezasSeleccionadas = [...this.piezasSeleccionadas, dienteSel];
+            }
 
-                if (this.piezaCompletaValor(diente, cara) !== -1) {
-                    this.registro.valor.piezas.splice(indexValor, 1);
-                }
-                this.piezasSeleccionadas.splice(index, 1);
-                this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-                if (this.piezasSeleccionadas.length === 0) {
-                    this.emitEjecutarAccion(false);
-                }
+            dienteSel.diente.cara = cara;
+            dienteSel.piezaCompleta = false;
 
+            let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
+
+            if (this.caraValor(diente, cara) === -1) {
+                wisdomTooth = JSON.parse(JSON.stringify({
+                    concepto: diente.concepto,
+                    cara: cara
+                }));
+                piezas = [...piezas, wisdomTooth];
+            }
+
+            this.prestacion.ejecucion.registros[0].valor = {
+                piezas: piezas,
+                odontograma: this.odontograma
+            };
+
+            if (!this.seleccionMultiple) {
+                this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: cara }], ...this.params, ...{ multiple: this.seleccionMultiple } });
+            } else {
+                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
             }
 
         } else {
 
-            let index = this.cara(diente, cara);
-            let indexValor = this.caraValor(diente, cara);
-
-            if (index === -1) {
-
-                if (!this.seleccionMultiple) {
-                    this.piezasSeleccionadas = [{ diente: diente, cara: cara }];
-                } else {
-                    this.piezasSeleccionadas = [...this.piezasSeleccionadas, { diente: diente, cara: cara }];
-                }
-
-                diente.cara = cara;
-                diente.piezaCompleta = false;
-
-                let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
-
-                if (this.caraValor(diente, cara) === -1) {
-                    piezas.push({
-                        concepto: diente.concepto,
-                        cara: cara
-                    });
-                }
-
-                this.prestacion.ejecucion.registros[0].valor = {
-                    piezas: piezas,
-                    odontograma: this.odontograma
-                };
-
-                if (!this.seleccionMultiple) {
-                    this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: cara }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-                } else {
-                    this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-                }
-
-            } else {
-
-                if (this.caraValor(diente, cara) !== -1) {
-                    this.registro.valor.piezas.splice(indexValor, 1);
-                }
-                this.piezasSeleccionadas.splice(index, 1);
-                this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-                // if (this.piezasSeleccionadas.length === 0) {
+            if (this.caraValor(diente, cara) !== -1) {
+                this.registro.valor.piezas.splice(indexValor, 1);
+            }
+            this.piezasSeleccionadas.splice(index, 1);
+            this.piezasSeleccionadas = [...this.piezasSeleccionadas];
+            if (this.piezasSeleccionadas.length === 0) {
                 this.emitEjecutarAccion(false);
-                // }
+            } else {
+                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            }
+        }
+
+    }
+
+    relacionesOdontograma() {
+        if (this.prestacion.ejecucion.registros.length > 1) {
+            return this.prestacion.ejecucion.registros[1].relacionadoCon.map(x => x = { diente: x.concepto.conceptId, cara: x.cara });
+        }
+    }
+
+    fixRelaciones() {
+        this.registro.valor.piezas = this.registro.valor.piezas.filter(x => this.relacionesOdontograma().find(y => y === x.concepto.conceptId));
+    }
+
+    seleccionarPieza(diente) {
+        let index = this.piezaCompleta(diente, 'pieza');
+        let indexValor = this.piezaCompletaValor(diente, 'pieza');
+
+        // Variable para evitar que los dientes tengan un mismo puntero en memoria
+        let wisdomTooth;
+
+
+        if (index === -1) {
+            const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: 'pieza' }));
+            dienteSel.piezaCompleta = true;
+            dienteSel.diente.cara = 'pieza';
+
+            if (!this.seleccionMultiple) {
+                this.piezasSeleccionadas = [dienteSel];
+            } else {
+                this.piezasSeleccionadas = [...this.piezasSeleccionadas, dienteSel];
+            }
+
+            let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
+
+            if (this.piezaCompletaValor(diente, 'pieza') === -1) {
+                wisdomTooth = JSON.parse(JSON.stringify({
+                    concepto: diente.concepto,
+                    cara: 'pieza'
+                }));
+                piezas = [...piezas, wisdomTooth];
+            }
+
+            this.prestacion.ejecucion.registros[0].valor = {
+                piezas: piezas,
+                odontograma: this.odontograma
+            };
+
+            if (!this.seleccionMultiple) {
+                this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params, ...{ multiple: this.seleccionMultiple } });
+            } else {
+                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            }
+
+        } else {
+
+            if (this.piezaCompletaValor(diente, 'pieza') !== -1) {
+                this.registro.valor.piezas.splice(indexValor, 1);
+            }
+            this.piezasSeleccionadas.splice(index, 1);
+            this.piezasSeleccionadas = [...this.piezasSeleccionadas];
+            if (this.piezasSeleccionadas.length === 0) {
+                this.emitEjecutarAccion(false);
+            } else {
+                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
             }
 
         }
-
     }
 
     piezaAnulada(conceptId) {
@@ -475,10 +493,12 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         }
     }
 
-    habilitarSeleccionMultiple(e) {
-        this.seleccionMultiple = !this.seleccionMultiple;
-        this.piezasSeleccionadas = [];
-        this.comprobarSelecciones();
+    limpiarSeleccion(e) {
+        setTimeout(() => {
+            console.log(this.piezasSeleccionadas);
+            this.piezasSeleccionadas = [];
+            this.registro.valor.piezas = [];
+        }, 100);
     }
 
     estaSeleccionada(diente, cara) {
@@ -493,6 +513,10 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             }
         }
         return false;
+    }
+
+    limpiarVinculaciones(e) {
+        this.registro.valor.piezas.filter(x => x.concepto.conceptId === e.conceptId);
     }
 
 }
