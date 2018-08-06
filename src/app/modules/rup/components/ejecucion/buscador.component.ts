@@ -195,7 +195,9 @@ export class BuscadorComponent implements OnInit, OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         // if (this.ultimoTipoBusqueda !== this.busquedaActual) {
         this.results.buscadorBasico = [];
-        this.resultsAux.buscadorBasico = [];
+        if (this.resultsAux && this.resultsAux.buscadorBasico) {
+            this.resultsAux.buscadorBasico = [];
+        }
         this.results[this.busquedaActual] = [];
         // }
         if (changes.frecuentesTipoPrestacion && changes.frecuentesTipoPrestacion.currentValue) {
