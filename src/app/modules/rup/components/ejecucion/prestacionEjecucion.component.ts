@@ -260,7 +260,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        let registros = this.prestacion.ejecucion.registros;
+
+        // let registros = this.prestacion.ejecucion.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
@@ -407,6 +408,16 @@ export class PrestacionEjecucionComponent implements OnInit {
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
+
+        if (this.prestacion && this.prestacion && this.prestacion.ejecucion.registros
+            && this.prestacion.ejecucion.registros.length) {
+            // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
+            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+            if (registroRequerido) {
+                nuevoRegistro.relacionadoCon.push(registroRequerido);
+            }
+        }
+
 
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
