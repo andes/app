@@ -11,7 +11,5 @@ export class DetalleSolicitudComponent {
     @Input() turnoSeleccionado: any;
     @Input() tipoSolicitud: string;
 
-    @Output() afterDetalleSolicitud: EventEmitter<any> = new EventEmitter<any>();
-
     constructor(plex: Plex) { }
 }
