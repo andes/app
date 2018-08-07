@@ -194,7 +194,7 @@
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
                                                 title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal">
                                                 Procedimiento/Diagnóstico principal? &nbsp;
-                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion(elemento)"
+                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
                                                     [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal"></plex-radio>
 
                                             </label>&nbsp;&nbsp;&nbsp;
