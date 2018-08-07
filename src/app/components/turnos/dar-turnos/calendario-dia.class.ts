@@ -9,6 +9,7 @@ export class CalendarioDia {
     public cantidadAgendas: number;
     public hoy: Date;
     public turnosDisponibles: number;
+    public dinamica = false;
 
     public programadosDisponibles = 0;
     public gestionDisponibles = 0;
@@ -21,7 +22,7 @@ export class CalendarioDia {
         if (!agenda) {
             this.estado = 'vacio';
         } else {
-            let disponible: boolean = this.agenda.turnosDisponibles > 0;
+            let disponible: boolean = (this.agenda.turnosDisponibles > 0);
             this.estadoAgenda = this.agenda.estado;
             if (disponible) {
                 let countBloques = [];
@@ -94,7 +95,13 @@ export class CalendarioDia {
                 }
 
             } else {
-                this.estado = 'ocupado';
+                if (this.agenda.dinamica) {
+                    this.estado = 'disponible';
+                    this.dinamica = true;
+
+                } else {
+                    this.estado = 'ocupado';
+                }
             }
         }
 

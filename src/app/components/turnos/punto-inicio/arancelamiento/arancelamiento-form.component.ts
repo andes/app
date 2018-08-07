@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding, DebugElement } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { EdadPipe } from './../../../pipes/edad.pipe';
+import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-import { ObraSocialService } from './../../../services/obraSocial.service';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 
 @Component({
     selector: 'arancelamiento-form',
@@ -35,11 +35,22 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioOS.get(this.turnoSeleccionado.paciente.documento).subscribe(resultado => {
-            this.obraSocial = resultado.nombre;
-            this.codigoOs = resultado.codigo;
+        this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
+            if (resultado) {
+                this.obraSocial = resultado.financiador;
+                this.codigoOs = resultado.codigoFinanciador;
+            } else {
+                this.obraSocial = '';
+                this.codigoOs = '';
+            }
+
             this.showForm = true;
+            setTimeout(() => {
+                this.imprimir();
+                this.volverAPuntoInicio.emit();
+            }, 100);
         });
+
     }
 
     getNroCarpeta() {

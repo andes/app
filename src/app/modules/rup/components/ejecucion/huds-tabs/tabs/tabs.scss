@@ -75,6 +75,9 @@
             &.elemento.de.registro {
                 background-color: $adjunto;
             }
+            &.laboratorio {
+                background-color: $laboratorio;
+            }
         }
         &.fixed {
             padding-left: 200px;

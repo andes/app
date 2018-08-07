@@ -8,6 +8,7 @@ import { environment } from './../../../../../environments/environment';
 import * as moment from 'moment';
 import { SmsService } from './../../../../services/turnos/sms.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
+import { Auth } from '@andes/auth';
 @Component({
     selector: 'suspender-agenda',
     templateUrl: 'suspender-agenda.html'
@@ -22,7 +23,7 @@ export class SuspenderAgendaComponent implements OnInit {
     @Output() returnSuspenderAgenda = new EventEmitter<any>();
 
 
-    constructor(public plex: Plex, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
+    constructor(public plex: Plex, public auth: Auth, public serviceAgenda: AgendaService, public smsService: SmsService, public turnosService: TurnoService) { }
 
     public mostrarHeaderCompleto = false; // Pongo false por defecto, estipo que arranca así. [Agregado para AOT]
     public motivoSuspensionSelect = { select: null };
@@ -102,7 +103,7 @@ export class SuspenderAgendaComponent implements OnInit {
                 if (this.seleccionadosSMS[x].avisoSuspension !== 'enviado') {
                     let dia = moment(this.seleccionadosSMS[x].horaInicio).format('DD/MM/YYYY');
                     let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
-                    let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue suspendido.';
+                    let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                     this.seleccionadosSMS[x].smsEnviado = 'pendiente';
                     this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
                 }
