@@ -202,11 +202,11 @@ export class PrestacionValidacionComponent implements OnInit {
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
         if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnostico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
