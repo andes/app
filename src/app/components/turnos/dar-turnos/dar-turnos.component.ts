@@ -6,14 +6,12 @@ import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Observable } from 'rxjs/Rx';
-import { EdadPipe } from './../../../pipes/edad.pipe';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
 import { ObraSocialService } from './../../../services/obraSocial.service';
 
 // Interfaces
-import { ITipoPrestacion } from './../../../interfaces/ITipoPrestacion';
 import { IBloque } from './../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../interfaces/turnos/ITurno';
 import { IAgenda } from './../../../interfaces/turnos/IAgenda';
@@ -831,7 +829,7 @@ export class DarTurnosComponent implements OnInit {
                     this.volverAlGestor.emit(this.agenda); // devuelve la agenda al gestor, para que éste la refresque
                     this.actualizarPaciente();
                     if (this.paciente && this._pacienteSeleccionado) {
-                        this.cancelarDarTurno.emit(true);
+                        this.afterDarTurno.emit(true);
                         return false;
                     } else {
                         this.buscarPaciente();
@@ -866,12 +864,13 @@ export class DarTurnosComponent implements OnInit {
                         if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
                             this.indiceTurno = nuevoIndice;
                             this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
-                            this.cancelarDarTurno.emit(true);
+                            this.afterDarTurno.emit(true);
                             this.darTurno();
                         } else {
                             this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
                             this.actualizar('');
                         }
+                    }
                 }
             });
         }
@@ -917,7 +916,7 @@ export class DarTurnosComponent implements OnInit {
         }
         this.actualizarPaciente();
         if (this.paciente && this._pacienteSeleccionado) {
-            this.cancelarDarTurno.emit(true);
+            this.afterDarTurno.emit(true);
             return false;
         } else {
             this.buscarPaciente();
