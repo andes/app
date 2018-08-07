@@ -13,7 +13,7 @@ import { ReglaService } from '../../../services/top/reglas.service';
     selector: 'nueva-solicitud',
     templateUrl: './nuevaSolicitud.html',
 })
-export class NuevaSolicitudComponent implements OnInit {
+export class NuevaSolicitudComponent {
     @HostBinding('class.plex-layout') layout = true;
 
     showSeleccionarPaciente = true;
@@ -85,8 +85,6 @@ export class NuevaSolicitudComponent implements OnInit {
 
     ) { }
 
-    ngOnInit() {
-    }
 
     seleccionarPaciente(paciente: any): void {
         this.paciente = paciente;
@@ -128,14 +126,6 @@ export class NuevaSolicitudComponent implements OnInit {
                 }
                 this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
             }
-            // this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
-            //     .subscribe(
-            //         res => {
-            //             this.arrayReglasOrigen = res;
-            //             let aux = (res as any).origen.prestaciones;
-            //             this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
-            //         }
-            //     );
         }
     }
 
@@ -169,27 +159,8 @@ export class NuevaSolicitudComponent implements OnInit {
         }
     }
 
-    loadProfesionales(event) {
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-    }
-
-    loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            let dataF;
-            if (this.permisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            }
-            event.callback(dataF);
-        });
+    changeAutocitado() {
+        console.log(this.autocitado);
     }
 
     guardarSolicitud($event) {
@@ -238,5 +209,29 @@ export class NuevaSolicitudComponent implements OnInit {
 
     cancelar() {
         this.newSolicitudEmitter.emit();
+    }
+
+
+    loadProfesionales(event) {
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    loadTipoPrestaciones(event) {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
+            event.callback(dataF);
+        });
     }
 }

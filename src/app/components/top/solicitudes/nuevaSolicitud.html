@@ -20,13 +20,7 @@
             </div>
             <!-- Autocitado? -->
             <div class="col-12 d-flex">
-                <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
-            </div>
-            <!-- Tipo Prestación Destino -->
-            <div class="col-12" *ngIf="tipoSolicitud == 'entrada'">
-                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
-                    label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionOrigen()">
-                </plex-select>
+                <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (change)="changeAutocitado()"></plex-bool>
             </div>
             <!-- Organización Origen -->
             <div class="col-12" *ngIf="tipoSolicitud == 'entrada'">
@@ -41,9 +35,6 @@
                     (change)="onSelect()" (getData)="loadTipoPrestaciones($event)" label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen"
                     [required]="true">
                 </plex-select>
-                <!-- <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
-                                                    placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionDestino()">
-                                                </plex-select> -->
                 <plex-select *ngIf="tipoSolicitud == 'entrada'" [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen" name="tipoPrestacion"
                     (change)="onSelect()" label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen" [required]="true">
                 </plex-select>
@@ -57,6 +48,14 @@
                 </plex-select>
             </div>
 
+            <!-- Tipo Prestación Destino -->
+            <div class="col-12" *ngIf="tipoSolicitud == 'entrada' && !autocitado">
+                <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                    label="Tipo de Prestación Solicitada" placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionOrigen()">
+                </plex-select>
+            </div>
+
+
             <!-- Organización Destino -->
             <div class="col-6" *ngIf="tipoSolicitud == 'salida' && !autocitado">
                 <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" (getData)="loadOrganizacion($event)"
@@ -65,7 +64,7 @@
             </div>
 
             <!-- Tipo Prestación Destino -->
-            <div class="col-12" *ngIf="tipoSolicitud == 'salida'">
+            <div class="col-12" *ngIf="tipoSolicitud == 'salida' && !autocitado">
                 <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" [data]="dataReglasDestino" label="Tipo de Prestación Solicitada"
                     placeholder="Tipos de Prestación solicitada" [required]="true" (change)="onSelectPrestacionDestino()">
                 </plex-select>
