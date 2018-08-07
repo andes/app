@@ -1,10 +1,10 @@
 <form *ngIf="!showDarTurnos" class="plex-layout" #form="ngForm">
     <section>
+        <span *ngIf=" !showEditarReglas && showCargarSolicitud">
+            <nueva-solicitud [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
+        </span>
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
-            <div class="col" *ngIf="showCargarSolicitud">
-                <nueva-solicitud [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
-            </div>
             <div class="col" *ngIf="!showCargarSolicitud">
                 <plex-box>
                     <header>
@@ -159,8 +159,7 @@
             </div>
             <!-- SIDEBAR -->
             <div *ngIf="showSidebar && solicitudSeleccionada?.turno && turnoSeleccionado && !showCargarSolicitud" class="col-3">
-                <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [solicitudSeleccionada]="solicitudSeleccionada" [turnoSeleccionado]="turnoSeleccionado"
-                    (afterDetalleSolicitud)="afterDetalleSolicitud($event)"></detalle-solicitud>
+                <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [solicitudSeleccionada]="solicitudSeleccionada" [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
         </div>
         <!-- Configuración de Reglas -->

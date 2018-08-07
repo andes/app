@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
@@ -13,7 +13,9 @@ import { ReglaService } from '../../../services/top/reglas.service';
     selector: 'nueva-solicitud',
     templateUrl: './nuevaSolicitud.html',
 })
-export class NuevaSolicitudComponent implements OnInit {
+export class NuevaSolicitudComponent {
+    @HostBinding('class.plex-layout') layout = true;
+
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
@@ -84,8 +86,6 @@ export class NuevaSolicitudComponent implements OnInit {
 
     ) { }
 
-    ngOnInit() {
-    }
 
     seleccionarPaciente(paciente: any): void {
         this.paciente = paciente;
@@ -130,14 +130,6 @@ export class NuevaSolicitudComponent implements OnInit {
                 }
                 this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
             }
-            // this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
-            //     .subscribe(
-            //         res => {
-            //             this.arrayReglasOrigen = res;
-            //             let aux = (res as any).origen.prestaciones;
-            //             this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
-            //         }
-            //     );
         }
     }
 
@@ -201,40 +193,22 @@ export class NuevaSolicitudComponent implements OnInit {
         }
     }
 
-    loadProfesionales(event) {
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-    }
-
-    loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            let dataF;
-            if (this.permisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            }
-            event.callback(dataF);
-        });
+    changeAutocitado() {
+        console.log(this.autocitado);
     }
 
     guardarSolicitud($event) {
 
         if ($event.formValid) {
+            if (this.tipoSolicitud === 'entrada') {
+                this.modelo.solicitud.organizacion = this.auth.organizacion;
+            } else {
+                this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
+            }
             if (this.autocitado) {
                 this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionOrigen;
             }
-            // if (this.tipoSolicitud === 'entrada') {
-            //     this.modelo.solicitud.organizacion = this.auth.organizacion;
-            // } else {
-            //     this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-            // }
             this.modelo.solicitud.registros.push({
                 nombre: this.modelo.solicitud.tipoPrestacion.term,
                 concepto: this.modelo.solicitud.tipoPrestacion,
@@ -269,5 +243,29 @@ export class NuevaSolicitudComponent implements OnInit {
 
     cancelar() {
         this.newSolicitudEmitter.emit();
+    }
+
+
+    loadProfesionales(event) {
+        if (event.query) {
+            let query = {
+                nombreCompleto: event.query
+            };
+            this.servicioProfesional.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    loadTipoPrestaciones(event) {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
+            let dataF;
+            if (this.permisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            }
+            event.callback(dataF);
+        });
     }
 }
