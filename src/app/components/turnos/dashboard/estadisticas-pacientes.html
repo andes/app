@@ -1,135 +1,143 @@
-<!--Header de estadisticas-->
-<fieldset>
-    <legend>INFORMACIÓN SOBRE EL PACIENTE</legend>
-    <!--Datos básicos del Paciente-->
-    <header>
-        <div class="row">
-            <div class="col">
-                <h5>
-                    <span style="color: #00A8E0">{{_paciente | paciente}}</span>
-                </h5>
+<plex-tabs>
+    <plex-tab icon="information" label="Datos">
+        <!--Header de estadisticas-->
+        <fieldset>
+            <!--Datos básicos del Paciente-->
+            <br>
+            <header>
+                <div class="row">
+                    <div class="col">
+                        <h5>
+                            <span style="color: #00A8E0">{{_paciente | paciente}}</span>
+                        </h5>
+                    </div>
+                </div>
+                <hr>
+            </header>
+            <div class="row">
+                <div class="col-6">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span style="color: #00A8E0">Documento</span>
+                </div>
+                <div class="col-6">
+                    <i class="mdi mdi-calendar-today"></i>
+                    <span style="color: #00A8E0">Fecha de Nacimiento</span>
+                </div>
             </div>
-        </div>
-        <hr>
-    </header>
-    <div class="row">
-        <div class="col-6">
-            <i class="mdi mdi-account-card-details"></i>
-            <span style="color: #00A8E0">Documento</span>
-        </div>
-        <div class="col-6">
-            <i class="mdi mdi-calendar-today"></i>
-            <span style="color: #00A8E0">Fecha de Nacimiento</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6" *ngIf="_paciente?.documento !== ''">
-            {{_paciente.documento | number}}
-        </div>
-        <div class="col-6" *ngIf="_paciente?.fechaNacimiento !== null">
-            {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
-        </div>
-    </div>
-    <div class="row">
+            <div class="row">
+                <div class="col-6" *ngIf="_paciente?.documento !== ''">
+                    {{_paciente.documento | number}}
+                </div>
+                <div class="col-6" *ngIf="_paciente?.fechaNacimiento !== null">
+                    {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
+                </div>
+            </div>
+            <div class="row">
 
-        <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
 
-            <i class="mdi mdi-map-marker"></i>
-            <span style="color: #00A8E0">Dirección</span>
-        </div>
-        <div class="col-6" *ngIf="_paciente && _paciente.contacto && _paciente.contacto.length > 0">
-            <i class="mdi mdi-cellphone-android"></i>
-            <span style="color: #00A8E0">Teléfono</span>
-        </div>
-    </div>
-    <div class="row">
+                    <i class="mdi mdi-map-marker"></i>
+                    <span style="color: #00A8E0">Dirección</span>
+                </div>
+                <div class="col-6" *ngIf="_paciente && _paciente.contacto && _paciente.contacto.length > 0">
+                    <i class="mdi mdi-cellphone-android"></i>
+                    <span style="color: #00A8E0">Teléfono</span>
+                </div>
+            </div>
+            <div class="row">
 
-        <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
-            {{_paciente.direccion[0].valor}}
-        </div>
-        <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
-            {{_paciente.contacto[0].valor}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6" *ngIf="_paciente">
-            <i class="mdi mdi-folder-account"></i>
-            <span style="color: #00A8E0">Nro. de Carpeta</span>
+                <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+                    {{_paciente.direccion[0].valor}}
+                </div>
+                <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
+                    {{_paciente.contacto[0].valor}}
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col">
+                    <h5>Paciente |
+                        <span style="color: #00A8E0">Estadísticas</span>
+                    </h5>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <span>Filtrar por Fechas</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
+                    </plex-datetime>
+                </div>
+                <div class="col-6">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
+                    </plex-datetime>
+                </div>
+            </div>
+            <br>
+            <div class="row">
+                <div class="col-2 vertical-center text-center">
+                    <i class="mdi mdi-account-check mdi-36px"></i>
+                </div>
+                <div class="col-7 vertical-center">
+                    <h5>Cantidad de turnos</h5>
+                </div>
+                <div class="col-2 badge badge-success">
+                    <span class="h3">{{turnosOtorgados}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 vertical-center text-center">
+                    <i class="mdi mdi-account-minus mdi-36px"></i>
+                </div>
+                <div class="col-7 vertical-center">
+                    <h5>Inasistencias</h5>
+                </div>
+                <div class="col-2 badge badge-danger">
+                    <span class="h3">{{inasistencias}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-2 vertical-center text-center">
+                    <i class="mdi mdi-calendar-remove mdi-36px"></i>
+                </div>
+                <div class="col-7 vertical-center">
+                    <h5>Anulaciones</h5>
+                </div>
+                <div class="col-2 badge badge-warning">
+                    <span class="h3">{{anulaciones}}</span>
+                </div>
+            </div>
+        </fieldset>
 
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-3" *ngIf="nroCarpeta  && !editando">
-            <div> {{nroCarpeta}} </div>
-        </div>
-        <div class="col-3" *ngIf="nroCarpeta && !editando">
-            <plex-button (click)="editarNroCarpeta()" type="success" label="Editar"></plex-button>
-        </div>
-
-        <div class="col-3" *ngIf="!nroCarpeta || editando">
-            <plex-text name="nroCarpeta" [(ngModel)]="nuevaCarpeta"></plex-text>
-
-        </div>
-        <div class="col-3" *ngIf="!nroCarpeta || editando">
-            <plex-button (click)="nuevoNroCarpeta()" type="success" label="Guardar"></plex-button>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col">
-            <h5>Paciente |
-                <span style="color: #00A8E0">Estadísticas</span>
-            </h5>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col">
-            <span>Filtrar por Fechas</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-6">
-            <plex-datetime type="date" [(ngModel)]="fechaDesde" [required]="true" name="fechaDesde" label="Desde">
-            </plex-datetime>
-        </div>
-        <div class="col-6">
-            <plex-datetime type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Hasta">
-            </plex-datetime>
-        </div>
-    </div>
-    <br>
-    <div class="row">
-        <div class="col-2 vertical-center text-center">
-            <i class="mdi mdi-account-check mdi-36px"></i>
-        </div>
-        <div class="col-7 vertical-center">
-            <h5>Cantidad de turnos</h5>
-        </div>
-        <div class="col-2 badge badge-success">
-            <span class="h3">{{turnosOtorgados}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-2 vertical-center text-center">
-            <i class="mdi mdi-account-minus mdi-36px"></i>
-        </div>
-        <div class="col-7 vertical-center">
-            <h5>Inasistencias</h5>
-        </div>
-        <div class="col-2 badge badge-danger">
-            <span class="h3">{{inasistencias}}</span>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-2 vertical-center text-center">
-            <i class="mdi mdi-calendar-remove mdi-36px"></i>
-        </div>
-        <div class="col-7 vertical-center">
-            <h5>Anulaciones</h5>
-        </div>
-        <div class="col-2 badge badge-warning">
-            <span class="h3">{{anulaciones}}</span>
-        </div>
-    </div>
-</fieldset>
+    </plex-tab>
+    <plex-tab icon="clock" label="Turnos">
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+    </plex-tab>
+    <plex-tab icon="history" label="Historial">
+        <fieldset>
+            <ul class="list-group">
+                <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
+                    <div class="list-group-item-text">
+                        <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} |
+                            <span>{{turno.estado}}</span>
+                        </div>
+                        <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
+                        <div *ngFor="let profesional of turno.profesionales">
+                            {{profesional | profesional}}
+                        </div>
+                        <div>
+                            <em class="small">{{turno.organizacion.nombre}}</em>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </fieldset>
+    </plex-tab>
+    <plex-tab icon="folder-account" label="Carpetas">
+        <carpeta-paciente [pacienteSeleccionado]='pacienteSeleccionado'> </carpeta-paciente>
+    </plex-tab>
+</plex-tabs>

@@ -86,7 +86,7 @@ export class DarTurnosComponent implements OnInit {
 
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-    @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
+    @Output() afterDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
     // usamos este output para volver al componente de validacion de rup
     @Output() volverValidacion = new EventEmitter<any>();
@@ -872,10 +872,6 @@ export class DarTurnosComponent implements OnInit {
                             this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
                             this.actualizar('');
                         }
-                    } else {
-                        this.plex.confirm('No se emitió el turno, por favor  verifique los turnos disponibles', 'Turno no asignado');
-                        this.actualizar('');
-                    }
                 }
             });
         }
@@ -1086,7 +1082,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._pacienteSeleccionado) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
-            this.cancelarDarTurno.emit(true);
+            this.afterDarTurno.emit(true);
         } else {
             this.buscarPaciente();
         }
@@ -1117,7 +1113,7 @@ export class DarTurnosComponent implements OnInit {
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.cancelarDarTurno.emit(true);
+        this.afterDarTurno.emit(true);
         this.buscarPaciente();
     }
 
