@@ -141,7 +141,7 @@
                             </div>
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                     <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                 </small>
@@ -224,18 +224,17 @@
                             </div>
                         </div>
                     </header>
+
                     <ng-container *ngFor="let rama of registrosOrdenados; let iRama = index">
                         <ul class="list-group">
                             <li [ngClass]="{
-                                'ml-0': !rama.esDiagnosticoPrincipal,
-                                'ml-2': rama.relacionadoCon[0] && relacionadoConPadre(rama.relacionadoCon[0].id)
-                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0">
+                                'ml-0': !rama.esDiagnosticoPrincipal
+                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{relacionadoConPadreDeep(this.prestacion.ejecucion.registros, rama.relacionadoCon[0]?.concepto.conceptId)}}">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
-                                    <!-- [ngClass]="{'font-weight-bold': rama.esDiagnosticoPrincipal}" -->
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
-                                            Motivo de consulta principal
+                                            Procedimiento / diagnóstico principal
                                         </small>
                                     </small>
                                 </div>
