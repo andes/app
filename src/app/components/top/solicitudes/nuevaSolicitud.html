@@ -104,10 +104,11 @@
                         <div class="row" *ngIf="tipoSolicitud == 'salida'">
                             <!-- Organización Destino -->
                             <div class="col-6">
-                                <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" (getData)="loadOrganizacion($event)"
-                                    label="Organización destino" placeholder="Seleccione la organización" labelField="nombre"
-                                    [required]="true">
-                                </plex-select>
+                                <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" 
+                                label="Organización destino" placeholder="Seleccione la organización" labelField="nombre"
+                                [data] = "dataOrganizacionesDestino"
+                                [required]="true" (change)="onSelectOrganizacionDestino()">
+                            </plex-select>
                             </div>
 
                         </div>
