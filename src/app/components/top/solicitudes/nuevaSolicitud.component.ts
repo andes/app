@@ -155,7 +155,6 @@ export class NuevaSolicitudComponent implements OnInit {
             this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
                 .subscribe(
                     res => {
-                        debugger
                         this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
                         // this.arrayOrganizacionesOrigen = res;
                         // this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
