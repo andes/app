@@ -1,7 +1,6 @@
-<form *ngIf="!showDarTurnos" class="plex-layout" #form="ngForm">
+<form *ngIf="!showDarTurnos && !showCargarSolicitud" class="plex-layout" #form="ngForm">
     <section>
-        <span *ngIf=" !showEditarReglas && showCargarSolicitud">
-            <nueva-solicitud [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)> </nueva-solicitud>
+        <span *ngIf="showCargarSolicitud">
         </span>
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
@@ -168,5 +167,8 @@
 </form>
 
 <!-- Calendario para dar turnos -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
     [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
+
+<nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)>
+</nueva-solicitud>
