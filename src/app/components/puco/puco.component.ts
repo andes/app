@@ -61,7 +61,8 @@ export class PucoComponent implements OnInit, OnDestroy {
 
                 let arrAux = padrones[0].concat(padrones[1]);
                 arrAux.sort((a, b) => a.version < b.version);
-                let periodoMasActual = new Date(arrAux[0].version); // el padron mas actual entre puco y profe
+                //  let periodoMasActual = new Date(arrAux[0].version); // el padron mas actual entre puco y profe
+                let periodoMasActual = new Date();  // fecha actual
 
                 for (let i = 0; i < this.cantidadPeriodos; i++) {
                     let periodoAux = moment(periodoMasActual).subtract(i, 'month').format('YYYY/MM/DD');
@@ -116,8 +117,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     }
 
     /* Verifica que el periodo seleccionado para la búsqueda corresponda a un padrón ya actualizado.
-    * De ser asi retorna dicho periodo, de lo contrario retorna el periodo correspondiente a un padrón
-    * actualizado lo mas cercano posible.
+    * De ser asi retorna dicho periodo, de lo contrario retorna el periodo más actual.
     */
     verificarPeriodo(periodo1, periodo2) {
         periodo1 = new Date(periodo1);
