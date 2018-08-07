@@ -11,38 +11,49 @@
                     placeholder="Seleccione una organizacion.."></plex-select>
             </div>
         </div>
-        <table *ngIf="mapeos && mapeos.length" class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Tipo de prestación</th>
-                    <th>ID Snomed</th>
-                    <th>Especialidad Sips</th>
-                    <th>Código</th>
-                    <th>ID Sips</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="hover" *ngFor="let unMapeo of mapeos">
-                    <td>
-                        {{unMapeo.snomed.fsn}}</td>
-                    <td>
-                        {{unMapeo.snomed.conceptId}}</td>
-                    <td>
-                        <span *ngIf="unMapeo.organizaciones.length">{{unMapeo.organizaciones[0].nombreEspecialidad}}</span>
-                    </td>
-                    <td>
-                        <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo !== 0">{{unMapeo.organizaciones[0].codigo}}</span>
-                    </td>
-                    <td>
-                        <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo === 0">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
-                    </td>
-                    <td>
-                        <plex-button type="danger" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row">
+            <div class="col">
+                <table *ngIf="mapeos && mapeos.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Tipo de prestación</th>
+                            <th>ID Snomed</th>
+                            <th>Especialidad Sips</th>
+                            <th>Código</th>
+                            <th>ID Sips</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let unMapeo of mapeos">
+                            <td>
+                                {{unMapeo.organizaciones[0] | json}} {{unMapeo.snomed.fsn}}
+                            </td>
+                            <td>
+                                {{unMapeo.snomed.conceptId}}</td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length">{{unMapeo.organizaciones[0].nombreEspecialidad}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo !== 0">{{unMapeo.organizaciones[0].codigo}}</span>
+                            </td>
+                            <td>
+                                <span *ngIf="unMapeo.organizaciones.length && unMapeo.organizaciones[0].codigo === 0">{{unMapeo.organizaciones[0].idEspecialidad}}</span>
+                            </td>
+                            <td>
+                                <plex-button type="danger" icon="delete" (click)="eliminarMapeo(unMapeo)" title="Borrar"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row" *ngIf="organizacionSelect && (!mapeos || mapeos.length <= 0)">
+            <div class="col">
+                <label>No se encontraron registros</label>
+            </div>
+        </div>
+
     </plex-layout-main>
 </plex-layout>
 
