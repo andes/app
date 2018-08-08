@@ -124,9 +124,6 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
-        // this.zone.runOutsideAngular(() => {
-        //     console.log(22);
-        // });
     }
 
     redirect(pagina: string) {
@@ -427,10 +424,24 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
 
-        this.registrosOrdenados = relacionesOrdenadas;
+        let neu = [];
+
+        this.registrosOrdenados.forEach((item, index) => {
+            let indexRel = this.registrosOrdenados.findIndex(x => x.id === item.id);
+            let indexPadre = this.registrosOrdenados.findIndex(x => x.id === item.relacionadoCon[0]);
+
+            if (indexRel > (indexPadre + 1)) {
+                this.arraymove(this.registrosOrdenados, indexRel, indexPadre + 1);
+            }
+
+        });
     }
 
-
+    arraymove(arr, fromIndex, toIndex) {
+        let element = arr[fromIndex];
+        arr.splice(fromIndex, 1);
+        arr.splice(toIndex, 0, element);
+    }
 
     reordenarRelaciones() {
         let rel: any;
