@@ -110,7 +110,6 @@ export class NuevaSolicitudComponent {
             this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
                 .subscribe(
                     res => {
-                        debugger
                         this.arrayReglasDestino = res;
                         this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
                         this.dataOrganizacionesDestino = res.map(elem => { return { id: elem.destino.organizacion.id, nombre: elem.destino.organizacion.nombre }; });
@@ -142,24 +141,14 @@ export class NuevaSolicitudComponent {
     }
 
     onSelectOrganizacionDestino() {
-        console.log('lalalala ');
         if (this.tipoSolicitud === 'salida') {
             this.servicioReglas.get({ organizacionOrigen: this.auth.organizacion.id, prestacionOrigen: this.modelo.solicitud.tipoPrestacionOrigen.conceptId })
                 .subscribe(
                     res => {
                         this.dataReglasDestino = res.map(elem => { return { id: elem.destino.prestacion.conceptId, nombre: elem.destino.prestacion.term }; });
-                        // this.arrayOrganizacionesOrigen = res;
-                        // this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
-                        // let aux = (res as any).origen.prestaciones;
-                        // this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
                     }
                 );
         }
-        // let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
-        // if (regla && regla.origen) {
-        //     this.arrayReglasOrigen = regla.origen.prestaciones;
-        //     this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
-        // }
     }
 
     onSelectPrestacionOrigen() {
@@ -169,15 +158,9 @@ export class NuevaSolicitudComponent {
                     res => {
                         this.arrayOrganizacionesOrigen = res;
                         this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
-                        // let aux = (res as any).origen.prestaciones;
-                        // this.dataReglasOrigen = aux.map(elem => { return { id: elem.origen.prestacion.conceptId, nombre: elem.origen.prestacion.term }; });
                     }
                 );
         }
-        // if (this.prestacionOrigen) {
-        //     let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.conceptId === this.prestacionDestino.id; });
-        //     this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
-        // }
     }
 
     onSelectPrestacionDestino() {
@@ -202,12 +185,16 @@ export class NuevaSolicitudComponent {
         if ($event.formValid) {
             if (this.tipoSolicitud === 'entrada') {
                 this.modelo.solicitud.organizacion = this.auth.organizacion;
+                // ------- solo solicitudes de entrada pueden ser autocitadas  ------
+                if (this.autocitado) {
+                    this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                    this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
+                    this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
+                    // solicitudes autocitadas
+                    this.modelo.estados.push({ tipo: 'pendiente' });
+                }
             } else {
                 this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-            }
-            if (this.autocitado) {
-                this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
-                this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionOrigen;
             }
             this.modelo.solicitud.registros.push({
                 nombre: this.modelo.solicitud.tipoPrestacion.term,

@@ -1,7 +1,5 @@
 <form *ngIf="!showDarTurnos && !showCargarSolicitud" class="plex-layout" #form="ngForm">
     <section>
-        <span *ngIf="showCargarSolicitud">
-        </span>
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
             <div class="col" *ngIf="!showCargarSolicitud">
@@ -157,7 +155,7 @@
                 </plex-box>
             </div>
             <!-- SIDEBAR -->
-            <div *ngIf="showSidebar && solicitudSeleccionada?.turno && turnoSeleccionado && !showCargarSolicitud" class="col-3">
+            <div *ngIf="showSidebar && solicitudSeleccionada?.turno && !showCargarSolicitud" class="col-3">
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [solicitudSeleccionada]="solicitudSeleccionada" [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
         </div>

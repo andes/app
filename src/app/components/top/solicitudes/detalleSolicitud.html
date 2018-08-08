@@ -28,9 +28,10 @@
             <b>Fecha Solicitud</b>
             <br> {{ solicitudSeleccionada.horaInicio | fecha }}
             <br>
-            <b>Fecha Turno</b>
-            <br> {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
-
+            <span *ngIf="turnoSeleccionado">
+                <b>Fecha Turno</b>
+                <br> {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
+            </span>
             <hr>
             <h3> Origen </h3>
 

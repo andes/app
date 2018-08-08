@@ -23,9 +23,16 @@
                     </div>
 
 
+
                     <!-- SOLICITUD ENTRADA -->
 
                     <span *ngIf=" !showSeleccionarPaciente && tipoSolicitud == 'entrada'">
+
+                        <!-- Autocitado? -->
+                        <div class="col-12 d-flex">
+                            <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
+                        </div>
+
                         <!-- Tipo Prestación Destino -->
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.solicitud.tipoPrestacion" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
@@ -34,13 +41,14 @@
                             </plex-select>
                         </div>
                         <!-- Organización Origen -->
-                        <div class="col-12">
+                        <div class="col-12" *ngIf="!autocitado">
                             <plex-select [(ngModel)]="modelo.solicitud.organizacionOrigen" name="organizacionOrigen" [data]="dataOrganizacionesOrigen"
                                 label="Organización origen" placeholder="Seleccione la organización" labelField="nombre" (change)="onSelectOrganizacionOrigen()"
                                 [required]="true">
                             </plex-select>
                         </div>
-                        <div class="col-12">
+                        <!-- Tipo Prestación Origen -->
+                        <div class="col-12" *ngIf="!autocitado">
                             <plex-select [(ngModel)]="prestacionOrigen" [data]="dataTipoPrestacionesOrigen" name="tipoPrestacion" (change)="onSelect()"
                                 label="Tipos de Prestación Origen" placeholder="Tipos de Prestación Origen" [required]="true">
                             </plex-select>
@@ -52,12 +60,9 @@
                                 [required]="true">
                             </plex-select>
                         </div>
-                        <!-- Autocitado? -->
-                        <div class="col-6 d-flex">
-                            <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
-                        </div>
+
                         <!-- Profesional Destino -->
-                        <div class="col-12">
+                        <div class="col-12" *ngIf="!autocitado">
                             <plex-select *ngIf="!autocitado" [(ngModel)]="modelo.solicitud.profesional" label="Profesional destino" name="profesional"
                                 (getData)="loadProfesionales($event)" placeholder="Escriba el apellido de un Profesional" labelField="apellido + ' ' + nombre">
                             </plex-select>
@@ -84,10 +89,6 @@
                                 [required]="true">
                             </plex-select>
                         </div>
-                        <!-- Autocitado? -->
-                        <div class="col-6 d-flex">
-                            <plex-bool class="align-self-center" [(ngModel)]="autocitado" label="Autocitado" name="autocitado" (click)="selectAutocitado(autocitado)"></plex-bool>
-                        </div>
                         <!-- Organización Destino -->
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.solicitud.organizacion" name="organizacionDestino" label="Organización destino" placeholder="Seleccione la organización"
@@ -110,7 +111,8 @@
 
                     <!-- /SOLICITUD SALIDA -->
 
-                    <div class="col-12" *ngIf=" !showSeleccionarPaciente && tipoSolicitud == ''">
+                    <!-- MOTIVO DE CONSULTA -->
+                    <div class="col-12" *ngIf=" !showSeleccionarPaciente">
                         <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
                         <label for="registros">Notas / Diagnóstico / Motivo</label>
                         <textarea class="form-control" [(ngModel)]="motivo" name="motivo" id="registros" rows="5"></textarea>
