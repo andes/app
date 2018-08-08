@@ -2,7 +2,7 @@
     <section>
         <div *ngIf="!showEditarReglas" class="row">
             <!--Panel de Agendas-->
-            <div class="col" *ngIf="!showCargarSolicitud">
+            <div class="col">
                 <plex-box>
                     <header>
                         <div class="clearfix">
@@ -41,7 +41,7 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-12">
-                                        <table *ngIf="prestaciones?.length && !showCargarSolicitud" class="table table-striped table-sm">
+                                        <table *ngIf="prestaciones?.length" class="table table-striped table-sm">
                                             <thead>
                                                 <th>Fecha</th>
                                                 <th>Paciente</th>
@@ -77,10 +77,6 @@
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">
-                                                            <!-- <button class="btn-info" (click)="verTurno()" title="Ver Turno">
-                                                            <span class="mdi mdi-eye"></span>
-                                                        </button> -->
-
                                                         </span>
                                                     </td>
                                                 </tr>
@@ -104,7 +100,7 @@
                                         </ng-container>
                                     </div>
                                     <div class="col-12 ">
-                                        <table *ngIf="prestaciones?.length  && !showCargarSolicitud" class="table table-striped table-sm">
+                                        <table *ngIf="prestaciones?.length" class="table table-striped table-sm">
                                             <thead>
                                                 <th>Fecha</th>
                                                 <th>Paciente</th>
@@ -131,9 +127,6 @@
                                                         <span *ngIf="!prestacion.solicitud.turno">
                                                             <span class="badge badge-danger"> {{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
                                                         </span>
-                                                        <!-- <span *ngIf="auditarArraySalida[i]">
-                                                            <span class="badge badge-danger">Auditoría pendiente</span>
-                                                        </span> -->
                                                         <span *ngIf="visualizarSalida[i]">
                                                             <span class="badge badge-success">Turno Dado</span>
                                                         </span>
@@ -155,7 +148,7 @@
                 </plex-box>
             </div>
             <!-- SIDEBAR -->
-            <div *ngIf="showSidebar && solicitudSeleccionada?.turno && !showCargarSolicitud" class="col-3">
+            <div *ngIf="showSidebar" class="col-3">
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [solicitudSeleccionada]="solicitudSeleccionada" [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
             </div>
         </div>
@@ -165,7 +158,7 @@
 </form>
 
 <!-- Calendario para dar turnos -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (cancelarDarTurno)="volverDarTurno($event)" (volverValidacion)="volverDarTurno($event)"
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (cancelarDarTurno)="volverDarTurno($event)" (volverAlGestor)="volverDarTurno($event)"
     [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
 
 <nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)>

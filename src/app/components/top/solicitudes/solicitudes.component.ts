@@ -37,14 +37,14 @@ export class SolicitudesComponent implements OnInit {
     public auditarArrayEntrada = [];
     public visualizarSalida = [];
     public visualizarEntrada = [];
-    tipoSolicitud = 'entrada';
-    prestacionesSalida: any;
-    prestacionesEntrada: any;
-    showEditarReglas = false;
+    public tipoSolicitud = 'entrada';
+    public prestacionesSalida: any;
+    public prestacionesEntrada: any;
+    public showEditarReglas = false;
     public panelIndex = 0;
-    pacienteSolicitud: any;
-    activeTab = 0;
-    showSidebar = false;
+    public pacienteSolicitud: any;
+    public activeTab = 0;
+    public showSidebar = false;
 
     constructor(
         private auth: Auth,
@@ -302,6 +302,7 @@ export class SolicitudesComponent implements OnInit {
         this.showBotonCargarSolicitud = true;
         this.showCargarSolicitud = false;
         this.cargarSolicitudes();
+        this.activeTab = 0;
     }
 
     afterDetalleSolicitud(event) {
