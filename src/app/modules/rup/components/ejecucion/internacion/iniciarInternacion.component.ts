@@ -127,14 +127,14 @@ export class IniciarInternacionComponent implements OnInit {
 
     ngOnInit() {
         if (this.prestacion) {
-            this.btnIniciarGuardar = "GUARDAR";
+            this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
             }
-        } else if (this.paciente.id) {
-            this.btnIniciarGuardar = "INICIAR PRESTACIÓN";
+        } else if (this.paciente && this.paciente.id) {
+            this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
@@ -154,7 +154,9 @@ export class IniciarInternacionComponent implements OnInit {
                         }
                         // Se busca la obra social del paciente y se le asigna
                         this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                            this.obraSocial = os;
+                            if (os) {
+                                this.obraSocial = os;
+                            }
                         });
                         this.buscandoPaciente = false;
                     });
@@ -276,7 +278,7 @@ export class IniciarInternacionComponent implements OnInit {
                     informeIngreso: this.informeIngreso
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-                    this.refreshCamas.emit();
+                    this.refreshCamas.emit(this.cama);
                     this.data.emit(false);
                 }, (err) => {
                     this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
@@ -292,7 +294,9 @@ export class IniciarInternacionComponent implements OnInit {
                 let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
-                nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigo, nombre: this.obraSocial.nombre };
+                if (this.obraSocial) {
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigo, nombre: this.obraSocial.nombre };
+                }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                     if (this.cama) {
@@ -310,8 +314,7 @@ export class IniciarInternacionComponent implements OnInit {
 
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            // this.router.navigate(['rup/internacion/ver', prestacion.id]);
-                            this.refreshCamas.emit();
+                            this.refreshCamas.emit(this.cama);
                             this.data.emit(false);
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
@@ -319,7 +322,7 @@ export class IniciarInternacionComponent implements OnInit {
                     } else {
                         // this.router.navigate(['rup/internacion/ver', prestacion.id]);
                         this.data.emit(false);
-                        this.refreshCamas.emit();
+                        this.refreshCamas.emit(this.cama);
                     }
 
                 }, (err) => {

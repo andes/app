@@ -54,7 +54,6 @@ export class CarpetaPacienteComponent implements OnInit {
         }
         // Obtenemos el paciente completo. (entró por parametro el turno)
         this.servicioPaciente.getById(this.paciente.id).subscribe(resultado => {
-            console.log("paciente encontrado -> ", resultado)
             this.paciente = resultado;
             this.getCarpetas(this.paciente);
         });
