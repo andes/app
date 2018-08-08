@@ -88,7 +88,7 @@ export class MapaDeCamasComponent implements OnInit {
         // buscar camas para la organización
         this.limpiarFiltros();
         this.loader = true;
-        this.camasService.getCamasXFecha(this.auth.organizacion.id, this.fecha).subscribe(camas => {
+        this.camasService.getCamasXFecha(this.auth.organizacion._id, this.fecha).subscribe(camas => {
             this.camas = camas;
             this.countFiltros();
             this.loader = false;

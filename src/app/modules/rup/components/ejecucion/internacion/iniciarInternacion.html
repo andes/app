@@ -9,21 +9,19 @@
                             <br>
                             <h5>Paciente:</h5>
                             <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
-                            <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
-                                para una mejor visualizacion de la carga de datos -->
-                            <div class="row">
-                                <div class="col" *ngIf="!soloValores">
-                                    <!-- <div class="panel panel-default"> -->
-                                    <!-- <div class="clear"></div> -->
-                                    <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
-                                    </carpeta-paciente>
-                                    <!-- </div> -->
-                                </div>
-                                <div class="col" *ngIf="showEditarCarpetaPaciente">
-                                    <plex-text [(ngModel)]="carpetaPaciente" labelField=""></plex-text>
-                                </div>
-                            </div>
+
                         </fieldset>
+                        <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
+                            para una mejor visualizacion de la carga de datos -->
+                        <div class="row">
+                            <div class="col" *ngIf="!soloValores">
+                                <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) ">
+                                </carpeta-paciente>
+                            </div>
+                            <div class="col" *ngIf="showEditarCarpetaPaciente">
+                                <plex-text [(ngModel)]="carpetaPaciente" labelField=""></plex-text>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-6">
                                 <plex-datetime *ngIf="!soloValores" type="datetime" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "

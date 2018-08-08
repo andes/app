@@ -83,8 +83,8 @@
         </div>
     </div>
     <div *ngIf="showLiberarTurno ">
-        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="saveLiberarTurno($event, paciente) "
-            (cancelaLiberarTurno)="cancelaLiberarTurno($event) ">
+        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="afterLiberarTurno($event) "
+            (cancelaLiberarTurno)="afterLiberarTurno($event) ">
         </liberar-turno>
     </div>
 </plex-box>
