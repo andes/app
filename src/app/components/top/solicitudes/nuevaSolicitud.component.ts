@@ -172,10 +172,6 @@ export class NuevaSolicitudComponent {
         }
     }
 
-    changeAutocitado() {
-        console.log(this.autocitado);
-    }
-
     guardarSolicitud($event) {
 
         if ($event.formValid) {
@@ -211,7 +207,7 @@ export class NuevaSolicitudComponent {
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             };
-            console.log('modelo ', this.modelo);
+            // console.log('modelo ', this.modelo);
 
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
