@@ -17,6 +17,10 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
     public organizaciones: IOrganizacion[] = [];
     public tipoPrestaciones: any[] = [];    // conceptoTurneable
     public especialidades: any[] = [];  // prestacionesLegacy
+    public organizacion: IOrganizacion = null;
+    public tipoPrestacion = null;
+    public especialidad = null;
+
 
     @Output() data: EventEmitter<boolean> = new EventEmitter<boolean>();
 
