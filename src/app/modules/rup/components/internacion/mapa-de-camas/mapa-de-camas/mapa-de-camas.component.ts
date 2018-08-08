@@ -38,6 +38,8 @@ export class MapaDeCamasComponent implements OnInit {
     // Muesta/oculta el loader del sidebar
     public showLoaderSidebar = false;
 
+    public showResumen = false;
+
     public prestacionPorInternacion;
 
     // Muestra el componente ingreso en el sidebar
@@ -324,7 +326,6 @@ export class MapaDeCamasComponent implements OnInit {
             this.showEgreso = true;
             this.showIngreso = false;
         });
-        // this.router.navigate(['internacion/egreso/' + idInternacion]);
     }
 
     verIngreso(soloValores, idInternacion) {
@@ -338,12 +339,25 @@ export class MapaDeCamasComponent implements OnInit {
         });
     }
 
-    cerrarEgreso(event) {
-        this.showEgreso = event;
-    }
-
-    cerrarIgreso(event) {
-        this.showIngreso = event;
+    /**
+     * Captura el evento que emite el componente y cierra/oculta los mismos
+     * @param event
+     * @param param
+     */
+    cerrar(event, param) {
+        switch (param) {
+            case 'ingreso':
+                this.showIngreso = event;
+                break;
+            case 'egreso':
+                this.showEgreso = event;
+                break;
+            case 'resumen':
+                this.showResumen = event;
+                break;
+            default:
+                break;
+        }
     }
 
     onPacienteCancel() {
@@ -361,4 +375,15 @@ export class MapaDeCamasComponent implements OnInit {
     onCamaSelected(event) {
         this.camaSelected = event;
     }
+
+    verResumen(idInternacion) {
+        this.showLoaderSidebar = true;
+        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+            this.prestacionPorInternacion = prestacion;
+            this.showLoaderSidebar = false;
+            this.showEgreso = false;
+            this.showResumen = true;
+        });
+    }
+
 }

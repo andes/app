@@ -16,6 +16,7 @@ export class EgresoInternacionComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
 
     @Input() prestacion;
+    @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public listaUnidadesOrganizativas: any[];
@@ -93,8 +94,6 @@ export class EgresoInternacionComponent implements OnInit {
                 }
             };
         }
-        //     });
-        // });
 
         this.showProcedimientos_causas();
         let params;

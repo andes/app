@@ -126,13 +126,16 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        console.log(this.prestacion, 'Prestacion');
         if (this.prestacion) {
+            console.log(this.snomedIngreso.conceptId, '---------', this.prestacion.ejecucion.registros);
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
+                console.log(this.informeIngreso);
             }
-        } else if (this.paciente.id) {
+        } else if (this.paciente && this.paciente.id) {
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
@@ -295,15 +298,15 @@ export class IniciarInternacionComponent implements OnInit {
                     this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                         this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                         // this.router.navigate(['rup/internacion/ver', prestacion.id]);
-                        this.refreshCamas.emit();
-                        this.data.emit(false)
+                        this.refreshCamas.emit(this.cama);
+                        this.data.emit(false);
                     }, (err1) => {
                         this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                     });
                 } else {
                     // this.router.navigate(['rup/internacion/ver', prestacion.id]);
-                    this.data.emit(false)
-                    this.refreshCamas.emit();
+                    this.data.emit(false);
+                    this.refreshCamas.emit(this.cama);
                 }
 
             }, (err) => {
