@@ -70,6 +70,8 @@ import { LogPacienteService } from './services/logPaciente.service';
 import { PermisosService } from './services/permisos.service';
 import { PrestamosService } from './services/prestamosHC/prestamos-hc.service';
 import { RenaperService } from './services/fuentesAutenticas/servicioRenaper.service';
+import { ConfiguracionPrestacionService } from './services/term/configuracionPrestacion.service';
+import { PrestacionLegacyService } from './services/prestacionLegacy.service';
 
 // ... Turnos
 import { EspacioFisicoService } from './services/turnos/espacio-fisico.service';
@@ -301,6 +303,11 @@ import { DevolverHcComponent } from './components/prestamosHC/prestamos/devolver
 import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitudes/imprimir-solicitudes.component';
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 
+// Configuracion prestaciones
+import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
+import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
+
+
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
     'PesoComponent': PesoComponent,
@@ -468,6 +475,9 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+        // Configuracion prestacion
+        ConfiguracionPrestacionVisualizarComponent,
+        ConfiguracionPrestacionCrearComponent,
         PucoComponent
     ],
     entryComponents: RUPComponentsArray,
@@ -528,7 +538,9 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
-        CDAService,
+        ConfiguracionPrestacionService,
+        PrestacionLegacyService,
+        CDAService
 
     ]
 })
