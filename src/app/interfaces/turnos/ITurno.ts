@@ -7,6 +7,7 @@ export interface ITurno {
     horaInicio: Date;
     estado: string;
     asistencia: string;
+    estadoFacturacion: string;
     paciente: {
         id: string,
         nombre: string,

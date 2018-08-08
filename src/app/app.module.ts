@@ -428,11 +428,11 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoE3Y6AComponent
 ];
 
-/** moment pipes  - desde agular 5 hay que importar el locale a demanda */
-import { registerLocaleData } from '@angular/common';
-import localeEs from '@angular/common/locales/es';
+// /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
+// import { registerLocaleData } from '@angular/common';
+// import localeEs from '@angular/common/locales/es';
 
-registerLocaleData(localeEs, 'es');
+// registerLocaleData(localeEs, 'es');
 
 
 // Main module
