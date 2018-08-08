@@ -10,7 +10,7 @@ import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
 export class PacienteService {
 
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
-    private carpetaUrl = '/modules/turnos/carpetasPacientes';
+    private carpetaUrl = '/modules/carpetas';
 
 
     constructor(private server: Server) { }
@@ -40,11 +40,11 @@ export class PacienteService {
     }
 
     getNroCarpeta(params: any): Observable<any> {
-        return this.server.get(this.carpetaUrl, { params: params, showError: true });
+        return this.server.get(this.carpetaUrl + '/carpetasPacientes', { params: params, showError: true });
     }
 
     getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
-        return this.server.get(this.carpetaUrl + '/' + id, null);
+        return this.server.get(this.carpetaUrl + '/carpetasPacientes' + id, null);
     }
 
     /**
@@ -96,5 +96,11 @@ export class PacienteService {
             return this.server.post(this.pacienteUrl, paciente);
 
         }
+    }
+    getSiguienteCarpeta(): Observable<any> {
+        return this.server.get(this.carpetaUrl + '/ultimaCarpeta');
+    }
+    incrementarNroCarpeta(): Observable<any> {
+        return this.server.post(this.carpetaUrl + '/incrementarCuenta', {});
     }
 }
