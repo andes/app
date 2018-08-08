@@ -38,9 +38,8 @@ export class LaboratoriosComponent implements OnInit {
 
 
     descargar(archivo) {
-        let nombreArchivo = archivo.substring(0, archivo.lastIndexOf('.'));
         let token = window.sessionStorage.getItem('jwt');
-        let url = environment.API + '/modules/cda/' + nombreArchivo + '?token=' + token;
+        let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
     }
 };

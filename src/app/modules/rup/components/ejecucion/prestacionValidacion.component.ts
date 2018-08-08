@@ -202,11 +202,11 @@ export class PrestacionValidacionComponent implements OnInit {
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
 
         if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnostico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -239,11 +239,13 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.motivoReadOnly = true;
 
                     // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                    if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
-                    }
-
-
+                    this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                        result => {
+                            let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                            if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
+                                this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                            }
+                        });
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -385,8 +387,18 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
 
-    relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
+    relacionadoConPadreDeep(registros: any[], conceptId) {
+        if (registros) {
+            for (let i = 0; i < registros.length; i++) {
+                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
+                    return i;
+                } else {
+                    this.relacionadoConPadreDeep(registros[i].registros, conceptId);
+                }
+            }
+            return false;
+        }
+
     }
 
     armarRelaciones(registros) {
@@ -417,6 +429,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
+
+
 
     reordenarRelaciones() {
         let rel: any;

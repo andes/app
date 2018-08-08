@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, HostBinding, DebugElement } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { EdadPipe } from './../../../pipes/edad.pipe';
+import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-import { ObraSocialService } from './../../../services/obraSocial.service';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 
 @Component({
     selector: 'arancelamiento-form',
@@ -36,11 +36,19 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            if (resultado) {
+            if (resultado && resultado.length) {
                 this.obraSocial = resultado[0].financiador;
                 this.codigoOs = resultado[0].codigoFinanciador;
-                this.showForm = true;
+            } else {
+                this.obraSocial = '';
+                this.codigoOs = 0;
             }
+
+            this.showForm = true;
+            setTimeout(() => {
+                this.imprimir();
+                this.volverAPuntoInicio.emit();
+            }, 100);
         });
     }
 

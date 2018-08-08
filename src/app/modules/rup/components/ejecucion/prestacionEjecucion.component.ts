@@ -114,7 +114,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
@@ -129,7 +128,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-                        // Si la prestación está validad, navega a la página de validación
+                        // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
@@ -156,7 +155,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
-                                        this.itemsRegistros[registoExiste.id].collapse = true;
+                                        this.itemsRegistros[registoExiste.id].collapse = false;
                                     }
                                 }
                             }
@@ -187,10 +186,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
+
         if (this.prestacion) {
             // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
-                this.itemsRegistros[registro.id] = { collapse: false, items: null };
+                this.itemsRegistros[registro.id] = { collapse: true, items: null };
                 // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
@@ -260,7 +260,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        let registros = this.prestacion.ejecucion.registros;
+
+        // let registros = this.prestacion.ejecucion.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
@@ -408,6 +409,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         nuevoRegistro.valor = valor;
 
+        if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
+            // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
+            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+            if (registroRequerido) {
+                nuevoRegistro.relacionadoCon.push(registroRequerido);
+                if (nuevoRegistro.id) {
+                    this.itemsRegistros[nuevoRegistro.id].collapse = true;
+                }
+            }
+        }
+        //
+
+
+        //
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
@@ -544,7 +559,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
-
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
@@ -612,7 +626,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
             // registro.valido = (registro.valor && Object.keys(registro.valor).length === 0) ? true : false;
             if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
+                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 500);
                 this.colapsarPrestaciones('expand');
             }
         } else {
@@ -689,18 +703,23 @@ export class PrestacionEjecucionComponent implements OnInit {
                 localStorage.removeItem('idAgenda');
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
-                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                    cambios = {
-                        op: 'noAsistio',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
-                } else {
-                    cambios = {
-                        op: 'darAsistencia',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
-                }
-                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                    result => {
+                        let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                        if (filtroRegistros && filtroRegistros.length > 0) {
+
+                            cambios = {
+                                op: 'noAsistio',
+                                turnos: [this.prestacion.solicitud.turno]
+                            };
+                        } else {
+                            cambios = {
+                                op: 'darAsistencia',
+                                turnos: [this.prestacion.solicitud.turno]
+                            };
+                        }
+                        this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                    });
             }
 
             // Actualizamos las prestaciones de la HUDS
@@ -752,7 +771,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.ejecutarConcepto(e.dragData);
                 });
             }
-
         }
     }
 

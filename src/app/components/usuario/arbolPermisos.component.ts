@@ -65,18 +65,16 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
             } else {
                 let permisos = this.makePermission();
                 let items: String[] = this.shiro.permissions(permisos + ':?');
-
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
                     } else {
-
+                        this.all = false;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
                                     this.seleccionados = [...data];
-
                                 });
                                 break;
                         }
@@ -96,23 +94,19 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
-        if (event.query) {
-            // [TODO] Filtrar otras tipos de datos
-            switch (type) {
-                case 'prestacion':
-                    let query = {
-                        term: event.query
-                    };
-                    this.servicioTipoPrestacion.get(query).subscribe((data) => {
-                        data = [...data, ...this.seleccionados || []];
-                        event.callback(data);
-                    });
-                    break;
-            }
-        } else {
-            window.setTimeout(() => {
-                event.callback(this.seleccionados || null);
-            }, 1000);
+        // [TODO] Filtrar otras tipos de datos
+        switch (type) {
+            case 'prestacion':
+                let query: any = {};
+                if (event.query) {
+                    query.term = event.query;
+                }
+
+                this.servicioTipoPrestacion.get(query).subscribe((data) => {
+                    data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
+                });
+                break;
         }
     }
 
