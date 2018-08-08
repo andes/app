@@ -1,12 +1,10 @@
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
-import { TurnoService } from '../../../services/turnos/turno.service';
 import { ReglaService } from '../../../services/top/reglas.service';
 
 @Component({
@@ -74,14 +72,12 @@ export class NuevaSolicitudComponent {
     dataReglasOrigen: { id: any; nombre: any; }[];
 
     constructor(
-        private router: Router,
         private plex: Plex,
         private auth: Auth,
         private servicioTipoPrestacion: TipoPrestacionService,
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
-        private servicioTurnos: TurnoService,
         private servicioReglas: ReglaService
 
     ) { }
@@ -167,12 +163,12 @@ export class NuevaSolicitudComponent {
         if (this.prestacionDestino) {
             let regla = this.arrayReglasDestino.find(rule => { return rule.destino.prestacion.conceptId === this.prestacionDestino.id; });
             this.modelo.solicitud.tipoPrestacion = regla.destino.prestacion;
-            if (regla.auditable) {
+            let regla2 = regla.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
+            if (regla2.auditable) {
                 this.modelo.estados.push({ tipo: 'auditoria' });
             } else {
                 this.modelo.estados.push({ tipo: 'pendiente' });
             }
-            // this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
         }
     }
 
