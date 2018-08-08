@@ -1,4 +1,4 @@
-<form class="plex-layout" #form="ngForm">
+<form *ngIf="!showArancelamiento" class="plex-layout" #form="ngForm">
     <section class="dar-turnos-section">
         <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
         <div class="row calendario-expandido" *ngIf="autorizado && showDarTurnos">
@@ -304,16 +304,9 @@
                                                 <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
                                             </div>
                                         </footer>
-
                                     </div>
-                                    <!-- <hr> -->
-                                    <!--Otros datos-->
-                                    <!-- <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
-                                        name="turnoTipoPrestacion" [required]="true"></plex-select>
-                                    <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
-                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text> -->
-
                                 </ng-container>
+
                             </fieldset>
                         </plex-tab>
 
@@ -357,4 +350,6 @@
         </div>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelar()"></pacientesSearch>
+
 </form>
+<arancelamiento-form *ngIf="showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'></arancelamiento-form>
