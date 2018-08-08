@@ -83,6 +83,9 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
+import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
+
 
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
@@ -115,6 +118,10 @@ import { CDAService } from './modules/rup/services/CDA.service';
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
 import { InicioComponent } from './components/inicio/inicio.component';
+
+// Sugerencias
+import { SugerenciasService } from './services/sendmailsugerencias.service';
+
 // ... Tablas Maestras
 import { ProfesionalComponent } from './components/profesional/profesional.component';
 import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
@@ -517,6 +524,8 @@ registerLocaleData(localeEs, 'es');
         TipoPrestacionService,
         ObraSocialService,
         ProfeService,
+        PeriodoPadronesPucoService,
+        PeriodoPadronesProfeService,
         ElementosRUPService,
         ConceptObserverService,
         LlavesTipoPrestacionService,
@@ -538,9 +547,10 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
+        CDAService,
+        SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService,
-        CDAService
+        PrestacionLegacyService
 
     ]
 })
