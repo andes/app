@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operator/take';
 import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
 import { LoginComponent } from './../../login/login.component';
@@ -114,6 +115,8 @@ export class DarTurnosComponent implements OnInit {
     autorizado = false;
     pacientesSearch = true;
     showDarTurnos = false;
+    showArancelamiento = false;
+    turnoArancelamiento;
     cambioTelefono = false;
     showCreateUpdate = false;
     tipoTurno: string;
@@ -847,8 +850,13 @@ export class DarTurnosComponent implements OnInit {
             }
             this.actualizarPaciente();
             if (this.paciente && this._pacienteSeleccionado) {
-                this.afterDarTurno.emit(this.paciente);
-                // return false;
+                this.turnoArancelamiento = datosTurno;
+                if (this.turnoArancelamiento.paciente && this.turnoArancelamiento.paciente.obraSocial) {
+                    this.turnoArancelamiento.horaInicio = this.turno.horaInicio;
+                    this.showArancelamiento = true;
+                } else {
+                    this.afterDarTurno.emit(this.paciente);
+                }
             } else {
                 this.buscarPaciente();
             }
@@ -1059,6 +1067,11 @@ export class DarTurnosComponent implements OnInit {
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
+    }
+
+    volverAPuntoInicio() {
+        this.showArancelamiento = false;
+        this.afterDarTurno.emit(this.paciente);
     }
 
 }
