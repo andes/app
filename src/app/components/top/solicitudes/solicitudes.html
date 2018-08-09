@@ -63,12 +63,14 @@
                                                     <td *ngIf="!prestacion.solicitud.profesionalOrigen"></td>
                                                     <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
                                                     <td>{{prestacion.solicitud.profesional | profesional}}</td>
-                                                    <td *ngIf="!prestacion.solicitud.turno" class="text-right estado">{{prestacion.estados[prestacion.estados.length-1].tipo}}</td>
+                                                    <td *ngIf="!prestacion.solicitud.turno" class="text-center estado">
+                                                        <span class="badge badge-success">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                    </td>
                                                     <td *ngIf="prestacion.solicitud.turno" class="text-center estado">
                                                         <span class="badge badge-success">Turno dado</span>
                                                     </td>
                                                     <td class="text-center">
-                                                        <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente">
+                                                        <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno">
                                                             <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)" title="Dar Turno">
                                                             </plex-button>
                                                         </span>
@@ -158,7 +160,7 @@
 </form>
 
 <!-- Calendario para dar turnos -->
-<dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (cancelarDarTurno)="volverDarTurno($event)" (volverAlGestor)="volverDarTurno($event)"
+<dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)" (afterDarTurno)="volverDarTurno($event)"
     [pacienteSeleccionado]="pacienteSeleccionado" [solicitudPrestacion]="solicitudTurno"></dar-turnos>
 
 <nueva-solicitud *ngIf="showCargarSolicitud" [tipoSolicitud]="tipoSolicitud" (newSolicitudEmitter)=afterNewSolicitud($event)>
