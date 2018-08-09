@@ -11,6 +11,8 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { NgModel } from '@angular/forms';
+import { NgTemplateOutlet } from '@angular/common';
 
 @Component({
     selector: 'planificar-agenda',
@@ -267,10 +269,10 @@ export class PlanificarAgendaComponent implements OnInit {
         this.modelo.bloques.push({
             indice: longitud,
             // 'descripcion': `Bloque {longitud + 1}°`,
-            'cantidadTurnos': 0,
+            // 'cantidadTurnos': 0,
             'horaInicio': null,
             'horaFin': null,
-            'duracionTurno': 0,
+            // 'duracionTurno': 0,
             'cantidadSimultaneos': null,
             'cantidadBloque': null,
             'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
