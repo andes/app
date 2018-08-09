@@ -421,11 +421,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     relacionesOdontograma() {
         if (this.prestacion.ejecucion.registros.length > 1) {
             return this.prestacion.ejecucion.registros[1].relacionadoCon.map(x => x = { diente: x.concepto.conceptId, cara: x.cara });
+        } else {
+            return [];
         }
     }
 
     fixRelaciones() {
-        this.registro.valor.piezas = this.registro.valor.piezas.filter(x => this.relacionesOdontograma().find(y => y === x.concepto.conceptId));
+        if (this.registro.valor && this.registro.valor.piezas) {
+            this.registro.valor.piezas = this.registro.valor.piezas.filter(x => this.relacionesOdontograma().find(y => y === x.concepto.conceptId));
+        }
     }
 
     seleccionarPieza(diente) {
