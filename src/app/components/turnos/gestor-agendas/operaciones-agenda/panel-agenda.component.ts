@@ -115,12 +115,12 @@ export class PanelAgendaComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.agenda.profesionales) {
-                    listaProfesionales = (resultado) ? this.agenda.profesionales.concat(resultado) : this.agenda.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+                // if (this.agenda.profesionales) {
+                //     listaProfesionales = (resultado) ? [...resultado] : [...this.agenda.profesionales];
+                // } else {
+                //     listaProfesionales = [...resultado];
+                // }
+                event.callback(resultado);
             });
         } else {
             event.callback(this.agenda.profesionales || []);

@@ -5,7 +5,7 @@
         <div class="col-6">
             <!-- Profesionales -->
             <plex-select [(ngModel)]="agenda.profesionales" name="profesionales" (getData)="loadProfesionales($event)" label="Profesionales"
-                placeholder="Seleccione los profesionales" labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
+                placeholder="Seleccione los profesionales" closeAfterSelect="true" labelField="apellido + ' ' + nombre" (change)="validarSolapamientos('profesionales')"
                 [multiple]="true">
             </plex-select>
         </div>

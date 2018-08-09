@@ -103,12 +103,12 @@ export class PlanificarAgendaComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+                // if (this.modelo.profesionales) {
+                //     listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
+                // } else {
+                //     listaProfesionales = resultado;
+                // }
+                event.callback(resultado);
             });
         } else {
             event.callback(this.modelo.profesionales || []);
