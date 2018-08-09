@@ -4,7 +4,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class ProfesionalPipe implements PipeTransform {
     transform(value: any, args?: string[]): any {
         if (value) {
-            return value.apellido + ', ' + value.nombre;
+            if (value.apellido && value.nombre) {
+                return value.apellido + ', ' + value.nombre;
+            } else {
+                return (value.apellido ? value.apellido : value.nombre);
+            }
         }
     }
 }
