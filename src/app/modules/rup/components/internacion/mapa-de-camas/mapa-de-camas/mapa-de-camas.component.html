@@ -113,14 +113,12 @@
                                     (verInternacionEmit)="cerrarIgreso($event)"></app-cama>
                             </div>
                         </div>
-
                     </plex-box>
                 </div>
 
-                <!-- SIDEBAR -->
-                <div id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
+                <!-- SIDEBAR -->    
 
-                        <plex-box class="">
+                        <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
                                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                                 <!-- Egreso -->
                                 <ng-container *ngIf="showEgreso && !showIngreso">
@@ -132,80 +130,78 @@
                                         [soloValores]="editarIngreso" (refreshCamas)="refresh($event)"></rup-iniciarInternacion>
                                 </ng-container>
     
-
-
                                 <!-- Detalles de cama -->
                                 <ng-container *ngIf="camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
+                                <header>
                                 <!-- Tabs -->
                                 <plex-tabs class="andes-contenedor-tabs">
+                                    <!-- Tab cama -->
+                                    <plex-tab class="andes-tab center" label="Datos de cama">
+                                        <div class="sidebar-contenedor-texto">
+                                            <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
+                                                {{camaSeleccionada.ultimoEstado.estado}}
+                                            </span>
+                                            <h3>Cama</h3>
+                                            <hr class="blanco xs">
+                                            <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
+                                            <!-- Data paciente -->
+                                            <div class="andes-contenedor-secundario horizontal centrado">
+                                                <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente" src="" alt="">
+                                                <div class="andes-sidebar-prefix">
+                                                    <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
+                                                        <b>{{camaSeleccionada.ultimoEstado.paciente.apellido}}</b>
+                                                        <br>{{camaSeleccionada.ultimoEstado.paciente.nombre}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <hr class="blanco xs">
+                                            <p class="andes-sidebar-subfix">{{camaSeleccionada.sectores[0].nombre}}</p>
+                                            <p class="andes-sidebar-subfix {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}</p>
+                                            <hr class="blanco xs">
 
-                                <!-- Tab cama -->
-                                <plex-tab class="andes-tab" label="Datos de cama">
-                                    <header>
-                                        <h3>Detalle de cama</h3>
-                                    </header>
-                                    <div class="text-center info-cama-menu">
-                                        <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
-                                            {{camaSeleccionada.ultimoEstado.estado}}
-                                        </span>
-                                        <h3>Cama</h3>
-                                        <h2 class="{{camaSeleccionada.ultimoEstado.estado}}">
-                                            {{camaSeleccionada.nombre}}
-                                        </h2>
-                                        <div class="data-paciente">
-                                            <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
-                                                <b>
-                                                    {{camaSeleccionada.ultimoEstado.paciente.apellido}}
-                                                </b>
-                                                <br> {{camaSeleccionada.ultimoEstado.paciente.nombre}}
-                                            </p>
-                                        </div>
-                                        {{camaSeleccionada.sectores[0].nombre}}
-                                        <p>
-                                            {{camaSeleccionada.ultimoEstado.unidadOrganizativa.term}}
-                                        </p>
-            
-                                            <!-- Iconos estado cama-->
-                                            <div class="andes-contenedor-iconos">
-                                                <div class="cama-seleccion-icon">
-                                                    <!-- oxigeno -->
-                                                    <i class="icon icon-andes-cama-oxigeno"></i>
-                                                    <p>Oxigeno</p>
+                                                <!-- Iconos estado cama-->
+                                                <div class="andes-contenedor-iconos">
+                                                    <div class="cama-seleccion-icon">
+                                                        <!-- oxigeno -->
+                                                        <i class="icon icon-andes-cama-oxigeno"></i>
+                                                        <p>Oxigeno</p>
+                                                    </div>
+                                                    <div class="cama-seleccion-icon">
+                                                        <!-- reparacion -->
+                                                        <i class="icon icon-andes-cama-herramienta"></i>
+                                                        <p>Censable</p>
+                                                    </div>
+                                                    <div class="cama-seleccion-icon">
+                                                        <!-- reparacion -->
+                                                        <i class="icon icon-andes-cama-herramienta"></i>
+                                                        <p>Unisex</p>
+                                                    </div>
                                                 </div>
-                                                <div class="cama-seleccion-icon">
-                                                    <!-- reparacion -->
-                                                    <i class="icon icon-andes-cama-herramienta"></i>
-                                                    <p>Censable</p>
-                                                </div>
-                                                <div class="cama-seleccion-icon">
-                                                    <!-- reparacion -->
-                                                    <i class="icon icon-andes-cama-herramienta"></i>
-                                                    <p>Unixex</p>
-                                                </div>
+                                                 <!-- Botonera inferior -->
+                                                <footer class="andes-contenedor-botones vertical block">
+                                                    <div class="andes-contenedor-botones horizontal between block">
+                                                        <!-- Editar internacion -->
+                                                        <plex-button type="danger" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                                        <!-- Ver egreso -->
+                                                        <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="info" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                                    </div>
+                                                    <div class="">
+                                                        <!-- Ver internacion -->
+                                                        <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                                    </div>
+                                                </footer>
                                             </div>
-                                        </div>
-                                        <!-- Botonera inferior -->
-                                        <section class="andes-contenedor-botones vertical">
-                                            <div class="andes-contenedor-botones horizontal between">
-                                                <!-- Editar internacion -->
-                                                <plex-button type="danger" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
-                                                <!-- Ver egreso -->
-                                                <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="info" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
-                                            </div>
-                                            <div class="">
-                                                <!-- Ver internacion -->
-                                                <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
-                                            </div>
-                                        </section>
-                                </plex-tab>
+
+                                    </plex-tab>
 
                                 <!-- Tab internacion -->
-                                <!-- <plex-tab class="andes-tab" label="Datos de ingreso"></plex-tab> -->
+                                <plex-tab class="andes-tab" label="Datos de ingreso"> </plex-tab>
                 
                                 <!-- Tab egreso -->
-                                <!-- <plex-tab class="andes-tab" label="Datos de egreso"></plex-tab> -->
+                                <plex-tab class="andes-tab" label="Datos de egreso"></plex-tab>
 
                             </plex-tabs>
+                        </header>
                             </ng-container>
 
 
@@ -230,10 +226,10 @@
                             </ng-container>
                             <div class="pt-3">
                                 <h3>Estado del servicio</h3>
-                                <hr>
+                                <hr class="blanco">
                             </div>
                             <div class="container-resumen">
-                                <div class="subcontainer-resumen">
+                                <div class="subcontainer-resumen totales">
                                     <div>
                                         <i class="icon icon-andes-cama"></i>
                                     </div>
@@ -295,7 +291,6 @@
 
                         </ng-container>
                     </plex-box>
-                </div>
             </div>
         </section>
     </form>
