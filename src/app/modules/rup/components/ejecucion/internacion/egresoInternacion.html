@@ -1,24 +1,24 @@
 <form #formEgreso="ngForm">
 
-    <section class="andes-tab">
+    <section class="andes-tab" *ngIf="!soloValores">
         <div class="row" *ngIf="prestacion && registro.valor">
             <div class="col-12">
                     <ng-container>
-                        <div class="row">
-                            <div class="col-6">
-                                <plex-datetime name="fecha-hora" label="Fecha y hora " type="datetime" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
+                        <div class="row ">
+                            <div class="col-6 ">
+                                <plex-datetime name="fecha-hora " label="Fecha y hora " type="datetime " [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso "
                                     required>
                                 </plex-datetime>
                             </div>
-                            <div class="col-6">
-                                <plex-select (change)="selecOrganizacionDestino()" label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
-                                    name="InformeEgreso.tipoEgreso" [data]="listaTipoEgreso" placeholder="Seleccione..." required>
+                            <div class="col-6 ">
+                                <plex-select (change)="selecOrganizacionDestino() " label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso "
+                                    name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... " required>
                                 </plex-select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <plex-select *ngIf="listaUnidadesOrganizativas?.length > 0" label="Unidad organizativa de destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
+                        <div class="row ">
+                            <div class="col ">
+                                <plex-select *ngIf="listaUnidadesOrganizativas?.length> 0" label="Unidad organizativa de destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
                                     name="InformeEgreso.UnidadOrganizativaDestino" [data]="listaUnidadesOrganizativas" placeholder="Seleccione..."
                                     required>
                                 </plex-select>
@@ -222,7 +222,7 @@
     </section>
 
 </form>
-<!-- <ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
+<ng-container *ngIf="soloValores && registro.valor.InformeEgreso">
     <div class="row">
         <div class="col-3">
             <label class="block">Fecha de egreso</label>
@@ -274,15 +274,15 @@
     <div class="row" *ngIf="registro.valor.InformeEgreso.causaExterna">
         <div class="col-4">
             <label class="block">Producido por</label>
-            <span>{{registro.valor.InformeEgreso.causaExterna.producidaPor.nombre}}</span>
+            <span *ngIf="registro.valor.InformeEgreso.causaExterna.producidaPor">{{registro.valor.InformeEgreso.causaExterna.producidaPor.nombre}}</span>
         </div>
         <div class="col-4">
             <label class="block">Lugar donde ocurrio</label>
-            <span>{{registro.valor.InformeEgreso.causaExterna.lugar.nombre }}</span>
+            <span *ngIf="registro.valor.InformeEgreso.causaExterna.lugar">{{registro.valor.InformeEgreso.causaExterna.lugar.nombre }}</span>
         </div>
         <div class="col-4">
             <label class="block">Como se produjo</label>
-            <span>{{registro.valor.InformeEgreso.causaExterna.comoSeProdujo.nombre }}</span>
+            <span *ngIf="registro.valor.InformeEgreso.causaExterna.comoSeProdujo">{{registro.valor.InformeEgreso.causaExterna.comoSeProdujo.nombre }}</span>
         </div>
     </div>
 
@@ -334,5 +334,15 @@
         </div>
     </ng-container>
 
-</ng-container> -->
+</ng-container>
 
+<footer class="andes-contenedor-botones vertical block" *ngIf="!soloValores">
+    <div class="andes-contenedor-botones horizontal between block">
+            <plex-button class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) "
+                type="success " class="float-right "></plex-button>
+
+            <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
+                (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
+    </div>
+</footer>
