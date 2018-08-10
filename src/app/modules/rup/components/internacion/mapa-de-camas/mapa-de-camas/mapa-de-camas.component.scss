@@ -57,15 +57,14 @@ $andes-verde-claro: #63c7b7;
     }
 }
 .cama-container {
-    margin: 10px 0 70px 0;
+    padding: 1rem 0;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
     perspective: 800px;
-    min-height: 390px;
+    min-height: 450px;
     width: 100%;
-
-
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
     
     .cama {
         -webkit-transition: -webkit-transform .5s;
@@ -105,10 +104,9 @@ $andes-verde-claro: #63c7b7;
             position: absolute;
             top: 0;
             left: 0;
-
-            // background-color: #FFF;
-            // min-height: 390px;
-            // width: 100%;
+            background-color: #FFF;
+            min-height: 430px;
+            width: 100%;
             // margin-bottom: 20px;
             // margin-top: 10px;
         }
@@ -316,9 +314,9 @@ $andes-verde-claro: #63c7b7;
 
 .cama-container:hover .cama .front,
 .cama-container:hover .cama .back {
-    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
     -webkit-transition: all 0.3s ease-out;
     -o-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
@@ -334,50 +332,72 @@ $andes-verde-claro: #63c7b7;
     margin-right: 0px!important;
     margin-left: 0px!important;
     
-    div[class="col-md-3"] {
-        margin: 0!important;
-        padding: 0;
-        box-shadow: grey 3px 3px 2px 0.5;
+    div {
+        &[class^="col-xs-"],
+        &[class^="col-sm-"],
+        &[class^="col-md-"],
+        &[class^="col-lg-"],
+        &[class^="col-xl-"] {
+            // margin: 0.25rem!important;
+            padding: 0;
+            // margin-bottom: 1rem;
+    
+            &.selected {
+                border: solid 3px $andes-azul;
+                padding: 0;
+                box-sizing: border-box;
+                height: 450px;
+                z-index: 4;
+            }
+        }
     }
 
 }
 
 
-
 .andes-card-container {
 	display: flex;
     flex-direction: row;
-    padding: 2rem 0;
+    padding: 0;
     margin: 0;
 	justify-content: space-between;
     align-items: center;
 	max-width: 100%;
     max-height: 15rem;
     text-align: center;
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
-
 
 
     .card-contenedor-central {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-
+        justify-content: flex-start;
+        height: 420px;
         width: 70%;
 
         .contenedor-cama {
             article.contenedor-texto {
                 position: absolute;
-                top: 45%;
-                left: 20%;
+                top: 43%;
+                left: 25%;
                 color: white;
-                width: calc(100% - 6rem);
-
+                width: calc(100% - 8vw);
             }
                 i {
                     align-self: center;
                 }
         }
+
+
+        .card-contenedor-inferior {
+            display: flex;
+            height: 200px;
+            flex-direction: column;
+            // height: 160px;
+            justify-content: flex-end;
+        
+        }
+        
+
     }
 
     .card-contenedor-lateral {
@@ -396,27 +416,30 @@ $andes-verde-claro: #63c7b7;
         }
     }
 
-    .andes-card-prefix {
+    .card-prefix {
         font-size: 1rem;
         font-weight: 700;
         text-transform: uppercase;
     }
     
-    .andes-card-titulo {
-        font-size: 1.5rem;
-    }
-    
-    .andes-card-subtitulo {
+    .card-titulo {
         font-size: 1.25rem;
-        font-weight: 900;
+        font-weight: 700;
+        text-transform: uppercase;
     }
     
-    .andes-card-texto {
+    .card-subtitulo {
+        font-size: 0.85rem;
+        font-weight: 400;
+        // white-space: pre;
+    }
+    
+    .card-texto {
         font-size: 0.9vw;
         line-height: 1.25vw;
     }
     
-    .andes-card-numero {
+    .card-numero {
         font-size: 7rem; 
         font-weight: 700;
     }
@@ -654,7 +677,6 @@ button {
     color: #000;
     height: fit-content;
     width: 100%;
-    line-height: 1;
     padding-top: 10px;
 
 }
@@ -837,6 +859,7 @@ button {
     display: flex;
     flex-direction: row;
     margin-top: 20px;
+    justify-content: space-around;
 
     .subcontainer-resumen {
         display: flex;
@@ -873,13 +896,6 @@ button {
         }
     }
 }
-    .selected{
-        border: solid 3px $andes-azul;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-
 
     .cama-seleccion-icon {
         color: $andes-cyan;
@@ -944,11 +960,34 @@ button {
 
 plex-box#panel-lateral > DIV {
 
-    h3,h4,h5,h5,p,strong,b {
+    h3,h4,h5,h5,p,strong {
         color: white;
         margin-bottom: 0.25rem;
     }
 
+    b,label {
+        color: $andes-cyan!important;
+    }
+
+    .text-info {
+        color: $andes-cyan;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    // Si hay tabla
+    table {
+        th, td {
+            color: white;
+        }
+    }
+
+    // Listados
+    li {
+        &.list-group-item {
+            padding: 0!important;
+        }
+    }
 
     fieldset > [class^="col"] {
         padding: 0px;
@@ -1018,12 +1057,17 @@ plex-tabs.andes-contenedor-tabs {
 		display: flex;
 		flex-direction: column;
         justify-content: space-between; 
-        padding: 1rem;
+        padding: 0.25rem 0;
         
         &.center {
             align-content: center;
             text-align: center;
 
+        }
+
+        .input-group-addon {
+            background-color: $andes-azul;
+            color: white;
         }
 	}
 
@@ -1050,7 +1094,8 @@ plex-tabs.andes-contenedor-tabs {
     justify-content: space-between;
 
     .andes-sidebar-numero {
-        font-size: 5rem;
+        // font-size: 5rem;
+        text-transform: uppercase;
         
         &.desocupada {
             color: $desocupada!important;
@@ -1111,6 +1156,8 @@ plex-tabs.andes-contenedor-tabs {
     .andes-contenedor-botones,.andes-contenedor-secundario  {
         display: flex;
         height: auto;
+        margin-top: 1rem;
+
 
         &.horizontal {
             flex-direction: row;
@@ -1128,6 +1175,10 @@ plex-tabs.andes-contenedor-tabs {
             justify-content: flex-start;
         }
 
+        &.around {
+            justify-content: space-around;
+        }
+
         &.end {
             justify-content: flex-end;
         }
@@ -1135,6 +1186,7 @@ plex-tabs.andes-contenedor-tabs {
         &.centrado {
             align-items: center;
             align-self: center;
+            justify-content: center;
         }
 
         &.block {
@@ -1169,8 +1221,9 @@ plex-tabs.andes-contenedor-tabs {
     text-align: center;
 }
 
-footer {
-    background-color: none!important;
+.plex-layout > footer {
+    background-color: $andes-azul-oscuro;
+    padding: 0!important
 }
 
 }
@@ -1180,6 +1233,10 @@ footer {
 
 hr {
 	border: solid 1px;
+
+    &.separate {
+        margin: 10px 0 10px 0;
+    }
 
 	&.blanco {
 		border-color: white;
@@ -1227,10 +1284,4 @@ hr {
 		
     }
     
-
-    .andes-contenedor-botones {
-        align-self: flex-end;
-    }
-
-
 }
