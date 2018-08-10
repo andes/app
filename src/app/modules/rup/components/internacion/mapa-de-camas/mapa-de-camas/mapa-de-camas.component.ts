@@ -311,9 +311,13 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     selecionarCama(cama) {
-        if(cama.ultimoEstado.paciente){
-               this.verResumen(cama.ultimoEstado.idInternacion) 
-            }
+        if (cama.ultimoEstado.paciente) {
+            this.showLoaderSidebar = true;
+            this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
+                this.prestacionPorInternacion = prestacion;
+                this.showLoaderSidebar = false;
+            });
+        }
         if (this.camaSeleccionada === cama) {
             this.camaSeleccionada = null;
         } else {
@@ -324,27 +328,27 @@ export class MapaDeCamasComponent implements OnInit {
         }
     }
 
-    verEgreso(idInternacion) {
-        this.showLoaderSidebar = true;
-        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-            this.prestacionPorInternacion = prestacion;
-            this.showLoaderSidebar = false;
-            this.showEgreso = true;
-            this.showIngreso = false;
-        });
-    }
+    // verEgreso(idInternacion) {
+    //     this.showLoaderSidebar = true;
+    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+    //         this.prestacionPorInternacion = prestacion;
+    //         this.showLoaderSidebar = false;
+    //         this.showEgreso = true;
+    //         this.showIngreso = false;
+    //     });
+    // }
 
-    verIngreso(soloValores, idInternacion) {
-        this.showLoaderSidebar = true;
-        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-            this.prestacionPorInternacion = prestacion;
-            this.showLoaderSidebar = false;
-            this.showEgreso = false;
-            this.showIngreso = true;
-            this.showResumen = false;
-            this.editarIngreso = soloValores;
-        });
-    }
+    // verIngreso(soloValores, idInternacion) {
+    //     this.showLoaderSidebar = true;
+    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+    //         this.prestacionPorInternacion = prestacion;
+    //         this.showLoaderSidebar = false;
+    //         this.showEgreso = false;
+    //         this.showIngreso = true;
+    //         this.showResumen = false;
+    //         this.editarIngreso = soloValores;
+    //     });
+    // }
 
     /**
      * Captura el evento que emite el componente y cierra/oculta los mismos
@@ -383,14 +387,27 @@ export class MapaDeCamasComponent implements OnInit {
         this.camaSelected = event;
     }
 
-    verResumen(idInternacion) {
-        this.showLoaderSidebar = true;
-        this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-            this.prestacionPorInternacion = prestacion;
-            this.showLoaderSidebar = false;
-            this.showEgreso = false;
-            this.showResumen = true;
-        });
-    }
+    // verResumen(idInternacion) {
+    //     this.showLoaderSidebar = true;
+    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
+    //         this.prestacionPorInternacion = prestacion;
+    //         this.showLoaderSidebar = false;
+    //         // this.showEgreso = false;
+    //         // this.showResumen = true;
+    //     });
+    // }
 
+
+    editar(event) {
+        switch (event) {
+            case 'ingreso':
+                this.editarIngreso = true;
+                break;
+            case 'egreso':
+                // this.showEgreso = event;
+                break;
+            default:
+                break;
+        }
+    }
 }

@@ -117,16 +117,14 @@
             <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
 
-                <!-- Egreso -->
-                <ng-container *ngIf="showEgreso && !showIngreso">
-                    <rup-egresoInternacion (data)="cerrar($event, 'egreso')" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
-                </ng-container>
+
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
                         [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
-                <ng-container *ngIf="camaSeleccionada && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso">
+                <ng-container *ngIf="camaSeleccionada">
+                    <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
                     <plex-tabs class="andes-contenedor-tabs">
                         <!-- Tab cama -->
                         <plex-tab class="andes-tab center" label="Datos de cama">
@@ -185,20 +183,27 @@
                                 </div>
                                 <div class="">
                                     <!-- Ver internacion -->
-                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion"
+                                        label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
                                 </div>
                             </footer>
                         </plex-tab>
+                        <!-- Resumen -->
                         <plex-tab class="andes-tab" label="datos de internacion">
-                                <internacion-resumen *ngIf="prestacionPorInternacion" (data)="cerrar($event, 'resumen')" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion"></internacion-resumen>
+                            <internacion-resumen *ngIf="prestacionPorInternacion" (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
+                                [prestacion]="prestacionPorInternacion"></internacion-resumen>
                         </plex-tab>
 
+
+
+                        <!-- Egreso -->
                         <plex-tab class="andes-tab" label="datos de egreso">
-                            <p>dcasdas</p>
+
+                            <!-- <ng-container *ngIf="showEgreso && !showIngreso"> -->
+                            <rup-egresoInternacion *ngIf="prestacionPorInternacion" (data)="cerrar($event, 'egreso')" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
+                            <!-- </ng-container> -->
+
                         </plex-tab>
-
-
-
                     </plex-tabs>
                 </ng-container>
 

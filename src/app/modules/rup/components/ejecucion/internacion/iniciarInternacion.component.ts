@@ -364,4 +364,5 @@ export class IniciarInternacionComponent implements OnInit {
         }
         this.showEditarCarpetaPaciente = false;
     }
+
 }

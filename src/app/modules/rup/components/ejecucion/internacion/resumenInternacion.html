@@ -1,61 +1,73 @@
 <ng-container *ngIf="prestacion">
     <!-- datos del ingreso -->
-    <rup-iniciarInternacion [paciente]="paciente" [prestacion]="prestacion" [soloValores]="true">
-    </rup-iniciarInternacion>
+    <ng-container *ngIf="!editarEgreso">
 
+        <rup-iniciarInternacion [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
+        </rup-iniciarInternacion>
+
+        <plex-button *ngIf="!editarIngreso || !editarEgreso" label="editar" (click)="editar('ingreso')">
+        </plex-button>
+    </ng-container>
 
     <!-- pases de cama -->
-    <p>
-        <span>Pases</span>
-    </p>
-    <div class="row">
-        <div class="col">
-            <table class="table">
-                <tr>
-                    <th>Fecha</th>
-                    <th>Cama</th>
-                    <th>Unidad organizativa</th>
-                    <th>Especialidad</th>
-                </tr>
-                <tr *ngFor="let pase of pases; let i=index">
-                    <td>
-                        {{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}
-                    </td>
-                    <td>
-                        {{ getHabitacionName(pase) + '/' + pase.nombre }}
-                    </td>
-                    <td>
-                        {{ pase.estados.unidadOrganizativa.term }}
-                    </td>
-                    <td>
-                        {{ pase.estados.especialidades[0]?.term }}
-                    </td>
-                </tr>
-            </table>
+    <ng-container *ngIf="!editarIngreso && !editarEgreso">
 
+        <p>
+            <span>Pases</span>
+        </p>
+        <div class="row">
+            <div class="col">
+                <table class="table">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Cama</th>
+                        <th>Unidad organizativa</th>
+                        <th>Especialidad</th>
+                    </tr>
+                    <tr *ngFor="let pase of pases; let i=index">
+                        <td>
+                            {{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}
+                        </td>
+                        <td>
+                            {{ getHabitacionName(pase) + '/' + pase.nombre }}
+                        </td>
+                        <td>
+                            {{ pase.estados.unidadOrganizativa.term }}
+                        </td>
+                        <td>
+                            {{ pase.estados.especialidades[0]?.term }}
+                        </td>
+                    </tr>
+                </table>
+
+            </div>
         </div>
-    </div>
 
+    </ng-container>
     <!-- datos del egreso -->
-    <rup-egresoInternacion [prestacion]="prestacion" [soloValores]="true"></rup-egresoInternacion>
-</ng-container>
+    <ng-container *ngIf="!editarIngreso">
+        <rup-egresoInternacion [prestacion]="prestacion" [soloValores]="!editarEgreso"></rup-egresoInternacion>
+        <plex-button *ngIf="!editarIngreso && !editarEgreso" label="editar" (click)="editar('egreso')">
+        </plex-button>
+    </ng-container>
 
-<footer>
+</ng-container>
+<!-- <footer>
     <div class="row">
         <div class="col-6 text-left">
             <plex-button class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
         </div>
-        <div class="col-6 text-right">
+        <div class="col-6 text-right"> -->
 
-            <!-- Falta un poco de analisis sobre la funcionalidad desde aca -->
+<!-- Falta un poco de analisis sobre la funcionalidad desde aca -->
 
 
-            <!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
+<!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
                     (click)="validar() " type="success " class="float-right "></plex-button> -->
 
-            <!-- <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
+<!-- <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
                     (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
              -->
-        </div>
+<!-- </div>
     </div>
-</footer>
+</footer> -->
