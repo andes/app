@@ -13,6 +13,8 @@ export class ResumenInternacionComponent implements OnInit {
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public pases;
+    public editarIngreso = false;
+    public editarEgreso = false;
 
     constructor(
         public prestacionesService: PrestacionesService
@@ -43,6 +45,19 @@ export class ResumenInternacionComponent implements OnInit {
      */
     cancelar() {
         this.data.emit(false);
+    }
+
+    editar(param) {
+        switch (param) {
+            case 'ingreso':
+                this.editarIngreso = true;
+                break;
+            case 'egreso':
+                this.editarEgreso = true;
+                break;
+            default:
+                break;
+        }
     }
 
 }
