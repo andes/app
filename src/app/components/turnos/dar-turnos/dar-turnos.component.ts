@@ -884,7 +884,7 @@ export class DarTurnosComponent implements OnInit {
         this.enviarSMS(pacienteSave);
         this.estadoT = 'noSeleccionada';
         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
-        let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+
         let agendaid = this.agenda.id;
         this.agenda = null;
         this.actualizar('');
@@ -901,7 +901,7 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         if (this.turnoDoble) {
-
+            let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
             if (turnoSiguiente.estado === 'disponible') {
                 let patch: any = {
                     op: 'darTurnoDoble',
