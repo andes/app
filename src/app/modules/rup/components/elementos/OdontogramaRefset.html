@@ -290,7 +290,7 @@
 
             <ng-container *ngFor="let cuadrante of cuadrantes">
                 <div class="col-6 no-gutters">
-                    <ng-container *ngFor="let diente of registro.valor.odontograma[cuadrante]; let i = index">
+                    <ng-container *ngFor="let diente of prestacion.ejecucion.registros[0].valor.odontograma[cuadrante]; let i = index">
                         <div class="diente-container text-center">
                             <span class="text-diente"> {{ diente.concepto.term }}</span>
                             <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
