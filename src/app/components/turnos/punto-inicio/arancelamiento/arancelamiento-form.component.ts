@@ -16,8 +16,8 @@ export class ArancelamientoFormComponent implements OnInit {
 
     turnoSeleccionado: any;
     efector = this.auth.organizacion.nombre;
-    obraSocial: string;
-    codigoOs: string;
+    obraSocial: String;
+    codigoOs: Number;
     showForm = false;
     idOrganizacion = this.auth.organizacion.id;
 
@@ -36,12 +36,12 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            if (resultado) {
-                this.obraSocial = resultado.financiador;
-                this.codigoOs = resultado.codigoFinanciador;
+            if (resultado && resultado.length) {
+                this.obraSocial = resultado[0].financiador;
+                this.codigoOs = resultado[0].codigoFinanciador;
             } else {
                 this.obraSocial = '';
-                this.codigoOs = '';
+                this.codigoOs = 0;
             }
 
             this.showForm = true;
@@ -50,7 +50,6 @@ export class ArancelamientoFormComponent implements OnInit {
                 this.volverAPuntoInicio.emit();
             }, 100);
         });
-
     }
 
     getNroCarpeta() {
@@ -58,7 +57,12 @@ export class ArancelamientoFormComponent implements OnInit {
             let resultado: any = this.turnoSeleccionado.paciente.carpetaEfectores.filter((carpeta: any) => {
                 return (carpeta.organizacion._id === this.idOrganizacion && carpeta.nroCarpeta !== null);
             });
-            return resultado[0].nroCarpeta;
+            if (resultado && resultado.length) {
+                return resultado[0].nroCarpeta;
+            } else {
+                return '';
+            }
+
         } else {
             return null;
         }

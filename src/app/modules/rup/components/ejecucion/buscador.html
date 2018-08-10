@@ -8,7 +8,7 @@
 
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR BÁSICO</button>
 
-        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('busquedaGuiada')" [ngClass]="{'active': busquedaActual === 'busquedaGuiada'}">BÚSQUEDA GUIADA</button>
+        <!--button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('busquedaGuiada')" [ngClass]="{'active': busquedaActual === 'busquedaGuiada'}">BÚSQUEDA GUIADA</button-->
     </div>
 
 </div>
@@ -91,7 +91,7 @@
                         </button>
                     </li>
 
-                    <li class="">
+                    <!--li class="">
                         <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('otros')" [ngClass]="{'active': filtroActual === 'otros'}" [disabled]="getCantidadResultados('otros') === 0"
@@ -99,7 +99,7 @@
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                             ELEM. REG.
                         </button>
-                    </li>
+                    </li-->
                 </ul>
             </div>
         </ng-container>

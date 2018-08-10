@@ -135,7 +135,7 @@ export class BotonesAgendaComponent implements OnInit {
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
-            editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
+            editarAgenda: (this.cantidadSeleccionadas === 1) && !this.agendasSeleccionadas[0].dinamica && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
             suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
@@ -168,24 +168,28 @@ export class BotonesAgendaComponent implements OnInit {
     }
 
     hayAgendasSuspendidas() {
-        let reasginar = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.nominalizada && agenda.estado === 'suspendida');
+        let reasignar = this.agendasSeleccionadas.filter((agenda) => {
+            return (agenda.nominalizada && !agenda.dinamica && agenda.estado === 'suspendida');
         }).length > 0;
-        return reasginar;
+        return reasignar;
     }
 
     // Comprueba que haya algún turno con paciente, en estado suspendido
     hayTurnosSuspendidos() {
-        for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
-            for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                if (this.agendasSeleccionadas[x].bloques[y].turnos) {
-                    for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
-                        if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
-                            return true;
+        if (!this.agendasSeleccionadas[0].dinamica) {
+            for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
+                for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
+                    if (this.agendasSeleccionadas[x].bloques[y].turnos) {
+                        for (let z = 0; z < this.agendasSeleccionadas[x].bloques[y].turnos.length; z++) {
+                            if (this.agendasSeleccionadas[x].bloques[y].turnos[z].estado === 'suspendido' && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente && this.agendasSeleccionadas[x].bloques[y].turnos[z].paciente.id) {
+                                return true;
+                            }
                         }
                     }
                 }
             }
+        } else {
+            return false;
         }
     }
 
@@ -234,7 +238,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoAgregar() {
         let agenda = this.agendasSeleccionadas[0];
-        return (agenda.nominalizada && (agenda.estado === 'disponible' || agenda.estado === 'publicada'));
+        return (agenda.nominalizada && !agenda.dinamica && (agenda.estado === 'disponible' || agenda.estado === 'publicada'));
     }
 
     puedoRevisar() {
@@ -254,7 +258,9 @@ export class BotonesAgendaComponent implements OnInit {
         let band = false;
         for (let x = 0; x < this.agendasSeleccionadas.length; x++) {
             for (let y = 0; y < this.agendasSeleccionadas[x].bloques.length; y++) {
-                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 && this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0) {
+                if (this.agendasSeleccionadas[x].bloques[y].accesoDirectoProgramado === 0 &&
+                    this.agendasSeleccionadas[x].bloques[y].accesoDirectoDelDia === 0 &&
+                    !this.agendasSeleccionadas[x].dinamica) {
                     band = false || band;
                 } else {
                     band = true;
