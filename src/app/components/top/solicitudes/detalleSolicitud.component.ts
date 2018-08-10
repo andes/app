@@ -7,7 +7,7 @@ import { Input, Component, Output, EventEmitter } from '@angular/core';
 })
 export class DetalleSolicitudComponent {
 
-    @Input() solicitudSeleccionada: any;
+    @Input() prestacionSeleccionada: any;
     @Input() turnoSeleccionado: any;
     @Input() tipoSolicitud: string;
 

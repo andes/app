@@ -45,6 +45,7 @@ export class SolicitudesComponent implements OnInit {
     public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
+    prestacionSeleccionada: any;
 
     constructor(
         private auth: Auth,
@@ -77,8 +78,10 @@ export class SolicitudesComponent implements OnInit {
     }
 
     cambio(activeTab) {
+
         this.activeTab = activeTab;
         this.showSidebar = false;
+        this.tipoSolicitud = (this.activeTab === 0) ? 'entrada' : 'salida';
     }
 
     refreshSelection(value, tipo) {
@@ -96,13 +99,14 @@ export class SolicitudesComponent implements OnInit {
         let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
         this.prestaciones[indicePrestacion].seleccionada = true;
         this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
         this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
         if (this.prestaciones[indicePrestacion].solicitud && this.prestaciones[indicePrestacion].solicitud.turno) {
             let params = {
                 id: this.solicitudSeleccionada.turno
             };
-            this.servicioTurnos.getTurnos(params).subscribe(turno => {
-                this.turnoSeleccionado = turno[0].bloques[0].turnos[0];
+            this.servicioTurnos.getTurnos(params).subscribe(turnos => {
+                this.turnoSeleccionado = turnos[0];
             });
         } else {
             this.turnoSeleccionado = null;
@@ -287,6 +291,8 @@ export class SolicitudesComponent implements OnInit {
             });
         }
     }
+
+
 
     formularioSolicitud(tipoSolicitud) {
 
