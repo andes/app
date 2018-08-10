@@ -784,6 +784,7 @@ export class DarTurnosComponent implements OnInit {
             obraSocial: this.obraSocialPaciente
         };
         this.agenda = agd;
+        this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estadoFacturacion = 'sinFacturar';
         this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].estado = 'asignado';
         this.agenda.bloques[this.indiceBloque].cantidadTurnos = (this.agenda.bloques[this.indiceBloque].cantidadTurnos) - 1;
         let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];

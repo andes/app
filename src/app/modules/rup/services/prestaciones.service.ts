@@ -5,6 +5,8 @@ import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
+import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
+
 @Injectable()
 export class PrestacionesService {
 
@@ -137,7 +139,7 @@ export class PrestacionesService {
      */
     getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
-            let registros = [];
+            let registros: IPrestacionRegistro[] = [];
 
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
@@ -145,7 +147,6 @@ export class PrestacionesService {
 
                 }
             });
-            let registroSalida = [];
             let registroEncontrado = this.findValues(registros, key);
             if (registroEncontrado && registroEncontrado.length > 0) {
                 return registroEncontrado[0];

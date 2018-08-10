@@ -1,6 +1,3 @@
-<!-- Este es un elemento RUP -->
-
-<!-- Moléculas -->
 <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
@@ -9,6 +6,7 @@
                     [soloValores]="soloValores" (change)="emitChange()">
                 </rup>
             </div>
+            {{ registro.registros[i].updatedAt | json }}
         </ng-container>
     </div>
 </ng-container>

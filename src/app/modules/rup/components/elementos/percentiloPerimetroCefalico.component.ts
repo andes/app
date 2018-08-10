@@ -1,23 +1,24 @@
+import { debounce } from 'rxjs/operator/debounce';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-
+import * as moment from 'moment';
 @Component({
-    selector: 'rup-observaciones',
-    templateUrl: 'observaciones.html'
+    selector: 'rup-percentiloPerimetroCefalico',
+    templateUrl: 'percentiloPerimetroCefalico.html'
 })
-export class ObservacionesComponent extends RUPComponent implements OnInit {
-    public referentSet = [];
+export class PercentiloPerimetroCefalicoComponent extends RUPComponent implements OnInit {
+
     ngOnInit() {
-        this.registro.valido = true;
-        // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
         if (!this.soloValores) {
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
-                // No soy yo mismo
-                if (this.registro !== data && this.registro.valor !== data.valor) {
+                if (this.registro.valor !== data.valor) {
                     this.registro.valor = data.valor;
                     this.emitChange(false);
                 }
             });
+        }
+        if (this.registro.valor) {
+            this.mensaje = this.getMensajes();
         }
     }
 }

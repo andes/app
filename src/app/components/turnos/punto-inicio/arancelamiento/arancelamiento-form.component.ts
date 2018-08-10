@@ -2,7 +2,12 @@ import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, Host
 import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
+<<<<<<< HEAD:src/app/components/turnos/punto-inicio/arancelamiento/arancelamiento-form.component.ts
 import { ObraSocialService } from './../../../../services/obraSocial.service';
+=======
+import { ObraSocialService } from './../../../services/obraSocial.service';
+import { FacturacionAutomaticaService} from './../../../services/facturacionAutomatica.service';
+>>>>>>> mergeJulito:src/app/components/turnos/dashboard/arancelamiento-form.component.ts
 
 @Component({
     selector: 'arancelamiento-form',
@@ -20,6 +25,7 @@ export class ArancelamientoFormComponent implements OnInit {
     codigoOs: string;
     showForm = false;
     idOrganizacion = this.auth.organizacion.id;
+    codigoNomenclador: string;
 
     @Input('turno')
     set turno(value: any) {
@@ -32,7 +38,7 @@ export class ArancelamientoFormComponent implements OnInit {
     @Output() volverAPuntoInicio: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;
 
-    constructor(public auth: Auth, public servicioOS: ObraSocialService, public plex: Plex) { }
+    constructor(public auth: Auth, public servicioOS: ObraSocialService, public servicioFA: FacturacionAutomaticaService, public plex: Plex) { }
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
