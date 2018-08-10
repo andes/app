@@ -64,6 +64,9 @@ $andes-verde-claro: #63c7b7;
     perspective: 800px;
     min-height: 390px;
     width: 100%;
+
+
+    
     .cama {
         -webkit-transition: -webkit-transform .5s;
         -moz-transition: -moz-transform .5s;
@@ -102,12 +105,12 @@ $andes-verde-claro: #63c7b7;
             position: absolute;
             top: 0;
             left: 0;
-            background-color: #FFF;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
-            min-height: 390px;
-            width: 100%;
-            margin-bottom: 20px;
-            margin-top: 10px;
+
+            // background-color: #FFF;
+            // min-height: 390px;
+            // width: 100%;
+            // margin-bottom: 20px;
+            // margin-top: 10px;
         }
         .front {
             z-index: 2;
@@ -325,6 +328,101 @@ $andes-verde-claro: #63c7b7;
     
 }
 
+// Refactor Cama
+
+#mapaCamas.row {
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+    
+    div[class="col-md-3"] {
+        margin: 0!important;
+        padding: 0;
+        box-shadow: grey 3px 3px 2px 0.5;
+    }
+
+}
+
+
+
+.andes-card-container {
+	display: flex;
+    flex-direction: row;
+    padding: 2rem 0;
+    margin: 0;
+	justify-content: space-between;
+    align-items: center;
+	max-width: 100%;
+    max-height: 15rem;
+    text-align: center;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
+
+
+
+    .card-contenedor-central {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        width: 70%;
+
+        .contenedor-cama {
+            article.contenedor-texto {
+                position: absolute;
+                top: 45%;
+                left: 20%;
+                color: white;
+                width: calc(100% - 6rem);
+
+            }
+                i {
+                    align-self: center;
+                }
+        }
+    }
+
+    .card-contenedor-lateral {
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        width: 15%;
+
+        .icon-lateral {
+            border-top-left-radius: 25px; 
+            border-top-right-radius: 25px;
+            
+            i {
+                font-size: 0.25rem;
+            }
+        }
+    }
+
+    .andes-card-prefix {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .andes-card-titulo {
+        font-size: 1.5rem;
+    }
+    
+    .andes-card-subtitulo {
+        font-size: 1.25rem;
+        font-weight: 900;
+    }
+    
+    .andes-card-texto {
+        font-size: 0.9vw;
+        line-height: 1.25vw;
+    }
+    
+    .andes-card-numero {
+        font-size: 7rem; 
+        font-weight: 700;
+    }
+}
+
+
 /* varios */
 
 .numero-habitacion {
@@ -431,7 +529,7 @@ button {
 }
 
 .icon-content {
-    font-size: 14rem;
+    font-size: 13.5rem;
 
     &.desocupada{
         color:$desocupada;
@@ -552,9 +650,13 @@ button {
 }
 
 .data-paciente {
+    flex-direction: column;
     color: #000;
-    height: 60px;
+    height: fit-content;
+    width: 100%;
+    line-height: 1;
     padding-top: 10px;
+
 }
 
 // TODO: ver los estilos de los botones del lateral con julito @fersastre
@@ -773,6 +875,8 @@ button {
 }
     .selected{
         border: solid 3px $andes-azul;
+        padding: 0;
+        box-sizing: border-box;
     }
 
 
@@ -865,7 +969,6 @@ plex-box#panel-lateral > DIV {
 
 // Contenedor tabs 
 plex-tabs.andes-contenedor-tabs {
-
 }
 
     // tab head
@@ -879,6 +982,16 @@ plex-tabs.andes-contenedor-tabs {
         color: white;
         text-transform: uppercase;
         text-align: center;
+        justify-content: center;
+    }
+
+    .nav-tabs .nav-item {
+        display: flex;
+        width: 100%;
+
+        a > span {
+            align-self: center;
+        }
     }
 
     .nav-link {
@@ -886,7 +999,7 @@ plex-tabs.andes-contenedor-tabs {
         background-color: $andes-gris;
 
         &.active {
-            background-color: $andes-azul;
+            background-color: $andes-azul!important;
         }
     }
 
@@ -986,10 +1099,6 @@ plex-tabs.andes-contenedor-tabs {
     }
 }
 
-
-    .andes-contenedor-botones {
-        align-self: flex-end;
-    }
 
     // Iconos
     .andes-contenedor-iconos {
@@ -1116,5 +1225,12 @@ hr {
 	&.xl {
 		width: 100%;
 		
-	}
+    }
+    
+
+    .andes-contenedor-botones {
+        align-self: flex-end;
+    }
+
+
 }
