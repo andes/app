@@ -591,8 +591,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                             resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
                         }
                     } else {
-                        debugger;
-                        this.tipoBusqueda = this.filtroRefset;
+                        this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
                         resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                     }
                 }

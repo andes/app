@@ -316,20 +316,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         if (this.prestacion.ejecucion.registros.length) {
             return this.prestacion.ejecucion.registros.find(x => {
                 if (x.relacionadoCon) {
-                    if (x.esSolicitud === false) {
-                        return x.relacionadoCon.find(y => {
-                            if (y && y.concepto && y.cara) {
-                                return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                            }
-                        });
-                    } else {
+                    if (x.esSolicitud) {
                         x.concepto.semanticTag = 'plan';
-                        return x.relacionadoCon.find(y => {
-                            if (y && y.concepto && y.cara) {
-                                return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                            }
-                        });
                     }
+                    return x.relacionadoCon.find(y => {
+                        if (y && y.concepto && y.cara) {
+                            return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                        }
+                    });
                 }
             });
         }

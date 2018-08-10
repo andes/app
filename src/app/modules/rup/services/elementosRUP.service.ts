@@ -131,6 +131,8 @@ export class ElementosRUPService {
     buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
         // Busca el elemento RUP que implemente el concepto
 
+        // TODO: ver cómo resolver esto mejor...
+        concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {

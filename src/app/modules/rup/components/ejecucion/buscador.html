@@ -29,7 +29,6 @@
 
     <!-- Botones filtros -->
     <ng-container *ngIf="results">
-
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
             <div class="container-filtros">
                 <ul class="botones-filtros">
@@ -127,9 +126,6 @@
                     <a href="javascript: void(0);" (click)="setTipoBusqueda('buscadorBasico');">Buscador básico</a>
                 </p>
             </ng-container>
-            <!-- <pre>
-                {{ busquedaRefSet | json }}
-            </pre> -->
         </div>
     </ng-container>
 </div>
@@ -143,14 +139,11 @@
 
 
 <!-- RESULTADOS PRINCIPALES -->
-
 <div *ngIf="busquedaActual && filtroActual && results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length">
 
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
-
             <li>
-
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="rup-header">
                         <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
@@ -158,9 +151,7 @@
                             <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                         </div>
-
                         <div class="rup-border">
-
                             <div class="row p-0 m-0 border-secondary border-left-0">
                                 <div class="col-6 p-0 m-0">
                                     <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
@@ -188,9 +179,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </li>

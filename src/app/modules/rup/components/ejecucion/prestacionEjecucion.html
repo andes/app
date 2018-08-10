@@ -207,6 +207,7 @@
                                                     </div>
 
                                                     <!-- RUP Loader -->
+                                                    {{ registro.concepto | json }} {{ registro.esSolicitud }}
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
                                                         [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"
                                                         (change)="elementosRUPService.selectPorRefsetId(registro.concepto)" (ejecutarConcepto)="ejecutarConcepto($event, registro)"
