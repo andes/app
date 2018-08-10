@@ -403,7 +403,7 @@
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" [busquedaRefSet]="tipoBusqueda" (tagBusqueda)="getTipoBusqueda($event)"
-                                (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event, tipoBusqueda)"
+                                (filtroRefSet)="getFiltroRefset($event)" (tengoResultado)="recibeSitengoResultado($event)" (evtData)="ejecutarConcepto($event, tipoBusqueda)"
                                 (_onDragStart)="arrastrandoConcepto(true)" (_onDragEnd)="arrastrandoConcepto(false)">
                             </rup-buscador>
                         </plex-tab>

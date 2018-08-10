@@ -9,7 +9,8 @@
     background: rgba(133, 133, 133, 0.4);
     border-radius: 5px;
     .title {
-        height: 28px;
+        height: auto;
+        max-height: 40px;
     }
     width: 100%;
     transition: all 1s;

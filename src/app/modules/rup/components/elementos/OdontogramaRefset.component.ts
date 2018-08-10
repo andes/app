@@ -1,6 +1,4 @@
 import { setTimeout } from 'timers';
-import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
-import { ISnomedConcept } from './../../interfaces/snomed-concept.interface';
 import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
@@ -309,17 +307,29 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
             }
         });
+
     }
+
+
 
     getClassRegistro(diente, cara) {
         if (this.prestacion.ejecucion.registros.length) {
             return this.prestacion.ejecucion.registros.find(x => {
                 if (x.relacionadoCon) {
-                    return x.relacionadoCon.find(y => {
-                        if (y && y.concepto && y.cara) {
-                            return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
-                        }
-                    });
+                    if (x.esSolicitud === false) {
+                        return x.relacionadoCon.find(y => {
+                            if (y && y.concepto && y.cara) {
+                                return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                            }
+                        });
+                    } else {
+                        x.concepto.semanticTag = 'plan';
+                        return x.relacionadoCon.find(y => {
+                            if (y && y.concepto && y.cara) {
+                                return y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara;
+                            }
+                        });
+                    }
                 }
             });
         }

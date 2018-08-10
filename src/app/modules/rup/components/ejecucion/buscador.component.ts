@@ -40,6 +40,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     @Output() _tipoDeBusqueda: EventEmitter<any> = new EventEmitter<any>();
     @Output() tagBusqueda: EventEmitter<any> = new EventEmitter<any>();
+    @Output() filtroRefSet: EventEmitter<any> = new EventEmitter<any>();
     // Lista de planes.
     public listaPlanes: any[] = [];
     // concepto snomed seleccionado del buscador a ejecutar
@@ -506,7 +507,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
             // Devolvemos si queremos que se genere una relación
             // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
-            this.tagBusqueda.emit(this.busquedaRefSet);
+            this.tagBusqueda.emit(filtro);
+            this.filtroRefSet.emit(this.busquedaRefSet);
             // this.tagBusqueda.emit(filtro);
             this.busquedaRefSet = null;
         } else {
