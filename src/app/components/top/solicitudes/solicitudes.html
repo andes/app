@@ -64,7 +64,7 @@
                                                     <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
                                                     <td>{{prestacion.solicitud.profesional | profesional}}</td>
                                                     <td *ngIf="!prestacion.solicitud.turno" class="text-center estado">
-                                                        <span class="badge badge-success">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                        <span class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
                                                     </td>
                                                     <td *ngIf="prestacion.solicitud.turno" class="text-center estado">
                                                         <span class="badge badge-success">Turno dado</span>
@@ -75,7 +75,7 @@
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="auditarArrayEntrada[i]">
-                                                            <plex-button icon="calendar-plus" type="info" (click)="auditar()" title="Auditar Solicitud">
+                                                            <plex-button icon="mdi mdi-check" type="info" (click)="auditar()" title="Aprobar Solicitud">
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">

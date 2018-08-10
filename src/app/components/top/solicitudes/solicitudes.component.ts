@@ -151,7 +151,19 @@ export class SolicitudesComponent implements OnInit {
     }
 
     auditar() {
+        this.plex.confirm('', '¿Aprobar Solicitud?').then((confirmado) => {
+            if (!confirmado) {
+                return false;
+            }
 
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                this.prestacionSeleccionada.estados.push({ tipo: 'pendiente' });
+                this.servicioPrestacion.put(this.prestacionSeleccionada).subscribe(respuesta => {
+                    this.cargarSolicitudes();
+                });
+            }
+
+        });
     }
 
     editarReglas() {

@@ -148,7 +148,7 @@ export class NuevaSolicitudComponent {
     }
 
     onSelectPrestacionOrigen() {
-        if (this.tipoSolicitud === 'entrada') {
+        if (this.tipoSolicitud === 'entrada' && this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
             this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
                 .subscribe(
                     res => {
@@ -160,7 +160,7 @@ export class NuevaSolicitudComponent {
     }
 
     onSelectPrestacionDestino() {
-        if (this.prestacionDestino) {
+        if (this.prestacionDestino && this.modelo.solicitud && this.modelo.solicitud.tipoPrestacionOrigen) {
             let regla = this.arrayReglasDestino.find(rule => { return rule.destino.prestacion.conceptId === this.prestacionDestino.id; });
             this.modelo.solicitud.tipoPrestacion = regla.destino.prestacion;
             let regla2 = regla.origen.prestaciones.find(rule => { return rule.prestacion.conceptId === this.modelo.solicitud.tipoPrestacionOrigen.conceptId; });
