@@ -15,6 +15,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { ObraSocialService } from './../../../../services/obraSocial.service';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -27,10 +28,14 @@ export class PrestacionEjecucionComponent implements OnInit {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
 
+    public ResumendePaciente = 'Resumen de Paciente';
+    public obraSocialPaciente;
+
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
     public paciente: IPaciente;
     public elementoRUP: IElementoRUP;
+    public prestacionSolicitud;
 
     public showPlanes = false;
     public relacion = null;
@@ -96,6 +101,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public collapse = true;
 
     constructor(
+        private obraSocialService: ObraSocialService,
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
@@ -136,8 +142,11 @@ export class PrestacionEjecucionComponent implements OnInit {
                             // Carga la información completa del paciente
                             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                 this.paciente = paciente;
+                                this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
+                                    this.obraSocialPaciente = os;
+                                });
                             });
-
+                            this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
