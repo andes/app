@@ -2,12 +2,8 @@ import { Component, Input, OnInit, EventEmitter, Output, ViewEncapsulation, Host
 import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
-<<<<<<< HEAD:src/app/components/turnos/punto-inicio/arancelamiento/arancelamiento-form.component.ts
 import { ObraSocialService } from './../../../../services/obraSocial.service';
-=======
-import { ObraSocialService } from './../../../services/obraSocial.service';
-import { FacturacionAutomaticaService} from './../../../services/facturacionAutomatica.service';
->>>>>>> mergeJulito:src/app/components/turnos/dashboard/arancelamiento-form.component.ts
+import { FacturacionAutomaticaService} from './../../../../services/facturacionAutomatica.service';
 
 @Component({
     selector: 'arancelamiento-form',
