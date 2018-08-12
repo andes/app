@@ -25,7 +25,8 @@
         "mobile": false,
         "scripts": [],
         "styles": [
-            "styles.scss"
+            "styles.scss",
+            "app/shared/assets/wizard/styles.scss"
         ],
         "environmentSource": "environments/environment.ts",
         "environments": {
