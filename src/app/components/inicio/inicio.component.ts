@@ -1,23 +1,7 @@
-import {
-    Plex
-} from '@andes/plex';
-import {
-    Observable
-} from 'rxjs/Rx';
-import {
-    Component,
-    AfterViewInit,
-    HostBinding
-} from '@angular/core';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    Wizard
-} from './../../classes/wizard.class';
-import {
-    AppComponent
-} from './../../app.component';
+import { Plex } from '@andes/plex';
+import { Component, AfterViewInit, HostBinding } from '@angular/core';
+import { Auth } from '@andes/auth';
+import { AppComponent } from './../../app.component';
 
 @Component({
     templateUrl: 'inicio.html',
@@ -76,13 +60,19 @@ export class InicioComponent implements AfterViewInit {
             }
         });
         // Por ahora desactivamos el wizard!
-        // let wizard = new Wizard('turnos');
-        // wizard.addStep('Bienvenido al módulo de Agendas & Turnos', 'Este asistente lo ayudará a empezar a trabajar');
-        // wizard.addStep('Crear la agenda', 'El primer paso es crear una agenda a través del Gestor de Agendas');
-        // wizard.addStep('Publica la agenda', 'Luego la agenda debe publicarse para que esté lista para dar turnos');
-        // wizard.addStep('Dar Turnos', 'Ahora pueden otorgarse turnos');
-        // wizard.addStep('Acceso de profesionales', 'El personal de Salud puede acceder a los turnos dados desde el consultorio, incluso otorgar nuevos turnos');
-        // wizard.addStep('Comenzar a usar', 'La aplicación ya está lista para que comiences a utilizarla');
-        // wizard.render();
+        this.plex.wizard({
+            id: 'turnos',
+            updatedOn: moment('2018-08-01').toDate(),
+            steps: [
+                {
+                    title: 'Bienvenido al módulo de Agendas & Turnos',
+                    content: 'Este asistente lo ayudará a empezar a trabajar'
+                },
+                {
+                    title: 'Dos',
+                    content: 'Contenido dos'
+                },
+            ]
+        });
     }
 }
