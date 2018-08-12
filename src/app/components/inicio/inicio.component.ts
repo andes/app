@@ -59,20 +59,5 @@ export class InicioComponent implements AfterViewInit {
                 this.denied = false;
             }
         });
-        // Por ahora desactivamos el wizard!
-        this.plex.wizard({
-            id: 'turnos',
-            updatedOn: moment('2018-08-01').toDate(),
-            steps: [
-                {
-                    title: 'Bienvenido al módulo de Agendas & Turnos',
-                    content: 'Este asistente lo ayudará a empezar a trabajar'
-                },
-                {
-                    title: 'Dos',
-                    content: 'Contenido dos'
-                },
-            ]
-        });
     }
 }
