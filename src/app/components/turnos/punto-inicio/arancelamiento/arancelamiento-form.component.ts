@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
 import { ObraSocialService } from './../../../../services/obraSocial.service';
-import { FacturacionAutomaticaService} from './../../../../services/facturacionAutomatica.service';
+import { FacturacionAutomaticaService } from './../../../../services/facturacionAutomatica.service';
 
 @Component({
     selector: 'arancelamiento-form',
@@ -38,21 +38,27 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
-            if (resultado) {
-                this.obraSocial = resultado.financiador;
-                this.codigoOs = resultado.codigoFinanciador;
-            } else {
-                this.obraSocial = '';
-                this.codigoOs = '';
-            }
+            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+                if (resultadoFA && resultadoFA.length > 0) {
+                    this.codigoNomenclador = resultadoFA[0].nomencladorRecuperoFinanciero;
+                } else {
+                    this.codigoNomenclador = '';
+                }
+                if (resultado) {
+                    this.obraSocial = resultado[0].financiador;
+                    this.codigoOs = resultado[0].codigoFinanciador;
+                } else {
+                    this.obraSocial = '';
+                    this.codigoOs = '';
+                }
 
-            this.showForm = true;
-            setTimeout(() => {
-                this.imprimir();
-                this.volverAPuntoInicio.emit();
-            }, 100);
+                this.showForm = true;
+                setTimeout(() => {
+                    this.imprimir();
+                    this.volverAPuntoInicio.emit();
+                }, 100);
+            });
         });
-
     }
 
     getNroCarpeta() {
