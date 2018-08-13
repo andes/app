@@ -17,6 +17,8 @@ export class EgresoInternacionComponent implements OnInit {
 
     @Input() prestacion;
     @Input() soloValores;
+    // botonera, input para pasarle por parametro si mostramos o no el btn cerrar o guardar.
+    @Input() botonera;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public listaUnidadesOrganizativas: any[];
@@ -62,9 +64,7 @@ export class EgresoInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        // this.route.params.subscribe(params => {
-        //     this.servicioPrestacion.getById(params.id).subscribe(prestacion => {
-        //         this.prestacion = prestacion;
+        // this.iniciaBotonera();
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
         let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
         this.registro.valor = existeRegistro ? existeRegistro.valor : null;
@@ -105,6 +105,22 @@ export class EgresoInternacionComponent implements OnInit {
         });
     }
 
+    /**
+     * Inicia la visualizacion de los botones por defecto en true
+     */
+    iniciaBotonera() {
+        // debugger;
+        if (this.botonera) {
+            this.botonera.cerrar = (this.botonera && this.botonera.cerrar) ? this.botonera.cerrar : true;
+            this.botonera.guardar = (this.botonera && this.botonera.guardar) ? this.botonera.guardar : true;
+            this.botonera.validar = (this.botonera && this.botonera.validar) ? this.botonera.validar : true;
+        }
+
+    }
+    /**
+     * Captura el evento del select y busca el codigo CIE10
+     * @param event
+     */
     codigoCIE10(event) {
         if (event && event.query) {
             let query = {

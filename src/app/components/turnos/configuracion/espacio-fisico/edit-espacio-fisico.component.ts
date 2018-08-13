@@ -38,7 +38,6 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     ngOnInit() {
         this.autorizado = this.auth.check('turnos:editarEspacio');
-        console.log('this.espacioFisicoHijo ', this.espacioFisicoHijo);
 
         let nombre = this.espacioFisicoHijo ? this.espacioFisicoHijo.nombre : '';
         let descripcion = this.espacioFisicoHijo ? this.espacioFisicoHijo.descripcion : '';
@@ -93,7 +92,6 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     onClick(modelo: IEspacioFisico) {
 
-        console.log('modelo ', modelo);
         let estOperation: Observable<IEspacioFisico>;
         modelo.organizacion = this.auth.organizacion;
         modelo.estado = this.modelo.estado ? this.modelo.estado.id : 'disponible';

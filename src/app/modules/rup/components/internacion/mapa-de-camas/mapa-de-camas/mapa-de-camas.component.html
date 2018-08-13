@@ -194,13 +194,12 @@
                                 [prestacion]="prestacionPorInternacion"></internacion-resumen>
                         </plex-tab>
 
-
-
                         <!-- Egreso -->
                         <plex-tab class="andes-tab" label="datos de egreso">
 
                             <!-- <ng-container *ngIf="showEgreso && !showIngreso"> -->
-                            <rup-egresoInternacion *ngIf="prestacionPorInternacion" (data)="cerrar($event, 'egreso')" [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
+                            <rup-egresoInternacion *ngIf="prestacionPorInternacion" [botonera]="{cerrar: false, validar: true, guardar: true}" (data)="cerrar($event, 'egreso')"
+                                [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
                             <!-- </ng-container> -->
 
                         </plex-tab>

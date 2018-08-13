@@ -146,7 +146,7 @@ export class SuspenderTurnoComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
+
                 }
             }
 

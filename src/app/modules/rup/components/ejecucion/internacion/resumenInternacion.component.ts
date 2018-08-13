@@ -60,4 +60,9 @@ export class ResumenInternacionComponent implements OnInit {
         }
     }
 
+    cierraEditar(event) {
+        this.editarIngreso = false;
+        this.editarEgreso = false;
+    }
+
 }

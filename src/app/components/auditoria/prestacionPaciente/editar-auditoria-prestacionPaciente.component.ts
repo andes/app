@@ -113,7 +113,6 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
                 },
                     err => {
                         if (err) {
-                            console.log(err);
                         }
                     });
 
@@ -126,7 +125,6 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
                 },
                     err => {
                         if (err) {
-                            console.log(err);
                         }
                     });
             }

@@ -503,7 +503,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {

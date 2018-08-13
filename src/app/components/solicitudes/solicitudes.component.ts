@@ -29,8 +29,6 @@ export class SolicitudesComponent implements OnInit {
     }
 
     estaSeleccionada(solicitud: any) {
-        console.log('solicitud ', solicitud);
-        console.log('solicitudes ', this.solicitudes);
         return this.solicitudes.findIndex(x => x.id === solicitud._id);
     }
 
@@ -262,13 +260,11 @@ export class SolicitudesComponent implements OnInit {
                     ]
                 }
             ];
-            //     console.log('solicitudes ', this.solicitudes);
         }
         // this.servicioPrestacion.get(params).subscribe(resultado => {
         //     this.solicitudes = resultado;
         // }, err => {
         //     if (err) {
-        //         console.log(err);
         //     }
         // });
     }

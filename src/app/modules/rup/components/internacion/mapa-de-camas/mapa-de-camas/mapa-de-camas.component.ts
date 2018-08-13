@@ -81,7 +81,6 @@ export class MapaDeCamasComponent implements OnInit {
 
     ngOnInit() {
         this.refresh();
-
     }
 
 

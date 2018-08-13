@@ -72,7 +72,6 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            console.log(this.childsComponents.first);
             (this.childsComponents.first as any).nativeElement.value = '';
             let metadata = {
                 prestacion: this.prestacion.id,

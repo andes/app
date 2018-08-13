@@ -2,7 +2,7 @@
     <!-- datos del ingreso -->
     <ng-container *ngIf="!editarEgreso">
 
-        <rup-iniciarInternacion [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
+        <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
         </rup-iniciarInternacion>
 
         <plex-button *ngIf="!editarIngreso || !editarEgreso" label="editar" (click)="editar('ingreso')">
@@ -46,7 +46,8 @@
     </ng-container>
     <!-- datos del egreso -->
     <ng-container *ngIf="!editarIngreso">
-        <rup-egresoInternacion [prestacion]="prestacion" [soloValores]="!editarEgreso"></rup-egresoInternacion>
+        <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
+            [soloValores]="!editarEgreso"></rup-egresoInternacion>
         <plex-button *ngIf="!editarIngreso && !editarEgreso" label="editar" (click)="editar('egreso')">
         </plex-button>
     </ng-container>

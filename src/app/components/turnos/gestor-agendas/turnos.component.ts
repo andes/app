@@ -431,7 +431,7 @@ export class TurnosComponent implements OnInit {
                     },
                     err => {
                         if (err) {
-                            console.log(err);
+
                         }
                     }
                 );
