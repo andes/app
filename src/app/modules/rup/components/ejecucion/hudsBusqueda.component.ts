@@ -446,7 +446,6 @@ export class HudsBusquedaComponent implements OnInit {
         // (alfa === concepto.term)
         if (this.filtroActual === 'laboratorios') {
             this.laboratorios.sort((a, b) => {
-                console.log(a.createdAt);
                 if (tipoOrden === 'fecha') {
                     if (this.ordenDesc) {
                         return b.createdAt - a.createdAt;

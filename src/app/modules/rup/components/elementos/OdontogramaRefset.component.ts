@@ -100,9 +100,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
-                    if (this.ultimoOdontograma && this.ultimoOdontograma.valor) {
-                        console.log(odontogramasPaciente);
-                    }
                 }
                 this.armarRelaciones();
             });
@@ -310,8 +307,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     }
 
-
-
     getClassRegistro(diente, cara) {
         if (this.prestacion.ejecucion.registros.length) {
             return this.prestacion.ejecucion.registros.find(x => {
@@ -443,7 +438,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         // Variable para evitar que los dientes tengan un mismo puntero en memoria
         let wisdomTooth;
 
-
         if (index === -1) {
             const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: 'pieza' }));
             dienteSel.piezaCompleta = true;
@@ -503,7 +497,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     limpiarSeleccion(e) {
         setTimeout(() => {
-            console.log(this.piezasSeleccionadas);
             this.piezasSeleccionadas = [];
             this.registro.valor.piezas = [];
         }, 100);
