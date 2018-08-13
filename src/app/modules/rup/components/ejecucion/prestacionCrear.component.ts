@@ -136,7 +136,8 @@ export class PrestacionCrearComponent implements OnInit {
             estados: {
                 fecha: new Date(),
                 tipo: 'ejecucion'
-            }
+            },
+            estadoFacturacion: 'sinFacturar'
         };
 
         nuevaPrestacion.paciente['_id'] = this.paciente.id;
