@@ -24,25 +24,10 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
 
         if (this.elementoRUP.conceptosBuscar && this.elementoRUP.conceptosBuscar.length > 0) {
 
-            // armo el array de conceptIds a buscar en la HUDS
-            const conceptIds = this.elementoRUP.conceptosBuscar.map(concepto => concepto.conceptId);
-
             // buscamos
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, conceptIds).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<27113001').subscribe(prestaciones => {
 
                 if (prestaciones.length) {
-
-                    // armamos array de resultados
-                    // this.pesos = prestaciones.map(prestacion => {
-                    //     let registro = prestacion.ejecucion.registros.filter(p => { return conceptIds.indexOf(p.concepto.conceptId) > -1; });
-                    //     return ({
-                    //         // fecha: prestacion.ejecucion.fecha,
-                    //         fecha: prestacion.ejecucion.fecha,
-                    //         registro: registro[0],
-                    //         profesional: registro[0].createdBy,
-                    //         prestacion: prestacion.solicitud.tipoPrestacion.term
-                    //     });
-                    // });
                     this.pesos = prestaciones;
 
                     // ordenamos los pesos por fecha
