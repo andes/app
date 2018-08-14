@@ -179,6 +179,9 @@ export class HudsBusquedaComponent implements OnInit {
             case 'hallazgo':
             case 'producto':
                 registro.class = registro.concepto.semanticTag;
+                if (registro.esSolicitud) {
+                    registro.class = 'plan';
+                }
                 index = this.registrosHuds.findIndex(r => {
                     if (r.data.concepto && (r.data.concepto.semanticTag === 'hallazgo' || r.data.concepto.semanticTag === 'trastorno' || r.data.concepto.semanticTag === 'producto' || r.data.concepto.semanticTag === 'procedimiento' || r.data.concepto.semanticTag === 'entidad observable') && r.data.concepto.id === registro.concepto.id) {
                         if (r.data.createdAt === registro.createdAt && r.data.updatedAt === registro.updatedAt) {
@@ -445,7 +448,6 @@ export class HudsBusquedaComponent implements OnInit {
         // (alfa === concepto.term)
         if (this.filtroActual === 'laboratorios') {
             this.laboratorios.sort((a, b) => {
-                console.log(a.createdAt);
                 if (tipoOrden === 'fecha') {
                     if (this.ordenDesc) {
                         return b.createdAt - a.createdAt;
