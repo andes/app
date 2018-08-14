@@ -7,6 +7,7 @@
                         <legend class="text-info">Datos de ingreso</legend>
                         <h5>Paciente:</h5>
                         <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
+                        <hr class="blanco xs separate">
                         <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
                                 para una mejor visualizacion de la carga de datos -->
                         <div class="row">
@@ -85,7 +86,8 @@
     <!-- SoloValores -->
     <ng-container *ngIf="soloValores">
 
-        <ng-container *ngIf="paciente">
+        <ng-container *ngIf="paciente && informeIngreso">
+            <!-- Datos personales -->
             <fieldset>
                 <legend class="text-info">Datos de ingreso</legend>
                 <br>
@@ -97,55 +99,60 @@
                     </div>
                 </div>
             </fieldset>
-            <div class="row">
-                <div class="col-6">
-                    <b>Fecha Ingreso:</b> {{informeIngreso.fechaIngreso | fecha}}
+            <hr class="blanco xs">
+            <!-- Datos de internacion -->
+            <div class="andes-contenedor-secundario horizontal between">
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Fecha Ingreso:</b>
+                    <p>{{informeIngreso.fechaIngreso | fecha}}</p>
                 </div>
-                <div class="col-6">
-                    <b>Origen Hospitalización:</b> {{informeIngreso.origen}}
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Origen Hospitalización:</b>
+                    <p>{{informeIngreso.origen}}</p>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <b>Profesional:</b> {{informeIngreso.profesional.nombreCompleto}}
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-6" *ngIf="situacionesLaborales">
-                    <b>Situacion Laboral:</b> {{informeIngreso.situacionLaboral}}
-                </div>
-                <div class="col-6 ">
-                    <b>Ocupación Habitual:</b> {{informeIngreso.ocupacionHabitual}}
+                <div *ngIf="informeIngreso.profesional" class="andes-contenedor-secundario vertical">
+                    <b>Profesional:</b>
+                    <p>{{informeIngreso.profesional.nombreCompleto}}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-4 ">
-                    <b>Nivel Instrucción:</b> {{informeIngreso.nivelInstruccion}}
+
+            <!-- Datos secundarios  -->
+            <div class="andes-contenedor-secundario horizontal between" *ngIf="situacionesLaborales">
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Situacion Laboral:</b>
+                    <p>{{informeIngreso.situacionLaboral}}</p>
                 </div>
-                <div class="col-4 ">
-                    <b>Asociado a:</b> {{informeIngreso.asociado}}
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Ocupación Habitual:</b>
+                    <p>{{informeIngreso.ocupacionHabitual}}</p>
                 </div>
-                <div class="col-4 ">
-                    <b>Obra Social:</b> {{obraSocial.nombre}}
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Nivel Instrucción:</b>
+                    <p>{{informeIngreso.nivelInstruccion}}</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <b>Motivo:</b> {{informeIngreso.motivo}}
+
+            <!-- datos administrativos -->
+            <div class="andes-contenedor-secundario horizontal start">
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Asociado a:</b>
+                    <p>{{informeIngreso.asociado}}</p>
                 </div>
+                <div class="andes-contenedor-secundario vertical">
+                    <b>Obra Social:</b>
+                    <p>{{obraSocial.nombre}}</p>
+                </div>
+            </div>
+            <div class="andes-contenedor-secundario vertical">
+                <b>Motivo:</b>
+                <p>{{informeIngreso.motivo}}</p>
             </div>
         </ng-container>
-
-
     </ng-container>
-    <!--Footer-->
 
-    <footer class="andes-contenedor-botones vertical block" *ngIf="!buscandoPaciente && !soloValores">
-        <div class="andes-contenedor-botones horizontal between block">
-            <plex-button type="danger " label="VOLVER" (click)="cancelar() ">
-            </plex-button>
-            <plex-button label="{{btnIniciarGuardar}}" *ngIf="paciente " validateForm="true " type="success " (click)="guardar($event) ">
-            </plex-button>
-        </div>
+    <!--Footer-->
+    <footer class="andes-contenedor-botones horizontal between" *ngIf="!buscandoPaciente && !soloValores">
+        <plex-button type="danger" label="VOLVER" (click)="cancelar()"></plex-button>
+        <plex-button label="{{btnIniciarGuardar}}" *ngIf="paciente" validateForm="true " type="success " (click)="guardar($event)"></plex-button>
     </footer>
 </form>

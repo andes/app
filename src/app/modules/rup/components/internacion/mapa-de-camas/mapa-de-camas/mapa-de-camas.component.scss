@@ -57,13 +57,15 @@ $andes-verde-claro: #63c7b7;
     }
 }
 .cama-container {
-    margin: 10px 0 70px 0;
+    padding: 1rem 0;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
     perspective: 800px;
-    min-height: 390px;
+    min-height: 450px;
     width: 100%;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
+    
     .cama {
         -webkit-transition: -webkit-transform .5s;
         -moz-transition: -moz-transform .5s;
@@ -103,11 +105,10 @@ $andes-verde-claro: #63c7b7;
             top: 0;
             left: 0;
             background-color: #FFF;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
-            min-height: 390px;
+            min-height: 430px;
             width: 100%;
-            margin-bottom: 20px;
-            margin-top: 10px;
+            // margin-bottom: 20px;
+            // margin-top: 10px;
         }
         .front {
             z-index: 2;
@@ -313,9 +314,9 @@ $andes-verde-claro: #63c7b7;
 
 .cama-container:hover .cama .front,
 .cama-container:hover .cama .back {
-    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
     -webkit-transition: all 0.3s ease-out;
     -o-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
@@ -324,6 +325,126 @@ $andes-verde-claro: #63c7b7;
     transition: all 0.3s ease-out;
     
 }
+
+// Refactor Cama
+
+#mapaCamas.row {
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+    
+    div {
+        &[class^="col-xs-"],
+        &[class^="col-sm-"],
+        &[class^="col-md-"],
+        &[class^="col-lg-"],
+        &[class^="col-xl-"] {
+            // margin: 0.25rem!important;
+            padding: 0;
+            // margin-bottom: 1rem;
+    
+            &.selected {
+                border: solid 3px $andes-azul;
+                padding: 0;
+                box-sizing: border-box;
+                height: 450px;
+                z-index: 4;
+            }
+        }
+    }
+
+}
+
+
+.andes-card-container {
+	display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0;
+	justify-content: space-between;
+    align-items: center;
+	max-width: 100%;
+    max-height: 15rem;
+    text-align: center;
+
+
+    .card-contenedor-central {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 420px;
+        width: 70%;
+
+        .contenedor-cama {
+            article.contenedor-texto {
+                position: absolute;
+                top: 43%;
+                left: 25%;
+                color: white;
+                width: calc(100% - 8vw);
+            }
+                i {
+                    align-self: center;
+                }
+        }
+
+
+        .card-contenedor-inferior {
+            display: flex;
+            height: 200px;
+            flex-direction: column;
+            // height: 160px;
+            justify-content: flex-end;
+        
+        }
+        
+
+    }
+
+    .card-contenedor-lateral {
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        width: 15%;
+
+        .icon-lateral {
+            border-top-left-radius: 25px; 
+            border-top-right-radius: 25px;
+            
+            i {
+                font-size: 0.25rem;
+            }
+        }
+    }
+
+    .card-prefix {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .card-titulo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .card-subtitulo {
+        font-size: 0.85rem;
+        font-weight: 400;
+        // white-space: pre;
+    }
+    
+    .card-texto {
+        font-size: 0.9vw;
+        line-height: 1.25vw;
+    }
+    
+    .card-numero {
+        font-size: 7rem; 
+        font-weight: 700;
+    }
+}
+
 
 /* varios */
 
@@ -431,7 +552,7 @@ button {
 }
 
 .icon-content {
-    font-size: 14rem;
+    font-size: 13.5rem;
 
     &.desocupada{
         color:$desocupada;
@@ -552,9 +673,12 @@ button {
 }
 
 .data-paciente {
+    flex-direction: column;
     color: #000;
-    height: 60px;
+    height: fit-content;
+    width: 100%;
     padding-top: 10px;
+
 }
 
 // TODO: ver los estilos de los botones del lateral con julito @fersastre
@@ -735,6 +859,7 @@ button {
     display: flex;
     flex-direction: row;
     margin-top: 20px;
+    justify-content: space-around;
 
     .subcontainer-resumen {
         display: flex;
@@ -771,11 +896,6 @@ button {
         }
     }
 }
-    .selected{
-        border: solid 3px $andes-azul;
-    }
-
-
 
     .cama-seleccion-icon {
         color: $andes-cyan;
@@ -840,11 +960,34 @@ button {
 
 plex-box#panel-lateral > DIV {
 
-    h3,h4,h5,h5,p,strong,b {
+    h3,h4,h5,h5,p,strong {
         color: white;
         margin-bottom: 0.25rem;
     }
 
+    b,label {
+        color: $andes-cyan!important;
+    }
+
+    .text-info {
+        color: $andes-cyan;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    // Si hay tabla
+    table {
+        th, td {
+            color: white;
+        }
+    }
+
+    // Listados
+    li {
+        &.list-group-item {
+            padding: 0!important;
+        }
+    }
 
     fieldset > [class^="col"] {
         padding: 0px;
@@ -865,7 +1008,6 @@ plex-box#panel-lateral > DIV {
 
 // Contenedor tabs 
 plex-tabs.andes-contenedor-tabs {
-
 }
 
     // tab head
@@ -879,6 +1021,16 @@ plex-tabs.andes-contenedor-tabs {
         color: white;
         text-transform: uppercase;
         text-align: center;
+        justify-content: center;
+    }
+
+    .nav-tabs .nav-item {
+        display: flex;
+        width: 100%;
+
+        a > span {
+            align-self: center;
+        }
     }
 
     .nav-link {
@@ -886,7 +1038,7 @@ plex-tabs.andes-contenedor-tabs {
         background-color: $andes-gris;
 
         &.active {
-            background-color: $andes-azul;
+            background-color: $andes-azul!important;
         }
     }
 
@@ -905,12 +1057,17 @@ plex-tabs.andes-contenedor-tabs {
 		display: flex;
 		flex-direction: column;
         justify-content: space-between; 
-        padding: 1rem;
+        padding: 0.25rem 0;
         
         &.center {
             align-content: center;
             text-align: center;
 
+        }
+
+        .input-group-addon {
+            background-color: $andes-azul;
+            color: white;
         }
 	}
 
@@ -937,7 +1094,8 @@ plex-tabs.andes-contenedor-tabs {
     justify-content: space-between;
 
     .andes-sidebar-numero {
-        font-size: 5rem;
+        // font-size: 5rem;
+        text-transform: uppercase;
         
         &.desocupada {
             color: $desocupada!important;
@@ -987,10 +1145,6 @@ plex-tabs.andes-contenedor-tabs {
 }
 
 
-    .andes-contenedor-botones {
-        align-self: flex-end;
-    }
-
     // Iconos
     .andes-contenedor-iconos {
         display: flex;
@@ -1002,6 +1156,8 @@ plex-tabs.andes-contenedor-tabs {
     .andes-contenedor-botones,.andes-contenedor-secundario  {
         display: flex;
         height: auto;
+        margin-top: 1rem;
+
 
         &.horizontal {
             flex-direction: row;
@@ -1019,6 +1175,10 @@ plex-tabs.andes-contenedor-tabs {
             justify-content: flex-start;
         }
 
+        &.around {
+            justify-content: space-around;
+        }
+
         &.end {
             justify-content: flex-end;
         }
@@ -1026,6 +1186,7 @@ plex-tabs.andes-contenedor-tabs {
         &.centrado {
             align-items: center;
             align-self: center;
+            justify-content: center;
         }
 
         &.block {
@@ -1060,8 +1221,9 @@ plex-tabs.andes-contenedor-tabs {
     text-align: center;
 }
 
-footer {
-    background-color: none!important;
+.plex-layout > footer {
+    background-color: $andes-azul-oscuro;
+    padding: 0!important
 }
 
 }
@@ -1071,6 +1233,10 @@ footer {
 
 hr {
 	border: solid 1px;
+
+    &.separate {
+        margin: 10px 0 10px 0;
+    }
 
 	&.blanco {
 		border-color: white;
@@ -1116,5 +1282,6 @@ hr {
 	&.xl {
 		width: 100%;
 		
-	}
+    }
+    
 }

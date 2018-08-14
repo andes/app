@@ -71,6 +71,8 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
+    public activo = 0;
+
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -408,5 +410,13 @@ export class MapaDeCamasComponent implements OnInit {
             default:
                 break;
         }
+    }
+
+    /**
+     * Pasamos el numero del tap que queremos mostrar por defecto
+     * @param value
+     */
+    public cambiaTap(value) {
+        this.activo = value;
     }
 }

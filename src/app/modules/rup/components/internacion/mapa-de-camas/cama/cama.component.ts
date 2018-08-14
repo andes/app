@@ -251,6 +251,7 @@ export class CamaComponent implements OnInit {
         let idPaciente = paciente ? paciente._id : this.prestacion.paciente.id;
         idInternacion = idInternacion ? idInternacion : this.prestacion.id;
         cama = cama ? cama : this.cama;
+        console.log(idPaciente, 'LA paciente');
         this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
             dto = {
                 fecha: new Date,

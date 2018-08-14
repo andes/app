@@ -144,7 +144,7 @@ export class IniciarInternacionComponent implements OnInit {
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
-                        this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
+                        // this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
                     }
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos

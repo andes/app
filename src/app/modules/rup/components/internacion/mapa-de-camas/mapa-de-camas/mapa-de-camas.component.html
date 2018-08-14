@@ -7,9 +7,7 @@
                 <plex-box>
                     <header>
                         <div class="clearfix">
-                            <div class="page-title">
-                                Mapa de camas
-                            </div>
+                            <div class="page-title">Mapa de camas</div>
                         </div>
                         <!-- TODO: Ver estilos con julito ,@FerSastre -->
                         <div class="row" *ngIf="camas">
@@ -34,9 +32,7 @@
                             </div>
                             <!-- Filtros por estado -->
                             <div class="col-md-3">
-                                <label>
-                                    Estados:
-                                </label>
+                                <label>Estados:</label>
                                 <div class="d-flex estados-container" *ngIf="cantidadXEstado">
                                     <div>
                                         <span class="{{(inactive && filtros.estado?.id !== 'disponible') ? 'inactive' :  ''}} count disponible">{{cantidadXEstado['disponible'].length}}</span>
@@ -94,7 +90,6 @@
                                 </button>
                             </div>
                         </div>
-                        <hr />
                     </header>
                     <!-- Loader -->
                     <plex-loader *ngIf="loader" type="ball-pulse-sync"></plex-loader>
@@ -102,8 +97,8 @@
                     <div *ngIf="!loader && !camas">
                         No se encontraron resultados
                     </div>
-                    <div class="row" *ngIf="!loader">
-                        <div (click)="selecionarCama(cama)" [ngClass]="{'col-md-3': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
+                    <div id="mapaCamas" class="row" *ngIf="!loader">
+                        <div (click)="selecionarCama(cama)" [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                             *ngFor="let cama of camas; let i = index">
                             <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id }"
                                 (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
@@ -117,7 +112,6 @@
             <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
 
-
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
@@ -125,7 +119,7 @@
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs class="andes-contenedor-tabs">
+                    <plex-tabs class="andes-contenedor-tabs" [activeIndex]="activo" (change)="cambiaTap($event)">
                         <!-- Tab cama -->
                         <plex-tab class="andes-tab center" label="Datos de cama">
                             <div class="sidebar-contenedor-texto">
@@ -135,9 +129,7 @@
                                     </span>
                                     <h3>Cama</h3>
                                     <hr class="blanco xs">
-                                    <h2 class="{{camaSeleccionada.ultimoEstado.estado}}">
-                                        {{camaSeleccionada.nombre}}
-                                    </h2>
+                                    <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
                                     <!-- Data paciente -->
                                     <div class="andes-contenedor-secundario horizontal centrado">
                                         <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente" src="" alt="">
@@ -177,9 +169,9 @@
                             <footer class="andes-contenedor-botones vertical block">
                                 <div class="andes-contenedor-botones horizontal between block">
                                     <!-- Editar internacion -->
-                                    <plex-button type="danger" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="verIngreso(false, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                    <plex-button type="danger" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" label="Editar internación" (click)="cambiaTap(1)"></plex-button>
                                     <!-- Ver egreso -->
-                                    <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="info" label="Ver Egreso" (click)="verEgreso(camaSeleccionada.ultimoEstado.idInternacion)"></plex-button>
+                                    <plex-button *ngIf="camaSeleccionada.ultimoEstado?.idInternacion" type="info" label="Ver Egreso" (click)="cambiaTap(2)"></plex-button>
                                 </div>
                                 <div class="">
                                     <!-- Ver internacion -->
@@ -208,7 +200,7 @@
 
                 <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
                     <header>
-                        <h3>Acciones</h3>
+                        <h5 class="text-info">Acciones</h5>
                     </header>
                     <ng-container *ngIf="!prestacion && !historicoMode">
                         <plex-button type="primary btn-block" label="Lista de espera" (click)="!camasService.showListaEspera = true;"></plex-button>
@@ -229,7 +221,7 @@
                     </ng-container>
 
                     <div class="pt-3">
-                        <h3>Estado del servicio</h3>
+                        <h5 class="text-info">Estado del servicio</h5>
                         <hr class="blanco">
                     </div>
 
