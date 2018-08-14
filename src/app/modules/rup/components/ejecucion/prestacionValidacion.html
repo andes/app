@@ -61,14 +61,12 @@
                 </div>
             </div>
         </header>
-        <div class="row no-gutters">
+        <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
             <div class="col titulos">
-                <!-- <object data="/assets/logo-andes.svg"></object> -->
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
                         <div class="col">
-                            <!-- <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }} -->
                             <br>
                             <b>Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
                             <br>
@@ -93,28 +91,24 @@
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
                         <div class="text-capitalize mt-4 titulo-trastornos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Trastornos</h5>
-                            <!-- {{ reemplazar(['trastorno'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
                         <div class="text-capitalize mt-4 titulo-procedimientos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Procedimientos</h5>
-                            <!-- {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
                         <div class="text-capitalize mt-4 titulo-planes">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Planes</h5>
-                            <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
                         <div class="text-capitalize mt-4 titulo-productos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Productos</h5>
-                            <!-- {{ reemplazar(['producto'], ', ') }} -->
                         </div>
                     </ng-container>
 
@@ -133,14 +127,14 @@
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
-                                    {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                    {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                 </ng-container>
 
                                 <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                    <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
+                                    <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }}</b>
                                 </div>
-                                <div class="float-left" *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0">
-                                    <b class="clearfix" *ngIf="elemento.relacionadoCon[0]">Relacionado con: </b>
+                                <div class="float-left" *ngIf="elemento?.relacionadoCon">
+                                    <b class="clearfix" *ngIf="elemento?.relacionadoCon">Relacionado con: </b>
                                     <ng-container *ngFor="let relacion of elemento.relacionadoCon">
                                         <span class="badge badge-info">
                                             {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara

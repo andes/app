@@ -35,6 +35,20 @@
     right: 15px;
 }
 
+.cuadranteSuperiorDerecho,
+.cuadranteSuperiorDerechoTemporal,
+.cuadranteInferiorDerecho,
+.cuadranteInferiorDerechoTemporal {
+    text-align: right;
+}
+
+.cuadranteSuperiorIzquierdo,
+.cuadranteSuperiorIzquierdoTemporal,
+.cuadranteInferiorIzquierdo,
+.cuadranteInferiorIzquierdoTemporal {
+    text-align: left;
+}
+
 svg {
     overflow: visible;
 }
@@ -188,7 +202,7 @@ $translation in $angles {
 
 .diente-container {
     display: inline-block;
-    width: 50px;
+    width: 40px;
     font-size: 12px;
     .text-diente {
         font-size: 16px;

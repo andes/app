@@ -137,12 +137,12 @@
             <ng-container *ngFor="let cuadrante of cuadrantes">
 
                 <!-- CUADRANTE -->
-                <div class="col-6 no-gutters">
+                <div class="col-6 no-gutters {{ cuadrante }}">
                     <ng-container *ngFor="let diente of odontograma[cuadrante]; let i=index">
                         <div class="diente-container text-center">
                             <span class="text-diente">{{ diente.concepto.term }}</span>
                             <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
+                                id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1"
                                 viewBox="0 0 55 50" xml:space="preserve">
 
                                 <!-- DISTAL -->
@@ -213,6 +213,7 @@
                                 <!-- PIEZA -->
                                 <g class="pieza" (click)="seleccionarPieza(diente, 'pieza')" title="pieza completa" (mouseenter)="showTooltip(diente, false, 0)"
                                     (mouseleave)="hideTooltip()">
+                                    <!-- Círculo MINI -->
                                     <circle class="st1" [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311" r="5.801" />
                                     <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                     />
@@ -223,11 +224,11 @@
                                     <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let pc=index">
                                         <g title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle (mouseenter)="showTooltip(diente, false, pc)" (mouseleave)="hideTooltip()" *ngIf="relClass?.concepto?.semanticTag"
-                                                class="st1 {{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
+                                            <circle (mouseenter)="showTooltip(diente, false, pc)" (mouseleave)="hideTooltip()" class="st1 {{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
                                                 [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311"
                                                 r="5.801" />
-                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="piezaCompletaValor(diente) !==- 1 ? 'diente-' + getClassRegistro(diente)?.concepto.semanticTag + '-outline' : ''"
+                                            <!-- Asterisco -->
+                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="{'seleccionada seleccionada-outline': estaSeleccionada(diente, 'pieza')}"
                                                 d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
                                             />
                                         </g>
@@ -235,7 +236,7 @@
                                 </ng-container>
                             </svg>
                             <svg *ngIf="piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
+                                id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1"
                                 viewBox="0 0 55 50" xml:space="preserve">
                                 <g (mouseenter)="showTooltip(diente, 'anulada')" (mouseleave)="hideTooltip()">
                                     <circle class="pieza completa pieza-anulada" cx="26" cy="27.5" r="22.246">
@@ -289,12 +290,12 @@
             </div>
 
             <ng-container *ngFor="let cuadrante of cuadrantes">
-                <div class="col-6 no-gutters">
+                <div class="col-6 no-gutters {{ cuadrante }}">
                     <ng-container *ngFor="let diente of prestacion.ejecucion.registros[0].valor.odontograma[cuadrante]; let i = index">
                         <div class="diente-container text-center">
                             <span class="text-diente"> {{ diente.concepto.term }}</span>
                             <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
+                                id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1"
                                 viewBox="0 0 55 50" xml:space="preserve">
                                 <path (mouseenter)="showTooltip(diente, 'distal', false, 0)" (mouseleave)="hideTooltip()" [ngClass]="{'registrada': caraValor(diente, 'distal') !== -1}"
                                     d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
@@ -367,7 +368,7 @@
                                     <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let a=index">
                                         <g (mouseenter)="showTooltip(diente, 'pieza', false, a)" (mouseleave)="hideTooltip()" class="pieza" title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle *ngIf="relClass?.concepto?.semanticTag" cx="46.285" cy="7.311" r="5.801" class="st1" [ngClass]=" 'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a "
+                                            <circle *ngIf="relClass?.concepto?.semanticTag" cx="46.285" cy="7.311" r="5.801" class="st1" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a"
                                             />
                                             <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag + '-outline' : '' "
                                                 d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
@@ -379,7 +380,7 @@
                                 </ng-container>
                             </svg>
                             <svg *ngIf="piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1 "
+                                id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1 "
                                 viewBox="0 0 55 50" xml:space="preserve">
                                 <g (mouseenter)="showTooltip(diente, 'anulada')" (mouseleave)="hideTooltip()">
                                     <circle class="pieza completa pieza-anulada" cx="26" cy="27.5" r="22.246">

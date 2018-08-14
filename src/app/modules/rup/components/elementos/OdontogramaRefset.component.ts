@@ -31,7 +31,17 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     public carasSeleccionadas: any[] = [];
     public conceptos: any[] = [];
 
-    public cuadrantes = ['cuadranteSuperiorDerecho', 'cuadranteSuperiorIzquierdo', 'cuadranteInferiorDerecho', 'cuadranteInferiorIzquierdo'];
+    public cuadrantes = [
+        'cuadranteSuperiorDerecho',
+        'cuadranteSuperiorIzquierdo',
+        'cuadranteSuperiorDerechoTemporal',
+        'cuadranteSuperiorIzquierdoTemporal',
+        'cuadranteInferiorDerechoTemporal',
+        'cuadranteInferiorIzquierdoTemporal',
+        'cuadranteInferiorDerecho',
+        'cuadranteInferiorIzquierdo',
+    ];
+    public cuadrantesTemporales = ['cuadranteSuperiorDerechoTemporal', 'cuadranteSuperiorIzquierdoTemporal', 'cuadranteInferiorDerechoTemporal', 'cuadranteInferiorIzquierdoTemporal'];
 
     showPopOver = false;
     popOverText: any = '';
@@ -44,9 +54,13 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     public odontograma: any = {
         cuadranteSuperiorDerecho: [],
+        cuadranteSuperiorDerechoTemporal: [],
         cuadranteSuperiorIzquierdo: [],
+        cuadranteSuperiorIzquierdoTemporal: [],
         cuadranteInferiorDerecho: [],
-        cuadranteInferiorIzquierdo: []
+        cuadranteInferiorDerechoTemporal: [],
+        cuadranteInferiorIzquierdo: [],
+        cuadranteInferiorIzquierdoTemporal: [],
     };
 
     public seleccionMultiple = false;
@@ -58,7 +72,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             odontograma.forEach(diente => {
                 let nroDiente = Number(diente.term.replace('ISO designation ', ''));
                 diente.term = nroDiente.toString();
-                //  || (nroDiente >= 51 && nroDiente <= 55)
                 if ((nroDiente >= 11 && nroDiente <= 18)) {
                     this.odontograma.cuadranteSuperiorDerecho.push({ concepto: diente });
                 } else if (nroDiente >= 21 && nroDiente <= 28) {
@@ -67,25 +80,31 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.odontograma.cuadranteInferiorDerecho.push({ concepto: diente });
                 } else if (nroDiente >= 31 && nroDiente <= 38) {
                     this.odontograma.cuadranteInferiorIzquierdo.push({ concepto: diente });
+                } else if (nroDiente >= 51 && nroDiente <= 55) {
+                    this.odontograma.cuadranteSuperiorDerechoTemporal.push({ concepto: diente });
+                } else if (nroDiente >= 61 && nroDiente <= 65) {
+                    this.odontograma.cuadranteSuperiorIzquierdoTemporal.push({ concepto: diente });
+                } else if (nroDiente >= 81 && nroDiente <= 85) {
+                    this.odontograma.cuadranteInferiorDerechoTemporal.push({ concepto: diente });
+                } else if (nroDiente >= 71 && nroDiente <= 75) {
+                    this.odontograma.cuadranteInferiorIzquierdoTemporal.push({ concepto: diente });
                 }
-
             });
 
             this.odontograma.cuadranteSuperiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
             this.odontograma.cuadranteSuperiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
             this.odontograma.cuadranteInferiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
             this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
+            this.odontograma.cuadranteSuperiorDerechoTemporal.sort((a, b) => b.concepto.term > a.concepto.term);
+            this.odontograma.cuadranteSuperiorIzquierdoTemporal.sort((a, b) => b.concepto.term < a.concepto.term);
+            this.odontograma.cuadranteInferiorDerechoTemporal.sort((a, b) => b.concepto.term > a.concepto.term);
+            this.odontograma.cuadranteInferiorIzquierdoTemporal.sort((a, b) => b.concepto.term < a.concepto.term);
 
             // Trae los hallazgos, procedimientos, etc...
             if (this.params) {
                 this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                     this.conceptos = resultado;
                 });
-
-            }
-
-            if (this.registro.valor && this.registro.valor.piezas) {
-                // traer las evoluciones del odontograma (odontogramas anteriores)
             }
 
             let params: IPrestacionGetParams = {
@@ -129,6 +148,19 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
             });
 
+            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerechoTemporal.forEach(x => {
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdoTemporal.forEach(x => {
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerechoTemporal.forEach(x => {
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdoTemporal.forEach(x => {
+                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
+            });
+
         }
 
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
@@ -146,6 +178,22 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 x.relacion = x.relacion.map(y => y.concepto);
             });
             this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
+                x.relacion = x.relacion.map(y => y.concepto);
+            });
+            this.odontograma.cuadranteSuperiorDerechoTemporal.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
+                x.relacion = x.relacion.map(y => y.concepto);
+            });
+            this.odontograma.cuadranteSuperiorIzquierdoTemporal.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
+                x.relacion = x.relacion.map(y => y.concepto);
+            });
+            this.odontograma.cuadranteInferiorDerechoTemporal.forEach(x => {
+                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
+                x.relacion = x.relacion.map(y => y.concepto);
+            });
+            this.odontograma.cuadranteInferiorIzquierdoTemporal.forEach(x => {
                 x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
                 x.relacion = x.relacion.map(y => y.concepto);
             });

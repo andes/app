@@ -206,11 +206,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                             registro.relacionadoCon[key] = esRegistro;
                         } else {
                             registro.relacionadoCon[key] = registroRel;
-                            // window.setTimeout(() => {
-                            //     this.servicioSnomed.getByConceptId(registroRel, { format: '' }).subscribe(rel => {
-                            //         registro.relacionadoCon[key] = rel;
-                            //     });
-                            // }, 1000);
                         }
                     });
                 }

@@ -181,27 +181,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 this.prestacion.ejecucion.registros.forEach(registro => {
 
-                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        // console.log(registro.relacionadoCo);
-                        registro.relacionadoCon.forEach((registroRel, key) => {
-                            // console.log('registroRel', registroRel);
-                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
-                            // Es registro RUP o es un concepto puro?
-                            if (esRegistro) {
-                                registro.relacionadoCon[key] = esRegistro;
-                            } else if (registroRel) {
-                                registro.relacionadoCon[key] = registroRel;
-                                // registroRel = typeof registroRel === 'object' ? registroRel.concepto.conceptId : registroRel;
-                                // window.setTimeout(() => {
-                                //     this.servicioSnomed.getByConceptId(registroRel, { format: '' }).subscribe(rel => {
-                                //         registro.relacionadoCon[key] = rel;
-                                //     });
-                                // }, 1000);
-                            }
-                        });
-                    }
-
-
                     if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
                         let parametros = {
                             conceptId: registro.concepto.conceptId,
@@ -217,10 +196,26 @@ export class PrestacionValidacionComponent implements OnInit {
                 });
 
             });
+
+            if (this.prestacion) {
+                this.prestacion.ejecucion.registros.forEach(registro => {
+
+                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        registro.relacionadoCon.forEach((registroRel, key) => {
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
+                            // Es registro RUP o es un concepto puro?
+                            if (esRegistro) {
+                                registro.relacionadoCon[key] = esRegistro;
+                            } else {
+                                registro.relacionadoCon[key] = registroRel;
+                            }
+                        });
+                    }
+                });
+                this.armarRelaciones(this.prestacion.ejecucion.registros);
+            }
+
             this.defualtDiagnosticoPrestacion();
-            this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.armarRelaciones(this.registrosOrdenados);
-            // this.reordenarRelaciones();
 
         });
     }
@@ -257,13 +252,6 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
 
-                    this.prestacion.ejecucion.registros.forEach(registro => {
-                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
-                            });
-                        }
-                    });
                     // actualizamos las prestaciones de la HUDS
                     this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
@@ -277,7 +265,6 @@ export class PrestacionValidacionComponent implements OnInit {
                     if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
                         this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
                     }
-
 
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
@@ -445,7 +432,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let relacionesOrdenadas = [];
 
         registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon.findIndex(y => y === cosa.id));
+            let esPadre = registros.filter(x => x.relacionadoCon[0] ? x.relacionadoCon[0] === cosa.id : false);
 
             if (esPadre.length > 0) {
                 if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
@@ -464,7 +451,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
         });
 
-        this.registrosOrdenados = relacionesOrdenadas;
+        this.prestacion.ejecucion.registros = relacionesOrdenadas;
+
     }
 
 
