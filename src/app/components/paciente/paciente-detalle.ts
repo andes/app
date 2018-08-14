@@ -81,7 +81,7 @@ export class PacienteDetalleComponent implements OnInit {
                 if (patient.estado === 'temporal') {
                     patient.nombre = datos.nombres;
                     patient.apellido = datos.apellido;
-                    patient.fechaNacimiento = datos.fechaNacimiento;
+                    patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
                     patient.estado = 'validado';
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;
