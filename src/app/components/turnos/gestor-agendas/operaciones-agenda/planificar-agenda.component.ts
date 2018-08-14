@@ -10,7 +10,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
-import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 
 @Component({
     selector: 'planificar-agenda',
@@ -541,6 +540,10 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            if (this.dinamica) {
+                this.modelo.bloques[0].horaInicio = iniAgenda;
+                this.modelo.bloques[0].horaFin = finAgenda;
+            }
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
