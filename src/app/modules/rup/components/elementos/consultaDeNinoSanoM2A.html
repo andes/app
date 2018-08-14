@@ -1,4 +1,5 @@
-<div *ngIf="(ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && validacion === false" class="row bg-faded" class="d-flex justify-content-start">
+<div *ngIf="ultimaConsulta && (ultimaConsulta?.updatedAt || ultimaConsulta?.createdAt) && validacion === false" class="row bg-faded"
+    class="d-flex justify-content-start">
     <div class="col m-0 p-0 bg-registro-anterior">
         <span>Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }}, por {{ ultimaConsulta.createdBy
             | profesional }})</span>
@@ -37,12 +38,12 @@
 </ng-container>
 
 <!-- Se muestran valores de la consulta ACTUAL en pantalla RESUMEN -->
-<ng-container *ngIf="registro?.registros?.length && soloValores === true && validacion === true">
+<ng-container *ngIf="registro?.registros?.length && soloValores === true">
     <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
             <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
                 <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }}">
-                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="ultimaConsulta.registros[i]"
+                    <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
                         [soloValores]="true" (change)="emitChange()">
                     </rup>
                 </div>

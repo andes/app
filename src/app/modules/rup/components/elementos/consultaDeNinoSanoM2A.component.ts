@@ -26,10 +26,8 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
             ordenFecha: true,
             estado: 'validada'
         };
-
         // Nos aseguramos que NO estamos en la pantalla de Validación/Resumen
-        if (!this.validacion) {
-
+        if (!this.validacion && !this.soloValores) {
             // Se busca en la HUDS si hay prestaciones con valores ya cargados
             this.prestacionesService.get(params).subscribe(consultasPaciente => {
 

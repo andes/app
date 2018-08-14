@@ -37,7 +37,7 @@
 </ng-container>
 
 <!-- Se muestran valores de la consulta ACTUAL en pantalla RESUMEN -->
-<ng-container *ngIf="registro?.registros?.length && soloValores === true && validacion === true">
+<ng-container *ngIf="registro?.registros?.length && soloValores === true">
     <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
         <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
             <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">

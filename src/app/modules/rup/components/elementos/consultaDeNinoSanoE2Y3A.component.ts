@@ -28,7 +28,7 @@ export class ConsultaDeNinoSanoE2Y3AComponent extends RUPComponent implements On
         };
 
         // Nos aseguramos que NO estamos en la pantalla de Validación/Resumen
-        if (!this.validacion) {
+        if (!this.validacion && !this.soloValores) {
 
             // Se busca en la HUDS si hay prestaciones con valores ya cargados
             this.prestacionesService.get(params).subscribe(consultasPaciente => {
