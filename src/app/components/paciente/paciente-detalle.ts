@@ -64,13 +64,10 @@ export class PacienteDetalleComponent implements OnInit {
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
-        if (patient.estado === 'validado') {
-            sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
-            documentoRena = patient.documento;
-        } else {
-            sexoRena = (patient.sexo.id === 'masculino') ? 'M' : 'F';
-            documentoRena = patient.documento;
-        }
+
+        patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
+        sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
+        documentoRena = patient.documento;
 
         this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
             // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
