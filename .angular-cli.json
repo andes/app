@@ -23,7 +23,6 @@
         "tsconfig": "tsconfig.json",
         "prefix": "app",
         "mobile": false,
-        "scripts": [],
         "styles": [
             "styles.scss"
         ],
