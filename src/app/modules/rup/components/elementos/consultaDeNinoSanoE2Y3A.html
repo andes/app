@@ -50,3 +50,7 @@
         </div>
     </ng-container>
 </ng-container>
+<!-- Se muestran valores de las consultas -->
+<ng-container *ngIf="registro.valor && soloValores === true">
+    <span [innerHTML]="registro.valor"></span>
+</ng-container>
