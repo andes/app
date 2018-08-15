@@ -204,14 +204,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
             if (typeof this.results.sugeridos['todos'] === 'undefined') {
                 this.results.sugeridos['todos'] = [];
             }
-
             changes.frecuentesTipoPrestacion.currentValue.forEach(element => {
                 if (this.results.sugeridos['todos'].indexOf(element) === -1) {
-
                     if (this.conceptoFrecuente.term) {
                         element.sugeridoPor = this.conceptoFrecuente.term;
                     }
-
                     this.results.sugeridos['todos'].push(element);
                 }
             });
@@ -329,7 +326,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} resultadosSnomed
      * @memberof BuscadorComponent
      */
-    recibeResultados(resultadosSnomed) {
+    recibeResultados(resultadosSnomed: any) {
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
@@ -395,6 +392,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
         this.results[busquedaActual][this.filtroActual] = this.results[busquedaActual][this.filtroActual].filter(x => !this.esTurneable(x));
         if (this.results[busquedaActual]['planes'].length) {
+            let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
+            let planes = [];
+            planesCopia.forEach(unPlan => {
+                unPlan.plan = true;
+                planes.push(unPlan);
+            });
             // agregamos los planes
             this.results[busquedaActual][this.filtroActual] = [...this.results[busquedaActual][this.filtroActual], ...this.results[busquedaActual]['planes']];
             // ordenamos los resultados
@@ -417,7 +420,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     valor: []
                 });
             }
-
         });
 
         Object.keys(this.conceptos).forEach(concepto => {
@@ -454,7 +456,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             return this.results[this.busquedaActual][semanticTag].length;
         }
-
         return 0;
     }
 
@@ -477,11 +478,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
-
         }
-
         this.tengoResultado.emit(true);
-
     }
 
     /**
@@ -545,14 +543,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
     getFiltroSeleccionado() {
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
-
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
         // o bien, si estamos en el buscador guiado, si la opcion desplegada es planes
         // entonces sobreescribmos el filtro a emitir como ['planes']
         if (this.filtroActual === 'planes' || this.opcionDesplegada === 'planes') {
             filtro = ['planes'];
         }
-
         return filtro;
     }
 
@@ -564,7 +560,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      */
     public desplegar(nombre) {
         // this.opcionDesplegada = nombre;
-
         this.opcionDesplegada = (this.opcionDesplegada === nombre) ? null : nombre;
     }
 
@@ -576,11 +571,10 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @returns  boolean TRUE/FALSE si es turneable o no
      * @memberof BuscadorComponent
      */
-    public esTurneable(concepto) {
+    public esTurneable(concepto: any) {
         if (!this.conceptosTurneables) {
             return false;
         }
-
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
@@ -597,6 +591,5 @@ export class BuscadorComponent implements OnInit, OnChanges {
         }
         return this.busquedaPorConcepto;
     }
-
 
 }

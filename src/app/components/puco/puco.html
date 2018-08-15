@@ -1,59 +1,92 @@
-<div class="row">
-    <!--Panel central-->
-    <div class="col">
-        <plex-box type="primary">
-            <header>
-                <div class="page-title">Datos de obra social</div>
-            </header>
-            <p>Consultas de afiliación a obras sociales de salud.</p>
-            <div class="buscador">
-                <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Buscar por DNI" [autoFocus]="autofocus"
-                    prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
+<plex-layout main="9">
+    <plex-layout-main>
+        <header>
+            <h3>Padrón de cobertura social</h3>
+            <div class="row">
+                <div class="col-8">
+                    <div class="buscador">
+                        <plex-text [(ngModel)]="searchTerm" name="searchTerm" (change)="buscar()" placeholder="Ingrese DNI" [autoFocus]="autofocus"
+                            prefix="<i class='mdi mdi-account-search'></i>"></plex-text>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <plex-select *ngIf="periodos.length" [(ngModel)]="periodoSelect" name="periodoPadron" [data]="periodos" placeholder="Seleccione un periodo"
+                        (change)="setPeriodo($event.value)" [required]="true"></plex-select>
+                </div>
             </div>
-            <!--Loader-->
-            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
-            <!-- Error paciente no encontrado -->
-            <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading && !errorSearchTerm" class="alert alert-danger">
-                <i class="mdi mdi-account-alert"></i> Paciente no encontrado.
+        </header>
+
+        <!-- Error paciente no encontrado -->
+        <div *ngIf="usuarios && !usuarios.length && searchTerm && !loading && !errorSearchTerm && periodoSelect" class="alert alert-danger">
+            <i class="mdi mdi-account-alert"></i> Paciente no encontrado en este padrón.
+        </div>
+        <!-- Error por ingreso de caracteres -->
+        <div *ngIf="errorSearchTerm && searchTerm && !loading" class="alert alert-danger">
+            <i class="mdi mdi-account-alert"></i> Este campo sólo admite caracteres numéricos.
+        </div>
+        <!--Loader-->
+        <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+        <!--Tabla de resultados por SimpleQuery -->
+        <table *ngIf="usuarios && usuarios.length && !errorSearchTerm && searchTerm" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>DNI</th>
+                    <th>Apellido y nombre</th>
+                    <th>Padrón</th>
+                    <th>Otra información</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let usuario of usuarios">
+                    <td *ngIf="usuario.dni; else sinDatos">
+                        {{usuario.dni}}
+                    </td>
+                    <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
+                    <td *ngIf="usuario.financiador; else programaIC">
+                        {{usuario.financiador}}
+                    </td>
+                    <td *ngIf="usuario.fechaAlta; else sinDatos">
+                        Fecha de alta: {{usuario.fechaAlta | date: 'dd/MM/yyyy'}}
+                    </td>
+                    <ng-template #sinDatos>
+                        <td>SIN DATOS</td>
+                    </ng-template>
+                    <ng-template #programaIC>
+                        <td>Programa Incluir Salud</td>
+                    </ng-template>
+                    <ng-template #noTransmite>
+                        <td>No</td>
+                    </ng-template>
+                </tr>
+            </tbody>
+        </table>
+
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <header>
+            <h3>Información</h3>
+        </header>
+        <div class="row">
+            <div class="col">
+                <h5>PUCO</h5>
+                <p>Última actualización: {{ultimaActualizacionPuco | date: 'dd/MM/yyyy'}}</p>
+                <p>Padrones disponibles: {{listaPeriodosPuco}}</p>
             </div>
-            <!-- Error por ingreso de caracteres -->
-            <div *ngIf="errorSearchTerm && searchTerm && !loading" class="alert alert-danger">
-                <i class="mdi mdi-account-alert"></i> Este campo sólo admite caracteres numéricos.
+        </div>
+        <br>
+        <div class="row">
+            <div class="col">
+                <h5>Incluir Salud</h5>
+                <p>Última actualización: {{ultimaActualizacionProfe | date: 'dd/MM/yyyy'}}</p>
+                <p>Padrones disponibles: {{listaPeriodosProfe}}</p>
             </div>
-            <!--Tabla de resultados por SimpleQuery -->
-            <table *ngIf="usuarios && usuarios.length && !errorSearchTerm" class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Apellido y nombre</th>
-                        <th>DNI</th>
-                        <th>Obra Social</th>
-                        <th>Transmite</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let usuario of usuarios  | textFilter:textoLibre ; let i=index">
-                        <td *ngIf="usuario.nombre; else sinDatos">{{usuario.nombre}}</td>
-                        <td *ngIf="usuario.dni; else sinDatos">
-                            {{usuario.dni}}
-                        </td>
-                        <td *ngIf="usuario.financiador; else programaIC">
-                            {{usuario.financiador}}
-                        </td>
-                        <td *ngIf="usuario.transmite && usuario.transmite == 'S'; else noTransmite">
-                            Si
-                        </td>
-                        <ng-template #sinDatos>
-                            <td>SIN DATOS</td>
-                        </ng-template>
-                        <ng-template #programaIC>
-                            <td>Programa Incluir Salud</td>
-                        </ng-template>
-                        <ng-template #noTransmite>
-                            <td>No</td>
-                        </ng-template>
-                    </tr>
-                </tbody>
-            </table>
-        </plex-box>
-    </div>
-</div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias()"></plex-button>
+            </div>
+        </div>
+
+    </plex-layout-sidebar>
+
+</plex-layout>

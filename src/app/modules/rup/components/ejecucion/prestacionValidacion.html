@@ -145,7 +145,10 @@
                             </div>
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Motivo de consulta principal</small>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
+                                <!-- <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                </small> -->
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
@@ -171,7 +174,6 @@
                                     {{elemento.concepto.semanticTag}}
                                 </span>
                             </div>
-
                             <div class="content">
                                 <ng-container *ngIf="enBusquedaGuiada(elemento.concepto)">
                                     <div class="row">
@@ -191,35 +193,18 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-                                            <!-- <small class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && elemento.esDiagnosticoPrincipal">
-                                                Motivo de consulta principal
-                                            </small> -->
+
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
-                                                title="Establecer como motivo de consulta principal" class="diagnostico-principal">
-                                                Motivo de consulta principal
-                                                <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                    'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
-                                                    'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
-                                                }">
-                                                </span>
-                                            </label>
-                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen === 'internacion'"
-                                                title="Establecer como motivo de egreso" class="diagnostico-principal">
-                                                Motivo de egreso
-                                                <span (click)="diagnosticoPrestacion(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                    'mdi-toggle-switch': elemento.esDiagnosticoPrincipal,
-                                                    'mdi-toggle-switch-off': !elemento.esDiagnosticoPrincipal
-                                                }">
-                                                </span>
-                                            </label>
+                                                title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal">
+                                                Procedimiento/Diagnóstico principal? &nbsp;
+                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
+                                                    [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal"></plex-radio>
+
+                                            </label>&nbsp;&nbsp;&nbsp;
                                             <label *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
-                                                title="{{ !elemento.esPrimeraVez ? 'Es primera vez' : 'Es primera vez'}}" class="primera-vez ml-2">
-                                                Indicar primera vez
-                                                <span (click)="primeraVez(elemento)" class="hover text-info mdi mdi-36px" [ngClass]="{
-                                                    'mdi-toggle-switch': elemento.esPrimeraVez,
-                                                    'mdi-toggle-switch-off': !elemento.esPrimeraVez
-                                                }">
-                                                </span>
+                                                class="diagnostico-principal" title="Indicar si es primera vez">
+                                                Es primera vez? &nbsp;
+                                                <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?" [(ngModel)]="elemento.esPrimeraVez" type="horizontal"></plex-radio>
                                             </label>
                                         </ng-container>
                                     </div>
@@ -252,7 +237,7 @@
                                     <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
-                                            Motivo de consulta principal
+                                            Procedimiento / diagnóstico principal
                                         </small>
                                     </small>
                                 </div>

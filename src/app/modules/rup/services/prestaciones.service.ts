@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
+import { SnomedService } from '../../../services/term/snomed.service';
 
 @Injectable()
 export class PrestacionesService {
@@ -27,16 +28,10 @@ export class PrestacionesService {
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
-    public conceptosNoConcurrio = [
-        '397710003',
-        '281399006',
-        '270426007',
-        '275694009'
-    ];
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -532,10 +527,10 @@ export class PrestacionesService {
      * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
      * @memberof PrestacionesService
      */
-    getRegistrosHuds(idPaciente: string, conceptIds: any[]) {
+    getRegistrosHuds(idPaciente: string, expresion) {
         let opt = {
             params: {
-                'conceptIds': conceptIds,
+                'expresion': expresion
             },
             options: {
                 showError: true
@@ -800,14 +795,8 @@ export class PrestacionesService {
      * @returns  {boolean}
      * @memberof BuscadorComponent
      */
-    public prestacionPacienteAusente(prestacion) {
-        let filtroRegistros = null;
-        filtroRegistros = prestacion.ejecucion.registros.filter(x => this.conceptosNoConcurrio.find(y => y === x.concepto.conceptId));
-        if (filtroRegistros && filtroRegistros.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public prestacionPacienteAusente(): Observable<any[]> {
+        return this.snomed.getQuery({ expression: '<<281399006' });
 
     }
 
@@ -822,9 +811,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, filtroActual) {
         let clase = conceptoSNOMED.semanticTag;
 
-        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
-
-        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
             clase = 'plan';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
@@ -846,7 +833,7 @@ export class PrestacionesService {
     public getIcon(conceptoSNOMED, filtroActual: null) {
         let icon = conceptoSNOMED.semanticTag;
 
-        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
             icon = 'plan';
         } else {
             switch (conceptoSNOMED.semanticTag) {
