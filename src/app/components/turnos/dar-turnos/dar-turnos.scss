@@ -12,3 +12,11 @@
     display: flex;
     justify-content: space-around;
 }
+
+.text-ellipsis{
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    width: 100%;
+    overflow: hidden;
+}

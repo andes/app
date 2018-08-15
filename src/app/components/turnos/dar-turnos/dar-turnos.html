@@ -248,7 +248,7 @@
                             <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}}
                                 pacientes asignados </div>
                             <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados
-                                </div>
+                            </div>
                             <br>
                             <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
                             <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
@@ -262,13 +262,11 @@
                         <!--Header-->
                         <div class="row">
                             <div class="col">
-                                <label>Turno</label>
-                                <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio | date:
-                                    'HH:mm'}}
-                                </div>
                                 <label>Paciente</label>
-                                <div *ngIf="paciente">{{this.paciente | paciente}}</div>
-                                <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div>
+                                <div *ngIf="paciente" class="text-ellipsis">{{this.paciente | paciente}}</div>
+                                <!-- <div *ngIf="paciente.documento !== ''">{{this.paciente.documento | number}}</div> -->
+                                <label>Turno</label>
+                                <div>{{agenda.horaInicio | date: 'EEE d/MMM' | uppercase}} a las {{turno.horaInicio | date:'HH:mm'}}</div>
                                 <div *ngIf="paciente.documento === ''">Sin documento (temporal)</div>
                             </div>
                             <div class="col">
@@ -285,9 +283,9 @@
                             <div class="col">
                                 <span *ngIf="obraSocialPaciente">
                                     <label>Obra Social </label>
-                                    <div>{{obraSocialPaciente.financiador}}</div>
+                                    <div class="text-ellipsis">{{obraSocialPaciente.financiador}}</div>
                                 </span>
-                                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
+                                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [(ngModel)]="motivoConsulta"></plex-text>
                             </div>
                         </div>
                         <div class="row">
@@ -304,13 +302,13 @@
                                     name="turnoTipoPrestacion"></plex-select>
                                 <div class="row">
                                     <div class="col-6">
-                                        <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
+                                        <plex-phone label="Celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
                                     </div>
                                     <div class="col-6">
                                         <plex-text *ngIf="carpetaEfector" (change)="cambiarCarpeta()" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text>
                                     </div>
                                 </div>
-                                <plex-text label="Nota" name="nota" multiline="true" [(ngModel)]="nota" (change)="verificarNota()">
+                                <plex-text label="Nota" name="nota" [(ngModel)]="nota" (change)="verificarNota()">
                                 </plex-text>
                             </div>
                         </div>
@@ -330,10 +328,10 @@
 
     <footer *ngIf="autorizado && showDarTurnos">
         <div class="row">
-            <div class="col text-left">
+            <!-- <div class="col text-left">
                 <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
-            </div>
-            <div class="col text-right" *ngIf="opciones.tipoPrestacion || opciones.profesional">
+            </div> -->
+            <div class="col text-left" *ngIf="opciones.tipoPrestacion || opciones.profesional">
                 <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
             </div>
         </div>
