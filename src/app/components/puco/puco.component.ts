@@ -42,7 +42,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     constructor(
         private obraSocialService: ObraSocialService,
         private profeService: ProfeService,
-        private periodoPadronesPucoService: PeriodoPadronesPucoService,
+        // private periodoPadronesPucoService: PeriodoPadronesPucoService,
         private periodoPadronesProfeService: PeriodoPadronesProfeService,
         private sugerenciasService: SugerenciasService,
         private plex: Plex) { }
@@ -56,11 +56,11 @@ export class PucoComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         Observable.forkJoin([
-            this.periodoPadronesPucoService.get({}),
+            this.obraSocialService.getPadrones({}),
             this.periodoPadronesProfeService.get({})]).subscribe(padrones => {
 
-                let arrAux = padrones[0].concat(padrones[1]);
-                arrAux.sort((a, b) => a.version < b.version);
+                // let arrAux = padrones[0].concat(padrones[1]);
+                // arrAux.sort((a, b) => a.version < b.version);
                 //  let periodoMasActual = new Date(arrAux[0].version); // el padron mas actual entre puco y profe
                 let periodoMasActual = new Date();  // fecha actual
 
