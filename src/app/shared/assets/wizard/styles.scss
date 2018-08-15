@@ -1,23 +1,15 @@
-.plex-wizard {
-    // Turnos
-    &-turnos {
-        &-1 {
-            background-image: url('agenda2.svg');
-        }
-        &-2 {
-            background-image: url('agenda.svg');
-        }
-        &-3 {
-            background-image: url('checklist.svg');
-        }
-        &-4 {
-            background-image: url('recepcion.svg');
-        }
-        &-5 {
-            background-image: url('profesionales.svg');
-        }
-        &-6 {
-            background-image: url('agenda.svg');
-        }
-    }
+.plex-wizard-citas-planificarAgendas-dinamica {
+    background-image: url('citas-planificarAgendas-dinamica.png');
+}
+
+.plex-wizard-citas-planificarAgendas-darTurnos {
+    background-image: url('citas-planificarAgendas-darTurnos.png');
+}
+
+.plex-wizard-planificarAgendas-dinamicaCupo {
+    background-image: url('citas-planificarAgendas-dinamicaCupo.png');
+}
+
+.plex-wizard-citas-planificarAgendas {
+    background-image: url('agenda.svg');
 }
