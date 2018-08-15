@@ -26,11 +26,7 @@
         "@agm/core": "^1.0.0-beta.2",
         "@andes/auth": "^2.0.0",
         "@andes/match": "^0.1.9",
-<<<<<<< HEAD
-        "@andes/plex": "^3.3.1",
-=======
         "@andes/plex": "^3.3.2",
->>>>>>> d53bc43e... wizard demo
         "@andes/shared": "^2.0.0",
         "@angular/animations": "^5.0.0",
         "@angular/cdk": "^5.2.4",
