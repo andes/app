@@ -124,10 +124,11 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             });
         });
 
-
     }
 
     armarRelaciones() {
+
+        // Último Odontograma (si existe)
         if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
 
             // Quito el odontograma porque se necesitan sólo los registros y sus relaciones
@@ -135,68 +136,27 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.relaciones = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros;
             this.relacionesActuales = this.registro.registros;
 
-            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerecho.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-
-            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorDerechoTemporal.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteSuperiorIzquierdoTemporal.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorDerechoTemporal.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
-            this.ultimoOdontograma.valor.odontograma.cuadranteInferiorIzquierdoTemporal.forEach(x => {
-                x.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === x.concepto.conceptId : z === x.concepto.conceptId))) || {};
-            });
+            // Se arma el último odontograma, con sus relaciones
+            for (let cuadrante of this.cuadrantes) {
+                for (let diente of this.ultimoOdontograma.valor.odontograma[String(cuadrante)]) {
+                    diente.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === diente.concepto.conceptId : z === diente.concepto.conceptId))) || {};
+                }
+            }
 
         }
 
+
+        // Odontograma de esta consulta
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
-            // Esta consulta
-            this.odontograma.cuadranteSuperiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteSuperiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteInferiorDerecho.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteInferiorIzquierdo.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteSuperiorDerechoTemporal.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteSuperiorIzquierdoTemporal.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteInferiorDerechoTemporal.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
-            this.odontograma.cuadranteInferiorIzquierdoTemporal.forEach(x => {
-                x.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === x.concepto.conceptId || z === x.concepto.conceptId) : {});
-                x.relacion = x.relacion.map(y => y.concepto);
-            });
+
+            // Se arma el Odontograma actual, con sus relaciones
+            for (let cuadrante of this.cuadrantes) {
+                for (let diente of this.odontograma[String(cuadrante)]) {
+                    diente.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === diente.concepto.conceptId || z === diente.concepto.conceptId) : {});
+                    diente.relacion = diente.relacion.map(y => y.concepto);
+                };
+            }
+
         }
 
     }
@@ -257,20 +217,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
             }
         });
-    }
-
-    getTipoHUDS(st) {
-        switch (st) {
-            case 'hallazgo':
-            case 'trastorno':
-            case 'situacion':
-            case 'producto':
-                return 'hallazgo';
-            case 'plan':
-                return 'prestacion';
-            case 'procedimiento':
-                return 'procedimiento';
-        }
     }
 
     verRegistroDiente(cuandrante, diente, cara) {
@@ -370,13 +316,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
             });
         }
-    }
-
-    loadPrestacionesDientes($event, tipo) {
-        let conceptosSelect = this.conceptos.map(elem => {
-            return { id: elem.conceptId, nombre: elem.term, concepto: elem, timestamp: new Date().getTime() }
-        });
-        $event.callback(conceptosSelect);
     }
 
     cara(diente, cara) {

@@ -40,12 +40,12 @@
             <ng-container *ngIf="ultimoOdontograma && showUltimoOdontograma && relaciones">
                 <!-- CUADRANTE -->
                 <ng-container *ngFor="let cuadrante of cuadrantes">
-                    <div class="col-6 no-gutters" [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
+                    <div class="col-6 no-gutters {{ cuadrante }}" [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
                         <ng-container *ngFor="let diente of ultimoOdontograma.valor.odontograma[cuadrante]; let i=index">
                             <div class="diente-container text-center">
-                                <span class="text-xs">{{ diente.concepto.term }}</span>
+                                <span class="text-diente">{{ diente.concepto.term }}</span>
                                 <svg *ngIf="!piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
+                                    id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1"
                                     viewBox="0 0 55 50" xml:space="preserve">
                                     <path (mouseenter)="showTooltip(diente, 'distal', true)" (mouseleave)="hideTooltip()" (click)="verRegistroDiente(cuadrante, diente, 'distal')"
                                         d="M18.042,27.5c0-2.197,0.89-4.187,2.33-5.627l-9.339-9.339c-3.831,3.83-6.2,9.122-6.2,14.966c0,5.845,2.369,11.137,6.2,14.967l9.34-9.34C18.933,31.687,18.042,29.698,18.042,27.5z"
@@ -111,7 +111,7 @@
                                     </ng-container>
                                 </svg>
                                 <svg *ngIf="piezaAnulada(diente.concepto.conceptId)" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                    id="cuadrante-sup-der" width="50px" height="50px" x="0px" y="0px" baseProfile="basic" version="1.1"
+                                    id="cuadrante-sup-der" width="32px" height="32px" x="0px" y="0px" baseProfile="basic" version="1.1"
                                     viewBox="0 0 55 50" xml:space="preserve">
                                     <g (mouseenter)="showTooltip(diente, 'anulada')" (mouseleave)="hideTooltip()">
                                         <circle class="pieza-anulada" cx="26" cy="27.5" r="22.246">
@@ -137,7 +137,7 @@
             <ng-container *ngFor="let cuadrante of cuadrantes">
 
                 <!-- CUADRANTE -->
-                <div class="col-6 no-gutters {{ cuadrante }}">
+                <div class="col-6 no-gutters {{ cuadrante }}" *ngIf="odontograma[cuadrante].length">
                     <ng-container *ngFor="let diente of odontograma[cuadrante]; let i=index">
                         <div class="diente-container text-center">
                             <span class="text-diente">{{ diente.concepto.term }}</span>
