@@ -315,9 +315,11 @@
 
                         <hr>
                         <footer *ngIf="!hideDarTurno && estadoT === 'confirmacion'" class="row">
-                            <div class="col acciones-dar-turno">
-                                <plex-button label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
-                                <plex-button label="Confirmar" type="success" (click)="darTurno()"></plex-button>
+                            <div class="col text-left">
+                                <plex-button class="text-left" label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
+                            </div>
+                            <div class="col text-right">
+                                <plex-button class="text-right" label="Confirmar" type="success" (click)="darTurno()"></plex-button>
                             </div>
                         </footer>
                     </ng-container>
