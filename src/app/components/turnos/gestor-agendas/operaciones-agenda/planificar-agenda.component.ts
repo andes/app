@@ -11,6 +11,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'planificar-agenda',
@@ -53,6 +54,8 @@ export class PlanificarAgendaComponent implements OnInit {
     showMapaEspacioFisico = false;
     cupoMaximo: Number;
     setCupo = false;
+    // ultima request de profesionales que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -95,21 +98,24 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        let listaProfesionales = [];
-        if (event.query) {
+
+        if (event.query && event.query !== '' && event.query.length > 2) {
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+            this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
+                event.callback(resultado);
             });
         } else {
-            event.callback(this.modelo.profesionales || []);
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
+            event.callback([]);
         }
     }
 
