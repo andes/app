@@ -117,7 +117,7 @@
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
                         [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
-                <ng-container *ngIf="camaSeleccionada">
+                <ng-container *ngIf="camaSeleccionada && !showIngreso">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
                     <plex-tabs class="andes-contenedor-tabs" [activeIndex]="activo" (change)="cambiaTap($event)">
                         <!-- Tab cama -->
@@ -184,16 +184,22 @@
                         <plex-tab class="andes-tab" label="datos de internacion">
                             <internacion-resumen *ngIf="prestacionPorInternacion" (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion"></internacion-resumen>
+                            <ng-container *ngIf="!prestacionPorInternacion">
+                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente
+                                    internado
+                                </h2>
+                            </ng-container>
                         </plex-tab>
 
                         <!-- Egreso -->
                         <plex-tab class="andes-tab" label="datos de egreso">
-
-                            <!-- <ng-container *ngIf="showEgreso && !showIngreso"> -->
                             <rup-egresoInternacion *ngIf="prestacionPorInternacion" [botonera]="{cerrar: false, validar: true, guardar: true}" (data)="cerrar($event, 'egreso')"
                                 [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
-                            <!-- </ng-container> -->
-
+                            <ng-container *ngIf="!prestacionPorInternacion">
+                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente
+                                    internado
+                                </h2>
+                            </ng-container>
                         </plex-tab>
                     </plex-tabs>
                 </ng-container>

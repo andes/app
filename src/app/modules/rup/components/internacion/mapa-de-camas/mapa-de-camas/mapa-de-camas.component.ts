@@ -326,6 +326,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.showIngreso = false;
             this.showResumen = false;
             this.camaSeleccionada = cama;
+            this.prestacionPorInternacion = null;
         }
     }
 

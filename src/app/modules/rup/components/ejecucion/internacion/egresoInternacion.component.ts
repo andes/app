@@ -283,7 +283,7 @@ export class EgresoInternacionComponent implements OnInit {
      * de unidades organizativas
      */
     selecOrganizacionDestino() {
-        if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado') {
+        if (this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Traslado' || this.registro.valor.InformeEgreso.tipoEgreso.nombre === 'Consultorio externo') {
             // nos fijamos si ya tenemos la info en la copia.
             if (this.copiaListaUnidadesOrganizativas.length) {
                 this.listaUnidadesOrganizativas = this.copiaListaUnidadesOrganizativas;

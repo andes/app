@@ -5,7 +5,7 @@
         <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
         </rup-iniciarInternacion>
         <!-- Editar internacion -->
-        <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso || !editarEgreso" label="editar"
+        <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso && !editarEgreso" label="editar"
             (click)="editar('ingreso')"></plex-button>
     </ng-container>
 

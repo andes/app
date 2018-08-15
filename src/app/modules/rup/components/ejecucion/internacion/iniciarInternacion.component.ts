@@ -156,6 +156,7 @@ export class IniciarInternacionComponent implements OnInit {
                         this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
                             if (os) {
                                 this.obraSocial = os;
+                                this.informeIngreso.obraSocial = os;
                             }
                         });
                         this.buscandoPaciente = false;
