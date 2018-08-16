@@ -2,7 +2,7 @@
     class="d-flex justify-content-start">
     <div class="col m-0 p-0 bg-registro-anterior">
         <span>Registros tomados el {{ (ultimaConsulta.updatedAt || ultimaConsulta.createdAt) | fecha }}, por {{ ultimaConsulta.createdBy
-            | profesional }})</span>
+            | profesional }}</span>
     </div>
 </div>
 <hr>
@@ -50,4 +50,8 @@
             </ng-container>
         </div>
     </ng-container>
+</ng-container>
+<!-- Se muestran valores de las consultas -->
+<ng-container *ngIf="registro.valor && soloValores === true">
+    <span [innerHTML]="registro.valor"></span>
 </ng-container>
