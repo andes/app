@@ -330,28 +330,6 @@ export class MapaDeCamasComponent implements OnInit {
         }
     }
 
-    // verEgreso(idInternacion) {
-    //     this.showLoaderSidebar = true;
-    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-    //         this.prestacionPorInternacion = prestacion;
-    //         this.showLoaderSidebar = false;
-    //         this.showEgreso = true;
-    //         this.showIngreso = false;
-    //     });
-    // }
-
-    // verIngreso(soloValores, idInternacion) {
-    //     this.showLoaderSidebar = true;
-    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-    //         this.prestacionPorInternacion = prestacion;
-    //         this.showLoaderSidebar = false;
-    //         this.showEgreso = false;
-    //         this.showIngreso = true;
-    //         this.showResumen = false;
-    //         this.editarIngreso = soloValores;
-    //     });
-    // }
-
     /**
      * Captura el evento que emite el componente y cierra/oculta los mismos
      * @param event
@@ -386,19 +364,25 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        this.camaSelected = event;
+        let cama = event;
+        if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
+            this.showLoaderSidebar = true;
+            this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
+                this.prestacionPorInternacion = prestacion;
+                this.showLoaderSidebar = false;
+            });
+        }
+        if (this.camaSeleccionada === cama) {
+            this.camaSeleccionada = null;
+        } else {
+            this.showMenu = true;
+            this.showIngreso = false;
+            this.showResumen = false;
+            this.camaSeleccionada = cama;
+            this.prestacionPorInternacion = null;
+        }
+        this.camaSelected = event.id;
     }
-
-    // verResumen(idInternacion) {
-    //     this.showLoaderSidebar = true;
-    //     this.servicioPrestacion.getById(idInternacion).subscribe(prestacion => {
-    //         this.prestacionPorInternacion = prestacion;
-    //         this.showLoaderSidebar = false;
-    //         // this.showEgreso = false;
-    //         // this.showResumen = true;
-    //     });
-    // }
-
 
     editar(event) {
         switch (event) {
