@@ -330,10 +330,7 @@
 
     <footer *ngIf="autorizado && showDarTurnos">
         <div class="row">
-            <!-- <div class="col text-left">
-                <plex-button label="Buscar Otro Paciente" type="info" (click)="volver()"></plex-button>
-            </div> -->
-            <div class="col text-left" *ngIf="opciones.tipoPrestacion || opciones.profesional">
+            <div class="col text-left">
                 <plex-button label="No se asigna turno" type="danger" (click)="noSeAsignaTurno()"></plex-button>
             </div>
         </div>
