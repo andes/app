@@ -284,4 +284,8 @@ export class CamaComponent implements OnInit {
             });
         }
     }
+
+    camaSeleccionada() {
+        this.camaSelected.emit(this.cama);
+    }
 }

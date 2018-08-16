@@ -6,7 +6,7 @@
             <div class="card-contenedor-lateral"></div>
             <div class="card-contenedor-central">
                 <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div>
-                <div class="contenedor-cama">
+                <div (click)="camaSeleccionada()" class="contenedor-cama">
                     <article class="contenedor-texto">
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
                         <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div>
