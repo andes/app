@@ -409,27 +409,27 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     // Indices de profundidad de las relaciones
-    deep: any = {};
+    registrosDeep: any = {};
     armarRelaciones() {
-        let _deep = this.deep;
         let relacionesOrdenadas = [];
         let registros = this.prestacion.ejecucion.registros;
         let roots = registros.filter(x => x.relacionadoCon.length === 0);
 
-        roots.forEach((root) => {
-            this.deep[root.id] = 0;
-            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
-        });
-
-        function traverse(_registros, registro, deep) {
+        let traverse = (_registros, registro, deep) => {
             let orden = [];
             let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
-            _deep[registro.id] = deep;
+            this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
             });
             return orden;
-        }
+        };
+
+        roots.forEach((root) => {
+            this.registrosDeep[root.id] = 0;
+            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
+        });
+
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
