@@ -68,7 +68,7 @@ export class EgresoInternacionComponent implements OnInit {
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
         let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
         this.registro.valor = existeRegistro ? existeRegistro.valor : null;
-        if (!this.registro.valor) {
+        if (!this.registro.valor && !this.soloValores) {
             this.registro.valor = {
                 InformeEgreso: {
                     fechaEgreso: null,
@@ -93,9 +93,9 @@ export class EgresoInternacionComponent implements OnInit {
                     }
                 }
             };
+            this.showProcedimientos_causas();
         }
 
-        this.showProcedimientos_causas();
         let params;
         // // Cargamos todos los procedimientos.
         this.procedimientosQuirurgicosService.get(params).subscribe(rta => {
