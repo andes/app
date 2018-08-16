@@ -77,6 +77,7 @@ export class CamaComponent implements OnInit {
         ];
     }
 
+
     /**
      * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
      */
@@ -149,7 +150,6 @@ export class CamaComponent implements OnInit {
     }
 
     public cambiarEstado(cama, estado) {
-
         let dto = {
             fecha: this.fecha,
             estado: estado,
@@ -251,7 +251,6 @@ export class CamaComponent implements OnInit {
         let idPaciente = paciente ? paciente._id : this.prestacion.paciente.id;
         idInternacion = idInternacion ? idInternacion : this.prestacion.id;
         cama = cama ? cama : this.cama;
-        console.log(idPaciente, 'LA paciente');
         this.pacienteService.getById(idPaciente).subscribe(pacienteCompleto => {
             dto = {
                 fecha: new Date,
@@ -276,10 +275,13 @@ export class CamaComponent implements OnInit {
     /**
      * Carga el combo de las camas disponibles
      */
-    selectCamasDisponibles() {
-        this.camasService.getCamasDisponibles(this.params.idOrganizacion, this.params.fecha).then((resultado) => {
-            this.listaCamasDisponibles = resultado;
-        });
+    selectCamasDisponibles(event) {
+        if (event) {
+            this.params.fecha = moment().endOf('day').toDate();
+            this.camasService.getCamasXFecha(this.params.idOrganizacion, this.params.fecha).subscribe(resultado => {
+                this.listaCamasDisponibles = resultado.filter(cama => cama.ultimoEstado.estado === 'disponible');
+                event.callback(this.listaCamasDisponibles);
+            });
+        }
     }
-
 }

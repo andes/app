@@ -5,11 +5,11 @@
             <!-- Botonera lateral -->
             <div class="card-contenedor-lateral"></div>
             <div class="card-contenedor-central">
-                <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div>    
+                <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div>
                 <div class="contenedor-cama">
                     <article class="contenedor-texto">
-                            <h3 class="card-titulo">{{cama.nombre}}</h3>
-                            <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div>
+                        <h3 class="card-titulo">{{cama.nombre}}</h3>
+                        <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div>
                     </article>
                     <!-- Icono cama -->
                     <!-- Iconos redondos sobre la cama 
@@ -45,8 +45,9 @@
                 <div class="card-contenedor-inferior">
                     <!-- Nombre paciente -->
                     <div class="data-paciente" *ngIf="cama.ultimoEstado?.paciente">
-                        <p><b>{{cama.ultimoEstado.paciente.apellido}}</b>
-                        <br>{{cama.ultimoEstado.paciente.nombre}}</p>
+                        <p>
+                            <b>{{cama.ultimoEstado.paciente.apellido}}</b>
+                            <br>{{cama.ultimoEstado.paciente.nombre}}</p>
                     </div>
                     <!-- devolver cama -->
                     <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
@@ -204,8 +205,8 @@
                             <plex-select name="unidadOrganizativa" [required]="true" [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
                                 [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa">
                             </plex-select>
-                            <plex-select *ngIf="listaCamasDisponibles?.length" name="camasDisponibles" [data]="listaCamasDisponibles" idField="nombre"
-                                labelField="nombre" [(ngModel)]="camaSeleccionPase" label="Camas Disponibles">
+                            <plex-select name="camasDisponibles" (getData)="selectCamasDisponibles($event)" idField="nombre" labelField="nombre" [(ngModel)]="camaSeleccionPase"
+                                label="Camas Disponibles">
                             </plex-select>
                         </div>
                     </div>

@@ -29,7 +29,6 @@ export class CamasService {
             idOrganizacion: idOrganizacion,
             fecha: fecha
         };
-
         return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
 
@@ -140,18 +139,4 @@ export class CamasService {
         };
         return this.server.get(this.camasUrl, { params: params, showError: true });
     }
-
-    /**
-     * Retorna las camas disponibles en el mapa de cama.
-     * @param idOrganizacion
-     * @param fecha
-     */
-    getCamasDisponibles(idOrganizacion, fecha) { // QUedaria cachearlo para que no repita la consulta.
-        return new Promise((resolve) => {
-            this.getCamasXFecha(idOrganizacion, fecha).subscribe(camasEnElMapa => {
-                resolve(camasEnElMapa.filter(cama => cama.ultimoEstado.estado === 'disponible'));
-            });
-        });
-    }
-
 }
