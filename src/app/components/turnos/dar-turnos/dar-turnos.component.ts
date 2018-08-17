@@ -261,7 +261,7 @@ export class DarTurnosComponent implements OnInit {
             'usuario': this.auth.usuario
         };
         if (this.busquedas.length === 10) {
-            this.busquedas.shift();
+            this.busquedas.pop();
         }
 
         if (search.tipoPrestacion || search.profesional) {
@@ -270,7 +270,7 @@ export class DarTurnosComponent implements OnInit {
                     (item.tipoPrestacion && search.tipoPrestacion ? item.tipoPrestacion._id === search.tipoPrestacion._id : search.tipoPrestacion === null)
             );
             if (index < 0) {
-                this.busquedas.push(search);
+                this.busquedas.unshift(search);
                 localStorage.setItem('busquedas', JSON.stringify(this.busquedas));
             }
         }
