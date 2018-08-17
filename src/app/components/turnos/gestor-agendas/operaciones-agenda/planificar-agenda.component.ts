@@ -11,6 +11,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'planificar-agenda',
@@ -36,8 +37,9 @@ export class PlanificarAgendaComponent implements OnInit {
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
 
-    public modelo: any = { nominalizada: true };
+    public modelo: any = { nominalizada: true, dinamica: false };
     public noNominalizada = false;
+    public dinamica = false;
     public bloqueActivo: Number = 0;
     public elementoActivo: any = { descripcion: null };
     public alertas = [];
@@ -50,6 +52,10 @@ export class PlanificarAgendaComponent implements OnInit {
     textoEspacio = 'Espacios físicos de la organización';
     showBloque = true;
     showMapaEspacioFisico = false;
+    cupoMaximo: Number;
+    setCupo = false;
+    // ultima request de profesionales que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -60,6 +66,9 @@ export class PlanificarAgendaComponent implements OnInit {
         if (this.editaAgenda) {
             this.cargarAgenda(this._editarAgenda);
             this.bloqueActivo = 0;
+            if (this._editarAgenda.dinamica) { // hay que chequear si existe la prop dinamica porque es nueva en el esquema.
+                this.dinamica = true;
+            }
         } else {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
@@ -89,21 +98,24 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        let listaProfesionales = [];
-        if (event.query) {
+
+        if (event.query && event.query !== '' && event.query.length > 2) {
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+            this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
+                event.callback(resultado);
             });
         } else {
-            event.callback(this.modelo.profesionales || []);
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
+            event.callback([]);
         }
     }
 
@@ -206,6 +218,15 @@ export class PlanificarAgendaComponent implements OnInit {
 
     cambiarNominalizada(cambio) {
         this.modelo.nominalizada = !this.noNominalizada;
+        if (this.noNominalizada) {
+            this.dinamica = false;
+        }
+    }
+    seleccionarDinamica() {
+        if (this.dinamica) {
+            this.noNominalizada = false;
+            this.modelo.nominalizada = true;
+        }
     }
 
     calculosInicio() {
@@ -716,7 +737,11 @@ export class PlanificarAgendaComponent implements OnInit {
 
     onSave($event, clonar) {
         this.hideGuardar = true;
-        let validaBloques = true;
+        if (this.dinamica) {
+            this.modelo.dinamica = true;
+            this.modelo.cupo = (this.setCupo) ? this.cupoMaximo : -1;
+        }
+
         for (let i = 0; i < this.modelo.bloques.length; i++) {
             let bloque = this.modelo.bloques[i];
             // Verifico que cada bloque tenga al menos una prestacion activa
@@ -727,14 +752,8 @@ export class PlanificarAgendaComponent implements OnInit {
                     break;
                 }
             }
-            if (this.modelo.nominalizada) {
-                if (!(bloque.horaInicio && bloque.horaFin && bloque.cantidadTurnos && bloque.duracionTurno && prestacionActiva)) {
-                    validaBloques = false;
-                    break;
-                }
-            }
         }
-        if ($event.formValid && validaBloques) {
+        if ($event.formValid) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -769,49 +788,51 @@ export class PlanificarAgendaComponent implements OnInit {
             let bloques = this.modelo.bloques;
 
             bloques.forEach((bloque, index) => {
-
-                if (bloque.pacienteSimultaneos) {
-                    bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
-                    bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
-                    bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
-                    bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
-
-                } else {
-                    bloque.restantesDelDia = bloque.accesoDirectoDelDia;
-                    bloque.restantesProgramados = bloque.accesoDirectoProgramado;
-                    bloque.restantesGestion = bloque.reservadoGestion;
-                    bloque.restantesProfesional = bloque.reservadoProfesional;
-                }
-
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
-                for (let i = 0; i < bloque.cantidadTurnos; i++) {
-                    let turno = {
-                        estado: 'disponible',
-                        horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
-                        tipoTurno: undefined
-                    };
 
+                if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
-                        // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
-                        for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
-                            bloque.turnos.push(turno);
-                        }
+                        bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
+                        bloque.restantesProgramados = bloque.accesoDirectoProgramado * bloque.cantidadSimultaneos;
+                        bloque.restantesGestion = bloque.reservadoGestion * bloque.cantidadSimultaneos;
+                        bloque.restantesProfesional = bloque.reservadoProfesional * bloque.cantidadSimultaneos;
+
                     } else {
-                        if (bloque.citarPorBloque) {
-                            // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
-                            for (let j = 0; j < bloque.cantidadBloque; j++) {
-                                turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
-                                if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
-                                    if (bloque.turnos.length < bloque.cantidadTurnos) {
-                                        bloque.turnos.push(turno);
-                                    }
-                                }
+                        bloque.restantesDelDia = bloque.accesoDirectoDelDia;
+                        bloque.restantesProgramados = bloque.accesoDirectoProgramado;
+                        bloque.restantesGestion = bloque.reservadoGestion;
+                        bloque.restantesProfesional = bloque.reservadoProfesional;
+                    }
+
+                    for (let i = 0; i < bloque.cantidadTurnos; i++) {
+                        let turno = {
+                            estado: 'disponible',
+                            horaInicio: this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * 60000)),
+                            tipoTurno: undefined
+                        };
+
+                        if (bloque.pacienteSimultaneos) {
+                            // Simultaneos: Se crean los turnos según duración, se guardan n (cantSimultaneos) en c/ horario
+                            for (let j = 0; j < bloque.cantidadSimultaneos; j++) {
+                                bloque.turnos.push(turno);
                             }
                         } else {
-                            // Bloque sin simultaneos ni Citación por bloque
-                            bloque.turnos.push(turno);
+                            if (bloque.citarPorBloque) {
+                                // Citar x Bloque: Se generan los turnos según duración y cantidadPorBloque
+                                for (let j = 0; j < bloque.cantidadBloque; j++) {
+                                    turno.horaInicio = this.combinarFechas(this.fecha, new Date(bloque.horaInicio.getTime() + i * bloque.duracionTurno * bloque.cantidadBloque * 60000));
+                                    if (turno.horaInicio.getTime() < bloque.horaFin.getTime()) {
+                                        if (bloque.turnos.length < bloque.cantidadTurnos) {
+                                            bloque.turnos.push(turno);
+                                        }
+                                    }
+                                }
+                            } else {
+                                // Bloque sin simultaneos ni Citación por bloque
+                                bloque.turnos.push(turno);
+                            }
                         }
                     }
                 }

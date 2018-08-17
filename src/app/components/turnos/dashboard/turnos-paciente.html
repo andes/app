@@ -90,9 +90,10 @@
     <div *ngIf="showMotivoConsulta">
         <div class="row">
             <div class="col-12">
-                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.nombre">
+                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
                     <label>Obra Social </label>
-                    <div>{{turnoArancelamiento.paciente.obraSocial.nombre}}</div>
+                    {{turnoArancelamiento | json}}
+                    <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
                 </span>
                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
