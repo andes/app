@@ -159,7 +159,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
                             this.loading = false;
                             this.resPuco = t[0];
-                            this.resProfe = t[1];
+                            this.resProfe = (t[1] as any);
 
                             if (this.resPuco) {
                                 this.usuarios = this.resPuco;
@@ -182,7 +182,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                 // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
             }
         }
-    };
+    }
 
     // Boton reporte de errores/sugerencias
     sugerencias() {

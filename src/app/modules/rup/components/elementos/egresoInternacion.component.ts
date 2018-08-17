@@ -57,7 +57,7 @@ export class EgresoInternacionComponent extends RUPComponent implements OnInit {
             let query = {
                 nombre: event.query
             };
-            this.Cie10Service.get(query).subscribe((datos) => {
+            this.cie10Service.get(query).subscribe((datos) => {
                 event.callback(datos);
             });
         } else {

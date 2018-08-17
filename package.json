@@ -49,7 +49,8 @@
 		"ng2-charts": "^1.6.0",
 		"ng2-drag-drop": "^1.5.1",
 		"ng2-slugify": "^0.1.0",
-		"rxjs": "^5.4.2",
+		"rxjs": "^6.2.2",
+		"rxjs-compat": "^6.2.2",
 		"zone.js": "^0.8.20"
 	},
 	"devDependencies": {
