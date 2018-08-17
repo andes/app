@@ -573,8 +573,8 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = this.busquedas[indice].tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === this.busquedas[indice].profesional);
         this.opciones.profesional = this.busquedas[indice].profesional;
-        if (!actualizarProfesional && this.eventoProfesional) {
-            this.eventoProfesional.callback(this.busquedas[indice].profesional);
+        if (!actualizarProfesional && this.eventoProfesional && this.busquedas[indice].profesional) {
+            this.eventoProfesional.callback([this.busquedas[indice].profesional]);
         }
         this.actualizar('');
     }
