@@ -22,7 +22,6 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
     public valorImc: Number;
 
     ngOnInit() {
-
         this.registro.valido = true;
 
         if (!this.soloValores) {
@@ -39,6 +38,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
         }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
+            this.calculoIMC();
         }
     }
 
@@ -50,6 +50,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
                 }
             }
         }
+        return 2;
     }
 
     existeConcepto(elementoRUP, conceptId) {

@@ -46,9 +46,8 @@ export class ConsultaDeNinoSanoE3Y6AComponent extends RUPComponent implements On
                     const elementoRUP = this.elementosRUPService.buscarElemento(this.registro.concepto, false);
 
                     // Se arma el árbol de conceptos y valores
-                    this.ultimaConsulta = this.ninoSanoHUDS[this.ultimaConsultaIndex].ejecucion.registros.find(x => {
-                        return (this.existeConcepto(elementoRUP, x.concepto.conceptId) ? x : null);
-                    });
+                    this.ultimaConsulta = this.ninoSanoHUDS[this.ultimaConsultaIndex].ejecucion.registros.find(x =>
+                        x.concepto.conceptId === this.registro.concepto.conceptId);
 
                     // La consulta encontada en la HUDS tiene registros?
                     if (this.ultimaConsulta && this.ultimaConsulta.registros.length) {
