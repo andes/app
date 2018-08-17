@@ -47,8 +47,6 @@ export class RevisionAgendaComponent implements OnInit {
     @Input() modoCompleto = true;
 
     @Output() volverAlGestor = new EventEmitter<boolean>();
-    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
-    @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     public cantidadTurnosAsignados: number;
     private estadoPendienteAuditoria;
@@ -67,12 +65,12 @@ export class RevisionAgendaComponent implements OnInit {
     pacientesSearch = false;
     diagnosticos = [];
     public showRegistrosTurno = false;
-    public seleccion = null;
     public esEscaneado = false;
     public estadosAsistencia = enumToArray(EstadosAsistencia);
     public estadosAgendaArray = enumToArray(EstadosAgenda);
     public mostrarHeaderCompleto = false;
     public esAgendaOdonto = false;
+    idOrganizacion = this.auth.organizacion.id;
 
     constructor(public plex: Plex,
         public router: Router,
@@ -143,15 +141,15 @@ export class RevisionAgendaComponent implements OnInit {
      */
     onReturn(paciente: IPaciente): void {
         if (paciente.id) {
-            this.paciente = paciente;
-            this.showRegistrosTurno = true;
-            this.pacientesSearch = false;
-            window.setTimeout(() => this.pacientesSearch = false, 100);
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMongo => {
+                    this.paciente = pacienteMongo;
+                    this.showRegistrosTurno = true;
+                    this.pacientesSearch = false;
+                    window.setTimeout(() => this.pacientesSearch = false, 100);
+                });
         } else {
-            this.seleccion = paciente;
-            this.esEscaneado = true;
-            this.escaneado.emit(this.esEscaneado);
-            this.selected.emit(this.seleccion);
+            this.plex.alert('Paciente no encontrado', '¡Error!');
         }
     }
 
@@ -292,7 +290,7 @@ export class RevisionAgendaComponent implements OnInit {
             );
         });
         if (!turnoSinCodificar) {
-            // Se cambia de estado la agenda a asistenciaCerrada
+            // Se cambia de estado la agenda a Auditada
             let patch = {
                 'op': this.estadoCodificado.id,
                 'estado': this.estadoCodificado.id

@@ -29,13 +29,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "src/styles.less",
-              "src/app/assets/wizards/styles.scss",
-              "node_modules/mdi/css/materialdesignicons.css",
-              "node_modules/node-waves/dist/waves.css",
-              "node_modules/sweetalert2/dist/sweetalert2.css",
-              "node_modules/animate.css/animate.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },

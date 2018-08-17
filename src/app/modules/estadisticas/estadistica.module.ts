@@ -1,9 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { MatSlideToggleModule, MatCheckboxModule } from '@angular/material';
 
 // Providers
 import { EstAgendasService } from './services/agenda.service';
@@ -18,28 +14,41 @@ import { AuthModule } from '@andes/auth';
 import { ChartsModule } from 'ng2-charts';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
+import { CitasComponent } from './components/citas/citas.component';
+import { EstadisticasRouting } from './estadisticas.routing';
+import { CommonModule } from '@angular/common';
+import { EstRupService } from './services/rup-estadisticas.service';
+import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
+import { SnomedService } from './services/snomed.service';
 
 @NgModule({
     imports: [
-        BrowserModule,
+        CommonModule,
         PlexModule,
         AuthModule,
         ChartsModule,
         FormsModule,
         HttpClientModule,
         HttpModule,
+        EstadisticasRouting
     ],
     declarations: [
         HomeComponent,
-        FiltrosComponent
+        FiltrosComponent,
+        CitasComponent,
+        RupPacientesComponent
     ],
     entryComponents: [
         HomeComponent,
-        FiltrosComponent
+        FiltrosComponent,
+        CitasComponent,
+        RupPacientesComponent
     ],
     exports: [],
     providers: [
-        EstAgendasService
+        EstAgendasService,
+        EstRupService,
+        SnomedService
     ]
 })
 export class EstadisticaModule {

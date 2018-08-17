@@ -2,16 +2,7 @@
     <div id="printpage" *ngIf="showForm">
         <section>
             <plex-box>
-                <!--Header de listado de Turnos-->
-                <header>
-                    <div class="row">
-                        <div class="col">
-                            <plex-button type="danger" label="Cancelar" (click)="cancelar()"></plex-button>
-                            <plex-button type="success" label="Imprimir" (click)="imprimir()"></plex-button>
-                        </div>
-                    </div>
 
-                </header>
                 <div class="row">
                     <div class="col">
                         <label>Paciente </label>{{turnoSeleccionado.paciente | paciente}}
@@ -51,25 +42,13 @@
                 <hr>
                 <div class="row">
                     <div class="col">
-                        <label>Motivo de Consulta </label> {{turnoSeleccionado.motivoConsulta}}
+                        <label>Motivo de Consulta / Diagnóstico </label> {{turnoSeleccionado.motivoConsulta}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-12">
-                        <label>Diagnóstico </label>
-                    </div>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                    <br>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label>Firma </label>
+                        <label>Firma del paciente </label>
                     </div>
                     <br>
                     <br>

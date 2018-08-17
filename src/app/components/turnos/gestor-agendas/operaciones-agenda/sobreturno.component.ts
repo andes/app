@@ -294,7 +294,6 @@ export class AgregarSobreturnoComponent implements OnInit {
         if (!this._revision) {
             this.volverAlGestor.emit(true);
         } else {
-            console.log('aca');
             this.volverRevision.emit(true);
         }
     }

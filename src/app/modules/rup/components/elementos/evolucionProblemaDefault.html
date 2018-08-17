@@ -41,7 +41,8 @@
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Evolución" multiline="true" autoFocus="1" [(ngModel)]="registro.valor.evolucion" (change)="emitChange()"></plex-text>
+                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [html]="true" [readonly]="false" (change)="emitChange()">
+                </plex-text>
             </div>
         </div>
 
@@ -72,13 +73,27 @@
         </div>
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-8">
+                <br>
+                <strong>Evolución:</strong>
+                <span [innerHTML]="unaEvolucion.evolucion"></span>
+            </div>
+            <div class="col-4 text-right">
                 <br>
                 <strong>Profesional:</strong> {{unaEvolucion.profesional }}
             </div>
-            <div class="col-6">
-                <br>
-                <strong>Evolución:</strong> {{unaEvolucion.evolucion}}
+        </div>
+        <div class="row">
+            <div class="col" *ngIf="unaEvolucion.informeRequerido">
+                <hr>
+                <label>Informe Del Encuentro:</label>
+                <ng-container *ngIf="unaEvolucion.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
+                <ng-template #showContenidoValor>
+                    No tiene registrado el informe
+                </ng-template>
+                <ng-template #showMensaje>
+                    <span [innerHTML]="unaEvolucion.informeRequerido.valor"></span>
+                </ng-template>
             </div>
         </div>
     </ng-container>
@@ -118,7 +133,8 @@
     <div class="row">&nbsp;</div>
     <div class="row" *ngIf="registro.valor.evolucion">
         <div class="col-8 readonly">
-            <span>Evolución </span> {{ registro.valor.evolucion }}
+            <span>Evolución </span>
+            <span [innerHTML]="registro.valor.evolucion"></span>
         </div>
         <div class="col-4 readonly" *ngIf="registro.concepto.semanticTag === 'trastorno'">
             <span>Inicio aproximado </span>
@@ -135,23 +151,29 @@
         <div class="col">
             <ng-container *ngIf="registro?.evoluciones">
                 <div class="row">
-                    <div class="col-12 title" *ngIf="registro.concepto">
+                    <div class="col-8 title" *ngIf="registro.concepto">
                         <b>{{registro.concepto.term[0].toUpperCase() + registro.concepto.term.slice(1)}}</b>
-                        <hr>
                     </div>
+                    <div class="col-4 text-right">
+                        <b>Fecha de Inicio estimada: </b>
+                        <ng-container *ngIf="registro?.evoluciones[0].fechaInicio">
+                            {{ registro.evoluciones[0].fechaInicio | fromNow }}
+                        </ng-container>
+                        <ng-container *ngIf="!registro?.evoluciones[0].fechaInicio">
+                            Sin registro
+                        </ng-container>
+                    </div>
+                    <hr>
                 </div>
                 <div *ngFor="let evolucion of registro.evoluciones" class="row ml-1">
                     <div class="col-6">
-                        <b>Evolución: </b> {{ evolucion.evolucion }}
+                        <b>Evolución: </b>
+                        <span [innerHTML]="evolucion.evolucion"></span>
                     </div>
                     <div class="col-6">
-                        <div class="col-12">
-                            <b>Estado: </b> {{ evolucion.estado }}
-                        </div>
-                        <div class="col-12">
-                            <b>Fecha: </b> {{ evolucion.fechaCarga | fromNow }} /
-                            <b>Profesional: </b> {{evolucion.profesional }}
-                        </div>
+                        <b>Fecha de Carga: </b> {{ evolucion.fechaCarga | fecha }}
+                        <br>
+                        <b>Profesional: </b> {{evolucion.profesional }}
                     </div>
                     <div class="col-12">&nbsp;</div>
                 </div>
