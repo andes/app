@@ -126,6 +126,10 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (turno.paciente && turno.paciente.carpetaEfectores) {
+                                (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
+
                         });
                     });
 
@@ -137,6 +141,9 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
+                                (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
                         });
                     }
                 });

@@ -884,6 +884,11 @@ export class DarTurnosComponent implements OnInit {
         this.enviarSMS(pacienteSave);
         this.estadoT = 'noSeleccionada';
         let agendaReturn = this.agenda; // agendaReturn será devuelta al gestor.
+        let turnoSiguiente = null;
+        if (this.indiceBloque >= 0) {
+            turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
+        }
+        let agendaid = this.agenda.id;
         this.agenda = null;
         this.actualizar('');
         this.plex.toast('info', 'El turno se asignó correctamente');
@@ -899,8 +904,7 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         if (this.turnoDoble) {
-            let turnoSiguiente = this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno + 1];
-            let agendaid = this.agenda.id;
+
             if (turnoSiguiente.estado === 'disponible') {
                 let patch: any = {
                     op: 'darTurnoDoble',
