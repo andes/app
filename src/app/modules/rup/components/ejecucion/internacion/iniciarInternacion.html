@@ -1,11 +1,11 @@
-<form class="plex-layout" #formIngreso="ngForm">
+<form #formIngreso="ngForm">
     <section class="andes-tab" *ngIf="!soloValores">
         <div class="row">
             <div class="col-12">
                 <div *ngIf="paciente">
                     <fieldset>
-                        <legend class="text-info">Datos de ingreso</legend>
-                        <h5>Paciente:</h5>
+                        <!-- <legend class="text-info">Datos de ingreso</legend> -->
+                        <h5><b>Paciente:</b></h5>
                         <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
                         <hr class="blanco xs separate">
                         <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
@@ -91,15 +91,13 @@
 
     <!-- SoloValores -->
     <ng-container *ngIf="soloValores && paciente && informeIngreso">
-
         <!-- Datos personales -->
         <fieldset>
-            <legend class="text-info">Datos de ingreso</legend>
-            <br>
-            <h5>Paciente:</h5>
+            <!-- <legend class="text-info">Datos de ingreso</legend> -->
+            <h5><b>Paciente:</b></h5>
             <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
-            <div class="row">
-                <div class="col" *ngIf="showEditarCarpetaPaciente">
+            <div class="row" *ngIf="showEditarCarpetaPaciente">
+                <div class="col">
                     <plex-text [(ngModel)]="carpetaPaciente" labelField=""></plex-text>
                 </div>
             </div>
@@ -153,7 +151,6 @@
                 <p>{{informeIngreso.motivo}}</p>
             </div>
         </div>
-
     </ng-container>
 
     <!--Footer-->
