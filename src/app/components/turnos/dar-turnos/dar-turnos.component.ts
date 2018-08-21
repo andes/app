@@ -923,8 +923,8 @@ export class DarTurnosComponent implements OnInit {
             this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
         }
         this.actualizarPaciente();
+        this.afterDarTurno.emit(pacienteSave);
         if (this.paciente && this._pacienteSeleccionado) {
-            this.afterDarTurno.emit(true);
             return false;
         } else {
             this.buscarPaciente();
