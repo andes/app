@@ -107,6 +107,7 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
             } else {
                 this.carpetaEfectores.push(this.carpetaPaciente);
+                this.indiceCarpeta = this.carpetaEfectores.length - 1;
             }
 
             this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(
