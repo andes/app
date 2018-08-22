@@ -111,14 +111,12 @@
             <!-- SIDEBAR -->
             <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
                         [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
-                <ng-container *ngIf="camaSeleccionada && !showIngreso">
-                    <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
+                <ng-container *ngIf="camaSeleccionada?.ultimoEstado && !showIngreso">
                     <plex-tabs class="andes-contenedor-tabs" [activeIndex]="activo" (change)="cambiaTap($event)">
                         <!-- Tab cama -->
                         <plex-tab class="andes-tab center" label="Datos de cama">

@@ -209,14 +209,21 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e: any) {
+        this.cambiaTap(1);
         if (e) {
             this.countFiltros();
             // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
-            let i = this.camas.findIndex(c => c.id === e.id);
-            if (e) {
-                this.camas[i] = e;
+            let i = this.camas.findIndex(c => c.id === e.cama.id);
+            if (e.cama) {
+                this.camas[i] = e.cama;
+                this.camaSeleccionada = e.cama;
+                this.prestacionDelPaciente(e.cama);
             } else {
                 this.refresh();
+            }
+            if (e.iniciarInternacion) {
+                console.log('aqui');
+                // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
         }
     }
@@ -311,24 +318,24 @@ export class MapaDeCamasComponent implements OnInit {
         this.loadCountFiltros = true;
     }
 
-    selecionarCama(cama) {
-        if (cama.ultimoEstado.paciente) {
-            this.showLoaderSidebar = true;
-            this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
-                this.prestacionPorInternacion = prestacion;
-                this.showLoaderSidebar = false;
-            });
-        }
-        if (this.camaSeleccionada === cama) {
-            this.camaSeleccionada = null;
-        } else {
-            this.showMenu = true;
-            this.showIngreso = false;
-            this.showResumen = false;
-            this.camaSeleccionada = cama;
-            this.prestacionPorInternacion = null;
-        }
-    }
+    // selecionarCama(cama) {
+    //     if (cama.ultimoEstado.paciente) {
+    //         this.showLoaderSidebar = true;
+    //         this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
+    //             this.prestacionPorInternacion = prestacion;
+    //             this.showLoaderSidebar = false;
+    //         });
+    //     }
+    //     if (this.camaSeleccionada === cama) {
+    //         this.camaSeleccionada = null;
+    //     } else {
+    //         this.showMenu = true;
+    //         this.showIngreso = false;
+    //         this.showResumen = false;
+    //         this.camaSeleccionada = cama;
+    //         this.prestacionPorInternacion = null;
+    //     }
+    // }
 
     /**
      * Captura el evento que emite el componente y cierra/oculta los mismos
@@ -364,14 +371,9 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
+        this.camaSelected = event;
         let cama = event;
-        if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
-            this.showLoaderSidebar = true;
-            this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
-                this.prestacionPorInternacion = prestacion;
-                this.showLoaderSidebar = false;
-            });
-        }
+        this.prestacionDelPaciente(cama);
         if (this.camaSeleccionada === cama) {
             this.camaSeleccionada = null;
         } else {
@@ -381,7 +383,16 @@ export class MapaDeCamasComponent implements OnInit {
             this.camaSeleccionada = cama;
             this.prestacionPorInternacion = null;
         }
-        this.camaSelected = event.id;
+    }
+
+    prestacionDelPaciente(cama) {
+        if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
+            this.showLoaderSidebar = true;
+            this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
+                this.prestacionPorInternacion = prestacion;
+                this.showLoaderSidebar = false;
+            });
+        }
     }
 
     editar(event) {

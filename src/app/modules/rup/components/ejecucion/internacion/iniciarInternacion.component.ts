@@ -167,7 +167,7 @@ export class IniciarInternacionComponent implements OnInit {
             this.plex.alert('El paciente debe ser registrado en MPI');
         }
         if (this.camaSelected) {
-            let camaId = this.camaSelected;
+            let camaId = this.camaSelected.id;
             this.camasService.getCama(camaId).subscribe(cama => {
                 this.cama = cama;
             });
@@ -265,7 +265,6 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar una organización');
                 return;
             }
-
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
@@ -279,7 +278,7 @@ export class IniciarInternacionComponent implements OnInit {
                     informeIngreso: this.informeIngreso
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-                    this.refreshCamas.emit(this.cama);
+                    this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
                     this.data.emit(false);
                 }, (err) => {
                     this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
@@ -315,7 +314,7 @@ export class IniciarInternacionComponent implements OnInit {
 
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.refreshCamas.emit(this.cama);
+                            this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
                             this.data.emit(false);
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');

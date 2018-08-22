@@ -104,7 +104,7 @@ export class CamaComponent implements OnInit {
                 this.darCama();
             } else {
                 this.buscarPaciente.emit(true);
-                this.camaSelected.emit(cama.id);
+                this.camaSelected.emit(cama);
                 // this.router.navigate(['rup/internacion/crear', cama.id]);
             }
         }
@@ -192,7 +192,7 @@ export class CamaComponent implements OnInit {
                 // limpiar motivo por el cual se cambio el estado
                 cama.$motivo = '';
                 // emitimos la cama modificada
-                this.evtCama.emit(cama);
+                this.evtCama.emit({ cama: cama });
             }, 100);
         }, (err) => {
             this.plex.info('danger', err, 'Error');
@@ -228,7 +228,7 @@ export class CamaComponent implements OnInit {
                 // limpiar motivo por el cual se cambio el estado
                 cama.$motivo = '';
                 // emitimos la cama modificada
-                this.evtCama.emit(cama);
+                this.evtCama.emit({ cama: cama });
             }, 100);
         }, (err) => {
             this.plex.info('danger', err, 'Error');
