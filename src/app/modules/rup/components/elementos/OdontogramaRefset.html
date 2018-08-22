@@ -224,12 +224,15 @@
                                     <ng-container *ngFor="let relClass of getRegistrosRel(diente, 'pieza'); let pc=index">
                                         <g title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle (mouseenter)="showTooltip(diente, false, pc)" (mouseleave)="hideTooltip()" class="st1 {{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
+                                            <circle (mouseenter)="showTooltip(diente, 'pieza', false, pc)" (mouseleave)="hideTooltip()" class="st1 {{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
                                                 [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" cx="46.285" cy="7.311"
                                                 r="5.801" />
                                             <!-- Asterisco -->
-                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" [ngClass]="{'seleccionada seleccionada-outline': estaSeleccionada(diente, 'pieza')}"
+                                            <path [ngClass]="{'seleccionada': estaSeleccionada(diente, 'pieza')}" class="{{ 'diente-' + relClass.concepto.semanticTag + ' rotate-' + pc }}"
                                                 d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z"
+                                            />
+                                            <!-- Círculo GRANDE -->
+                                            <circle cx="26" cy="27.5" r="22.246" [ngClass]="{'seleccionada-outline': estaSeleccionada(diente, 'pieza')}" class="{{ 'diente-' + relClass.concepto.semanticTag + '-outline' }}"
                                             />
                                         </g>
                                     </ng-container>
@@ -370,8 +373,7 @@
                                             <!-- Círculo MINI -->
                                             <circle *ngIf="relClass?.concepto?.semanticTag" cx="46.285" cy="7.311" r="5.801" class="st1" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-'+ a"
                                             />
-                                            <path [ngClass]="piezaCompletaValor(diente, 'pieza') !== -1 ? 'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag + '-outline' : '' "
-                                                d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
+                                            <path [ngClass]="'diente-' + getClassRegistro(diente,'pieza')?.concepto.semanticTag" d="M50.668,5.782l-2.925,1.534l2.925,1.542l-0.674,1.25l-2.951-1.631v3.049h-1.507V8.477l-2.961,1.631l-0.674-1.25l2.961-1.542l-2.961-1.534l0.674-1.25l2.961,1.613V3.096h1.507v3.049l2.951-1.613L50.668,5.782z "
                                             />
                                         </g>
                                         <!-- Círculo GRANDE -->

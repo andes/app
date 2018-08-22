@@ -96,21 +96,25 @@ svg#cuadrante-sup-der {
 .diente-procedimiento-outline {
     fill: none !important;
     stroke: $procedimiento !important;
+    stroke-width: 2;
 }
 
 .diente-plan-outline {
     fill: none !important;
     stroke: $plan !important;
+    stroke-width: 2;
 }
 
 .diente-trastorno-outline {
     fill: none !important;
     stroke: $trastorno !important;
+    stroke-width: 2;
 }
 
 .diente-hallazgo-outline {
     fill: none !important;
     stroke: $hallazgo !important;
+    stroke-width: 2;
 }
 
 .evolucionada-stroke {
