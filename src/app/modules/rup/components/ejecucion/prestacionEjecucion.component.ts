@@ -297,7 +297,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (!registroOrigen.relacionadoCon) {
                     registroOrigen.relacionadoCon = [];
                 }
-                registroOrigen.relacionadoCon.push(registroDestino);
+
+                if (this.elementoRUP.reglas && this.elementoRUP.reglas.requeridos && this.elementoRUP.reglas.requeridos.relacionesMultiples) {
+                    registroOrigen.relacionadoCon.push(registroDestino);
+                } else {
+                    registroOrigen.relacionadoCon = [registroDestino];
+                }
                 // // buscamos en la posición que se encuentra el registro de orgien y destino
                 // let indexOrigen = registros.findIndex(r => (r.id === registroOrigen.id));
                 // let indexDestino = registros.findIndex(r => (r.id && registroDestino.id));
@@ -475,7 +480,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
-
         if (registroDestino && registroDestino.concepto) {
             registroDestino = registroDestino.concepto; // quickfix
         }
@@ -526,13 +530,13 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             }
         } else {
-            if (registoExiste && (!this.tipoBusqueda && !this.tipoBusqueda.puedeRepetirRegistros)) {
+            if (registoExiste && (!this.tipoBusqueda && !this.tipoBusqueda.repetirRegistros)) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
 
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (this.tipoBusqueda && !this.tipoBusqueda.puedeRepetirRegistros)) {
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (this.tipoBusqueda && !this.tipoBusqueda.repetirRegistros)) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
@@ -577,6 +581,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
                                 resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                 // }
+                            } else {
+                                registroDestino.relacionadoCon = [resultado];
                             }
                         }
                     });
@@ -584,14 +590,19 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
-                if (resultado && resultado.relacionadoCon) {
-                    if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
-                        if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
-                            resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                if (registroDestino && !this.elementoRUP.reglas.requeridos.relacionesMultiples) {
+                    registroDestino.relacionadoCon = [resultado];
+                } else {
+
+                    if (resultado && resultado.relacionadoCon) {
+                        if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
+                            if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
+                                resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                            }
+                        } else {
+                            this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
+                            resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                         }
-                    } else {
-                        this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
-                        resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                     }
                 }
 
@@ -614,7 +625,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
-            if (!existeEjecucion || (this.tipoBusqueda && this.tipoBusqueda.puedeRepetirRegistros)) {
+            if (!existeEjecucion || (this.tipoBusqueda && this.tipoBusqueda.repetirRegistros)) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
                     let resultado = this.cargarNuevoRegistro(resultadoHuds.data.concepto, valor);
