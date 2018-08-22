@@ -232,6 +232,11 @@ export class RevisionAgendaComponent implements OnInit {
     cerrarAsistencia() {
         // Se verifica que todos los campos tengan asistencia chequeada
         let turnoSinVerificar = null;
+        let turnoSinCodificar = null;
+        let label;
+        let patch;
+        let patchear = true;
+
         let listaTurnos = [];
         for (let i = 0; i < this.agenda.bloques.length; i++) {
             listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
@@ -239,48 +244,11 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.agenda.sobreturnos) {
             listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
         }
+
         turnoSinVerificar = listaTurnos.find(t => {
             return (t && t.paciente && t.paciente.id && !t.asistencia && t.estado !== 'suspendido' && t.estado !== 'turnoDoble');
         });
-        if (!turnoSinVerificar) { // Si todos los turnos están verificados..
-            // Se cambia de estado la agenda a pendienteAuditoria
-            let patch = {
-                'op': 'pendienteAuditoria',
-                'estado': 'pendienteAuditoria'
-            };
-            this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Auditoria');
-            });
-        } else {
-            // este caso se dá cuando se agregan sobreturnos desde la auditoria
-            // si hay algún turno sin verificar asistencia y la agenda ya está en otro estado, se vuelve a pendiente asisitencia
-            if (this.agenda.estado !== 'pendienteAsistencia') {
-                // Se cambia de estado la agenda a pendienteAuditoria
-                let patch = {
-                    'op': 'pendienteAsistencia',
-                    'estado': 'pendienteAsistencia'
-                };
-                this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                    this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Pendiente Asistencia');
-                });
-            }
-        }
-    }
-    /**
-     * Verifica que cada turno esté codificado y modifica el estado de la agenda si corresponde
-     *
-     * @memberof RevisionAgendaComponent
-     */
-    cerrarCodificacion() {
-        // Se verifica que todos los campos tengan el diagnostico codificado
-        let turnoSinCodificar = null;
-        let listaTurnos = [];
-        for (let i = 0; i < this.agenda.bloques.length; i++) {
-            listaTurnos = listaTurnos.concat(this.agenda.bloques[i].turnos);
-        }
-        if (this.agenda.sobreturnos) {
-            listaTurnos = listaTurnos.concat(this.agenda.sobreturnos);
-        }
+
         turnoSinCodificar = listaTurnos.find(t => {
             return (
                 t && t.paciente && t.paciente.id &&
@@ -288,14 +256,40 @@ export class RevisionAgendaComponent implements OnInit {
                     && !t.diagnostico.ilegible && t.asistencia === 'asistio')) || !t.asistencia)
             );
         });
+
         if (!turnoSinCodificar) {
-            // Se cambia de estado la agenda a asistenciaCerrada
-            let patch = {
+            // Se cambia de estado la agenda a Auditada
+            patch = {
                 'op': this.estadoCodificado.id,
                 'estado': this.estadoCodificado.id
             };
+            label = 'Auditada';
+        } else {
+            if (!turnoSinVerificar) { // Si todos los turnos tienen la asistencia verificada
+                // Se cambia de estado la agenda a pendienteAuditoria
+                patch = {
+                    'op': 'pendienteAuditoria',
+                    'estado': 'pendienteAuditoria'
+                };
+                label = 'Pendiente Auditoria';
+            } else {
+                // este caso se dá cuando se agregan sobreturnos desde la auditoria
+                // si hay algún turno sin verificar asistencia y la agenda ya está en otro estado, se vuelve a pendiente asisitencia
+                if (this.agenda.estado !== 'pendienteAsistencia') {
+                    // Se cambia de estado la agenda a pendienteAuditoria
+                    patch = {
+                        'op': 'pendienteAsistencia',
+                        'estado': 'pendienteAsistencia'
+                    };
+                    label = 'Pendiente Asistencia';
+                } else {
+                    patchear = false;
+                }
+            }
+        }
+        if (patchear) {
             this.serviceAgenda.patch(this._agenda.id, patch).subscribe(resultado => {
-                this.plex.toast('success', 'El estado de la agenda fue actualizado', 'Auditada');
+                this.plex.toast('success', 'El estado de la agenda fue actualizado', label);
             });
         }
     }
@@ -337,7 +331,6 @@ export class RevisionAgendaComponent implements OnInit {
         if (this.turnoSeleccionado.tipoPrestacion) {
             this.serviceTurno.put(datosTurno).subscribe(resultado => {
                 this.cerrarAsistencia();
-                this.cerrarCodificacion();
             });
         } else {
             this.plex.alert('Debe seleccionar un tipo de Prestacion');

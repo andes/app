@@ -78,7 +78,7 @@
                                 </ng-container>
 
                                 <!--Agenda seleccionada-->
-                                <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos'">
+                                <ng-container *ngIf="estadoT === 'seleccionada' || estadoT === 'noTurnos' || estadoT==='dinamica'">
                                     <!--Header agenda-->
                                     <div class="pt-3 text-center">
                                         <div>Agenda seleccionada</div>
@@ -243,7 +243,19 @@
                                         </div>
                                     </div>
                                 </ng-container>
-
+                                <ng-container>
+                                    <div class="col" *ngIf="estadoT == 'dinamica'">
+                                        <hr>
+                                        <br>
+                                        <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}} pacientes asignados </div>
+                                        <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados </div>
+                                        <br>
+                                        <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
+                                        <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
+                                        <div *ngIf="agenda.cupo === -1"> Agenda con cupos no limitados </div>
+                                        <plex-button label="Dar Turno" type="success" (click)="turnoDinamico()"></plex-button>
+                                    </div>
+                                </ng-container>
                                 <!--Confirmación del turno -->
                                 <ng-container *ngIf="estadoT === 'confirmacion'">
                                     <!-- <h5 class="pt-3 text-center">Confirme los datos del turno</h5> -->
@@ -274,7 +286,7 @@
                                             <div class="col">
                                                 <span *ngIf="obraSocialPaciente">
                                                     <label>Obra Social </label>
-                                                    <div>{{obraSocialPaciente.nombre}}</div>
+                                                    <div>{{obraSocialPaciente.financiador}}</div>
                                                 </span>
                                                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" [(ngModel)]="motivoConsulta"></plex-text>
                                             </div>
@@ -306,13 +318,6 @@
                                         </footer>
 
                                     </div>
-                                    <!-- <hr> -->
-                                    <!--Otros datos-->
-                                    <!-- <plex-select *ngIf="!turno.tipoPrestacion" label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="bloque.tipoPrestaciones"
-                                        name="turnoTipoPrestacion" [required]="true"></plex-select>
-                                    <plex-phone label="Número de celular" [(ngModel)]="telefono" (change)="cambiarTelefono()" name="telefono"></plex-phone>
-                                    <plex-text *ngIf="carpetaEfector" label="Nro Carpeta" name="nroCarpeta" [(ngModel)]="carpetaEfector.nroCarpeta"></plex-text> -->
-
                                 </ng-container>
                             </fieldset>
                         </plex-tab>

@@ -65,9 +65,9 @@
     <div *ngIf="showMotivoConsulta">
         <div class="row">
             <div class="col-12">
-                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.nombre">
+                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
                     <label>Obra Social </label>
-                    <div>{{turnoArancelamiento.paciente.obraSocial.nombre}}</div>
+                    <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
                 </span>
                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
@@ -83,8 +83,8 @@
         </div>
     </div>
     <div *ngIf="showLiberarTurno ">
-        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="saveLiberarTurno($event, paciente) "
-            (cancelaLiberarTurno)="cancelaLiberarTurno($event) ">
+        <liberar-turno [agenda]="agenda " [turnosSeleccionados]="turnosSeleccionados " (saveLiberarTurno)="afterLiberarTurno($event) "
+            (cancelaLiberarTurno)="afterLiberarTurno($event) ">
         </liberar-turno>
     </div>
 </plex-box>
