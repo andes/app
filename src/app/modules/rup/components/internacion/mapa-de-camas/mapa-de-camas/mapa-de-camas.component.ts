@@ -6,7 +6,9 @@ import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
-
+import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
+import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface'
+import { IPaciente } from '../../../../../../interfaces/IPaciente';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -72,6 +74,8 @@ export class MapaDeCamasComponent implements OnInit {
     };
 
     public activo = 0;
+    public pacientes: IPacienteMatch[] | IPaciente[];
+    public pacienteActivo: IPaciente;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -230,6 +234,8 @@ export class MapaDeCamasComponent implements OnInit {
 
     public ingresarPaciente() {
         this.buscandoPaciente = true;
+        this.pacienteSelected = null;
+        this.pacientes = null;
         // this.router.navigate(['rup/internacion/crear']);
     }
 
@@ -383,6 +389,18 @@ export class MapaDeCamasComponent implements OnInit {
         this.showIngreso = true;
         this.showMenu = true;
         this.prestacionPorInternacion = null;
+    }
+
+    searchStart() {
+        this.pacientes = null;
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.pacientes = resultado.pacientes;
+        }
     }
 
     onCamaSelected(event) {

@@ -16,7 +16,7 @@ export class ProfeService {
      * @memberof ProfeService
      */
 
-    get(opciones: any): Observable<any> {
-        return this.server.get(this.url + '/profe/', { params: opciones });
+    get(opciones: any, showError = true): Observable<any> {
+        return this.server.get(this.url + '/profe/', { params: opciones, showError: showError });
     }
 }

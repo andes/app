@@ -1,4 +1,4 @@
-<ng-container *ngIf="!camasService.showListaEspera && !buscandoPaciente">
+<ng-container *ngIf="!camasService.showListaEspera">
     <!-- <form class="plex-layout"> -->
     <section class="plex-layout">
         <div class="row">
@@ -109,15 +109,19 @@
             </div>
 
             <!-- SIDEBAR -->
-            <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu !buscandoPaciente">
+            <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-
+                <ng-container *ngIf="buscandoPaciente">
+                    <!-- Buscador adaptable de MPI -->
+                    <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
+                    <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                </ng-container>
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
                         [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
-                <ng-container *ngIf="camaSeleccionada && !showIngreso">
+                <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
                     <plex-tabs class="andes-contenedor-tabs" [activeIndex]="activo" (change)="cambiaTap($event)">
                         <!-- Tab cama -->
@@ -204,7 +208,7 @@
                     </plex-tabs>
                 </ng-container>
 
-                <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso">
+                <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso && !buscandoPaciente">
                     <header>
                         <h5 class="text-info">Acciones</h5>
                     </header>
@@ -300,6 +304,6 @@
 <ng-container *ngIf="camasService.showListaEspera && !buscandoPaciente">
     <listaEsperaInternacion (prestacion)='onDarCama($event)' (showCamas)='camasService.showListaEspera = $event'></listaEsperaInternacion>
 </ng-container>
-<!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="false"></pacientesSearch>
+<!-- Búsqueda de pacientes antes de componente nuevo de MPI -->
+<!-- <pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="false"></pacientesSearch> -->
