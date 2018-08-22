@@ -246,18 +246,19 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
 
-
             let search = this.search.toLowerCase();
 
             // filtramos uno a uno los conceptos segun el string de busqueda
             Object.keys(this.conceptos).forEach(concepto => {
-                this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                    return registro.term.toLowerCase().indexOf(search) >= 0;
-                });
-                if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                    this.results.buscadorBasico[concepto] = this.results.buscadorBasico[concepto].filter(x => {
-                        return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                if (this.results[this.busquedaActual][concepto]) {
+                    this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
+                        return registro.term.toLowerCase().indexOf(search) >= 0;
                     });
+                    if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
+                        this.results.buscadorBasico[concepto] = this.results.buscadorBasico[concepto].filter(x => {
+                            return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                        });
+                    }
                 }
             });
 
@@ -378,29 +379,33 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual][this.filtroActual];
 
-        Object.keys(this.conceptos).forEach(concepto => {
-            this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-            if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
-                    return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                }));
-            }
-        });
-
-        // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
-        this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x));
-        // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
-        this.results[busquedaActual][this.filtroActual] = this.results[busquedaActual][this.filtroActual].filter(x => !this.esTurneable(x));
-        if (this.results[busquedaActual]['planes'].length) {
-            let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
-            let planes = [];
-            planesCopia.forEach(unPlan => {
-                unPlan.plan = true;
-                planes.push(unPlan);
+        if (this.conceptos && resultados) {
+            Object.keys(this.conceptos).forEach(concepto => {
+                this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+                if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
+                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
+                        return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                    }));
+                }
             });
-            // agregamos los planes
-            this.results[busquedaActual][this.filtroActual] = [...this.results[busquedaActual][this.filtroActual], ...this.results[busquedaActual]['planes']];
-            // ordenamos los resultados
+        }
+
+        if (this.results && this.results[busquedaActual]) {
+            // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
+            this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'].filter(x => !this.esTurneable(x));
+            // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
+            this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x)) : [];
+            if (this.results[busquedaActual]['planes']) {
+                let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
+                let planes = [];
+                planesCopia.forEach(unPlan => {
+                    unPlan.plan = true;
+                    planes.push(unPlan);
+                });
+                // agregamos los planes
+                this.results[busquedaActual][this.filtroActual] = [...this.results[busquedaActual][this.filtroActual], ...this.results[busquedaActual]['planes']];
+                // ordenamos los resultados
+            }
         }
     }
 
