@@ -1,9 +1,9 @@
 <form class="plex-layout" #form="ngForm">
+    <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
     <section class="dar-turnos-section">
-        <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
         <div class="row calendario-expandido" *ngIf="autorizado && showDarTurnos">
             <!--Panel principal-->
-            <div class="col">
+            <div class="col-8">
                 <plex-box>
                     <!--Filtros-->
                     <header>
@@ -196,7 +196,8 @@
                                     <div class="col" *ngIf="estadoT == 'noTurnos'">
                                         <div *ngIf="alternativas.length > 0" class="list-group">
                                             <div class="row">
-                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa
+                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una
+                                                    agenda alternativa
                                                     <br>
                                                 </div>
                                             </div>
@@ -211,14 +212,16 @@
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.tipoPrestaciones">
                                                         <label>Tipo de Prestación: </label>
-                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span>
+                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}}
+                                                            - </span>
                                                         <br>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.profesionales">
                                                         <label>Profesional: </label>
-                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}}
+                                                            {{profesional.apellido}} - </span>
                                                         <br>
                                                     </div>
                                                 </div>
@@ -247,8 +250,10 @@
                                     <div class="col" *ngIf="estadoT == 'dinamica'">
                                         <hr>
                                         <br>
-                                        <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}} pacientes asignados </div>
-                                        <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados </div>
+                                        <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}}
+                                            pacientes asignados </div>
+                                        <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes
+                                            asignados </div>
                                         <br>
                                         <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
                                         <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
@@ -277,7 +282,8 @@
                                                     <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                                 <div *ngIf="agenda.profesionales">
                                                     <label>Profesional</label>
-                                                    <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional | profesional}}
+                                                    <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional
+                                                        | profesional}}
                                                     </div>
                                                 </div>
                                             </div>
