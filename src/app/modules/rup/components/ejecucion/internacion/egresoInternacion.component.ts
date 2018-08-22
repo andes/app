@@ -20,6 +20,7 @@ export class EgresoInternacionComponent implements OnInit {
     // botonera, input para pasarle por parametro si mostramos o no el btn cerrar o guardar.
     @Input() botonera;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
 
     public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
@@ -68,7 +69,8 @@ export class EgresoInternacionComponent implements OnInit {
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
         let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
         this.registro.valor = existeRegistro ? existeRegistro.valor : null;
-        if (!this.registro.valor && !this.soloValores) {
+        if (!this.registro.valor) {
+            this.btnIniciarEditarEmit.emit("Iniciar");
             this.registro.valor = {
                 InformeEgreso: {
                     fechaEgreso: null,
@@ -94,6 +96,8 @@ export class EgresoInternacionComponent implements OnInit {
                 }
             };
             this.showProcedimientos_causas();
+        } else {
+            this.btnIniciarEditarEmit.emit("Editar");
         }
 
         let params;

@@ -1,9 +1,11 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 
 @Component({
     selector: 'internacion-resumen',
-    templateUrl: 'resumenInternacion.html'
+    templateUrl: 'resumenInternacion.html',
+    styleUrls: ['resumenInternacion.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ResumenInternacionComponent implements OnInit {
 
@@ -15,6 +17,7 @@ export class ResumenInternacionComponent implements OnInit {
     public pases;
     public editarIngreso = false;
     public editarEgreso = false;
+    public btnIniciarEditar;
 
     constructor(
         public prestacionesService: PrestacionesService
@@ -25,6 +28,10 @@ export class ResumenInternacionComponent implements OnInit {
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
+    }
+
+    onBtnIniciarEditar(event) {
+        this.btnIniciarEditar = event;
     }
 
 

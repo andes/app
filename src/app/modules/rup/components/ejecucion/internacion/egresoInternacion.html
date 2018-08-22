@@ -1,11 +1,10 @@
 <form #formEgreso="ngForm">
-
     <section class="andes-tab" *ngIf="!soloValores">
         <div class="row" *ngIf="prestacion && registro.valor">
             <div class="col-12">
                 <ng-container>
                     <fieldset>
-                        <legend class="text-info">Datos de Egreso</legend>
+                        <legend class="text-info">Formulario de Egreso</legend>
                     </fieldset>
 
                     <div class="row ">
@@ -204,8 +203,8 @@
                 <!-- Footer -->
                 <footer class="andes-contenedor-botones horizontal between">
                     <plex-button *ngIf="botonera?.cerrar" class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
-                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' && botonera?.guardar"
-                        label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) " type="success " class="float-right "></plex-button>
+                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) "
+                        type="success " class="float-right "></plex-button>
                     <!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
                                     (click)="validar() " type="success " class="float-right "></plex-button> -->
 
@@ -215,9 +214,7 @@
             </div>
         </div>
     </section>
-    <fieldset *ngIf="soloValores">
-        <legend class="text-info">Datos de Egreso</legend>
-    </fieldset>
+
     <!-- Visualizacion de datos de egreso -->
     <ng-container *ngIf="soloValores && registro?.valor?.InformeEgreso">
 

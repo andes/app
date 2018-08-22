@@ -1,52 +1,69 @@
 <ng-container *ngIf="prestacion">
     <!-- datos del ingreso -->
-    <ng-container *ngIf="!editarEgreso">
-
-        <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
-        </rup-iniciarInternacion>
-        <!-- Editar internacion -->
-        <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso && !editarEgreso" label="editar"
-            (click)="editar('ingreso')"></plex-button>
-    </ng-container>
-
-    <!-- pases de cama TODO: Estilzar segun mockup-->
-    <ng-container *ngIf="!editarIngreso && !editarEgreso">
-        <section class="andes-contenedor-secundario vertical">
-            <h4 class="text-info">Pases</h4>
-            <div class="row">
-                <div class="col">
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Cama</th>
-                                <th>Unidad organizativa</th>
-                                <th>Especialidad</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let pase of pases; let i=index">
-                                <td>{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
-                                <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
-                                <td>{{ pase.estados.unidadOrganizativa.term }}</td>
-                                <td>{{ pase.estados.especialidades[0]?.term }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <plex-accordion>
+        <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true">
+            <ng-container *ngIf="!editarEgreso">
+                <div class="row">
+                    <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
+                    </rup-iniciarInternacion>
+                    <!-- Editar internacion -->
+                    <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso && !editarEgreso" label="Editar"
+                        (click)="editar('ingreso')"></plex-button>
                 </div>
+            </ng-container>
+        </plex-panel>
+    </plex-accordion>
+    <!-- pases de cama TODO: Estilzar segun mockup-->
+    <plex-accordion>
+        <plex-panel tituloPrincipal="Pases de Cama">
+            <div class="row">
+                <ng-container *ngIf="!editarIngreso && !editarEgreso">
+                    <section class="andes-contenedor-secundario vertical">
+                        <!-- <h4 class="text-info">Pases</h4> -->
+                        <div class="row">
+                            <div class="col">
+                                <table class="table table-dark">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Cama</th>
+                                            <th>Unidad organizativa</th>
+                                            <th>Especialidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let pase of pases; let i=index">
+                                            <td>{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
+                                            <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
+                                            <td>{{ pase.estados.unidadOrganizativa.term }}</td>
+                                            <td>{{ pase.estados.especialidades[0]?.term }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </ng-container>
             </div>
-        </section>
-    </ng-container>
-
+        </plex-panel>
+    </plex-accordion>
     <!-- datos del egreso -->
-    <ng-container *ngIf="!editarIngreso">
-        <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
-            [soloValores]="!editarEgreso"></rup-egresoInternacion>
-        <plex-button type="danger" class="btn btn-block btn-danger btn-sm" *ngIf="!editarIngreso && !editarEgreso" label="editar"
-            (click)="editar('egreso')">
-        </plex-button>
-    </ng-container>
-
+    <plex-accordion>
+        <plex-panel tituloPrincipal="Datos del Egreso">
+            <ng-container *ngIf="!editarIngreso">
+                <div class="row">
+                    <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
+                        [soloValores]="!editarEgreso" (btnIniciarEditarEmit)="onBtnIniciarEditar($event)"></rup-egresoInternacion>
+                    <div class="col text-center" *ngIf="btnIniciarEditar">
+                        <h4 *ngIf="btnIniciarEditar === 'Iniciar'">No se hay registrado ningún egreso</h4>
+                        <plex-button type="danger" class="btn btn-block btn-danger btn-sm" *ngIf="!editarIngreso && !editarEgreso" label="{{btnIniciarEditar}}"
+                            (click)="editar('egreso')">
+                        </plex-button>
+                    </div>
+                </div>
+            </ng-container>
+        </plex-panel>
+    </plex-accordion>
 </ng-container>
 <!-- <footer>
     <div class="row">
