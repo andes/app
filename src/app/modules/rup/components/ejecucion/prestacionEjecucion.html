@@ -102,47 +102,28 @@
 
                                                         <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
 
-                                                            <b class="clearfix" *ngIf="registro.relacionadoCon[0]">Relacionado con: </b>
-                                                            <ng-container *ngFor="let relacion of registro.relacionadoCon">
-                                                                <span *ngIf="!relacion?.conceptos" class="badge badge-info">
-                                                                    {{ relacion?.term ? relacion.term : (relacion.cara ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara + ')' : relacion.nombre
-                                                                    ) }}
-                                                                </span>
-                                                                <!-- <pre class="text-sm">
-                                                                    {{registro | json}}
-                                                                </pre> -->
-                                                                <!-- <span class="badge badge-info">
-
-                                                                    <ng-container *ngIf="relacion?.concepto">
-                                                                        {{ relacion.concepto.term[0].toUpperCase() + relacion.concepto.term.slice(1)}}
-                                                                        <span *ngIf="relacion.piezaCompleta && !relacion.cara"> / pieza</span>
-                                                                        <span *ngIf="relacion.cara"> / {{ relacion.cara }}</span>
+                                                            <div class="float-left" *ngIf="registro?.relacionadoCon">
+                                                                <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado con: </b>
+                                                                <small *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
+                                                                    class="badge badge-info">
+                                                                    {{ registro.relacionadoCon[0].concepto.term[0].toUpperCase() + registro.relacionadoCon[0].concepto.term.slice(1)}}
+                                                                </small>
+                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
+                                                                    <ng-container *ngFor="let relacion of registro.relacionadoCon">
+                                                                        <small *ngIf="relacion.cara" class="badge badge-info">
+                                                                            {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara
+                                                                            + ')' : relacion) }}
+                                                                        </small>
                                                                     </ng-container>
-                                                                </span> -->
+                                                                </ng-container>
+                                                                <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                    title="Desvincular" class="btn btn-sm btn-primary">
+                                                                    <i class="mdi mdi-link-variant-off"></i>
+                                                                </a>
+                                                            </div>
 
-                                                                <!-- <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '173291009'">
-                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
-                                                                        <span *ngIf="pieza.cara === 'pieza'" class="badge badge-info">
-                                                                            {{ pieza.concepto.term }} / pieza completa
-                                                                        </span>
-                                                                    </span>
-                                                                </ng-container> -->
-                                                                <!--  && registro.concepto.conceptId === '67784006' -->
-                                                                <!-- <ng-container *ngIf="relacion.valor?.piezas && registro.concepto.conceptId === '67784006'">
-                                                                    <span *ngFor="let pieza of relacion.valor.piezas">
-                                                                        <span *ngIf="pieza.cara !== 'pieza'" class="badge badge-info">
-                                                                            {{ pieza.concepto.term }} / cara {{ pieza.cara }}
-                                                                        </span>
-                                                                    </span>
-                                                                </ng-container> -->
-                                                            </ng-container>
 
                                                         </ng-container>
-
-                                                        <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                                            title="Desvincular" class="btn btn-sm btn-primary">
-                                                            <i class="mdi mdi-link-variant-off"></i>
-                                                        </a>
                                                     </div>
                                                     <!-- </div> -->
                                                 </div>
