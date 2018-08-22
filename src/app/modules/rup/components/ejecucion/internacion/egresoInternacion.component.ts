@@ -1,10 +1,9 @@
-import { Component, Output, Input, EventEmitter, OnInit, HostBinding } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, HostBinding, OnChanges } from '@angular/core';
 import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../../services/term/cie10.service';
 import { Plex } from '@andes/plex';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { ActivatedRoute } from '@angular/router';
-import { InternacionService } from '../../../services/internacion.service';
 import { Location } from '@angular/common';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 
@@ -12,7 +11,7 @@ import { OrganizacionService } from '../../../../../services/organizacion.servic
     selector: 'rup-egresoInternacion',
     templateUrl: 'egresoInternacion.html'
 })
-export class EgresoInternacionComponent implements OnInit {
+export class EgresoInternacionComponent implements OnInit, OnChanges {
     @HostBinding('class.plex-layout') layout = true;
 
     @Input() prestacion;
@@ -21,6 +20,7 @@ export class EgresoInternacionComponent implements OnInit {
     @Input() botonera;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
 
     public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
@@ -59,7 +59,6 @@ export class EgresoInternacionComponent implements OnInit {
         public Cie10Service: Cie10Service,
         private route: ActivatedRoute,
         private location: Location,
-        public servicioInternacion: InternacionService,
         public plex: Plex,
         public servicioOrganizacion: OrganizacionService
     ) { }
@@ -107,6 +106,11 @@ export class EgresoInternacionComponent implements OnInit {
                 return { id: elem._id, nombre: elem.nombre };
             });
         });
+    }
+
+    ngOnChanges(changes: any) {
+        // this.hayInformeEgreso = true;
+        // this.soloValores = false;
     }
 
     /**
@@ -208,76 +212,10 @@ export class EgresoInternacionComponent implements OnInit {
                 registros: registros
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+                this.prestacionGuardada.emit(prestacionEjecutada);
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 this.cancelar();
             });
-        }
-    }
-
-    /**Validamos la prestacion
-     * desocupamos la cama si corresponde
-     * y regresamos al mapa de camas
-     */
-    validar() {
-        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
-            if (!validar) {
-                return false;
-            } else {
-                let planes = [];
-                this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
-                    this.prestacion = prestacion;
-                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                    this.desocuparCama();
-                    this.cancelar();
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                });
-            }
-        });
-
-    }
-
-    romperValidacion() {
-        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
-            if (!validar) {
-                return false;
-            } else {
-                // guardamos una copia de la prestacion antes de romper la validacion.
-                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
-                // Agregamos el estado de la prestacion copiada.
-                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
-                // Guardamos la prestacion copia
-                this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
-                    let prestacionModificada = prestacionClonada;
-                    // hacemos el patch y luego creamos los planes
-                    let cambioEstado: any = {
-                        op: 'romperValidacion',
-                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
-                    };
-                    // Vamos a cambiar el estado de la prestación a ejecucion
-                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-                        this.prestacion = prestacion;
-                        // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                    });
-                });
-            }
-        });
-    }
-
-    /**
-     * Si validamos la prestacion con el informe de egreso cargado
-     * desocupamos la cama del paciente
-     */
-    desocuparCama() {
-        let registros = this.prestacion.ejecucion.registros;
-        // nos fijamos si el concepto ya aparece en los registros
-        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.registro.concepto.conceptId);
-        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
-            egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
-
         }
     }
 

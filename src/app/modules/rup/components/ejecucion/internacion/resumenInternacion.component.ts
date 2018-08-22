@@ -1,5 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
 import { PrestacionesService } from '../../../services/prestaciones.service';
+import { Plex } from '@andes/plex';
+import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
     selector: 'internacion-resumen',
@@ -8,19 +10,30 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class ResumenInternacionComponent implements OnInit {
-
-
     @Input() prestacion;
     @Input() paciente;
+    @Input() camaSeleccionada;
+    @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
 
     public pases;
     public editarIngreso = false;
     public editarEgreso = false;
     public btnIniciarEditar;
+    public mostrarValidacion = false;
+
+    public conceptoEgreso = {
+        conceptId: '58000006',
+        term: 'alta del paciente',
+        fsn: 'alta del paciente (procedimiento)',
+        semanticTag: 'procedimiento'
+    };
 
     constructor(
-        public prestacionesService: PrestacionesService
+        public prestacionesService: PrestacionesService,
+        private plex: Plex,
+        public servicioInternacion: InternacionService,
     ) { }
 
 
@@ -28,6 +41,7 @@ export class ResumenInternacionComponent implements OnInit {
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
+        this.comprobarEgresoParaValidar();
     }
 
     onBtnIniciarEditar(event) {
@@ -70,6 +84,94 @@ export class ResumenInternacionComponent implements OnInit {
     cierraEditar(event) {
         this.editarIngreso = false;
         this.editarEgreso = false;
+    }
+
+    changeRegistrosPrestacion(event) {
+        console.log("nueva prestacion -> ", event)
+        this.prestacion = event;
+    }
+
+    /**
+     * Si validamos la prestacion con el informe de egreso cargado
+     * desocupamos la cama del paciente
+     */
+    desocuparCama() {
+        console.log("entro a desocupar cama -> ", this.prestacion)
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
+            egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
+            this.refreshCamas.emit({ cama: this.camaSeleccionada });
+        }
+    }
+
+    comprobarEgresoParaValidar() {
+        let registros = this.prestacion.ejecucion.registros;
+        // nos fijamos si el concepto ya aparece en los registros
+        let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
+
+        if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+            if (egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
+                this.mostrarValidacion = true;
+            } else {
+                this.mostrarValidacion = false;
+            }
+        } else {
+            this.mostrarValidacion = false;
+        }
+    }
+
+    /**Validamos la prestacion
+     * desocupamos la cama si corresponde
+     * y regresamos al mapa de camas
+     */
+    validar() {
+        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+                let planes = [];
+                this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
+                    this.prestacion = prestacion;
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+                    // this.desocuparCama();
+                    // this.cancelar();
+                }, (err) => {
+                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                });
+            }
+        });
+
+    }
+
+    romperValidacion() {
+        this.plex.confirm('Esta acción puede traer consecuencias <br />¿Desea continuar?', 'Romper validación').then(validar => {
+            if (!validar) {
+                return false;
+            } else {
+                // guardamos una copia de la prestacion antes de romper la validacion.
+                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+                // Agregamos el estado de la prestacion copiada.
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+                // Guardamos la prestacion copia
+                this.prestacionesService.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
+                    let prestacionModificada = prestacionClonada;
+                    // hacemos el patch y luego creamos los planes
+                    let cambioEstado: any = {
+                        op: 'romperValidacion',
+                        estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
+                    };
+                    // Vamos a cambiar el estado de la prestación a ejecucion
+                    this.prestacionesService.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
+                        this.prestacion = prestacion;
+                    }, (err) => {
+                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                    });
+                });
+            }
+        });
     }
 
 }

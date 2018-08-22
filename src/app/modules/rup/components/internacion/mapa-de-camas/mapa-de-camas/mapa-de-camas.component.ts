@@ -209,7 +209,6 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     public updateCama(e: any) {
-        this.cambiaTap(1);
         if (e) {
             this.countFiltros();
             // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
@@ -222,7 +221,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.refresh();
             }
             if (e.iniciarInternacion) {
-                console.log('aqui');
+                this.cambiaTap(1);
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
         }

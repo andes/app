@@ -2,7 +2,7 @@
     <!-- datos del ingreso -->
     <plex-accordion>
         <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true">
-            <ng-container *ngIf="!editarEgreso">
+            <ng-container>
                 <div class="row">
                     <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
                     </rup-iniciarInternacion>
@@ -17,7 +17,7 @@
     <plex-accordion>
         <plex-panel tituloPrincipal="Pases de Cama">
             <div class="row">
-                <ng-container *ngIf="!editarIngreso && !editarEgreso">
+                <ng-container>
                     <section class="andes-contenedor-secundario vertical">
                         <!-- <h4 class="text-info">Pases</h4> -->
                         <div class="row">
@@ -50,37 +50,19 @@
     <!-- datos del egreso -->
     <plex-accordion>
         <plex-panel tituloPrincipal="Datos del Egreso">
-            <ng-container *ngIf="!editarIngreso">
-                <div class="row">
-                    <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
-                        [soloValores]="!editarEgreso" (btnIniciarEditarEmit)="onBtnIniciarEditar($event)"></rup-egresoInternacion>
-                    <div class="col text-center" *ngIf="btnIniciarEditar">
-                        <h4 *ngIf="btnIniciarEditar === 'Iniciar'">No se hay registrado ningún egreso</h4>
-                        <plex-button type="danger" class="btn btn-block btn-danger btn-sm" *ngIf="!editarIngreso && !editarEgreso" label="{{btnIniciarEditar}}"
-                            (click)="editar('egreso')">
-                        </plex-button>
-                    </div>
-                </div>
+            <ng-container>
+                <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
+                    [soloValores]="!editarEgreso" (btnIniciarEditarEmit)="onBtnIniciarEditar($event)" (prestacionGuardada)="changeRegistrosPrestacion($event)"></rup-egresoInternacion>
+                <ng-container class="text-center" *ngIf="btnIniciarEditar">
+                    <plex-button type="danger" class="btn btn-block btn-danger btn-sm" *ngIf="!editarIngreso && !editarEgreso" label="{{btnIniciarEditar}}"
+                        (click)="editar('egreso')">
+                    </plex-button>
+                </ng-container>
             </ng-container>
         </plex-panel>
     </plex-accordion>
+    <plex-button *ngIf="prestacion && mostrarValidacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada'"
+        label="Validar Internación" (click)="validar()" type="success" class="float-right"></plex-button>
+    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
+        (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
 </ng-container>
-<!-- <footer>
-    <div class="row">
-        <div class="col-6 text-left">
-            <plex-button class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
-        </div>
-        <div class="col-6 text-right"> -->
-
-<!-- Falta un poco de analisis sobre la funcionalidad desde aca -->
-
-
-<!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
-                    (click)="validar() " type="success " class="float-right "></plex-button> -->
-
-<!-- <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' " label="Romper Validación"
-                    (click)="romperValidacion() " type="danger " class="float-right "></plex-button>
-             -->
-<!-- </div>
-    </div>
-</footer> -->

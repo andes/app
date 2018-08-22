@@ -183,9 +183,10 @@
                         <!-- Resumen -->
                         <plex-tab class="andes-tab" label="datos de internacion">
                             <internacion-resumen *ngIf="prestacionPorInternacion" (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
-                                [prestacion]="prestacionPorInternacion"></internacion-resumen>
+                                [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"></internacion-resumen>
                             <ng-container *ngIf="!prestacionPorInternacion">
-                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente internado
+                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente
+                                    internado
                                 </h2>
                             </ng-container>
                         </plex-tab>
