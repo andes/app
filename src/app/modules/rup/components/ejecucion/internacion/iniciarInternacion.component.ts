@@ -144,7 +144,17 @@ export class IniciarInternacionComponent implements OnInit {
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
-                        // this.router.navigate(['rup/internacion/ocuparCama', this.cama.id, resultado.ultimaInternacion.id]);
+                        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+                        this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                            if (existeRegistro) {
+                                // Carga la información completa del paciente
+                                this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
+                                    this.paciente = paciente;
+                                    this.informeIngreso = existeRegistro.valor.informeIngreso;
+                                });
+                            }
+                        });
                     }
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
@@ -311,7 +321,6 @@ export class IniciarInternacionComponent implements OnInit {
                             paciente: this.paciente,
                             idInternacion: prestacion.id
                         };
-
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                             this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
