@@ -563,6 +563,7 @@ export class DarTurnosComponent implements OnInit {
                 this.turnoTipoPrestacion = this.opciones.tipoPrestacion;
             }
             this.habilitarTurnoDoble();
+            this.nota = this.turno.nota;
             this.estadoT = 'confirmacion';
         } else {
             this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -740,9 +741,6 @@ export class DarTurnosComponent implements OnInit {
         this.turno = {};
         if (this.paciente) {
             this.bloque = this.agenda.bloques[0];
-            // this.indiceBloque = this.agenda.bloques.indexOf(this.bloque);
-            // this.indiceTurno = indice;
-            // this.turno = bloque.turnos[indice];
             if (this.bloque.tipoPrestaciones.length === 1) {
                 this.turnoTipoPrestacion = this.bloque.tipoPrestaciones[0];
                 this.turno.tipoPrestacion = this.bloque.tipoPrestaciones[0];
