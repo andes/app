@@ -1,9 +1,9 @@
 <form class="plex-layout" #form="ngForm">
+    <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
     <section class="dar-turnos-section">
-        <header-paciente *ngIf="showDarTurnos" [paciente]="paciente"></header-paciente>
         <div class="row calendario-expandido" *ngIf="autorizado && showDarTurnos">
             <!--Panel principal-->
-            <div class="col">
+            <div class="col-8">
                 <plex-box>
                     <!--Filtros-->
                     <header>
@@ -312,16 +312,15 @@
                                 </plex-text>
                             </div>
                         </div>
-
-                        <hr>
-                        <footer *ngIf="!hideDarTurno && estadoT === 'confirmacion'" class="row">
+                        <br>
+                        <div class="row" *ngIf="!hideDarTurno && estadoT === 'confirmacion'">
                             <div class="col text-left">
                                 <plex-button class="text-left" label="Cambiar horario" type="default" (click)="seleccionarAgenda(this.agenda)"></plex-button>
                             </div>
                             <div class="col text-right">
                                 <plex-button class="text-right" label="Confirmar" type="success" (click)="darTurno()"></plex-button>
                             </div>
-                        </footer>
+                        </div>
                     </ng-container>
                 </plex-box>
             </div>

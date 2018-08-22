@@ -228,7 +228,7 @@
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal
-                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{relacionadoConPadreDeep(this.prestacion.ejecucion.registros, rama.relacionadoCon[0]?.concepto.conceptId)}}">
+                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
                                 <div>
                                     <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <small>{{ rama.nombre }}
