@@ -1095,8 +1095,11 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.buscarPaciente();
         }
-        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion
         this.estadoT = 'noSeleccionada';
+        this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
+        this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
+        this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
+        this.afterDarTurno.emit(true);
     }
 
     buscarPaciente() {
