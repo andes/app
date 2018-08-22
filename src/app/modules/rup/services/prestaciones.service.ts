@@ -3,11 +3,8 @@ import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { IPrestacion } from '../interfaces/prestacion.interface';
-<<<<<<< HEAD
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-=======
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
->>>>>>> master
 import { SnomedService } from '../../../services/term/snomed.service';
 
 @Injectable()
