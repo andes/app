@@ -414,7 +414,6 @@ export class DarTurnosComponent implements OnInit {
 
                 // Tipo de Prestación, para poder filtrar las agendas
                 let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
-
                 // Se filtran los bloques segun el filtro tipoPrestacion
                 this.bloques = this.agenda.bloques.filter(
                     function (value) {
@@ -435,7 +434,7 @@ export class DarTurnosComponent implements OnInit {
                         if (agendaDeHoy) {
                             return (value.restantesDelDia) + (value.restantesProgramados) > 0;
                         } else {
-                            return ((value.restantesProgramados) + (value.reservadoGestion) + (value.restantesProfesional) > 0);
+                            return ((value.restantesProgramados) + (value.restantesGestion) + (value.restantesProfesional) > 0);
                         }
                     }
                 );
