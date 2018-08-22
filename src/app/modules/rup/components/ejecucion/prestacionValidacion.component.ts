@@ -223,7 +223,7 @@ export class PrestacionValidacionComponent implements OnInit {
                         });
                     }
                 });
-                this.armarRelaciones(this.prestacion.ejecucion.registros);
+                // this.armarRelaciones(this.prestacion.ejecucion.registros);
             }
 
             this.defualtDiagnosticoPrestacion();
