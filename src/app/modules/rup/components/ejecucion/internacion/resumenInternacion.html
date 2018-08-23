@@ -1,7 +1,7 @@
 <ng-container *ngIf="prestacion">
     <!-- datos del ingreso -->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true">
+        <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true" icon="arrow-down-drop-circle-outline flechita">
             <ng-container *ngIf="!editarEgreso">
                 <div class="row">
                     <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
@@ -15,7 +15,7 @@
     </plex-accordion>
     <!-- pases de cama TODO: Estilzar segun mockup-->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Pases de Cama">
+        <plex-panel tituloPrincipal="Pases de Cama" icon="arrow-down-drop-circle-outline flechita">
             <div class="row">
                 <ng-container *ngIf="!editarIngreso && !editarEgreso">
                     <section class="andes-contenedor-secundario vertical">
@@ -49,17 +49,17 @@
     </plex-accordion>
     <!-- datos del egreso -->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Datos del Egreso">
+        <plex-panel tituloPrincipal="Datos del Egreso" icon="arrow-down-drop-circle-outline flechita">
             <ng-container *ngIf="!editarIngreso">
-                <div class="row">
+                <div class="andes-contenedor-secundario vertical">
                     <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"
                         [soloValores]="!editarEgreso" (btnIniciarEditarEmit)="onBtnIniciarEditar($event)"></rup-egresoInternacion>
-                    <div class="col text-center" *ngIf="btnIniciarEditar">
+                    <ng-container *ngIf="btnIniciarEditar">
                         <h4 *ngIf="btnIniciarEditar === 'Iniciar'">No se hay registrado ningún egreso</h4>
                         <plex-button type="danger" class="btn btn-block btn-danger btn-sm" *ngIf="!editarIngreso && !editarEgreso" label="{{btnIniciarEditar}}"
                             (click)="editar('egreso')">
                         </plex-button>
-                    </div>
+                    </ng-container>
                 </div>
             </ng-container>
         </plex-panel>

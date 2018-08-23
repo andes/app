@@ -5,8 +5,8 @@
                 <div *ngIf="paciente">
                     <fieldset>
                         <!-- <legend class="text-info">Datos de ingreso</legend> -->
-                        <h5><b>Paciente:</b></h5>
-                        <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
+                        <h6><b>Paciente:</b></h6>
+                        <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
                         <hr class="blanco xs separate">
                         <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
                                 para una mejor visualizacion de la carga de datos -->
@@ -94,8 +94,8 @@
         <!-- Datos personales -->
         <fieldset>
             <!-- <legend class="text-info">Datos de ingreso</legend> -->
-            <h5><b>Paciente:</b></h5>
-            <h5>{{ paciente.apellido }}, {{ paciente.nombre }}</h5>
+            <h6><b>Paciente:</b></h6>
+            <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
             <div class="row" *ngIf="showEditarCarpetaPaciente">
                 <div class="col">
                     <plex-text [(ngModel)]="carpetaPaciente" labelField=""></plex-text>

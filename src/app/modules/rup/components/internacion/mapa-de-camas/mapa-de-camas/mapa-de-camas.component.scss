@@ -960,7 +960,7 @@ button {
 
 plex-box#panel-lateral > DIV {
 
-    h3,h4,h5,h5,p,strong {
+    h3,h4,h5,h5,h6,p,strong {
         color: white;
         margin-bottom: 0.25rem;
     }
@@ -1143,6 +1143,53 @@ plex-tabs.andes-contenedor-tabs {
         }
     }
 }
+
+    // Accordions
+    plex-accordion plex-panel div.card {
+
+        :active {
+            // border: solid 3px $andes-azul;
+            }
+
+            div.card-header {
+                &:hover {
+                    background-color:#3f5467;
+                    color: $andes-azul!important;
+                    // border: solid 3px $andes-azul;
+                }
+
+                &:active {
+                    background-color:#3f5467;
+                    color: $andes-azul;
+                    // border: solid 3px $andes-azul;
+                }
+            
+            h5 {
+                font-size: 1.25rem;
+                font-weight: 500;
+                &:hover {
+                    color: $andes-azul;
+                }                
+
+                    i.flechita {
+                        display: inline-block;
+                        float: right;
+                        transition: all 1s ease;
+                        transform: rotate(90deg);
+
+                        &:active {
+                            color: $andes-azul;
+                            transform: rotate(0deg);
+                        }
+                    }
+            }
+
+        }
+
+        .card-block {
+            padding: 1.25rem 2.2rem;
+        }
+    }
 
 
     // Iconos
