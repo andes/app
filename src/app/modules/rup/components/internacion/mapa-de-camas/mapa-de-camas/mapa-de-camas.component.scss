@@ -915,7 +915,7 @@ button {
     }
     .info-cama-menu {
         h2 {
-            font-size: 5rem;
+            font-size: 5vw;
             font-weight: bold;
 
             &.desocupada{
@@ -935,7 +935,7 @@ button {
             }
         }
         span{
-            font-size: 1rem;
+            font-size: 1vw;
             padding: 10px;
             margin: 10px;
         }
@@ -979,6 +979,14 @@ plex-box#panel-lateral > DIV {
     table {
         th, td {
             color: white;
+
+        thead th {
+            vertical-align: middle;
+        }
+
+            &.txt-responsive {
+                font-size: 0.9vw;
+            }
         }
     }
 
@@ -1092,6 +1100,7 @@ plex-tabs.andes-contenedor-tabs {
     flex-direction: column;
     height: fit-content;
     justify-content: space-between;
+    margin-top: 8%;
 
     .andes-sidebar-numero {
         // font-size: 5rem;
@@ -1146,48 +1155,67 @@ plex-tabs.andes-contenedor-tabs {
 
     // Accordions
     plex-accordion plex-panel div.card {
+        border: 0px;
 
         :active {
             // border: solid 3px $andes-azul;
             }
 
             div.card-header {
+                color: $andes-cyan!important;
+                border: solid 2px white;
+                border-radius: 0px;
+                cursor: pointer;
+                
                 &:hover {
                     background-color:#3f5467;
-                    color: $andes-azul!important;
-                    // border: solid 3px $andes-azul;
+                    border: solid 2px $andes-cyan;
+                    color: white!important;
+                    
                 }
 
                 &:active {
                     background-color:#3f5467;
-                    color: $andes-azul;
-                    // border: solid 3px $andes-azul;
+                    border: solid 2px $andes-cyan;
+                    color: white!important;
                 }
+
             
             h5 {
                 font-size: 1.25rem;
                 font-weight: 500;
+
                 &:hover {
-                    color: $andes-azul;
+                    color: white;
                 }                
 
-                    i.flechita {
+                    i {
                         display: inline-block;
                         float: right;
                         transition: all 1s ease;
-                        transform: rotate(90deg);
 
-                        &:active {
-                            color: $andes-azul;
-                            transform: rotate(0deg);
+                        &.flechita {
+                            &.norotada {
+                                transform: rotate(90deg);
+                            }
+                        
+                            &.rotada {
+                                transform: rotate(0deg);
+                            }
                         }
                     }
             }
 
         }
 
+        .collapse.show {
+            .card-block {
+                border: solid 3px $andes-cyan;
+            }
+        }
+
         .card-block {
-            padding: 1.25rem 2.2rem;
+            padding: 1rem 1.2rem;
         }
     }
 

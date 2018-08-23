@@ -438,4 +438,5 @@ export class MapaDeCamasComponent implements OnInit {
     public cambiaTap(value) {
         this.activo = value;
     }
+
 }

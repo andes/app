@@ -1,55 +1,47 @@
 <ng-container *ngIf="prestacion">
     <!-- datos del ingreso -->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true" icon="arrow-down-drop-circle-outline flechita">
+        <plex-panel tituloPrincipal="Datos del Ingreso" [active]="true" icon="arrow-down-drop-circle-outline" class="flechita" (click)="rotarFlechita($event)" [ngClass]="flechita ? 'rotada' : 'norotada'">
             <ng-container *ngIf="!editarEgreso">
-                <div class="row">
                     <rup-iniciarInternacion (data)="cierraEditar($event)" [paciente]="paciente" [prestacion]="prestacion" [soloValores]="!editarIngreso">
                     </rup-iniciarInternacion>
                     <!-- Editar internacion -->
                     <plex-button class="btn btn-block btn-danger btn-sm" type="danger" *ngIf="!editarIngreso && !editarEgreso" label="Editar"
                         (click)="editar('ingreso')"></plex-button>
-                </div>
             </ng-container>
         </plex-panel>
     </plex-accordion>
     <!-- pases de cama TODO: Estilzar segun mockup-->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Pases de Cama" icon="arrow-down-drop-circle-outline flechita">
-            <div class="row">
+        <plex-panel tituloPrincipal="Pases de Cama" icon="arrow-down-drop-circle-outline">
                 <ng-container *ngIf="!editarIngreso && !editarEgreso">
                     <section class="andes-contenedor-secundario vertical">
                         <!-- <h4 class="text-info">Pases</h4> -->
-                        <div class="row">
-                            <div class="col">
-                                <table class="table table-dark">
-                                    <thead>
-                                        <tr>
-                                            <th>Fecha</th>
-                                            <th>Cama</th>
-                                            <th>Unidad organizativa</th>
-                                            <th>Especialidad</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let pase of pases; let i=index">
-                                            <td>{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
-                                            <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
-                                            <td>{{ pase.estados.unidadOrganizativa.term }}</td>
-                                            <td>{{ pase.estados.especialidades[0]?.term }}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                        <table class="table table-dark">
+                            <thead>
+                                <tr>
+                                    <th class="txt-responsive">Fecha</th>
+                                    <th class="txt-responsive">Cama</th>
+                                    <th class="txt-responsive">Unidad organizativa</th>
+                                    <th class="txt-responsive">Especialidad</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let pase of pases; let i=index">
+                                    <td class="txt-responsive">{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
+                                    <td class="txt-responsive">{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
+                                    <td class="txt-responsive">{{ pase.estados.unidadOrganizativa.term }}</td>
+                                    <td class="txt-responsive">{{ pase.estados.especialidades[0]?.term }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </section>
                 </ng-container>
-            </div>
         </plex-panel>
     </plex-accordion>
     <!-- datos del egreso -->
     <plex-accordion>
-        <plex-panel tituloPrincipal="Datos del Egreso" icon="arrow-down-drop-circle-outline flechita">
+        <plex-panel tituloPrincipal="Datos del Egreso" icon="arrow-down-drop-circle-outline">
             <ng-container *ngIf="!editarIngreso">
                 <div class="andes-contenedor-secundario vertical">
                     <rup-egresoInternacion [botonera]="{cerrar: true, validar: false}" (data)="cierraEditar($event)" [prestacion]="prestacion"

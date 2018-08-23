@@ -72,4 +72,10 @@ export class ResumenInternacionComponent implements OnInit {
         this.editarEgreso = false;
     }
 
+    // Rotacion flechita
+    flechita: boolean = false;
+    rotarFlechita(event){
+        this.flechita = !this.flechita;       
+    }
+    
 }
