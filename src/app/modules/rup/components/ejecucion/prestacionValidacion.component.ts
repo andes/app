@@ -197,7 +197,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.armarRelaciones(this.registrosOrdenados);
+            this.armarRelaciones();
             // this.reordenarRelaciones();
 
         });
@@ -408,31 +408,28 @@ export class PrestacionValidacionComponent implements OnInit {
 
     }
 
-    armarRelaciones(registros) {
-
-        registros = this.prestacion.ejecucion.registros;
-
+    // Indices de profundidad de las relaciones
+    registrosDeep: any = {};
+    armarRelaciones() {
         let relacionesOrdenadas = [];
+        let registros = this.prestacion.ejecucion.registros;
+        let roots = registros.filter(x => x.relacionadoCon.length === 0);
 
-        registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
+        let traverse = (_registros, registro, deep) => {
+            let orden = [];
+            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
+            this.registrosDeep[registro.id] = deep;
+            hijos.forEach((hijo) => {
+                orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
+            });
+            return orden;
+        };
 
-            if (esPadre.length > 0) {
-                if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
-                    relacionesOrdenadas.push(cosa);
-                }
-                esPadre.forEach(hijo => {
-                    if (relacionesOrdenadas.filter(x => x === hijo).length === 0) {
-                        relacionesOrdenadas.push(hijo);
-                    }
-                });
-            } else {
-                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
-                    relacionesOrdenadas.push(cosa);
-                }
-            }
-
+        roots.forEach((root) => {
+            this.registrosDeep[root.id] = 0;
+            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
         });
+
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
