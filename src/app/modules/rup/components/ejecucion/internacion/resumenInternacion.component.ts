@@ -87,7 +87,6 @@ export class ResumenInternacionComponent implements OnInit {
     }
 
     changeRegistrosPrestacion(event) {
-        console.log("nueva prestacion -> ", event)
         this.prestacion = event;
     }
 
@@ -96,7 +95,6 @@ export class ResumenInternacionComponent implements OnInit {
      * desocupamos la cama del paciente
      */
     desocuparCama() {
-        console.log("entro a desocupar cama -> ", this.prestacion)
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
@@ -172,6 +170,12 @@ export class ResumenInternacionComponent implements OnInit {
                 });
             }
         });
+    }
+
+    // Rotacion flechita
+    flechita: boolean = false;
+    rotarFlechita(event) {
+        this.flechita = !this.flechita;
     }
 
 }

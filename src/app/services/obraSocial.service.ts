@@ -16,8 +16,8 @@ export class ObraSocialService {
      * @memberof ObraSocialService
      */
 
-    get(opciones: any): Observable<any> {
-        return this.server.get(this.url + '/puco/', { params: opciones });
+    get(opciones: any, showError = true ): Observable<any> {
+        return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
     }
 
 

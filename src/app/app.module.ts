@@ -135,6 +135,10 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
+import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
+import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
+import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -392,9 +396,7 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-
 registerLocaleData(localeEs, 'es');
-
 
 // Main module
 @NgModule({
@@ -487,8 +489,14 @@ registerLocaleData(localeEs, 'es');
         ListaEsperaInternacionComponent,
         EgresoInternacionComponent,
         PucoComponent,
-        ResumenInternacionComponent
-
+        ResumenInternacionComponent,
+        PucoComponent,
+        // MPI
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+        PacienteDemoComponent,
+        PacientePanelComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

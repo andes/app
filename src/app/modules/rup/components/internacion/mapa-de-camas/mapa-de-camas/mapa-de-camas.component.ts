@@ -6,7 +6,9 @@ import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
-
+import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
+import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface'
+import { IPaciente } from '../../../../../../interfaces/IPaciente';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -14,6 +16,14 @@ import { PrestacionesService } from '../../../../services/prestaciones.service';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
+
+
+    public epicrisis = {
+        'conceptId': '721919000',
+        'term': 'epicrisis de enfermería',
+        'fsn': 'epicrisis de enfermería (elemento de registro)',
+        'semanticTag': 'elemento de registro'
+    };
 
     // listado de camas de la organizacion
     public camas: any[] = [];
@@ -72,6 +82,8 @@ export class MapaDeCamasComponent implements OnInit {
     };
 
     public activo = 0;
+    public pacientes: IPacienteMatch[] | IPaciente[];
+    public pacienteActivo: IPaciente;
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -236,6 +248,8 @@ export class MapaDeCamasComponent implements OnInit {
 
     public ingresarPaciente() {
         this.buscandoPaciente = true;
+        this.pacienteSelected = null;
+        this.pacientes = null;
         // this.router.navigate(['rup/internacion/crear']);
     }
 
@@ -369,6 +383,18 @@ export class MapaDeCamasComponent implements OnInit {
         this.prestacionPorInternacion = null;
     }
 
+    searchStart() {
+        this.pacientes = null;
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.pacientes = resultado.pacientes;
+        }
+    }
+
     onCamaSelected(event) {
         this.camaSelected = event;
         let cama = event;
@@ -414,4 +440,41 @@ export class MapaDeCamasComponent implements OnInit {
     public cambiaTap(value) {
         this.activo = value;
     }
+
+
+    /**
+       * Crea la prestacion de epicrisis, si existe recupera la epicrisis
+       * creada anteriormente.
+       * Nos rutea a la ejecucion de RUP.
+       */
+    generaEpicrisis() {
+        let epicrisisEjecucion;
+        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
+        // this.servicioPrestacion.getById(id).subscribe(prestacion => {
+        //     this.prestacion = prestacion;
+        // Carga la información completa del paciente
+        // this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
+        //     this.paciente = paciente;
+        // });
+        // recuperamos si tiene una epicrisis en ejecucion.
+        this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacionPorInternacion.id }).subscribe(prestacionExiste => {
+            epicrisisEjecucion = prestacionExiste;
+        });
+        // });
+
+
+        if (!epicrisisEjecucion) {
+            let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
+            nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                this.router.navigate(['rup/ejecucion', prestacion.id]);
+            });
+        } else {
+            this.router.navigate(['rup/ejecucion', epicrisisEjecucion[0].id]);
+        }
+    }
+
+
+
+
 }
