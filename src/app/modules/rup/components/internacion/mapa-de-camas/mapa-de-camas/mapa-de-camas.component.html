@@ -102,7 +102,7 @@
                             *ngFor="let cama of camas; let i = index">
                             <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
                                 (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
-                                (verInternacionEmit)="cerrarIgreso($event)"></app-cama>
+                                (verInternacionEmit)="verInternacion($event)"></app-cama>
                         </div>
                     </div>
                 </plex-box>

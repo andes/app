@@ -128,7 +128,7 @@ export class CamaComponent implements OnInit {
      */
     public verPrestacion(cama: any) {
         if (cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.idInternacion) {
-            this.verInternacionEmit.emit(true);
+            this.verInternacionEmit.emit(cama);
             // this.router.navigate(['rup/internacion/ver', cama.ultimoEstado.idInternacion]);
         }
     }
@@ -288,4 +288,5 @@ export class CamaComponent implements OnInit {
     camaSeleccionada() {
         this.camaSelected.emit(this.cama);
     }
+
 }
