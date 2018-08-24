@@ -569,7 +569,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null): any {
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -603,16 +603,26 @@ export class PrestacionesService {
             };
 
         } else if (momento === 'ejecucion') {
+            let profesional;
+            // Si el profesional llega por parametro.
+            if (_profesional) {
+                profesional = {
+                    id: _profesional.id,
+                    nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido,
+                    documento: this.auth.usuario.documento
+                };
+            } else {
+                profesional = {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                };
+            }
             prestacion['solicitud'] = {
                 fecha: fecha,
                 turno: turno,
                 tipoPrestacion: snomedConcept,
-                // profesional logueado
-                profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                profesional: profesional,
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []

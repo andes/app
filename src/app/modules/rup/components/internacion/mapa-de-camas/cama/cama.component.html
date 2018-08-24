@@ -61,7 +61,7 @@
                         *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
                     </plex-button>
                     <!-- Ver internacion -->
-                    <plex-button type="success" label="Ver internación" title="Ver internación" *ngIf="cama.ultimoEstado?.paciente?._id">
+                    <plex-button type="success" (click)="verPrestacion(cama)" label="Ver internación" title="Ver internación" *ngIf="cama.ultimoEstado?.paciente?._id">
                     </plex-button>
                     <!-- Desbloquear cama -->
                     <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
@@ -167,7 +167,8 @@
                             <div class="form-group">
                                 <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" required [(ngModel)]="cama.$motivo"
                                     name="motivoReparacion" id="motivoReparacion" #motivoReparacion="ngModel"></textarea>
-                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique motivo por el cual envía a reparación la cama</div>
+                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique
+                                    motivo por el cual envía a reparación la cama</div>
                             </div>
                         </div>
                     </div>

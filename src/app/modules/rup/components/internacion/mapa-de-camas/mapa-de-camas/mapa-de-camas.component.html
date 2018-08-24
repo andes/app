@@ -102,7 +102,7 @@
                             *ngFor="let cama of camas; let i = index">
                             <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
                                 (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
-                                (verInternacionEmit)="cerrarIgreso($event)"></app-cama>
+                                (verInternacionEmit)="verInternacion($event)"></app-cama>
                         </div>
                     </div>
                 </plex-box>
@@ -188,7 +188,7 @@
                                     <!-- Ver internacion -->
                                     <!-- <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion"
                                         label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button> -->
-                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion"
+                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="this.auth.profesional && camaSeleccionada.ultimoEstado?.idInternacion"
                                         label="Ver Epicrisis" (click)="generaEpicrisis() "></plex-button>
                                 </div>
                             </footer>

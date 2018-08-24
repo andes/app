@@ -449,20 +449,9 @@ export class MapaDeCamasComponent implements OnInit {
        */
     generaEpicrisis() {
         let epicrisisEjecucion;
-        // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
-        // this.servicioPrestacion.getById(id).subscribe(prestacion => {
-        //     this.prestacion = prestacion;
-        // Carga la información completa del paciente
-        // this.pacienteService.getById(prestacion.paciente.id).subscribe(paciente => {
-        //     this.paciente = paciente;
-        // });
-        // recuperamos si tiene una epicrisis en ejecucion.
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacionPorInternacion.id }).subscribe(prestacionExiste => {
             epicrisisEjecucion = prestacionExiste;
         });
-        // });
-
-
         if (!epicrisisEjecucion) {
             let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
             nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
@@ -477,10 +466,15 @@ export class MapaDeCamasComponent implements OnInit {
 
     /**
      * Cambia a false la variable para ocultar el componente cuando se clickea boton cancelar
-     * 
      * @public
      */
     cancelarInternacion() {
         this.buscandoPaciente = false;
     }
+
+    verInternacion(event) {
+        this.onCamaSelected(event);
+        this.cambiaTap(1);
+    }
+
 }

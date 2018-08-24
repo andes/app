@@ -301,7 +301,7 @@ export class IniciarInternacionComponent implements OnInit {
                 let conceptoSnomed = this.tipoPrestacionSeleccionada;
 
                 // creamos la prestacion de internacion y agregamos el registro de ingreso
-                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso);
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
                 if (this.obraSocial) {
