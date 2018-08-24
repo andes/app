@@ -213,14 +213,4 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
             }, 200);
         }
     }
-
-    /**
-     * Emite un false para ocultar el componente cuando se clickea boton cancelar
-     * 
-     * @public
-     * @returns {boolean} 
-     */
-    cancelar() {
-        this.data.emit(false);
-    }
 }

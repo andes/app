@@ -475,6 +475,12 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
 
-
-
+    /**
+     * Cambia a false la variable para ocultar el componente cuando se clickea boton cancelar
+     * 
+     * @public
+     */
+    cancelarInternacion() {
+        this.buscandoPaciente = false;
+    }
 }
