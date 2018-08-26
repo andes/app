@@ -12,8 +12,8 @@
     </div>
     <div class="row mb-1">
         <div class="col">
-            <span *ngIf="paciente.documento">{{ paciente.documento | number }}</span>
-            <span class="badge ml-1" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}"> {{ paciente.estado | uppercase }} </span>
+            <span *ngIf="paciente.documento" class="mr-1">{{ paciente.documento | number }}</span>
+            <span class="badge" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}"> {{ paciente.estado | uppercase }} </span>
         </div>
     </div>
     <div class="row mb-1" *ngIf="paciente.fechaNacimiento">

@@ -25,7 +25,7 @@ export class PacientePanelComponent {
     };
 
     public relaciones: {
-        data: [IPacienteRelacion];
+        data: IPacienteRelacion[];
         loading: boolean;
         error: boolean;
     };
@@ -50,7 +50,7 @@ export class PacientePanelComponent {
         this._paciente = value;
         if (this._paciente) {
             // Obtiene relaciones
-            this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones);
+            this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
             // Obtiene cobertura social más reciente
             this.actualizarCoberturaSocial();
         }
