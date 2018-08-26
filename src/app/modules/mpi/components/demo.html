@@ -2,10 +2,33 @@
     <plex-layout-main>
         <header>
             <!-- Buscador  -->
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
         </header>
         <!-- Listado de pacientes -->
-        <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+            ¡No se encontró ningún paciente!
+        </div>
+        <div class="row mt-1" *ngIf="pacientes && pacientes.length">
+            <div class="col-6">
+                <fieldset>
+                    <legend>Listado Small</legend>
+                    <paciente-listado [autoselect]="false" [pacientes]="pacientes" [autoselect]="false" [type]="'sm'" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+                </fieldset>
+            </div>
+            <div class="col">
+                <div class="text-muted">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam fermentum eleifend lacus in viverra. Fusce tortor erat, dictum in luctus at, cursus vel mi. Mauris condimentum pellentesque lacus, finibus commodo ex lobortis a. Phasellus iaculis, urna
+                    in dignissim tincidunt, ex augue vehicula lorem, ac posuere ex ligula quis arcu. Quisque tempus efficitur convallis. Phasellus placerat turpis pharetra, lobortis dui a, dictum tortor. Pellentesque nisl velit, ullamcorper quis erat
+                    sit amet, tristique tristique nisi. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Duis gravida faucibus diam a finibus. Nam porta est in tempor congue. Aenean urna nulla, vehicula imperdiet
+                    accumsan at, posuere at nulla. Quisque quis consequat est. Nunc ultricies pellentesque erat, ut condimentum mi finibus in. Nulla quis convallis nibh, sit amet porttitor elit. Sed consectetur lorem eget purus feugiat porta a ac arcu.
+                    Nam convallis eros at sem ultrices pretium. Aenean ut urna ligula. Pellentesque nec feugiat velit. Fusce lobortis enim eget tristique pharetra. Pellentesque maximus augue dignissim ante placerat pellentesque. Class aptent taciti sociosqu
+                    ad litora torquent per conubia nostra, per inceptos himenaeos. Nam at quam metus. Aliquam vestibulum ligula a tristique rhoncus. Nam sit amet mauris a magna hendrerit rutrum. Phasellus velit odio, mollis vel justo et, accumsan laoreet
+                    ipsum. Ut nulla sapien, vulputate et tellus ac, lobortis imperdiet velit. Morbi suscipit enim turpis, non porttitor eros blandit sit amet. Donec pretium ultricies elit sed aliquam. Aliquam aliquet feugiat lorem, quis laoreet justo
+                    vestibulum nec. Suspendisse at tellus tellus.
+                </div>
+            </div>
+        </div>
     </plex-layout-main>
     <plex-layout-sidebar>
         <paciente-panel [paciente]="pacienteActivo"></paciente-panel>

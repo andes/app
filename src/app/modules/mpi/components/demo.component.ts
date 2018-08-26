@@ -28,8 +28,11 @@ export class PacienteDemoComponent {
         }
     }
 
+    searchClear() {
+        this.pacientes = null;
+    }
+
     seleccionarPaciente(paciente: IPaciente) {
-        this.plex.info('success', `Seleccionó el paciente ${paciente.apellido}, ${paciente.nombre}`);
         this.pacienteActivo = paciente;
     }
 
