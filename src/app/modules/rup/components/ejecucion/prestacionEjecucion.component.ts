@@ -599,6 +599,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
                                 // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : this.tipoBusqueda.conceptos;
                                 // }
+                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
                                 registroDestino.relacionadoCon = [resultado];
                             }
@@ -607,26 +608,24 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
             } else {
+                debugger;
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && !this.elementoRUP.reglas.requeridos.relacionesMultiples) {
                     registroDestino.relacionadoCon = [resultado];
                 } else {
 
-                    if (resultado && resultado.relacionadoCon) {
-                        if (this.tipoBusqueda && this.tipoBusqueda.conceptos && this.filtroRefset) {
-                            if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
-                                // resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
-                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                    if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
+                        // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
+                        resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
 
-                            }
-                        } else {
-                            this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
-                            // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
-                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                        // }
+                    } else {
+                        this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
+                        // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
+                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
 
-                        }
-                        this.tipoBusqueda = null;
                     }
+                    // this.tipoBusqueda = null;
                 }
 
             }
