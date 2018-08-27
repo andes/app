@@ -1,6 +1,6 @@
 import {
     Component,
-    OnInit,
+    OnInit, OnDestroy,
     HostBinding,
     NgModule,
     ViewContainerRef,
@@ -42,6 +42,7 @@ import {
     enumToArray
 } from '../../../utils/enums';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'gestor-agendas',
@@ -49,7 +50,7 @@ import { ITurno } from '../../../interfaces/turnos/ITurno';
     styleUrls: ['./gestor-agendas.scss']
 })
 
-export class GestorAgendasComponent implements OnInit {
+export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     showReasignarTurnoAgendas: boolean;
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
@@ -96,9 +97,11 @@ export class GestorAgendasComponent implements OnInit {
     public parametros;
     public btnDarTurnos = false;
     public btnCrearAgendas = false;
-
     public permisos: any;
     public prestacionesPermisos = [];
+
+    // ultima request de profesionales que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     // Contador de turnos suspendidos por agenda, para mostrar notificaciones
     turnosSuspendidos: any[] = [];
@@ -114,6 +117,13 @@ export class GestorAgendasComponent implements OnInit {
         public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
         public auth: Auth) { }
+
+    /* limpiamos la request que se haya ejecutado */
+    ngOnDestroy() {
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+    }
 
     ngOnInit() {
         this.permisos = this.auth.getPermissions('turnos:agenda:?').length > 0;
@@ -162,6 +172,8 @@ export class GestorAgendasComponent implements OnInit {
 
     }
 
+
+
     refreshSelection(value, tipo) {
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
             this.parametros['tipoPrestaciones'] = this.prestacionesPermisos;
@@ -189,7 +201,7 @@ export class GestorAgendasComponent implements OnInit {
             }
         }
         if (tipo === 'profesionales') {
-            if (value.value !== null) {
+            if (value.value) {
                 this.parametros['idProfesional'] = value.value.id;
             } else {
                 this.parametros['idProfesional'] = '';
@@ -385,12 +397,20 @@ export class GestorAgendasComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        if (event.query) {
+        if (event.query && event.query !== '' && event.query.length > 2) {
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
             let query = {
                 nombreCompleto: event.query
             };
-            this.serviceProfesional.get(query).subscribe(event.callback);
+            this.lastRequest = this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
             event.callback([]);
         }
     }

@@ -111,17 +111,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     ngOnInit() {
         // inicializamos variable resultsAux con la misma estructura que results
-        // this.resultsAux = JSON.parse(JSON.stringify(this.results));
         this.resultsAux = Object.assign({}, this.results);
-
         // Se traen los Conceptos Turneables para poder quitarlos de la lista de
         // Procedimientos
-
         this.elementoRUP.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
             this.grupos_guida = grupos;
             this.filtrarResultadosBusquedaGuiada();
         });
-
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -135,7 +131,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 });
                 // filtramos los resultados
                 this.filtrarResultados('sugeridos');
-
                 this.resultsAux.sugeridos = Object.assign({}, this.results.sugeridos);
                 // seteamos el tipo de búsqueda actual como sugeridos
                 this.busquedaActual = 'sugeridos';
@@ -157,20 +152,14 @@ export class BuscadorComponent implements OnInit, OnChanges {
                         concepto.frecuencia = res.frecuencia;
                         return concepto;
                     });
-
                     this.results['misFrecuentes']['todos'] = frecuentesProfesional;
                     this.filtrarResultados('misFrecuentes');
-
                     this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
                 }
             });
-
-
-
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
         });
-
     }
 
     /**
@@ -185,14 +174,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
             if (typeof this.results.sugeridos['todos'] === 'undefined') {
                 this.results.sugeridos['todos'] = [];
             }
-
             changes.frecuentesTipoPrestacion.currentValue.forEach(element => {
                 if (this.results.sugeridos['todos'].indexOf(element) === -1) {
-
                     if (this.conceptoFrecuente.term) {
                         element.sugeridoPor = this.conceptoFrecuente.term;
                     }
-
                     this.results.sugeridos['todos'].push(element);
                 }
             });
@@ -244,7 +230,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} busquedaActual String Tipo de busqueda que se va a realizar
      * @memberof BuscadorComponent
      */
-    public setTipoBusqueda(busquedaActual): void {
+    public setTipoBusqueda(busquedaActual: any): void {
         if (this.busquedaActual !== busquedaActual) {
             this.busquedaActual = busquedaActual;
             // creamos una copia del filtro
@@ -285,7 +271,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} resultadosSnomed
      * @memberof BuscadorComponent
      */
-    recibeResultados(resultadosSnomed) {
+    recibeResultados(resultadosSnomed: any) {
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
@@ -336,31 +322,23 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x));
         // quitamos de 'todos' aquellos que son turneables, no es correcto que aparezcan
         this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'].filter(x => !this.esTurneable(x));
-
-
         if (this.results[busquedaActual]['planes'].length) {
+            let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
+            let planes = [];
+            planesCopia.forEach(unPlan => {
+                unPlan.plan = true;
+                planes.push(unPlan);
+            });
             // agregamos los planes
-            this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos'], ...this.results[busquedaActual]['planes']];
-            // ordenamos los resultados
+            this.results[busquedaActual]['todos'] = [...resultados, ...planes];
         }
     }
 
     public filtrarResultadosBusquedaGuiada() {
         this.results.busquedaGuiada = [];
-        // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
-        // this.results.buscadorBasico['procedimientos'] = this.results.buscadorBasico['procedimientos'].filter(x => !this.esTurneable(x));
-
-        // Object.keys(this.servicioPrestacion.refsetsIds).forEach(key => {
-        //     let nombre = key.replace(/_/g, ' ');
-        //     this.results.busquedaGuiada.push({
-        //         nombre: nombre,
-        //         valor: this.results.buscadorBasico['todos'].filter(x => x.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds[key]))
-        //     });
-        // });
 
         this.grupos_guida.forEach(data => {
             if (this.results.buscadorBasico['todos']) {
-
                 this.results.busquedaGuiada.push({
                     nombre: data.nombre,
                     valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
@@ -371,8 +349,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     valor: []
                 });
             }
-
-
         });
 
         Object.keys(this.conceptos).forEach(concepto => {
@@ -398,13 +374,11 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @returns Cantidad de resultados
      * @memberof BuscadorComponent
      */
-    public getCantidadResultados(semanticTag) {
+    public getCantidadResultados(semanticTag: string) {
         if (this.results && this.busquedaActual
             && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
-
             return this.results[this.busquedaActual][semanticTag].length;
         }
-
         return 0;
     }
 
@@ -427,11 +401,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
-
         }
-
         this.tengoResultado.emit(true);
-
     }
 
     /**
@@ -465,28 +436,30 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @param {any} concepto Concepto SNOMED
      * @memberof BuscadorComponent
      */
-    public seleccionarConcepto(concepto) {
-        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
-        // let filtro = this.getFiltroSeleccionado();
-
+    public seleccionarConcepto(concepto: any) {
+        let copiaConcepto = JSON.parse(JSON.stringify(concepto));
+        let filtro;
+        if (copiaConcepto.plan) {
+            delete copiaConcepto.plan;
+            filtro = ['planes'];
+        } else {
+            filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+        }
         // devolvemos los tipos de filtros
         this.tagBusqueda.emit(filtro);
-
         // devolvemos el concepto SNOMED
-        this.evtData.emit(concepto);
+        this.evtData.emit(copiaConcepto);
     }
 
     getFiltroSeleccionado() {
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
-
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
         // o bien, si estamos en el buscador guiado, si la opcion desplegada es planes
         // entonces sobreescribmos el filtro a emitir como ['planes']
         if (this.filtroActual === 'planes' || this.opcionDesplegada === 'planes') {
             filtro = ['planes'];
         }
-
         return filtro;
     }
 
@@ -498,7 +471,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
      */
     public desplegar(nombre) {
         // this.opcionDesplegada = nombre;
-
         this.opcionDesplegada = (this.opcionDesplegada === nombre) ? null : nombre;
     }
 
@@ -510,11 +482,10 @@ export class BuscadorComponent implements OnInit, OnChanges {
      * @returns  boolean TRUE/FALSE si es turneable o no
      * @memberof BuscadorComponent
      */
-    public esTurneable(concepto) {
+    public esTurneable(concepto: any) {
         if (!this.conceptosTurneables) {
             return false;
         }
-
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
@@ -528,6 +499,5 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public getSemanticTagFiltros() {
         return this.conceptos[this.filtroActual];
     }
-
 
 }
