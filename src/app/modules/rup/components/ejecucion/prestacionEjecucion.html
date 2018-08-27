@@ -104,11 +104,10 @@
 
                                                             <div class="float-left" *ngIf="registro?.relacionadoCon">
                                                                 <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado con: </b>
-                                                                <small *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
-                                                                    class="badge badge-info">
-                                                                    {{ registro.relacionadoCon[0].concepto.term[0].toUpperCase() + registro.relacionadoCon[0].concepto.term.slice(1)}}
+                                                                <small *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length === 1" class="badge badge-info">
+                                                                    {{ registro.relacionadoCon[0].concepto.term }}
                                                                 </small>
-                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
+                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.repetirRegistros">
                                                                     <ng-container *ngFor="let relacion of registro.relacionadoCon">
                                                                         <small *ngIf="relacion.cara" class="badge badge-info">
                                                                             {{ relacion?.term ? relacion.term : (relacion?.concepto?.term ? 'diente ' + relacion.concepto.term + ' (' + relacion.cara

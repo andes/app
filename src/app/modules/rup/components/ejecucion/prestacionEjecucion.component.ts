@@ -296,6 +296,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     registroOrigen.relacionadoCon = [];
                 }
 
+                debugger;
                 if (this.elementoRUP.reglas && this.elementoRUP.reglas.requeridos && this.elementoRUP.reglas.requeridos.relacionesMultiples) {
                     registroOrigen.relacionadoCon.push(registroDestino);
                 } else {
@@ -608,7 +609,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
             } else {
-                debugger;
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && !this.elementoRUP.reglas.requeridos.relacionesMultiples) {
                     registroDestino.relacionadoCon = [resultado];
@@ -791,11 +791,32 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
 
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
+        // registros.forEach(registro => {
+        //     if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
+        //         if (!registro.relacionadoCon.find(x => x.concepto)) {
+        //             registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
+        //         }
+        //     }
+        // });
+
         registros.forEach(registro => {
-            if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
-                if (!registro.relacionadoCon.find(x => x.concepto)) {
-                    registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
-                }
+
+            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                registro.relacionadoCon.forEach((registroRel, key) => {
+                    let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                        if (r.id) {
+                            return r.id === registroRel;
+                        } else {
+                            return r.concepto.conceptId === registroRel;
+                        }
+                    });
+                    // Es registro RUP o es un concepto puro?
+                    if (esRegistro) {
+                        registro.relacionadoCon[key] = esRegistro;
+                    } else {
+                        registro.relacionadoCon[key] = registroRel;
+                    }
+                });
             }
         });
 
