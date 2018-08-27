@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "3.5.1",
+    "version": "3.6.1",
     "description": "Aplicación web Angular2 para ANDES",
     "angular-cli": {},
     "scripts": {
@@ -26,7 +26,7 @@
         "@agm/core": "^1.0.0-beta.2",
         "@andes/auth": "^2.0.0",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "^3.3.1",
+        "@andes/plex": "^3.3.2",
         "@andes/shared": "^2.0.0",
         "@angular/animations": "^5.0.0",
         "@angular/cdk": "^5.2.4",
@@ -40,6 +40,7 @@
         "@angular/platform-browser-dynamic": "^5.0.0",
         "@angular/platform-server": "^5.0.0",
         "@angular/router": "^5.0.0",
+        "@types/jquery": "^3.3.5",
         "bowser": "^1.7.1",
         "bson": "^1.0.4",
         "chart.js": "^2.7.1",

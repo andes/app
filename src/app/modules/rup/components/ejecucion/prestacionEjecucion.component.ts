@@ -1,9 +1,6 @@
-import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { ObjectID } from 'bson';
-import { DropdownItem } from '@andes/plex';
+import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
@@ -123,6 +120,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
+
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -439,10 +437,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+
+        if (elementoRUP && elementoRUP.params) {
+            if (elementoRUP.params.reglasCargar) {
+                if (elementoRUP.params.reglasCargar.evolucionable) {
+                    // console.log(this.servicioPrestacion.getByPacienteKey(this.paciente.id, elementoRUP.conceptos.map(x => x.conceptId)));
+                }
+            }
+        }
+
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
+
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
@@ -682,33 +690,26 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     private controlValido(registro) {
-        if (registro.registros.length <= 0) {
-            if (registro.valor) {
-                registro.valido = true;
-                if ((typeof registro.valor === 'object') && Object.keys(registro.valor).length === 0) {
-                    registro.valido = false;
-                }
-            } else {
-                registro.valido = false;
-            }
-            // registro.valido = (registro.valor && Object.keys(registro.valor).length === 0) ? true : false;
-            if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 500);
-                this.colapsarPrestaciones('expand');
-            }
-        } else {
+        return true;
+        // if (registro.registros.length <= 0) {
+        //     registro.valido = (registro.valor !== null) ? true : false;
+        //     if (registro.concepto && !registro.valido) {
+        //         this.plex.toast('danger', 'Registro incompleto: ' + registro.concepto.term, 'Error', 3000);
+        //         this.colapsarPrestaciones('expand');
+        //     }
+        // } else {
 
-            let total = registro.registros.length;
-            let contadorValiddos = 0;
-            registro.registros.forEach(r => {
-                let res = this.controlValido(r);
-                if (res) {
-                    contadorValiddos++;
-                }
-            });
-            registro.valido = (contadorValiddos === total) ? true : false;
-        }
-        return registro.valido;
+        //     let total = registro.registros.length;
+        //     let contadorValiddos = 0;
+        //     registro.registros.forEach(r => {
+        //         let res = this.controlValido(r);
+        //         if (res) {
+        //             contadorValiddos++;
+        //         }
+        //     });
+        //     registro.valido = (contadorValiddos === total) ? true : false;
+        // }
+        // return registro.valido;
     }
 
     /**
@@ -723,42 +724,61 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         if (!this.prestacion.ejecucion.registros.length || (this.prestacion.ejecucion.registros.length === 1 && this.prestacion.ejecucion.registros[0].concepto.conceptId === '721145008')) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
-            return false;
+            resultado = false;
         } else {
             this.prestacion.ejecucion.registros.forEach(r => {
                 if (!this.controlValido(r)) {
-
                     this.prestacionValida = false;
                     this.mostrarMensajes = true;
                     resultado = false;
                 }
 
             });
+
         }
 
         return resultado;
     }
 
-    /**
-     * Guardamos la prestacion y vamos hacia la pantalla de validacion
-     *
-     * @returns
-     * @memberof PrestacionEjecucionComponent
-     */
-    guardarPrestacion() {
+    controlParams() {
+        let respuesta = true;
+        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length) {
 
+            let valoresConCero = [];
+            if (this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
+                for (let reg of this.prestacion.ejecucion.registros) {
+                    let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                    if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
+                        valoresConCero.push(reg);
+                    }
+                }
+            }
+            // if (valoresConCero.length > 0) {
+            //     this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+            //         if (respuestaAlerta) {
+            //             respuesta = true;
+            //         } else {
+            //             respuesta = false;
+            //         }
+            //         return respuesta;
+            //     });
+            // }
+            return respuesta;
+        } else {
+            return respuesta;
+        }
+
+    }
+
+    confirmarGuardar() {
         // validamos antes de guardar
         if (!this.beforeSave()) {
             return;
         }
-
-        // let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        let registros = this.prestacion.ejecucion.registros;
-
+        let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                // Relacionar con otro registro o con un concepto
-                // registro.relacionadoCon = registro.relacionadoCon.map(r => (r.concepto ? r.concepto.conceptId : r.conceptId) || r.id);
+            if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
+                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
         });
 
@@ -801,6 +821,43 @@ export class PrestacionEjecucionComponent implements OnInit {
             });
 
         });
+    }
+    /**
+     * Guardamos la prestacion y vamos hacia la pantalla de validacion
+     *
+     * @returns
+     * @memberof PrestacionEjecucionComponent
+     */
+    guardarPrestacion() {
+
+        let respuesta = true;
+        let valoresConCero = [];
+        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
+            for (let reg of this.prestacion.ejecucion.registros) {
+                let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
+                if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
+                    valoresConCero.push(reg);
+                }
+            }
+        }
+        if (valoresConCero.length > 0) {
+            this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
+
+                if (!respuestaAlerta) {
+                    return false;
+                }
+
+                this.confirmarGuardar();
+
+
+
+            });
+        } else {
+            this.confirmarGuardar();
+        }
+
+
+
     }
 
     volver(ambito = 'ambulatorio') {
