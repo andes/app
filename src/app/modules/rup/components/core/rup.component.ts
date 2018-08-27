@@ -37,6 +37,7 @@ export class RUPComponent implements OnInit {
     @Input() paciente: IPaciente;
     @Input() soloValores: boolean;
     @Input() params: any;
+    @Input() opcionales: any;
     public mensaje: any = {};
 
     // Eventos
@@ -64,6 +65,7 @@ export class RUPComponent implements OnInit {
         componentReference.instance['soloValores'] = this.soloValores;
         componentReference.instance['paciente'] = this.paciente;
         componentReference.instance['params'] = this.params;
+        componentReference.instance['opcionales'] = this.opcionales;
 
         // Event bubbling
         componentReference.instance['change'].subscribe(value => {
