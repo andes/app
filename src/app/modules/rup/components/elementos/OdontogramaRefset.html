@@ -255,8 +255,12 @@
 
         </div>
         <div class="row">
-            <div class="col-12">
-                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Activar selección múltiple" (click)="limpiarSeleccion(e)"></plex-bool>
+            <div class="col">
+                <plex-bool class="m-0 p-0" [(ngModel)]="seleccionMultiple" name="seleccionMultiple" label="Seleccionar piezas/caras múltiples"
+                    (click)="limpiarSeleccion(e)"></plex-bool>
+            </div>
+            <div *ngIf="piezasSeleccionadas?.length > 0" class="col-6">
+                <plex-button class="m-0 p-0" name="deseleccionar" label="Deseleccionar todo" (click)="limpiarSeleccion(e)"></plex-button>
             </div>
         </div>
         <!-- FIN ODONTOGRAMA DE ESTA CONSULTA -->

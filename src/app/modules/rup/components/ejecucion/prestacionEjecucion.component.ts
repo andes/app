@@ -374,7 +374,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
 
                     // relacionadoCon está populado, y debe comprobarse el id
-                    let indexRel = registro.relacionadoCon.findIndex(x => x.id === _registro.id);
+                    let indexRel = registro.relacionadoCon.findIndex(x => x && x.id && x.id === _registro.id);
                     if (indexRel !== -1) {
                         registro.relacionadoCon.slice(indexRel, 1);
                     }
@@ -511,6 +511,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                 this.plex.toast('danger', 'El elemento seleccionado debe ser un hallazgo');
                 return false;
             }
+
             if (registoExiste) {
                 this.plex.confirm('El concepto seleccionado ya se ha registrado en la consulta ¿Desea continuar con la transformación?', 'Transformar Problema').then(validar => {
                     if (validar) {
@@ -555,8 +556,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     idRegistroOrigen: dato.evoluciones[0].idRegistro
                                 };
                                 resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                if (registroDestino) {
-                                    registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
+                                if (resultado && this.tipoBusqueda) {
+
+                                    if (registroDestino) {
+                                        registroDestino.relacionadoCon = [...registroDestino.relacionadoCon, resultado];
+                                    }
+                                } else {
+                                    registroDestino.relacionadoCon = [resultado];
                                 }
                             } else {
                                 // verificamos si no es cronico pero esta activo
@@ -567,17 +573,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                                                 idRegistroOrigen: dato.evoluciones[0].idRegistro
                                             };
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
-                                            if (resultado && resultado.relacionadoCon) {
+                                            if (this.tipoBusqueda) {
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
-                                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
+                                            } else {
+                                                registroDestino.relacionadoCon = [resultado];
                                             }
                                         } else {
                                             resultado = this.cargarNuevoRegistro(snomedConcept);
-                                            if (resultado && resultado.relacionadoCon) {
+                                            if (resultado && this.tipoBusqueda) {
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
+                                            } else {
+                                                registroDestino.relacionadoCon = [resultado];
                                             }
                                         }
                                     });
@@ -585,9 +595,9 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                         } else {
                             resultado = this.cargarNuevoRegistro(snomedConcept);
-                            if (resultado && resultado.relacionadoCon) {
+                            if (resultado && this.tipoBusqueda) {
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
-                                resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                                // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : this.tipoBusqueda.conceptos;
                                 // }
                             } else {
                                 registroDestino.relacionadoCon = [resultado];
@@ -603,14 +613,19 @@ export class PrestacionEjecucionComponent implements OnInit {
                 } else {
 
                     if (resultado && resultado.relacionadoCon) {
-                        if (this.tipoBusqueda && this.tipoBusqueda.conceptos) {
+                        if (this.tipoBusqueda && this.tipoBusqueda.conceptos && this.filtroRefset) {
                             if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.conceptId === (this.tipoBusqueda as any).conceptId)) === -1) {
-                                resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                                // resultado.relacionadoCon = this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : this.tipoBusqueda;
+                                resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+
                             }
                         } else {
                             this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
-                            resultado.relacionadoCon = this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes' ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                            // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
+                            resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+
                         }
+                        this.tipoBusqueda = null;
                     }
                 }
 
@@ -775,10 +790,13 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.beforeSave()) {
             return;
         }
+
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
             if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
-                registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
+                if (!registro.relacionadoCon.find(x => x.concepto)) {
+                    registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
+                }
             }
         });
 
@@ -924,13 +942,17 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Búsqueda que filtra según concepto
     ejecutarAccion(data) {
-        if (data.conceptos) {
+        this.tipoBusqueda = [];
+        if (data && data.conceptos) {
             // tipoBusqueda
             this.tipoBusqueda = data;
-            this.registrosHuds = [...this.registrosHuds, data];
+            // this.registrosHuds = [...this.registrosHuds, data];
         } else {
-            this.tipoBusqueda = [];
+            this.tipoBusqueda = null;
+            this.filtroRefset = null;
+
         }
+
     }
 
     cargaItems(registroActual, indice) {

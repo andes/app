@@ -528,20 +528,22 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // let filtro = this.getFiltroSeleccionado();
 
         // Devolvemos los tipos de filtros
-        if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
-            // Devolvemos si queremos que se genere una relación
-            // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
-            this.tagBusqueda.emit(filtro);
-            this.filtroRefSet.emit(this.busquedaRefSet);
-            // this.tagBusqueda.emit(filtro);
-            this.busquedaRefSet = null;
-        } else {
-            // Devolvemos los tipos de filtros
-            this.tagBusqueda.emit(filtro);
-        }
+        // if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
+        //     // Devolvemos si queremos que se genere una relación
+        //     // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
+        //     this.tagBusqueda.emit(filtro);
+        //     this.filtroRefSet.emit(this.busquedaRefSet);
+        //     // this.tagBusqueda.emit(filtro);
+        // } else {
+        //     // Devolvemos los tipos de filtros
+        //     this.tagBusqueda.emit(filtro);
+        // }
+        // this.busquedaRefSet = null;
+        // this.filtroRefSet = null;
 
         // Devolvemos el concepto SNOMED
         this.evtData.emit(concepto);
+        // this.search = null;
 
     }
 

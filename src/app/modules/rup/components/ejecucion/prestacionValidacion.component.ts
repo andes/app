@@ -213,7 +213,13 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                         registro.relacionadoCon.forEach((registroRel, key) => {
-                            let esRegistro = this.prestacion.ejecucion.registros.find(r => r.id === registroRel);
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                                if (r.id) {
+                                    return r.id === registroRel;
+                                } else {
+                                    return r.concepto.conceptId === registroRel;
+                                }
+                            });
                             // Es registro RUP o es un concepto puro?
                             if (esRegistro) {
                                 registro.relacionadoCon[key] = esRegistro;
@@ -424,19 +430,6 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
 
-    relacionadoConPadreDeep(registros: any[], conceptId) {
-        if (registros) {
-            for (let i = 0; i < registros.length; i++) {
-                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0] && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
-                    return i;
-                } else {
-                    this.relacionadoConPadreDeep(registros[i].registros, conceptId);
-                }
-            }
-            return false;
-        }
-
-    }
 
     // Indices de profundidad de las relaciones
     registrosDeep: any = {};
@@ -447,7 +440,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
+            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id || item.relacionadoCon[0] === registro.concepto.conceptId);
             this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
@@ -469,14 +462,14 @@ export class PrestacionValidacionComponent implements OnInit {
     reordenarRelaciones() {
         let rel: any;
         let relIdx: any;
-        this.prestacion.ejecucion.registros.forEach((item, index) => {
-            rel = this.prestacion.ejecucion.registros.find(x => x.id === item.relacionadoCon[0].id);
-            relIdx = this.prestacion.ejecucion.indexOf(rel);
+        // this.prestacion.ejecucion.registros.forEach((item, index) => {
+        //     rel = this.prestacion.ejecucion.registros.find(x => x.id === item.relacionadoCon[0].id);
+        //     relIdx = this.prestacion.ejecucion.indexOf(rel);
 
-            if (rel.length > 0 && relIdx > index) {
-                this.swapItems(rel, item);
-            }
-        });
+        //     if (rel.length > 0 && relIdx > index) {
+        //         this.swapItems(rel, item);
+        //     }
+        // });
     }
 
     swapItems(a, b) {

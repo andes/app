@@ -152,19 +152,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             // Se arma el Odontograma actual, con sus relaciones
             for (let cuadrante of this.cuadrantes) {
                 for (let diente of this.odontograma[String(cuadrante)]) {
-                    diente.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => z.conceptId === diente.concepto.conceptId || z === diente.concepto.conceptId) : {});
+                    diente.relacion = this.prestacion.ejecucion.registros.filter(y => y.relacionadoCon ? y.relacionadoCon.find(z => {
+                        return z === diente.concepto.conceptId;
+                    }) : {});
                     diente.relacion = diente.relacion.map(y => y.concepto);
                 };
             }
 
         }
 
-    }
-
-    walkThruKeys(obj: any) {
-        if (typeof obj === 'object') {
-            return Object.keys(obj);
-        }
     }
 
     odontogramaAnterior() {
@@ -483,10 +479,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     limpiarSeleccion(e) {
-        setTimeout(() => {
-            this.piezasSeleccionadas = [];
-            this.registro.valor.piezas = [];
-        }, 100);
+        this.piezasSeleccionadas = [];
+        this.registro.valor.piezas = [];
+        this.emitEjecutarAccion(null);
     }
 
     estaSeleccionada(diente, cara) {
