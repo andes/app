@@ -88,9 +88,10 @@ export class AppComponent {
         // Inicializa el chequeo de conectividad
         this.initStatusCheck();
 
+        // @andes/auth debería tener un metodo que devuelva el token.
         let token = window.sessionStorage.getItem('jwt');
         if (token) {
-            this.ws.auth(token);
+            this.ws.setToken(token);
         }
 
     }

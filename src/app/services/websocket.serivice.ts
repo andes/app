@@ -1,38 +1,47 @@
 import { environment } from '../../environments/environment';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import * as io from 'socket.io-client';
 import * as Wildcard from 'socketio-wildcard';
 
 @Injectable()
 export class WebSocketService {
+    public autheticated = false;
     public socket;
     public token = null;
-    public events: Observable<any>;
+    public events: Subject<any>;
+    public rooms: String[] = [];
 
     constructor () {
         let patch = Wildcard(io.Manager);
         this.socket = io(environment.WS);
         patch(this.socket);
-        this.events = new Observable(observer => {
+        this.events = new Subject();
 
-            this.socket.on('*', packet => {
-                let data = packet.data;
-                observer.next({ event: data[0], data: data[1] });
-            });
-
-            return () => {
-                // this.socket.disconnect();
-            };
+        this.socket.on('*', packet => {
+            let data = packet.data;
+            this.events.next({ event: data[0], data: data[1] });
         });
+
+
         this.socket.on('connect', () => {
             if (this.token) {
-                this.auth(this.token);
+                this.emitAuth();
             }
+            // No necesario por ahora
+            // this.events.next({ event: 'connect', data: {} });
         });
+
+        this.socket.on('disconnect', () => {
+            this.autheticated = false;
+        });
+
         this.socket.on('auth', (data) => {
-            if (data.status === 'error') {
-                // Nada por ahora
+            if (data.status !== 'error') {
+                this.autheticated = true;
+                this.rooms.forEach((room) => {
+                    this.socket.emit('room', { name: room });
+                });
             }
         });
     }
@@ -41,22 +50,31 @@ export class WebSocketService {
         this.socket.emit(event, data);
     }
 
-    auth (token) {
-        this.token = token;
-        // Hack: En algunas maquinas no me funciona el emit inmediato.
-        setTimeout(this.emit.bind(this, 'auth', { token }), 1000);
 
+    setToken(token) {
+        this.token = token;
+    }
+
+    emitAuth () {
+        this.emit('auth', { token: this.token });
     }
 
     join (room) {
-        setTimeout(this.emit.bind(this, 'room', { name: room }), 1200);
-        // this.socket.emit('room', { name: room });
+        const index = this.rooms.findIndex(name => name === room);
+        if (index < 0) {
+            this.rooms.push(room);
+            if (this.autheticated) {
+                this.socket.emit('room', { name: room });
+            }
+        }
     }
 
     leave (room) {
-        setTimeout(() => {
-            this.emit('leave', { name: room });
-        }, 1000);
+        this.emit('leave', { name: room });
+        const index = this.rooms.findIndex(name => name === room);
+        if (index < 0) {
+            this.rooms.splice(index, 1);
+        }
     }
 
     close () {

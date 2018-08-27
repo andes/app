@@ -3,6 +3,7 @@ import { PantallaService } from '../services/pantalla.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { WebSocketService } from '../../../services/websocket.serivice';
+import { Auth } from '@andes/auth';
 
 @Component({
     templateUrl: 'pantallas.html'
@@ -22,12 +23,13 @@ export class PantallasComponent implements OnInit, OnDestroy  {
         public pantallasService: PantallaService,
         private route: ActivatedRoute,
         private router: Router,
-        private ws: WebSocketService
+        private ws: WebSocketService,
+        private auth: Auth
     ) {}
 
     ngOnInit () {
         let temp;
-        this.ws.join('turnero');
+        this.ws.join(`turnero-${this.auth.organizacion.id}`);
         this.sub = this.ws.events.subscribe(( {event, data} ) => {
             let { pantalla } = data;
             switch (event) {

@@ -441,7 +441,7 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoE3Y6AComponent
 ];
 
-import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
+// import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
@@ -467,7 +467,7 @@ registerLocaleData(localeEs, 'es');
         Ng2DragDropModule,
         ChartsModule,
         routing,
-        EstadisticaModule,
+        // EstadisticaModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })
