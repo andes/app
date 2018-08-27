@@ -15,6 +15,8 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { TurneroService } from '../../../../services/turnero.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { TurnoService } from '../../../../services/turnos/turno.service';
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -44,6 +46,9 @@ export class PuntoInicioComponent implements OnInit {
     public index = 0;
     public llamandoTurno = false;
     public volverALlamar = false;
+    // habilita la busqueda del paciente
+    public buscandoPaciente = false;
+
     // FILTROS
     private agendasOriginales: any = [];
     private prestacionesOriginales: any = [];
@@ -54,14 +59,18 @@ export class PuntoInicioComponent implements OnInit {
 
     public espaciosFisicosTurnero = [];
 
-    constructor(private router: Router,
-        private plex: Plex, public auth: Auth,
+    constructor(
+        private router: Router,
+        private plex: Plex,
+        public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnero: TurneroService,
-        public servicioOrganizacion: OrganizacionService) { }
+        public servicioOrganizacion: OrganizacionService,
+        public serviceTurno: TurnoService
+    ) { }
 
     ngOnInit() {
 
@@ -117,6 +126,8 @@ export class PuntoInicioComponent implements OnInit {
     /**
      * Actualiza el listado de agendas y prestaciones
      */
+
+    // tieneTurnosAsignados: true,
     actualizar() {
         Observable.forkJoin(
             // Agendas
@@ -125,7 +136,6 @@ export class PuntoInicioComponent implements OnInit {
                 fechaHasta: moment(this.fecha).isValid() ? moment(this.fecha).endOf('day').toDate() : new Date(),
                 organizacion: this.auth.organizacion.id,
                 estados: ['disponible', 'publicada', 'pendienteAsistencia', 'pendienteAuditoria', 'auditada'],
-                tieneTurnosAsignados: true,
                 tipoPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             }),
             // Prestaciones
@@ -155,6 +165,10 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (turno.paciente && turno.paciente.carpetaEfectores) {
+                                (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
+
                         });
                     });
 
@@ -166,6 +180,9 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
+                                (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
                         });
                     }
                 });
@@ -448,6 +465,53 @@ export class PuntoInicioComponent implements OnInit {
     // Detecta si "hoy" es el día de la Agenda
     diaAgenda(agenda: IAgenda) {
         return moment(agenda.horaInicio).fromNow();
+    }
+
+    // buscar paciente para asigar en las agendas dinamicas
+    buscarPaciente() {
+        this.buscandoPaciente = true;
+    }
+
+    // Paciente seleccionado para la carga en agendas dinamicas
+    onPacienteSelected(paciente: IPaciente) {
+        if (paciente.id) {
+
+            let pacienteSave = {
+                id: paciente.id,
+                documento: paciente.documento,
+                apellido: paciente.apellido,
+                nombre: paciente.nombre,
+                alias: paciente.alias,
+                fechaNacimiento: paciente.fechaNacimiento,
+                sexo: paciente.sexo
+            };
+            this.darTurno(pacienteSave);
+        } else {
+            this.plex.alert('El paciente debe ser registrado en MPI');
+        }
+    }
+
+    darTurno(paciente) {
+        let idAgendaSeleccionada = this.agendaSeleccionada.id;
+        if (this.agendaSeleccionada.dinamica) {
+            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+                let datosTurno = {
+                    nota: '',
+                    motivoConsulta: '',
+                    tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
+                    paciente: paciente,
+                    idAgenda: this.agendaSeleccionada.id
+                };
+                this.serviceTurno.saveDinamica(datosTurno).subscribe(
+                    resultado => {
+                        this.buscandoPaciente = false;
+                        this.actualizar();
+                    },
+                    error => {
+
+                    });
+            });
+        }
     }
 
 }

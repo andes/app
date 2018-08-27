@@ -1,12 +1,7 @@
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
-import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Rx';
-import * as moment from 'moment';
 import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 // Interfaces

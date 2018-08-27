@@ -1,0 +1,24 @@
+<ng-container *ngIf="!soloValores && conceptos && params">
+    <label for="lactancia">
+        {{ params.titulo }}
+    </label>
+</ng-container>
+
+<ng-container *ngFor="let concepto of conceptos; let i = index">
+    <plex-bool *ngIf="!soloValores" [(ngModel)]="registro.valor[i].checkbox" (getData)="loadConceptos($event)" (change)="selectCheckBox(concepto)"
+        label="{{concepto.term}}" name="concepto-{{concepto.conceptId}}"></plex-bool>
+</ng-container>
+
+<p *ngIf="soloValores && !tieneValor()" class="readonly">
+    <span class="text-capitalize">{{ registro.nombre }} </span>sin valor
+</p>
+
+<p *ngIf="soloValores && tieneValor()" class="readonly">
+    <span class="text-capitalize">{{ registro.nombre }}</span>
+    <ng-container *ngFor="let reg of registro.valor">
+        <ng-container *ngIf="reg.checkbox">
+            {{ reg.concepto.term }}
+            <br>
+        </ng-container>
+    </ng-container>
+</p>

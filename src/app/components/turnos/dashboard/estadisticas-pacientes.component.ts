@@ -19,6 +19,8 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     nroCarpeta: any;
     public _paciente: IPaciente;
+    turnosPaciente: any;
+    ultimosTurnos: any;
     @Input('paciente')
     set paciente(value: any) {
         this.turnosOtorgados = 0;
@@ -31,6 +33,9 @@ export class EstadisticasPacientesComponent implements OnInit {
     get agenda(): any {
         return this._paciente;
     }
+
+    @Output() showArancelamientoForm = new EventEmitter<any>();
+
     pacienteSeleccionado: IPaciente;
     public fechaDesde: any;
     public fechaHasta: any;
@@ -38,8 +43,6 @@ export class EstadisticasPacientesComponent implements OnInit {
     inasistencias = 0;
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
-    nuevaCarpeta = '';
-    editando = false;
     carpetaEfector: any;
 
     // Inicialización
@@ -69,24 +72,38 @@ export class EstadisticasPacientesComponent implements OnInit {
 
     }
 
+    arancelamiento(turno) {
+        this.showArancelamientoForm.emit(turno);
+
+    }
+
     getPaciente() {
         this.servicePaciente.getById(this.pacienteSeleccionado.id).subscribe(
             pacienteMPI => {
                 this._paciente = pacienteMPI;
-                let datosTurno = { pacienteId: this._paciente && this._paciente.id ? this._paciente.id : null };
-                let cantInasistencias = 0;
-                // Se muestra la cantidad de turnos otorgados e inasistencias
-                this.serviceTurno.getTurnos(datosTurno).subscribe(turnos => {
-                    turnos.forEach(turno => {
-                        if (turno.asistencia && turno.asistencia === 'noAsistio') {
-                            cantInasistencias++;
-                        }
-                    });
-                    this.turnosOtorgados = turnos.length;
-                    this.inasistencias = cantInasistencias;
-                });
-
                 if (this._paciente && this._paciente.id) {
+                    let datosTurno = { pacienteId: this._paciente.id };
+                    let cantInasistencias = 0;
+                    // Se muestra la cantidad de turnos otorgados e inasistencias
+                    this.serviceTurno.getHistorial(datosTurno).subscribe(turnos => {
+                        turnos.forEach(turno => {
+                            if (turno.asistencia && turno.asistencia === 'noAsistio') {
+                                cantInasistencias++;
+                            }
+                        });
+                        this.turnosOtorgados = turnos.length;
+                        this.inasistencias = cantInasistencias;
+                        this.sortTurnos(turnos);
+                        this.turnosPaciente = turnos.filter(t => {
+                            return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                        });
+
+                        this.ultimosTurnos = turnos.filter(t => {
+                            return moment(t.horaInicio).isSameOrBefore(new Date(), 'day');
+                        });
+
+                    });
+
                     // Se muestra la cantidad de turnos anulados
                     let datosLog = { idPaciente: this._paciente.id, operacion: 'turnos:liberar' };
                     this.serviceLogPaciente.get(datosLog).subscribe(logs => {
@@ -95,65 +112,17 @@ export class EstadisticasPacientesComponent implements OnInit {
                         }
                     });
                 }
-                this.obtenerCarpetaPaciente();
             });
     }
 
-    editarNroCarpeta() {
-        this.editando = true;
-    }
-
-    obtenerCarpetaPaciente() {
-        let indiceCarpeta = -1;
-        if (this._paciente.carpetaEfectores.length > 0) {
-            // Filtro por organizacion
-            indiceCarpeta = this._paciente.carpetaEfectores.findIndex((x) => (x.organizacion as any)._id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
-                this.carpetaEfector = this._paciente.carpetaEfectores[indiceCarpeta];
-                this.nroCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
-                this.nuevaCarpeta = this._paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+    private sortTurnos(turnos) {
+        turnos = turnos.sort((a, b) => {
+            let inia = a.horaInicio ? new Date(a.horaInicio) : null;
+            let inib = b.horaInicio ? new Date(b.horaInicio) : null;
+            {
+                return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
-        }
-
-        if (indiceCarpeta === -1) {
-            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this._paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                    this.nroCarpeta = carpeta.nroCarpeta;
-                    this.nuevaCarpeta = carpeta.nroCarpeta;
-                }
-            });
-        }
-    }
-
-    nuevoNroCarpeta() {
-        if (this.nuevaCarpeta && this.nuevaCarpeta !== '') {
-            this.nuevaCarpeta = this.nuevaCarpeta.trim();
-            this.carpetaEfector = {
-                organizacion: {
-                    _id: this.auth.organizacion.id,
-                    nombre: this.auth.organizacion.nombre
-                },
-                nroCarpeta: this.nuevaCarpeta
-            };
-            let indiceCarpeta = this._paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
-                this._paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
-            } else {
-                this._paciente.carpetaEfectores.push(this.carpetaEfector);
-            }
-            this.servicePaciente.patch(this._paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this._paciente.carpetaEfectores }).subscribe(
-                resultadoCarpeta => {
-                    this.getPaciente();
-                    this.plex.alert('Nro. de carpeta Asignado', 'Información');
-                    this.editando = false;
-                },
-                error => {
-                    this.plex.toast('danger', 'No se asignó el Nro. de carpeta, intente nuevamente.');
-                    this.editando = false;
-                }
-            );
-        }
+            ;
+        });
     }
 }
