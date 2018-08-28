@@ -122,9 +122,18 @@
             <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
-                        <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} |
-                            <span>{{turno.estado}}</span>
+                        <div>
+                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'" class="badge badge-success">
+                                ASIGNADO</span>
+                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " class="badge badge-danger">
+                                {{turno.estado | uppercase}}</span>
+
+                            | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
+
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                            | date: 'dd/MM/yyyy'}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
+
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
                         <div *ngFor="let profesional of turno.profesionales">
                             {{profesional | profesional}}

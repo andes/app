@@ -15,7 +15,8 @@
                     <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                         <!-- Panel -->
                         <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
-                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{
+                            turno.asistencia }}</div>
                         <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                         <h5>{{ turno.tipoPrestacion.term }}</h5>
                         <div class="row" *ngIf="turno.organizacion">
@@ -35,7 +36,8 @@
 
                         <div class="row" *ngIf="turno && turno.profesionales">
                             <div class="col">
-                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre'] }}
+                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre']
+                                }}
                             </div>
                         </div>
                         <br>
