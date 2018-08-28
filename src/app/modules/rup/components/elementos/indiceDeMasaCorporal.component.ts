@@ -20,6 +20,7 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
 
     // utilizado para el form, asi nos permite dejar el input como disabled
     public valorImc: Number;
+    termCapitalizado: string;
 
     ngOnInit() {
         this.registro.valido = true;
@@ -40,6 +41,8 @@ export class IndiceDeMasaCorporalComponent extends RUPComponent implements OnIni
             this.mensaje = this.getMensajes();
             this.calculoIMC();
         }
+
+        this.termCapitalizado = this.elementoRUP.conceptos[0].term[0].toUpperCase() + this.elementoRUP.conceptos[0].term.slice(1).toLowerCase();
     }
 
     cumpleReglasParams(elementoRUP) {
