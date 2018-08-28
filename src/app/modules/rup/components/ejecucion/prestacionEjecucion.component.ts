@@ -296,7 +296,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     registroOrigen.relacionadoCon = [];
                 }
 
-                debugger;
                 if (this.elementoRUP.reglas && this.elementoRUP.reglas.requeridos && this.elementoRUP.reglas.requeridos.relacionesMultiples) {
                     registroOrigen.relacionadoCon.push(registroDestino);
                 } else {
@@ -350,12 +349,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         delete this.confirmarDesvincular[registroId];
     }
 
-    verKeys(reg) {
-        // WTF
-        Object.keys(reg).forEach((v, i) => {
-            // console.log(v, reg[v]);
-        });
-    }
 
     /**
      * Quitamos elemento del array de registros
