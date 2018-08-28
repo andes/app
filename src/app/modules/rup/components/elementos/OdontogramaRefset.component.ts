@@ -64,6 +64,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     };
 
     public seleccionMultiple = false;
+    public ocultarTemporales = true;
 
     ngOnInit() {
 
@@ -500,6 +501,10 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     limpiarVinculaciones(e) {
         this.registro.valor.piezas.filter(x => x.concepto.conceptId === e.conceptId);
+    }
+
+    toggleOcultarTemporales(e) {
+        this.ocultarTemporales = !this.ocultarTemporales;
     }
 
 }
