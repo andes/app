@@ -192,6 +192,25 @@ export class PrestacionesService {
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
                     // COnceptId del informe requerido en en todas las prestaciones ambulatorias
                     if (agregar.length > 0) {
+                        // buscamos las relaciones y buscamos el concepto para mostrar la relacion
+                        let algo = 0;
+                        agregar.forEach(reg => {
+                            algo = algo + 1;
+                            let arrayRelaciones = [];
+                            if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
+                                if (typeof reg.relacionadoCon[0] === 'string') {
+                                    reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
+                                        return prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                    });
+                                    if (reg.relacionadoCon) {
+                                        arrayRelaciones = [...arrayRelaciones, ...reg.relacionadoCon];
+                                    }
+                                }
+                            }
+                            if (arrayRelaciones.length > 0) {
+                                reg.relacionadoCon = arrayRelaciones;
+                            }
+                        });
                         agregar[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
                     }
                     registros = [...registros, ...agregar];
@@ -229,7 +248,8 @@ export class PrestacionesService {
                             origen: registro.valor.origen ? registro.valor.origen : null,
                             idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
                             informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
-                        }]
+                        }],
+                        relacionadoCon: registro.relacionadoCon ? registro.relacionadoCon : null
                     };
                     registroSalida.push(dato);
                 } else {
@@ -279,7 +299,7 @@ export class PrestacionesService {
             }
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
-                    // buscamos las relaciones y buscamos el concepto para mostrar la relacion  TODO: "AGREGAR AL RESTO, POR AHORA SOLOFUNCIONA CON PROCEDIMIENTOS"
+                    // buscamos las relaciones y buscamos el concepto para mostrar la relacion
                     prestacion.ejecucion.registros.forEach(reg => {
                         if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
                             if (typeof reg.relacionadoCon[0] === 'string') {
