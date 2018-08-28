@@ -314,6 +314,10 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     }
 
+    mostrarVinculacion(registro) {
+        return registro.relacionadoCon.find(x => x.concepto.conceptId === this.confirmarDesvincular[registro.id]);
+    }
+
     /**
      * Mostrar opciones de confirmación de desvinculación
      *
@@ -337,7 +341,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             let registroActual = this.prestacion.ejecucion.registros.find(r => r.id === registroId || r.concepto && r.concepto.conceptId === registroId);
 
             if (registroActual) {
-                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId]);
+                registroActual.relacionadoCon = registroActual.relacionadoCon.filter(rr => rr.id !== this.confirmarDesvincular[registroId] && rr.concepto.conceptId !== this.confirmarDesvincular[registroId]);
                 delete this.confirmarDesvincular[registroId];
                 // this.moverRegistroEnPosicion(index, this.prestacion.ejecucion.registros.length);
             }
