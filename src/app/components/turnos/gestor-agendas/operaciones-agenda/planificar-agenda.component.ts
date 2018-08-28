@@ -314,6 +314,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques.splice(indice, 1);
                 this.bloqueActivo = -1;
                 this.validarTodo();
+
+                for (let i = 0; i < this.modelo.bloques.length; i++) {
+                    this.modelo.bloques[i].indice = i;
+                }
             }
         }
         ).catch(() => {
