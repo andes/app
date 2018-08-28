@@ -20,7 +20,8 @@
             <!--ESTADO DEL PROBLEMA-->
             <div class="col-4">
                 <label class="box-title-secundario">Estado actual</label>
-                <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true" (change)="formatearEstado()">
+                <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true"
+                    (change)="formatearEstado()">
                 </plex-select>
             </div>
 
@@ -30,10 +31,10 @@
             <div class="col" *ngIf="!hallazgoHudsCompleto">
                 <label class="box-title-secundario">Fecha estimada</label>
                 <div class="row">
-                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" [required]="true" prefix="Hace"
-                        (change)="calcularFecha()"></plex-int>
-                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
-                        [required]="true" (change)="calcularFecha()"></plex-select>
+                    <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad"
+                        [required]="true" prefix="Hace" (change)="calcularFecha()"></plex-int>
+                    <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo"
+                        [data]="unidadTiempo" [required]="true" (change)="calcularFecha()"></plex-select>
                 </div>
             </div>
         </div>
@@ -41,7 +42,8 @@
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [html]="true" [readonly]="false" (change)="emitChange()">
+                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [html]="true"
+                    [readonly]="false" (change)="emitChange()">
                 </plex-text>
             </div>
         </div>
@@ -66,9 +68,10 @@
                 {{ unaEvolucion.fechaCarga | fecha }}
             </div>
             <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
-                    (click)="cambiarEvolucion('+') "></plex-button>
-                <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
+                <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right"
+                    class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+                <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right"
+                    class="mdi-18px"></plex-button>
             </div>
         </div>
 
@@ -107,22 +110,22 @@
                 <div class="col">
                     <!-- <small class="badge badge-info" *ngIf="registro.esDiagnosticoPrincipal">Motivo de consulta principal</small> -->
                     <small class="badge badge-info" *ngIf="registro.esPrimeraVez">Primera vez</small>
-                    <small class="badge badge-success">
-                        <ng-container *ngIf="hallazgoHudsCompleto">
-                            {{ hallazgoHudsCompleto.evoluciones[0].estado }}
-                        </ng-container>
-                        <ng-container *ngIf="!hallazgoHudsCompleto && !registro.evoluciones">
-                            {{ registro.valor.estado}}
-                        </ng-container>
-                        <ng-container *ngIf="!hallazgoHudsCompleto && registro.evoluciones">
-                            {{ registro.evoluciones[0].estado }}
-                        </ng-container>
+
+                    <small class="badge badge-success" *ngIf="hallazgoHudsCompleto && hallazgoHudsCompleto?.evoluciones[0]?.estado">
+                        {{ hallazgoHudsCompleto.evoluciones[0].estado }}
                     </small>
-                    <small *ngIf="hallazgoOrigen" class="badge badge-info">
+                    <small class="badge badge-success" *ngIf="!hallazgoHudsCompleto && !registro.evoluciones && registro?.valor?.estado">
+                        {{ registro.valor.estado }}
+                    </small>
+                    <small class="badge badge-success" *ngIf="!hallazgoHudsCompleto && registro?.evoluciones[0]?.estado">
+                        {{ registro.evoluciones[0].estado }}
+                    </small>
+
+                    <small class="badge badge-info" *ngIf="hallazgoOrigen">
                         Originado con la transformación de:
                         <strong>{{ hallazgoOrigen.nombre }}</strong>
                     </small>
-                    <small *ngIf="registro.transformado" class="badge badge-info">
+                    <small class="badge badge-info" *ngIf="registro.transformado">
                         Transformado en:
                         <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : '' }}</strong>
                     </small>
