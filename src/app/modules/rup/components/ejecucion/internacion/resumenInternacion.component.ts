@@ -173,7 +173,7 @@ export class ResumenInternacionComponent implements OnInit {
     }
 
     // Rotacion flechita
-    flechita: boolean = false;
+    flechita = false;
     rotarFlechita(event) {
         this.flechita = !this.flechita;
     }
