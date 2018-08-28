@@ -1,6 +1,5 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import * as moment from 'moment';
 
 @Component({
     selector: 'rup-talla',
@@ -20,9 +19,8 @@ export class TallaComponent extends RUPComponent implements OnInit {
             });
         }
 
-
         if (this.registro.valor) {
-            // this.mensaje = this.getMensajes();
+            this.mensaje = this.getMensajes();
         }
     }
 

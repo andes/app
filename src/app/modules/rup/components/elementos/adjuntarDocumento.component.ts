@@ -178,9 +178,8 @@ export class AdjuntarDocumentoComponent extends RUPComponent implements OnInit {
                 this.adjunto = data[0];
                 let docs = this.adjunto.valor.documentos;
                 docs.forEach((item) => {
-
                     this.fotos.push(item);
-
+                    this.registro.valor.documentos.push(item);
                 });
                 this.adjuntosService.delete(this.adjunto._id).subscribe(() => { });
 
