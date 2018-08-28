@@ -1,5 +1,5 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
-import { Component, EventEmitter, Output, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -20,7 +20,7 @@ import { ISubscription } from 'rxjs/Subscription';
         'planificar-agenda.scss'
     ]
 })
-export class PlanificarAgendaComponent implements OnInit {
+export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
     espaciosList: any[];
@@ -73,6 +73,22 @@ export class PlanificarAgendaComponent implements OnInit {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
         }
+    }
+
+    ngAfterViewInit() {
+        this.plex.wizard({
+            id: 'citas:planificarAgenda',
+            updatedOn: moment('2018-08-15').toDate(),
+            steps: [
+                { title: 'Novedades del módulo CITAS', content: '15/08/2018', imageClass: 'plex-wizard-citas-planificarAgendas' },
+                { title: 'Planificación de Agendas Dinámicas', content: 'Esta opción permite crear agendas sin horarios predefinidos, para ser utilizadas en consultorios de demanda espontánea (ej: Guardia, Enfermería, Recetas, etc.)', imageClass: 'plex-wizard-citas-planificarAgendas-dinamica' },
+                { title: 'Cupo máximo', content: 'El campo cupo máximo permite, opcionalmente, establecer una cantidad maxima de pacientes.', imageClass: 'plex-wizard-planificarAgendas-dinamicaCupo' },
+                { title: 'Turnos para Agendas Dinámicas', content: 'Los pacientes se van agregando en el orden en que son asignados a la agenda.', imageClass: 'plex-wizard-citas-planificarAgendas-darTurnos' },
+            ],
+            forceShow: false,
+            fullScreen: true,
+            showNumbers: false
+        });
     }
 
     cargarAgenda(agenda: IAgenda) {
