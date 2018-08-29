@@ -551,6 +551,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
 
         }
+        this.goBottom();
     }
 
     /**
@@ -1120,6 +1121,10 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
         return results;
+    }
+
+    goBottom() {
+        // document.getElementById('bottom').scrollIntoView();
     }
 
     // eliminaTodosLosRegistros() {

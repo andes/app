@@ -85,7 +85,6 @@
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
                                         [ngClass]="{'relacionado': registro?.relacionadoCon}">
 
-
                                         <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="rup-header">
                                                 <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
@@ -245,7 +244,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </tab>
                         <ng-container *ngIf="registrosHuds">
@@ -263,11 +261,12 @@
                                             <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
-                                            }}
+                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional
+                                            | profesional }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre }}
+                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre
+                                            }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -315,7 +314,6 @@
                                             </ng-container>
                                         </div>
                                     </div>
-
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class" *ngIf="registro.tipo === 'laboratorio'">
@@ -329,7 +327,7 @@
                             </ng-container>
                         </ng-container>
                     </tabs>
-
+                    <div id="bottom"></div>
                 </plex-box>
             </div>
 
