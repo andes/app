@@ -208,6 +208,9 @@ import { PuntoInicioComponent } from './modules/rup/components/ejecucion/puntoIn
 import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds.component';
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
+import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumenPaciente-estatico.component';
+import { ResumenPacienteComponent } from './modules/rup/components/ejecucion/resumenPaciente.component';
+
 
 // Legacy para RUP
 import { LaboratoriosComponent } from './modules/rup/components/laboratorios/laboratorios.component';
@@ -470,6 +473,8 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         LaboratoriosComponent,
+        ResumenPacienteEstaticoComponent,
+        ResumenPacienteComponent,
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,

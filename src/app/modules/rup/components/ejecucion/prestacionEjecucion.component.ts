@@ -145,7 +145,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     this.obraSocialPaciente = os;
                                 });
                             });
-                            this.prestacionSolicitud = prestacion.solicitud;
+                            // cambio: this.prestacionSolicitud = prestacion.solicitud;
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
