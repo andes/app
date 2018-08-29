@@ -46,19 +46,19 @@ export class AutocitarTurnoAgendasComponent implements OnInit {
 
         if (this.agendasAutocitar && this.agendasAutocitar.length > 0) {
             // Filtro Agendas según cambios de acuerdo al día
-            this.agendasAutocitar = this.agendasAutocitar.filter(ag => this.comprobarFecha(ag));
+            // this.agendasAutocitar = this.agendasAutocitar.filter(ag => this.comprobarFecha(ag));
             this.showListaAgendas = true;
         }
     }
 
-    comprobarFecha(agenda: IAgenda): Boolean {
-        // Genero una fecha 48 horas en el futuro...
-        let fechaLimite = moment(new Date()).add(2, 'days');
-        if (agenda.horaInicio <= fechaLimite.toDate()) {
-            return false;
-        }
-        return true;
-    }
+    // comprobarFecha(agenda: IAgenda): Boolean {
+    //     // Genero una fecha 48 horas en el futuro...
+    //     let fechaLimite = moment(new Date()).add(2, 'days');
+    //     if (agenda.horaInicio <= fechaLimite.toDate()) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     toggleExpandir(index) {
         this.agendasExpandidas[index] = !this.agendasExpandidas[index];

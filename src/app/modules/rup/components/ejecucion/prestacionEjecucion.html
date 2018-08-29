@@ -114,15 +114,15 @@
 
                                                 <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-                                                    <span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                                    <!--span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
-                                                    </span>
+                                                    </span-->
 
-                                                    <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
+                                                    <!--a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
                                                         *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                         <i class="mdi mdi-vector-difference-ba"></i>
                                                         <i class="mdi mdi-vector-difference-ab"></i>
-                                                    </a>
+                                                    </a-->
 
                                                     <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
                                                         <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>

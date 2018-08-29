@@ -41,7 +41,8 @@
         <!--EVOLUCION DEL PROBLEMA-->
         <div class="row">
             <div class="col-12">
-                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [html]="true" [readonly]="false" (change)="emitChange()">
+                <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true" [readonly]="false"
+                    (change)="emitChange()">
                 </plex-text>
             </div>
         </div>
@@ -81,6 +82,19 @@
             <div class="col-4 text-right">
                 <br>
                 <strong>Profesional:</strong> {{unaEvolucion.profesional }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" *ngIf="unaEvolucion.informeRequerido">
+                <hr>
+                <label>Informe Del Encuentro:</label>
+                <ng-container *ngIf="unaEvolucion.informeRequerido?.valor;then showMensaje else showContenidoValor"></ng-container>
+                <ng-template #showContenidoValor>
+                    No tiene registrado el informe
+                </ng-template>
+                <ng-template #showMensaje>
+                    <span [innerHTML]="unaEvolucion.informeRequerido.valor"></span>
+                </ng-template>
             </div>
         </div>
     </ng-container>
