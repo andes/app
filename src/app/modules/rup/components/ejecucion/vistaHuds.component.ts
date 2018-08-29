@@ -120,7 +120,6 @@ export class VistaHudsComponent implements OnInit {
         setTimeout(() => {
 
             let content = '';
-            // let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('prestacion-' + tabIndex).cloneNode(true);
 
             /**
@@ -145,17 +144,6 @@ export class VistaHudsComponent implements OnInit {
                 ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
             </div>
             `;
-
-            // agregamos prestaciones
-            // let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
-
-            // const total = elementosRUP.length;
-            // for (let i = 0; i < total; i++) {
-            //     content += ' <div class="rup-card">' + elementosRUP[i].innerHTML + '</div>';
-            // }
-
-            // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
-            // content = this.sanitizer.sanitize(1, content);
 
             this.servicioDocumentos.descargar(content).subscribe(data => {
                 if (data) {

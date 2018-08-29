@@ -175,7 +175,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.prestacion.ejecucion.registros.forEach(registro => {
                     if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                         registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                            return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            if (idRegistroRel && idRegistroRel.concepto) {
+                                return idRegistroRel;
+                            } else {
+                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            }
                         });
                     }
                     if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
@@ -238,7 +242,13 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                if (idRegistroRel && idRegistroRel.concepto) {
+                                    return idRegistroRel;
+                                } else {
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                }
+                            });
                         }
                     });
                     // actualizamos las prestaciones de la HUDS

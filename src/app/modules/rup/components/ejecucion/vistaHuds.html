@@ -32,8 +32,8 @@
                                 <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class"
                                     *ngIf="registro.tipo === 'prestacion'">
                                     <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF"
-                                        titlePosition="top" (click)="descargarResumen(registro.data.concepto.term, i)"></plex-button>
-                                    <div id="prestacion">
+                                        titlePosition="top" (click)="descargarResumen(registro.data.solicitud.tipoPrestacion.term, i)"></plex-button>
+                                    <div id="prestacion-{{i}}">
 
                                         <h4>{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                         <div class="row">
