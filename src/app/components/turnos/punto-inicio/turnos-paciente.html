@@ -43,7 +43,7 @@
                         <br>
                         <div class="row" *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
 
-                            <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio'">
+                            <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id">
                                 <!-- no funcionan bien los title="" -->
                                 <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)"></plex-button>
                             </div>
