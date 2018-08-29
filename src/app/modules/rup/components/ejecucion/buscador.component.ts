@@ -92,7 +92,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public busquedaActual: any;
 
     // objeto de resultados
-    public results = { 'misFrecuentes': [], 'sugeridos': [], 'busquedaGuiada': [], 'buscadorBasico': [] };
+    public results = { 'misFrecuentes': [], 'sugeridos': [], 'busquedaGuiada': [], 'buscadorBasico': [], 'frecuentesTP': [] };
     public resultsAux: any;
 
     // public totalesTodos: Number = 0;
@@ -147,7 +147,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             this.frecuentesProfesionalService.get(query).subscribe((resultados: any) => {
                 // const frecuentesProfesional = resultados[0].frecuentes.map(res => res.concepto);
                 if (resultados && resultados.length) {
-                    const frecuentesProfesional = resultados[0].frecuentes.map(res => {
+                    const frecuentesProfesional = resultados.map(res => {
                         let concepto = res.concepto;
                         concepto.frecuencia = res.frecuencia;
                         return concepto;
@@ -157,6 +157,24 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
                 }
             });
+
+            let queryFTP = {
+                'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+            };
+
+            // buscar los frecuentes agrupados por tipo de prestacion, sin filtrar profesional
+            this.frecuentesProfesionalService.getXPrestacion(queryFTP).subscribe((resultados: any) => {
+
+                this.results['frecuentesTP']['todos'] = resultados.map(res => {
+                    let concepto = res.concepto;
+                    concepto.frecuencia = res.frecuencia;
+                    return concepto;
+                });
+                this.filtrarResultados('frecuentesTP');
+
+                this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
+            });
+
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
         });
@@ -244,7 +262,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             } else {
                 this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
             }
-            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
             }
         }
