@@ -18,12 +18,12 @@ export class FormTerapeuticoService {
     }
 
     put(data) {
-        return this.server.put(this.formTerapeuticoUrl + '/' + data._id, {params: data});
+        return this.server.put(this.formTerapeuticoUrl + '/' + data._id,  data);
     }
 
 
     post(data) {
-        return this.server.post(this.formTerapeuticoUrl, {params: data});
+        return this.server.post(this.formTerapeuticoUrl,  data);
     }
 
 
