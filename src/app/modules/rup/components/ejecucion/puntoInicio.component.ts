@@ -312,7 +312,6 @@ export class PuntoInicioComponent implements OnInit {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');

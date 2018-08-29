@@ -35,7 +35,11 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
                 informe: {}
             };
         }
-
+        let turno = this.prestacion.solicitud.turno;
+        console.log('prestacion ', turno);
+        this.turnoService.get({ id: turno }).subscribe(agenda => {
+            debugger
+        });
         this.listaActividades = [
             {
                 '_id': '57f505d669fe79a598ee542b',
