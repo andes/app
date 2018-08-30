@@ -169,7 +169,6 @@ export class PrestacionCrearComponent implements OnInit {
 
         // Hay paciente?
         this.existePaciente();
-
         let params = {
             disponiblesProfesional: true,
             idTipoPrestacion: this.tipoPrestacionSeleccionada.id,
