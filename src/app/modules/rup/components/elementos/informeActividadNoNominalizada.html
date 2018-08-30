@@ -113,7 +113,7 @@
         <th>Pacientes</th>
         <th>&nbsp;</th>
     </thead>
-    <tbody>
+    <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
         <tr>
             <td>&nbsp;</td>
             <td>&nbsp;</td>

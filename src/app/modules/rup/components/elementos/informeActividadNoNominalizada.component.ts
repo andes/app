@@ -137,6 +137,7 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     seleccionarPaciente(paciente: IPaciente) {
         this.pacienteActivo = paciente;
+        this.pacientes = [];
         console.log(this.pacienteActivo);
     }
 
