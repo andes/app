@@ -10,7 +10,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
-import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
@@ -114,7 +113,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadProfesionales(event) {
-
         if (event.query && event.query !== '' && event.query.length > 2) {
             // cancelamos ultimo request
             if (this.lastRequest) {
@@ -135,16 +133,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-
-    // loadServicios(event) {
-    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
-    //         let servicios = respuesta.map((ef) => {
-    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
-    //         });
-    //         event.callback(servicios);
-    //     });
-    // }
-
     loadEdificios(event) {
         this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
@@ -158,10 +146,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             event.callback(sectores);
         });
     }
-    // loadEspacios(event) {
-    //     // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
-    // }
 
     /**
      * filtro espacios fisicos
@@ -340,6 +324,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioPrestaciones() {
+        if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
+            if (this.modelo.tipoPrestaciones[0].noNominalizada) {
+                this.noNominalizada = true;
+                this.dinamica = false;
+                this.modelo.nominalizada = false;
+            }
+        }
         if (this.modelo.bloques.length === 0) {
             this.addBloque();
             this.bloqueActivo = 0;

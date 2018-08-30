@@ -111,5 +111,4 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
             this.elegirOtraActividad = this.registro.valor.informe.tematica === 'Otra';
         }
     }
-
 }
