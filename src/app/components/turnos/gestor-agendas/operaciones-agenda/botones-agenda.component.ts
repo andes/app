@@ -207,7 +207,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoDisponer() {
         let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion' || !agenda.nominalizada);
+            return (agenda.estado !== 'planificacion');
         }).length <= 0;
         return disponer;
     }
