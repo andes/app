@@ -10,8 +10,6 @@ export class PesoComponent extends RUPComponent implements OnInit {
             // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
 
-                console.log(this.registro.valor, data.valor);
-
                 if (this.registro.valor !== data.valor) {
                     this.registro.valor = data.valor;
                     this.emitChange(false);

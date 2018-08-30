@@ -361,8 +361,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
     editarAgenda(agenda) {
         this.editaAgenda = agenda;
-
-        if (this.editaAgenda.estado === 'planificacion') {
+        if (this.editaAgenda.estado === 'planificacion' && !this.editaAgenda.dinamica) {
             this.showEditarAgenda = true;
             this.showGestorAgendas = false;
             this.showEditarAgendaPanel = false;

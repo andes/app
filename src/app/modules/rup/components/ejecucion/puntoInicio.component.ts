@@ -193,8 +193,8 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
-                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
+                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
 
             // agregamos el original de las prestaciones que estan fuera
