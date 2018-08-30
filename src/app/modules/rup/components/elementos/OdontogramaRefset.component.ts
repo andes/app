@@ -216,20 +216,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         });
     }
 
-    verRegistroDiente(cuandrante, diente, cara) {
-        if (!this.popOverText.relacion) {
-            return;
-        } else {
-            if (this.popOverText.relacion) {
-                let conceptoValor = this.getRelacion(cuandrante, diente, cara);
-                this.emitEjecutarAccion({ data: this.popOverText.relacion, ...{ tipo: (this.popOverText.relacion ? this.popOverText.relacion.concepto.semanticTag : 'seleccionada') } });
-
-            } else {
-                alert(this.popOverText.relacion);
-            }
-        }
-    }
-
     // (mouseenter)
     showTooltip(diente, cara, huds = false, index = -1) {
         this.popOverText = {};
