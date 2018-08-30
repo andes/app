@@ -41,11 +41,11 @@
                     </div>
                     <!--Opcion agenda no nominalizada o dinamica-->
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <plex-bool [(ngModel)]="noNominalizada" name="noNominalizada" label="No nominalizada" (change)="cambiarNominalizada($event)">
                             </plex-bool>
-                        </div>
-                        <div class="col-6">
+                        </div> -->
+                        <div class="col">
                             <plex-bool [(ngModel)]="dinamica" name="dinamica" label="Dinámica" (change)="seleccionarDinamica($event)">
                             </plex-bool>
                         </div>

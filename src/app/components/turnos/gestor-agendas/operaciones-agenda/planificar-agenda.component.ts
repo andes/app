@@ -222,10 +222,17 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.dinamica = false;
         }
     }
+
     seleccionarDinamica() {
         if (this.dinamica) {
-            this.noNominalizada = false;
-            this.modelo.nominalizada = true;
+            if (this.noNominalizada) {
+                this.plex.alert('No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
+                    this.dinamica = false;
+                });
+            } else {
+                this.noNominalizada = false;
+                this.modelo.nominalizada = true;
+            }
         }
     }
 
@@ -272,7 +279,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         const longitud = this.modelo.bloques.length;
         this.modelo.bloques.push({
             indice: longitud,
-            // 'descripcion': `Bloque {longitud + 1}°`,
             'cantidadTurnos': 0,
             'horaInicio': null,
             'horaFin': null,
@@ -419,7 +425,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambiaCantTipo(cual: String) {
-        // if ($event.key === '-')
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
@@ -630,12 +635,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     this.alertas.push(alerta);
                 }
 
-                // let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
-                // let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
-                // let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
-                // let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
-
-                // if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
@@ -700,7 +699,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     espaciosChange(agenda) {
-
         // TODO: ver límite
         let query: any = {
             limit: 20,
