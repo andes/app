@@ -160,7 +160,7 @@
                                 <div class="col-6 p-0 m-0">
                                     <div class="p-0 pt-1 pr-1 float-right">
                                         <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
-                                            {{ (filtroActual === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                            {{ (filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag + ' ppp ' }}
                                         </small>
                                         <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
                                             <i class="mdi mdi-plus"></i>
@@ -236,7 +236,7 @@
                                             <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
                                                     <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
-                                                        {{ (items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                                        {{ (item.plan === 'planes' || items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>
                                                     <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
                                                         <i class="mdi mdi-plus"></i>

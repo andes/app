@@ -202,10 +202,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
             let search = this.search.toLowerCase();
+            let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
+            // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                    return registro.term.toLowerCase().indexOf(search) >= 0;
+                    words.forEach(word => {
+                        if (registro.term.toLowerCase().indexOf(word) >= 0) {
+                            return true;
+                        }
+                    });
+                    return false;
+
                 });
             });
 
@@ -317,7 +325,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
         Object.keys(this.conceptos).forEach(concepto => {
             this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
         });
-
         // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
         this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x));
         // quitamos de 'todos' aquellos que son turneables, no es correcto que aparezcan
@@ -330,7 +337,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 planes.push(unPlan);
             });
             // agregamos los planes
-            this.results[busquedaActual]['todos'] = [...resultados, ...planes];
+            this.results[busquedaActual]['todos'] = [...this.results[busquedaActual]['todos'], ...planes];
         }
     }
 
@@ -390,15 +397,17 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results.misFrecuentes && this.results.misFrecuentes['todos'] && this.results.misFrecuentes['todos'].length) {
             // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope
             // de la lista con Array.unshift()
+            this.results.misFrecuentes['todos'].sort((a, b) => b.frecuencia - a.frecuencia);
             frecuentes = this.results.misFrecuentes['todos'].map(x => {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
-                    this.results.buscadorBasico['todos'].splice(this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId), 1);
+                    let indexBusq = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
+                    this.results.buscadorBasico['todos'].splice(indexBusq, 1);
                     this.results.buscadorBasico['todos'].unshift(x);
                 }
                 return x;
             });
             // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
-            frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
+
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
         }
