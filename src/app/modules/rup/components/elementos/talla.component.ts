@@ -20,9 +20,9 @@ export class TallaComponent extends RUPComponent implements OnInit {
             });
         }
 
-        if (this.params !== null) {
+        if (this.params) {
             this.esRequerido = this.params.required;
-        } else { this.esRequerido = true; }
+        } else { this.esRequerido = false; }
     }
 
     /*

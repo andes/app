@@ -4,11 +4,11 @@
     </plex-float>
 
     <p *ngIf="soloValores && registro.valor" class="readonly">
-        <span>{{ registro.concepto.term }}</span> {{ registro.valor }} cm
+        <span>Talla</span> {{ registro.valor }} cm
     </p>
 
     <p *ngIf="soloValores && !registro.valor" class="readonly">
-        <span>{{ registro.concepto.term }}</span> sin valor
+        <span>Talla</span> sin valor
     </p>
 
     <p *ngIf="mensaje && mensaje.texto">

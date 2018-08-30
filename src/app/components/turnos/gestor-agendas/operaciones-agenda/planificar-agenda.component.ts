@@ -123,6 +123,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let query = {
                 nombreCompleto: event.query
             };
+
             this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
                 event.callback(resultado);
             });
