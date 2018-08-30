@@ -6,10 +6,7 @@ import {
 import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
-import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 import { Plex } from '@andes/plex';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-
 
 @Component({
     selector: 'paciente-detalle',
