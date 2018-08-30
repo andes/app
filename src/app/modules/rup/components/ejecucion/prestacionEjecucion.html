@@ -244,7 +244,8 @@
                             </div>
                         </tab>
                         <tab [tabTitle]="ResumendePaciente" *ngIf="paciente">
-                            <resumenPaciente-estatico></resumenPaciente-estatico>
+                            <rup-resumenPaciente-estatico [prestacion]="prestacion" [paciente]="paciente"></rup-resumenPaciente-estatico>
+                            <rup-resumenPaciente-dinamico-nino [paciente]="paciente"></rup-resumenPaciente-dinamico-nino>
                         </tab>
 
                         <ng-container *ngIf="registrosHuds">

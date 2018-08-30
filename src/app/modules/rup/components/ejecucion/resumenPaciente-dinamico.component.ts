@@ -7,7 +7,7 @@ import { IPrestacion } from '../../interfaces/prestacion.interface';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 
 @Component({
-    selector: 'rup-resumenPaciente-dinamico-nino',
+    selector: 'rup-resumenPaciente-dinamico',
     templateUrl: 'resumenPaciente-dinamico.html'
 })
 

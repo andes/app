@@ -209,7 +209,8 @@ import { VistaHudsComponent } from './modules/rup/components/ejecucion/vistaHuds
 import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.component';
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumenPaciente-estatico.component';
-import { ResumenPacienteComponent } from './modules/rup/components/ejecucion/resumenPaciente.component';
+import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico.component';
+import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-nino.component';
 
 
 // Legacy para RUP
@@ -389,7 +390,10 @@ let RUPComponentsArray = [
     PasesCamaComponent,
     InformeEpicrisisComponent,
     OdontologiaDefaultComponent,
-    CircunferenciaCinturaComponent
+    CircunferenciaCinturaComponent,
+    ResumenPacienteEstaticoComponent,
+    ResumenPacienteDinamicoComponent,
+    ResumenPacienteDinamicoNinoComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -473,8 +477,6 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         LaboratoriosComponent,
-        ResumenPacienteEstaticoComponent,
-        ResumenPacienteComponent,
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,

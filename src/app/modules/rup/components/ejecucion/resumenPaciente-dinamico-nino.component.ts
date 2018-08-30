@@ -8,7 +8,7 @@ import { IPaciente } from '../../../../interfaces/IPaciente';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',
-    templateUrl: 'resumenPaciente-dinamico.html'
+    templateUrl: 'resumenPaciente-dinamico-nino.html'
 })
 
 export class ResumenPacienteDinamicoNinoComponent implements OnInit {

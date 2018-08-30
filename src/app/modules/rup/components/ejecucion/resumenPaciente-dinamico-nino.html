@@ -1,12 +1,12 @@
-<plex-layout>
-    <plex-layout-main>
-        <div class="row">
-            <div class="col-6">
-                <h3>Resumen de HUDS</h3>
-            </div>
-            <div class="col-6">
-                <h3>Vacunas aplicadas</h3>
-                <table class="table table-striped">
+<ng-container>
+    <div class="row">
+        <div class="col-6">
+            <h5>Resumen de HUDS</h5>
+        </div>
+        <div class="col-6">
+            <h5>Vacunas aplicadas</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -16,59 +16,69 @@
                     <tbody>
                         <tr>
                             <td></td>
+                            <td></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="row">
-            <h3>Registro de visitas</h3>
-            <div class="col-4">
-                <h2>Percentilo peso</h2>
-            </div>
-            <div class="col-4">
-                <h2>Percentilo tabla</h2>
-            </div>
-            <div class="col-4">
-                <h2>Percentilo PC</h2>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            <h5>Registro de visitas</h5>
+        </div>
+        <div class="col-3">
+            <h5>Percentilo peso</h5>
+        </div>
+        <div class="col-3">
+            <h5>Percentilo tabla</h5>
+        </div>
+        <div class="col-3">
+            <h5>Percentilo PC</h5>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h5>Consultas de Niño Sano</h5>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Edad</th>
+                            <th>Peso en Kgs.</th>
+                            <th>PC. Peso</th>
+                            <th>Talla en cm.</th>
+                            <th>PC. Talla</th>
+                            <th>IMC</th>
+                            <th>PC. IMC</th>
+                            <th>Perim. Cef.</th>
+                            <th>PC. Perim. Cef.</th>
+                            <th>Tensión arterial</th>
+                            <th>PC. Tensión arterial</th>
+                            <th>Lactancia materna</th>
+                            <th>Desarrollo psicomotor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="row">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Edad</th>
-                        <th>Peso en Kgs.</th>
-                        <th>% Peso</th>
-                        <th>Talla en cm.</th>
-                        <th>% Talla</th>
-                        <th>Per. Cef.</th>
-                        <th>% Per. Cef.</th>
-                        <th>Lactancia materna</th>
-                        <th>Desarrollo psicomotor</th>
-                        <th>IMC</th>
-                        <th>% IMC</th>
-                        <th>Tensión arterial</th>
-                        <th>% Tensión arterial</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </plex-layout-main>
-</plex-layout>
+    </div>
+</ng-container>
