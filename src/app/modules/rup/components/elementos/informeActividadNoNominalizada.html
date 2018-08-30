@@ -107,3 +107,28 @@
         </div>
     </div>
 </ng-container>
+<!-- Buscador  -->
+<table class="table table-striped table-sm">
+    <thead>
+        <th>Pacientes</th>
+        <th>&nbsp;</th>
+    </thead>
+    <tbody>
+        <tr>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" [type]="'sm'" (selected)="seleccionarPaciente($event)"></paciente-listado>
+                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                    ¡No se encontró ningún paciente!
+                </div>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+    </tfoot>
+</table>

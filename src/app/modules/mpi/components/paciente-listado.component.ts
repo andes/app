@@ -45,7 +45,7 @@ export class PacienteListadoComponent {
      * Indica si selecciona automáticamente el primer paciente de la lista
      *
      */
-    @Input() autoselect = true;
+    @Input() autoselect = false;
     /**
     * Indica como se muestra la tabla de resultados
     *

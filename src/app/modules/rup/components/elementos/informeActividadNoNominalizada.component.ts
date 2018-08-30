@@ -1,6 +1,10 @@
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { IPacienteMatch } from '../../../mpi/interfaces/IPacienteMatch.inteface';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { Plex } from '@andes/plex';
+import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 
 @Component({
     selector: 'rup-ActividadNoNominalizada',
@@ -28,6 +32,9 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         { id: 'Salud sexual y reproductiva', nombre: 'Salud sexual y reproductiva' },
         { id: 'Violencia', nombre: 'Violencia' },
         { id: 'Otra', nombre: 'Otra' }];
+    public pacientes: IPacienteMatch[] | IPaciente[];
+    public pacienteActivo: IPaciente;
+    private plex: Plex;
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -111,4 +118,29 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
             this.elegirOtraActividad = this.registro.valor.informe.tematica === 'Otra';
         }
     }
+
+    searchStart() {
+        this.pacientes = null;
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.pacientes = resultado.pacientes;
+        }
+    }
+
+    searchClear() {
+        this.pacientes = null;
+    }
+
+    seleccionarPaciente(paciente: IPaciente) {
+        this.pacienteActivo = paciente;
+        console.log(this.pacienteActivo);
+    }
+
+    // hoverPaciente(paciente: IPaciente) {
+    //     this.pacienteActivo = paciente;
+    // }
 }
