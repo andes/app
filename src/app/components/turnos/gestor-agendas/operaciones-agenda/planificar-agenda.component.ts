@@ -216,12 +216,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    cambiarNominalizada(cambio) {
-        this.modelo.nominalizada = !this.noNominalizada;
-        if (this.noNominalizada) {
-            this.dinamica = false;
-        }
-    }
+    // cambiarNominalizada(cambio) {
+    //     this.modelo.nominalizada = !this.noNominalizada;
+    //     if (this.noNominalizada) {
+    //         this.dinamica = false;
+    //     }
+    // }
 
     seleccionarDinamica() {
         if (this.dinamica) {
@@ -796,7 +796,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
-
                 if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
@@ -811,6 +810,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         bloque.restantesProfesional = bloque.reservadoProfesional;
                     }
 
+                    if (this.noNominalizada) {
+                        let turno = {
+                            estado: 'disponible',
+                            horaInicio: bloque.horaInicio,
+                            tipoPrestacion: bloque.tipoPrestaciones[0],
+                            tipoTurno: undefined
+                        };
+                        bloque.turnos.push(turno);
+                    }
                     for (let i = 0; i < bloque.cantidadTurnos; i++) {
                         let turno = {
                             estado: 'disponible',
