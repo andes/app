@@ -1,3 +1,4 @@
+import { Plex } from '@andes/plex';
 import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges } from '@angular/core';
@@ -13,7 +14,7 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit, OnChanges {
+export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     autofocus: any;
 
     // @Input() elementoRUPprestacion;
@@ -103,10 +104,24 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public search; // buscador de sugeridos y mis frecuentes
 
+    /**
+     * Permite reusar los textos en los textos en el wizard y los tooltips
+     *
+     * @memberof BuscadorComponent
+     */
+    public tooltips = {
+        hallazgos: 'Incluyen signos, síntomas, antecedentes tanto positivos como negativos.<br><br>Ejemplos: antecedente de asma, no fuma, vivienda adecuada.',
+        trastornos: 'Incluye enfermedades y situaciones siempre anómalas.<br><br>Ejemplos: cardiopatía, diabetes mellitus tipo I, asma, aclorhidria.',
+        procedimientos: 'Incluye todos los procedimientos/prácticas que se realizan durante una prestación.<br><br>Ejemplos: Medir tensión arteria, registrar signos vitales',
+        planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
+        productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
+    };
+
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
-        public servicioPrestacion: PrestacionesService) {
+        public servicioPrestacion: PrestacionesService,
+        private plex: Plex) {
     }
 
     ngOnInit() {
@@ -160,6 +175,27 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
         });
+    }
+
+    ngAfterViewInit() {
+        // Espera un segundo para que el padre termine de acomodar los contenidos
+        setTimeout(() => {
+            this.plex.wizard({
+                id: 'rup:buscador:botones',
+                updatedOn: moment('2018-08-29').toDate(),
+                steps: [
+                    { title: 'Nuevo buscador', content: 'Presentamos una forma más fácil de buscar los conceptos para registrar en la consulta' },
+                    { title: 'Hallazgos', content: this.tooltips.hallazgos },
+                    { title: 'Trastornos', content: this.tooltips.trastornos },
+                    { title: 'Procedimientos', content: this.tooltips.procedimientos },
+                    { title: 'Solicitudes', content: this.tooltips.planes },
+                    { title: 'Insumos', content: this.tooltips.productos },
+                ],
+                forceShow: false,
+                fullScreen: false,
+                showNumbers: false
+            });
+        }, 1000);
     }
 
     /**
