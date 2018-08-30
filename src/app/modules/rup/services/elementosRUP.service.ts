@@ -166,7 +166,6 @@ export class ElementosRUPService {
     }
 
     selectPorRefsetId(concepto) {
-        // console.log(this.coleccionRetsetId[concepto.conceptId]);
         if (this.coleccionRetsetId[concepto.conceptId]) {
             return this.coleccionRetsetId[concepto.conceptId];
         }
