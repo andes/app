@@ -342,6 +342,7 @@ export class PuntoInicioComponent implements OnInit {
 
     tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
+        debugger
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
 
         // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion

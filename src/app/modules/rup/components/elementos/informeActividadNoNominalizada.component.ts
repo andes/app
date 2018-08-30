@@ -36,10 +36,15 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
             };
         }
         let turno = this.prestacion.solicitud.turno;
-        console.log('prestacion ', turno);
-        this.turnoService.get({ id: turno }).subscribe(agenda => {
-            debugger
-        });
+        if (turno) {
+            this.agendaService.get({ turno: turno }).subscribe(agendas => {
+                this.registro.valor.informe.profesionales = agendas[0].profesionales;
+                this.registro.valor.informe.fecha = agendas[0].horaInicio;
+                this.registro.valor.informe.horaIngreso = agendas[0].horaInicio;
+                this.registro.valor.informe.horaFin = agendas[0].horaFin;
+            });
+        }
+
         this.listaActividades = [
             {
                 '_id': '57f505d669fe79a598ee542b',
