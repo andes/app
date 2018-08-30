@@ -29,6 +29,7 @@ export class PantallasComponent implements OnInit, OnDestroy  {
 
     ngOnInit () {
         let temp;
+        this.ws.connect();
         this.ws.join(`turnero-${this.auth.organizacion.id}`);
         this.sub = this.ws.events.subscribe(( {event, data} ) => {
             let { pantalla } = data;
@@ -67,6 +68,7 @@ export class PantallasComponent implements OnInit, OnDestroy  {
     ngOnDestroy() {
         this.sub.unsubscribe();
         this.ws.leave('turnero');
+        this.ws.disconnect();
     }
 
     vencido (expirationTime) {

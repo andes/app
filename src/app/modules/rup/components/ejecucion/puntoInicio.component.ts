@@ -1,6 +1,6 @@
 import { estados } from './../../../../utils/enumerados';
 
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
@@ -17,13 +17,14 @@ import { TurneroService } from '../../../../services/turnero.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
+import { WebSocketService } from '../../../../services/websocket.serivice';
 
 @Component({
     selector: 'rup-puntoInicio',
     templateUrl: 'puntoInicio.html',
     styleUrls: ['./puntoInicio.component.css']
 })
-export class PuntoInicioComponent implements OnInit {
+export class PuntoInicioComponent implements OnInit, OnDestroy {
     @HostBinding('class.plex-layout') layout = true;
 
     // Fecha seleccionada
@@ -68,12 +69,16 @@ export class PuntoInicioComponent implements OnInit {
         public servicePaciente: PacienteService,
         public servicioTipoPrestacion: TipoPrestacionService,
         public servicioTurnero: TurneroService,
+        public ws: WebSocketService,
         public servicioOrganizacion: OrganizacionService,
         public serviceTurno: TurnoService
     ) { }
 
+    ngOnDestroy() {
+        this.ws.disconnect();
+    }
     ngOnInit() {
-
+        this.ws.connect();
         this.servicioTurnero.get({}).subscribe((pantallas) => {
             pantallas.forEach((pantalla: any) => {
                 pantalla.espaciosFisicos.forEach((ef) => {

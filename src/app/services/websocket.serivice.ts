@@ -13,6 +13,9 @@ export class WebSocketService {
     public rooms: String[] = [];
 
     constructor () {
+    }
+
+    connect () {
         let patch = Wildcard(io.Manager);
         this.socket = io(environment.WS);
         patch(this.socket);
@@ -28,8 +31,6 @@ export class WebSocketService {
             if (this.token) {
                 this.emitAuth();
             }
-            // No necesario por ahora
-            // this.events.next({ event: 'connect', data: {} });
         });
 
         this.socket.on('disconnect', () => {
@@ -44,6 +45,10 @@ export class WebSocketService {
                 });
             }
         });
+    }
+
+    disconnect () {
+        this.socket.disconnect();
     }
 
     emit(event, data) {

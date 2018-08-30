@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
                     this.router.navigate(['selectOrganizacion']);
 
                     this.ws.setToken(window.sessionStorage.getItem('jwt'));
-                    this.ws.emitAuth();
+                    // this.ws.emitAuth();
 
                 }, (err) => {
                     this.plex.info('danger', 'Usuario o contraseña incorrectos');
