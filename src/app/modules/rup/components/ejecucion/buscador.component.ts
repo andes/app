@@ -15,6 +15,8 @@ import { ElementosRUPService } from '../../services/elementosRUP.service';
 })
 
 export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
+    private wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
+
     autofocus: any;
 
     // @Input() elementoRUPprestacion;
@@ -180,6 +182,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     ngAfterViewInit() {
         // Espera un segundo para que el padre termine de acomodar los contenidos
         setTimeout(() => {
+            this.wizardActivo = true;
             this.plex.wizard({
                 id: 'rup:buscador:botones',
                 updatedOn: moment('2018-08-29').toDate(),
@@ -194,7 +197,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 forceShow: false,
                 fullScreen: false,
                 showNumbers: false
-            });
+            }).then(() => this.wizardActivo = false);
         }, 1000);
     }
 
