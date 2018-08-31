@@ -7,7 +7,7 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { CamasService } from '../../../../services/camas.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
-import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface'
+import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
 @Component({
     selector: 'app-mapa-de-camas',

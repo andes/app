@@ -69,7 +69,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
         this.registro.valor = existeRegistro ? existeRegistro.valor : null;
         if (!this.registro.valor) {
-            this.btnIniciarEditarEmit.emit("Iniciar");
+            this.btnIniciarEditarEmit.emit('Iniciar');
             this.registro.valor = {
                 InformeEgreso: {
                     fechaEgreso: null,
@@ -96,7 +96,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             };
             this.showProcedimientos_causas();
         } else {
-            this.btnIniciarEditarEmit.emit("Editar");
+            this.btnIniciarEditarEmit.emit('Editar');
         }
 
         let params;
