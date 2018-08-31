@@ -1,11 +1,10 @@
-<ng-container *ngIf="conceptos.length > 0 && params && params.tipoSelect === 'select'">
-    <plex-select *ngIf="!soloValores" [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
+<ng-container *ngIf="!soloValores && conceptos.length > 0 && params && params.tipoSelect === 'select'">
+    <plex-select [multiple]="params.multiple" [(ngModel)]="registro.valor" name="conceptos" (getData)="loadConceptos($event)"
         (change)="emitChange()" [required]="true" label="{{ params.titulo }}">
     </plex-select>
 </ng-container>
 
-<ng-container *ngIf="conceptos && params && params.tipoSelect === 'radio'">
-
+<ng-container *ngIf="!soloValores && conceptos && params && params.tipoSelect === 'radio'">
     <span>{{ params.titulo }}</span>
     <ng-container *ngFor="let concepto of conceptos, let i = index">
 

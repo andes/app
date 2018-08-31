@@ -33,5 +33,4 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
     selectRadio(concepto) {
         this.registro.valor = { concepto: concepto };
     }
-
 }
