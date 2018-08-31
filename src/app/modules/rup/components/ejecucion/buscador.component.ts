@@ -153,7 +153,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
                         return concepto;
                     });
                     this.results['misFrecuentes']['todos'] = frecuentesProfesional;
-                    debugger;
                     this.filtrarResultados('misFrecuentes');
                     this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
                 }
@@ -202,25 +201,28 @@ export class BuscadorComponent implements OnInit, OnChanges {
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
+
             let search = this.search.toLowerCase();
             let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
             // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
-                this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                    words.forEach(word => {
-                        if (registro.term.toLowerCase().indexOf(word) >= 0) {
-                            return true;
-                        }
+
+                words.forEach(word => {
+                    this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
+                        return registro.term.toLowerCase().indexOf(word) >= 0;
                     });
-                    return false;
 
                 });
+
             });
 
-            // tambien filtramos el campo 'todos' segun el string de busquueda
-            this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
-                return registro.term.toLowerCase().indexOf(search) >= 0;
+            // tambien filtramos el campo 'todos' segun el string de busqueda
+            words = search.split(' ');
+            words.forEach(word => {
+                this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
+                    return registro.term.toLowerCase().indexOf(word) >= 0;
+                });
             });
         } else {
             // si el string de busqueda esta vacio, reiniciamos los resultados desde la copia auxiliar
@@ -320,7 +322,6 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     public filtrarResultados(busquedaActual) {
-        debugger;
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual]['todos'];
 
@@ -344,35 +345,35 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     public filtrarResultadosBusquedaGuiada() {
-        this.results.busquedaGuiada = [];
+        // this.results.busquedaGuiada = [];
 
-        this.grupos_guida.forEach(data => {
-            if (this.results.buscadorBasico['todos']) {
-                this.results.busquedaGuiada.push({
-                    nombre: data.nombre,
-                    valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
-                });
-            } else {
-                this.results.busquedaGuiada.push({
-                    nombre: data.nombre,
-                    valor: []
-                });
-            }
-        });
+        // this.grupos_guida.forEach(data => {
+        //     if (this.results.buscadorBasico['todos']) {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: data.nombre,
+        //             valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
+        //         });
+        //     } else {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: data.nombre,
+        //             valor: []
+        //         });
+        //     }
+        // });
 
-        Object.keys(this.conceptos).forEach(concepto => {
-            if (this.results.buscadorBasico['todos']) {
-                this.results.busquedaGuiada.push({
-                    nombre: concepto,
-                    valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-                });
-            } else {
-                this.results.busquedaGuiada.push({
-                    nombre: concepto,
-                    valor: []
-                });
-            }
-        });
+        // Object.keys(this.conceptos).forEach(concepto => {
+        //     if (this.results.buscadorBasico['todos']) {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: concepto,
+        //             valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
+        //         });
+        //     } else {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: concepto,
+        //             valor: []
+        //         });
+        //     }
+        // });
     }
 
 
@@ -399,16 +400,18 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results.misFrecuentes && this.results.misFrecuentes['todos'] && this.results.misFrecuentes['todos'].length) {
             // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope
             // de la lista con Array.unshift()
+            // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
             this.results.misFrecuentes['todos'].sort((a, b) => b.frecuencia - a.frecuencia);
             frecuentes = this.results.misFrecuentes['todos'].map(x => {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
-                    let indexBusq = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
-                    this.results.buscadorBasico['todos'].splice(indexBusq, 1);
-                    this.results.buscadorBasico['todos'].unshift(x);
+                    let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
+                    let registroFrec = this.results.buscadorBasico['todos'][index];
+                    this.results.buscadorBasico['todos'].splice(index, 1);
+                    this.results.buscadorBasico['todos'].unshift(registroFrec);
                 }
                 return x;
             });
-            // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
+
 
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
