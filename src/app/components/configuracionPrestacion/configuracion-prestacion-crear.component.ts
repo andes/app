@@ -30,6 +30,7 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
 
     ngOnInit() {
         this.organizacionService.get({}).subscribe(resultado => {
+            resultado.sort((a, b) => a.nombre.localeCompare(b.nombre.toString()));
             this.organizaciones = resultado;
         });
 
@@ -38,6 +39,7 @@ export class ConfiguracionPrestacionCrearComponent implements OnInit {
         });
 
         this.prestacionLegacyService.get({}).subscribe(resultado => {
+            resultado.sort((a, b) => a.nombre.localeCompare(b.nombre.toString()));
             this.especialidades = resultado;
         });
     }
