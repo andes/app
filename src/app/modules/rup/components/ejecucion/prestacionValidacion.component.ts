@@ -218,7 +218,7 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
-        if (!existeDiagnostico) {
+        if (!existeDiagnostico && !this.prestacion.noNominalizada) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
