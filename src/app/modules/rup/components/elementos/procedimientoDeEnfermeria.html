@@ -1,0 +1,28 @@
+<!-- 
+- Fecha y hora de inicio
+- Hora de fin
+- Tipo de actividad: reference set relacionado con el tipo de prestación (ver #308)
+- Temática: listado estático. En el caso de seleccionar 'Otra' mostrar el siguiente campo ...
+- Otra temática (ver campo anterior)
+- Profesionales intervinientes
+- Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
+-->
+<form #form="ngForm">
+    <ng-container>
+        <div class="row">
+            <div class="col-6" *ngIf="registro.valor?.prestacionesRealizadas">
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.banioAntitermico" name="banioAntitermico"
+                    label="Baño Antitérmico">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.sondaNasogastrica" name="sondaNasogastrica"
+                    label="Colocación de sonda nasogástrica">
+                </plex-bool>
+            </div>
+            <div class="col-6">
+                2° mitad
+            </div>
+        </div>
+    </ng-container>
+</form>
+<!-- Lista de pacientes y buscador  -->
