@@ -43,7 +43,6 @@ export class RUPComponent implements OnInit {
 
     // Eventos
     @Output() change: EventEmitter<any> = new EventEmitter<any>();
-    @ViewChild('foco') public elemento: ElementRef;
 
     /**
      * Carga un componente dinámicamente
@@ -77,6 +76,7 @@ export class RUPComponent implements OnInit {
 
     // Constructor
     constructor(
+        private elemento: ElementRef,
         private renderer: Renderer,
         private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
@@ -102,8 +102,7 @@ export class RUPComponent implements OnInit {
 
     // tslint:disable-next-line:use-life-cycle-interface
     ngAfterViewInit() {
-        this.renderer.invokeElementMethod(this.elemento, 'foco');
-        // this.renderer.invokeElementMethod(this.spouseElement.nativeElement, 'focus');
+        this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
     }
 
     /**
