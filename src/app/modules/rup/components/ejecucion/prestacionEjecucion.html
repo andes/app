@@ -297,7 +297,7 @@
                                                     <div class="rup-body">
                                                         <div class="legend">
                                                             <span>
-                                                                {{elemento.concepto.semanticTag}}
+                                                                {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
                                                             </span>
                                                         </div>
                                                         <div class="content">
