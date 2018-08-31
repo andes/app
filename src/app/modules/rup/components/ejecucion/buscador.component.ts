@@ -153,6 +153,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                         return concepto;
                     });
                     this.results['misFrecuentes']['todos'] = frecuentesProfesional;
+                    debugger;
                     this.filtrarResultados('misFrecuentes');
                     this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
                 }
@@ -319,6 +320,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     public filtrarResultados(busquedaActual) {
+        debugger;
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual]['todos'];
 
