@@ -39,7 +39,7 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {
-                informe: {}
+                informe: { pacientes: [] }
             };
         }
         let turno = this.prestacion.solicitud.turno;
@@ -137,11 +137,11 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
 
     seleccionarPaciente(paciente: IPaciente) {
         this.pacienteActivo = paciente;
-        this.pacientes = [];
-        console.log(this.pacienteActivo);
+        this.registro.valor.informe.pacientes.push(paciente);
+        this.pacientes = null;
     }
 
-    // hoverPaciente(paciente: IPaciente) {
-    //     this.pacienteActivo = paciente;
-    // }
+    deletePaciente(indice) {
+        this.registro.valor.informe.pacientes.splice(indice, 1);
+    }
 }
