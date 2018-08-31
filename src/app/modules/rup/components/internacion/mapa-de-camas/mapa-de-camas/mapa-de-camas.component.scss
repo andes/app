@@ -1,4 +1,29 @@
 @import '../../../../assets/font.css';
+
+/*--------------------------------------------------------------
+# ANDES - Variables cromaticas
+--------------------------------------------------------------*/
+
+$andes-negro:black;
+$andes-azul-oscuro: #062837;
+$andes-azul: #2CA2DA;
+$andes-cyan: #66DFFF;
+
+// Neutros
+$andes-gris: #e3e3e3;
+$andes-blanco: #ffffff;
+
+
+// Extensiones
+$andes-celeste: #d7f1fd;
+$andes-rojo: #cb0053;
+$andes-violeta: #662482;
+$andes-violeta-claro: #982f98;
+$andes-magenta: #e3007e;
+$andes-verde: #8CC63F;
+$andes-verde-claro: #63c7b7;
+
+
 /*
 ******************************
 ** MAPA DE CAMAS
@@ -23,15 +48,24 @@
         font-size: 20px;
     }
 }
-
+.btnMenu {
+    position: absolute;
+    right: 0;
+    padding-left: 20px;
+    i {
+       font-size: 1.6rem; 
+    }
+}
 .cama-container {
-    margin: 10px 0 20px 0;
+    padding: 1rem 0;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
     perspective: 800px;
-    min-height: 390px;
+    min-height: 450px;
     width: 100%;
+    box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
+    
     .cama {
         -webkit-transition: -webkit-transform .5s;
         -moz-transition: -moz-transform .5s;
@@ -71,11 +105,10 @@
             top: 0;
             left: 0;
             background-color: #FFF;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .14);
-            min-height: 390px;
+            min-height: 430px;
             width: 100%;
-            margin-bottom: 20px;
-            margin-top: 10px;
+            // margin-bottom: 20px;
+            // margin-top: 10px;
         }
         .front {
             z-index: 2;
@@ -180,6 +213,11 @@
                 font-size: 100px;
                 cursor: pointer;
             }
+
+            >p {
+                font-size: 1rem;
+            }
+
         }
         .rounded-background {
             border-radius: 18px;
@@ -276,16 +314,137 @@
 
 .cama-container:hover .cama .front,
 .cama-container:hover .cama .back {
-    -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -webkit-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // -moz-box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
+    // box-shadow: 0 0 16px rgba(0, 0, 0, 0.2);
     -webkit-transition: all 0.3s ease-out;
     -o-transition: all 0.3s ease-out;
     -moz-transition: all 0.3s ease-out;
     -ms-transition: all 0.3s ease-out;
     -kthtml-transition: all 0.3s ease-out;
     transition: all 0.3s ease-out;
+    
 }
+
+// Refactor Cama
+
+#mapaCamas.row {
+    margin-right: 0px!important;
+    margin-left: 0px!important;
+    
+    div {
+        &[class^="col-xs-"],
+        &[class^="col-sm-"],
+        &[class^="col-md-"],
+        &[class^="col-lg-"],
+        &[class^="col-xl-"] {
+            // margin: 0.25rem!important;
+            padding: 0;
+            // margin-bottom: 1rem;
+    
+            &.selected {
+                border: solid 3px $andes-azul;
+                padding: 0;
+                box-sizing: border-box;
+                height: 450px;
+                z-index: 4;
+            }
+        }
+    }
+
+}
+
+
+.andes-card-container {
+	display: flex;
+    flex-direction: row;
+    padding: 0;
+    margin: 0;
+	justify-content: space-between;
+    align-items: center;
+	max-width: 100%;
+    max-height: 15rem;
+    text-align: center;
+
+
+    .card-contenedor-central {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 420px;
+        width: 70%;
+
+        .contenedor-cama {
+            article.contenedor-texto {
+                position: absolute;
+                top: 43%;
+                left: 25%;
+                color: white;
+                width: calc(100% - 8vw);
+            }
+                i {
+                    align-self: center;
+                }
+        }
+
+
+        .card-contenedor-inferior {
+            display: flex;
+            height: 200px;
+            flex-direction: column;
+            // height: 160px;
+            justify-content: flex-end;
+        
+        }
+        
+
+    }
+
+    .card-contenedor-lateral {
+        align-self: flex-start;
+        display: flex;
+        flex-direction: column;
+        width: 15%;
+
+        .icon-lateral {
+            border-top-left-radius: 25px; 
+            border-top-right-radius: 25px;
+            
+            i {
+                font-size: 0.25rem;
+            }
+        }
+    }
+
+    .card-prefix {
+        font-size: 1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .card-titulo {
+        font-size: 1.25rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .card-subtitulo {
+        font-size: 0.85rem;
+        font-weight: 400;
+        // white-space: pre;
+    }
+    
+    .card-texto {
+        font-size: 0.9vw;
+        line-height: 1.25vw;
+    }
+    
+    .card-numero {
+        font-size: 7rem; 
+        font-weight: 700;
+    }
+}
+
 
 /* varios */
 
@@ -336,7 +495,7 @@
 // -------------- CARDS CAMAS---------------
 
 $desocupada: #f7931e; 
-$ocupada: #ad0455;
+$ocupada: #cb0053;
 $disponible: #8cc63f;
 $reparacion: #f44336;
 $bloqueada: #f44336;
@@ -354,6 +513,10 @@ $bloqueada: #f44336;
     font-weight: normal;
     padding: 5px;
     text-transform: uppercase;
+    margin-bottom: 1rem;
+    width: fit-content;
+    align-self: center;
+    border-radius: 25px;
 }
 
 .badge-desocupada {
@@ -362,8 +525,8 @@ $bloqueada: #f44336;
 }
 
 .badge-ocupada {
-    border-color: #ad0455;
-    color: #ad0455;
+    border-color: $andes-rojo;
+    color: $andes-rojo;
 }
 
 .badge-disponible {
@@ -389,7 +552,7 @@ button {
 }
 
 .icon-content {
-    font-size: 14rem;
+    font-size: 13.5rem;
 
     &.desocupada{
         color:$desocupada;
@@ -407,7 +570,6 @@ button {
         color: rgb(204, 204, 204);
     }
 }
-
 
 .data-icon {
     position: absolute;
@@ -480,7 +642,7 @@ button {
 
 .botonera-superior {
     position: absolute;
-    left: 85%;
+    right: 0;
 
 }
 
@@ -511,9 +673,12 @@ button {
 }
 
 .data-paciente {
+    flex-direction: column;
     color: #000;
-    height: 60px;
+    height: fit-content;
+    width: 100%;
     padding-top: 10px;
+
 }
 
 // TODO: ver los estilos de los botones del lateral con julito @fersastre
@@ -531,3 +696,667 @@ button {
     margin-bottom: 3px;
 }
 
+.estados-icon {
+    font-size: 30px;
+    background-color: #ffffff;
+    height: 32px;
+    width: 32px;
+    border-radius: 80px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.2rem 0;
+    margin-left: 2px;
+    cursor: pointer;
+
+    &.desocupada{
+        border: solid 2px $desocupada;
+    }
+    &.masculino{
+        border: solid 2px #5bc0de;
+    }
+    &.femenino{
+        border: solid 2px rgb(255, 192, 203);
+    }
+    &.reparacion{
+        border: solid 2px $reparacion;
+    }
+    &.bloqueada{
+        border: solid 2px $bloqueada;
+    }
+    &.disponible{
+        border: solid 2px $disponible;
+    }
+    &.ocupada{
+        border: solid 2px $ocupada;
+    }
+    &.oxigeno{
+        border: solid 2px #5bc0de;
+    }
+
+    i{
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.masculino{
+            color:#5bc0de;
+        }
+        &.femenino{
+            color:rgb(255, 192, 203);
+        }
+        &.reparacion{
+            color:$reparacion;
+        }
+        &.bloqueada{
+            color: $bloqueada;
+        }
+        &.disponible{
+            color:$disponible;
+        }
+        &.ocupada{
+            color:$ocupada;
+        }
+        &.oxigeno{
+            color:5bc0de;
+        }
+    }
+}
+
+.estados-container{
+    position: absolute;
+    top: 35px;
+    div{
+        margin: 2px;
+    }
+}
+
+
+
+
+.estados-icon-active {
+    font-size: 30px;
+    border: solid 2px #ffffff;
+    height: 32px;
+    width: 32px;
+    border-radius: 80px;
+    text-align: center;
+    font-size: 1.1rem;
+    padding: 0.2rem 0;
+    margin-left: 2px;
+    cursor: pointer;
+
+    &.desocupada{
+        background-color:$desocupada;
+    }
+    &.masculino{
+        background-color: #5bc0de;
+    }
+    &.femenino{
+        background-color: rgb(255, 192, 203);
+    }
+    &.reparacion{
+        background-color: $reparacion;
+    }
+    &.bloqueada{
+        background-color:$bloqueada;
+    }
+    &.disponible{
+        background-color: $disponible;
+    }
+    &.ocupada{
+        background-color: $ocupada;
+    }
+    &.oxigeno{
+        background-color: #5bc0de;
+    }
+
+    i{
+       color: #ffffff;
+    }
+}
+.count {
+    position: absolute;
+    top: 28px;
+    font-size: 9px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    text-align: center;
+    color: #ffffff;
+
+    &.desocupada{
+        background-color: $desocupada;
+    }
+    &.masculino{
+        background-color: #5bc0de;
+    }
+    &.femenino{
+        background-color: rgb(255, 192, 203);
+    }
+    &.reparacion{
+        background-color: $reparacion;
+    }
+    &.bloqueada{
+        background-color: $bloqueada;
+    }
+    &.disponible{
+        background-color: $disponible;
+    }
+    &.ocupada{
+        background-color: $ocupada;
+    }
+    &.oxigeno{
+        background-color: #5bc0de;
+    }
+    
+}
+.inactive {
+    cursor: not-allowed;
+    opacity: .65;
+    // filter: grayscale(75%);
+}
+
+.container-resumen {
+    display: flex;
+    flex-direction: row;
+    margin-top: 20px;
+    justify-content: space-around;
+
+    .subcontainer-resumen {
+        display: flex;
+        flex-direction: row;
+        &.desocupada{
+            color:$desocupada;
+        }
+        &.ocupada{
+            color:$ocupada;
+        }
+        &.disponible{
+            color:$disponible;
+        }
+        &.reparacion{
+            color:rgb(204, 204, 204);
+        }
+        &.bloqueada{
+            color: rgb(204, 204, 204);
+        }
+        &.totales {
+            color: white;
+        }
+        i{ 
+            font-size: 80px;
+        }
+
+        .texto-resumen {
+            width: 100px;
+            p {
+                font-size: 13px;
+                margin-left: 2px;
+            }
+
+        }
+    }
+}
+
+    .cama-seleccion-icon {
+        color: $andes-cyan;
+        font-size: 30px;
+        height: 40px;
+        width: 40px;
+        border-radius: 80px;
+        text-align: center;
+        font-size: 1.5rem;
+        padding: 0.2rem 0;
+        margin: 0 5px;
+        border: solid 2px $andes-cyan;
+        p  {
+        font-size: 11px;
+        text-align: center;
+        }
+    }
+    .info-cama-menu {
+        h2 {
+            font-size: 5vw;
+            font-weight: bold;
+
+            &.desocupada{
+                color:$desocupada;
+            }
+            &.ocupada{
+                color:$ocupada;
+            }
+            &.disponible{
+                color:$disponible;
+            }
+            &.reparacion{
+                color:rgb(204, 204, 204);
+            }
+            &.bloqueada{
+                color: rgb(204, 204, 204);
+            }
+        }
+        span{
+            font-size: 1vw;
+            padding: 10px;
+            margin: 10px;
+        }
+    }
+
+
+
+@media screen and (max-width: 1080px) and (min-width: 768px) {
+    .container-resumen {
+        display: flex;
+        flex-direction: column!important;
+    }
+
+}
+
+
+// ------------------------------------
+// EXTENSIONES
+// ------------------------------------
+
+// Estilos sidebar
+
+plex-box#panel-lateral > DIV {
+
+    h3,h4,h5,h5,h6,p,strong {
+        color: white;
+        margin-bottom: 0.25rem;
+    }
+
+    b,label {
+        color: $andes-cyan!important;
+    }
+
+    .text-info {
+        color: $andes-cyan;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    // Si hay tabla
+    table {
+        th, td {
+            color: white;
+
+        thead th {
+            vertical-align: middle;
+        }
+
+            &.txt-responsive {
+                font-size: 0.9vw;
+            }
+        }
+    }
+
+    // Listados
+    li {
+        &.list-group-item {
+            padding: 0!important;
+        }
+    }
+
+    fieldset > [class^="col"] {
+        padding: 0px;
+
+        hr {
+            color: white;
+        }
+    }
+
+    &.plex-box {
+        padding: 1rem!important;
+        height: 100%;
+        background-color: $andes-azul-oscuro;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        
+
+// Contenedor tabs 
+plex-tabs.andes-contenedor-tabs {
+}
+
+    // tab head
+    %base-tab {
+        display: flex;
+        flex-direction: row;     
+        border: solid 2px white;
+        border-radius: 0px!important;
+        padding: 1rem;
+        width: 100%;
+        color: white;
+        text-transform: uppercase;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .nav-tabs .nav-item {
+        display: flex;
+        width: 100%;
+
+        a > span {
+            align-self: center;
+        }
+    }
+
+    .nav-link {
+        @extend %base-tab;
+        background-color: $andes-gris;
+
+        &.active {
+            background-color: $andes-azul!important;
+        }
+    }
+
+	.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        @extend %base-tab;
+		background-color: $andes-azul;
+
+
+		&:hover {
+			background-color: $andes-celeste;
+		}
+	}
+
+	// Tab body
+	.andes-tab {
+		display: flex;
+		flex-direction: column;
+        justify-content: space-between; 
+        padding: 0.25rem 0;
+        
+        &.center {
+            align-content: center;
+            text-align: center;
+
+        }
+
+        .input-group-addon {
+            background-color: $andes-azul;
+            color: white;
+        }
+	}
+
+    .andes-sidebar-prefix {
+        color: white;
+        font-size: 1rem;
+        padding-top: 10px;
+    }
+
+.sidebar-imagen-paciente {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    display: flex;
+    align-self: center;
+    background-color: lightblue;
+    margin-right: 1.5rem;
+}
+
+.sidebar-contenedor-texto {
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    justify-content: space-between;
+    margin-top: 8%;
+
+    .andes-sidebar-numero {
+        // font-size: 5rem;
+        text-transform: uppercase;
+        
+        &.desocupada {
+            color: $desocupada!important;
+        }
+        &.ocupada {
+            color: $ocupada!important;
+        }
+        &.disponible {
+            color: $disponible!important;
+        }
+        &.reparacion {
+            color: $reparacion!important;
+        }
+        &.bloqueada {
+            color: $bloqueada!important;
+        }
+    
+    }
+
+    .andes-sidebar-prefix {
+        color: white;
+        text-align: left;
+    }
+
+
+    .andes-sidebar-subfix {
+        color: white;
+        text-transform: uppercase;
+        font-weight: 600;
+            
+        &.desocupada {
+            color: $desocupada!important;
+        }
+        &.ocupada {
+            color: $ocupada!important;
+        }
+        &.disponible {
+            color: $disponible!important;
+        }
+        &.reparacion {
+            color: $reparacion!important;
+        }
+        &.bloqueada {
+            color: $bloqueada!important;
+        }
+    }
+}
+
+    // Accordions
+    plex-accordion plex-panel div.card {
+        border: 0px;
+
+        :active {
+            // border: solid 3px $andes-azul;
+            }
+
+            div.card-header {
+                color: $andes-cyan!important;
+                border: solid 2px white;
+                border-radius: 0px;
+                cursor: pointer;
+                
+                &:hover {
+                    background-color:#3f5467;
+                    border: solid 2px $andes-cyan;
+                    color: white!important;
+                    
+                }
+
+                &:active {
+                    background-color:#3f5467;
+                    border: solid 2px $andes-cyan;
+                    color: white!important;
+                }
+
+            
+            h5 {
+                font-size: 1.25rem;
+                font-weight: 500;
+
+                &:hover {
+                    color: white;
+                }                
+
+                    i {
+                        display: inline-block;
+                        float: right;
+                        transition: all 1s ease;
+
+                        &.flechita {
+                            &.norotada {
+                                transform: rotate(90deg);
+                            }
+                        
+                            &.rotada {
+                                transform: rotate(0deg);
+                            }
+                        }
+                    }
+            }
+
+        }
+
+        .collapse.show {
+            .card-block {
+                border: solid 3px $andes-cyan;
+            }
+        }
+
+        .card-block {
+            padding: 1rem 1.2rem;
+        }
+    }
+
+
+    // Iconos
+    .andes-contenedor-iconos {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin-bottom: 2rem;
+    }
+
+    .andes-contenedor-botones,.andes-contenedor-secundario  {
+        display: flex;
+        height: auto;
+        margin-top: 1rem;
+
+
+        &.horizontal {
+            flex-direction: row;
+        }
+
+        &.vertical {
+            flex-direction: column;
+        }
+
+        &.between {
+            justify-content: space-between;
+        }
+
+        &.start {
+            justify-content: flex-start;
+        }
+
+        &.around {
+            justify-content: space-around;
+        }
+
+        &.end {
+            justify-content: flex-end;
+        }
+
+        &.centrado {
+            align-items: center;
+            align-self: center;
+            justify-content: center;
+        }
+
+        &.block {
+            width: 100%;
+        }
+
+        plex-button {
+            margin-top: 1rem;
+        }
+    }
+
+
+        .plex-box-content {
+
+        }
+
+    }
+
+    b,.form-group > label {
+        color: white;
+    }
+
+    
+
+
+  header {
+	
+	// background-color: $andes-azul;
+    color: white;
+    font-size: 1rem;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.plex-layout > footer {
+    background-color: $andes-azul-oscuro;
+    padding: 0!important
+}
+
+}
+
+
+// GLOBALES
+
+hr {
+	border: solid 1px;
+
+    &.separate {
+        margin: 10px 0 10px 0;
+    }
+
+	&.blanco {
+		border-color: white;
+	}
+
+	&.gris {
+		border-color: $andes-gris;
+	}
+
+	&.magenta {
+		border-color: $andes-magenta;
+	}
+
+	&.cyan {
+		border-color: $andes-cyan;
+	}
+
+	&.celeste {
+		border-color: $andes-celeste;
+	}
+
+	// Variantes de tamaño
+	&.xxs {
+		width: 10%;
+	}
+	
+	&.xs {
+		width: 15px;
+	}
+	
+	&.sm {
+		width: 35%;
+	}
+	
+	&.md {
+		width: 50%;
+	}
+	
+	&.lg {
+		width: 75%;
+	}
+	
+	&.xl {
+		width: 100%;
+		
+    }
+    
+}

@@ -5,12 +5,13 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
+import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.inteface';
 
 @Injectable()
 export class PacienteService {
 
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
-    private carpetaUrl = '/modules/turnos/carpetasPacientes';
+    private carpetaUrl = '/modules/carpetas';
 
 
     constructor(private server: Server) { }
@@ -27,6 +28,23 @@ export class PacienteService {
         return this.server.get(this.pacienteUrl + '/' + id, null);
     }
 
+    /**
+     * TEMPORAL. Resuelve el bug de la API de pacientes, unificando la interface que devuelven los diferentes tipos
+     * Una vez solucionado el bug de la API, eliminar este método y reemplazarlo por get()
+     * @param {PacienteSearch} params
+     * @returns {Observable<IPacienteMatch[]>}
+     * @memberof PacienteService
+     */
+    getMatch(params: PacienteSearch): Observable<IPacienteMatch[]> {
+        return this.server.get(this.pacienteUrl, { params: params, showError: true }).map((value) => {
+            if (params.type === 'simplequery') {
+                return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
+            } else {
+                return value;
+            }
+        });
+    }
+
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
@@ -40,11 +58,11 @@ export class PacienteService {
     }
 
     getNroCarpeta(params: any): Observable<any> {
-        return this.server.get(this.carpetaUrl, { params: params, showError: true });
+        return this.server.get(this.carpetaUrl + '/carpetasPacientes', { params: params, showError: true });
     }
 
     getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
-        return this.server.get(this.carpetaUrl + '/' + id, null);
+        return this.server.get(this.carpetaUrl + '/carpetasPacientes' + id, null);
     }
 
     /**
@@ -96,5 +114,11 @@ export class PacienteService {
             return this.server.post(this.pacienteUrl, paciente);
 
         }
+    }
+    getSiguienteCarpeta(): Observable<any> {
+        return this.server.get(this.carpetaUrl + '/ultimaCarpeta');
+    }
+    incrementarNroCarpeta(): Observable<any> {
+        return this.server.post(this.carpetaUrl + '/incrementarCuenta', {});
     }
 }

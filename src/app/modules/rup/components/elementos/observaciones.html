@@ -13,7 +13,7 @@
 <p *ngIf="!(soloValores && params && params.hr)" class="readonly">
     <span>Observaciones</span>
     <ng-container>
-        {{registro.valor}}
+        <span [innerHTML]="registro.valor"></span>
     </ng-container>
 </p>
 

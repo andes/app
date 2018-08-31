@@ -20,7 +20,7 @@ export class CamasService {
 
 
     /**
-     * Busca todas las camas segun la fehca y hora que pasemos.
+     * Busca todas las camas segun la fecha y hora que pasemos.
      * @param idOrganizacion
      * @param fecha
      */
@@ -29,7 +29,6 @@ export class CamasService {
             idOrganizacion: idOrganizacion,
             fecha: fecha
         };
-
         return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
 

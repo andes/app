@@ -142,7 +142,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
+
                 }
             });
     }
@@ -168,7 +168,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
 
             this.showVistaAuditoriasPP = true;
 
-            // console.log(this.auditoriaPPSeleccionada);
+
 
             // Para que no rompa la validación, se asegura que no falten estas auditoria
             // if (typeof this.auditoriaPPSeleccionada.auditoria === 'undefined') {
@@ -240,7 +240,6 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
 
     //         this.showVistaAuditoriasPP = true;
 
-    //         console.log(this.auditoriaPPSeleccionada);
 
     //         // Para que no rompa la validación, se asegura que no falten estas auditoria
     //         if (typeof this.auditoriaPPSeleccionada.auditoria === 'undefined') {

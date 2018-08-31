@@ -1,16 +1,33 @@
-<div class="cama-container manual-flip animate-repeat" [ngClass]="{'hover': cama.$rotar }">
+<section class="cama-container manual-flip animate-repeat" [ngClass]="{'hover': cama.$rotar}">
     <div class="cama">
-        <!-- informacion del frente de las cards -->
-        <div class="front {{cama.ultimoEstado.estado}}">
-            <div class="row">
-                <div class="col-12">
-                    <div class="text-center">
-                        <span class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">
-                            {{cama.ultimoEstado.estado}}
-                        </span>
+        <!-- Refactor -->
+        <div class="andes-card-container front {{cama.ultimoEstado.estado}}">
+            <!-- Botonera lateral -->
+            <div class="card-contenedor-lateral"></div>
+            <div class="card-contenedor-central">
+                <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div>
+                <div (click)="camaSeleccionada()" class="contenedor-cama">
+                    <article class="contenedor-texto">
+                        <h3 class="card-titulo">{{cama.nombre}}</h3>
+                        <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div>
+                    </article>
+                    <!-- Icono cama -->
+                    <!-- Iconos redondos sobre la cama 
+                    Agrego el *ngIf para ocultar el icono del sexo, lo dejo por si se usa otro-->
+                    <div *ngIf="cama.ultimoEstado.estado !== 'ocupada'" class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
+                        <!-- reparacion -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama-herramienta {{cama.ultimoEstado.estado}}"></i>
+                        <!-- Bloqueada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'bloqueada'" class="icon icon-andes-cama-candado {{cama.ultimoEstado.estado}}"></i>
+                        <!-- ocupada -->
+                        <!-- <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i> -->
+                        <!-- desocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
+                        <!-- ocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama-check {{cama.ultimoEstado.estado}}"></i>
                     </div>
-                    <!-- Iconos de la cama-->
-                    <div class="icon-content text-center {{cama.ultimoEstado.estado}}">
+
+                    <div class="icon-content {{cama.ultimoEstado.estado}}">
                         <!-- disponible -->
                         <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama"></i>
                         <!-- desocupada -->
@@ -22,63 +39,16 @@
                         <!-- reparacion de la cama -->
                         <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama"></i>
                     </div>
-                    <!-- informacion de la cama, nombre de cama, sector, etc -->
-                    <div class="info-cama text-center">
-                        <h2>
-                            {{cama.nombre}}
-                        </h2>
-                        {{getHabitacionName()}}
-                        <p class="unidad-organizativa">{{ cama.ultimoEstado.unidadOrganizativa.term }}</p>
-                        <div class="data-paciente">
-                            <p *ngIf="cama.ultimoEstado?.paciente">
-                                <b>
-                                    {{cama.ultimoEstado.paciente.apellido}}
-                                </b>
-                                <br> {{cama.ultimoEstado.paciente.nombre}}
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Iconos redondos sobre la cama -->
-                    <div class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
-                        <!-- reparacion -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama-herramienta {{cama.ultimoEstado.estado}}"></i>
-                        <!-- Bloqueada -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'bloqueada'" class="icon icon-andes-cama-candado {{cama.ultimoEstado.estado}}"></i>
-                        <!-- ocupada -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'ocupada' && cama.ultimoEstado.paciente" class="icon icon-andes-cama-{{cama.ultimoEstado.paciente.sexo}} {{cama.ultimoEstado.paciente.sexo}}"></i>
-                        <!-- desocupada -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
-                        <!-- ocupada -->
-                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama-check {{cama.ultimoEstado.estado}}"></i>
-                    </div>
-                    <!-- </div> -->
                 </div>
-                <!-- Botonera laterar derecho -->
-                <div class="col-2 botonera-superior" *ngIf="!readOnly">
-                    <!-- Liberar la cama -->
-                    <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha()"
-                        *ngIf="cama.ultimoEstado?.idInternacion">
-                        <i class="mdi mdi-close-box"></i>
-                    </button>
-                    <!-- Editar datos de la cama -->
-                    <button class="rounded left btn-primary" title="Editar cama" (click)="editarCama(cama)">
-                        <i class="mdi mdi-mdi mdi-pencil"></i>
-                    </button>
-                    <!-- bloquear cama -->
-                    <button class="rounded left btn-danger" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
-                        *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
-                        <i class="mdi mdi-lock"></i>
-                    </button>
-                    <!-- enviar a reparacion -->
-                    <button class="rounded left btn-warning" title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion' ; SetFecha()"
-                        *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion') || cama.ultimoEstado.estado == 'desocupada'">
-                        <i class="mdi mdi-wrench"></i>
-                    </button>
-                </div>
-            </div>
-            <!-- Botonera del frente de las card -->
-            <div class="footer row">
-                <div class="col-12 text-center">
+
+                <!-- Boton clave inferior -->
+                <div class="card-contenedor-inferior">
+                    <!-- Nombre paciente -->
+                    <div class="data-paciente" *ngIf="cama.ultimoEstado?.paciente">
+                        <p>
+                            <b>{{cama.ultimoEstado.paciente.apellido}}</b>
+                            <br>{{cama.ultimoEstado.paciente.nombre}}</p>
+                    </div>
                     <!-- devolver cama -->
                     <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
@@ -91,7 +61,7 @@
                         *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
                     </plex-button>
                     <!-- Ver internacion -->
-                    <plex-button type="success" label="Ver internación" title="Ver internación" (click)="verPrestacion(cama)" *ngIf="cama.ultimoEstado?.paciente?._id">
+                    <plex-button type="success" (click)="verPrestacion(cama)" label="Ver internación" title="Ver internación" *ngIf="cama.ultimoEstado?.paciente?._id">
                     </plex-button>
                     <!-- Desbloquear cama -->
                     <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
@@ -103,10 +73,26 @@
                     </plex-button>
                 </div>
             </div>
-            <hr>
+            <div class="card-contenedor-lateral" *ngIf="!readOnly">
+                <!-- Liberar la cama -->
+                <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha(); selectCamasDisponibles()"
+                    *ngIf="cama.ultimoEstado?.idInternacion">
+                    <i class="mdi mdi-close-box"></i>
+                </button>
+                <!-- Editar datos de la cama -->
+                <button class="rounded left btn-primary" title="Editar cama" (click)="editarCama(cama)">
+                    <i class="mdi mdi-mdi mdi-pencil"></i>
+                </button>
+                <!-- bloquear cama -->
+                <button class="rounded left btn-danger" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                    *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
+                    <i class="mdi mdi-lock"></i>
+                </button>
+            </div>
         </div>
+
         <!-- TODO: ver estilo de las cards de la parte de atras con julito @fersastre -->
-        <div class="back">
+        <div class="back" *ngIf="cama.$rotar">
             <!-- Header del back de las tarjetas -->
             <div class="header">
                 <div class="float-left">
@@ -181,7 +167,8 @@
                             <div class="form-group">
                                 <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" required [(ngModel)]="cama.$motivo"
                                     name="motivoReparacion" id="motivoReparacion" #motivoReparacion="ngModel"></textarea>
-                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique motivo por el cual envía a reparación la cama</div>
+                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique
+                                    motivo por el cual envía a reparación la cama</div>
                             </div>
                         </div>
                     </div>
@@ -218,6 +205,9 @@
                             </p>
                             <plex-select name="unidadOrganizativa" [required]="true" [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
                                 [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa">
+                            </plex-select>
+                            <plex-select name="camasDisponibles" (getData)="selectCamasDisponibles($event)" idField="nombre" labelField="nombre" [(ngModel)]="camaSeleccionPase"
+                                label="Camas Disponibles">
                             </plex-select>
                         </div>
                     </div>
@@ -314,9 +304,10 @@
                         </p>
                         <div class="main">
                             <div class="form-group">
-                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual bloquea la cama?" required [(ngModel)]="cama.$motivo"
-                                    name="motivoBloqueo" id="motivoBloqueo" #motivoBloqueo="ngModel"></textarea>
-                                <div [hidden]="motivoBloqueo.valid || (motivoBloqueo.pristine && !formBloqueo.submitted)" class="alert alert-danger">Indique motivo por el cual bloquea la cama</div>
+                                <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo" idField="name" labelField="name" [(ngModel)]="cama.$motivo"
+                                    label="Motivo del bloqueo">
+                                </plex-select>
+
                             </div>
                         </div>
                     </div>
@@ -396,17 +387,15 @@
                             <h3 class="name reparacion">
                                 Bloqueada desde:
                                 <br/> {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "}}hs
-                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
+                                <br/>enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
                                 <br/>
                                 <br/>
                             </h3>
-                            <div class="motivo-reparacion">
-                                {{cama.ultimoEstado.motivo}}
-                            </div>
+                            <div class="motivo-reparacion">{{cama.ultimoEstado.motivo}}</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>

@@ -37,12 +37,16 @@ import { ListaEsperaComponent } from './components/turnos/lista-espera/listaEspe
 import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/clonar-agenda';
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
-import { PuntoInicioTurnosComponent } from './components/turnos/dashboard/puntoInicio-turnos.component';
+import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
+import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
+
+// ... Obras sociales
+import { PucoComponent } from './components/puco/puco.component';
 
 // ... RUP
 import { ResumenComponent } from './modules/rup/components/ejecucion/resumen.component';
@@ -67,9 +71,9 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 
 // Internacion
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamasListadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camasListado.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
@@ -80,6 +84,8 @@ import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecuc
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
+// Home de Estadisticas
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -95,8 +101,11 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
-  // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'mpi/demo', component: PacienteDemoComponent, canActivate: [RoutingGuard] },
+
+  // Obras sociales
+  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
@@ -128,7 +137,8 @@ const appRoutes: Routes = [
 
   // Mapa de camas
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
-
+  // internacion
+  { path: 'internacion/egreso/:id', component: EgresoInternacionComponent, canActivate: [RoutingGuard] },
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },
 
@@ -157,6 +167,9 @@ const appRoutes: Routes = [
   { path: 'inicio', component: InicioComponent, canActivate: [RoutingGuard] },
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
+
+  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+
   { path: '**', redirectTo: 'inicio' }
 ];
 

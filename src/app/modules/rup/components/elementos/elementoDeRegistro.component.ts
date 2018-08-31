@@ -285,11 +285,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
 
     cambiaValorCollapse(indice) {
-        console.log(indice);
-        console.log(this.itemsRegistros[indice], 'rrrr');
         if (this.itemsRegistros[indice]) {
-            console.log(this.itemsRegistros[indice].collapse);
-
             this.itemsRegistros[indice].collapse = !this.itemsRegistros[indice].collapse;
         }
         this.registrosColapsados();

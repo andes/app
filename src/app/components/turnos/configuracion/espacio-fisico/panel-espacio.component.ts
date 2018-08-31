@@ -61,7 +61,6 @@ export class PanelEspacioComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
                 }
             });
     }
@@ -245,7 +244,6 @@ export class PanelEspacioComponent implements OnInit {
                 band = true;
             }, err => {
                 if (err) {
-                    console.log(err);
                 }
             });
         }

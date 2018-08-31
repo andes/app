@@ -1,46 +1,16 @@
-import {
-    Component,
-    OnInit,
-    HostBinding,
-    NgModule,
-    ViewContainerRef,
-    ViewChild
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    FormsModule
-} from '@angular/forms';
-import {
-    Router
-} from '@angular/router';
-import {
-    Auth
-} from '@andes/auth';
-import {
-    Plex
-} from '@andes/plex';
-import {
-    TipoPrestacionService
-} from './../../../services/tipoPrestacion.service';
-import {
-    ProfesionalService
-} from './../../../services/profesional.service';
-import {
-    EspacioFisicoService
-} from './../../../services/turnos/espacio-fisico.service';
-import {
-    AgendaService
-} from './../../../services/turnos/agenda.service';
-import {
-    IAgenda
-} from './../../../interfaces/turnos/IAgenda';
-
+import { Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
+import { Plex } from '@andes/plex';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { ProfesionalService } from './../../../services/profesional.service';
+import { EspacioFisicoService } from './../../../services/turnos/espacio-fisico.service';
+import { AgendaService } from './../../../services/turnos/agenda.service';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import * as enumerado from './../enums';
 import * as moment from 'moment';
-import {
-    enumToArray
-} from '../../../utils/enums';
+import { enumToArray } from '../../../utils/enums';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 
 @Component({
@@ -238,7 +208,6 @@ export class GestorAgendasComponent implements OnInit {
 
         }, err => {
             if (err) {
-                console.log(err);
             }
         });
     }

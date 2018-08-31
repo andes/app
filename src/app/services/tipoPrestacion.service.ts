@@ -16,8 +16,6 @@ export class TipoPrestacionService {
      * @param {any} params Opciones de busqueda
      */
     get(params: any): Observable<ITipoPrestacion[]> {
-
-
         return this.server.get(this.tipoPrestacionUrl, { params: params, showError: true });
     }
     /**

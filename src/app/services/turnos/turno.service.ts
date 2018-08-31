@@ -11,12 +11,14 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
-        console.log(params);
         return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 
     getTurnos(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
+    }
+    getHistorial(params: any): Observable<any[]> {
+        return this.server.get(this.turnoUrl + '/historial', { params: params, showError: true });
     }
 
     save(turno: any, options: any = {}): Observable<IAgenda> {
