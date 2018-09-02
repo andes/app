@@ -16,8 +16,7 @@
 
 <!-- Apunta a components/snomed/snomed-buscar.component.ts -->
 <!-- <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)"></snomed-buscar> -->
-<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
-    [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
+<snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'" [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
 
 <div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
     <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
@@ -25,19 +24,17 @@
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
 <div class="menu-buscador" *ngIf="!showRefSets">
-    <plex-loader class="float-right" *ngIf="loading" type="ball-pulse"></plex-loader>
+    <plex-loader *ngIf="loading" type="linear"></plex-loader>
 
     <!-- Botones filtros -->
     <ng-container *ngIf="results">
-
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
             <div class="container-filtros">
                 <ul class="botones-filtros" [plexWizard]="0">
                     <li>
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}" [disabled]="!wizardActivo && getCantidadResultados('todos') === 0"
-                            class="btn btn-block btn-todos">
+                        <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}" [disabled]="!wizardActivo && getCantidadResultados('todos') === 0" class="btn btn-block btn-todos">
                             <i class="icon icon-rup-semantic-todos"></i>
                             TODOS
                         </button>
@@ -45,8 +42,7 @@
                     <li>
                         <small *ngIf="getCantidadResultados('hallazgos')" class="badge badge-hallazgo ml-1 float-right" [ngClass]="{'active': filtroActual === 'hallazgos'}">{{ getCantidadResultados('hallazgos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('hallazgos')" [ngClass]="{'active': filtroActual === 'hallazgos'}" [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
-                            class="btn btn-block btn-hallazgo" [plexWizard]="1" [title]="tooltips.hallazgos">
+                        <button (click)="filtroBuscadorSnomed('hallazgos')" [ngClass]="{'active': filtroActual === 'hallazgos'}" [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0" class="btn btn-block btn-hallazgo" [plexWizard]="1" [title]="tooltips.hallazgos">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
@@ -55,8 +51,7 @@
                     <li>
                         <small *ngIf="getCantidadResultados('trastornos')" class="badge badge-trastorno ml-1 float-right" [ngClass]="{'active': filtroActual === 'trastornos'}">{{ getCantidadResultados('trastornos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}" [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
-                            class="btn btn-block btn-trastorno" [plexWizard]="2" [title]="tooltips.trastornos">
+                        <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}" [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0" class="btn btn-block btn-trastorno" [plexWizard]="2" [title]="tooltips.trastornos">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
@@ -65,8 +60,7 @@
                     <li>
                         <small *ngIf="getCantidadResultados('procedimientos')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimientos'}">{{ getCantidadResultados('procedimientos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}" [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
-                            class="btn btn-block btn-procedimiento" [plexWizard]="3" [title]="tooltips.procedimientos">
+                        <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}" [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0" class="btn btn-block btn-procedimiento" [plexWizard]="3" [title]="tooltips.procedimientos">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROCEDIM.
                         </button>
@@ -74,8 +68,7 @@
                     <li>
                         <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4" [title]="tooltips.planes">
+                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-plan" [ngClass]="{'active': filtroActual === 'planes'}" [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4" [title]="tooltips.planes">
                             <i class="icon icon-rup-semantic-plan"></i>
                             SOLICITUDES
                         </button>
@@ -84,8 +77,7 @@
                     <li>
                         <small *ngIf="getCantidadResultados('productos')" class="badge badge-producto ml-1 float-right" [ngClass]="{'active': filtroActual === 'productos'}">{{ getCantidadResultados('productos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('productos')" [ngClass]="{'active': filtroActual === 'productos'}" [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
-                            class="btn btn-block btn-producto" [plexWizard]="5" [title]="tooltips.productos">
+                        <button (click)="filtroBuscadorSnomed('productos')" [ngClass]="{'active': filtroActual === 'productos'}" [disabled]="!wizardActivo && getCantidadResultados('productos') === 0" class="btn btn-block btn-producto" [plexWizard]="5" [title]="tooltips.productos">
                             <i class="icon icon-rup-semantic-producto"></i>
                             INSUMOS
                         </button>
@@ -143,8 +135,7 @@
 
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="rup-header">
-                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
-                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                         </div>

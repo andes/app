@@ -183,9 +183,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         // Espera un segundo para que el padre termine de acomodar los contenidos
         setTimeout(() => {
             this.wizardActivo = true;
-            this.plex.wizard({
+            let promise = this.plex.wizard({
                 id: 'rup:buscador:botones',
-                updatedOn: moment('2018-08-29').toDate(),
+                updatedOn: moment('2018-09-01').toDate(),
                 steps: [
                     { title: 'Nuevo buscador', content: 'Presentamos una forma más fácil de buscar los conceptos para registrar en la consulta' },
                     { title: 'Hallazgos', content: this.tooltips.hallazgos },
@@ -197,7 +197,14 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 forceShow: false,
                 fullScreen: false,
                 showNumbers: false
-            }).then(() => this.wizardActivo = false);
+            });
+
+            // Devuelve una promise sólo si se mostró el wizard
+            if (promise) {
+                promise.then(() => this.wizardActivo = false);
+            } else {
+                this.wizardActivo = false;
+            }
         }, 1000);
     }
 
