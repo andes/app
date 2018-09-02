@@ -3,7 +3,7 @@ import { Plex } from '@andes/plex';
 import { EdadPipe } from './../../../pipes/edad.pipe';
 import { Auth } from '@andes/auth';
 import { ObraSocialService } from './../../../services/obraSocial.service';
-import { FacturacionAutomaticaService} from './../../../services/facturacionAutomatica.service';
+import { FacturacionAutomaticaService } from './../../../services/facturacionAutomatica.service';
 
 @Component({
     selector: 'arancelamiento-form',
@@ -37,11 +37,11 @@ export class ArancelamientoFormComponent implements OnInit {
     constructor(public auth: Auth, public servicioOS: ObraSocialService, public servicioFA: FacturacionAutomaticaService, public plex: Plex) { }
 
     ngOnInit() {
-        this.servicioOS.get({dni: this.turnoSeleccionado.paciente.documento}).subscribe(resultado => {
-            this.servicioFA.get({conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
+        this.servicioOS.get({ dni: this.turnoSeleccionado.paciente.documento }).subscribe(resultado => {
+            this.servicioFA.get({ conceptId: this.turnoSeleccionado.tipoPrestacion.conceptId }).subscribe(resultadoFA => {
                 if (resultadoFA && resultadoFA.length > 0) {
                     this.codigoNomenclador = resultadoFA[0].nomencladorRecuperoFinanciero;
-                }else{
+                } else {
                     this.codigoNomenclador = '';
                 }
                 this.obraSocial = resultado.nombre;
