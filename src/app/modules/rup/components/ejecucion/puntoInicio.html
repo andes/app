@@ -21,10 +21,10 @@
                             </plex-datetime>
                         </div>
                         <div class="col-3">
-                            <plex-text [(ngModel)]="paciente" (change)="filtrar()" label="Buscar paciente"></plex-text>
+                            <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true" label="Buscar paciente"></plex-text>
                         </div>
                         <div class="col-6">
-                            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion"
+                            <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion"
                                 labelField="term" (change)="filtrar()">
                             </plex-select>
                         </div>

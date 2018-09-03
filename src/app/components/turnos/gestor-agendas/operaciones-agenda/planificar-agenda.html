@@ -65,7 +65,7 @@
                             <div class="row" *ngIf="espacioFisicoPropios">
                                 <div class="col-10">
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico del efector"
-                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.dscripcion ? edificio.descripcion : '')"
+                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.descripcion ? edificio.descripcion : '')"
                                         (change)="validarTodo()">
                                     </plex-select>
                                 </div>
