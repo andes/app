@@ -117,15 +117,15 @@ export class PrestacionCrearComponent implements OnInit {
             },
             solicitud: {
                 fecha: this.fecha,
-                tipoPrestacion: conceptoSnomed,
+                tipoPrestacionOrigen: conceptoSnomed,
                 // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                profesionalOrigen:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                organizacionOrigen: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
             },
             ejecucion: {
                 fecha: this.fecha,
@@ -225,10 +225,10 @@ export class PrestacionCrearComponent implements OnInit {
                     prestacionOrigen: null,
                     // profesional logueado
                     profesional:
-                        {
-                            id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                            apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                        },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                     // organizacion desde la que se solicita la prestacion
                     organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.id.nombre },
                 },

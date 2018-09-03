@@ -70,7 +70,7 @@
                         <div class="col">
                             <!-- <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }} -->
                             <br>
-                            <b>Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
+                            <b>Organización:</b> {{prestacion.solicitud.organizacionOrigen.nombre}}
                             <br>
                             <b>Fecha:</b> {{prestacion.solicitud.fecha | date}}
                         </div>
@@ -141,9 +141,11 @@
                             </div>
                             <div class="actions">
                                 <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico
+                                    principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
+                                    + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                 </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">

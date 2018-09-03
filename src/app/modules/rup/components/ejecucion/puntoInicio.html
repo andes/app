@@ -64,13 +64,15 @@
                                         </div>
                                         <div>
                                             <span *ngIf="agenda.espacioFisico?.nombre">{{agenda.espacioFisico.nombre}}</span>
-                                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
+                                            <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico
+                                                no asignado</span>
                                         </div>
                                     </td>
                                     <td>
                                         <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                                         <div>
-                                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
+                                            <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional
+                                                no asignado</span>
                                             <ng-container *ngIf="agenda.profesionales">
                                                 <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}</div>
                                             </ng-container>
@@ -129,8 +131,8 @@
                     <table *ngFor="let bloque of agendaSeleccionada.bloques" class="table table-striped">
                         <thead *ngIf="bloque.descripcion">
                             <tr>
-                                <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date:
-                                    'HH:mm'}} hs
+                                <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">{{bloque.descripcion}} de {{ bloque.horaInicio
+                                    | date: 'HH:mm'}} a {{ bloque.horaFin | date: 'HH:mm'}} hs
                                 </th>
                                 <th *ngIf="agendaSeleccionada.nominalizada" colspan="4">{{bloque.descripcion}}
                                 </th>
@@ -158,12 +160,15 @@
                                         <small>
                                             <span *ngIf="turno.paciente?.id">
                                                 <br>
-                                                <span *ngIf="turno.paciente.documento !== ''"> DNI {{turno.paciente.documento | number}}</span>
+                                                <span *ngIf="turno.paciente.documento !== ''"> DNI {{turno.paciente.documento
+                                                    | number}}</span>
                                                 <span *ngIf="turno.paciente.documento === ''"> Sin documento (temporal)</span>
                                             </span>
                                             <span *ngIf="turno?.paciente?.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores?.length > 0">
                                                 | Nro Carpeta
-                                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{ carpeta.nroCarpeta }}</span>
+                                                <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">{{ carpeta.nroCarpeta
+                                                    }}
+                                                </span>
                                             </span>
                                         </small>
                                         <br *ngIf="turno.paciente?.id && turno.tipoPrestacion && agendaSeleccionada.tipoPrestaciones.length > 1">
@@ -177,7 +182,9 @@
                                         </small>
 
 
-                                        <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno Doble</span>
+                                        <span [ngClass]="{'text-danger': turno.estado === 'turnoDoble'}" *ngIf="turno && turno.estado === 'turnoDoble'">Turno
+                                            Doble
+                                        </span>
                                         <span class="badge badge-danger" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</span>
                                         <span *ngIf="turno && turno.nota">
                                             <i title="{{turno.nota}}" class="text-warning warning mdi mdi-message"></i>
@@ -260,7 +267,8 @@
                                             <small>
                                                 <span *ngIf="sobreturno.paciente?.id">
                                                     <br>
-                                                    <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento | number}}</span>
+                                                    <span *ngIf="sobreturno.paciente.documento !== ''"> DNI {{sobreturno.paciente.documento
+                                                        | number}}</span>
                                                     <span *ngIf="sobreturno.paciente.documento === ''"> Sin documento (temporal)</span>
                                                 </span>
                                                 <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores && sobreturno?.paciente?.carpetaEfectores?.length > 0">
@@ -340,7 +348,8 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente }} </span>
+                                    <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente }}
+                                    </span>
                                     <small>
                                         <span *ngIf="prestacion && prestacion.paciente">
                                             <br>
