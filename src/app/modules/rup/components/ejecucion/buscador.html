@@ -8,7 +8,8 @@
 
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR BÁSICO</button>
 
-        <!--button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('busquedaGuiada')" [ngClass]="{'active': busquedaActual === 'busquedaGuiada'}">BÚSQUEDA GUIADA</button-->
+        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES POR PRESTACION</button>
+
     </div>
 
 </div>
@@ -19,7 +20,7 @@
 <snomed-buscar (loading)="Loader($event)" (_resultados)="recibeResultados($event)" *ngIf="busquedaActual === 'buscadorBasico' || busquedaActual === 'busquedaGuiada'"
     [searchTermInput]="search" [autofocus]="autofocus"></snomed-buscar>
 
-<div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes'">
+<div class="buscador" *ngIf="busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP'">
     <plex-text [(ngModel)]="search" name="search" (keyup)="buscar()" placeholder=" Buscar ..." [autoFocus]="autofocus"></plex-text>
 </div>
 
@@ -155,6 +156,9 @@
                                 <div class="col-6 p-0 m-0">
                                     <div class="p-0 pl-2" [ngClass]="{'actions-left': filtroActual === 'equipamientos'}">
                                         {{item.term}}
+                                        <span *ngIf="item.frecuencia" class="small">
+                                            ({{item.frecuencia}})
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="col-6 p-0 m-0">

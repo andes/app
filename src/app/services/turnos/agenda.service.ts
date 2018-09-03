@@ -40,7 +40,6 @@ export class AgendaService {
     }
 
     patch(id: String, cambios: any): Observable<IAgenda> {
-        console.log(this.agendaUrl);
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 
