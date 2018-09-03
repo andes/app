@@ -12,15 +12,46 @@ export class ProcedimientoDeEnfermeriaComponent extends RUPComponent implements 
     private plex: Plex;
 
     ngOnInit() {
-        console.log('procedimiento enfermeria');
         if (!this.registro.valor) {
             this.registro.valor = {
                 prestacionesRealizadas: {
-                    banioAntitermico : false,
-                    sondaNasogastrica: false
+                    banioAntitermico: false,
+                    sondaNasogastrica: false,
+                    viaPeriferica: false,
+                    aspiracionSecreciones: false,
+                    basiloscopia: false,
+                    confeccionCarnet: false,
+                    saludEscolar: false,
+                    CLCF: false,
+                    tomaMuestra: false,
+                    dinamicaUterina: false,
+                    electrocardiograma: false,
+                    entregaLeche: false,
+                    enemaEvacuante: false,
+                    extraccionSuturas: false,
+                    gestionInsumos: false,
+                    impregnacion: false,
+                    instilacionOcular: false,
+                    lavajeGastrico: false,
+                    monitoreoCardiaco: false,
+                    nebulizaciones: false,
+                    rcp: false,
+                    recap: false,
+                    rehidratacion: false,
+                    vendaje: false,
+                    virologo: false,
+                    sondaVesical: false,
+                    curacionSimple: false,
+                    curacionCompleja: false,
+                    curacionQuemadura: false
                 },
                 tiemposEmpleados: {
-
+                    asistenciaPracticas: 0,
+                    atencionDomiciliaria: 0,
+                    charlaEducativa: 0,
+                    derivaciones: 0,
+                    atencionPrehospitalaria: 0,
+                    contencionEmocional: 0
                 }
             };
         }
