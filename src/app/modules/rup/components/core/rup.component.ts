@@ -100,6 +100,7 @@ export class RUPComponent implements OnInit {
         this.loadComponent();
     }
 
+    // tslint:disable-next-line:use-life-cycle-interface
     ngAfterViewInit() {
         this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
     }
