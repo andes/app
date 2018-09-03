@@ -293,6 +293,7 @@ import { ChartsModule } from 'ng2-charts';
 // INTERNACION
 import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
 import { ResumenInternacionComponent } from './modules/rup/components/ejecucion/internacion/resumenInternacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -471,6 +472,7 @@ registerLocaleData(localeEs, 'es');
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        PuntoInicioInternacionComponent,
         LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
