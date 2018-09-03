@@ -31,7 +31,7 @@ import { ActivatedRoute } from '@angular/router';
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
 export class RUPComponent implements OnInit {
-    [x: string]: any;
+
     // Propiedades
     @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
@@ -100,7 +100,6 @@ export class RUPComponent implements OnInit {
         this.loadComponent();
     }
 
-    // tslint:disable-next-line:use-life-cycle-interface
     ngAfterViewInit() {
         this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
     }

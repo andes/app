@@ -541,17 +541,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                         }
                     });
-
-
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino) {
                     registroDestino.relacionadoCon = [resultado];
                 }
             }
-
         }
-        this.goBottom();
     }
 
     /**
