@@ -571,6 +571,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
+
         let prestacion = {
             paciente: {
                 id: paciente.id,
@@ -588,13 +589,13 @@ export class PrestacionesService {
                 turno: turno,
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                profesionalOrigen:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                organizacionOrigen: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
             };
 
@@ -609,13 +610,13 @@ export class PrestacionesService {
                 turno: turno,
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                profesionalOrigen:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                organizacionOrigen: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
             };
 
@@ -623,7 +624,7 @@ export class PrestacionesService {
                 fecha: fecha,
                 registros: [],
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+                organizacionOrigen: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
             };
 
             prestacion['estados'] = {
@@ -636,13 +637,13 @@ export class PrestacionesService {
                 turno: turno,
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                profesionalOrigen:
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                organizacionOrigen: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
             };
 
@@ -670,7 +671,6 @@ export class PrestacionesService {
         if (planes.length) {
             planesCrear = [];
             planes.forEach(plan => {
-
                 // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
                 let existePrestacion = null;
                 if (this.cache[prestacion.paciente.id]) {
@@ -690,6 +690,8 @@ export class PrestacionesService {
                     if (existeConcepto) {
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
+                        // asignamos el tipoPrestacionOrigen a la solicitud
+                        nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
                         // asignamos la prestacion de origen
                         nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
