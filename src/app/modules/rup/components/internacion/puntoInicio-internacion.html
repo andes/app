@@ -1,0 +1,80 @@
+<plex-layout main="9">
+    <plex-layout-main>
+        <header>
+            <h3>Punto de inicio</h3>
+        </header>
+
+
+        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
+        <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <div class="text-center info-sidebar" *ngIf="pacienteSeleccionado">
+            <span class="badge badge-success">
+                algo
+            </span>
+            <br>
+            <h3>
+                {{pacienteSeleccionado.nombre}}
+            </h3>
+            <h3 class="strong">
+                {{pacienteSeleccionado.apellido}}
+            </h3>
+            <br> {{pacienteSeleccionado.documento}}
+            <br> Fecha de nacimiento
+            <br> {{pacienteSeleccionado.fechaNacimiento | date}}
+            <!-- </ng-container> -->
+        </div>
+        <div class="float-left">
+            <b>
+                Lista de epicrisis
+            </b>
+        </div>
+
+        <table class="table table-striped table-responsive">
+            <thead>
+                <tr>
+                    <td>
+                        <strong>Fecha</strong>
+                    </td>
+                    <td>
+                        <strong>Abstracto</strong>
+                    </td>
+                    <td>
+                        <strong>Acciones</strong>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr class="hover">
+                    <td>
+                        23/09/2018
+                    </td>
+                    <td>
+                        <span>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et volutpat lacus. Morbi quam risus, tempus in metus ac, tempus
+                            ullamcorper leo. Vestibulum
+                        </span>
+                    </td>
+                    <td>
+                        <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info"></plex-button>
+                    </td>
+                </tr>
+
+            </tbody>
+        </table>
+        <footer>
+            <div class="float-left">
+                <plex-button label="Ver HUDS" type="info" position="left"></plex-button>
+            </div>
+            <div class="float-right">
+                <plex-button label="Crear epicrisis" type="success" position="right"></plex-button>
+            </div>
+        </footer>
+
+    </plex-layout-sidebar>
+    <plex-layout-footer>
+        <plex-button label="Mapa de camas" type="info" position="right"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
