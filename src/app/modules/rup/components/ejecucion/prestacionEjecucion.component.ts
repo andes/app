@@ -134,9 +134,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                 this.paciente = paciente;
                             });
-
                             // Trae el elementoRUP que implementa esta Prestación
-                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacionOrigen, false);
 
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
