@@ -12,21 +12,23 @@
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto" (getData)="loadTipoPrestaciones($event)"
-                                    placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion" [readonly]="true">
+                                <!-- {{_solicitudPrestacion.solicitud.tipoPrestacion | json}} -->
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
+                                    (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()"
+                                    name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
                             </div>
                             <div class="col-4">
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
                                     placeholder="Profesionales" labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado===true" [(ngModel)]="_solicitudPrestacion.solicitud.profesional"
+                                <!-- {{_solicitudPrestacion.solicitud.profesional | json}} -->
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado" [(ngModel)]="_solicitudPrestacion.solicitud.profesional"
                                     (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
                                     name="profesional" [readonly]="true">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.registros[0].valor.solicitudPrestacion.autocitado===false" [(ngModel)]="opciones.profesional"
-                                    (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
-                                    name="profesional">
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && !autocitado" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
+                                    labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>
                             <div *ngIf="mostrarCalendario" class="col">
@@ -196,7 +198,8 @@
                                     <div class="col" *ngIf="estadoT == 'noTurnos'">
                                         <div *ngIf="alternativas.length > 0" class="list-group">
                                             <div class="row">
-                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una agenda alternativa
+                                                <div class="col col-md-12">No quedan turnos en esta agenda, seleccione una
+                                                    agenda alternativa
                                                     <br>
                                                 </div>
                                             </div>
@@ -211,14 +214,16 @@
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.tipoPrestaciones">
                                                         <label>Tipo de Prestación: </label>
-                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}} - </span>
+                                                        <span *ngFor="let tipoPrestacion of alternativa.tipoPrestaciones">{{tipoPrestacion.nombre}}
+                                                            - </span>
                                                         <br>
                                                     </div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col col-md-12" *ngIf="alternativa.profesionales">
                                                         <label>Profesional: </label>
-                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}} {{profesional.apellido}} - </span>
+                                                        <span *ngFor="let profesional of alternativa.profesionales">{{profesional.nombre}}
+                                                            {{profesional.apellido}} - </span>
                                                         <br>
                                                     </div>
                                                 </div>
@@ -247,8 +252,10 @@
                                     <div class="col" *ngIf="estadoT == 'dinamica'">
                                         <hr>
                                         <br>
-                                        <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}} pacientes asignados </div>
-                                        <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes asignados </div>
+                                        <div *ngIf="agenda.bloques[0].turnos.length > 0"> Esta agenda tiene {{agenda.bloques[0].turnos.length}}
+                                            pacientes asignados </div>
+                                        <div *ngIf="agenda.bloques[0].turnos.length === 0"> Esta agenda no tiene pacientes
+                                            asignados </div>
                                         <br>
                                         <div *ngIf="agenda.cupo > 1"> {{agenda.cupo}} cupos disponibles </div>
                                         <div *ngIf="agenda.cupo === 1"> {{agenda.cupo}} cupo disponible </div>
@@ -277,7 +284,8 @@
                                                     <label>Tipo de prestación</label>{{turno.tipoPrestacion?.nombre}}</div>
                                                 <div *ngIf="agenda.profesionales">
                                                     <label>Profesional</label>
-                                                    <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional | profesional}}
+                                                    <div *ngFor="let profesional of agenda.profesionales let i = index">{{profesional
+                                                        | profesional}}
                                                     </div>
                                                 </div>
                                             </div>

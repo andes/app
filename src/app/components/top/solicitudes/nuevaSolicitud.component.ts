@@ -207,8 +207,6 @@ export class NuevaSolicitudComponent {
                 sexo: this.paciente.sexo,
                 fechaNacimiento: this.paciente.fechaNacimiento
             };
-            // console.log('modelo ', this.modelo);
-
             // Se guarda la solicitud 'pendiente' de prestación
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.newSolicitudEmitter.emit();
