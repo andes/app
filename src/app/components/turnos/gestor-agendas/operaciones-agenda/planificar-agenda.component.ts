@@ -766,26 +766,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            // Limpiar de bug selectize "$order", horrible todo esto :'(
-            // if (this.modelo.tipoPrestaciones) {
-            //     this.modelo.tipoPrestaciones.forEach(function (prestacion, key) {
-            //         delete prestacion.$order;
-            //     });
-            // }
-            // if (this.modelo.profesionales) {
-            //     this.modelo.profesionales.forEach(function (prestacion, key) {
-            //         delete prestacion.$order;
-            //     });
-            // }
-            // if (this.modelo.edificio) {
-            //     delete this.modelo.edificio.$order;
-            // }
-            // if (this.modelo.espacioFisico) {
-            //     delete this.modelo.espacioFisico.$order;
-            // }
-            // if (this.modelo.sector) {
-            //     delete this.modelo.sector.$order;
-            // }
 
             // Si es una agenda nueva, no tiene ID y se genera un ID en '0' para el mapa de espacios físicos
             if (this.modelo.id === '0') {
