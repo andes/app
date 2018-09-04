@@ -54,7 +54,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     constructor(
         public servicePaciente: PacienteService,
-        // public servicioAgenda: AgendaService,
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
@@ -78,7 +77,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = true;
     }
     onPacienteSelected(paciente: IPaciente): void {
-        // debugger
         this.paciente = paciente;
 
         if (paciente.id) {
@@ -96,7 +94,8 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.servicePaciente.getById(paciente.id).subscribe(
                     pacienteMPI => {
                         this.paciente = pacienteMPI;
-                        if (!this.paciente.scan) {
+                        // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
+                        if (!this.paciente.scan && paciente.scan) {
                             this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                         }
                         this.showMostrarEstadisticasAgendas = false;
@@ -200,10 +199,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = !actualizar;
     }
 
-    cancelarDarTurno() {
+    afterDarTurno(pac) {
         this.showDarTurnos = false;
         this.showDashboard = true;
         if (this.paciente && this.paciente.id) {
+            // this.onPacienteSelected(this.paciente);
+            if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
+                this.paciente.carpetaEfectores = pac.carpetaEfectores;
+            }
             this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];
         }
