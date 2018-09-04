@@ -13,6 +13,8 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { SnomedService } from '../../../../services/term/snomed.service';
+import { Observable } from 'rxjs/Rx';
+
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -93,6 +95,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
     filtroRefset: any;
+    refSet: any;
 
     constructor(
         private servicioPrestacion: PrestacionesService,
@@ -114,6 +117,12 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
+
+        this.servicioPrestacion.getRefSetData().subscribe(refset => {
+            this.refSet = refset;
+            this.filtroRefset = this.refSet;
+        });
+
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
@@ -139,13 +148,21 @@ export class PrestacionEjecucionComponent implements OnInit {
                             });
 
                             // Trae el elementoRUP que implementa esta Prestación
+                            // this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+                            if (this.elementoRUP.requeridos.length > 0) {
+                                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
+                                }
+                            }
 
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
                             this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
 
                             // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
+
 
                             if (this.elementoRUP.requeridos.length > 0) {
                                 for (let elementoRequerido of this.elementoRUP.requeridos) {
@@ -364,8 +381,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (this.confirmarEliminar) {
             let registros = this.prestacion.ejecucion.registros;
             let _registro = registros[this.indexEliminar];
-
-            this.ejecutarAccion([]);
 
             // Quitamos toda la vinculación que puedan tener con el registro
             registros.forEach(registro => {
@@ -607,7 +622,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
-                if (registroDestino && !this.elementoRUP.reglas.requeridos.relacionesMultiples) {
+                if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
                     registroDestino.relacionadoCon = [resultado];
                 } else {
 
@@ -959,16 +974,16 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     // Búsqueda que filtra según concepto
     ejecutarAccion(data) {
-        this.tipoBusqueda = [];
-        if (data && data.conceptos) {
-            // tipoBusqueda
-            this.tipoBusqueda = data;
-            // this.registrosHuds = [...this.registrosHuds, data];
-        } else {
-            this.tipoBusqueda = null;
-            this.filtroRefset = null;
+        // this.tipoBusqueda = [];
+        // if (data && data.conceptos) {
+        //     // tipoBusqueda
+        //     this.tipoBusqueda = data;
+        //     // this.registrosHuds = [...this.registrosHuds, data];
+        // } else {
+        //     this.tipoBusqueda = null;
+        //     this.filtroRefset = null;
 
-        }
+        // }
 
     }
 

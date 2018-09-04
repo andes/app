@@ -7,6 +7,8 @@ import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 
 @Injectable()
 export class PrestacionesService {
@@ -15,6 +17,20 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
+    private datosRefSet = new BehaviorSubject<any>(null);
+
+    setRefSetData(datos: IPrestacion[], refsetId) {
+        this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
+    }
+
+    getRefSetData(): Observable<any> {
+        return this.datosRefSet.asObservable();
+    }
+
+    clearRefSetData() {
+        this.datosRefSet.next(null);
+    }
 
     public refsetsIds = {
         cronico: '1641000013105',

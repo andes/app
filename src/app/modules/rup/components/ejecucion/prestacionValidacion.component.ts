@@ -1,18 +1,12 @@
-import { DomSanitizer } from '@angular/platform-browser';
-import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { SnomedService } from './../../../../services/term/snomed.service';
-import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, NgZone } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
 import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
 import { Slug } from 'ng2-slugify';
@@ -111,15 +105,12 @@ export class PrestacionValidacionComponent implements OnInit {
     ];
 
     constructor(private servicioPrestacion: PrestacionesService,
-        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
-        private servicioDocumentos: DocumentosService,
-        private sanitizer: DomSanitizer,
-        private servicioSnomed: SnomedService
+        private route: ActivatedRoute,
+        private servicioDocumentos: DocumentosService
     ) {
     }
 

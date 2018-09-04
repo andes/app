@@ -69,7 +69,13 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     ngOnInit() {
 
         // Traer EL odontograma, los dientes
-        this.snomedService.getQuery({ expression: '^' + this.params.refsetId, field: 'term', words: 'iso designation', languageCode: 'en' }).subscribe(odontograma => {
+        this.snomedService.getQuery({
+            expression: `^${this.params.refsetId}`,
+            field: 'term',
+            words: 'iso designation',
+            languageCode: 'en'
+        }).subscribe(odontograma => {
+
             odontograma.forEach(diente => {
                 let nroDiente = Number(diente.term.replace('ISO designation ', ''));
                 diente.term = nroDiente.toString();
@@ -103,7 +109,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             // Trae los hallazgos, procedimientos, etc...
             if (this.params) {
-                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+                this.snomedService.getQuery({ expression: `^${this.params.refsetId}` }).subscribe(resultado => {
                     this.conceptos = resultado;
                 });
             }
@@ -139,13 +145,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             // Se arma el último odontograma, con sus relaciones
             for (let cuadrante of this.cuadrantes) {
-                for (let diente of this.ultimoOdontograma.valor.odontograma[String(cuadrante)]) {
-                    diente.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === diente.concepto.conceptId : z === diente.concepto.conceptId))) || {};
+                if (this.ultimoOdontograma.valor && this.ultimoOdontograma.valor.odontograma) {
+                    for (let diente of this.ultimoOdontograma.valor.odontograma[String(cuadrante)]) {
+                        diente.relacion = this.relaciones.filter(y => y.relacionadoCon.find(z => (z.concepto.conceptId ? z.concepto.conceptId === diente.concepto.conceptId : z === diente.concepto.conceptId))) || {};
+                    }
                 }
             }
 
         }
-
 
         // Odontograma de esta consulta
         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
@@ -365,11 +372,12 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 odontograma: this.odontograma
             };
 
-            if (!this.seleccionMultiple) {
-                this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: cara }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-            } else {
-                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            }
+            // if (!this.seleccionMultiple) {
+            //     this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: cara }], ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // } else {
+            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // }
+            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
         } else {
 
@@ -378,11 +386,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-            if (this.piezasSeleccionadas.length === 0) {
-                this.emitEjecutarAccion(false);
-            } else {
-                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            }
+            // if (this.piezasSeleccionadas.length === 0) {
+            //     this.emitEjecutarAccion(false);
+            // } else {
+
+            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // }
+            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
+
         }
 
     }
@@ -434,11 +445,16 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 odontograma: this.odontograma
             };
 
-            if (!this.seleccionMultiple) {
-                this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-            } else {
-                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            }
+            // if (!this.seleccionMultiple) {
+            //     this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // } else {
+            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // }
+
+            // this.prestacionesService.setRefSetData(this.piezasSeleccionadas, this.params.refsetId);
+            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
+
+
 
         } else {
 
@@ -447,11 +463,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-            if (this.piezasSeleccionadas.length === 0) {
-                this.emitEjecutarAccion(false);
-            } else {
-                this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            }
+            // if (this.piezasSeleccionadas.length === 0) {
+            //     this.emitEjecutarAccion(false);
+            // } else {
+            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
+            // }
+
+            // this.prestacionesService.setRefSetData(this.piezasSeleccionadas, this.params.refsetId);
+            this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
+
 
         }
     }

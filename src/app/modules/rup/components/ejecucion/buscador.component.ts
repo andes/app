@@ -106,6 +106,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
     public search; // buscador de sugeridos y mis frecuentes
     private ultimoTipoBusqueda: any;
+    refSet: any;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -115,23 +116,26 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
 
-
     async ngOnInit() {
 
-        // inicializamos variable resultsAux con la misma estructura que results
-        this.resultsAux = Object.assign({}, this.results);
+        this.servicioPrestacion.getRefSetData().subscribe(async refset => {
+            this.busquedaRefSet = refset;
+            // inicializamos variable resultsAux con la misma estructura que results
+            this.resultsAux = Object.assign({}, this.results);
 
-        // Se inicializa el buscador básico, principal
-        await this.inicializarBuscadorBasico();
+            // Se inicializa el buscador básico, principal
+            await this.inicializarBuscadorBasico();
 
-        // Se inicializa el buscador guiado, secundario
-        this.gruposGuiada = await this.inicializarBusquedaGuiada();
-        this.filtrarResultadosBusquedaGuiada();
+            // Se inicializa el buscador guiado, secundario
+            this.gruposGuiada = await this.inicializarBusquedaGuiada();
+            this.filtrarResultadosBusquedaGuiada();
 
 
-        // inicializamos el filtro actual para los hallazgos
-        this.filtroActual = 'todos';
-        this.ultimoTipoBusqueda = this.busquedaActual;
+            // inicializamos el filtro actual para los hallazgos
+            this.filtroActual = 'todos';
+            this.ultimoTipoBusqueda = this.busquedaActual;
+        });
+
 
     }
 
@@ -351,7 +355,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             // Hay más frecuentes? Frecuentes de este profesional
 
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
+                this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
                     return x.refsetIds.includes(this.busquedaRefSet.refsetId);
                 });
             }
@@ -543,6 +547,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         // Devolvemos el concepto SNOMED
         this.evtData.emit(concepto);
+        this.servicioPrestacion.clearRefSetData();
         // this.search = null;
 
     }
