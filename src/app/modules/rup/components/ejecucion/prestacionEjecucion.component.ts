@@ -134,11 +134,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                             this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                 this.paciente = paciente;
                             });
+
                             // Trae el elementoRUP que implementa esta Prestación
                             this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacionOrigen, false);
 
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
-                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
+                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacionOrigen, this.elementoRUP);
 
                             // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
@@ -157,7 +158,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                             }
                         }
-                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
+                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacionOrigen.conceptId).subscribe((grupos) => {
                             this.grupos_guida = grupos;
                         });
 
