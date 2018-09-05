@@ -15,7 +15,7 @@ export class FormTerapeuticoComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: Number;
-    private indices;
+    public indices;
     private titulo;
     private padres: any[];
     private hijos: any[];
