@@ -7,7 +7,7 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, OnCh
     styleUrls: ['form-terapeutico-detalle.scss']
 })
 
-export class FormTerapeuticoDetallePage implements OnInit, OnChanges {
+export class FormTerapeuticoDetallePageComponent implements OnInit, OnChanges {
     mostrarMenu = false;
 
 
@@ -15,10 +15,9 @@ export class FormTerapeuticoDetallePage implements OnInit, OnChanges {
 
 
     ngOnInit() {
-     }
+    }
 
      ngOnChanges(changes: any) {
-        this.medicamento;
     }
 
 }

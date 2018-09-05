@@ -1,16 +1,13 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, OnChanges } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
-import { Router } from '@angular/router';
-import * as moment from 'moment';
-import { FormTerapeuticoService } from './../../services/formTerapeutico/formTerapeutico.service';
-import { forEach } from '@angular/router/src/utils/collection';
+import { FormTerapeuticoService } from '../../services/formTerapeutico/formTerapeutico.service';
+
 @Component({
     selector: 'arbolItem',
     templateUrl: 'arbolItem.html',
 })
 
-export class ArbolItem implements OnInit, OnChanges {
+export class ArbolItemComponent implements OnInit, OnChanges {
     public hijos: any[];
     @Output() enviarDetalle = new EventEmitter();
     @Output() enviarDatosMedicamento = new EventEmitter();

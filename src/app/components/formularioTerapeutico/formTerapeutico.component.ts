@@ -2,17 +2,16 @@ import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter, Host
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import * as moment from 'moment';
 import { FormTerapeuticoService } from './../../services/formTerapeutico/formTerapeutico.service';
-import { ArbolItem } from './arbolItem';
+import { ArbolItemComponent } from './arbolItem.component';
 
 
 @Component({
     selector: 'app-formTerapeutico',
     templateUrl: './formTerapeutico.html'
 })
-export class formTerapeuticoComponent implements OnInit {
-    @ViewChild('arbol') arbolHijo: ArbolItem;
+export class FormTerapeuticoComponent implements OnInit {
+    @ViewChild('arbol') arbolHijo: ArbolItemComponent;
     @HostBinding('class.plex-layout') layout = true;
     @Input() indice: any;
     @Input() deep: Number;
