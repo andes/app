@@ -742,8 +742,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     onSave($event, clonar) {
-        // console.log('tipoPrestaciones ', this.modelo.tipoPrestaciones);
-        // TODO agregar chequeo de única prestación para las no nominalizadas
         this.hideGuardar = true;
         if (this.dinamica) {
             this.modelo.dinamica = true;
@@ -761,7 +759,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-        if ($event.formValid) {
+        if ($event.formValid && this.verificarNoNominalizada()) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -852,7 +850,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             },
                 (err) => { this.hideGuardar = false; });
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            if (!this.verificarNoNominalizada()) {
+                this.plex.alert('Solo puede haber una prestación en las agendas no nominalizadas');
+            } else {
+                this.plex.alert('Debe completar los datos requeridos');
+            }
         }
     }
 
@@ -869,6 +871,25 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     cerrarMapaPlanificar() {
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
+    }
+    /**
+     * Verifica si es una agenda no nominalizada, en cuyo caso chequea
+     * que la agenda tenga una sola prestación
+     * @returns boolean TRUE/FALSE chequeos no nominalizada Ok
+     * @memberof PlanificarAgendaComponent
+     */
+    verificarNoNominalizada() {
+        let arrayTP = this.modelo.tipoPrestaciones;
+        let indice = arrayTP.map(
+            function (obj) {
+                return obj.noNominalizada;
+            }
+        ).indexOf(true);
+        if (indice === -1) {
+            return true;
+        } else {
+            return (arrayTP.length === 1);
+        }
     }
 }
 
