@@ -5,5 +5,6 @@ export interface ISnomedSearchResult {
     sugeridos: ISnomedConcept[];
     busquedaGuiada: any[];
     buscadorBasico: ISnomedConcept[];
+    frecuentesTP: any[];
     nomnbre?: any;
 }
