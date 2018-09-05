@@ -15,6 +15,9 @@ export class DocumentosService {
 
     constructor(private http: Http) { }
 
+    /**
+     * @param html HTML que se envía a la API para que genere y devuelva un PDF "institucionalizado"
+     */
     descargar(html: string): Observable<any> {
 
         let htmlPdf = { html: Buffer.from(html).toString('base64') };
@@ -25,6 +28,19 @@ export class DocumentosService {
 
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
         return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
+    descargarV2(data): Observable<any> {
+
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+        });
+
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+        return this.http.post(this.pdfURL + '/pdf', data, options)
             .map(this.extractData)
             .catch(this.handleError);
     }

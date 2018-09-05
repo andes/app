@@ -13,6 +13,8 @@ import * as moment from 'moment';
 export class ImprimirSolicitudesComponent implements OnInit {
 
     public solicitudes;
+    public idOrganizacion = this.auth.organizacion.id;
+
     @Input('solicutudes')
     set solicutudes(value: any) {
         this.solicitudes = value;

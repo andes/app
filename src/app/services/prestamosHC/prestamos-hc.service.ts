@@ -35,4 +35,8 @@ export class PrestamosService {
     devolverCarpetas(carpetas): Observable<any[]> {
         return this.server.post(this.turnoUrl + '/prestamosHC/devolverCarpetas', carpetas);
     }
+
+    solicitudManualCarpeta(solicitud): Observable<any[]> {
+        return this.server.post(this.turnoUrl + '/prestamosHC/solicitudManualCarpeta', solicitud);
+    }
 }

@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="!buscandoPaciente">
     <div class="row">
         <div class="col-7">
             <plex-box>
@@ -21,10 +21,10 @@
                             </plex-datetime>
                         </div>
                         <div class="col-3">
-                            <plex-text [(ngModel)]="paciente" (change)="filtrar()" label="Buscar paciente"></plex-text>
+                            <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true" label="Buscar paciente"></plex-text>
                         </div>
                         <div class="col-6">
-                            <plex-select [(ngModel)]="prestacionSeleccion" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion"
+                            <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion" label="Filtrar por prestación" [data]="tiposPrestacion"
                                 labelField="term" (change)="filtrar()">
                             </plex-select>
                         </div>
@@ -53,10 +53,11 @@
                         <ng-container *ngIf="agendas.length">
                             <ng-container *ngFor="let agenda of agendas; let i=index">
                                 <tr class="hover" [ngClass]="{'bg-inverse text-white': agendaSeleccionada == agenda}" (click)="cargarTurnos(this.agenda)"
-                                    *ngIf="agenda.estado === 'disponible' || getCantidadPacientes(agenda)">
+                                    *ngIf="agenda.estado === 'disponible' || agenda.dinamica || getCantidadPacientes(agenda)">
 
                                     <td>
-                                        <div>{{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
+                                        <div>
+                                            {{agenda.horaInicio | date: 'HH:mm'}} a {{agenda.horaFin | date: 'HH:mm'}} hs
                                             <span *ngIf="agenda.nota">
                                                 <i title="{{agenda.nota}}" class="mdi mdi-comment"></i>
                                             </span>
@@ -77,7 +78,8 @@
                                     </td>
                                     <td>
                                         <ng-container *ngIf="agenda.estado !== 'disponible'">
-                                            <span class="badge-info float-right">pacientes {{getCantidadPacientes(agenda)}} / {{agenda.cantidadTurnos}}
+                                            <span class="badge-info float-right">pacientes {{getCantidadPacientes(agenda)}}
+                                                <ng-container *ngIf="!agenda.dinamica">/ {{agenda.cantidadTurnos}}</ng-container>
                                             </span>
                                         </ng-container>
                                     </td>
@@ -113,6 +115,7 @@
                             <ng-container>
                                 {{ agendaSeleccionada.horaInicio | date: 'EEE' }} {{ agendaSeleccionada.horaInicio | date: 'dd/MM/yyyy'}}, {{ agendaSeleccionada.horaInicio
                                 | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
+                                <span class="badge-info" *ngIf="agendaSeleccionada.dinamica">Dinámica</span>
                                 <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
 
                                 <div *ngIf="agendaSeleccionada.nota" class="alert alert-info">
@@ -137,7 +140,9 @@
                             <ng-container *ngFor="let turno of bloque.turnos; let i=index">
                                 <tr *ngIf="turno" class="hover">
                                     <td>
-                                        <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                        <ng-container *ngIf="!agendaSeleccionada.dinamica">
+                                            <strong>{{ turno.horaInicio | date: 'HH:mm' }}</strong>
+                                        </ng-container>
 
                                         <div *ngIf="turno.prestacion && turno?.prestacion?.estados">
                                             <br />
@@ -211,7 +216,7 @@
                                                 titlePosition="top"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(turno.tipoPrestacion,turno.prestacion)"
-                                                label="VER REGISTROS" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
+                                                label="CONTINUAR REGISTRO" type="primary btn-sm" (click)="routeTo('ejecucion', turno.prestacion.id)"></plex-button>
 
                                             <plex-button *ngIf="turno.paciente && turno.estado !== 'suspendido' && turno.prestacion && turno.prestacion.estados[turno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                                                 label="VER RESÚMEN" type="success btn-sm" (click)="routeTo('validacion', turno.prestacion.id)"></plex-button>
@@ -223,6 +228,9 @@
 
                         </tbody>
                     </table>
+                    <ng-container *ngIf="((agendaSeleccionada.dinamica && agendaSeleccionada.cupo && (agendaSeleccionada.cupo > 0)) || agendaSeleccionada.cupo < 0)">
+                        <plex-button label="AGREGAR PACIENTE" type="primary" class="float-right mr-1" (click)="buscarPaciente()"></plex-button>
+                    </ng-container>
                     <ng-container>
                         <table *ngIf="agendaSeleccionada.sobreturnos" class="table table-striped">
                             <thead>
@@ -302,10 +310,10 @@
                                                     titlePosition="top"></plex-button>
 
                                                 <plex-button *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'ejecucion' && tienePermisos(sobreturno.tipoPrestacion)"
-                                                    label="Ver Registros" type="primary btn-sm" (click)="routeTo('ejecucion', sobreturno.prestacion.id)"></plex-button>
+                                                    label="CONTINUAR REGISTRO" type="primary btn-sm" (click)="routeTo('ejecucion', sobreturno.prestacion.id)"></plex-button>
 
                                                 <plex-button *ngIf="sobreturno.paciente && sobreturno.estado !== 'suspendido' && sobreturno.prestacion && sobreturno.prestacion.estados[sobreturno.prestacion.estados.length - 1].tipo === 'validada' && tienePermisos(sobreturno.tipoPrestacion)"
-                                                    label="Ver Resúmen" type="success btn-sm" (click)="routeTo('validacion', sobreturno.prestacion.id)"></plex-button>
+                                                    label="VER RESUMEN" type="success btn-sm" (click)="routeTo('validacion', sobreturno.prestacion.id)"></plex-button>
 
                                             </ng-container>
                                         </td>
@@ -364,7 +372,7 @@
                                     </plex-button>
 
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)"
-                                        label="VER REGISTROS" type="primary btn-sm">
+                                        label="CONTINUAR REGISTRO" type="primary btn-sm">
                                     </plex-button>
 
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'" (click)="routeTo('validacion', prestacion.id)"
@@ -383,7 +391,7 @@
 </section>
 
 <!--Footer-->
-<footer>
+<footer *ngIf="!buscandoPaciente">
     <div class="row">
         <div class="col-4">
 
@@ -398,6 +406,7 @@
             </div>
         </div>
     </div>
-
-
 </footer>
+<!-- Búsqueda de pacientes -->
+<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>

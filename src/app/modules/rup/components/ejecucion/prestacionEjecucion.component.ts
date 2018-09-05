@@ -1,6 +1,5 @@
-import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ObjectID } from 'bson';
 import { DropdownItem } from '@andes/plex';
@@ -15,6 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -26,6 +26,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 export class PrestacionEjecucionComponent implements OnInit {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
@@ -114,13 +115,13 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
+
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -129,7 +130,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
-                        // Si la prestación está validad, navega a la página de validación
+                        // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
@@ -156,7 +157,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                         this.ejecutarConcepto(elementoRequerido.concepto);
                                     } else if (registoExiste.id && registoExiste.valor) {
                                         // Expandir sólo si no tienen algún valor
-                                        this.itemsRegistros[registoExiste.id].collapse = true;
+                                        this.itemsRegistros[registoExiste.id].collapse = false;
                                     }
                                 }
                             }
@@ -187,10 +188,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     mostrarDatosEnEjecucion() {
+
         if (this.prestacion) {
             // recorremos los registros ya almacenados en la prestación
             this.prestacion.ejecucion.registros.forEach(registro => {
-                this.itemsRegistros[registro.id] = { collapse: false, items: null };
+                this.itemsRegistros[registro.id] = { collapse: true, items: null };
                 // Si el registro actual tiene registros vinculados, los "populamos"
                 if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
                     registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
@@ -260,7 +262,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     vincularRegistros(registroOrigen: any, registroDestino: any) {
-        let registros = this.prestacion.ejecucion.registros;
+
+        // let registros = this.prestacion.ejecucion.registros;
 
         // si proviene del drag and drop lo que llega es un concepto
         if (registroOrigen.dragData) {
@@ -398,16 +401,40 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+
+        if (elementoRUP && elementoRUP.params) {
+            if (elementoRUP.params.reglasCargar) {
+                if (elementoRUP.params.reglasCargar.evolucionable) {
+                    // console.log(this.servicioPrestacion.getByPacienteKey(this.paciente.id, elementoRUP.conceptos.map(x => x.conceptId)));
+                }
+            }
+        }
+
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
+
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
 
+        if (this.prestacion && this.prestacion.ejecucion.registros && this.prestacion.ejecucion.registros.length) {
+            // TODO:: Por ahora la vinculacion automatica es solo con INFORME DEL ENCUENTRO
+            let registroRequerido = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+            if (registroRequerido) {
+                nuevoRegistro.relacionadoCon.push(registroRequerido);
+                if (nuevoRegistro.id) {
+                    this.itemsRegistros[nuevoRegistro.id].collapse = true;
+                }
+            }
+        }
+        //
+
+
+        //
         // Agregamos al array de registros
         this.prestacion.ejecucion.registros.splice(this.prestacion.ejecucion.registros.length, 0, nuevoRegistro);
         this.showDatosSolicitud = false;
@@ -544,7 +571,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return (registro.valor) && (registro.valor.idRegistroOrigen) && (registro.valor.idRegistroOrigen === idRegistroOrigen);
             });
 
-
             if (!existeEjecucion) {
                 let valor = { idRegistroOrigen: idRegistroOrigen };
                 window.setTimeout(() => {
@@ -601,25 +627,26 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     private controlValido(registro) {
-        if (registro.registros.length <= 0) {
-            registro.valido = (registro.valor) ? true : false;
-            if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
-                this.colapsarPrestaciones('expand');
-            }
-        } else {
+        return true;
+        // if (registro.registros.length <= 0) {
+        //     registro.valido = (registro.valor !== null) ? true : false;
+        //     if (registro.concepto && !registro.valido) {
+        //         this.plex.toast('danger', 'Registro incompleto: ' + registro.concepto.term, 'Error', 3000);
+        //         this.colapsarPrestaciones('expand');
+        //     }
+        // } else {
 
-            let total = registro.registros.length;
-            let contadorValiddos = 0;
-            registro.registros.forEach(r => {
-                let res = this.controlValido(r);
-                if (res) {
-                    contadorValiddos++;
-                }
-            });
-            registro.valido = (contadorValiddos === total) ? true : false;
-        }
-        return registro.valido;
+        //     let total = registro.registros.length;
+        //     let contadorValiddos = 0;
+        //     registro.registros.forEach(r => {
+        //         let res = this.controlValido(r);
+        //         if (res) {
+        //             contadorValiddos++;
+        //         }
+        //     });
+        //     registro.valido = (contadorValiddos === total) ? true : false;
+        // }
+        // return registro.valido;
     }
 
     /**
@@ -633,17 +660,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
-        } else {
-            this.prestacion.ejecucion.registros.forEach(r => {
-                if (!this.controlValido(r)) {
-
-                    this.prestacionValida = false;
-                    this.mostrarMensajes = true;
-                    resultado = false;
-                }
-            });
         }
-
         return resultado;
     }
 
@@ -654,15 +671,21 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
-
         // validamos antes de guardar
-        if (!this.beforeSave()) {
+        let flag = true;
+        this.rupElements.forEach((item) => {
+
+            let instance = item.rupInstance;
+            flag = flag && (instance.soloValores || instance.validate());
+        });
+        // validamos antes de guardar
+        if (!this.beforeSave() || !flag) {
+            this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
-
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+            if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
         });
@@ -681,18 +704,23 @@ export class PrestacionEjecucionComponent implements OnInit {
                 localStorage.removeItem('idAgenda');
                 // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                 let cambios;
-                if (this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                    cambios = {
-                        op: 'noAsistio',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
-                } else {
-                    cambios = {
-                        op: 'darAsistencia',
-                        turnos: [this.prestacion.solicitud.turno]
-                    };
-                }
-                this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                    result => {
+                        let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                        if (filtroRegistros && filtroRegistros.length > 0) {
+
+                            cambios = {
+                                op: 'noAsistio',
+                                turnos: [this.prestacion.solicitud.turno]
+                            };
+                        } else {
+                            cambios = {
+                                op: 'darAsistencia',
+                                turnos: [this.prestacion.solicitud.turno]
+                            };
+                        }
+                        this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                    });
             }
 
             // Actualizamos las prestaciones de la HUDS
@@ -702,6 +730,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
+
 
     volver(ambito = 'ambulatorio') {
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
@@ -744,7 +773,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.ejecutarConcepto(e.dragData);
                 });
             }
-
         }
     }
 

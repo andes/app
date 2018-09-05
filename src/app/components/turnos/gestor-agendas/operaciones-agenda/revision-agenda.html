@@ -362,11 +362,11 @@
                                     <span>| Sin documento (temporal)</span>
                                 </small>
                                 <small>
-                                    <span *ngIf="turno.paciente && turno.paciente.id && turno.paciente.carpetaEfectores && turno.paciente.carpetaEfectores.length > 0 && turno.paciente.carpetaEfectores[0].nroCarpeta!=''">
-                                        | Nro Carpeta
-                                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores | slice:0:1;">
-                                            {{ carpeta.nroCarpeta }}
-                                            <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
+                                    <span *ngIf="turno?.paciente?.id && turno?.paciente?.carpetaEfectores?.length > 0">
+                                        <span *ngFor="let carpeta of turno.paciente.carpetaEfectores">
+                                            <span *ngIf="carpeta.organizacion?._id == idOrganizacion">
+                                                | Nro Carpeta {{carpeta.nroCarpeta}}
+                                            </span>
                                         </span>
                                     </span>
                                 </small>
@@ -408,11 +408,11 @@
                                     <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.documento === ''" class="text-danger">| DNI: Sin documento (temporal)</span>
                                 </small>
                                 <small>
-                                    <span *ngIf="sobreturno.paciente && sobreturno.paciente.id && sobreturno.paciente.carpetaEfectores && sobreturno.paciente.carpetaEfectores.length > 0 && sobreturno.paciente.carpetaEfectores[0].nroCarpeta!=''">
-                                        | Nro Carpeta
-                                        <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores | slice:0:1;">
-                                            {{carpeta.nroCarpeta}}
-                                            <!-- <plex-text [(ngModel)]="carpeta.nroCarpeta"></plex-text> -->
+                                    <span *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.carpetaEfectores?.length > 0">
+                                        <span *ngFor="let carpeta of sobreturno.paciente.carpetaEfectores">
+                                            <span *ngIf="carpeta.organizacion?._id == idOrganizacion">
+                                                | Nro Carpeta {{carpeta.nroCarpeta}}
+                                            </span>
                                         </span>
                                     </span>
                                 </small>

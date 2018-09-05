@@ -2,9 +2,6 @@ import { environment } from './../../../../../../environments/environment';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Observable } from 'rxjs/Rx';
-import { CalendarioComponent } from './../../../dar-turnos/calendario.component';
-import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';
 import { AgendaService } from '../../../../../services/turnos/agenda.service';
@@ -88,7 +85,7 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         if (this.agendaSeleccionada.estado === 'publicada' && this.agendaSeleccionada.horaInicio >= moment().startOf('day').toDate() &&
             this.agendaSeleccionada.horaInicio <= moment().endOf('day').toDate()) {
             tipoTurno = 'delDia';
-        // Si no es del dia, chequeo el estado para definir el tipo de turno
+            // Si no es del dia, chequeo el estado para definir el tipo de turno
         } else {
             if (this.agendaSeleccionada.estado === 'publicada' && bloque.restantesProgramados > 0) {
                 tipoTurno = 'programado';
@@ -162,12 +159,14 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
 
                     // Enviar SMS sólo en Producción
                     if (environment.production === true && this.smsStatus) {
+                        let diaOrig = moment(datosTurnoReasignado.turno.horaInicio).format('DD/MM/YYYY');
+                        let tmOrig = moment(datosTurnoReasignado.turno.horaInicio).format('HH:mm');
                         let dia = moment(turno.horaInicio).format('DD/MM/YYYY');
                         let tm = moment(turno.horaInicio).format('HH:mm');
-                        let mensaje = 'AVISO: Se reasignó su turno al ' + dia + ' a las ' + tm + ' hs. para ' + this.turnoSeleccionado.tipoPrestacion;
+                        let mensaje = 'AVISO:  Su turno de ' + this.turnoSeleccionado.tipoPrestacion.term + ' del ' + diaOrig + ' a las ' + tmOrig
+                            + ' hs. fue REASIGNADO  al ' + dia + ' a las ' + tm + ' hs.   ' + this.auth.organizacion.nombre;
                         this.plex.toast('info', 'Se informó al paciente mediante un SMS');
                         this.enviarSMS(this.turnoSeleccionado.paciente, mensaje);
-                        // this.actualizarCarpetaPaciente(turno.paciente);
                     } else {
                         this.plex.toast('info', 'INFO: SMS no enviado');
                     }
@@ -204,10 +203,9 @@ export class ReasignarTurnoAgendasComponent implements OnInit {
         };
         this.smsService.enviarSms(smsParams).subscribe(sms => {
             let resultado = sms;
-
             // "if 0 errores"
             if (resultado === '0') {
-                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombreCompleto);
+                this.plex.toast('info', 'Se envió SMS al paciente ' + paciente.nombre + ' ' + paciente.apellido);
             } else {
                 this.plex.toast('danger', 'ERROR: SMS no enviado');
             }
