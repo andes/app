@@ -1,15 +1,22 @@
-<!-- El titulo del pull request debe respetar lo siguiente:
-- Mencionar el modulo
-- Si la funcionalidad a mergear corresponde a una user storie debe ser el mismo titulo
-- En caso contrario poner una frase que describa la funcionalidad desarrollada
-- PROHIBIDO USAR LA PALABRA FIX!!!
-EJ: 'CITAS - Reglas de referencia y contrarreferencia para la carga de solicitudes'
- -->
+<!--
 
-<!--Asignar Revisor/es: Miembro del equipo responsable de revisar el pull request. -->
+PASOS PARA REGISTRAR UN PULL REQUEST
+_____________________________________________
 
+1) Escribir el nombre siguiendo estas reglas:
+   - Indicar como prefijo el nombre del módulo
+   - Si la funcionalidad corresponde a una User Story, el nombre debe coincidir son su título
+   - No utilizar la palabra fix ni sus derivados
+
+   Ejemplo: CITAS - Reglas de referencia y contrarreferencia para la carga de solicitudes
+
+2) Seleccionar el proyecto al que pertenece (CITAS, RUP, MPI, ...)
+3) Asignar revisores que sean miembros del equipo responsable de revisar el pull request
+4) Completar las siguientes secciones:
+
+-->
 ### Requerimiento
-* Link a la user storie de open project, referencia al issue (#1111) o breve descripcion del requerimiento
+* URL de la User Story, referencia al issue (#1111) o breve descripcion del requerimiento
 
 ### Funcionalidad desarrollada 
 <!-- Describir que se desarrollo -->
@@ -20,20 +27,20 @@ EJ: 'CITAS - Reglas de referencia y contrarreferencia para la carga de solicitud
 
 ### UserStories llegó a completarse
 <!-- Marca con una X la casilla correcta-->
-- [ ] Si
-- [ ] No
+- [] Si
+- [] No
 
 ### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
-- [ ] Si
-- [ ] No
+- [] Si
+- [] No
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->
 
+
 <!-- Código relevante 
-
-
   ```
-  // TODO: Código que considere importante incorporar.  
-  ``` -->
+  (pegar código aquí)  
+  ``` 
+-->
