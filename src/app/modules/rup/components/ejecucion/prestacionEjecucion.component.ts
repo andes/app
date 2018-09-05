@@ -140,10 +140,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                             });
 
                             // Trae el elementoRUP que implementa esta Prestación
-                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacionOrigen, false);
+                            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
 
                             // Trae los "más frecuentes" (sugeridos) de esta Prestación
-                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacionOrigen, this.elementoRUP);
+                            this.recuperaLosMasFrecuentes(prestacion.solicitud.tipoPrestacion, this.elementoRUP);
 
                             // Muestra los registros (y los colapsa)
                             this.mostrarDatosEnEjecucion();
@@ -162,7 +162,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                             }
                         }
-                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacionOrigen.conceptId).subscribe((grupos) => {
+                        this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
                             this.grupos_guida = grupos;
                         });
 
@@ -563,7 +563,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     ejecutarConceptoHuds(resultadoHuds) {
         if (resultadoHuds.tipo === 'prestacion') {
-            this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacionOrigen);
+            this.ejecutarConcepto(resultadoHuds.data.solicitud.tipoPrestacion);
         } else {
             let idRegistroOrigen = resultadoHuds.data.evoluciones[0].idRegistro;
 
@@ -756,7 +756,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
                     case 'prestacion':
-                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacionOrigen);
+                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
                         break;
                     case 'hallazgo':
                     case 'trastorno':
@@ -887,7 +887,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (concepto) {
             this.conceptoFrecuente = concepto;
         } else {
-            this.conceptoFrecuente = this.prestacion.solicitud.tipoPrestacionOrigen;
+            this.conceptoFrecuente = this.prestacion.solicitud.tipoPrestacion;
         }
         this.masFrecuentes = [];
         if (!elementoRUP && concepto) {
