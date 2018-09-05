@@ -605,7 +605,7 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
-        FormTerapeuticoService
+        FormTerapeuticoService,
         CDAService,
         SugerenciasService,
         ConfiguracionPrestacionService,
