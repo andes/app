@@ -95,7 +95,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
     public busquedaActual: any;
 
     // objeto de resultados
-    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], busquedaGuiada: [], buscadorBasico: [] };
+    public results: ISnomedSearchResult = { todos: [], misFrecuentes: [], sugeridos: [], busquedaGuiada: [], buscadorBasico: [], frecuentesTP: [] };
     public resultsAux: any;
 
     // public totalesTodos: Number = 0;
@@ -177,6 +177,20 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 this.filtrarResultados('misFrecuentes');
                 this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
             }
+
+            let frecuentesTP = await this.inicializarFrecuentesTP();
+
+            this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
+                let concepto = res.concepto;
+                concepto.frecuencia = res.frecuencia;
+                return concepto;
+            });
+            this.filtrarResultados('frecuentesTP');
+
+            this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
+
+            // inicializamos el filtro actual para los hallazgos
+            this.filtroActual = 'todos';
         });
     }
 
@@ -187,6 +201,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
             'idOrganizacion': this.auth.organizacion.id,
         };
         return this.frecuentesProfesionalService.get(query).toPromise();
+    }
+
+    private inicializarFrecuentesTP() {
+        let queryFTP = {
+            'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
+        };
+        return this.frecuentesProfesionalService.getXPrestacion(queryFTP).toPromise();
     }
 
     /**
@@ -303,7 +324,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             } else {
                 this.filtroActual = this.copiaFiltroActual ? this.copiaFiltroActual : this.filtroActual;
             }
-            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes') && this.search) {
+            if ((busquedaActual === 'sugeridos' || busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') && this.search) {
                 this.buscar();
             }
         }

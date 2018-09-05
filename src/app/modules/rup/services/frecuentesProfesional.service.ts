@@ -8,6 +8,7 @@ import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 import { IFrecuentesProfesional } from '../interfaces/frecuentesProfesional.interface';
 
 const url = '/modules/rup/frecuentesProfesional';
+const urlPrestacion = '/modules/rup/frecuentesPrestacion';
 
 @Injectable()
 export class FrecuentesProfesionalService {
@@ -40,6 +41,27 @@ export class FrecuentesProfesionalService {
 
         return this.server.get(url, opt);
     }
+
+
+    /**
+     * Metodo getXPrestacion. Lista los frecuentes por tipo de prestación.
+     *
+     * @param {*} params Opciones de busqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<any[]>}
+     *
+     * @memberof PrestacionesService
+     */
+    getXPrestacion(params: any, options: any = {}): Observable<any[]> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt = { params: params, options };
+
+        return this.server.get(url, opt);
+    }
+
 
     /**
      * Metodo post. Inserta un objeto elementoRup nuevo.

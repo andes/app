@@ -28,14 +28,15 @@
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
-                                [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
+                                [multiple]="true" [required]="true" closeAfterSelect="true" (change)="cambioPrestaciones()">
                             </plex-select>
                         </div>
                     </div>
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
-                            <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                                [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
+                            <plex-select [(ngModel)]="modelo.profesionales" closeAfterSelect="true" label="Profesionales" name="modelo.profesionales"
+                                (getData)="loadProfesionales($event)" [multiple]="true" labelField="apellido + ' ' + nombre"
+                                (change)="validarTodo()">
                             </plex-select>
                         </div>
                     </div>
@@ -65,7 +66,7 @@
                             <div class="row" *ngIf="espacioFisicoPropios">
                                 <div class="col-10">
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico del efector"
-                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.dscripcion ? edificio.descripcion : '')"
+                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.descripcion ? edificio.descripcion : '')"
                                         (change)="validarTodo()">
                                     </plex-select>
                                 </div>
