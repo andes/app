@@ -108,7 +108,7 @@
                                                             <div class="float-left" *ngIf="registro?.relacionadoCon">
                                                                 <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado
                                                                     con: </b>
-                                                                <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length === 1">
+                                                                <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples">
                                                                     <small class="badge badge-info text-uppercase">
                                                                         {{ registro.relacionadoCon[0].concepto.term }}
                                                                     </small>
@@ -119,7 +119,7 @@
                                                                     </a>
                                                                 </ng-container>
 
-                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.repetirRegistros">
+                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
                                                                     <ng-container *ngFor="let relacion of registro.relacionadoCon; let r=index">
                                                                         <small *ngIf="relacion.cara" class="badge badge-info">
                                                                             {{ relacion?.term ? relacion.term :
@@ -224,7 +224,9 @@
 
                                                     <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
                                                         <b class="text-capitalize">{{
-                                                            mostrarVinculacion(registro).concepto.term }}</b>?
+                                                            mostrarVinculacion(registro).concepto.term }} <span *ngIf="mostrarVinculacion(registro)?.cara">/
+                                                                {{
+                                                                mostrarVinculacion(registro)?.cara }}</span></b>?
                                                         <div class="buttons">
                                                             <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)"
                                                                 class="btn btn-default">

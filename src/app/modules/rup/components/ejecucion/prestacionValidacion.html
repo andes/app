@@ -143,7 +143,7 @@
                                     <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
                                     </b>
                                     <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
-                                        class="badge badge-info">
+                                        class="badge badge-info text-uppercase">
                                         {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() +
                                         elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                     </small>

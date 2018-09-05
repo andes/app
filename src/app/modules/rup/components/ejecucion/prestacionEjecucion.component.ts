@@ -501,6 +501,9 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+
+        this.tipoBusqueda = this.refSet;
+
         if (registroDestino && registroDestino.concepto) {
             registroDestino = registroDestino.concepto; // quickfix
         }
@@ -561,6 +564,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (this.tipoBusqueda && !this.tipoBusqueda.repetirRegistros)) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
+
                         if (dato) {
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
@@ -578,14 +582,19 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
                             } else {
+                                debugger;
+
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
                                     this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
+
                                             valor = {
                                                 idRegistroOrigen: dato.evoluciones[0].idRegistro
                                             };
+
                                             resultado = this.cargarNuevoRegistro(snomedConcept, valor);
+
                                             if (this.tipoBusqueda) {
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).find)) === -1) {
                                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
@@ -593,9 +602,12 @@ export class PrestacionEjecucionComponent implements OnInit {
                                             } else {
                                                 registroDestino.relacionadoCon = [resultado];
                                             }
+
                                         } else {
+
                                             resultado = this.cargarNuevoRegistro(snomedConcept);
                                             if (resultado && this.tipoBusqueda) {
+
                                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
                                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                                                 // }
@@ -606,14 +618,20 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     });
                                 }
                             }
+
                         } else {
+                            debugger;
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (resultado && this.tipoBusqueda) {
+                                debugger;
+
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
                                 // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : this.tipoBusqueda.conceptos;
                                 // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
+                                debugger;
+
                                 registroDestino.relacionadoCon = [resultado];
                             }
                         }
@@ -634,7 +652,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                     } else {
                         this.tipoBusqueda = this.filtroRefset ? this.filtroRefset : this.tipoBusqueda;
                         // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : [];
-                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
+                        resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : (this.tipoBusqueda && this.tipoBusqueda.conceptos ? this.tipoBusqueda.conceptos : []);
 
                     }
                     // this.tipoBusqueda = null;
@@ -965,7 +983,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     getTipoBusqueda(tipoDeBusqueda) {
-        this.tipoBusqueda = tipoDeBusqueda;
+        this.tipoBusqueda = [...tipoDeBusqueda, this.tipoBusqueda];
     }
 
     getFiltroRefset(filtroRefSet) {

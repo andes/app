@@ -547,7 +547,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
         // Devolvemos el concepto SNOMED
         this.evtData.emit(concepto);
-        this.servicioPrestacion.clearRefSetData();
+        // this.servicioPrestacion.clearRefSetData();
         // this.search = null;
 
     }
