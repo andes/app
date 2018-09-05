@@ -117,7 +117,7 @@ export class PrestacionCrearComponent implements OnInit {
             },
             solicitud: {
                 fecha: this.fecha,
-                tipoPrestacionOrigen: conceptoSnomed,
+                tipoPrestacion: conceptoSnomed,
                 // profesional logueado
                 profesionalOrigen:
                 {
