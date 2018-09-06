@@ -93,7 +93,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                         this.inasistencias = cantInasistencias;
                         this.sortTurnos(turnos);
                         this.turnosPaciente = turnos.filter(t => {
-                            return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                            return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
                         });
 
                         this.ultimosTurnos = turnos.filter(t => {
