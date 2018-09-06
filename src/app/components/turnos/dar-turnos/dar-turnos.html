@@ -12,7 +12,6 @@
                                 <plex-select *ngIf="!_solicitudPrestacion?.solicitud" [(ngModel)]="opciones.tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
                                     placeholder="Tipos de Prestación" (change)="filtrar()" name="tipoPrestacion">
                                 </plex-select>
-                                <!-- {{_solicitudPrestacion.solicitud.tipoPrestacion | json}} -->
                                 <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
                                     (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()"
                                     name="tipoPrestacion" [readonly]="true">
@@ -27,7 +26,7 @@
                                     (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
                                     name="profesional" [readonly]="true">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && !autocitado" [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
+                                <plex-select *ngIf="(_solicitudPrestacion?.solicitud && !autocitado) " [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)"
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional">
                                 </plex-select>
                             </div>

@@ -1,14 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { ProfesionalService } from '../../../services/profesional.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
 
 @Component({
     selector: 'solicitudes',
@@ -182,7 +177,7 @@ export class SolicitudesComponent implements OnInit {
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
-            this.servicioPrestacion.get(params).subscribe(resultado => {
+            this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
                 this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
