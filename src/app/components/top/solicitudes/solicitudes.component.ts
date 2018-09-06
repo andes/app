@@ -1,14 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { ProfesionalService } from '../../../services/profesional.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { IPaciente } from './../../../interfaces/IPaciente';
 
 @Component({
     selector: 'solicitudes',
