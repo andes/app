@@ -96,7 +96,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public collapse = true;
 
     // boton de volver cuando la ejecucion tiene motivo de internacion.
-    // Por defecto vuelve al mapa de camas  
+    // Por defecto vuelve al mapa de camas
     public btnVolver = 'Mapa de camas';
     public rutaVolver;
 
@@ -119,12 +119,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
+        // consultamos desde que pagina se ingreso para poder volver a la misma
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-            console.log('resp', resp);
             if (resp) {
                 this.btnVolver = resp.nombre;
                 this.rutaVolver = resp.ruta;
-                console.log(this.btnVolver);
             }
         });
         // Limpiar los valores observados al iniciar la ejecución

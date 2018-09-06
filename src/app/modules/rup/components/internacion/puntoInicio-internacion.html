@@ -51,7 +51,7 @@
                 <br> Fecha de nacimiento
                 <br> {{pacienteSeleccionado.fechaNacimiento | date}}
                 <div class="pt-4">
-                    <plex-button label="VER HUDS" type="info" (click)="verHuds(pacienteSeleccionado.id)"></plex-button>
+                    <plex-button label="VER HUDS" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')"></plex-button>
                 </div>
             </div>
             <b>
@@ -93,7 +93,7 @@
                                 </ng-container>
                             </td>
                             <td>
-                                <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info" (click)="VerEpicrisis(epicrisis.id)"></plex-button>
+                                <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info" (click)="ruteo(epicrisis.id, 'epicrisis')"></plex-button>
                             </td>
                         </tr>
                     </tbody>

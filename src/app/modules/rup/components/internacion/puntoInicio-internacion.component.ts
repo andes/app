@@ -80,16 +80,22 @@ export class PuntoInicioInternacionComponent implements OnInit {
     }
 
     /**
-     * Ruteos a ejecucion de una epicrisis y
-     * a la HUDS
+     * Ruteo a epicris/huds
+     * @param id
+     * @param key
      */
-
-    VerEpicrisis(id) {
+    ruteo(id, key) {
         this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/puntoInicio' });
-        this.router.navigate(['rup/ejecucion', id]);
-    }
-
-    verHuds(id) {
-        this.router.navigate(['rup/vista/', id]);
+        switch (key) {
+            case 'huds':
+                this.router.navigate(['rup/vista/', id]);
+                break;
+            case 'epicrisis':
+                this.router.navigate(['rup/ejecucion', id]);
+                break;
+            default:
+                this.router.navigate([]);
+                break;
+        }
     }
 }
