@@ -112,6 +112,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+import { ResumenPacienteDinamicoService } from './modules/rup/services/resumenPaciente-dinamico.service';
 
 
 // Componentes
@@ -557,8 +558,8 @@ registerLocaleData(localeEs, 'es');
         CDAService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
-
+        PrestacionLegacyService,
+        ResumenPacienteDinamicoService
     ]
 })
 

@@ -41,40 +41,43 @@
         <div class="col">
             <h5>Consultas de Niño Sano</h5>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table *ngIf="tablaModelo.length" class="table table-bordered">
                     <thead>
                         <tr>
-                            <th>Fecha</th>
-                            <th>Edad</th>
-                            <th>Peso en Kgs.</th>
-                            <th>PC. Peso</th>
-                            <th>Talla en cm.</th>
-                            <th>PC. Talla</th>
-                            <th>IMC</th>
-                            <th>PC. IMC</th>
-                            <th>Perim. Cef.</th>
-                            <th>PC. Perim. Cef.</th>
-                            <th>Tensión arterial</th>
-                            <th>PC. Tensión arterial</th>
-                            <th>Lactancia materna</th>
-                            <th>Desarrollo psicomotor</th>
+                            <th>{{tablaModelo[0].titulo}}</th>
+                            <th>{{tablaModelo[1].titulo}}</th>
+                            <th>{{tablaModelo[2].titulo}}</th>
+                            <th>{{tablaModelo[3].titulo}}</th>
+                            <th>{{tablaModelo[4].titulo}}</th>
+                            <th>{{tablaModelo[5].titulo}}</th>
+                            <th>{{tablaModelo[6].titulo}}</th>
+                            <th>{{tablaModelo[7].titulo}}</th>
+                            <th>{{tablaModelo[8].titulo}}</th>
+                            <th>{{tablaModelo[9].titulo}}</th>
+                            <th>{{tablaModelo[10].titulo}}</th>
+                            <th>{{tablaModelo[11].titulo}}</th>
+                            <th>{{tablaModelo[12].titulo}}</th>
+
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                        <tr *ngFor="let prestacion of tabla">
+                            <td *ngIf="prestacion[0]">{{prestacion[0]}}</td>
+                            <td *ngIf="prestacion[1]">{{prestacion[1]}}</td>
+                            <td *ngIf="prestacion[2]">{{prestacion[2]}}</td>
+                            <td *ngIf="prestacion[3]">{{prestacion[3]}}</td>
+                            <td *ngIf="prestacion[4]">{{prestacion[4]}}</td>
+                            <td *ngIf="prestacion[5]">{{prestacion[5]}}</td>
+                            <td *ngIf="prestacion[6]">{{prestacion[6]}}</td>
+                            <td *ngIf="prestacion[7]s">{{prestacion[7]}}</td>
+                            <td *ngIf="prestacion[8]">{{prestacion[8]}}</td>
+                            <td *ngIf="prestacion[9]">{{prestacion[9]}}</td>
+                            <td *ngIf="prestacion[10]">{{prestacion[10]}}</td>
+                            <td *ngIf="prestacion[11]">{{prestacion[11]}}</td>
+                            <td *ngIf="prestacion[12]">{{prestacion[12]}}</td>
+                            <ng-template #sinDatos>
+                                <td>-</td>
+                            </ng-template>
                         </tr>
                     </tbody>
                 </table>
