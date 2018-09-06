@@ -83,6 +83,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
@@ -607,10 +608,10 @@ registerLocaleData(localeEs, 'es');
         ProcedimientosQuirurgicosService,
         FormTerapeuticoService,
         CDAService,
+        FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService
-
     ]
 })
 
