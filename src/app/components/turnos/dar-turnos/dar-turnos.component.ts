@@ -1,6 +1,5 @@
 import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
-import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -70,7 +69,9 @@ export class DarTurnosComponent implements OnInit {
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
-            this.autocitado = this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional === this._solicitudPrestacion.solicitud.profesionalOrigen;
+            this.autocitado = this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.registros &&
+                this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
+                this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado;
             this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
@@ -239,19 +240,20 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadProfesionales(event) {
+        if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
+            event.callback([this._solicitudPrestacion.solicitud.profesional]);
+        }
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
-        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
-            // TODO quedaria ver que se va a hacer cuando en la solicitud se tengan mas de un profesional asignado
-            let query = {
-                nombreCompleto: `${this._solicitudPrestacion.solicitud.profesional.apellido} ${this._solicitudPrestacion.solicitud.profesional.nombre}`,
-            };
-            this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            event.callback(this.opciones.profesional || []);
+            if (this.opciones && this.opciones.profesional) {
+                event.callback([this.opciones.profesional]);
+            } else {
+                event.callback([]);
+            }
         }
         this.eventoProfesional = event;
     }
@@ -458,7 +460,6 @@ export class DarTurnosComponent implements OnInit {
                             // Tiene solicitud "papelito"?
                             if (this._solicitudPrestacion) {
 
-                                // Es autocitado?
 
                                 if (this.autocitado) {
                                     this.tiposTurnosSelect = 'profesional';
