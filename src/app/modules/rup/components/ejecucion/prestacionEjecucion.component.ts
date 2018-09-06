@@ -450,7 +450,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
+        if (snomedConcept.semanticTag === 'plan') {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
@@ -505,6 +505,11 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
+
+        if (snomedConcept[0] === 'planes') {
+            snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
+            snomedConcept.semanticTag = 'plan';
+        }
 
         this.tipoBusqueda = this.refSet;
 
@@ -565,7 +570,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
 
             // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (this.tipoBusqueda && !this.tipoBusqueda.repetirRegistros)) {
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
 
@@ -586,11 +591,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     registroDestino.relacionadoCon = [resultado];
                                 }
                             } else {
-                                debugger;
 
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
+                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado', 'Evolucionar', 'Insertar nuevo').then((confirmar) => {
                                         if (confirmar) {
 
                                             valor = {
@@ -624,17 +628,14 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
 
                         } else {
-                            debugger;
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (resultado && this.tipoBusqueda) {
-                                debugger;
 
                                 // if (this.prestacion.ejecucion.registros.findIndex(x => x.concepto.conceptId === resultado.relacionadoCon.find(y => y.concepto.id === (this.tipoBusqueda.conceptos as any).conceptId)) === -1) {
                                 // resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? (this.tipoBusqueda && this.tipoBusqueda[1] && this.tipoBusqueda[1].conceptos) : this.tipoBusqueda.conceptos;
                                 // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
-                                debugger;
 
                                 registroDestino.relacionadoCon = [resultado];
                             }
@@ -643,6 +644,8 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
             } else {
+
+
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
                     registroDestino.relacionadoCon = [resultado];
@@ -862,6 +865,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             // Actualizamos las prestaciones de la HUDS
             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                this.servicioPrestacion.clearRefSetData();
                 this.router.navigate(['rup/validacion', this.prestacion.id]);
             });
 

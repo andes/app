@@ -108,7 +108,7 @@
                                                             <div class="float-left" *ngIf="registro?.relacionadoCon">
                                                                 <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado
                                                                     con: </b>
-                                                                <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples">
+                                                                <!-- <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && (!elementoRUP?.reglas?.requeridos?.relacionesMultiples)">
                                                                     <small class="badge badge-info text-uppercase">
                                                                         {{ registro.relacionadoCon[0].concepto.term }}
                                                                     </small>
@@ -117,16 +117,16 @@
                                                                         title="Desvincular" class="btn btn-sm btn-primary">
                                                                         <i class="mdi mdi-link-variant-off"></i>
                                                                     </a>
-                                                                </ng-container>
+                                                                </ng-container> -->
 
-                                                                <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
+                                                                <ng-container>
                                                                     <ng-container *ngFor="let relacion of registro.relacionadoCon; let r=index">
-                                                                        <small *ngIf="relacion.cara" class="badge badge-info">
-                                                                            {{ relacion?.term ? relacion.term :
-                                                                            (relacion?.concepto?.term ? 'diente ' +
-                                                                            relacion.concepto.term + ' (' +
-                                                                            relacion.cara
-                                                                            + ')' : relacion) }}
+                                                                        <small class="badge badge-info">
+                                                                            {{ relacion?.cara ? 'diente ' +
+                                                                            relacion?.concepto?.term + ' (cara ' +
+                                                                            relacion.cara + ')' :
+                                                                            relacion.concepto.term
+                                                                            }}
                                                                         </small>
                                                                         <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[r])"
                                                                             class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"

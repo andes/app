@@ -488,6 +488,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     limpiarSeleccion(e) {
         this.piezasSeleccionadas = [];
         this.registro.valor.piezas = [];
+        this.prestacionesService.clearRefSetData();
         this.emitEjecutarAccion(null);
     }
 

@@ -128,6 +128,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
 
             // Se inicializa el buscador guiado, secundario
             this.gruposGuiada = await this.inicializarBusquedaGuiada();
+
             this.filtrarResultadosBusquedaGuiada();
 
 
@@ -168,7 +169,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
             let fp = await this.inicializarFrecuentesProfesional();
 
             if (fp && fp.length) {
-                const frecuentesProfesional = fp[0].frecuentes.map(res => {
+                const frecuentesProfesional = fp.map(res => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
                     return concepto;
@@ -185,7 +186,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
                 concepto.frecuencia = res.frecuencia;
                 return concepto;
             });
-            this.filtrarResultados('frecuentesTP');
+            // this.filtrarResultados('frecuentesTP');
 
             this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
 
@@ -399,7 +400,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         }
     }
 
-    public filtrarResultados(busquedaActual) {
+    public filtrarResultados(busquedaActual = 'busquedaActual') {
 
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual][this.filtroActual];
@@ -567,7 +568,7 @@ export class BuscadorComponent implements OnInit, OnChanges {
         // this.filtroRefSet = null;
 
         // Devolvemos el concepto SNOMED
-        this.evtData.emit(concepto);
+        this.evtData.emit([this.filtroActual, concepto]);
         // this.servicioPrestacion.clearRefSetData();
         // this.search = null;
 
