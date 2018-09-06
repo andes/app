@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
+import { Component, Output, EventEmitter, Input, HostBinding, ViewChildren, QueryList, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
@@ -6,13 +6,18 @@ import { ProfesionalService } from '../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { ReglaService } from '../../../services/top/reglas.service';
+import { environment } from '../../../../environments/environment';
+import { DomSanitizer } from '@angular/platform-browser';
+import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service';
 
 @Component({
     selector: 'nueva-solicitud',
     templateUrl: './nuevaSolicitud.html',
+    styleUrls: ['adjuntarDocumento.scss'],
 })
-export class NuevaSolicitudComponent {
+export class NuevaSolicitudComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChildren('upload') childsComponents: QueryList<any>;
 
     showSeleccionarPaciente = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
@@ -23,6 +28,26 @@ export class NuevaSolicitudComponent {
     autocitado = false;
     prestacionDestino: any;
     prestacionOrigen: any;
+    // Adjuntar Archivo
+    errorExt = false;
+    waiting = false;
+    fotos: any[] = [];
+    fileToken: String = null;
+    timeout = null;
+    lightbox = false;
+    indice;
+    documentos = [];
+
+
+    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
+    extensions = [
+        // Documentos
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
+        // Audio/Video
+        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+        // Otros
+        'dat'
+    ];
 
     modelo: any = {
         paciente: {
@@ -78,10 +103,18 @@ export class NuevaSolicitudComponent {
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
         private servicioPrestacion: PrestacionesService,
-        private servicioReglas: ReglaService
+        private servicioReglas: ReglaService,
+        public sanitazer: DomSanitizer,
+        public adjuntosService: AdjuntosService,
 
     ) { }
 
+    ngOnInit() {
+        this.extensions = this.extensions.concat(this.imagenes);
+        this.adjuntosService.generateToken().subscribe((data: any) => {
+            this.fileToken = data.token;
+        });
+    }
 
     seleccionarPaciente(paciente: any): void {
         this.paciente = paciente;
@@ -195,7 +228,8 @@ export class NuevaSolicitudComponent {
                     solicitudPrestacion: {
                         motivo: this.motivo,
                         autocitado: this.autocitado
-                    }
+                    },
+                    documentos: this.documentos
                 },
                 tipo: 'solicitud'
             });
@@ -221,8 +255,6 @@ export class NuevaSolicitudComponent {
     cancelar() {
         this.newSolicitudEmitter.emit();
     }
-
-
     loadProfesionales(event) {
         if (event.query) {
             let query = {
@@ -245,4 +277,105 @@ export class NuevaSolicitudComponent {
             event.callback(dataF);
         });
     }
+
+    // Adjuntar archivo
+    changeListener($event): void {
+        this.readThis($event.target);
+    }
+
+    readThis(inputValue: any): void {
+        let ext = this.fileExtension(inputValue.value);
+        this.errorExt = false;
+        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
+            (this.childsComponents.first as any).nativeElement.value = '';
+            this.errorExt = true;
+            return;
+        }
+        let file: File = inputValue.files[0];
+        let myReader: FileReader = new FileReader();
+
+        myReader.onloadend = (e) => {
+            console.log(this.childsComponents.first);
+            (this.childsComponents.first as any).nativeElement.value = '';
+            let metadata = {};
+            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
+                this.fotos.push({
+                    ext,
+                    id: data._id
+                });
+                this.documentos.push({
+                    ext,
+                    id: data._id
+                });
+            });
+
+
+        };
+        myReader.readAsDataURL(file);
+    }
+
+    fileExtension(file) {
+        if (file.lastIndexOf('.') >= 0) {
+            return file.slice((file.lastIndexOf('.') + 1));
+        } else {
+            return '';
+        }
+    }
+
+    esImagen(extension) {
+        return this.imagenes.find(x => x === extension.toLowerCase());
+    }
+
+    imageUploaded($event) {
+        let foto = {
+            ext: this.fileExtension($event.file.name),
+            file: $event.src,
+        };
+        this.fotos.push(foto);
+    }
+
+    imageRemoved($event) {
+        let index = this.fotos.indexOf($event);
+        this.fotos.splice(index, 1);
+        // this.registro.valor.documentos.splice(index, 1);
+    }
+
+    activaLightbox(index) {
+        if (this.fotos[index].ext !== 'pdf') {
+            this.lightbox = true;
+            this.indice = index;
+        }
+    }
+
+    imagenPrevia(i) {
+        let imagenPrevia = i - 1;
+        if (imagenPrevia >= 0) {
+            this.indice = imagenPrevia;
+        }
+    }
+
+    imagenSiguiente(i) {
+        let imagenSiguiente = i + 1;
+        if (imagenSiguiente <= this.fotos.length - 1) {
+            this.indice = imagenSiguiente;
+        }
+    }
+
+    createUrl(doc) {
+        /** Hack momentaneo */
+        // let jwt = window.sessionStorage.getItem('jwt');
+        if (doc.id) {
+            let apiUri = environment.API;
+            return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
+        } else {
+            // Por si hay algún documento en la vieja versión.
+            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
+        }
+    }
+
+    cancelarAdjunto() {
+        clearTimeout(this.timeout);
+        this.waiting = false;
+    }
+
 }
