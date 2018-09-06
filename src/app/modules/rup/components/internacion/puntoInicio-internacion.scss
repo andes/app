@@ -25,6 +25,9 @@ $andes-verde-claro: #63c7b7;
 
 
 
+table {
+    margin-top: 20px;
+}
 
 .info-sidebar {
     color:rgb(204, 204, 204);
@@ -52,6 +55,7 @@ h3 {
 
     plex-layout-sidebar plex-box > DIV {
 
+        
     h3,h4,h5,h5,h6,p,strong {
         color: white;
         margin-bottom: 0.25rem;
@@ -66,21 +70,44 @@ h3 {
         font-weight: 400;
         text-transform: uppercase;
     }
+    
+    b {
+        text-align: left;
+    }
+    .mensaje-resultado{
+        color:#ffffff;
+        text-align: center;
+    }
+
+    & > .plex-box-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
 
     // Si hay tabla
-    table {
-        th, td {
-            color: white;
+    .contenedor-tabla {
+        height: 35vh;
+        overflow-y: scroll;
+        overflow-x: hidden;
 
-        thead th {
-            vertical-align: middle;
-        }
 
-            &.txt-responsive {
-                font-size: 0.9vw;
+        table {
+            th, td {
+                color: white;
+    
+            thead th {
+                vertical-align: middle;
+            }
+    
+                &.txt-responsive {
+                    font-size: 0.9vw;
+                }
             }
         }
+    
     }
+
 
     // Listados
     li {

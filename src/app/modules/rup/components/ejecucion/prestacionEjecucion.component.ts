@@ -95,6 +95,11 @@ export class PrestacionEjecucionComponent implements OnInit {
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
 
+    // boton de volver cuando la ejecucion tiene motivo de internacion.
+    // Por defecto vuelve al mapa de camas  
+    public btnVolver = 'Mapa de camas';
+    public rutaVolver;
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -114,7 +119,14 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            console.log('resp', resp);
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+                console.log(this.btnVolver);
+            }
+        });
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
@@ -727,16 +739,36 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
-
-    volver(ambito = 'ambulatorio') {
-        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+    /**
+     * Setea el boton volver, Segun la ruta que recibe y el
+     *  ambito de origen de la prestacion
+     * @param ambito
+     * @param ruta
+     */
+    volver(ambito = 'ambulatorio', ruta = null) {
+        let mensaje;
+        let ruteo;
+        switch (ambito) {
+            case 'ambulatorio':
+                mensaje = 'Punto de Inicio';
+                ruteo = 'rup';
+                break;
+            case 'internacion':
+                if (ruta) {
+                    mensaje = 'Punto de Inicio';
+                    ruteo = ruta;
+                } else {
+                    mensaje = 'Mapa de Camas';
+                    ruteo = '/internacion/camas';
+                }
+                break;
+            default:
+                break;
+        }
+        // let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
-                if (ambito === 'ambulatorio') {
-                    this.router.navigate(['rup']);
-                } else {
-                    this.router.navigate(['/internacion/camas']);
-                }
+                this.router.navigate([ruteo]);
             } else {
                 return;
             }
