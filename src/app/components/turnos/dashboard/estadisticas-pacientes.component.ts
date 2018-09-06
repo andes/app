@@ -69,12 +69,10 @@ export class EstadisticasPacientesComponent implements OnInit {
             nroCarpeta: ''
         };
         this.getPaciente();
-
     }
 
     arancelamiento(turno) {
         this.showArancelamientoForm.emit(turno);
-
     }
 
     getPaciente() {
