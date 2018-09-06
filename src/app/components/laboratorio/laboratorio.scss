@@ -1,0 +1,294 @@
+@import 'node_modules/@andes/plex/src/lib/css/variables';
+
+
+td:not(:first) {
+    min-width: 200px !important;
+}
+
+.datos-agenda:not(span),
+.tipo-prestacion,
+.fechas {
+    font-size: 0.9rem;
+}
+
+.nombres-profesionales {
+    div {
+        font-size: 0.9rem;
+    }
+}
+
+span.badge,
+span.badge-default {
+    font-size: 0.6rem;
+}
+
+
+// Extensiones
+
+// Globales
+.badge-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    // width: 40%;
+
+    &.start {
+        justify-content: flex-start;
+    }
+ }
+
+ .botonera-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    // width: 100%;
+    padding: 0.25rem;
+    margin: .5rem 0;
+
+    plex-button {
+        &.left {
+
+        }
+        
+        &.right {
+
+        }
+
+        &.center {
+
+        }
+    }
+ }
+
+ .labs-contenedor-secundario {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 30px;
+
+ }
+
+//  Tabs
+header {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
+    >h4 {
+        text-transform: uppercase;
+        &::after {
+            color: blue;
+        }
+
+    }
+}
+section.contenedor-tabs {
+    display: flex;
+    flex-direction: row;
+    align-self: flex-end;
+
+    height: 100%;
+    width: auto;
+    max-width: 50%;
+    
+
+    // Menu hamburguesa
+    .dropdown-secundario {
+        display: flex;
+        align-self: center;
+        font-size: 2rem;
+
+    }
+
+}
+
+// Filtros avanzados
+.contenedor-filtros {
+    display: flex;
+    align-items: flex-start; 
+
+    [class^="label"] {
+        margin-top: 0!important;
+    }
+}
+
+%bloque-texto {
+    display: flex;
+    flex-direction: column;
+}
+    .contenedor-bloque-texto {
+        &.line-height {
+            line-height: 0;
+            text-align: right;
+        }
+
+        @extend %bloque-texto;
+    
+            >h5 {
+                font-weight: 500;
+            }
+        
+            .align-right {
+                text-align: right;
+            }
+        
+            small {
+                font-style: italic;
+            }
+    }
+
+// Resultados protocolos
+.labs-listado-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 60px;
+    max-height: 60px;
+    padding: 0.25rem 0.5rem;
+    background-color: white!important;
+    border:solid 1px black;
+
+    &:hover{ 
+        background-color: $dark-grey;
+        border: solid 2px $blue;   
+    }
+    
+    .listado-contenedor-secundario {
+        display: flex;
+        justify-content: flex-start;
+        width: 75%;
+    }
+    
+    td {
+        border: none!important;
+    }
+
+    .labs-item-numero {
+        display: flex;
+        flex-direction: row;
+        font-weight: bolder; 
+        
+        & h2 {
+            align-self: center;
+            display: flex;
+            margin-bottom: 0;
+        }
+    }
+
+    .contenedor-bloque-texto {
+        @extend %bloque-texto;
+        height: 3rem;
+        align-self: center;
+
+        .labs-item-texto {
+            display: flex;
+            flex-direction: row;
+            font-weight: normal; 
+        }
+    }
+
+    hr {
+        border: solid 1px gray;
+        height: 35%;
+        margin: 10px;
+        align-self: center;
+    }
+}
+
+.labs-listado-item-input {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    min-height: 60px;
+    padding: 0.25rem 0.5rem;
+    background-color: white!important;
+    border:solid 1px black;
+
+    &:hover{ 
+        background-color: $dark-grey;
+        border: solid 2px $blue;   
+    }
+    
+    .listado-contenedor-secundario {
+        display: flex;
+        justify-content: flex-start;
+        width: 75%;
+    }
+    
+    td {
+        border: none!important;
+    }
+
+    .labs-item-numero {
+        display: flex;
+        flex-direction: row;
+        font-weight: bolder; 
+        
+        & h2 {
+            align-self: center;
+            display: flex;
+            margin-bottom: 0;
+        }
+    }
+
+    .contenedor-bloque-texto {
+        @extend %bloque-texto;
+        height: 3rem;
+        align-self: center;
+
+        .labs-item-texto {
+            display: flex;
+            flex-direction: row;
+            font-weight: normal; 
+        }
+    }
+
+    hr {
+        border: solid 1px gray;
+        height: 35%;
+        margin: 10px;
+        align-self: center;
+    }
+}
+
+// Sidebar
+plex-layout-sidebar[type="invert"]
+    plex-box > div:last-child {
+        background-color: #072837!important;
+        &h1,h2,h3,h4,h5,h6,p {
+            color: white;
+        }
+    }
+
+
+// Icons
+i[class^="mdi mdi-"] {
+    &.rosa {
+        color: #FFB6C1;
+    }
+
+    &.azul {
+        color: $blue;
+    }
+}
+
+.invert{
+    background-color: #072837!important;
+    &h1,h2,h3,h4,h5,h6,p,span {
+        color: white;
+    }
+}
+
+.scrollPacientes{    
+    overflow-y: auto;
+    max-height: 200px;
+}

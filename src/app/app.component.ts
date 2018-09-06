@@ -61,6 +61,11 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
 
+        // if (this.auth.getPermissions('rup:?').length > 0) {
+        if (true) {
+            accessList.push({ label: 'SIL: Sistema de Laboratorio', icon: 'contacts', route: '/laboratorio' });
+        }
+
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
         accessList.forEach((permiso) => {

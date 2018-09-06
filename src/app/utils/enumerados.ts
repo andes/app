@@ -63,6 +63,36 @@ export enum PrioridadesPrestacion {
     'emergencia'
 }
 
+export enum CargaLaboratorio {
+    'recepcion',
+    'control',
+    'carga',
+    'validacion'
+}
+
+export enum PrioridadesLaboratorio {
+    'normal',
+    'urgencia'
+}
+
+export enum OrigenLaboratorio {
+    'ambulatorio',
+    'internación',
+    'guardia',
+    'todos'
+}
+
+export enum laboratorioInterno {
+    'derivaciones',
+    'guardia',
+    'hematologia',
+    'hemostasia',
+    'inmunofluorescencia',
+    'orinas',
+    'quimica clinica',
+    'serologia'
+}
+
 export enum EstadosEspacios {
     'disponible',
     'mantenimiento',
@@ -178,6 +208,56 @@ export function getPrioridades() {
     let arrPrioridades = Object.keys(PrioridadesPrestacion);
     arrPrioridades = arrPrioridades.slice(arrPrioridades.length / 2);
     return arrPrioridades;
+}
+
+export function getPrioridadesLab() {
+    let arrLab = Object.keys(PrioridadesLaboratorio);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+
+
+export function getCargaLaboratorio() {
+    let arrLab = Object.keys(CargaLaboratorio);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getOrigenLab() {
+    let arrLab = Object.keys(OrigenLaboratorio);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getLaboratorioInterno() {
+    let arrLab = Object.keys(laboratorioInterno);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
 }
 
 export function getEstadosAuditorias() {

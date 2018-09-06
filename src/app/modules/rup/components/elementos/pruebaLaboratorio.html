@@ -1,0 +1,55 @@
+<ng-container *ngIf="!soloValores && registro.valor">
+    <!-- Prioridad -->
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.prioridad" name="Prioridad" (getData)="loadPrioridad($event)"
+        label="Prioridad" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
+    </plex-select>
+    <!-- Organización Destino -->
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.organizacionDestino" name="organizacionDestino" (getData)="loadOrganizacion($event)"
+        label="Organización destino" placeholder="Seleccione la organización" labelField="nombre" [required]="true ">
+    </plex-select>
+    <!-- Servicio -->
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.servicio" name="Servicio" (getData)="loadServicios($event)"
+        label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="true" idField="term">
+    </plex-select>
+    <!-- Prácticas  -->
+    <plex-select [(ngModel)]="registro.valor.solicitudPrestacion.practicas" (getData)="loadPracticas($event)" required="true"
+        placeholder="Practicas" label="Practicas a Solicitar" labelField="descripcion" idField="descripcion" [multiple]="true">
+    </plex-select>
+    <!-- Observaciones -->
+    <plex-text label="Observaciones" multiline="true" autoFocus="1" required="true" [(ngModel)]="registro.valor.solicitudPrestacion.observaciones"></plex-text>
+</ng-container>
+<div class="row" *ngIf="soloValores">
+    <div class="col-12 readonly">
+        <div *ngIf="registro.valor?.solicitudPrestacion?.prioridad">
+            <span>Prioridad de la solicitud</span>
+            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.prioridad">
+                {{ registro.valor.solicitudPrestacion.prioridad.nombre }}
+            </ng-container>
+        </div>
+        <div *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino">
+            <span>Organización a la cual se solicita</span>
+            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.organizacionDestino && registro.valor?.solicitudPrestacion?.organizacionDestino?.id">
+                {{ registro.valor.solicitudPrestacion.organizacionDestino.nombre }}
+            </ng-container>
+        </div>
+        <div *ngIf="registro?.valor?.solicitudPrestacion?.servicio">
+            <span>Servicio</span>
+            <ng-container *ngIf="registro.valor?.solicitudPrestacion?.servicio && registro?.valor?.solicitudPrestacion?.servicio?.id">
+                {{ registro.valor.solicitudPrestacion.servicio.term }}
+            </ng-container>
+        </div>
+        <div *ngIf="registro?.valor?.solicitudPrestacion?.practicas">
+            <span>Practicas</span>
+            <ng-container *ngIf="registro?.valor?.solicitudPrestacion?.practicas && registro?.valor?.solicitudPrestacion?.practicas.length">
+                <ng-container *ngFor="let practica of registro.valor?.solicitudPrestacion?.practicas">
+                    {{practica.descripcion}}
+                    <br>
+                </ng-container>
+            </ng-container>
+        </div>
+        <div>
+            <span>Observaciones</span>
+            {{ registro.valor.solicitudPrestacion.observaciones || '(no definido)' }}
+        </div>
+    </div>
+</div>

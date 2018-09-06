@@ -19,6 +19,7 @@ import { ProcedimientosQuirurgicosService } from '../../../../services/procedimi
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ActivatedRoute } from '@angular/router';
+import { PracticaService } from '../../../../services/laboratorio/practica.service';
 
 @Component({
     selector: 'rup',
@@ -96,6 +97,7 @@ export class RUPComponent implements OnInit {
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         public Cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
+        public servicioPractica: PracticaService,
         public route: ActivatedRoute
     ) { }
 

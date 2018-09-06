@@ -58,6 +58,21 @@ export class PrestacionesService {
     }
 
     /**
+     * Método get. Trae lista de objetos prestacion de 'prueba de laboratorio' sin protocolo asociado.
+     * @param {*} params Opciones de búsqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<IPrestacion[]>}
+     *
+     * @memberof PrestacionesService
+     */
+    getPrestacionesLabo(params: any, options: any = {}): Observable<IPrestacion[]> {
+
+        let opt = { params: params, options };
+
+        return this.server.get(this.prestacionesUrl + '/laboratorio', opt);
+    }
+
+    /**
      * Método getById. Trae el objeto tipoPrestacion por su Id.
      * @param {String} id Busca por Id
      */
@@ -571,6 +586,7 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
+
         let prestacion = {
             paciente: {
                 id: paciente.id,

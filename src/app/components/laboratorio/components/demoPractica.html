@@ -1,0 +1,15 @@
+<plex-layout main="9">
+    <plex-layout-main>
+        <header>
+            <!-- Buscador  -->
+            <practica-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"> </practica-buscar>
+        </header>
+        <!-- Listado de practicas -->
+        <practica-listado *ngIf="practicas && practicas.length" [practicas]="practicas" [autoselect]="false" (selected)="seleccionarPractica($event)"
+            (hover)="hoverPractica($event)"></practica-listado>
+        <div *ngIf="practicas && !practicas.length" class="alert alert-default">
+            ¡No se encontró ningúna practica!
+        </div>
+    </plex-layout-main>
+
+</plex-layout>

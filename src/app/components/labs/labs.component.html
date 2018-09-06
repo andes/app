@@ -1,0 +1,102 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <header>
+            <h3>Un titulo</h3>
+
+            <!-- Conjunto de filtros -->
+            <div class="row">
+                <div class="col-3">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" name="fechaDesde" label="Desde" class="fechas"></plex-datetime>
+                    <!-- <plex-button type="info" icon="chevron-right"></plex-button> -->
+                </div>
+                <div class="col-3">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" name="fechaHasta" label="Hasta"
+                        class="fechas">
+                    </plex-datetime>
+                </div>
+                <div class="col-3">
+                    <plex-select [(ngModel)]="prestaciones" (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación">
+                    </plex-select>
+                </div>
+                <div class="col-3">
+                    <label>
+                      <!--Spacer-->&nbsp;
+                    </label>
+                    <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                </div>
+            </div>
+            <!-- Filtros avanzados -->
+            <div class="row" *ngIf="mostrarMasOpciones">
+                <div class="col-4">
+                    <plex-select [(ngModel)]="profesionales" name="profesionales" label="Profesional" placeholder="Buscar un profesional" labelField="apellido+' '+nombre" ngModelOptions="{standalone: true}"></plex-select>
+                </div>
+                <div class="col-4">
+                    <plex-select [(ngModel)]="espacioFisico"  name="espacioFisico" (getData)="loadEspacios($event)" label="Espacio Físico" placeholder="Buscar un espacio físico" labelField="nombre + ' - ' + (servicio ? servicio.nombre : '' ) + ' (' + edificio ? edificio.descripcion : '' + ')'" ngModelOptions="{standalone: true}"></plex-select>
+                </div>
+                <div class="col-4">
+                    <plex-select [(ngModel)]="estado" [data]="estadosAgendaArray" name="estado" label="Estado" ngModelOptions="{standalone: true}"></plex-select>
+                </div>
+            </div>
+        </header>
+
+        <!-- Listado -->
+        <table class="table table-striped table-sm">
+            <thead>
+                <th>ID</th>
+                <th>Fecha</th>
+                <th>Servicio</th>
+                <th></th>
+                <th class="text-right estado">Estado</th>
+            </thead>
+            <tbody>
+                <tr class="" *ngFor="let protocolo of protocolos; let i = index" (click)="editProtocolo(i)">
+                  <td>{{protocolo.id}}</td>
+                  <td>{{protocolo.fecha}}</td>
+                  <td>{{protocolo.servicio}}</td>
+                  <td>
+                    <a (click)="addProtocolo()" class="btn btn-success">
+                      Accion exitosa
+                    </a>
+                    <a class="btn btn-danger">
+                      Editar
+                    </a>
+                  </td>
+                  <td>{{protocolo.origen}}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </plex-layout-main>
+    <plex-layout-sidebar>
+      <header>
+        <h3>Detalle</h3>
+      </header>
+
+      <!-- Detalle -->
+      <form class="form-horizontal">
+          <div class="form-group">
+            <label for="" class="control-label col-sm-2">Número</label>
+            <div class="col-sm-12">
+              <h1 class="text-primary" id="id" name="número" [(ngModel)]="model2.id">{{ model2.id}}</h1>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label col-sm-2">Fecha</label>
+            <div class="col-sm-12">
+              <h3 class="" id="id" name="número" [(ngModel)]="model2.fecha">{{ model2.fecha}}</h3>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="" class="control-label col-sm-2">Origen</label>
+            <div class="col-sm-12">
+              <h3 class="" id="id" name="número" [(ngModel)]="model2.origen">{{ model2.origen}}</h3>
+            </div>
+          </div>
+        </form>
+
+    </plex-layout-sidebar>
+    <plex-layout-footer>
+            <plex-button label="Cancelar" type="danger" position="left"></plex-button>
+            <plex-button label="Guardar formulario" type="success" position="right"></plex-button>
+    </plex-layout-footer>
+</plex-layout>   

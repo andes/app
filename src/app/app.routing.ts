@@ -43,6 +43,7 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
+import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -82,6 +83,10 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+// Laboratorio
+import { PuntoInicioLaboratorioComponent } from './components/laboratorio/puntoInicioLaboratorio.component';
+import { ProtocoloDetalleComponent } from './components/laboratorio/protocolos/protocolo-detalle.component';
+import { PracticaDemoComponent } from './components/laboratorio/components/demoPractica.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -101,6 +106,9 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'mpi/demo', component: PacienteDemoComponent, canActivate: [RoutingGuard] },
+
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
@@ -133,6 +141,7 @@ const appRoutes: Routes = [
   // configuracion prestacion
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingGuard] },
 
+
   // Mapa de camas
   { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
 
@@ -150,6 +159,10 @@ const appRoutes: Routes = [
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
+  // Laboratorio
+  { path: 'laboratorio', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

@@ -60,6 +60,7 @@ import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
 import { PacienteService } from './services/paciente.service';
+import { PracticaService } from './services/laboratorio/practica.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -114,6 +115,7 @@ import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesP
 import { CDAService } from './modules/rup/services/CDA.service';
 
 
+
 // Componentes
 import { LoginComponent } from './components/login/login.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
@@ -141,6 +143,10 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
+import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
+import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
+import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -227,6 +233,7 @@ import { ObservacionesComponent } from './modules/rup/components/elementos/obser
 import { NuevaEvolucionProblemaComponent } from './modules/rup/components/elementos/nuevaEvolucionProblema.component';
 import { EvolucionProblemaDefaultComponent } from './modules/rup/components/elementos/evolucionProblemaDefault.component';
 import { AutocitadoComponent } from './modules/rup/components/elementos/autocitado.component';
+import { PruebaLaboratorioComponent } from './modules/rup/components/elementos/pruebaLaboratorio.component';
 import { ObesidadComponent } from './modules/rup/components/elementos/obesidad.component';
 import { HipertensionArterialComponent } from './modules/rup/components/elementos/hipertensionArterial.component';
 import { FiltradoGlomerularComponent } from './modules/rup/components/elementos/filtradoGlomerular.component';
@@ -331,6 +338,12 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+// Laboratorio
+import { PuntoInicioLaboratorioComponent } from './components/laboratorio/puntoInicioLaboratorio.component';
+import { ProtocoloDetalleComponent } from './components/laboratorio/protocolos/protocolo-detalle.component';
+import { PracticaBuscarComponent } from './components/laboratorio/components/practica-buscar.component';
+import { PracticaDemoComponent } from './components/laboratorio/components/demoPractica.component';
+import { PracticaListadoComponent } from './components/laboratorio/components/practica-listado.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -348,6 +361,7 @@ export let RUPRegistry = {
     'FrecuenciaCardiacaComponent': FrecuenciaCardiacaComponent,
     'FrecuenciaRespiratoriaComponent': FrecuenciaRespiratoriaComponent,
     'AutocitadoComponent': AutocitadoComponent,
+    'PruebaLaboratorioComponent': PruebaLaboratorioComponent,
     'ObesidadComponent': ObesidadComponent,
     'HipertensionArterialComponent': HipertensionArterialComponent,
     'FiltradoGlomerularComponent': FiltradoGlomerularComponent,
@@ -386,6 +400,7 @@ export let RUPRegistry = {
 let RUPComponentsArray = [
     SelectPorRefsetComponent,
     AutocitadoComponent,
+    PruebaLaboratorioComponent,
     EvolucionProblemaDefaultComponent,
     FiltradoGlomerularComponent,
     FrecuenciaCardiacaComponent,
@@ -520,6 +535,8 @@ registerLocaleData(localeEs, 'es');
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
+        PuntoInicioLaboratorioComponent,
+        ProtocoloDetalleComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
         PrestarHcComponent,
@@ -529,6 +546,19 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+        //LABORATORIO
+        PracticaBuscarComponent,
+        PracticaDemoComponent,
+        PracticaListadoComponent,
+
+
+        // MPI
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+        PacienteDemoComponent,
+        PacientePanelComponent,
+        ReglasComponent,
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
@@ -555,6 +585,7 @@ registerLocaleData(localeEs, 'es');
         LocalidadService,
         BarrioService,
         PacienteService,
+        PracticaService,
         FinanciadorService,
         ParentescoService,
         appRoutingProviders,

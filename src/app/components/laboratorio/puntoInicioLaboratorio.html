@@ -1,0 +1,266 @@
+<plex-layout main="9" *ngIf="showListarProtocolos">
+    <plex-layout-main>
+        <header>
+            <h4>Punto de inicio | Laboratorio</h4>
+            <section class="contenedor-tabs">
+                <plex-tabs>
+                    <plex-tab label="Laboratorio general"></plex-tab>
+                    <plex-tab label="Microbiologia"></plex-tab>
+                    <plex-tab label="Screening neonatal"></plex-tab>
+                    <plex-tab label="Bromatologia"></plex-tab>
+                </plex-tabs>
+                <div class="dropdown-secundario">
+                    <i class="mdi mdi-dots-horizontal"></i>
+                </div>
+            </section>
+        </header>
+        <!-- Conjunto de filtros -->
+        <div class="row">
+
+            <div class="col-6">
+                <plex-select [(ngModel)]="modo" name="LaboratorioInterno" (change)='changeServicio()' label="Modo" [data]='cargaLaboratorioEnum'
+                    [required]="false"></plex-select>
+            </div>
+            <div class="col-6 text-right" *ngIf='modo && modo.id !== "recepcion"'>
+                <plex-bool type="slide" [(ngModel)]="espec" label="" name="especialidad.activo" label='Establecer filtros por defecto' (change)='recordarFiltros()'></plex-bool>
+
+            </div>
+            <div class="col-1 d-flex" *ngIf='modo && modo.id === "recepcion"'>
+                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="formularioSolicitud('activeTab')"></plex-button>
+            </div>
+            <div class="col-6" *ngIf='modo && modo.id === "carga"'>
+                <label for="">Forma de cargar</label>
+                <plex-bool type="checkbox" [(ngModel)]="formaCarga.listProtocolo" label="Por lista de protocolos" (change)='changeCarga("listProtocolo")'
+                    name="protocolos"></plex-bool>
+                <plex-bool type="checkbox" [(ngModel)]="formaCarga.hTrabajo" label="Por hoja de trabajo" (change)='changeCarga("hTrabajo")'
+                    name="trabajo"></plex-bool>
+                <plex-bool type="checkbox" [(ngModel)]="formaCarga.pAnalisis" label="Por analisis" (change)='changeCarga("pAnalisis")' name="analisis"></plex-bool>
+            </div>
+
+        </div>
+        <div class="row contenedor-filtros">
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
+                <plex-select [(ngModel)]="area" (change)="refreshSelection($event,'LaboratorioInterno')" name="LaboratorioInterno" label="Area"
+                    [data]='laboratorioInternoEnum' [required]="true"></plex-select>
+            </div>
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
+                <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="Prioridad" label="Prioridad" [data]="prioridadesEnum"
+                    [required]="true"></plex-select>
+            </div>
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
+                <plex-select [(ngModel)]="origen" (change)="refreshSelection($event,'origen')" name="origen" label="Origen" [data]="origenEnum"
+                    [required]="true"></plex-select>
+            </div>
+            <div class="col-2" *ngIf='modo && modo.id !== "recepcion"'>
+                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="refreshSelection($event,'fechaDesde')" name="solicitudDesde"
+                    label="Fecha desde" class="fechas" [required]="true">
+                </plex-datetime>
+            </div>
+            <div class="col-2" *ngIf='modo && modo.id !== "recepcion"'>
+                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="refreshSelection($event,'fechaHasta')" name="solicitudHasta"
+                    label="Fecha hasta" class="fechas" [required]="true">
+                </plex-datetime>
+            </div>
+            <div class="col-2" *ngIf='modo && modo.id === "recepcion"'>
+                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="turnosLaboratorio()" name="solicitudDesde" label="Fecha desde"
+                    class="fechas" [required]="true">
+                </plex-datetime>
+            </div>
+            <div class="col-2" *ngIf='modo && modo.id === "recepcion"'>
+                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="turnosLaboratorio()" name="solicitudHasta" label="Fecha hasta"
+                    class="fechas" [required]="true">
+                </plex-datetime>
+            </div>
+            <div class="col-2 labs-contenedor-secundario " *ngIf='modo && modo.id !== "recepcion"'>
+                <div class="contenedor-bloque-texto line-height mr-2">
+                    <h6>Filtrado avanzado</h6>
+                    <small class="text-primary"></small>
+                </div>
+                <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+            </div>
+        </div>
+        <!-- Filtros avanzados -->
+        <div class="row" *ngIf="mostrarMasOpciones">
+            <div *ngIf='modo && modo.id === "carga" && modo.id !== "recepcion"' class="col-3">
+                <plex-select [(ngModel)]="busqueda.servicios" name="Servicio" (getData)="loadServicios($event)" label="Servicio" placeholder="Seleccione el servicio"
+                    labelField="term" [multiple]="true" [required]="false" idField="term">
+                </plex-select>
+            </div>
+            <div *ngIf='modo && modo.id !== "carga" && modo.id !== "recepcion"' class="col-3">
+                <plex-select [(ngModel)]="busqueda.servicios" name="Servicio" (getData)="loadServicios($event)" label="Servicio" placeholder="Seleccione el servicio"
+                    labelField="term" [required]="false" idField="term">
+                </plex-select>
+            </div>
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
+                <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numeroDesde"
+                    label="N° protocolo desde"></plex-float>
+            </div>
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
+                <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numeroHasta"
+                    label="N° protocolo hasta"></plex-float>
+            </div>
+            <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
+                <plex-select [(ngModel)]="efectorSolicitante" (change)="refreshSelection($event,'efectorSolicitante')" name="efectorSolicitante"
+                    label="Efector Solicitante" (getData)="loadOrganizacion($event)"></plex-select>
+            </div>
+            <div class="col-12" *ngIf='modo && modo.id !== "recepcion"'>
+                <label for="">Paciente</label>
+                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+                <!-- Listado de pacientes -->
+                <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
+                    <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+                </div>
+            </div>
+        </div>
+        <div *ngIf='modo && modo.id === "recepcion"' class="col-12">
+            <label for="">Paciente</label>
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+            <!-- Listado de pacientes -->
+            <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
+                <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+            </div>
+        </div>
+        <hr>
+        <!--Resultados-->
+
+
+        <div *ngIf="!protocolos?.length" class="alert alert-default">
+            <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
+        </div>
+        <!-- Listado -->
+        <hr>
+        <!-- Listado -->
+        <table class="table table-striped table-sm" *ngIf='modo && modo.id !== "recepcion"'>
+            <tbody>
+                <tr class="labs-listado-item" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
+                    <div class="listado-contenedor-secundario">
+                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
+
+                            <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
+                            <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
+                            <hr>
+                            <h2 *ngIf='getNumeroProtocolo(protocolo.solicitud.registros) !== null'>{{getNumeroProtocolo(protocolo.solicitud.registros)}}</h2>
+
+                            <hr>
+                        </td>
+                        <td class="contenedor-bloque-texto">
+                            <div class="labs-item-texto">
+                                <p>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
+                                <strong>&nbsp;|&nbsp;Origen&nbsp;</strong>
+                                <p>{{protocolo.solicitud.ambitoOrigen}}</p>
+                                <strong>&nbsp;|&nbsp;Servicio&nbsp;</strong>
+                                <p>Clinica</p>
+                            </div>
+                            <div class="labs-item-texto">
+                                <strong>Usuario:&nbsp;</strong>
+                                <p>{{protocolo.createdBy.nombreCompleto}}</p>
+                                <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
+                                <p>{{protocolo.paciente.nombre}} {{protocolo.paciente.apellido}} </p>
+                                <strong>&nbsp;|&nbsp;Fecha de Registro:&nbsp;</strong>
+                                <p>{{protocolo.createdAt | date: 'dd/MM/yyyy'}}</p>
+                            </div>
+                        </td>
+                    </div>
+                    <td class="badge-container">
+                        <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
+                        <plex-badge type="warning" class="ml-2"> estado </plex-badge>
+                        <plex-button type="success" size="sm" (click)="cargarResultados()" class="ml-2">{{accion}} Resultados</plex-button>
+                        <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
+                            <i class="mdi mdi-file-document"></i>
+                        </plex-button>
+
+
+                    </td>
+                </tr>
+                <!-- /Protocolos hardcodeados -->
+            </tbody>
+        </table>
+
+        <!-- TABLA RECEPCION -->
+        <table *ngIf='turnosRecepcion && modo && modo.id === "recepcion"' class="table table-striped table-sm">
+            <tbody>
+                <tr class="labs-listado-item" *ngFor="let prestacion of turnosRecepcion; let i = index">
+                    <div class="listado-contenedor-secundario">
+                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
+
+                            <i *ngIf='prestacion.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
+                            <i *ngIf='prestacion.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
+                            <hr>
+                            <hr>
+                        </td>
+                        <td class="contenedor-bloque-texto">
+                            <div class="labs-item-texto">
+                                <strong>Fecha de Registro:&nbsp;</strong>
+                                <p>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
+                                <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
+                                <p>{{prestacion.paciente.nombre}} {{prestacion.paciente.apellido}}
+                                </p>
+                                <strong>&nbsp;|&nbsp;Documento:&nbsp;</strong>
+                                <p>{{prestacion.paciente.documento}}
+                                </p>
+                            </div>
+                        </td>
+                    </div>
+                    <td class="badge-container">
+                        <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
+                        <plex-badge type="warning" class="ml-2"> estado </plex-badge>
+                        <plex-button type="success" size="sm" (click)="cargarResultados()" class="ml-2">Iniciar protocolo</plex-button>
+                        <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
+                            <i class="mdi mdi-file-document"></i>
+                        </plex-button>
+
+
+                    </td>
+                </tr>
+                <!-- /Protocolos hardcodeados -->
+            </tbody>
+        </table>
+
+
+
+
+
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <header>
+            <h3>Detalle</h3>
+        </header>
+        <div class="badge-container start">
+            <plex-badge type="info" class="mr-2">Clinica</plex-badge>
+            <plex-badge type="warning" class="mr-2">Ambulatorio</plex-badge>
+        </div>
+        <label class="control-label">Número</label>
+        <h1 class="text-primary text-xl">{{protocolo.numero}}</h1>
+        <hr>
+        <div class="labs-contenedor-secundario">
+            <div class="labs-bloque-texto">
+                <label class="control-label text-info">Usuario</label>
+                <h5 class="" id="id">pmarconi</h5>
+            </div>
+            <div class="labs-bloque-texto">
+                <label class="control-label text-info">solicitante</label>
+                <h5 class="" id="id">lmonteverde</h5>
+            </div>
+            <div class="labs-bloque-texto">
+                <label class="control-label text-info">Fecha registro</label>
+                <h5 class="" id="id">09/07/2018</h5>
+            </div>
+        </div>
+        <hr>
+        <label class="control-label">Observacion</label>
+        <textarea class="form-control" rows="12">nsdajdnfjaklsnd;kasbndj</textarea>
+    </plex-layout-sidebar>
+    <!-- Panel lateral -->
+
+    <!-- footer -->
+    <plex-layout-footer *ngIf="showListarProtocolos">
+        <plex-button label="accion clave" type="primary" position="left" label="Crear un nuevo protocolo" (click)="insertarAgenda()"></plex-button>
+        <plex-button label="Cancelar" type="Cancelar" position="left" (click)="guardarAgendaPanel.cancelar()"></plex-button>
+        <plex-button label="Otra accion clave" type="Guardar" position="right" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
+
+<!-- Switchea a listado practicas -->
+<protocolo-detalle *ngIf="showProtocoloDetalle" [cargarProtocolo]="protocolo" [indexProtocolo]='indexProtocolo' [protocolos]="protocolos"
+    [modo]='modo' (volverAListaControEmit)='showProtocoloDetalle = false;showListarProtocolos = true;  showCargarSolicitud = false'></protocolo-detalle>
