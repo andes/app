@@ -70,7 +70,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
     /**
      * Crea la prestacion de epicrisis
      * Nos rutea a la ejecucion de RUP.
-     * @param paciente 
+     * @param paciente
      */
     nuevaEpicrisis(paciente) {
         let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.epicrisis, 'ejecucion', 'internacion');

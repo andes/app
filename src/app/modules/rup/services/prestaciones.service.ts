@@ -557,7 +557,7 @@ export class PrestacionesService {
         * Método que retorna todas las epicrisis
         * por paciente
         * @param {String} idPaciente
-        * @param conceptId 
+        * @param conceptId
         */
     getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
