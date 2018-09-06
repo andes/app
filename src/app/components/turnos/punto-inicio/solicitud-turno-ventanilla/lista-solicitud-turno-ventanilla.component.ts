@@ -55,7 +55,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     cargarSolicitudes() {
         let params = {
             idPaciente: this.paciente.id,
-            estado: [
+            estados: [
                 'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
                 'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
                 'rechazada', // solicitudes rechazadas en el proceso de auditoría
@@ -63,7 +63,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
             ]
         };
 
-        this.servicioPrestacion.get(params).subscribe(resultado => {
+        this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
             this.solicitudesPrestaciones = this.sortSolicitudees(resultado);
         });
     }
