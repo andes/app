@@ -558,7 +558,6 @@ registerLocaleData(localeEs, 'es');
         PacientePanelComponent,
         PacienteDemoComponent,
         PacientePanelComponent,
-        ReglasComponent,
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,

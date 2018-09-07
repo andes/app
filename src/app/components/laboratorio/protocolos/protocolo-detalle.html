@@ -21,14 +21,14 @@
             <div class="row">
                 <div class="col-12">
                     <h2>{{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}}</h2>
-                </div>  
+                </div>
             </div>
             <div class="row">
                 <div class="col-10">
                     F. Nac.: {{modelo.paciente.fechaNacimiento}}, Sexo: {{modelo.paciente.sexo}}
                 </div>
                 <div class="col-2">
-                    <plex-button position="left" type="warning" (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                    <plex-button position="left" type="warning" *ngIf='modo.id !== "recepcion"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
                 </div>
             </div>
             <br>
@@ -36,7 +36,7 @@
         <!--FIN SECCION PACIENTE-->
 
         <!-- ENCABEZADO DE PROTOCOLO -->
-        <section class="labs-listado-item" >
+        <section *ngIf="!showSeleccionarPaciente" class="labs-listado-item">
             <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'></plex-button>
             <div class="listado-contenedor-secundario">
                 <article class="labs-item-numero" *ngIf='getNumeroProtocolo(modelo.solicitud.registros) !== null'>
@@ -66,8 +66,8 @@
                         <p>{{ modelo.createdAt | date: 'dd/MM/yyyy' }}</p>
                     </div>
                 </article>
-                <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">    
-                    <div class="row">   
+                <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">
+                    <div class="row">
                         <div class="col-3">
                             <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="Fecha de solicitud" [required]="true"></plex-datetime>
                         </div>
@@ -76,12 +76,13 @@
                         </div>
                         <div class="col-3">
                             <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre" placeholder="Seleccione..." label="Efector Solicitante">
+                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre" placeholder="Seleccione..."
+                                label="Efector Solicitante">
                             </plex-select>
                         </div>
                         <div class="col-3">
                             <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.profesional x modelo.solicitud.profesionalOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesionalOrigen" label="Profesional solicitante" (getData)="loadProfesionales($event)"
+                            <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesionals" label="Profesional solicitante" (getData)="loadProfesionales($event)"
                                 placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
                             </plex-select>
                         </div>
@@ -105,8 +106,8 @@
             <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()'></plex-button>
         </section>
         <!-- FIN ENCABEZADO DE PROTOCOLO -->
-        
 
+        <hr>
         <!-- BUSCADOR DE PRACTICAS -->
         <div class="row" *ngIf="(!showSeleccionarPaciente && modo.id === 'recepcion') || modo.id === 'control'">
             <div class="col-12">
@@ -120,7 +121,7 @@
             </div>
         </div>
         <!-- FIN BUSCADOR DE PRACTICAS -->
-        
+
         <!-- TABLA EDICION DE PRACTICAS -->
         <hr>
         <div class="row">
@@ -150,11 +151,12 @@
             </div>
         </div>
         <!-- TABLA EDICION DE PRACTICAS -->
+        <hr>
 
         <!--OBSERVACIONES - RECEPCION-->
         <div class="row " *ngIf="!showSeleccionarPaciente && modo.id==='recepcion' ">
             <div class="col-12 ">
-                <plex-text [(ngModel)]="motivo " label="Observaciones " name="motivo " multiline="true ">
+                <plex-text [(ngModel)]="observaciones " label="Observaciones " name="observaciones " multiline="true ">
                 </plex-text>
             </div>
         </div>
@@ -255,7 +257,7 @@
                             <td>
                                 <span class="float-left">{{subpractica.nombre}}</span>
                             </td>
-    
+
                             <ng-container *ngIf='modo.id !== "control"'>
                                 <td class="text-left align-middle estado">
                                     <p>{{practica.valor}}
@@ -272,7 +274,7 @@
                             <ng-container *ngIf='modo.id === "validacion"'>
                                 <input type='checkbox'>
                             </ng-container>
-    
+
                             <td>
                                 <plex-badge type="danger" class="ml-2"> valores criticos </plex-badge>
                                 <plex-badge type="info" class="ml-2"> F(x) </plex-badge>

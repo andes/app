@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 import { ICarpetaPaciente } from './../interfaces/ICarpetaPaciente';
+import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.inteface';
 
 @Injectable()
 export class PacienteService {
@@ -25,6 +26,23 @@ export class PacienteService {
      */
     getById(id: String): Observable<IPaciente> {
         return this.server.get(this.pacienteUrl + '/' + id, null);
+    }
+
+    /**
+     * TEMPORAL. Resuelve el bug de la API de pacientes, unificando la interface que devuelven los diferentes tipos
+     * Una vez solucionado el bug de la API, eliminar este método y reemplazarlo por get()
+     * @param {PacienteSearch} params
+     * @returns {Observable<IPacienteMatch[]>}
+     * @memberof PacienteService
+     */
+    getMatch(params: PacienteSearch): Observable<IPacienteMatch[]> {
+        return this.server.get(this.pacienteUrl, { params: params, showError: true }).map((value) => {
+            if (params.type === 'simplequery') {
+                return value.map((i) => ({ paciente: i, id: i.id, match: 100 }));
+            } else {
+                return value;
+            }
+        });
     }
 
     get(params: PacienteSearch): Observable<IPaciente[]> {

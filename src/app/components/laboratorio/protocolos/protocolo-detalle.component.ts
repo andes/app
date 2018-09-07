@@ -30,7 +30,8 @@ export class ProtocoloDetalleComponent
     showSeleccionarPractica = true;
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
-    motivo: '';
+    //estado: any;
+    observaciones: '';
     prioridad: any;
     servicio: any;
     fecha: any;
@@ -39,7 +40,7 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-   
+
     public practicas: IPracticaMatch[] | IPractica[];
     public practicasActivas = [];
 
@@ -69,7 +70,7 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    setProtocoloSelected(protocolo : IPrestacion) {
+    setProtocoloSelected(protocolo: IPrestacion) {
         this.modelo = protocolo;
     }
 
@@ -127,7 +128,7 @@ export class ProtocoloDetalleComponent
             });
             this.organizacion = salida;
         });
- 
+
     }
 
     loadProfesionales(event) {
@@ -285,8 +286,9 @@ export class ProtocoloDetalleComponent
                 console.log(err);
             }
         });
-    }   
+    }
     guardarSolicitud($event) {
+        //if ($event.formValid) {
         // this.modelo.solicitud.organizacion = this.auth.organizacion;
         // this.modelo.solicitud.profesional = {
         //     id: this.auth.profesional.id,
@@ -294,41 +296,51 @@ export class ProtocoloDetalleComponent
         //     apellido: this.auth.usuario.apellido,
         //     documento: this.auth.usuario.documento
         // };
-console.log('guardarSolicitud', this.modelo.solicitud.profesional)
-        this.modelo.solicitud.organizacionOrigen = this.auth.organizacion;
-        this.modelo.solicitud.profesionalOrigen = this.modelo.solicitud.profesional
+        this.modelo.paciente = this.modelo.paciente;
+
+        this.modelo.solicitud.tipoPrestacion = Constantes;
+        //this.modelo.solicitud.esSolicitud = true,
+
+        this.modelo.solicitud.organizacion = this.auth.organizacion;
+        //this.modelo.solicitud.organizacionOrigen = this.organizacionOrigen;
+        // this.modelo.solicitud.profesionalOrigen = this.modelo.solicitud.profesional;
+        this.modelo.solicitud.profesional = this.modelo.solicitud.profesional;
+        this.modelo.estados.push({
+            tipo: "pendiente",
+        });
 
         this.modelo.solicitud.registros.push({
-            nombre: Constantes.nombrePrestacionLaboratorio,
-            concepto: Constantes.codigoSnomedPrestacionLaboratorio,
-
+            esSolicitud: true,
+            nombre: Constantes.term,
+            concepto: Constantes,
             valor: {
                 solicitudPrestacion: {
                     autocitado: false,
                     prioridad: this.prioridad,
+                    organizacionDestino: this.auth.organizacion,
                     servicio: this.servicio,
-                    motivo: this.motivo,
-                    organizacionOrigen: this.organizacionOrigen,
-                    profesionalOrigen: this.profesionalOrigen,
                     practicas: this.practicasActivas,
+                    observaciones: this.observaciones,
+
+
                 }
             }
         });
-        // this.modelo.paciente = {
-        //     id: this.modelo.paciente.id,
-        //     nombre: this.protocoloSelected.paciente.nombre,
-        //     apellido: this.protocoloSelected.paciente.apellido,
-        //     documento: this.protocoloSelected.paciente.documento,
-        //     sexo: this.protocoloSelected.paciente.sexo,
-        //     fechaNacimiento: this.protocoloSelected.paciente.fechaNacimiento
-        // };
+        console.log('guardarSolicitud', this.modelo);
 
         this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+            console.log("post resp", respuesta);
             this.newSolicitudEmitter.emit();
             this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
         });
+        // }
+        // else {
+        //     this.plex.alert('Debe completar los datos requeridos');
+        // }
+    }
 
-
+    cancelar() {
+        this.newSolicitudEmitter.emit();
     }
 }
 

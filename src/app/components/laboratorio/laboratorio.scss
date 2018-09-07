@@ -150,7 +150,6 @@ section.contenedor-tabs {
     justify-content: space-between;
 
     min-height: 60px;
-    max-height: 60px;
     padding: 0.25rem 0.5rem;
     background-color: white!important;
     border:solid 1px black;
@@ -160,27 +159,13 @@ section.contenedor-tabs {
         border: solid 2px $blue;   
     }
     
-    .listado-contenedor-secundario {
-        display: flex;
-        justify-content: flex-start;
-        width: 75%;
-    }
+
     
     td {
         border: none!important;
     }
 
-    .labs-item-numero {
-        display: flex;
-        flex-direction: row;
-        font-weight: bolder; 
-        
-        & h2 {
-            align-self: center;
-            display: flex;
-            margin-bottom: 0;
-        }
-    }
+  
 
     .contenedor-bloque-texto {
         @extend %bloque-texto;
