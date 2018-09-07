@@ -134,16 +134,16 @@
             <tbody>
                 <tr class="labs-listado-item" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
                     <div class="listado-contenedor-secundario">
-                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
+                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero" style="max-height: 14px !important; display: block;">
 
                             <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                             <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
-                            <hr>
+                            <br>
                             <h2 *ngIf='getNumeroProtocolo(protocolo.solicitud.registros) !== null'>{{getNumeroProtocolo(protocolo.solicitud.registros)}}</h2>
 
-                            <hr>
+                            <br>
                         </td>
-                        <td class="contenedor-bloque-texto">
+                        <td class="contenedor-bloque-texto" style="margin-left: 61px !important">
                             <div class="labs-item-texto">
                                 <p>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
                                 <strong>&nbsp;|&nbsp;Origen&nbsp;</strong>

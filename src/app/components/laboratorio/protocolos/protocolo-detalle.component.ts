@@ -132,6 +132,9 @@ export class ProtocoloDetalleComponent
     }
 
     loadProfesionales(event) {
+        if (this.modelo.solicitud.profesional) {
+            event.callback(this.modelo.solicitud.profesional);
+        }
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
@@ -140,19 +143,50 @@ export class ProtocoloDetalleComponent
         } else {
             event.callback([]);
         }
+        // this.servicioProfesional.get(this.modelo.solicitud.profesional.id).subscribe(resultado => {
+        //     let salida = resultado.map(elem => {
+        //         return {
+        //             'id': elem.id,
+        //             'nombre': elem.nombre,
+        //             'apellido': elem.apellido,
+        //             'documento': elem.documento
+
+        //         };
+        //     });
+        //     this.profesional = salida;
+        // });
+
+
     }
 
 
     loadServicios($event) {
+        // if (this.modelo.solicitud.registros.valor.solicitudPrestacion.servicio) {
+        //     $event.callback(this.servicio);
+        // }
+        // if ($event.query) {
+
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             $event.callback(organizacion.unidadesOrganizativas);
         });
+        // }
+        // else {
+        //     $event.callback([]);
+        // }
 
     }
 
+
     loadPrioridad(event) {
+        // if (this.prioridad) {
+        //     event.callback(this.prioridad);
+        // }
+        // if (event.query) {
+
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();
+
+        // }
     }
     public busqueda = {
         dniPaciente: null,
@@ -290,59 +324,59 @@ export class ProtocoloDetalleComponent
     guardarSolicitud($event) {
         //SI VIENE PACIENTE CON TURNO
 
-        if (this.modelo.solicitud.registros.valor.solicitudPrestacion) {
-            console.log("viene paciente conturno");
-            this.modelo.ejecucion.organizacion = this.auth.organizacion;
-            this.modelo.ejecucion.registros.push({
-                nombre: "numeroProtocolo",
-                concepto: {
-                    fsn: "número (calificador)",
-                    term: "número",
-                    conceptId: "260299005",
-                    semanticTag: "calificador"
+        // if (this.modelo.solicitud.registros.valor.solicitudPrestacion) {
+        //     console.log("viene paciente conturno");
+        //     this.modelo.ejecucion.organizacion = this.auth.organizacion;
+        //     this.modelo.ejecucion.registros.push({
+        //         nombre: "numeroProtocolo",
+        //         concepto: {
+        //             fsn: "número (calificador)",
+        //             term: "número",
+        //             conceptId: "260299005",
+        //             semanticTag: "calificador"
+        //         }
+        //     });
+        // } else {
+        //     console.log("viene paciente sin turno");
+
+        //if ($event.formValid) {
+        // this.modelo.solicitud.organizacion = this.auth.organizacion;
+        // this.modelo.solicitud.profesional = {
+        //     id: this.auth.profesional.id,
+        //     nombre: this.auth.usuario.nombre,
+        //     apellido: this.auth.usuario.apellido,
+        //     documento: this.auth.usuario.documento
+        // };
+        this.modelo.paciente = this.modelo.paciente;
+
+        this.modelo.solicitud.tipoPrestacion = Constantes;
+        //this.modelo.solicitud.esSolicitud = true,
+
+        this.modelo.solicitud.organizacion = this.auth.organizacion;
+        //this.modelo.solicitud.organizacionOrigen = this.organizacionOrigen;
+        // this.modelo.solicitud.profesionalOrigen = this.modelo.solicitud.profesional;
+        this.modelo.solicitud.profesional = this.modelo.solicitud.profesional;
+        this.modelo.estados = [{ tipo: "pendiente" }];
+
+        this.modelo.solicitud.registros.push({
+            esSolicitud: true,
+            nombre: Constantes.term,
+            concepto: Constantes,
+            valor: {
+                solicitudPrestacion: {
+                    autocitado: false,
+                    prioridad: this.prioridad,
+                    organizacionDestino: this.auth.organizacion,
+                    servicio: this.servicio,
+                    practicas: this.practicasActivas,
+                    observaciones: this.observaciones,
+
+
                 }
-            });
-        } else {
-            console.log("viene paciente sin turno");
+            }
+        });
+        console.log('guardarSolicitud', this.modelo);
 
-            //if ($event.formValid) {
-            // this.modelo.solicitud.organizacion = this.auth.organizacion;
-            // this.modelo.solicitud.profesional = {
-            //     id: this.auth.profesional.id,
-            //     nombre: this.auth.usuario.nombre,
-            //     apellido: this.auth.usuario.apellido,
-            //     documento: this.auth.usuario.documento
-            // };
-            this.modelo.paciente = this.modelo.paciente;
-
-            this.modelo.solicitud.tipoPrestacion = Constantes;
-            //this.modelo.solicitud.esSolicitud = true,
-
-            this.modelo.solicitud.organizacion = this.auth.organizacion;
-            //this.modelo.solicitud.organizacionOrigen = this.organizacionOrigen;
-            // this.modelo.solicitud.profesionalOrigen = this.modelo.solicitud.profesional;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesional;
-            this.modelo.estados = [{ tipo: "pendiente" }];
-
-            this.modelo.solicitud.registros.push({
-                esSolicitud: true,
-                nombre: Constantes.term,
-                concepto: Constantes,
-                valor: {
-                    solicitudPrestacion: {
-                        autocitado: false,
-                        prioridad: this.prioridad,
-                        organizacionDestino: this.auth.organizacion,
-                        servicio: this.servicio,
-                        practicas: this.practicasActivas,
-                        observaciones: this.observaciones,
-
-
-                    }
-                }
-            });
-            console.log('guardarSolicitud', this.modelo);
-        }
         this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
             console.log("post resp", respuesta);
             this.volverAListaControEmit.emit();

@@ -84,7 +84,7 @@
                             </div>
                             <div class="col-3">
                                 <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.profesional x modelo.solicitud.profesionalOrigen -->
-                                <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesionals" label="Profesional solicitante" (getData)="loadProfesionales($event)"
+                                <plex-select [(ngModel)]="modelo.solicitud.profesional" name="profesional" label="Profesional solicitante" (getData)="loadProfesionales($event)"
                                     placeholder="Escriba el apellido del Profesional" labelField="apellido + ' ' + nombre" [required]="true">
                                 </plex-select>
                             </div>
