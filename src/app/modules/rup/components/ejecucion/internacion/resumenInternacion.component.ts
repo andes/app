@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation, OnChanges } from '@angular/core';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Plex } from '@andes/plex';
 import { InternacionService } from '../../../services/internacion.service';
@@ -9,7 +9,7 @@ import { InternacionService } from '../../../services/internacion.service';
     styleUrls: ['resumenInternacion.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
-export class ResumenInternacionComponent implements OnInit {
+export class ResumenInternacionComponent implements OnInit, OnChanges {
     @Input() prestacion;
     @Input() paciente;
     @Input() camaSeleccionada;
@@ -37,7 +37,11 @@ export class ResumenInternacionComponent implements OnInit {
     ) { }
 
 
-    ngOnInit() {
+
+
+    ngOnInit() { }
+
+    ngOnChanges() {
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
