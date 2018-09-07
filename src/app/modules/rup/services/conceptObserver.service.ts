@@ -23,6 +23,7 @@ export class ConceptObserverService {
     };
     // Filtra para que notifique al mismo elemento que lo generó el cambio
     return this.observers[registro.concepto.conceptId].filter((value, index) => value !== registro);
+    // return this.observers[registro.concepto.conceptId];
   }
 
   /**

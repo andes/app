@@ -1,5 +1,5 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
-import { Component, EventEmitter, Output, OnInit, Input, HostBinding } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -11,6 +11,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
+import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'planificar-agenda',
@@ -19,7 +20,7 @@ import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
         'planificar-agenda.scss'
     ]
 })
-export class PlanificarAgendaComponent implements OnInit {
+export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     hideGuardar: boolean;
     subscriptionID: any;
     espaciosList: any[];
@@ -53,6 +54,8 @@ export class PlanificarAgendaComponent implements OnInit {
     showMapaEspacioFisico = false;
     cupoMaximo: Number;
     setCupo = false;
+    // ultima request de profesionales que se almacena con el subscribe
+    private lastRequest: ISubscription;
 
     constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
@@ -70,6 +73,22 @@ export class PlanificarAgendaComponent implements OnInit {
             this.modelo.bloques = [];
             this.bloqueActivo = -1;
         }
+    }
+
+    ngAfterViewInit() {
+        this.plex.wizard({
+            id: 'citas:planificarAgenda',
+            updatedOn: moment('2018-08-15').toDate(),
+            steps: [
+                { title: 'Novedades del módulo CITAS', content: '15/08/2018', imageClass: 'plex-wizard-citas-planificarAgendas' },
+                { title: 'Planificación de Agendas Dinámicas', content: 'Esta opción permite crear agendas sin horarios predefinidos, para ser utilizadas en consultorios de demanda espontánea (ej: Guardia, Enfermería, Recetas, etc.)', imageClass: 'plex-wizard-citas-planificarAgendas-dinamica' },
+                { title: 'Cupo máximo', content: 'El campo cupo máximo permite, opcionalmente, establecer una cantidad maxima de pacientes.', imageClass: 'plex-wizard-planificarAgendas-dinamicaCupo' },
+                { title: 'Turnos para Agendas Dinámicas', content: 'Los pacientes se van agregando en el orden en que son asignados a la agenda.', imageClass: 'plex-wizard-citas-planificarAgendas-darTurnos' },
+            ],
+            forceShow: false,
+            fullScreen: true,
+            showNumbers: false
+        });
     }
 
     cargarAgenda(agenda: IAgenda) {
@@ -95,21 +114,24 @@ export class PlanificarAgendaComponent implements OnInit {
     }
 
     loadProfesionales(event) {
-        let listaProfesionales = [];
-        if (event.query) {
+
+        if (event.query && event.query !== '' && event.query.length > 2) {
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
             let query = {
                 nombreCompleto: event.query
             };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.modelo.profesionales) {
-                    listaProfesionales = (resultado) ? this.modelo.profesionales.concat(resultado) : this.modelo.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+            this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
+                event.callback(resultado);
             });
         } else {
-            event.callback(this.modelo.profesionales || []);
+            // cancelamos ultimo request
+            if (this.lastRequest) {
+                this.lastRequest.unsubscribe();
+            }
+            event.callback([]);
         }
     }
 
