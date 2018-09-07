@@ -3,6 +3,8 @@ import { Plex } from '@andes/plex';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../services/resumenPaciente-dinamico.service';
 import { VacunasService } from '../../../../services/vacunas.service';
+import { PrestacionesService } from '../../services/prestaciones.service';
+import { ElementosRUPService } from './../../services/elementosRUP.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',
@@ -17,9 +19,12 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public prestaciones = [];
     private expresion = '<<410620009'; // filtro de conceptos snomed (niño sano)
     public vacunas = [];
+    public registro = null;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
         private servicioVacunas: VacunasService,
+        private prestacionesService: PrestacionesService,
+        private elementosRUPService: ElementosRUPService,
         private plex: Plex) { }
 
     ngOnInit() {
@@ -42,8 +47,20 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
 
         this.loadPrestaciones();
         this.loadVacunas();
+        this.loadResumen();
     }
-
+    loadResumen() {
+        this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {
+            if (prestaciones && prestaciones.length) {
+                prestaciones.sort(function (a, b) {
+                    let dateA = new Date(a.fecha).getTime();
+                    let dateB = new Date(b.fecha).getTime();
+                    return dateA > dateB ? 1 : -1;
+                });
+                this.registro = prestaciones[prestaciones.length - 1].registro;
+            }
+        });
+    }
     loadVacunas() {
         this.servicioVacunas.get(this.paciente.id).subscribe(resultado => {
             this.vacunas = resultado;

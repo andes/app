@@ -2,24 +2,31 @@
     <div class="row">
         <div class="col-6">
             <h5>Resumen de HUDS</h5>
+            <rup-resumenHistoriaClinica *ngIf="registro" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                [prestacion]="" [paciente]="paciente" [registro]="registro" [soloValores]="true"></rup-resumenHistoriaClinica>
         </div>
         <div class="col-6">
             <h5>Vacunas aplicadas</h5>
             <div class="table-responsive">
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Vacuna</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody *ngIf="vacunas.length; else sinDatos">
                         <tr *ngFor="let vacuna of vacunas">
                             <td>{{vacuna.fechaAplicacion | date: 'dd/M/yyyy'}}</td>
                             <td>{{vacuna.vacuna}}</td>
                         </tr>
                     </tbody>
                 </table>
+                <ng-template #sinDatos>
+                    <tbody>
+                        <td colspan="2">No registra datos</td>
+                    </tbody>
+                </ng-template>
             </div>
         </div>
     </div>
@@ -41,7 +48,7 @@
         <div class="col">
             <h5>Consultas de Niño Sano</h5>
             <div class="table-responsive">
-                <table *ngIf="tablaModelo.length" class="table table-bordered">
+                <table *ngIf="tablaModelo.length" class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>{{tablaModelo[0].titulo}}</th>
@@ -57,7 +64,6 @@
                             <th>{{tablaModelo[10].titulo}}</th>
                             <th>{{tablaModelo[11].titulo}}</th>
                             <th>{{tablaModelo[12].titulo}}</th>
-
                         </tr>
                     </thead>
                     <tbody>
@@ -75,9 +81,6 @@
                             <td *ngIf="prestacion[10]">{{prestacion[10]}}</td>
                             <td *ngIf="prestacion[11]">{{prestacion[11]}}</td>
                             <td *ngIf="prestacion[12]">{{prestacion[12]}}</td>
-                            <ng-template #sinDatos>
-                                <td>-</td>
-                            </ng-template>
                         </tr>
                     </tbody>
                 </table>
