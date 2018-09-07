@@ -84,8 +84,9 @@ export class WebSocketService {
 
     close () {
         this.token = null;
-        this.socket.close();
-        this.socket.open();
+        if (this.socket) {
+            this.socket.close();
+        }
     }
 
 }

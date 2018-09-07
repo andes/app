@@ -10,10 +10,9 @@ import { CommonModule } from '@angular/common';
 
 
 import { TurneroRouting } from './turnero.routing';
-// import { PantallaService } from './services/pantalla.service';
-// import { PantallasComponent } from './views/pantallas.component';
-// import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
-// import { WebSocketService } from '../../services/websocket.serivice';
+import { PantallaService } from './services/pantalla.service';
+import { PantallasComponent } from './views/pantallas.component';
+import { PantallaDetalleComponent } from './views/pantalla-detalle.component';
 
 @NgModule({
     imports: [
@@ -26,17 +25,16 @@ import { TurneroRouting } from './turnero.routing';
         TurneroRouting
     ],
     declarations: [
-        // PantallasComponent,
-        // PantallaDetalleComponent
+        PantallasComponent,
+        PantallaDetalleComponent
     ],
     entryComponents: [
-        // PantallasComponent,
-        // PantallaDetalleComponent
+        PantallasComponent,
+        PantallaDetalleComponent
     ],
     exports: [],
     providers: [
-        // PantallaService,
-        // WebSocketService
+        PantallaService
     ]
 })
 export class TurneroModule {

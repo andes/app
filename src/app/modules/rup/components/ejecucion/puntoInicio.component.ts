@@ -1,5 +1,3 @@
-import { estados } from './../../../../utils/enumerados';
-
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -17,7 +15,7 @@ import { TurneroService } from '../../../../services/turnero.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
-import { WebSocketService } from '../../../../services/websocket.serivice';
+import { WebSocketService } from '../../../../services/websocket.service';
 
 @Component({
     selector: 'rup-puntoInicio',

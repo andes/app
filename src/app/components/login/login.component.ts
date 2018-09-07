@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { environment } from '../../../environments/environment';
-import { WebSocketService } from '../../services/websocket.serivice';
+import { WebSocketService } from '../../services/websocket.service';
 @Component({
     templateUrl: 'login.html',
     styleUrls: ['login.scss'],

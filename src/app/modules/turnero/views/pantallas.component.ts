@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { PantallaService } from '../services/pantalla.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
-import { WebSocketService } from '../../../services/websocket.serivice';
+import { WebSocketService } from '../../../services/websocket.service';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -21,7 +21,6 @@ export class PantallasComponent implements OnInit, OnDestroy  {
 
     constructor(
         public pantallasService: PantallaService,
-        private route: ActivatedRoute,
         private router: Router,
         private ws: WebSocketService,
         private auth: Auth

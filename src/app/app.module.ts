@@ -52,7 +52,7 @@ import { IconoCamaPipe } from './pipes/iconoCama.pipe';
 
 // Servicios
 
-import { WebSocketService } from './services/websocket.serivice';
+import { WebSocketService } from './services/websocket.service';
 
 // ... Tablas Maestras
 import { OrganizacionService } from './services/organizacion.service';
@@ -446,13 +446,8 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
-import { PantallasComponent } from './modules/turnero/views/pantallas.component';
-import { PantallaDetalleComponent } from './modules/turnero/views/pantalla-detalle.component';
-import { PantallaService } from './modules/turnero/services/pantalla.service';
-
 
 registerLocaleData(localeEs, 'es');
-
 
 // Main module
 @NgModule({
@@ -541,8 +536,6 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        PantallasComponent,
-        PantallaDetalleComponent,
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
@@ -610,7 +603,6 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
-        PantallaService,
         CDAService,
         SugerenciasService,
         ConfiguracionPrestacionService,

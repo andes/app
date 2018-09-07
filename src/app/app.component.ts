@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
-import { WebSocketService } from './services/websocket.serivice';
+import { WebSocketService } from './services/websocket.service';
 
 @Component({
     selector: 'app',

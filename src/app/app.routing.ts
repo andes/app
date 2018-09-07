@@ -83,11 +83,6 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
-// Home de Estadisticas
-import { HomeComponent } from './modules/estadisticas/components/home.component';
-import { PantallasComponent } from './modules/turnero/views/pantallas.component';
-import { PantallaDetalleComponent } from './modules/turnero/views/pantalla-detalle.component';
-
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -167,19 +162,8 @@ const appRoutes: Routes = [
   { path: 'selectOrganizacion', component: SelectOrganizacionComponent, canActivate: [RoutingGuard] },
   { path: 'login', component: LoginComponent },
 
-  {
-      path: 'turnero',
-      component: PantallasComponent,
-      children: [{
-          path: 'edit/:id',
-          component: PantallaDetalleComponent
-      }, {
-          path: 'create',
-          component: PantallaDetalleComponent
-      }]
-  },
-
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
+  { path: 'turnero', loadChildren: './modules/turnero/turnero.module#TurneroModule', canActivate: [RoutingGuard] },
 
   { path: '**', redirectTo: 'inicio' }
 ];

@@ -1,9 +1,7 @@
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { environment } from '../../environments/environment';
-import * as io from 'socket.io-client';
-import { WebSocketService } from './websocket.serivice';
+import { WebSocketService } from './websocket.service';
 
 @Injectable()
 export class TurneroService {
