@@ -1,12 +1,8 @@
 import * as moment from 'moment';
-
-import { Observable } from 'rxjs/Rx';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
-
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { EstAgendasService } from '../../services/agenda.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
 
 @Component({
     templateUrl: 'citas.html',
@@ -58,7 +54,7 @@ export class CitasComponent implements AfterViewInit {
 
     };
 
-    constructor(private plex: Plex, public auth: Auth, public estService: EstAgendasService) { }
+    constructor(private plex: Plex, public auth: Auth, public estService: AgendaService) { }
 
     ngAfterViewInit() {
         // this.organizacion = this.auth.organizacion;
@@ -83,7 +79,7 @@ export class CitasComponent implements AfterViewInit {
             organizacion: this.auth.organizacion.id,
             ...$event
         };
-        this.estService.get(params).subscribe((data) => {
+        this.estService.estadisticas(params).subscribe((data) => {
             this.data = data[0];
             if (this.data.sexo) {
                 this.data.sexo.forEach((item) => {

@@ -882,4 +882,12 @@ export class PrestacionesService {
     public getPasesInternacion(idInternacion) {
         return this.server.get('/modules/rup/internaciones/pases/' + idInternacion, null);
     }
+
+
+    /**
+     * Estadisticas de RUP
+     */
+    public estadisticas(params) {
+        return this.server.get('/modules/rup/estadisticas', { params });
+    }
 }

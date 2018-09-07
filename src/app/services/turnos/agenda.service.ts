@@ -10,7 +10,7 @@ export class AgendaService {
     // URL to web api
     private agendaUrl = '/modules/turnos/agenda';
 
-    constructor(private server: Server) { }
+    constructor(private server: Server) {}
 
     find(idPaciente: String): Observable<IAgenda[]> {
         return this.server.get(this.agendaUrl + '/paciente' + '/' + idPaciente);
@@ -62,5 +62,14 @@ export class AgendaService {
 
     clonar(data: any): Observable<IAgenda[]> {
         return this.server.post(this.agendaUrl + '/clonar', data);
+    }
+
+    /**
+     *
+     * @param params Filtros de busqueda
+     */
+
+    estadisticas (params) {
+        return this.server.get('/modules/turnos/estadistica', { params });
     }
 }

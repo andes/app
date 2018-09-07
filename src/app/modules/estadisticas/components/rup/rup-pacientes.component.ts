@@ -1,7 +1,7 @@
 import * as moment from 'moment';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
-import { EstRupService } from '../../services/rup-estadisticas.service';
-import { SnomedService } from '../../services/snomed.service';
+import { PrestacionesService } from '../../../rup/services/prestaciones.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
 
 @Component({
     templateUrl: 'rup-pacientes.html',
@@ -28,7 +28,7 @@ export class RupPacientesComponent implements AfterViewInit {
     public registros = [];
     public tablas: any = [];
 
-    constructor(public estService: EstRupService, public snomed: SnomedService) { }
+    constructor(public estService: PrestacionesService, public snomed: SnomedService) { }
 
     ngAfterViewInit() {
         this.snomed.getQuery({ expression: '<1651000013107' }).subscribe((result) => {
@@ -49,7 +49,7 @@ export class RupPacientesComponent implements AfterViewInit {
             this.registros = [];
 
             let prestaciones = this.prestacionesHijas.filter(item => item.check).map(item => item.conceptId);
-            this.estService.get({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
+            this.estService.estadisticas({ desde: this.desde, hasta: this.hasta, prestaciones }).subscribe((resultados) => {
                 this.showData = true;
                 if (this.detallar) {
                     this.createTable(this.prestacionesHijas.filter(item => item.check), resultados.pacientes);

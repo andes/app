@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
-// Providers
-import { EstAgendasService } from './services/agenda.service';
-
 // Components
 import { HomeComponent } from './components/home.component';
 import { FiltrosComponent } from './components/citas/filtros.component';
@@ -17,9 +14,7 @@ import { HttpModule } from '@angular/http';
 import { CitasComponent } from './components/citas/citas.component';
 import { EstadisticasRouting } from './estadisticas.routing';
 import { CommonModule } from '@angular/common';
-import { EstRupService } from './services/rup-estadisticas.service';
 import { RupPacientesComponent } from './components/rup/rup-pacientes.component';
-import { SnomedService } from './services/snomed.service';
 
 @NgModule({
     imports: [
@@ -45,11 +40,7 @@ import { SnomedService } from './services/snomed.service';
         RupPacientesComponent
     ],
     exports: [],
-    providers: [
-        EstAgendasService,
-        EstRupService,
-        SnomedService
-    ]
+    providers: []
 })
 export class EstadisticaModule {
 }

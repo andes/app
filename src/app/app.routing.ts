@@ -132,9 +132,6 @@ const appRoutes: Routes = [
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
 
-  // Estadisticas
-  { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
-
   // configuracion prestacion
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingGuard] },
 
