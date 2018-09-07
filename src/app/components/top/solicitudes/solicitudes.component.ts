@@ -19,7 +19,7 @@ export class SolicitudesComponent implements OnInit {
     showDarTurnos: boolean;
     solicitudTurno: any;
     labelVolver = 'Lista de Solicitudes';
-
+    showAuditar = false;
     public autorizado = false;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
@@ -107,6 +107,7 @@ export class SolicitudesComponent implements OnInit {
             this.turnoSeleccionado = null;
         }
         this.showSidebar = true;
+        this.showAuditar = false;
     }
 
     darTurno(prestacionSolicitud) {
@@ -145,20 +146,24 @@ export class SolicitudesComponent implements OnInit {
         this.showEditarReglas = false;
     }
 
-    auditar() {
-        this.plex.confirm('', '¿Aprobar Solicitud?').then((confirmado) => {
-            if (!confirmado) {
-                return false;
-            }
-
-            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-                this.prestacionSeleccionada.estados.push({ tipo: 'pendiente' });
-                this.servicioPrestacion.put(this.prestacionSeleccionada).subscribe(respuesta => {
-                    this.cargarSolicitudes();
-                });
-            }
-
-        });
+    auditar(arrayPrestaciones, indice) {
+        let indicePrestacion = this.prestaciones.findIndex((prest: any) => { return prest.id === arrayPrestaciones[indice].id; });
+        this.solicitudSeleccionada = this.prestaciones[indicePrestacion].solicitud;
+        this.prestacionSeleccionada = this.prestaciones[indicePrestacion];
+        this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
+        this.showAuditar = true;
+        this.showSidebar = false;
+        // this.plex.confirm('', '¿Aprobar Solicitud?').then((confirmado) => {
+        //     if (!confirmado) {
+        //         return false;
+        //     }
+        //     if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+        //         this.prestacionSeleccionada.estados.push({ tipo: 'pendiente' });
+        //         this.servicioPrestacion.put(this.prestacionSeleccionada).subscribe(respuesta => {
+        //             this.cargarSolicitudes();
+        //         });
+        //     }
+        // });
     }
 
     editarReglas() {
@@ -221,6 +226,17 @@ export class SolicitudesComponent implements OnInit {
                                 // Se puede visualizar?
                                 this.visualizarSalida[i] = false;
                             }
+                            break;
+                        case 'rechazada':
+
+                            // Se puede dar turno?
+                            this.darTurnoArraySalida[i] = false;
+
+                            // Se puede visualizar?
+                            this.visualizarSalida[i] = false;
+
+                            // Se puede auditar?
+                            this.auditarArraySalida[i] = false;
                             break;
                         case 'validada':
 
@@ -320,6 +336,37 @@ export class SolicitudesComponent implements OnInit {
 
     afterDetalleSolicitud(event) {
         this.showSidebar = false;
+    }
+
+    returnAuditoria(event) {
+        this.showAuditar = false;
+        if (event.status) {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'pendiente' }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('success', '', 'Solicitud Aceptada');
+                    }
+                );
+            }
+        } else {
+            if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
+                let patch = {
+                    op: 'estadoPush',
+                    estado: { tipo: 'rechazada', motivoRechazo: event.motivo }
+                };
+                this.servicioPrestacion.patch(this.prestacionSeleccionada.id, patch).subscribe(
+                    respuesta => {
+                        this.cargarSolicitudes();
+                        this.plex.toast('danger', '', 'Solicitud Rechazada');
+                    }
+                );
+            }
+        }
     }
 
 }

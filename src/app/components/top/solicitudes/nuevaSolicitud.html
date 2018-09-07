@@ -129,16 +129,16 @@
 
                     <!-- MOTIVO DE CONSULTA -->
                     <div class="row" *ngIf="!showSeleccionarPaciente">
-                        <div class="col" >
+                        <div class="col">
                             <!-- <plex-text [(ngModel)]="registros" label="Notas / Diagnóstico / Motivo" name="registros" multiline="true"></plex-text> -->
                             <!-- <label for="registros">Notas / Diagnóstico / Motivo</label> -->
-                            <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" multiline="true"></plex-text>
+                            <plex-text [(ngModel)]="motivo" label="Notas / Diagnóstico / Motivo" name="motivo" multiline="true" [required]="true"></plex-text>
                         </div>
                     </div>
-                     <!-- Adjuntar Archivo -->
+                    <!-- Adjuntar Archivo -->
 
                     <br>
-                    <div class="container-fluid"  *ngIf="!showSeleccionarPaciente  && tipoSolicitud == 'salida'">
+                    <div class="container-fluid" *ngIf="!showSeleccionarPaciente  && tipoSolicitud == 'salida'">
                         <div class="row mb-3">
                             <div class="col-12">
                                 <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
@@ -161,7 +161,7 @@
                                     <ng-container *ngFor="let doc of fotos; let i = index">
                                         <a (click)="activaLightbox(i)">
                                             <div class="image hover">
-                    
+
                                                 <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
                                                 <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
                                                     {{ doc.ext }}

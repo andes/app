@@ -54,25 +54,29 @@
                                                 <th>Operaciones</th>
                                             </thead>
                                             <tbody>
-                                                <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover" (click)="seleccionar(prestacionesEntrada,i)"
-                                                    [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
-                                                    <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
-                                                    <td>{{prestacion.paciente | paciente}}</td>
-                                                    <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
-                                                    <td *ngIf="!prestacion.solicitud.organizacionOrigen"></td>
-                                                    <td *ngIf="prestacion.solicitud.profesionalOrigen">{{prestacion.solicitud.profesionalOrigen
+                                                <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
+                                                    <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.fecha
+                                                        | date: 'dd/MM/yyyy'}}</td>
+                                                    <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.paciente
+                                                        | paciente}}</td>
+                                                    <td *ngIf="prestacion.solicitud.organizacionOrigen" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
+                                                    <td *ngIf="!prestacion.solicitud.organizacionOrigen" (click)="seleccionar(prestacionesEntrada,i)"></td>
+                                                    <td *ngIf="prestacion.solicitud.profesionalOrigen" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.profesionalOrigen
                                                         | profesional}}</td>
-                                                    <td *ngIf="!prestacion.solicitud.profesionalOrigen"></td>
-                                                    <td>{{prestacion.solicitud.tipoPrestacion.term}}</td>
-                                                    <td *ngIf="!prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado">{{prestacion.solicitud.profesional
+                                                    <td *ngIf="!prestacion.solicitud.profesionalOrigen" (click)="seleccionar(prestacionesEntrada,i)"></td>
+                                                    <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.tipoPrestacion.term}}</td>
+                                                    <td *ngIf="!prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.profesional
                                                         | profesional}}</td>
-                                                    <td *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado">
+                                                    <td *ngIf="prestacion.solicitud?.registros[0]?.valor?.solicitudPrestacion?.autocitado" (click)="seleccionar(prestacionesEntrada,i)">
                                                         <span class="badge badge-danger">AUTOCITADO</span>
                                                     </td>
-                                                    <td *ngIf="!prestacion.solicitud.turno" class="text-center estado">
-                                                        <span class="badge badge-info">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                    <td *ngIf="!prestacion.solicitud.turno" class="text-center estado" (click)="seleccionar(prestacionesEntrada,i)">
+                                                        <span class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                        <span class="badge badge-danger" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                                                        <span class="badge badge-warning" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+
                                                     </td>
-                                                    <td *ngIf="prestacion.solicitud.turno" class="text-center estado">
+                                                    <td *ngIf="prestacion.solicitud.turno" (click)="seleccionar(prestacionesEntrada,i)" class="text-center estado">
                                                         <span class="badge badge-success">Turno dado</span>
                                                     </td>
                                                     <td class="text-center">
@@ -81,7 +85,7 @@
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="auditarArrayEntrada[i]">
-                                                            <plex-button icon="mdi mdi-check" type="info" (click)="auditar()" title="Aprobar Solicitud">
+                                                            <plex-button icon="mdi mdi-lock-alert" type="info" (click)="auditar(prestacionesEntrada,i)" title="Auditar Solicitud">
                                                             </plex-button>
                                                         </span>
                                                         <span *ngIf="visualizarEntrada[i]">
@@ -158,8 +162,11 @@
                 </plex-box>
             </div>
             <!-- SIDEBAR -->
-            <div *ngIf="showSidebar" class="col-3">
+            <div *ngIf="showSidebar && !showAuditar" class="col-3">
                 <detalle-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada" [turnoSeleccionado]="turnoSeleccionado"></detalle-solicitud>
+            </div>
+            <div *ngIf="showAuditar && !showDidebar" class="col-3">
+                <auditar-solicitud [tipoSolicitud]="tipoSolicitud" [prestacionSeleccionada]="prestacionSeleccionada" (returnAuditoria)="returnAuditoria($event)"></auditar-solicitud>
             </div>
         </div>
         <!-- Configuración de Reglas -->
