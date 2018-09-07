@@ -14,9 +14,9 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td></td>
-                            <td></td>
+                        <tr *ngFor="let vacuna of vacunas">
+                            <td>{{vacuna.fechaAplicacion | date: 'dd/M/yyyy'}}</td>
+                            <td>{{vacuna.vacuna}}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -1,10 +1,8 @@
-import { PrestacionesService } from '../../services/prestaciones.service';
 import { Component, Output, Input, EventEmitter, OnInit, HostBinding } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { ResumenPacienteDinamicoService } from '../../services/resumenPaciente-dinamico.service';
+import { VacunasService } from '../../../../services/vacunas.service';
 
 @Component({
     selector: 'rup-resumenPaciente-dinamico-nino',
@@ -21,6 +19,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public vacunas = [];
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
+        private servicioVacunas: VacunasService,
         private plex: Plex) { }
 
     ngOnInit() {
@@ -42,8 +41,14 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
         ];
 
         this.loadPrestaciones();
+        this.loadVacunas();
     }
 
+    loadVacunas() {
+        this.servicioVacunas.get(this.paciente.id).subscribe(resultado => {
+            this.vacunas = resultado;
+        });
+    }
     loadPrestaciones() {
         let conceptos = [];
         // armamos un array solo con los conceptos {conceptId: xxxxxxx}
