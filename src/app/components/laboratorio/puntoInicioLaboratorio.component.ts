@@ -23,11 +23,14 @@ export class PuntoInicioLaboratorioComponent
     public prestacionesEntrada: any;
     prestacionSeleccionada: any;
 
+    public seleccionPaciente = false;
     public showListarProtocolos = true;
     public showProtocoloDetalle = false;
     public showCargarSolicitud = false;
+    public esPacienteSinTurno = false;
+
     public protocolos: any = [];
-    public protocolo: any =  {
+    public protocolo: any = {
         paciente: {
             id: '',
             nombre: '',
@@ -39,7 +42,7 @@ export class PuntoInicioLaboratorioComponent
         solicitud: {
             esSolicitud: true,
             tipoPrestacion: null,
-            organizacion: { },
+            organizacion: {},
             profesional: null,
             ambitoOrigen: 'ambulatorio',
             fecha: new Date(),
@@ -176,18 +179,19 @@ export class PuntoInicioLaboratorioComponent
 
     verProtocolo(protocolo, multiple, e, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
-
-        if (protocolo && protocolo.id) {
+        if (protocolo) {
             // this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = index;
+
+            this.seleccionPaciente = false;
+            this.showCargarSolicitud = true;
             // }
         }
     }
     volverLista() {
-        this.protocolo = null;
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
@@ -314,8 +318,16 @@ export class PuntoInicioLaboratorioComponent
     }
 
     formularioSolicitud() {
+        this.seleccionPaciente = false;
         this.showListarProtocolos = false;
         this.showProtocoloDetalle = true;
+        this.showCargarSolicitud = true;
+    }
+
+    pacienteSinTurno() {
+        this.seleccionPaciente = true;
+        this.showProtocoloDetalle = false;
+        this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }
 

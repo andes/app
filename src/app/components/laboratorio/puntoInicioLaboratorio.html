@@ -26,7 +26,7 @@
 
             </div>
             <div class="col-1 d-flex" *ngIf='modo && modo.id === "recepcion"'>
-                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="formularioSolicitud('activeTab')"></plex-button>
+                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="pacienteSinTurno(activeTab)"></plex-button>
             </div>
             <div class="col-6" *ngIf='modo && modo.id === "carga"'>
                 <label for="">Forma de cargar</label>
@@ -204,7 +204,7 @@
                     <td class="badge-container">
                         <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
                         <plex-badge type="warning" class="ml-2"> estado </plex-badge>
-                        <plex-button type="success" size="sm" (click)="cargarResultados()" class="ml-2">Iniciar protocolo</plex-button>
+                        <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, false, $event,i)" class="ml-2">Iniciar protocolo</plex-button>
                         <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                             <i class="mdi mdi-file-document"></i>
                         </plex-button>
@@ -254,7 +254,7 @@
     <!-- Panel lateral -->
 
     <!-- footer -->
-    <plex-layout-footer *ngIf="showListarProtocolos">
+    <plex-layout-footer>
         <plex-button label="accion clave" type="primary" position="left" label="Crear un nuevo protocolo" (click)="insertarAgenda()"></plex-button>
         <plex-button label="Cancelar" type="Cancelar" position="left" (click)="guardarAgendaPanel.cancelar()"></plex-button>
         <plex-button label="Otra accion clave" type="Guardar" position="right" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button>
@@ -262,5 +262,5 @@
 </plex-layout>
 
 <!-- Switchea a listado practicas -->
-<protocolo-detalle *ngIf="showProtocoloDetalle" [cargarProtocolo]="protocolo" [indexProtocolo]='indexProtocolo' [protocolos]="protocolos"
-    [modo]='modo' (volverAListaControEmit)='showProtocoloDetalle = false;showListarProtocolos = true;  showCargarSolicitud = false'></protocolo-detalle>
+<protocolo-detalle *ngIf="!showListarProtocolos" [cargarProtocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
+    [indexProtocolo]='indexProtocolo' [protocolos]="protocolos" [modo]='modo' [seleccionPaciente]='seleccionPaciente' (volverAListaControEmit)='volverLista()'></protocolo-detalle>
