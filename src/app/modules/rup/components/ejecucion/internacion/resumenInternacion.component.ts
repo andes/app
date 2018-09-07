@@ -45,7 +45,6 @@ export class ResumenInternacionComponent implements OnInit {
     }
 
     onBtnIniciarEditar(event) {
-        console.log(event, 'El evento');
         this.btnIniciarEditar = event;
     }
 
