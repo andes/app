@@ -172,6 +172,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     odontogramaAnterior() {
+        this.showUltimoOdontograma = false;
         let params: IPrestacionGetParams = {
             idPaciente: this.paciente.id,
             conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
@@ -184,6 +185,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.ultimoOdontogramaIndex--;
                     this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.armarRelaciones();
+                    this.showUltimoOdontograma = true;
                 }
             }
         });

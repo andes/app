@@ -27,9 +27,10 @@
         </div>
 
         <!-- ÚLTIMO ODONTOGRAMA -->
-        <div class="row no-gutters último-odontograma pt-0 pb-2" *ngIf="ultimoOdontograma">
+        <div class="row no-gutters último-odontograma p-0 pb-1" *ngIf="ultimoOdontograma">
             <div class="col-12 no-gutters pt-2 title">
-
+                <a class="toggle-último float-right hover btn btn-sm btn-info mdi mdi-chevron-{{ showUltimoOdontograma ? 'up' : 'down' }}"
+                    (click)="toggleUltimo()" title="{{ showUltimoOdontograma ? 'Ocultar' : 'Mostrar' }}"></a>
                 <h6>
                     <a *ngIf="ultimoOdontogramaIndex > 0" (click)="odontogramaAnterior()" class="hover text-warning text-bold mdi mdi-24px mdi-chevron-left"></a>
                     {{ ultimoOdontogramaIndex === odontogramasHUDS.length - 1 ? 'Último odontograma' : 'Odontograma del
@@ -39,10 +40,8 @@
                         class="hover text-warning text-bold mdi mdi-24px mdi-chevron-right"></a>
                 </h6>
 
-                <a class="toggle-último float-right hover btn btn-sm btn-info mdi mdi-chevron-{{ showUltimoOdontograma ? 'up' : 'down' }}"
-                    (click)="toggleUltimo()" title="{{ showUltimoOdontograma ? 'Ocultar' : 'Mostrar' }}"></a>
             </div>
-            <ng-container *ngIf="ultimoOdontograma && showUltimoOdontograma && relaciones">
+            <ng-container *ngIf="ultimoOdontograma && relaciones">
                 <!-- CUADRANTE -->
                 <ng-container *ngFor="let cuadrante of cuadrantes">
                     <div class="col-6 no-gutters {{ cuadrante }}" [ngClass]="{'hidden': !showUltimoOdontograma, 'visible': showUltimoOdontograma}">
