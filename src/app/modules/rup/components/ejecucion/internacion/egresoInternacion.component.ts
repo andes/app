@@ -213,6 +213,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                 this.prestacionGuardada.emit(prestacionEjecutada);
+                this.btnIniciarEditarEmit.emit('Editar');
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 this.cancelar();
             });
