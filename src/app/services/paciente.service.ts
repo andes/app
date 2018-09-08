@@ -9,10 +9,12 @@ import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.intefac
 
 @Injectable()
 export class PacienteService {
-
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
     private carpetaUrl = '/modules/turnos/carpetasPacientes';
-
+    /**
+     * RegEx para validar nombres y apellidos.
+     */
+    public nombreRegEx = /[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ ']+/;
 
     constructor(private server: Server) { }
 
