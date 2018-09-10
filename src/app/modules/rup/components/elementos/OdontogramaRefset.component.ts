@@ -374,11 +374,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 odontograma: this.odontograma
             };
 
-            // if (!this.seleccionMultiple) {
-            //     this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: cara }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // } else {
-            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // }
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
         } else {
@@ -447,13 +442,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 odontograma: this.odontograma
             };
 
-            // if (!this.seleccionMultiple) {
-            //     this.emitEjecutarAccion({ conceptos: [{ concepto: diente.concepto, cara: 'pieza' }], ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // } else {
-            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // }
-
-            // this.prestacionesService.setRefSetData(this.piezasSeleccionadas, this.params.refsetId);
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
 
@@ -465,13 +453,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-            // if (this.piezasSeleccionadas.length === 0) {
-            //     this.emitEjecutarAccion(false);
-            // } else {
-            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // }
-
-            // this.prestacionesService.setRefSetData(this.piezasSeleccionadas, this.params.refsetId);
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
 
@@ -491,7 +472,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.piezasSeleccionadas = [];
         this.registro.valor.piezas = [];
         this.prestacionesService.clearRefSetData();
-        this.emitEjecutarAccion(null);
     }
 
     estaSeleccionada(diente, cara) {
