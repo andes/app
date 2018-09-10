@@ -1,0 +1,113 @@
+$colors: ( primary: #488aff, secondary: #32db64, danger: #f53d3d, light: #f4f4f4, dark: #222, success: #8CC63F);
+$primary: #428bca;
+$darkblue: #062837;
+$celeste: #B9E5EF;
+$warning:#ff8d22;
+$danger: #ec1a73;
+$info:#00A8E0;
+$success: #95c11f;
+$verde-oscuro: #729905;
+$label-dark: #06CAFF;
+$icon-dark: #EA1E79;
+$gris: #4E4D4D;
+$light-gris: #acacac;
+$violeta: #e33178;
+$celeste-claro: #f4feff;
+
+// Mixins
+// Background - azul oscuro
+@mixin background-gradient ($color-1, $color-2, $color-3) {
+    background: $color-1;
+    background: -moz-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, $color-1), color-stop(55%, $color-2), color-stop(71%, $color-3));
+    background: -webkit-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -o-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -ms-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: linear-gradient(to right, $color-1 0%, $color-2 55%, $color-3 71%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006790', endColorstr='#043750', GradientType=1 );
+}
+
+// Background - azul claro
+@mixin light ($color-1, $color-2, $color-3) {
+    background: $color-1;
+    background: -moz-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, $color-1), color-stop(55%, $color-2), color-stop(71%, $color-3));
+    background: -webkit-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -o-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -ms-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: linear-gradient(to right, $color-1 0%, $color-2 55%, $color-3 71%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#006890', endColorstr='#17a6df', GradientType=1 );
+}
+
+// Background - violeta
+@mixin violeta ($color-1, $color-2, $color-3) {
+    background: $color-1;
+    background: -moz-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -webkit-gradient(left top, right top, color-stop(0%, $color-1), color-stop(55%, $color-2), color-stop(71%, $color-3));
+    background: -webkit-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -o-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: -ms-linear-gradient(left, $color-1 0%, $color-2 55%, $color-3 71%);
+    background: linear-gradient(to right, $color-1 0%, $color-2 55%, $color-3 71%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#941b80', endColorstr='#652680', GradientType=1 );
+}
+
+
+
+@mixin outline-color($name, $color) {
+    &.#{$name} {
+        border-color: $color;
+        color: $color;
+  }
+}
+
+    .titulo-prefix {
+        color: grey;
+        font-size : 1.6rem;
+        font-weight: 400;
+        line-height : 2rem;
+        text-align: left;
+        text-transform: capitalize;
+        margin-top: 3rem;
+    }
+
+
+    .titulo-principal {
+        font-size: 7rem;
+        color: $darkblue;
+        font-weight: 300;
+        text-transform: capitalize;
+
+        span {
+            font-weight: bold;
+        }
+
+        &.md {
+            font-size: 3.5rem;
+        }
+    }
+
+    .titulo-secundario {
+        font-size: 2rem;
+        color: $violeta;
+        font-weight: 500;
+        margin-top: 2rem;
+    }
+
+
+    .andes-texto {
+        font-size: 1.8rem;
+        height: auto;
+    }
+
+
+    .andes-container {
+        display: flex;
+        .andes-wraper {
+            flex-basis: 100%;
+          
+        }
+    }
+
+    .badgeContainer{
+        font-size:1.2em;
+    }

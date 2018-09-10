@@ -90,6 +90,9 @@ import { PracticaDemoComponent } from './components/laboratorio/components/demoP
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -150,6 +153,9 @@ const appRoutes: Routes = [
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
+
+  // formulario terapeutico
+  { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingGuard] },
 
   // Reportes
   { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
