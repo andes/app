@@ -31,22 +31,25 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            <h5>Registro de visitas</h5>
-        </div>
-        <div class="col-3">
-            <h5>Percentilo peso</h5>
-        </div>
-        <div class="col-3">
-            <h5>Percentilo tabla</h5>
-        </div>
-        <div class="col-3">
-            <h5>Percentilo PC</h5>
+        <div class="col">
+            <h5>
+                Registro de visitas
+            </h5>
         </div>
     </div>
     <div class="row">
+        <div class="col">&nbsp;</div>
+    </div>
+    <div class="row">
         <div class="col">
-            <h5>Consultas de Niño Sano</h5>
+            <radio-chart [paciente]="paciente"></radio-chart>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">&nbsp;</div>
+    </div>
+    <div class="row">
+        <div class="col">
             <div class="table-responsive">
                 <table *ngIf="tablaModelo.length" class="table table-bordered table-striped">
                     <thead>
