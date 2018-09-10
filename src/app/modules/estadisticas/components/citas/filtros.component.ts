@@ -16,7 +16,7 @@ import { Plex } from '@andes/plex';
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
         </div> 
         <div class="col-2">
-            <plex-button type="success" label="Filtrar" (click)="onChange()" ></plex-button>
+            <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
         </div>
     </div>
     <div class="row">
