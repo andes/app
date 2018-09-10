@@ -61,11 +61,13 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             }
         });
     }
+
     loadVacunas() {
         this.servicioVacunas.get(this.paciente.id).subscribe(resultado => {
             this.vacunas = resultado;
         });
     }
+
     loadPrestaciones() {
         let conceptos = [];
         // armamos un array solo con los conceptos {conceptId: xxxxxxx}
@@ -75,20 +77,37 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
                 conceptos.push(elto.concepto);
             }
         });
+
         this.servicioResumenPaciente.get(this.paciente.id, { 'expresion': this.expresion, 'conceptos': JSON.stringify(conceptos) }).subscribe(resultado => {
-            this.prestaciones = resultado;
+            // se ordena el array de mayor a menor segun fecha (Mas actuales primero)
+            resultado.sort(function (a, b) {
+                let dateA = new Date(a.fecha).getTime();
+                let dateB = new Date(b.fecha).getTime();
+                return dateA < dateB ? 1 : -1;
+            });
+
+            // Para evitar mostrar consultas repetidas se llena un array auxiliar solo con la prestacion mas actual de las repetidas,
+            // es decir, la primera aparicion de cada prestacion (Ya que primero son ordenadas por fecha en forma decreciente).
+            let prestacionesAux = [];
+            resultado.forEach(unaPrestacion => {
+                if (!prestacionesAux.find(p => p.motivo.conceptId === unaPrestacion.motivo.conceptId)) {
+                    prestacionesAux.push(unaPrestacion);
+                }
+            });
+
+            this.prestaciones = prestacionesAux;
             this.crearTabla();
         });
     }
 
     crearTabla() {
-        // por cada prestacion obtenida cargamos los datos que se van a mostrar en la tabla
+        // por cada prestacion cargamos los datos que se van a mostrar en la tabla
         this.prestaciones.forEach(prestacion => {
             let filaTabla = [];
             // pusheamos la fecha
             filaTabla.push(moment(prestacion.fecha).format('DD/MM/YYYY'));
             // pusheamos la edad
-            filaTabla.push(prestacion.motivo);
+            filaTabla.push(prestacion.motivo.term);
             // recorremos las columnas de la tabla modelo para armar la nueva tabla con la informacion en el mismo orden
             this.tablaModelo.forEach(col => {
                 if (col.concepto) {
