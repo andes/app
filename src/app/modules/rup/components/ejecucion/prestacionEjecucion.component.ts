@@ -16,7 +16,6 @@ import { ConceptObserverService } from './../../services/conceptObserver.service
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { SnomedService } from '../../../../services/term/snomed.service';
 import { Observable } from 'rxjs/Rx';
-
 import { RUPComponent } from '../core/rup.component';
 
 @Component({
@@ -446,6 +445,11 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (snomedConcept.dragData) {
             snomedConcept = snomedConcept.dragData;
         }
+
+        // Si proviene del drag and drop
+        if (typeof snomedConcept.conceptId === 'undefined') {
+            snomedConcept = snomedConcept[1];
+        }
         // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
 
@@ -564,7 +568,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
             }
         } else {
-            if (registoExiste && (!this.tipoBusqueda && !this.tipoBusqueda.repetirRegistros)) {
+            if (registoExiste) {
                 this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
                 return false;
             }
@@ -789,6 +793,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
         // validamos antes de guardar
         let flag = true;
+        debugger;
         this.rupElements.forEach((item) => {
 
             let instance = item.rupInstance;
