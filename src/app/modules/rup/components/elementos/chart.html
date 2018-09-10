@@ -5,7 +5,7 @@
         </form>
     </div>
     <div class="col-9">
-        <div style="height: 50%; width:50%">
+        <div style="height: 50%; width:100%">
             <div style="display: block" *ngIf="mostrarChart">
                 <canvas baseChart height="300" [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
                     [chartType]="barChartType"></canvas>

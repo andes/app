@@ -139,7 +139,7 @@ export class ChartComponent implements AfterViewInit {
                     time: {
                         min: moment(data[0].fecha).subtract(0.5, 'days'),
                         max: moment(data[data.length - 1].fecha).add(0.5, 'days'),
-                        unit: 'day',
+                        unit: 'month',
                         tooltipFormat: 'DD/MM/YYYY',
                         unitStepSize: 0.5,
                         round: 'hour',
