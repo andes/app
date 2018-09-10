@@ -80,10 +80,6 @@ export class RUPComponent implements OnInit {
         componentReference.instance['ejecutarConcepto'].subscribe(value => {
             this.emitEjecutarConcepto(value);
         });
-        // Event bubbling
-        componentReference.instance['ejecutarAccion'].subscribe(value => {
-            this.emitEjecutarAccion(value);
-        });
 
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
@@ -145,13 +141,6 @@ export class RUPComponent implements OnInit {
 
         // Notifica al componente padre del cambio
         this.ejecutarConcepto.emit(concepto);
-    }
-
-    public emitEjecutarAccion(opciones) {
-        this.prepareEmit();
-
-        // Notifica al componente padre del cambio
-        this.ejecutarAccion.emit(opciones);
     }
 
 
