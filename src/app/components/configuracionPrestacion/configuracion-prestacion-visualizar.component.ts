@@ -24,21 +24,27 @@ export class ConfiguracionPrestacionVisualizarComponent implements OnInit {
 
     ngOnInit() {
         this.organizacionService.get({}).subscribe(resultado => {
+            resultado.sort((a, b) => a.nombre.localeCompare(b.nombre.toString()));
             this.organizaciones = resultado;
         });
     }
 
     public actualizarListaMapeos(unaOrganizacion: IOrganizacion) {
 
-        this.configuracionPrestacionService.get({ organizacion: unaOrganizacion.id }).subscribe(resultado => {
-            this.mapeos = resultado;
+        if (unaOrganizacion) {
+            this.configuracionPrestacionService.get({ organizacion: unaOrganizacion.id }).subscribe(resultado => {
+                this.mapeos = resultado;
 
-            if (this.mapeos) {
-                this.mapeos.forEach(unMapeo => {
-                    unMapeo.organizaciones = unMapeo.organizaciones.filter(unaOrg => unaOrg._id === unaOrganizacion.id);
-                });
-            }
-        });
+                if (this.mapeos) {
+                    this.mapeos.forEach(unMapeo => {
+                        unMapeo.organizaciones = unMapeo.organizaciones.filter(unaOrg => unaOrg._id === unaOrganizacion.id);
+                    });
+                }
+            });
+        } else {
+            // Si el select de organización se borra, se borra la ultima tabla de mapeos mostrada
+            this.mapeos = [];
+        }
     }
 
     public eliminarMapeo(unMapeo) {

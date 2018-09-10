@@ -1,4 +1,4 @@
-<plex-int autoFocus="1" *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="registro.valor" name="tensionSistolica"
+<plex-int *ngIf="!soloValores" placeholder="Ingrese un valor entre 20 y 300" [(ngModel)]="registro.valor" name="tensionSistolica"
     label="Tensión Sistólica" suffix="mmHG" min="20" max="300" required="true" (change)="emitChange()">
 </plex-int>
 

@@ -53,11 +53,13 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
-                this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                    if (resultado) {
-                        this.obraSocialPaciente = resultado[0];
-                    }
-                });
+                if (this.paciente.documento) {
+                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                        if (resultado) {
+                            this.obraSocialPaciente = resultado[0];
+                        }
+                    });
+                }
                 this.mostrarCalendario = false;
             });
     }
@@ -74,11 +76,13 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                        if (resultado) {
-                            this.obraSocialPaciente = resultado[0];
-                        }
-                    });
+                    if (this.paciente.documento) {
+                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                            if (resultado) {
+                                this.obraSocialPaciente = resultado[0];
+                            }
+                        });
+                    }
                 });
         }
     }
@@ -1001,11 +1005,13 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                        if (resultado) {
-                            this.obraSocialPaciente = resultado[0];
-                        }
-                    });
+                    if (this.paciente.documento) {
+                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                            if (resultado) {
+                                this.obraSocialPaciente = resultado[0];
+                            }
+                        });
+                    }
                 });
         } else {
             this.buscarPaciente();
@@ -1028,11 +1034,13 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
-                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                        if (resultado) {
-                            this.obraSocialPaciente = resultado[0];
-                        }
-                    });
+                    if (this.paciente.documento) {
+                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                            if (resultado) {
+                                this.obraSocialPaciente = resultado[0];
+                            }
+                        });
+                    }
                 });
         } else {
             this.seleccion = paciente;
