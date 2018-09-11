@@ -452,6 +452,7 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { ChartComponent } from './modules/rup/components/elementos/chart.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -530,6 +531,7 @@ registerLocaleData(localeEs, 'es');
         MapaDeCamasComponent,
         CamaComponent,
         LaboratoriosComponent,
+        ChartComponent,
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
