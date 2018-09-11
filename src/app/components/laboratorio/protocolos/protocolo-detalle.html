@@ -304,7 +304,7 @@
     </plex-layout-main>
 
 
-    <!-- <plex-layout-sidebar *ngIf='modo.id !== "recepcion"'>
+    <plex-layout-sidebar *ngIf='modo.id !== "recepcion"'>
         <div class="row " *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i'
             [ngClass]="{'invert': protocolo._id === modelo._id}">
             <div class="col-2">
@@ -321,11 +321,7 @@
             </div>
             <hr>
         </div>
-
     </plex-layout-sidebar>
-
-  
-     -->
 
     <plex-layout-footer>
         <plex-button position="left" type="warning" (click)="volverProtocolos()">Volver</plex-button>

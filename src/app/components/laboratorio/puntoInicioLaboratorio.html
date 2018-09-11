@@ -44,7 +44,7 @@
                     [data]='laboratorioInternoEnum' [required]="true"></plex-select>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
-                <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="Prioridad" label="Prioridad" [data]="prioridadesEnum"
+                <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="Prioridad" label="Prioridad" [data]="prioridadesFiltroEnum"
                     [required]="true"></plex-select>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
@@ -181,16 +181,16 @@
             <tbody>
                 <tr class="labs-listado-item" *ngFor="let prestacion of turnosRecepcion; let i = index">
                     <div class="listado-contenedor-secundario">
-                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
+                        <!-- <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
 
                             <i *ngIf='prestacion.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                             <i *ngIf='prestacion.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
                             <hr>
                             <hr>
-                        </td>
+                        </td> -->
                         <td class="contenedor-bloque-texto">
                             <div class="labs-item-texto">
-                                <strong>Fecha de Registro:&nbsp;</strong>
+                                <strong>Fecha de turno:&nbsp;</strong>
                                 <p>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
                                 <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
                                 <p>{{prestacion.paciente.nombre}} {{prestacion.paciente.apellido}}
@@ -202,8 +202,7 @@
                         </td>
                     </div>
                     <td class="badge-container">
-                        <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
-                        <plex-badge type="warning" class="ml-2"> estado </plex-badge>
+                        <plex-badge type="danger" class="ml-2">{{getPrioridad(prestacion.solicitud)}}</plex-badge>
                         <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, false, $event,i)" class="ml-2">Iniciar protocolo</plex-button>
                         <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                             <i class="mdi mdi-file-document"></i>

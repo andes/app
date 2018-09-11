@@ -57,7 +57,7 @@ export class PuntoInicioLaboratorioComponent
     public fechaDesde: any = new Date();
     public fechaHasta: any = new Date();
     public origenEnum: any;
-    public prioridadesEnum;
+    public prioridadesFiltroEnum;
     public laboratorioInternoEnum: any;
     public dniPaciente: any;
     public pacientes;
@@ -77,16 +77,16 @@ export class PuntoInicioLaboratorioComponent
         pAnalisis: false
     };
     public origen = {
-        id: null,
-        nombre: null
+        id: 'todos',
+        nombre: 'todos'
     };
     public area = {
         id: null,
         nombre: null
     };
     public prioridad = {
-        id: null,
-        nombre: null
+        id: 'todos',
+        nombre: 'todos'
     };
     public busqueda = {
         solicitudDesde: new Date(),
@@ -94,7 +94,7 @@ export class PuntoInicioLaboratorioComponent
         pacienteDocumento: null,
         nombrePaciente: null,
         apellidoPaciente: null,
-        origen: null,
+        origen: 'todos',
         numProtocoloDesde: null,
         numProtocoloHasta: null,
         servicios: null,
@@ -124,7 +124,7 @@ export class PuntoInicioLaboratorioComponent
     ) { }
 
     ngOnInit() {
-        this.prioridadesEnum = enumerados.getPrioridadesLab();
+        this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();

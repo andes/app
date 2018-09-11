@@ -75,6 +75,12 @@ export enum PrioridadesLaboratorio {
     'urgencia'
 }
 
+export enum PrioridadesLaboratorioFiltro {
+    'normal',
+    'urgencia',
+    'todos'
+}
+
 export enum OrigenLaboratorio {
     'ambulatorio',
     'internación',
@@ -222,7 +228,17 @@ export function getPrioridadesLab() {
     return salida;
 }
 
-
+export function getPrioridadesFiltroLab() {
+    let arrLab = Object.keys(PrioridadesLaboratorioFiltro);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
 
 export function getCargaLaboratorio() {
     let arrLab = Object.keys(CargaLaboratorio);
