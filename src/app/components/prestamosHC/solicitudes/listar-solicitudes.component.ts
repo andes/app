@@ -411,11 +411,11 @@ export class ListarSolicitudesComponent implements OnInit {
 
 
     readThis(inputValue: any, index, _carpeta): void {
-        // ConceptId que se utilizará para la digitalización 
+        // ConceptId que se utilizará para la digitalización
         let conceptSnomed = {
-            term: "adjuntar archivo de historia clínica digitalizada (procedimiento)",
-            conceptId: "2881000013106"
-        }
+            term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
+            conceptId: '2881000013106'
+        };
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = -1;
         if (ext.toLowerCase() !== this.extensionPermitida) {
@@ -429,19 +429,19 @@ export class ListarSolicitudesComponent implements OnInit {
         myReader.onloadend = (e) => {
             let id;
             let profesional = this.auth.usuario;
-            if (_carpeta.tipo === "Manual") {
+            if (_carpeta.tipo === 'Manual') {
                 id = _carpeta.idSolicitud;
-            } else if (_carpeta.tipo === "Automatica") {
+            } else if (_carpeta.tipo === 'Automatica') {
                 id = _carpeta.datosPrestamo.turno.id;
             }
             let metadata = {
                 id: id,
-                prestacionSnomed: conceptSnomed.conceptId,
+                tipoPrestacion: conceptSnomed.conceptId,
                 fecha: new Date(),
                 paciente: _carpeta.paciente,
                 profesional: profesional,
                 file: myReader.result,
-                texto: "Se adjunta/n historia clínica digitalizada por un administrativo"
+                texto: 'Se adjunta/n historia clínica digitalizada por un administrativo'
             };
             this.servicioCDA.post(myReader.result, metadata).subscribe((data) => {
                 this.plex.toast('success', 'Se adjuntó correctamente', 'Información', 1000);
