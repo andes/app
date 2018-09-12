@@ -451,7 +451,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
-        debugger;
+
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
         if (snomedConcept.semanticTag === 'plan') {
             esSolicitud = true;
@@ -509,7 +509,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
 
-        if (snomedConcept[0] === 'planes') {
+        if (snomedConcept[0] && snomedConcept[0][0] === 'planes') {
             snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
             snomedConcept.semanticTag = 'plan';
         }
@@ -629,6 +629,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                     });
                                 }
                             }
+
 
                         } else {
                             resultado = this.cargarNuevoRegistro(snomedConcept);

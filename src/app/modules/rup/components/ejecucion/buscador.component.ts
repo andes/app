@@ -312,7 +312,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
-
         // reiniciamos los resultados desde la copia auxiliar que tenemos
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
 
@@ -323,7 +322,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // filtramos uno a uno los conceptos segun el string de busqueda
             // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
-
                 words.forEach(word => {
                     this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
                         return registro.term.toLowerCase().indexOf(word) >= 0;
@@ -456,6 +454,8 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+
+
                 if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
                     this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
                         return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
@@ -483,6 +483,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
+    /**
+     * Resuelve los filtros sobre los conceptos que se visualizan en la busqueda guiada.
+     * POR AHORA NO ESTA EN FUNCIONAMIENTO.
+    */
     public filtrarResultadosBusquedaGuiada() {
         // this.results.busquedaGuiada = [];
 
@@ -589,9 +593,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.filtroActual = key;
         } else {
             this.filtroActual = key;
-            // this.busquedaPorConcepto = this.busquedaRefSet.conceptos;
         }
-        // this.filtrarResultados(this.busquedaActual);
     }
 
     /**
@@ -601,28 +603,17 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
-        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
-        // let filtro = this.getFiltroSeleccionado();
+        let filtro;
 
-        // Devolvemos los tipos de filtros
-        // if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
-        //     // Devolvemos si queremos que se genere una relación
-        //     // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
-        //     this.tagBusqueda.emit(filtro);
-        //     this.filtroRefSet.emit(this.busquedaRefSet);
-        //     // this.tagBusqueda.emit(filtro);
-        // } else {
-        //     // Devolvemos los tipos de filtros
-        //     this.tagBusqueda.emit(filtro);
-        // }
-        // this.busquedaRefSet = null;
-        // this.filtroRefSet = null;
-
+        if (concepto.plan) {
+            filtro = ['planes'];
+        } else {
+            filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+        }
+        // devolvemos los tipos de filtros
+        // this.tagBusqueda.emit(filtro);
         // Devolvemos el concepto SNOMED
-        this.evtData.emit([this.filtroActual, concepto]);
-        // this.servicioPrestacion.clearRefSetData();
-        // this.search = null;
-
+        this.evtData.emit([filtro, concepto]);
     }
 
     getFiltroSeleccionado() {
