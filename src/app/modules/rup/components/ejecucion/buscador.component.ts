@@ -1,3 +1,5 @@
+import { Plex } from '@andes/plex';
+import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, SimpleChanges, OnChanges, Renderer2 } from '@angular/core';
 import { PrestacionesService } from '../../services/prestaciones.service';
@@ -13,8 +15,10 @@ import { ISnomedSearchResult } from '../../interfaces/snomedSearchResult.interfa
     styleUrls: ['buscador.scss']
 })
 
-export class BuscadorComponent implements OnInit, OnChanges {
-    autofocus = true;
+export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
+    private wizardActivo = false; // Se usa para evitar que los botones aparezcan deshabilitados
+
+    autofocus: any;
 
     // @Input() elementoRUPprestacion;
     // @Input() resultados;
@@ -108,11 +112,25 @@ export class BuscadorComponent implements OnInit, OnChanges {
     private ultimoTipoBusqueda: any;
     refSet: any;
 
+    /**
+     * Permite reusar los textos en los textos en el wizard y los tooltips
+     *
+     * @memberof BuscadorComponent
+     */
+    public tooltips = {
+        hallazgos: 'Incluyen signos, síntomas, antecedentes tanto positivos como negativos.<br><br>Ejemplos: antecedente de asma, no fuma, vivienda adecuada.',
+        trastornos: 'Incluye enfermedades y situaciones siempre anómalas.<br><br>Ejemplos: cardiopatía, diabetes mellitus tipo I, asma, aclorhidria.',
+        procedimientos: 'Incluye todos los procedimientos/prácticas que se realizan durante una prestación.<br><br>Ejemplos: Medir tensión arteria, registrar signos vitales',
+        planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
+        productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
+    };
+
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
         public servicioPrestacion: PrestacionesService,
-        public renderer: Renderer2) {
+        public renderer: Renderer2,
+        private plex: Plex) {
     }
 
 
@@ -167,9 +185,8 @@ export class BuscadorComponent implements OnInit, OnChanges {
             }
 
             let fp = await this.inicializarFrecuentesProfesional();
-
             if (fp && fp.length) {
-                const frecuentesProfesional = fp.map(res => {
+                const frecuentesProfesional = fp.map((res: any) => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
                     return concepto;
@@ -209,6 +226,35 @@ export class BuscadorComponent implements OnInit, OnChanges {
             'tipoPrestacion': this.prestacion.solicitud.tipoPrestacion.conceptId
         };
         return this.frecuentesProfesionalService.getXPrestacion(queryFTP).toPromise();
+    }
+
+    ngAfterViewInit() {
+        // Espera un segundo para que el padre termine de acomodar los contenidos
+        setTimeout(() => {
+            this.wizardActivo = true;
+            let promise = this.plex.wizard({
+                id: 'rup:buscador:botones',
+                updatedOn: moment('2018-09-01').toDate(),
+                steps: [
+                    { title: 'Nuevo buscador', content: 'Presentamos una forma más fácil de buscar los conceptos para registrar en la consulta' },
+                    { title: 'Hallazgos', content: this.tooltips.hallazgos },
+                    { title: 'Trastornos', content: this.tooltips.trastornos },
+                    { title: 'Procedimientos', content: this.tooltips.procedimientos },
+                    { title: 'Solicitudes', content: this.tooltips.planes },
+                    { title: 'Insumos', content: this.tooltips.productos },
+                ],
+                forceShow: false,
+                fullScreen: false,
+                showNumbers: false
+            });
+
+            // Devuelve una promise sólo si se mostró el wizard
+            if (promise) {
+                promise.then(() => this.wizardActivo = false);
+            } else {
+                this.wizardActivo = false;
+            }
+        }, 1000);
     }
 
     /**
@@ -273,24 +319,26 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
 
             let search = this.search.toLowerCase();
-
+            let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
+            // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
-                if (this.results[this.busquedaActual][concepto]) {
+
+                words.forEach(word => {
                     this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                        return registro.term.toLowerCase().indexOf(search) >= 0;
+                        return registro.term.toLowerCase().indexOf(word) >= 0;
                     });
-                    if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                        this.results.buscadorBasico[concepto] = this.results.buscadorBasico[concepto].filter(x => {
-                            return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                        });
-                    }
-                }
+
+                });
+
             });
 
-            // También filtramos el campo 'todos' segun el string de búsqueda
-            this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
-                return registro.term.toLowerCase().indexOf(search) >= 0;
+            // tambien filtramos el campo 'todos' segun el string de busqueda
+            words = search.split(' ');
+            words.forEach(word => {
+                this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
+                    return registro.term.toLowerCase().indexOf(word) >= 0;
+                });
             });
 
         } else {
@@ -429,43 +477,42 @@ export class BuscadorComponent implements OnInit, OnChanges {
                     planes.push(unPlan);
                 });
                 // agregamos los planes
-                this.results[busquedaActual][this.filtroActual] = [...this.results[busquedaActual][this.filtroActual], ...this.results[busquedaActual]['planes']];
+                this.results[busquedaActual][this.filtroActual] = [...this.results[busquedaActual][this.filtroActual], ...planes];
                 // ordenamos los resultados
             }
         }
     }
 
     public filtrarResultadosBusquedaGuiada() {
-        this.results.busquedaGuiada = [];
+        // this.results.busquedaGuiada = [];
 
-        this.gruposGuiada.forEach(data => {
-            if (this.results.buscadorBasico[this.filtroActual]) {
+        // this.grupos_guida.forEach(data => {
+        //     if (this.results.buscadorBasico['todos']) {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: data.nombre,
+        //             valor: this.results.buscadorBasico['todos'].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
+        //         });
+        //     } else {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: data.nombre,
+        //             valor: []
+        //         });
+        //     }
+        // });
 
-                this.results.busquedaGuiada.push({
-                    nombre: data.nombre,
-                    valor: this.results.buscadorBasico[this.filtroActual].filter(x => data.conceptIds.indexOf(x.conceptId) >= 0)
-                });
-            } else {
-                this.results.busquedaGuiada.push({
-                    nombre: data.nombre,
-                    valor: []
-                });
-            }
-        });
-
-        Object.keys(this.conceptos).forEach(concepto => {
-            if (this.results.buscadorBasico[this.filtroActual]) {
-                this.results.busquedaGuiada.push({
-                    nombre: concepto,
-                    valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
-                });
-            } else {
-                this.results.busquedaGuiada.push({
-                    nombre: concepto,
-                    valor: []
-                });
-            }
-        });
+        // Object.keys(this.conceptos).forEach(concepto => {
+        //     if (this.results.buscadorBasico['todos']) {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: concepto,
+        //             valor: this.results.buscadorBasico[concepto].filter(x => this.conceptos[concepto].find(y => y === x.semanticTag))
+        //         });
+        //     } else {
+        //         this.results.busquedaGuiada.push({
+        //             nombre: concepto,
+        //             valor: []
+        //         });
+        //     }
+        // });
     }
 
 
@@ -498,15 +545,19 @@ export class BuscadorComponent implements OnInit, OnChanges {
         if (this.results.misFrecuentes && this.results.misFrecuentes['todos'] && this.results.misFrecuentes['todos'].length) {
             // Si hay un concepto frecuente en la lista de resultados, se lo mueve al tope
             // de la lista con Array.unshift()
+            // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
+            this.results.misFrecuentes['todos'].sort((a, b) => b.frecuencia - a.frecuencia);
             frecuentes = this.results.misFrecuentes['todos'].map(x => {
                 if (x.frecuencia != null && x.frecuencia >= 1 && this.results.buscadorBasico['todos'].find(c => c.conceptId === x.conceptId)) {
-                    this.results.buscadorBasico['todos'].splice(this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId), 1);
-                    this.results.buscadorBasico['todos'].unshift(x);
+                    let index = this.results.buscadorBasico['todos'].findIndex(r => r.conceptId === x.conceptId);
+                    let registroFrec = this.results.buscadorBasico['todos'][index];
+                    this.results.buscadorBasico['todos'].splice(index, 1);
+                    this.results.buscadorBasico['todos'].unshift(registroFrec);
                 }
                 return x;
             });
-            // Finalmente se orde  nan los más frecuentes de mayor a menor frecuencia
-            frecuentes.sort((a, b) => b.frecuencia - a.frecuencia);
+
+
             // Se le asignan los resultados ordenados con los mas frecuentes.
             // this.results.buscadorBasico = this.resultsAux = this.results.buscadorBasico;
         }

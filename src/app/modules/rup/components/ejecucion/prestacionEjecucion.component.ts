@@ -241,7 +241,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posición donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
-
         // // buscamos el registro
         let registro = this.prestacion.ejecucion.registros[posicionActual];
 
@@ -452,7 +451,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         }
         // Elemento a ejecutar dinámicamente luego de buscar y clickear en snomed
         let esSolicitud = false;
-
+        debugger;
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
         if (snomedConcept.semanticTag === 'plan') {
             esSolicitud = true;
