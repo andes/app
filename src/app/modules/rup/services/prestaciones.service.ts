@@ -65,10 +65,8 @@ export class PrestacionesService {
      *
      * @memberof PrestacionesService
      */
-    getPrestacionesLabo(params: any, options: any = {}): Observable<IPrestacion[]> {
-
+    getPrestacionesLaboratorio(params: any, options: any = {}): Observable<IPrestacion[]> {
         let opt = { params: params, options };
-
         return this.server.get(this.prestacionesUrl + '/laboratorio', opt);
     }
 

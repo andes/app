@@ -6,6 +6,7 @@ import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
+import { ProtocoloService } from '../../../services/laboratorio/protocolo.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import * as enumerados from './../../../utils/enumerados';
 import { IPrestacion } from '../../../modules/rup/interfaces/prestacion.interface';
@@ -13,6 +14,7 @@ import { IPracticaMatch } from '../interfaces/IPracticaMatch.inteface';
 import { PracticaBuscarResultado } from '../interfaces/PracticaBuscarResultado.inteface';
 import { IPractica } from '../../../interfaces/laboratorio/IPractica';
 import { Constantes } from '../consts';
+import { SnomedService } from '../../../services/term/snomed.service';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -29,6 +31,7 @@ export class ProtocoloDetalleComponent
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     paciente: any;
     //estado: any;
+    ambitoOrigen: String;
     observaciones: '';
     prioridad: any;
     servicio: any;
@@ -38,24 +41,16 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    estados: any = [];
     public practicas: IPracticaMatch[] | IPractica[];
     public practicasActivas = [];
 
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
-    public fechaDesde: any;
-    public fechaHasta: any;
-    public parametros = [];
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi = false;
-    // public profesional = {
-    //     nombre: 'Marco',
-    //     apellido: 'Santarelli'
-    // };
+    
     @Input() seleccionPaciente: any;
-
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Input() protocolos: any;
@@ -64,15 +59,12 @@ export class ProtocoloDetalleComponent
     @Input() indexProtocolo: any;
     @Input('cargarProtocolo')
     set cargarProtocolo(value: any) {
-        console.log('cargarProtocolo', value)
         if (value) {
             this.modelo = value;
         }
     }
 
     setProtocoloSelected(protocolo: IPrestacion) {
-
-        console.log('protocoloSelected', protocolo)
         this.modelo = protocolo;
     }
 
@@ -85,7 +77,9 @@ export class ProtocoloDetalleComponent
         public auth: Auth,
         private servicioOrganizacion: OrganizacionService,
         private servicioPrestacion: PrestacionesService,
+        private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
+        private servicioSnomed: SnomedService
     ) { }
 
     ngOnInit() {
@@ -143,20 +137,6 @@ export class ProtocoloDetalleComponent
         } else {
             event.callback([]);
         }
-        // this.servicioProfesional.get(this.modelo.solicitud.profesional.id).subscribe(resultado => {
-        //     let salida = resultado.map(elem => {
-        //         return {
-        //             'id': elem.id,
-        //             'nombre': elem.nombre,
-        //             'apellido': elem.apellido,
-        //             'documento': elem.documento
-
-        //         };
-        //     });
-        //     this.profesional = salida;
-        // });
-
-
     }
 
 
@@ -198,10 +178,6 @@ export class ProtocoloDetalleComponent
         return false;
     }
 
-    cargarResultados() {
-        console.log('cargarResultado');
-    }
-
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
@@ -211,40 +187,57 @@ export class ProtocoloDetalleComponent
         this.volverAListaControEmit.emit(true);
     }
 
-    getPracticas(registros) {
-        let registro: any = this.getRegistrosByConceptId(registros, '122869004');
-
-        return registro ? registro.registros : [];
-    }
-
-    getCodigoPractica(registros) {
-        let registro: any = this.getRegistrosByConceptId(registros, '260299005');
-        return (registro) ? registro.valor : '';
-    }
-
     getRegistrosByConceptId(registros, conceptId) {
         return registros.find((reg) => {
             return reg.concepto.conceptId === conceptId;
         });
-
     }
 
     getNumeroProtocolo(registros) {
         let registro: any = registros.find((reg) => {
             return reg.nombre === 'numeroProtocolo';
         });
-        return registro ? registro.valor : null;
+        return registro ? registro.valor.numeroCompleto : null;
+    }
+
+    getPracticas(registros) {
+        let registro: any = this.getRegistrosByConceptId(registros, Constantes.conceptIds.practica);
+
+        return registro ? registro.registros : [];
+    }
+
+    getCodigoPractica(registros) {
+        let registro: any = this.getRegistrosByConceptId(registros, Constantes.conceptIds.unidadMedida);
+        return (registro) ? registro.valor : '';
     }
 
     getUnidad(registros) {
-        console.log('getUnidad', registros)
         let registro: any = registros.find((reg) => {
-            return reg.concepto.conceptId === '282372007';
+            return reg.concepto.conceptId === Constantes.conceptIds.unidadMedida;
         });
         return registro ? registro.valor.term : null;
     }
 
+    getFechaTomaMuestra(registros) {
+        let registro: any = registros.find((reg) => {
+            return reg.concepto.conceptId === Constantes.conceptIds.unidadMedida;
+        });
+        return registro ? registro.valor.term : null;
+    }
 
+    getServicio(registros) {
+        let registro: any = registros.find((reg) => {
+            return reg.concepto.conceptId === Constantes.conceptIds.servicioOrigen;
+        });
+        return registro ? registro.valor.term : null;
+    }
+
+    getPrioridad(registros) {
+        let registro: any = registros.find((reg) => {
+            return reg.concepto.conceptId === Constantes.conceptIds.prioridad;
+        });
+        return registro ? registro.valor.term : null;
+    }
 
     searchStart() {
         this.pacientes = null;
@@ -279,7 +272,6 @@ export class ProtocoloDetalleComponent
         } else {
             this.practicas = resultado.practicas;
         }
-        console.log("busquedaFInal", this.practicas);
     }
 
 
@@ -290,7 +282,6 @@ export class ProtocoloDetalleComponent
 
 
     siguiente() {
-
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
             this.indexProtocolo++;
             this.protocoloSelected = this.protocolos[this.indexProtocolo];
@@ -299,7 +290,6 @@ export class ProtocoloDetalleComponent
     }
 
     anterior() {
-
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
             this.protocoloSelected = this.protocolos[this.indexProtocolo];
@@ -311,56 +301,14 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = true;
     }
 
-    // guardar() {
-    //     this.servicioPrestacion.post(this.protocoloSelected).subscribe((result) => {
-    //         // this.protocolos = protocolos;
-    //         console.log(result);
-    //     }, err => {
-    //         if (err) {
-    //             console.log(err);
-    //         }
-    //     });
-    // }
-    guardarSolicitud($event) {
-        //SI VIENE PACIENTE CON TURNO
-
-        // if (this.modelo.solicitud.registros.valor.solicitudPrestacion) {
-        //     console.log("viene paciente conturno");
-        //     this.modelo.ejecucion.organizacion = this.auth.organizacion;
-        //     this.modelo.ejecucion.registros.push({
-        //         nombre: "numeroProtocolo",
-        //         concepto: {
-        //             fsn: "número (calificador)",
-        //             term: "número",
-        //             conceptId: "260299005",
-        //             semanticTag: "calificador"
-        //         }
-        //     });
-        // } else {
-        //     console.log("viene paciente sin turno");
-
-        //if ($event.formValid) {
-        // this.modelo.solicitud.organizacion = this.auth.organizacion;
-        // this.modelo.solicitud.profesional = {
-        //     id: this.auth.profesional.id,
-        //     nombre: this.auth.usuario.nombre,
-        //     apellido: this.auth.usuario.apellido,
-        //     documento: this.auth.usuario.documento
-        // };
-        this.modelo.paciente = this.modelo.paciente;
-
-        this.modelo.solicitud.tipoPrestacion = Constantes;
-        //this.modelo.solicitud.esSolicitud = true,
-
+    async guardarSolicitud($event) {
+        this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
         this.modelo.solicitud.organizacion = this.auth.organizacion;
-        //this.modelo.solicitud.organizacionOrigen = this.organizacionOrigen;
-        // this.modelo.solicitud.profesionalOrigen = this.modelo.solicitud.profesional;
-        this.modelo.solicitud.profesional = this.modelo.solicitud.profesional;
         this.modelo.estados = [{ tipo: "pendiente" }];
 
         this.modelo.solicitud.registros.push({
             esSolicitud: true,
-            nombre: Constantes.term,
+            nombre: Constantes.conceptoPruebaLaboratorio.term,
             concepto: Constantes,
             valor: {
                 solicitudPrestacion: {
@@ -370,30 +318,44 @@ export class ProtocoloDetalleComponent
                     servicio: this.servicio,
                     practicas: this.practicasActivas,
                     observaciones: this.observaciones,
-
-
                 }
             }
         });
-        console.log('guardarSolicitud', this.modelo);
 
-        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-            console.log("post resp", respuesta);
-            this.volverAListaControEmit.emit();
-            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-        });
+        if(this.modo.id === 'recepcion') {
+            this.iniciarProtocolo();
+        } else {
+            this.guardarProtocolo();
+        }
+        // console.log('this.modelo.ejecucion.registros',this.modelo.ejecucion.registros)
         // }
         // else {
         //     this.plex.alert('Debe completar los datos requeridos');
         // }
-
-
-
     }
 
+    iniciarProtocolo () { 
+        let organizacionSolicitud = this.protocoloSelected.solicitud ? this.protocoloSelected.solicitud.organizacion.id : this.auth.organizacion.id;
+        this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
+            this.servicioSnomed.getQuery({ expression: '260299005' }).subscribe(result => {
+                let registro = {
+                    nombre: 'numeroProtocolo',
+                    concepto: result[0],
+                    esSolicitud: false,
+                    esDiagnosticoPrincipal: false,
+                    valor: numeroProtocolo,
+                    registros: []
+                };
+                this.modelo.ejecucion.registros.push(registro);
+                this.guardarProtocolo();            
+            });
+        });
+    }
 
-
+    guardarProtocolo() {
+        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+            this.volverAListaControEmit.emit();
+            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+        });
+    }
 }
-
-
-

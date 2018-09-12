@@ -132,35 +132,32 @@
         <!-- Listado -->
         <table class="table table-striped table-sm" *ngIf='modo && modo.id !== "recepcion"'>
             <tbody>
-                <tr class="labs-listado-item" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
-                    <div class="listado-contenedor-secundario">
-                        <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero" style="max-height: 14px !important; display: block;">
+                <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
+                    <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero" >
 
-                            <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
-                            <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
-                            <br>
-                            <h2 *ngIf='getNumeroProtocolo(protocolo.solicitud.registros) !== null'>{{getNumeroProtocolo(protocolo.solicitud.registros)}}</h2>
+                        <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
+                        <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
+                        <h2 *ngIf='getNumeroProtocolo(protocolo.ejecucion.registros) !== null'>{{getNumeroProtocolo(protocolo.ejecucion.registros)}}</h2>
 
-                            <br>
-                        </td>
-                        <td class="contenedor-bloque-texto" style="margin-left: 61px !important">
-                            <div class="labs-item-texto">
-                                <p>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
-                                <strong>&nbsp;|&nbsp;Origen&nbsp;</strong>
-                                <p>{{protocolo.solicitud.ambitoOrigen}}</p>
-                                <strong>&nbsp;|&nbsp;Servicio&nbsp;</strong>
-                                <p>Clinica</p>
-                            </div>
-                            <div class="labs-item-texto">
-                                <strong>Usuario:&nbsp;</strong>
-                                <p>{{protocolo.createdBy.nombreCompleto}}</p>
-                                <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
-                                <p>{{protocolo.paciente.nombre}} {{protocolo.paciente.apellido}} </p>
-                                <strong>&nbsp;|&nbsp;Fecha de Registro:&nbsp;</strong>
-                                <p>{{protocolo.createdAt | date: 'dd/MM/yyyy'}}</p>
-                            </div>
-                        </td>
-                    </div>
+                        <br>
+                    </td>
+                    <td class="contenedor-bloque-texto">
+                        <div class="labs-item-texto">
+                            <p>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
+                            <strong>&nbsp;|&nbsp;Origen&nbsp;</strong>
+                            <p>{{protocolo.solicitud.ambitoOrigen}}</p>
+                            <strong>&nbsp;|&nbsp;Servicio&nbsp;</strong>
+                            <p>Clinica</p>
+                        </div>
+                        <div class="labs-item-texto">
+                            <strong>Usuario:&nbsp;</strong>
+                            <p>{{protocolo.createdBy.nombreCompleto}}</p>
+                            <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
+                            <p>{{protocolo.paciente.nombre}} {{protocolo.paciente.apellido}} </p>
+                            <strong>&nbsp;|&nbsp;Fecha de Registro:&nbsp;</strong>
+                            <p>{{protocolo.createdAt | date: 'dd/MM/yyyy'}}</p>
+                        </div>
+                    </td>
                     <td class="badge-container">
                         <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
                         <plex-badge type="warning" class="ml-2"> estado </plex-badge>
@@ -168,8 +165,6 @@
                         <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                             <i class="mdi mdi-file-document"></i>
                         </plex-button>
-
-
                     </td>
                 </tr>
                 <!-- /Protocolos hardcodeados -->
