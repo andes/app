@@ -29,26 +29,27 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
 
     ngOnInit() {
         // Los conceptos se encuentran ordenados como deben aparecer en la tabla
-        this.tablaModelo = [
-            { 'titulo': 'Fecha' },
-            { 'titulo': 'Edad' },
-            { 'titulo': 'Peso en Kgs.', 'concepto': { 'conceptId': '27113001' } },    // peso
-            { 'titulo': 'PC. Peso', 'concepto': { 'conceptId': '170005003' } }, // percentilo peso del niño
-            { 'titulo': 'Talla en cm.', 'concepto': { 'conceptId': '14456009' } },    // talla
-            { 'titulo': 'PC. Talla', 'concepto': { 'conceptId': '248338008' } },   // percentilo de talla
-            { 'titulo': 'IMC', 'concepto': { 'conceptId': '60621009' } },   // imc
-            { 'titulo': 'PC. IMC', 'concepto': { 'conceptId': '446974000' } },   // percentilo imc
-            { 'titulo': 'Perim. Cef.', 'concepto': { 'conceptId': '363812007' } },   // perimetro cefalico
-            { 'titulo': 'PC. Perim. Cef.', 'concepto': { 'conceptId': '248397001' } },   // percentilo perim cefalico
-            { 'titulo': 'Tensión arterial', 'concepto': { 'conceptId': '46973005' } },   // presion arterial
-            { 'titulo': 'Lactancia materna', 'concepto': { 'conceptId': '3658006' } },   // lactancia
-            { 'titulo': 'Desarrollo psicomotor', 'concepto': { 'conceptId': '65401001' } }   // desarrollo psicomotor
+        // this.tablaModelo = [
+        //     { 'titulo': 'Fecha' },
+        //     { 'titulo': 'Edad' },
+        //     { 'titulo': 'Peso en Kgs.', 'concepto': { 'conceptId': '27113001' } },    // peso
+        //     { 'titulo': 'PC. Peso', 'concepto': { 'conceptId': '170005003' } }, // percentilo peso del niño
+        //     { 'titulo': 'Talla en cm.', 'concepto': { 'conceptId': '14456009' } },    // talla
+        //     { 'titulo': 'PC. Talla', 'concepto': { 'conceptId': '248338008' } },   // percentilo de talla
+        //     { 'titulo': 'IMC', 'concepto': { 'conceptId': '60621009' } },   // imc
+        //     { 'titulo': 'PC. IMC', 'concepto': { 'conceptId': '446974000' } },   // percentilo imc
+        //     { 'titulo': 'Perim. Cef.', 'concepto': { 'conceptId': '363812007' } },   // perimetro cefalico
+        //     { 'titulo': 'PC. Perim. Cef.', 'concepto': { 'conceptId': '248397001' } },   // percentilo perim cefalico
+        //     { 'titulo': 'Tensión arterial', 'concepto': { 'conceptId': '46973005' } },   // presion arterial
+        //     { 'titulo': 'Lactancia materna', 'concepto': { 'conceptId': '3658006' } },   // lactancia
+        //     { 'titulo': 'Desarrollo psicomotor', 'concepto': { 'conceptId': '65401001' } }   // desarrollo psicomotor
         ];
 
         this.loadPrestaciones();
         this.loadVacunas();
         this.loadResumen();
     }
+    // carga el resumen de historia clinica
     loadResumen() {
         this.prestacionesService.getRegistrosHuds(this.paciente.id, '6035001').subscribe(prestaciones => {
             if (prestaciones && prestaciones.length) {
@@ -70,7 +71,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
 
     loadPrestaciones() {
         let conceptos = [];
-        // armamos un array solo con los conceptos {conceptId: xxxxxxx}
+        // se carga un array solo con los conceptos {conceptId: xxxxxxx}
 
         this.tablaModelo.forEach(elto => {
             if (elto.concepto) {
@@ -78,7 +79,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
             }
         });
 
-        this.servicioResumenPaciente.get(this.paciente.id, { 'expresion': this.expresion, 'conceptos': JSON.stringify(conceptos) }).subscribe(resultado => {
+        this.servicioResumenPaciente.get(this.paciente.id).subscribe(resultado => {
             // se ordena el array de mayor a menor segun fecha (Mas actuales primero)
             resultado.sort(function (a, b) {
                 let dateA = new Date(a.fecha).getTime();
@@ -104,9 +105,9 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
         // por cada prestacion cargamos los datos que se van a mostrar en la tabla
         this.prestaciones.forEach(prestacion => {
             let filaTabla = [];
-            // pusheamos la fecha
+            // se carga la fecha
             filaTabla.push(moment(prestacion.fecha).format('DD/MM/YYYY'));
-            // pusheamos la edad
+            // se carga la edad
             filaTabla.push(prestacion.motivo.term);
             // recorremos las columnas de la tabla modelo para armar la nueva tabla con la informacion en el mismo orden
             this.tablaModelo.forEach(col => {
