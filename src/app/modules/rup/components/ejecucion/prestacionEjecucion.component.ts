@@ -109,7 +109,10 @@ export class PrestacionEjecucionComponent implements OnInit {
         private servicioPaciente: PacienteService,
         private servicioAgenda: AgendaService,
         private conceptObserverService: ConceptObserverService,
-        private servicioSnomed: SnomedService) { }
+        private servicioSnomed: SnomedService) {
+
+
+    }
 
     /**
      * Inicializamos prestacion a traves del id que viene como parametro de la url
@@ -781,6 +784,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         }
+        // 76/89/03
         return resultado;
     }
 

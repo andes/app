@@ -133,9 +133,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
-        // this.zone.runOutsideAngular(() => {
-        //     console.log(22);
-        // });
+
     }
 
     redirect(pagina: string) {
