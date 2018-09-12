@@ -193,6 +193,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     odontogramaSiguiente() {
+        this.showUltimoOdontograma = false;
         let params: IPrestacionGetParams = {
             idPaciente: this.paciente.id,
             conceptId: this.prestacion.solicitud.tipoPrestacion.conceptId,
@@ -205,6 +206,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.ultimoOdontogramaIndex++;
                     this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.armarRelaciones();
+                    this.showUltimoOdontograma = true;
                 }
             }
         });
@@ -383,12 +385,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
-            // if (this.piezasSeleccionadas.length === 0) {
-            //     this.emitEjecutarAccion(false);
-            // } else {
-
-            //     this.emitEjecutarAccion({ conceptos: this.piezasSeleccionadas.map(x => x.concepto = x.diente), ...this.params, ...{ multiple: this.seleccionMultiple } });
-            // }
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
         }
@@ -444,8 +440,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
 
-
-
         } else {
 
             if (this.piezaCompletaValor(diente, 'pieza') !== -1) {
@@ -454,7 +448,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
-
 
         }
     }
