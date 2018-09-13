@@ -131,6 +131,8 @@ export class PuntoInicioLaboratorioComponent
     };
 
 
+
+
     getNumeroProtocolo(registros) {
         let registro: any = registros.find((reg) => {
             return reg.nombre === 'numeroProtocolo';
@@ -141,13 +143,15 @@ export class PuntoInicioLaboratorioComponent
     getProtocolos(params: any) {
         console.log('params', params);
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
+
             this.protocolos = protocolos;
+
+            console.log('GET PROTOCOLOS', this.protocolos);
         }, err => {
             if (err) {
                 console.log(err);
             }
         });
-        console.log('GET PROTOCOLOS', this.protocolos);
     }
 
     estaSeleccionado(protocolo) {
@@ -277,7 +281,7 @@ export class PuntoInicioLaboratorioComponent
             case 'Recepcion':
                 this.accion = 'Recepcionar';
 
-                this.turnosLaboratorio();
+                this.refreshSelection();
                 break;
         }
 
@@ -346,9 +350,9 @@ export class PuntoInicioLaboratorioComponent
         }
     }
 
-    getPrioridad(x) {
-        return null;
-    }
+
+
+
 
     // recordarFiltros() {
     //     let filtrosPorDefecto = {
