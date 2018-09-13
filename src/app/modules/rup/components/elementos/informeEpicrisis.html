@@ -1,17 +1,24 @@
 <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
-        <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas" idField="conceptId"
-            labelField="term" label="Unidad Organizativa"></plex-select>
-        {{mensajeAccionAccordion}} Todos
-        <plex-button icon="mdi mdi-chevron-left" type="primary" (click)="desplegarAccordions()"></plex-button>
-        Ver arbol de relaciones
-        <plex-button icon="mdi mdi-source-fork" type="primary" (click)="desplegarAccordions()"></plex-button>
+        <div class="col-6">
+            <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
+                idField="conceptId" labelField="term" label="Unidad Organizativa"></plex-select>
+        </div>
+        <div class="col-3 mt-4">
+            {{mensajeAccionAccordion}} Todos
+            <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm" (click)="desplegarAccordions()"></plex-button>
+        </div>
+        <div class="col-3 mt-4">
+            Arbol de relaciones
+            <plex-button icon="mdi mdi-source-fork" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button>
+        </div>
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <plex-panel (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo" tituloPrincipal="{{ item.params.titulo }}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                    [soloValores]="soloValores" (change)="emitChange()">
+            <plex-panel icon="arrow-down-drop-circle-outline" (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo"
+                tituloPrincipal="{{ item.params.titulo }}">
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
                 </rup>
             </plex-panel>
         </ng-container>

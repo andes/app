@@ -34,4 +34,8 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
         this.mensajeAccionAccordion = this.desplegarTodo ? 'Colapsar' : 'Desplegar';
         this.accordionActive = -1;
     }
+
+    VerArbolRelaciones() {
+        this.prestacionesService.setShowArbolRelaciones(true);
+    }
 }

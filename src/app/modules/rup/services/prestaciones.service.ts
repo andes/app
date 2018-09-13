@@ -12,11 +12,11 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
-
+    // ---TODO----- Ver en que servicio dejar esta funcionalidad 
     public destinoRuta = new BehaviorSubject<boolean>(false);
-
     public rutaVolver = this.destinoRuta.asObservable();
-
+    public showArbolRelaciones = false;
+    // ------------
     public refsetsIds = {
         cronico: '1641000013105',
         // programable: '1661000013109',
@@ -39,7 +39,14 @@ export class PrestacionesService {
             this.conceptosTurneables = conceptosTurneables;
         });
     }
+    // ------ TODO----- Ver en que servicio dejar esta funcionalidad 
+    public getShowArbolRelaciones() {
+        return this.showArbolRelaciones;
+    }
 
+    public setShowArbolRelaciones(param) {
+        this.showArbolRelaciones = param;
+    }
 
     /**
      * Le pasamos por parametro un objeto con el nombre y la ruta
@@ -49,6 +56,7 @@ export class PrestacionesService {
     public notificaRuta(ruteo) {
         this.destinoRuta.next(ruteo);
     }
+    //----------------------------
 
     /**
      * Método get. Trae lista de objetos prestacion.
