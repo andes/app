@@ -181,9 +181,9 @@
                                                 <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                                     [dragOverClass]="'drag-target-border'" [dragData]="registro"
                                                     (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
-                                                    <!-- <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i> -->
                                                     <span>
-                                                        {{ registro.concepto.semanticTag }}
+                                                        {{ (registro.esSolicitud) ? 'solicitud' :
+                                                        registro.concepto.semanticTag}}
                                                     </span>
                                                 </div>
 
@@ -379,7 +379,8 @@
                                                     <div class="rup-body">
                                                         <div class="legend">
                                                             <span>
-                                                                {{elemento.concepto.semanticTag}}
+                                                                {{ (registro.esSolicitud) ? 'solicitud' :
+                                                                registro.concepto.semanticTag}}
                                                             </span>
                                                         </div>
                                                         <div class="content">
