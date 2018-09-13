@@ -68,9 +68,6 @@
                 </plex-datetime>
             </div>
             <div class="col-2 labs-contenedor-secundario" *ngIf='modo && modo.id === "recepcion"'>
-                <div class="contenedor-bloque-texto line-height mr-2">
-                    <small class="text-primary"></small>
-                </div>
                 <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="pacienteSinTurno(activeTab)"></plex-button>
             </div>
             <div class="col-2 labs-contenedor-secundario " *ngIf='modo && modo.id !== "recepcion"'>
@@ -131,7 +128,7 @@
         <table class="table table-striped table-sm" *ngIf='modo && modo.id !== "recepcion"'>
             <tbody>
                 <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
-                    <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero" >
+                    <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
 
                         <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                         <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
@@ -171,55 +168,44 @@
 
         <!-- TABLA VISUALIZACION DE RECEPCION -->
         <table *ngIf='turnosRecepcion && modo && modo.id === "recepcion"' class="table table-striped table-sm">
-            <!-- <thead>
-                    <th>Fecha de solicitud</th>
-                    <th>Dni del Paciente</th>
-                    <th>Nombre y apellido del Paciente</th>
-                    <th>Estado</th>
-                    <th>Operaciones</th>
-                </thead> -->
+            <thead>
+                <th>Fecha de solicitud</th>
+                <th>Dni del Paciente</th>
+                <th>Nombre y apellido del Paciente</th>
+                <th>Estado</th>
+                <th>Operaciones</th>
+                <th></th>
+                <th></th>
+            </thead>
             <tbody>
-                <tr class="labs-listado-item" *ngFor="let prestacion of turnosRecepcion; let i = index">
-                    <div class="listado-contenedor-secundario">
-                        <td class="contenedor-bloque-texto">
-                            <div class="labs-item-texto">
-                                <strong>Fecha de solicitud:&nbsp;</strong>
-                                <p>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
-                                <strong>Dni del Paciente</strong>
-                                <p>{{prestacion.paciente.documento}}</p>
-                                <strong>Nombre y apellido del Paciente</strong>
-                                <p>{{prestacion.paciente | paciente}}</p>
-                            </div>
-                        </td>
-
-
-                        <!-- <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
-                        <td>{{prestacion.paciente.documento}}</td>
-                        <td>{{prestacion.paciente | paciente}}</td> -->
-                        <td *ngIf="!prestacion.solicitud.turno" class="text-center estado">
-                            <span class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
-                            <span class="badge badge-danger" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'rechazada'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
-                            <span class="badge badge-warning" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo === 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
-                        </td>
-                        <!-- <td *ngIf="prestacion.solicitud.turno" class="text-center estado">
+                <tr *ngFor="let prestacion of turnosRecepcion; let i = index">
+                    <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
+                    <td>{{prestacion.paciente.documento}}</td>
+                    <td>{{prestacion.paciente | paciente}}</td>
+                    <td *ngIf="!prestacion.solicitud.turno" class="text-center estado">
+                        <span class="badge badge-info" *ngIf="prestacion.estados[prestacion.estados.length-1].tipo !== 'rechazada' && prestacion.estados[prestacion.estados.length-1].tipo !== 'auditoria'">{{prestacion.estados[prestacion.estados.length-1].tipo}}</span>
+                    </td>
+                    <td *ngIf="prestacion.solicitud.turno" class="text-center estado">
                         <span class="badge badge-success">Turno dado</span>
                     </td>
                     <td class="text-center">
-                        <span *ngIf="darTurnoArrayEntrada[i] && prestacion?.paciente && !prestacion.solicitud.turno">
+                        <span *ngIf="darTurnoArray && prestacion?.paciente && !prestacion.solicitud.turno">
                             <plex-button icon="calendar-plus" type="success" (click)="darTurno(prestacion)" title="Dar Turno">
                             </plex-button>
                         </span>
-                    </td> -->
-                        <td class="badge-container">
-                            <plex-badge type="danger" class="ml-2">{{getPrioridad(prestacion.solicitud)}}</plex-badge>
-                            <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, false, $event,i)" class="ml-2">Iniciar protocolo</plex-button>
-                            <!-- <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
+                        <span *ngIf="visualizarEntrada[i]">
+                        </span>
+
+                    </td>
+                    <td class="badge-container">
+                        <plex-badge type="danger" class="ml-2">{{getPrioridad(prestacion.solicitud)}}</plex-badge>
+                    </td>
+                    <td>
+                        <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, false, $event,i)" class="ml-2">Iniciar protocolo</plex-button>
+                        <!-- <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                                 <i class="mdi mdi-file-document"></i>
                             </plex-button> -->
-
-
-                        </td>
-                    </div>
+                    </td>
 
                 </tr>
             </tbody>
