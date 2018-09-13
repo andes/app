@@ -8,6 +8,8 @@ import * as enumerados from './../../utils/enumerados';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { TurnoService } from '../../services/turnos/turno.service';
+import { Constantes } from './consts';
+import { ObjectID } from 'bson';
 
 @Component({
     selector: 'gestor-protocolos',
@@ -31,11 +33,11 @@ export class PuntoInicioLaboratorioComponent
     public protocolos: any = [];
     public protocolo: any = {
         paciente: {
-            id: '',
-            nombre: '',
-            apellido: '',
-            documento: '',
-            sexo: '',
+            id: new ObjectID(),
+            nombre: 'PABLO',
+            apellido: 'LAMMEL',
+            documento: '31684354',
+            sexo: 'M',
             fechaNacimiento: new Date()
         },
         solicitud: {
@@ -45,7 +47,11 @@ export class PuntoInicioLaboratorioComponent
             profesional: null,
             ambitoOrigen: 'ambulatorio',
             fecha: new Date(),
-            registros: []
+            registros: [{
+                nombre: 'Prueba de Laboratorio',
+                concepto: Constantes.conceptoPruebaLaboratorio,
+                valor: {}
+            }]
         },
         ejecucion: {
             fecha: new Date(),
@@ -327,8 +333,10 @@ export class PuntoInicioLaboratorioComponent
     }
 
     pacienteSinTurno() {
-        this.seleccionPaciente = true;
-        this.showProtocoloDetalle = false;
+        // this.seleccionPaciente = true;
+        this.seleccionPaciente = false;
+        this.showProtocoloDetalle = true;
+        // this.showProtocoloDetalle = false;
         this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }

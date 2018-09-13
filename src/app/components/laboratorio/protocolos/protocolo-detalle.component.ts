@@ -29,7 +29,6 @@ export class ProtocoloDetalleComponent
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    paciente: any;
     //estado: any;
     ambitoOrigen: String;
     observaciones: '';
@@ -187,58 +186,6 @@ export class ProtocoloDetalleComponent
         this.volverAListaControEmit.emit(true);
     }
 
-    getRegistrosByConceptId(registros, conceptId) {
-        return registros.find((reg) => {
-            return reg.concepto.conceptId === conceptId;
-        });
-    }
-
-    getNumeroProtocolo(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.nombre === 'numeroProtocolo';
-        });
-        return registro ? registro.valor.numeroCompleto : null;
-    }
-
-    getPracticas(registros) {
-        let registro: any = this.getRegistrosByConceptId(registros, Constantes.conceptIds.practica);
-
-        return registro ? registro.registros : [];
-    }
-
-    getCodigoPractica(registros) {
-        let registro: any = this.getRegistrosByConceptId(registros, Constantes.conceptIds.unidadMedida);
-        return (registro) ? registro.valor : '';
-    }
-
-    getUnidad(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.concepto.conceptId === Constantes.conceptIds.unidadMedida;
-        });
-        return registro ? registro.valor.term : null;
-    }
-
-    getFechaTomaMuestra(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.concepto.conceptId === Constantes.conceptIds.unidadMedida;
-        });
-        return registro ? registro.valor.term : null;
-    }
-
-    getServicio(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.concepto.conceptId === Constantes.conceptIds.servicioOrigen;
-        });
-        return registro ? registro.valor.term : null;
-    }
-
-    getPrioridad(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.concepto.conceptId === Constantes.conceptIds.prioridad;
-        });
-        return registro ? registro.valor.term : null;
-    }
-
     searchStart() {
         this.pacientes = null;
     }
@@ -264,8 +211,6 @@ export class ProtocoloDetalleComponent
         this.practicas = null;
     }
 
-
-
     busquedaFInal(resultado: PracticaBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
@@ -274,12 +219,9 @@ export class ProtocoloDetalleComponent
         }
     }
 
-
-
     hoverPaciente(paciente: any) {
         this.pacienteActivo = paciente;
     }
-
 
     siguiente() {
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
@@ -337,18 +279,8 @@ export class ProtocoloDetalleComponent
     iniciarProtocolo () { 
         let organizacionSolicitud = this.protocoloSelected.solicitud ? this.protocoloSelected.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
-            this.servicioSnomed.getQuery({ expression: '260299005' }).subscribe(result => {
-                let registro = {
-                    nombre: 'numeroProtocolo',
-                    concepto: result[0],
-                    esSolicitud: false,
-                    esDiagnosticoPrincipal: false,
-                    valor: numeroProtocolo,
-                    registros: []
-                };
-                this.modelo.ejecucion.registros.push(registro);
-                this.guardarProtocolo();            
-            });
+            this.modelo.solicitud.registros[0].valor.numeroProtocolo = numeroProtocolo;
+            this.guardarProtocolo();            
         });
     }
 
