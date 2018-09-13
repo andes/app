@@ -932,7 +932,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     getTipoBusqueda(tipoDeBusqueda) {
-        this.tipoBusqueda = [...tipoDeBusqueda, this.tipoBusqueda];
+        if (tipoDeBusqueda) {
+            this.tipoBusqueda = [...tipoDeBusqueda, this.tipoBusqueda];
+        }
+
     }
 
     getFiltroRefset(filtroRefSet) {

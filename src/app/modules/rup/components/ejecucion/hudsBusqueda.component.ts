@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, DebugElement } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
@@ -130,6 +130,7 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     dragEnd(e) {
+        debugger;
         this._onDragEnd.emit(e);
     }
 

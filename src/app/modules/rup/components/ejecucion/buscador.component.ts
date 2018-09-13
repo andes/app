@@ -5,9 +5,9 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { ISnomedSearchResult } from '../../interfaces/snomedSearchResult.interface';
+import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 
 @Component({
     selector: 'rup-buscador',
@@ -140,7 +140,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.busquedaRefSet = refset;
             // inicializamos variable resultsAux con la misma estructura que results
             this.resultsAux = Object.assign({}, this.results);
-
+            // inicializamos el filtro actual para los hallazgos
+            this.filtroActual = 'todos';
+            this.ultimoTipoBusqueda = this.busquedaActual;
             // Se inicializa el buscador básico, principal
             await this.inicializarBuscadorBasico();
 
@@ -149,12 +151,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
             this.filtrarResultadosBusquedaGuiada();
 
-
-            // inicializamos el filtro actual para los hallazgos
-            this.filtroActual = 'todos';
-            this.ultimoTipoBusqueda = this.busquedaActual;
         });
-
 
     }
 
@@ -323,9 +320,12 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
                 words.forEach(word => {
-                    this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                        return registro.term.toLowerCase().indexOf(word) >= 0;
-                    });
+                    if (this.results[this.busquedaActual][concepto]) {
+                        this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
+                            return registro.term.toLowerCase().indexOf(word) >= 0;
+                        });
+                    }
+
 
                 });
 
@@ -334,9 +334,11 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // tambien filtramos el campo 'todos' segun el string de busqueda
             words = search.split(' ');
             words.forEach(word => {
-                this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
-                    return registro.term.toLowerCase().indexOf(word) >= 0;
-                });
+                if (this.results[this.busquedaActual]['todos']) {
+                    this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
+                        return registro.term.toLowerCase().indexOf(word) >= 0;
+                    });
+                }
             });
 
         } else {
@@ -447,7 +449,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     public filtrarResultados(busquedaActual = 'busquedaActual') {
-
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual][this.filtroActual];
 
@@ -611,7 +612,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         }
         // devolvemos los tipos de filtros
-        // this.tagBusqueda.emit(filtro);
+        this.tagBusqueda.emit(filtro);
         // Devolvemos el concepto SNOMED
         this.evtData.emit([filtro, concepto]);
     }
