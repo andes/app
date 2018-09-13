@@ -119,7 +119,7 @@
                     <ng-container *ngIf="c.concepto.term">
                         <!-- TODO: manejar 100% desde la prestación -->
                         <span *ngIf="c.cara">diente </span>{{ c.concepto.term }}
-                        <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}<ng-container *ngIf="idx < busquedaRefSet.conceptos.length">
+                        <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}<ng-container *ngIf="idx < busquedaRefSet.conceptos.length - 1">
                                 / </ng-container></span>
                     </ng-container>
                 </ng-container>)
