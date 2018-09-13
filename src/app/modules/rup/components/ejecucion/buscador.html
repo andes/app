@@ -10,7 +10,8 @@
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR
             BÁSICO</button>
 
-        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES POR PRESTACION</button>
+        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES
+            POR PRESTACION</button>
 
     </div>
 
@@ -114,11 +115,12 @@
             <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">
                 <!-- {{ busquedaRefSet | json }} -->
                 (
-                <ng-container *ngFor="let c of busquedaRefSet.conceptos">
+                <ng-container *ngFor="let c of busquedaRefSet.conceptos; let idx=index">
                     <ng-container *ngIf="c.concepto.term">
                         <!-- TODO: manejar 100% desde la prestación -->
-                        <span *ngIf="c.cara">diente </span>{{ c.concepto.term }},
-                        <span *ngIf="c.cara">cara {{ c.cara }}</span>
+                        <span *ngIf="c.cara">diente </span>{{ c.concepto.term }}
+                        <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}<ng-container *ngIf="idx < busquedaRefSet.conceptos.length">
+                                / </ng-container></span>
                     </ng-container>
                 </ng-container>)
             </i>
