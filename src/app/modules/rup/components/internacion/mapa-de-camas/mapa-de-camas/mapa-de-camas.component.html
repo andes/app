@@ -226,6 +226,7 @@
                         <plex-button class="" type="primary btn-block mt-2" label="Censo diario" (click)="censoDiario()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary btn-block mt-2" label="Censo mensual" (click)="censoMensual()" *ngIf="checkAuth('censo')"></plex-button>
                         <plex-button class="" type="primary btn-block mt-2" label="Historia del mapa de cama" (click)="verHistorico()"></plex-button>
+                        <plex-button class="" type="primary btn-block mt-2" label="Punto de inicio" routerLink="/internacion/puntoInicio"></plex-button>
                         <plex-button label="Crear cama" type="primary btn-block mt-2" (click)="onGestionCamaClick()" *ngIf="checkAuth('cama:create')"></plex-button>
                     </ng-container>
                     <ng-container *ngIf="prestacion">

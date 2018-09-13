@@ -1,0 +1,111 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <header>
+            <h3>Punto de inicio</h3>
+        </header>
+        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
+        <!-- Tabla / listado de pacientes -->
+        <table *ngIf="listado && listado.length" class="table table-striped table-hover">
+            <tbody>
+                <tr class="hover" *ngFor="let paciente of listado" [ngClass]="{'bg-inverse text-white': paciente.id == pacienteSeleccionado?.id}"
+                    (click)="onPacienteSelected(paciente)">
+                    <td>
+                        {{paciente | paciente}}<br>
+                        <span *ngIf="paciente?.documento !== ''"><b>DNI: </b> {{paciente.documento}}</span>
+                        <span *ngIf="paciente?.documento === ''"><b>DNI: </b>N/D</span>
+                        <span *ngIf="paciente.fechaNacimiento !== null">
+                            <span><b>| Fecha de Nac: </b>{{paciente.fechaNacimiento | fecha}}</span>
+                            <span *ngIf="paciente.fechaNacimiento === null"><b>| Fecha de Nac: </b>N/D</span>
+                            | <b>sexo:</b> {{paciente | sexo}}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="float-right">
+                            <plex-button label="VER DETALLE" (click)="onPacienteSelected(paciente)" type="info"></plex-button>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </plex-layout-main>
+    <!-- Sidebar -->
+    <plex-layout-sidebar>
+        <header>
+            <h5 class="text-info">Detalle</h5>
+        </header>
+        <ng-container *ngIf="pacienteSeleccionado">
+            <div class="text-center info-sidebar">
+                <span class="badge badge-success">
+                    algo
+                </span>
+                <br>
+                <h3>
+                    {{pacienteSeleccionado.nombre}}
+                </h3>
+                <h3 class="strong">
+                    {{pacienteSeleccionado.apellido}}
+                </h3>
+                <br> {{pacienteSeleccionado.documento}}
+                <br> Fecha de nacimiento
+                <br> {{pacienteSeleccionado.fechaNacimiento | date}}
+                <div class="pt-4">
+                    <plex-button label="VER HUDS" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')"></plex-button>
+                </div>
+            </div>
+            <b>
+                Lista de epicrisis
+            </b>
+            <ng-container *ngIf="!epicrisisPaciente.length && !showLoader">
+                <p class="mensaje-resultado">
+                    No se encontraron Epicrisis anteriores
+                </p>
+            </ng-container>
+            <plex-loader *ngIf="showLoader" type="ball-pulse-sync"></plex-loader>
+            <!-- Tabla de las epicrisis -->
+            <section class="contenedor-tabla" *ngIf="epicrisisPaciente.length">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>
+                                <strong>Fecha</strong>
+                            </td>
+                            <td>
+                                <strong>Abstracto</strong>
+                            </td>
+                            <td>
+                                <strong>Acciones</strong>
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let epicrisis of epicrisisPaciente">
+                            <td>
+                                {{epicrisis.solicitud.fecha | date}}
+                            </td>
+                            <td>
+                                <ng-container *ngIf="epicrisis.ejecucion.registros[0]?.registros">
+
+                                    <span>
+                                        {{epicrisis.ejecucion.registros[0].registros[0].valor}}
+                                    </span>
+                                </ng-container>
+                            </td>
+                            <td>
+                                <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info" (click)="ruteo(epicrisis.id, 'epicrisis')"></plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <div class="d-flex align-items-end">
+                <div>
+                    <plex-button label="CREAR EPICRISIS" type="success" position="right" (click)="nuevaEpicrisis(pacienteSeleccionado)"></plex-button>
+                </div>
+            </div>
+        </ng-container>
+    </plex-layout-sidebar>
+    <!-- footer -->
+    <plex-layout-footer>
+        <plex-button label="Mapa de camas" type="info" position="right" routerLink="/internacion/camas"></plex-button>
+    </plex-layout-footer>
+</plex-layout>

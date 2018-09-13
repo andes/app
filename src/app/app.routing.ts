@@ -73,7 +73,7 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
@@ -137,8 +137,8 @@ const appRoutes: Routes = [
 
   // Mapa de camas
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
-  // internacion
-  { path: 'internacion/egreso/:id', component: EgresoInternacionComponent, canActivate: [RoutingGuard] },
+  // internacion Punto inicio
+  { path: 'internacion/puntoInicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingGuard] },
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },
 

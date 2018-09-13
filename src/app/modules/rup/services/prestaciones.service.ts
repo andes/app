@@ -1,6 +1,6 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -12,6 +12,10 @@ export class PrestacionesService {
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+
+    public destinoRuta = new BehaviorSubject<boolean>(false);
+
+    public rutaVolver = this.destinoRuta.asObservable();
 
     public refsetsIds = {
         cronico: '1641000013105',
@@ -34,6 +38,16 @@ export class PrestacionesService {
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
         });
+    }
+
+
+    /**
+     * Le pasamos por parametro un objeto con el nombre y la ruta
+     * De la pantalla asi seteamos el boton de volver en el ejecucion
+     * @param ruteo
+     */
+    public notificaRuta(ruteo) {
+        this.destinoRuta.next(ruteo);
     }
 
     /**
@@ -537,6 +551,27 @@ export class PrestacionesService {
 
         return this.server.get(this.prestacionesUrl + '/huds/' + idPaciente, opt);
     }
+
+
+    /**
+        * Método que retorna todas las epicrisis
+        * por paciente
+        * @param {String} idPaciente
+        * @param conceptId
+        */
+    getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let prestacionesXtipo = [];
+            prestaciones.forEach(prestacion => {
+                if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
+                    prestacionesXtipo = [...prestacionesXtipo, ...prestacion];
+                }
+            });
+            return prestacionesXtipo;
+        });
+    }
+
+
 
     /**
      * Método post. Inserta un objeto nuevo.
