@@ -237,19 +237,21 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             diente.piezaCompleta = true;
         }
 
-        this.popOverText = JSON.parse(JSON.stringify(diente));
+        this.popOverText = diente;
 
         if (cara !== 'anulada') {
             let rel = !huds ? this.getRegistrosRel(diente, cara) : this.getRegistrosRelAnterior(diente, cara);
             if (rel.length) {
                 this.popOverText.relacion = rel[index];
+            } else {
+                this.popOverText.relacion = {};
+                // Sólo para piezas
             }
         }
-        // Sólo para piezas
         if (diente.piezaCompleta) {
-            this.popOverText.relacion = !huds ? this.getRegistrosRel(diente, 'pieza')[index] : this.getRegistrosRelAnterior(diente, 'pieza')[index];
-
+            this.popOverText['relacion'] = !huds ? this.getRegistrosRel(diente, 'pieza')[index] : this.getRegistrosRelAnterior(diente, 'pieza')[index];
         }
+
 
         this.popOverText.cara = cara;
         this.showPopOver = true;
@@ -269,7 +271,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     tieneEvolucion(diente, cara) {
-        return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
+        if (this.ultimoOdontograma.valor && this.ultimoOdontograma.valor.piezas) {
+            return this.ultimoOdontograma.valor.piezas.findIndex(y => y.concepto.conceptId === diente.concepto.conceptId && y.cara === cara) !== -1;
+        }
     }
 
     getRegistrosRel(diente, cara) {
@@ -336,7 +340,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     }
 
     piezaCompletaValor(diente, cara) {
-        if (this.registro.valor && this.registro.valor.piezas.length) {
+        if (this.registro.valor && this.registro.valor.piezas && this.registro.valor.piezas.length) {
             return this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === diente.concepto.conceptId && x.cara === 'pieza');
         }
         return -1;
@@ -345,10 +349,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     seleccionarDiente(diente, cara) {
 
         let index = this.cara(diente, cara);
-        let indexValor = this.caraValor(diente, cara);
 
-        // Variable para evitar que los dientes tengan un mismo puntero en memoria
-        let wisdomTooth;
         if (index === -1) {
             const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: cara }));
 
@@ -361,18 +362,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             dienteSel.diente.cara = cara;
             dienteSel.piezaCompleta = false;
 
-            let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
-
-            if (this.caraValor(diente, cara) === -1) {
-                wisdomTooth = JSON.parse(JSON.stringify({
-                    concepto: diente.concepto,
-                    cara: cara
-                }));
-                piezas = [...piezas, wisdomTooth];
-            }
-
             this.prestacion.ejecucion.registros[0].valor = {
-                piezas: piezas,
                 odontograma: this.odontograma
             };
 
@@ -380,9 +370,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
         } else {
 
-            if (this.caraValor(diente, cara) !== -1) {
-                this.registro.valor.piezas.splice(indexValor, 1);
-            }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
@@ -407,10 +394,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     seleccionarPieza(diente) {
         let index = this.piezaCompleta(diente, 'pieza');
-        let indexValor = this.piezaCompletaValor(diente, 'pieza');
-
-        // Variable para evitar que los dientes tengan un mismo puntero en memoria
-        let wisdomTooth;
 
         if (index === -1) {
             const dienteSel = JSON.parse(JSON.stringify({ diente: diente, cara: 'pieza' }));
@@ -425,16 +408,8 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
             let piezas = (this.registro.valor && this.registro.valor.piezas) ? this.registro.valor.piezas : [];
 
-            if (this.piezaCompletaValor(diente, 'pieza') === -1) {
-                wisdomTooth = JSON.parse(JSON.stringify({
-                    concepto: diente.concepto,
-                    cara: 'pieza'
-                }));
-                piezas = [...piezas, wisdomTooth];
-            }
 
             this.prestacion.ejecucion.registros[0].valor = {
-                piezas: piezas,
                 odontograma: this.odontograma
             };
 
@@ -442,9 +417,6 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
         } else {
 
-            if (this.piezaCompletaValor(diente, 'pieza') !== -1) {
-                this.registro.valor.piezas.splice(indexValor, 1);
-            }
             this.piezasSeleccionadas.splice(index, 1);
             this.piezasSeleccionadas = [...this.piezasSeleccionadas];
             this.prestacionesService.setRefSetData(this.piezasSeleccionadas.map(x => x.diente), this.params.refsetId);
@@ -473,16 +445,20 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     comprobarSelecciones() {
         for (let item of this.piezasSeleccionadas) {
-            let indexSeleccionada = this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === item.concepto.conceptId && x.cara === item.cara);
-            if (indexSeleccionada !== -1) {
-                this.registro.valor.piezas.splice(indexSeleccionada, 1);
+            if (this.registro.valor.piezas) {
+                let indexSeleccionada = this.registro.valor.piezas.findIndex(x => x.concepto.conceptId === item.concepto.conceptId && x.cara === item.cara);
+                if (indexSeleccionada !== -1) {
+                    this.registro.valor.piezas.splice(indexSeleccionada, 1);
+                }
             }
         }
         return false;
     }
 
     limpiarVinculaciones(e) {
-        this.registro.valor.piezas.filter(x => x.concepto.conceptId === e.conceptId);
+        if (this.registro.valor.piezas) {
+            this.registro.valor.piezas.filter(x => x.concepto.conceptId === e.conceptId);
+        }
     }
 
     toggleOcultarTemporales(e) {
