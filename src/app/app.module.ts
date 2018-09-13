@@ -61,6 +61,7 @@ import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
 import { PacienteService } from './services/paciente.service';
 import { PracticaService } from './services/laboratorio/practica.service';
+import { ProtocoloService } from './services/laboratorio/protocolo.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';
@@ -597,6 +598,7 @@ registerLocaleData(localeEs, 'es');
         BarrioService,
         PacienteService,
         PracticaService,
+        ProtocoloService,
         FinanciadorService,
         ParentescoService,
         appRoutingProviders,

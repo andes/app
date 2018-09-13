@@ -4,7 +4,6 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 // import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Constantes } from './consts';
 import * as enumerados from './../../utils/enumerados';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
@@ -128,7 +127,7 @@ export class PuntoInicioLaboratorioComponent
         let registro: any = registros.find((reg) => {
             return reg.nombre === 'numeroProtocolo';
         });
-        return registro ? registro.valor : null;
+        return registro ? registro.valor.numeroCompleto : null;
     }
 
     getProtocolos(params: any) {
@@ -280,13 +279,16 @@ export class PuntoInicioLaboratorioComponent
         let busqueda = {
             fechaDesde: this.busqueda.solicitudDesde,
             fechaHasta: this.busqueda.solicitudHasta,
-            pacienteDni: null
+            pacienteDni: null,
+            protocoloIniciado: false
         };
         if (this.pacienteActivo) {
             busqueda.pacienteDni = this.pacienteActivo.documento;
         }
         // this.turnoService.getTurnosLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; });
-        this.servicioPrestaciones.getPrestacionesLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; console.log(c); });
+        this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => { 
+            this.turnosRecepcion = turnos;
+        });
     }
 
     formularioSolicitud() {
@@ -332,6 +334,10 @@ export class PuntoInicioLaboratorioComponent
         if (this.modo.nombre === 'Recepcion') {
             this.turnosLaboratorio();
         }
+    }
+
+    getPrioridad(x) {
+        return null;
     }
 
     // recordarFiltros() {
