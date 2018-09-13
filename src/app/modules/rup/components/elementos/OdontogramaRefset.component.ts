@@ -66,6 +66,9 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     public seleccionMultiple = false;
     public ocultarTemporales = true;
 
+    // El paciente no tiene odontogramas anteriores, hasta que se revise la HUDS
+    public cargandoUltimoOdontograma = true;
+
     ngOnInit() {
 
         // Traer EL odontograma, los dientes
@@ -127,6 +130,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
                 }
+                this.cargandoUltimoOdontograma = false;
                 this.armarRelaciones();
             });
         });
