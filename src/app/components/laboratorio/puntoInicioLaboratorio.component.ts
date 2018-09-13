@@ -81,44 +81,27 @@ export class PuntoInicioLaboratorioComponent
         hTrabajo: false,
         pAnalisis: false
     };
-    public origen = {
-        id: 'todos',
-        nombre: 'todos'
-    };
-    public area = {
-        id: null,
-        nombre: null
-    };
-    public prioridad = {
-        id: 'todos',
-        nombre: 'todos'
-    };
+    public origen = null;
+    public area = null;
+    public prioridad = null;
+    public servicio = null;
+    public estado;
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
         pacienteDocumento: null,
         nombrePaciente: null,
         apellidoPaciente: null,
-        origen: 'todos',
+        origen: null,
         numProtocoloDesde: null,
         numProtocoloHasta: null,
-        servicios: null,
+        servicio: null,
         prioridad: null,
         area: null,
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: this.auth.organizacion._id,
-    };
-    public parametros = {
-        solicitudDesde: null,
-        solicitudHasta: null,
-        tipoPrestacionSolicititud: '15220000',
-        organizacion: this.auth.organizacion._id,
-        pacienteDocumento: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
-        numProtocoloDesde: null,
-        numProtocoloHasta: null
+        estado: ''
     };
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
@@ -138,27 +121,20 @@ export class PuntoInicioLaboratorioComponent
 
     }
 
-    // funciones
+
     refreshSelection(value?, tipo?) {
-        if (this.origen.id === 'todos') {
-            this.busqueda.origen = null;
+        this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
+        this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
+        this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
+        this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
+        if (this.modo.nombre === 'Recepcion') {
+            this.busqueda.estado = 'pendiente';
+            this.getProtocolos(this.busqueda);
         } else {
-            this.busqueda.origen = this.origen.id;
+            this.busqueda.estado = 'ejecucion';
+            this.getProtocolos(this.busqueda);
         }
-        if (this.area.id === 'todos') {
-            this.busqueda.area = null;
-        } else {
-            this.busqueda.area = this.area.id;
-        }
-        if (this.prioridad.id === 'todos') {
-            this.busqueda.prioridad = null;
-        } else {
-            this.busqueda.prioridad = this.prioridad.id;
-        }
-        this.getProtocolos(this.busqueda);
     };
-
-
 
 
     getNumeroProtocolo(registros) {
@@ -169,6 +145,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     getProtocolos(params: any) {
+        console.log('params', params);
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
@@ -176,6 +153,7 @@ export class PuntoInicioLaboratorioComponent
                 console.log(err);
             }
         });
+        console.log('GET PROTOCOLOS', this.protocolos);
     }
 
     estaSeleccionado(protocolo) {
@@ -203,8 +181,10 @@ export class PuntoInicioLaboratorioComponent
     }
 
     loadServicios($event) {
+        console.log(event);
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
+            console.log("servicios:", servicioEnum);
             $event.callback(servicioEnum);
         });
 
@@ -284,7 +264,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     changeServicio() {
-        this.busqueda.servicios = null;
+        this.busqueda.servicio = null;
         this.accion = this.modo.nombre;
 
         switch (this.modo.nombre) {
@@ -319,9 +299,11 @@ export class PuntoInicioLaboratorioComponent
         if (this.pacienteActivo) {
             busqueda.pacienteDni = this.pacienteActivo.documento;
         }
+        console.log("busqueda turnos", this.turnosRecepcion);
         // this.turnoService.getTurnosLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; });
-        this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => { 
+        this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => {
             this.turnosRecepcion = turnos;
+            console.log("turnos recepcion", this.turnosRecepcion);
         });
     }
 
@@ -354,12 +336,17 @@ export class PuntoInicioLaboratorioComponent
 
     getlocalStorage() {
         let ls = JSON.parse(localStorage.getItem('filtros'));
+
+        console.log("ls profesional", ls.profesional);
+
+        console.log("ls profesional", this.auth.profesional._id);
         if (ls.profesional === this.auth.profesional._id) {
             this.busqueda = ls.busqueda;
-            this.origen.id = ls.busqueda.origen;
-            this.area.id = ls.busqueda.area;
-            this.prioridad.id = ls.busqueda.prioridad;
-            this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
+            //this.origen.id = ls.busqueda.origen;
+            //this.area.id = ls.busqueda.area;
+            //this.prioridad.id = ls.busqueda.prioridad;
+            console.log("local storage", this.busqueda);
+            //this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
         }
 
         if (this.modo.nombre === 'Recepcion') {
