@@ -1,8 +1,8 @@
-<label class="title-element" *ngIf="params?.titulo">
-    {{ params.titulo }}</label>
-<hr>
+<!-- <label class="title-element" *ngIf="params?.titulo">
+            {{ params.titulo }}</label>
+        <hr> -->
 <div class="row">
-    <div class="col-12">
+    <div class="col-5">
         <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro.valor.descripcion }" [(ngModel)]="registro.valor.descripcion"
             rows="6" id="descripcion" name="descripcion"> 
         </textarea>
@@ -14,12 +14,12 @@
             </ng-container>
         </p>
     </div>
-</div>
+    <!-- </div>
 
 
-<div class="row">
+<div class="row"> -->
     <!-- Area droppable del elemento -->
-    <div class="col-12" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
+    <div class="col-7" droppable [dropScope]="'registros-rup'" [dragOverClass]="'drag-target-border'" (onDrop)="onConceptoDrop($event)">
         <div *ngIf="soloValores && !registro.registros.length" class="add mt-4">
             No hay registros vinculados
         </div>
@@ -127,3 +127,6 @@
         </div>
     </div>
 </div>
+
+<!-- </plex-panel> -->
+<!-- </plex-accordion> -->

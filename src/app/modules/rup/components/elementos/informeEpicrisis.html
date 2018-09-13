@@ -1,99 +1,19 @@
-<!-- <div *ngIf="!soloValores"> -->
-<!-- <pre>{{prestacion | json}}</pre> -->
-<!-- <div class="row">
-        <div class="col-12">
-            <plex-text rows="4" [(ngModel)]="registro.valor.resumen" multiline=true name="resumenIngreso" label=" Resumen del ingreso"
-                placeholder="Ingrese Resumen al egreso">
-            </plex-text>
-        </div>
-    </div>
+<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
-        <div class="col-12">
-            <plex-select [multiple]="true" [(ngModel)]="registro.valor.pautasDeAlarma" name="pautasDeAlarma" [data]="pautasDeAlarma"
-                labelField="term" idField="conceptId" [required]="true" label="Pautas de alarma">
-            </plex-select>
-        </div>
+        <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas" idField="conceptId"
+            labelField="term" label="Unidad Organizativa"></plex-select>
+        {{mensajeAccionAccordion}} Todos
+        <plex-button icon="mdi mdi-chevron-left" type="primary" (click)="desplegarAccordions()"></plex-button>
+        Ver arbol de relaciones
+        <plex-button icon="mdi mdi-source-fork" type="primary" (click)="desplegarAccordions()"></plex-button>
     </div>
-    <div class="row">
-        <div class="col" *ngIf="registro.valor && registro.valor.pautasDeAlarma">
-            <pre>{{registro.valor.pautasDeAlarma | json}}</pre>
-            <ng-container *ngFor="let elemento of registro.valor.pautasDeAlarma; let i = index">
-                <div class="rup-card elementoderegistro elementoRup">
-                    <div class="rup-header">
-                        <div class="icon-rup drag-handle">
-                            <i class="icon"></i>
-                        </div>
-                        <div class="title">
-                            <ng-container *ngIf="elemento?.nombre">
-                                {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
-                            </ng-container>
-                        </div>
-
-                    </div>
-                    <div class="rup-body">
-                        <div class="legend">
-                            <span>
-                                {{elemento.semanticTag}}
-                            </span>
-                        </div>
-                        <div class="content">
-                            <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento)" [prestacion]="prestacion" [registro]="elemento"
-                                [soloValores]="false"></rup>
-                        </div>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <plex-text rows="4" [(ngModel)]="registro.valor.tratamientoASeguir" multiline=true name="tratamientoASeguir" label="Tratamiento a seguir"
-                placeholder="Ingrese tratamiento a seguir">
-            </plex-text>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <plex-select [multiple]="true" [(ngModel)]="registro.valor.dietaAlta" name="dietaAlta" [data]="dietaDeAlta" [required]="true"
-                label="Dieta alta" labelField="term" idField="conceptId">
-            </plex-select>
-        </div>
-    </div>
-</div>
-
-
-
-<div *ngIf="soloValores">
-    <div class="row">
-        <div class="col-12">
-            <label>Resumen al egreso</label>
-            {{registro.valor.resumen}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <label>Pautas de alarma</label>
-            <ng-container *ngFor="let pauta of registro.valor.pautasDeAlarma">
-
-                {{pauta.term}}
-
-            </ng-container>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <label>Tratamiento a seguir</label>
-            {{registro.valor.tratamientoASeguir}}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <label>Dieta alta</label>
-            <ng-container *ngFor="let pauta of registro.valor.dietaAlta">
-
-                {{pauta.term}}
-
-            </ng-container>
-        </div>
-    </div>
-</div> -->
+    <plex-accordion>
+        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+            <plex-panel (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo" tituloPrincipal="{{ item.params.titulo }}">
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
+                    [soloValores]="soloValores" (change)="emitChange()">
+                </rup>
+            </plex-panel>
+        </ng-container>
+    </plex-accordion>
+</ng-container>
