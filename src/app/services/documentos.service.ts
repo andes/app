@@ -32,6 +32,19 @@ export class DocumentosService {
             .catch(this.handleError);
     }
 
+    descargarV2(data): Observable<any> {
+
+        let headers = new Headers({
+            'Content-Type': 'application/json',
+            'Authorization': window.sessionStorage.getItem('jwt') ? 'JWT ' + window.sessionStorage.getItem('jwt') : null
+        });
+
+        let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
+        return this.http.post(this.pdfURL + '/pdf', data, options)
+            .map(this.extractData)
+            .catch(this.handleError);
+    }
+
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';

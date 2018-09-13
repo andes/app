@@ -114,7 +114,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadProfesionales(event) {
-
+        if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {
+            event.callback(this.modelo.profesionales);
+        }
         if (event.query && event.query !== '' && event.query.length > 2) {
             // cancelamos ultimo request
             if (this.lastRequest) {
@@ -123,6 +125,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let query = {
                 nombreCompleto: event.query
             };
+
             this.lastRequest = this.servicioProfesional.get(query).subscribe(resultado => {
                 event.callback(resultado);
             });
@@ -133,6 +136,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             event.callback([]);
         }
+
     }
 
 
@@ -286,23 +290,26 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     addBloque() {
         const longitud = this.modelo.bloques.length;
-        this.modelo.bloques.push({
-            indice: longitud,
-            // 'descripcion': `Bloque {longitud + 1}°`,
-            'cantidadTurnos': 0,
-            'horaInicio': null,
-            'horaFin': null,
-            'duracionTurno': 0,
-            'cantidadSimultaneos': null,
-            'cantidadBloque': null,
-            'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
-            'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
-            'reservadoGestion': 0, 'reservadoGestionPorc': 0,
-            'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-            'tipoPrestaciones': []
-        });
-        this.activarBloque(longitud);
-        this.inicializarPrestacionesBloques(this.elementoActivo);
+
+        if (longitud === 0 || (this.modelo.bloques[longitud - 1].horaInicio && this.modelo.bloques[longitud - 1].horaFin)) {
+            this.modelo.bloques.push({
+                indice: longitud,
+                // 'descripcion': `Bloque {longitud + 1}°`,
+                'cantidadTurnos': 0,
+                'horaInicio': null,
+                'horaFin': null,
+                'duracionTurno': 0,
+                'cantidadSimultaneos': null,
+                'cantidadBloque': null,
+                'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
+                'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
+                'reservadoGestion': 0, 'reservadoGestionPorc': 0,
+                'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
+                'tipoPrestaciones': []
+            });
+            this.activarBloque(longitud);
+            this.inicializarPrestacionesBloques(this.elementoActivo);
+        }
     }
 
     deleteBloque(indice: number) {
@@ -311,6 +318,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques.splice(indice, 1);
                 this.bloqueActivo = -1;
                 this.validarTodo();
+
+                for (let i = 0; i < this.modelo.bloques.length; i++) {
+                    this.modelo.bloques[i].indice = i;
+                }
             }
         }
         ).catch(() => {
@@ -619,9 +630,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.alertas.push('La hora de inicio no puede igual a la de fin');
             }
         }
+
         // Verificaciones en cada bloque
         if (bloques) {
             bloques.forEach((bloque, index) => {
+
                 let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
@@ -774,26 +787,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             this.modelo.horaFin = this.combinarFechas(this.fecha, this.modelo.horaFin);
-            // Limpiar de bug selectize "$order", horrible todo esto :'(
-            if (this.modelo.tipoPrestaciones) {
-                this.modelo.tipoPrestaciones.forEach(function (prestacion, key) {
-                    delete prestacion.$order;
-                });
-            }
-            if (this.modelo.profesionales) {
-                this.modelo.profesionales.forEach(function (prestacion, key) {
-                    delete prestacion.$order;
-                });
-            }
-            if (this.modelo.edificio) {
-                delete this.modelo.edificio.$order;
-            }
-            if (this.modelo.espacioFisico) {
-                delete this.modelo.espacioFisico.$order;
-            }
-            if (this.modelo.sector) {
-                delete this.modelo.sector.$order;
-            }
 
             // Si es una agenda nueva, no tiene ID y se genera un ID en '0' para el mapa de espacios físicos
             if (this.modelo.id === '0') {

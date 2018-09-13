@@ -1,6 +1,8 @@
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, HostBinding, ViewEncapsulation } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
+import { Router, ActivatedRoute, Params } from '@angular/router';
+import { ObjectID } from 'bson';
+import { DropdownItem } from '@andes/plex';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { IPrestacion } from '../../interfaces/prestacion.interface';
@@ -12,6 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -23,6 +26,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 export class PrestacionEjecucionComponent implements OnInit {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
@@ -206,7 +210,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posición donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
-
         // // buscamos el registro
         let registro = this.prestacion.ejecucion.registros[posicionActual];
 
@@ -655,55 +658,28 @@ export class PrestacionEjecucionComponent implements OnInit {
         let resultado = true;
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
-            resultado = false;
-        } else {
-            this.prestacion.ejecucion.registros.forEach(r => {
-                if (!this.controlValido(r)) {
-                    this.prestacionValida = false;
-                    this.mostrarMensajes = true;
-                    resultado = false;
-                }
-
-            });
-
+            return false;
         }
-
         return resultado;
     }
 
-    controlParams() {
-        let respuesta = true;
-        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length) {
-
-            let valoresConCero = [];
-            if (this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
-                for (let reg of this.prestacion.ejecucion.registros) {
-                    let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
-                    if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
-                        valoresConCero.push(reg);
-                    }
-                }
-            }
-            // if (valoresConCero.length > 0) {
-            //     this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
-            //         if (respuestaAlerta) {
-            //             respuesta = true;
-            //         } else {
-            //             respuesta = false;
-            //         }
-            //         return respuesta;
-            //     });
-            // }
-            return respuesta;
-        } else {
-            return respuesta;
-        }
-
-    }
-
-    confirmarGuardar() {
+    /**
+     * Guardamos la prestacion y vamos hacia la pantalla de validacion
+     *
+     * @returns
+     * @memberof PrestacionEjecucionComponent
+     */
+    guardarPrestacion() {
         // validamos antes de guardar
-        if (!this.beforeSave()) {
+        let flag = true;
+        this.rupElements.forEach((item) => {
+
+            let instance = item.rupInstance;
+            flag = flag && (instance.soloValores || instance.validate());
+        });
+        // validamos antes de guardar
+        if (!this.beforeSave() || !flag) {
+            this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
@@ -753,43 +729,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
-    /**
-     * Guardamos la prestacion y vamos hacia la pantalla de validacion
-     *
-     * @returns
-     * @memberof PrestacionEjecucionComponent
-     */
-    guardarPrestacion() {
 
-        let respuesta = true;
-        let valoresConCero = [];
-        if (this.elementoRUP.params && this.elementoRUP.params.reglasGuardar && this.elementoRUP.params.reglasGuardar.requiereValores.length > 0) {
-            for (let reg of this.prestacion.ejecucion.registros) {
-                let indexRegistro = this.elementoRUP.params.reglasGuardar.requiereValores.findIndex(conceptId => conceptId === reg.concepto.conceptId); // Obtenemos el index del registro
-                if (indexRegistro !== -1 && reg.valor === 0) { // Si el registro pertenece a requiereValores y su valor es 0
-                    valoresConCero.push(reg);
-                }
-            }
-        }
-        if (valoresConCero.length > 0) {
-            this.plex.confirm(this.elementoRUP.params.reglasGuardar.mensajes[0], '¿Está seguro que desea seguir?').then((respuestaAlerta) => {
-
-                if (!respuestaAlerta) {
-                    return false;
-                }
-
-                this.confirmarGuardar();
-
-
-
-            });
-        } else {
-            this.confirmarGuardar();
-        }
-
-
-
-    }
 
     volver(ambito = 'ambulatorio') {
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';

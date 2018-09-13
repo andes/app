@@ -14,12 +14,11 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
 
     ngOnInit() {
         if (!this.registro.valor) {
-            this.registro.valor = {};
+            this.registro.valor = [];
         }
         if (this.params) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptos = resultado;
-
             });
         }
     }
@@ -30,6 +29,7 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         });
         $event.callback(conceptosSelect);
     }
+
     selectRadio(concepto) {
         this.registro.valor = { concepto: concepto };
     }
