@@ -114,10 +114,10 @@
                                         </ng-container>
                                     </ng-container>
                                     <ng-container *ngFor="let relClass of getRegistrosRelAnterior(diente, 'pieza'); let a=index">
-                                        <g (mouseenter)="showTooltip(diente, 'pieza', true, a)" (mouseleave)="hideTooltip()"
-                                            class="pieza" title="pieza completa">
+                                        <g class="pieza" title="pieza completa">
                                             <!-- Círculo MINI -->
-                                            <circle class="evolucionada" cx="46.285" cy="7.311" r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a" />
+                                            <circle (mouseenter)="showTooltip(diente, 'pieza', true, a)" (mouseleave)="hideTooltip()"
+                                                class="evolucionada" cx="46.285" cy="7.311" r="5.801" [ngClass]="'diente-' + relClass.concepto.semanticTag + ' rotate-' + a" />
                                         </g>
                                         <!-- Círculo GRANDE -->
                                         <circle *ngIf="ultimoOdontograma && tieneEvolucion(diente, 'pieza')" cx="26" cy="27.5"
