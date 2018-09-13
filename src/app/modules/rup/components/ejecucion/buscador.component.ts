@@ -167,13 +167,13 @@ export class BuscadorComponent implements OnInit, OnChanges {
             }
 
             let fp = await this.inicializarFrecuentesProfesional();
-
             if (fp && fp.length) {
-                const frecuentesProfesional = fp.map(res => {
+                const frecuentesProfesional = fp[0].frecuentes.map(res => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
                     return concepto;
                 });
+
                 this.results['misFrecuentes']['todos'] = frecuentesProfesional;
                 this.filtrarResultados('misFrecuentes');
                 this.resultsAux.misFrecuentes = Object.assign({}, this.results.misFrecuentes);
@@ -196,12 +196,12 @@ export class BuscadorComponent implements OnInit, OnChanges {
     }
 
     private inicializarFrecuentesProfesional() {
-        const query = {
+        const queryFP = {
             'idProfesional': this.auth.profesional.id,
             'tipoPrestacion': this.conceptoFrecuente.conceptId,
             'idOrganizacion': this.auth.organizacion.id,
         };
-        return this.frecuentesProfesionalService.get(query).toPromise();
+        return this.frecuentesProfesionalService.get(queryFP).toPromise();
     }
 
     private inicializarFrecuentesTP() {
