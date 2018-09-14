@@ -265,7 +265,7 @@ export class CamaComponent implements OnInit {
             this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
                 // Aca deberiamos mostrar el resumen en el sidebar
                 this.plex.toast('success', 'Se completo el pase de cama', 'Cambio estado');
-                this.evtCama.emit(camaActualizada);
+                this.evtCama.emit({ cama: camaActualizada });
             }, (err1) => {
                 this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
             });
