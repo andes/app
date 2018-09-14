@@ -612,7 +612,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         }
         // devolvemos los tipos de filtros
-        this.tagBusqueda.emit(filtro);
+        // this.tagBusqueda.emit(filtro);
         // Devolvemos el concepto SNOMED
         this.evtData.emit([filtro, concepto]);
     }

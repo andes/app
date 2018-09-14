@@ -130,7 +130,6 @@ export class HudsBusquedaComponent implements OnInit {
     }
 
     dragEnd(e) {
-        debugger;
         this._onDragEnd.emit(e);
     }
 
