@@ -28,7 +28,7 @@ export class CDAService {
     }
 
     /**
-     * 
+     *
      */
     post(file, metadata) {
         return this.server.post(this.CDAUrl + 'create/', metadata);
@@ -38,7 +38,7 @@ export class CDAService {
      * @param idPaciente
      */
     getCDAList(idPaciente) {
-        return this.server.get(this.CDAUrl + 'paciente/' + idPaciente)
+        return this.server.get(this.CDAUrl + 'paciente/' + idPaciente);
     }
 
     private handleError(error: any) {

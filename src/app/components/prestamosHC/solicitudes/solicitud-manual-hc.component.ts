@@ -18,7 +18,7 @@ import { PacienteService } from '../../../services/paciente.service';
 export class SolicitudManualComponent implements OnInit {
     private _carpeta: any;
     public prestacionesPermisos = [];
-    public espacioFisico = [];
+    public espacioFisico = null;
     public tipoPrestacion: any;
     public profesional: any;
     public observaciones: any;
