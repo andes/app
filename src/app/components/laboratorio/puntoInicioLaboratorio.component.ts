@@ -125,6 +125,7 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
         this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
         this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
+        this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
         if (this.modo.nombre === 'Recepcion') {
             this.busqueda.estado = 'pendiente';
             this.getProtocolos(this.busqueda);
@@ -135,6 +136,14 @@ export class PuntoInicioLaboratorioComponent
     };
 
 
+
+    getPrioridad(registros) {
+        let registro: any = registros.find((reg) => {
+            return reg.nombre === 'prioridad';
+        });
+        return registro ? registro.valor.solicitudPrestacion.prioridad : null;
+    }
+
     getNumeroProtocolo(registros) {
         let registro: any = registros.find((reg) => {
             return reg.nombre === 'numeroProtocolo';
@@ -143,7 +152,6 @@ export class PuntoInicioLaboratorioComponent
     }
 
     getProtocolos(params: any) {
-        console.log('params', params);
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
             this.protocolos = protocolos;
         }, err => {
@@ -151,7 +159,6 @@ export class PuntoInicioLaboratorioComponent
                 console.log(err);
             }
         });
-        console.log('GET PROTOCOLOS', this.protocolos);
     }
 
     estaSeleccionado(protocolo) {
@@ -177,10 +184,8 @@ export class PuntoInicioLaboratorioComponent
     }
 
     loadServicios($event) {
-        console.log(event);
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
-            console.log("servicios:", servicioEnum);
             $event.callback(servicioEnum);
         });
 
@@ -205,6 +210,12 @@ export class PuntoInicioLaboratorioComponent
 
     searchStart() {
         this.pacientes = null;
+        this.pacienteActivo = null;
+        this.refreshSelection(null, '');
+
+    }
+    searchClear() {
+        this.pacientes = null;
     }
 
     searchEnd(resultado: any) {
@@ -218,28 +229,21 @@ export class PuntoInicioLaboratorioComponent
                 this.mostrarListaMpi = false;
             }
         }
+        this.refreshSelection(null, '');
     }
 
 
     seleccionarPaciente(paciente: any) {
-        // this.plex.info('success', `Seleccionó el paciente ${paciente.apellido}, ${paciente.nombre}`);
         this.pacienteActivo = paciente;
         if (this.pacienteActivo) {
-            this.busqueda.pacienteDocumento = paciente.documento;
-
-        } else {
-            this.busqueda.pacienteDocumento = null;
-        }
-        if (this.modo.nombre === 'Recepcion') {
-            this.turnosLaboratorio();
-        } else {
-            this.refreshSelection(null, 'dniPaciente');
+            this.refreshSelection(null, this.pacienteActivo.documento);
         }
 
     }
 
     hoverPaciente(paciente: any) {
         this.pacienteActivo = paciente;
+
     }
 
     changeCarga(tipo) {
@@ -279,7 +283,7 @@ export class PuntoInicioLaboratorioComponent
             case 'Recepcion':
                 this.accion = 'Recepcionar';
 
-                this.turnosLaboratorio();
+                this.refreshSelection();
                 break;
         }
 
@@ -295,11 +299,11 @@ export class PuntoInicioLaboratorioComponent
         if (this.pacienteActivo) {
             busqueda.pacienteDni = this.pacienteActivo.documento;
         }
-        console.log("busqueda turnos", this.turnosRecepcion);
+        console.log('busqueda turnos', this.turnosRecepcion);
         // this.turnoService.getTurnosLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; });
         this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => {
             this.turnosRecepcion = turnos;
-            console.log("turnos recepcion", this.turnosRecepcion);
+            console.log('turnos recepcion', this.turnosRecepcion);
         });
     }
 
@@ -333,16 +337,16 @@ export class PuntoInicioLaboratorioComponent
     getlocalStorage() {
         let ls = JSON.parse(localStorage.getItem('filtros'));
 
-        console.log("ls profesional", ls.profesional);
+        console.log('ls profesional', ls.profesional);
 
-        console.log("ls profesional", this.auth.profesional._id);
+        console.log('ls profesional', this.auth.profesional._id);
         if (ls.profesional === this.auth.profesional._id) {
             this.busqueda = ls.busqueda;
-            //this.origen.id = ls.busqueda.origen;
-            //this.area.id = ls.busqueda.area;
-            //this.prioridad.id = ls.busqueda.prioridad;
-            console.log("local storage", this.busqueda);
-            //this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
+            // this.origen.id = ls.busqueda.origen;
+            // this.area.id = ls.busqueda.area;
+            // this.prioridad.id = ls.busqueda.prioridad;
+            console.log('local storage', this.busqueda);
+            // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
         }
 
         if (this.modo.nombre === 'Recepcion') {
@@ -350,9 +354,9 @@ export class PuntoInicioLaboratorioComponent
         }
     }
 
-    getPrioridad(x) {
-        return null;
-    }
+
+
+
 
     // recordarFiltros() {
     //     let filtrosPorDefecto = {
