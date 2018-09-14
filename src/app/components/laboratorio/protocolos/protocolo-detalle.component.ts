@@ -60,6 +60,9 @@ export class ProtocoloDetalleComponent
     set cargarProtocolo(value: any) {
         if (value) {
             this.modelo = value;
+            if (this.modo.id === 'carga') {
+                this.carparPracticasAEjecucion();
+            }
         }
     }
 
@@ -82,8 +85,21 @@ export class ProtocoloDetalleComponent
     ) { }
 
     ngOnInit() {
+        console.log("init");
         this.setProtocoloSelected(this.modelo);
         this.loadOrganizacion();
+    }
+
+    carparPracticasAEjecucion() {
+        let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
+        
+        let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
+
+        let practicasCargar = practicasSolicitud.filter((practicaSolicitud) => {
+            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId == practicaSolicitud.concepto.conceptId) == -1;
+        });
+
+        this.modelo.ejecucion.registros[0].valor.push(practicasCargar);
     }
 
     seleccionarPractica(practica: IPractica) {
@@ -244,25 +260,21 @@ export class ProtocoloDetalleComponent
     }
 
     async guardarSolicitud($event) {
+        
+
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
         this.modelo.solicitud.organizacion = this.auth.organizacion;
         this.modelo.estados = [{ tipo: "pendiente" }];
 
-        this.modelo.solicitud.registros.push({
-            esSolicitud: true,
-            nombre: Constantes.conceptoPruebaLaboratorio.term,
-            concepto: Constantes,
-            valor: {
-                solicitudPrestacion: {
-                    autocitado: false,
-                    prioridad: this.prioridad,
-                    organizacionDestino: this.auth.organizacion,
-                    servicio: this.servicio,
-                    practicas: this.practicasActivas,
-                    observaciones: this.observaciones,
-                }
-            }
-        });
+        if (this.modo.id === 'carga') {
+            this.modelo.solicitud.registros[0].prioridad = this.prioridad;
+            this.modelo.solicitud.registros[0].organizacionDestino = this.auth.organizacion;
+            this.modelo.solicitud.registros[0].servicio = this.servicio;
+            this.modelo.solicitud.registros[0].practicas = this.practicasActivas;
+            this.modelo.solicitud.registros[0].observaciones = this.observaciones;
+        
+            this.carparPracticasAEjecucion();
+        }
 
         if(this.modo.id === 'recepcion') {
             this.iniciarProtocolo();
