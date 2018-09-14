@@ -159,32 +159,9 @@
             <!-- TABLA EDICION DE PRACTICAS -->
             <hr>
 
-            <!--OBSERVACIONES - RECEPCION-->
-            <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
-                <div class="col-12 ">
-                    <plex-text [(ngModel)]="observaciones " label="Observaciones " name="observaciones " multiline="true ">
-                    </plex-text>
-                </div>
-            </div>
+            
         </ng-container>
         <!--FIN SECCION PRTOCOLO -->
-
-
-
-
-
-
-
-        <!-- Botonera 
-        <div class="botonera-container " *ngIf='modo.id !== "recepcion "'>
-            <plex-button class="left ml-2 " type="info " icon='chevron-up' label="boton clave 1 "></plex-button>
-            <plex-button class="center ml-2 " type="success " icon='chevron-up' label="boton clave 2 "></plex-button>
-            <plex-button class="right ml-2 " type="warning " icon='chevron-up' label="boton clave 3 "></plex-button>
-        </div>
-        <hr>
-       
-     -->
-
 
         <table *ngIf="modo.id !== 'recepcion' && modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
             <thead>
@@ -205,10 +182,10 @@
                 <th>Acciones</th>
             </thead>
             <tbody>
-                <ng-container *ngFor="let practica of getPracticas(modelo.ejecucion.registros); let i=index">
-                    <tr *ngIf="!getPracticas(practica.registros).length > 0" [ngClass]="">
+                <ng-container *ngFor="let practica of modelo.ejecucion.registros[0].valor; let i=index">
+                    <tr [ngClass]="">
                         <td>
-                            <span class="float-left">{{getCodigoPractica(practica.registros)}}</span>
+                            <span class="float-left">{{practica.codigo}}</span>
                         </td>
                         <td>
                             <span class="float-left">{{practica.nombre}}</span>
@@ -216,15 +193,15 @@
 
                         <ng-container *ngIf='modo.id !== "control"'>
                             <td class="text-left align-middle estado">
-                                <p>{{practica.valor}}
-                                    <plex-float [(ngModel)]="practica.valor"></plex-float>
+                                <p>{{practica.resultado.valor}}
+                                    <plex-float [(ngModel)]="practica.resultado.valor"></plex-float>
                                 </p>
                             </td>
                             <td>
-                                {{getUnidad(practica.registros)}}
+                                {{practica.unidadMedida.term}}
                             </td>
                             <td>
-                                10000 - 15000
+                                {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
                             </td>
                         </ng-container>
                         <ng-container *ngIf='modo.id === "validacion"'>
@@ -247,7 +224,7 @@
                         </td>
                     </tr>
 
-                    <ng-container *ngIf="getPracticas(practica.registros).length > 0">
+                    <!-- <ng-container>
                         <tr>
                             <td>
                                 <span class="float-left">{{getCodigoPractica(practica.registros)}}</span>
@@ -302,8 +279,16 @@
                                 </plex-button>
                             </td>
                         </tr>
-                    </ng-container>
+                    </ng-container> -->
                 </ng-container>
+
+                <!--OBSERVACIONES - RECEPCION-->
+                <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
+                    <div class="col-12 ">
+                        <plex-text [(ngModel)]="observaciones " label="Observaciones " name="observaciones " multiline="true ">
+                        </plex-text>
+                    </div>
+                </div>
             </tbody>
         </table>
     </plex-layout-main>

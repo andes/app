@@ -134,7 +134,7 @@
 
                         <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                         <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
-                        <h2 *ngIf='getNumeroProtocolo(protocolo.ejecucion.registros) !== null'>{{getNumeroProtocolo(protocolo.ejecucion.registros)}}</h2>
+                        <h2>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
 
                         <br>
                     </td>

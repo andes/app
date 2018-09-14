@@ -41,8 +41,6 @@ export class ProtocoloDetalleComponent
     organizacion: any;
     modelo: any;
     public practicas: IPracticaMatch[] | IPractica[];
-    public practicasActivas = [];
-
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
     public pacientes;
@@ -110,22 +108,22 @@ export class ProtocoloDetalleComponent
     }
 
     seleccionarPractica(practica: IPractica) {
-        let existe = this.practicasActivas.findIndex(x => x.id === practica.id);
+
+        let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
 
         if (existe === -1) {
-
-            this.practicasActivas.push(practica);
-        }
-        else {
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica);
+            this.modelo.ejecucion.registros[0].valor.push(practica);
+        } else {
             this.plex.alert('', 'Práctica ya ingresada');
         }
-        console.log(this.practicasActivas);
-
-
     }
 
     eliminarPractica(practica: IPractica) {
-        this.practicasActivas.splice(this.practicasActivas.findIndex(x => x.id === practica.id), 1);
+        let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
+        practicasSolicitud.splice(practicasSolicitud.findIndex(x => x.id === practica.id), 1);
+        let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
+        practicasEjecucion.splice(practicasEjecucion.findIndex(x => x.id === practica.id), 1);
     }
 
     seleccionarPaciente(paciente: any): void {
@@ -277,7 +275,6 @@ export class ProtocoloDetalleComponent
             this.modelo.solicitud.registros[0].prioridad = this.prioridad;
             this.modelo.solicitud.registros[0].organizacionDestino = this.auth.organizacion;
             this.modelo.solicitud.registros[0].servicio = this.servicio;
-            this.modelo.solicitud.registros[0].practicas = this.practicasActivas;
             this.modelo.solicitud.registros[0].observaciones = this.observaciones;
         
             this.carparPracticasAEjecucion();
@@ -300,7 +297,7 @@ export class ProtocoloDetalleComponent
         let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             
-            this.modelo.solicitud.registros[0].valor.numeroProtocolo = numeroProtocolo;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
             this.guardarProtocolo();            
         });
     }
