@@ -940,7 +940,7 @@ export class DarTurnosComponent implements OnInit {
             let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
             let horario = moment(this.turno.horaInicio).format('HH:mm');
             // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-            let mensaje = this.paciente.apellido + ' el ' + this.agenda.organizacion.nombre + ' le recuerda su turno de ' + this.turnoTipoPrestacion.nombre +
+            let mensaje = this.paciente.apellido + ' el ' + this.agenda.organizacion.nombre + ' le recuerda su turno de ' + this.turnoTipoPrestacion.term +
                 ' el dia ' + dia + ' a las ' + horario + ' hs. ';
             if (this.agenda.espacioFisico) {
                 mensaje = mensaje + 'en ' + this.agenda.espacioFisico.nombre + '.';
