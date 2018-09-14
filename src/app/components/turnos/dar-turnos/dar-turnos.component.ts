@@ -71,6 +71,7 @@ export class DarTurnosComponent implements OnInit {
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
+            this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
