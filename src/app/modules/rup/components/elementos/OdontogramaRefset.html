@@ -38,9 +38,8 @@
                     (click)="toggleUltimo()" title="{{ showUltimoOdontograma ? 'Ocultar' : 'Mostrar' }}"></a>
                 <h6>
                     <a *ngIf="ultimoOdontogramaIndex > 0" (click)="odontogramaAnterior()" class="hover text-warning text-bold mdi mdi-24px mdi-chevron-left"></a>
-                    {{ ultimoOdontogramaIndex === odontogramasHUDS.length - 1 ? 'Último odontograma' : 'Odontograma del
-                    ' }} {{ (ultimoOdontograma.createdAt
-                    | fecha)}}
+                    {{ ultimoOdontogramaIndex === odontogramasHUDS.length - 1 ? 'Último odontograma' : 'Odontograma
+                    del' }} {{ (ultimoOdontograma.createdAt | fecha)}}
                     <a *ngIf="ultimoOdontogramaIndex < odontogramasHUDS.length - 1" (click)="odontogramaSiguiente()"
                         class="hover text-warning text-bold mdi mdi-24px mdi-chevron-right"></a>
                 </h6>
@@ -305,7 +304,7 @@
                     (click)="limpiarSeleccion(e)"></plex-bool>
             </div>
             <div class="col-4" *ngIf="piezasSeleccionadas?.length > 0">
-                <plex-button class="m-0 p-0" name="deseleccionar" label="Deseleccionar todo" (click)="limpiarSeleccion(e)"></plex-button>
+                <plex-button class="m-0 p-0" name="limpiar-seleccion" label="Limpiar selección" (click)="limpiarSeleccion(e)"></plex-button>
             </div>
         </div>
         <!-- FIN ODONTOGRAMA DE ESTA CONSULTA -->
