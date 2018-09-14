@@ -111,16 +111,18 @@
         <!--SECCION PACIENTE-->
         <div class="col-12">
             <label for="">Paciente</label>
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
-            <!-- <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
-                    <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
-                </div> -->
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+            <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
+                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
+                    (hover)="hoverPaciente($event)"></paciente-listado>
+
+            </div>
         </div>
         <!--FIN SECCION PACIENTE-->
 
         <hr>
 
-        <!-- LISTADO DE RESULTADOS -->
+        <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
         <div *ngIf="!protocolos?.length" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
         </div>
@@ -138,31 +140,31 @@
                     </td>
                     <td class="contenedor-bloque-texto">
                         <div class="labs-item-texto">
-                            <p>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</p>
+                            <strong>|&nbsp;Fecha de toma muestra&nbsp;</strong>
+                            <p>{{protocolo.ejecucion.fecha | date: 'dd/MM/yyyy'}}</p>
                             <strong>&nbsp;|&nbsp;Origen&nbsp;</strong>
                             <p>{{protocolo.solicitud.ambitoOrigen}}</p>
-                            <strong>&nbsp;|&nbsp;Servicio&nbsp;</strong>
-                            <p>Clinica</p>
                         </div>
                         <div class="labs-item-texto">
-                            <strong>Usuario:&nbsp;</strong>
-                            <p>{{protocolo.createdBy.nombreCompleto}}</p>
-                            <strong>&nbsp;|&nbsp;Paciente:&nbsp;</strong>
+                            <strong>|&nbsp;Dni Paciente:&nbsp;</strong>
+                            <p>{{protocolo.paciente.documento}}</p>
+                            <strong>&nbsp;|&nbsp;Nombre y Apellido:&nbsp;</strong>
                             <p>{{protocolo.paciente.nombre}} {{protocolo.paciente.apellido}} </p>
-                            <strong>&nbsp;|&nbsp;Fecha de Registro:&nbsp;</strong>
-                            <p>{{protocolo.createdAt | date: 'dd/MM/yyyy'}}</p>
+                            <strong>&nbsp;|&nbsp;Fecha de Nacimiento:&nbsp;</strong>
+                            <p>{{protocolo.paciente.fechaNacimiento | date: 'dd/MM/yyyy'}}</p>
+                            <strong>&nbsp;|&nbsp;Sexo:&nbsp;</strong>
+                            <p>{{protocolo.paciente.sexo}}</p>
                         </div>
                     </td>
+
                     <td class="badge-container">
-                        <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
-                        <plex-badge type="warning" class="ml-2"> estado </plex-badge>
+                        <plex-badge type="danger" class="ml-2">Prioridad</plex-badge>
                         <plex-button type="success" size="sm" (click)="cargarResultados()" class="ml-2">{{accion}} Resultados</plex-button>
                         <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                             <i class="mdi mdi-file-document"></i>
                         </plex-button>
                     </td>
                 </tr>
-                <!-- /Protocolos hardcodeados -->
             </tbody>
         </table>
 
