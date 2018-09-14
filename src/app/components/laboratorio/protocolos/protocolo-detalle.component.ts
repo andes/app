@@ -60,7 +60,7 @@ export class ProtocoloDetalleComponent
     set cargarProtocolo(value: any) {
         if (value) {
             this.modelo = value;
-            if (this.modo.id === 'carga') {
+            if (this.modo.id === 'recepcion') {
                 this.carparPracticasAEjecucion();
             }
         }
@@ -91,15 +91,22 @@ export class ProtocoloDetalleComponent
     }
 
     carparPracticasAEjecucion() {
+        if(this.modelo.ejecucion.registros.length === 0) {
+            this.modelo.ejecucion.registros.push({
+                nombre: "Practicas",
+                concepto: Constantes.conceptoPruebaLaboratorio,
+                valor: []
+            });
+        }
+
         let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
-        
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
 
         let practicasCargar = practicasSolicitud.filter((practicaSolicitud) => {
             return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId == practicaSolicitud.concepto.conceptId) == -1;
         });
 
-        this.modelo.ejecucion.registros[0].valor.push(practicasCargar);
+        Array.prototype.push.apply(this.modelo.ejecucion.registros[0].valor, practicasCargar);
     }
 
     seleccionarPractica(practica: IPractica) {
@@ -277,6 +284,7 @@ export class ProtocoloDetalleComponent
         }
 
         if(this.modo.id === 'recepcion') {
+            console.log("iniciar procolot")
             this.iniciarProtocolo();
         } else {
             this.guardarProtocolo();
@@ -288,18 +296,26 @@ export class ProtocoloDetalleComponent
         // }
     }
 
-    iniciarProtocolo () { 
-        let organizacionSolicitud = this.protocoloSelected.solicitud ? this.protocoloSelected.solicitud.organizacion.id : this.auth.organizacion.id;
+    iniciarProtocolo() { 
+        let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
+            
             this.modelo.solicitud.registros[0].valor.numeroProtocolo = numeroProtocolo;
             this.guardarProtocolo();            
         });
     }
 
     guardarProtocolo() {
-        this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-            this.volverAListaControEmit.emit();
-            this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-        });
+        if(this.modelo.id) {
+            this.servicioPrestacion.put(this.modelo).subscribe(respuesta => {
+                this.volverAListaControEmit.emit();
+                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+            });
+        } else {
+            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
+                this.volverAListaControEmit.emit();
+                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+            });
+        }
     }
 }

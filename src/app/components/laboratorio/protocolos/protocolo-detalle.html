@@ -130,7 +130,7 @@
             <!-- FIN BUSCADOR DE PRACTICAS -->
             <!-- TABLA EDICION DE PRACTICAS -->
             <hr>
-            <div class="row">
+            <div class="row" *ngIf="modo.id !== 'recepcion'">
                 <div class="col">
                     <table *ngIf="practicasActivas && practicasActivas.length" class="table table-striped table-sm">
                         <thead>
@@ -186,7 +186,7 @@
      -->
 
 
-        <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
+        <table *ngIf="modo.id !== 'recepcion' && modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
             <thead>
                 <th>Cod.</th>
                 <th>Descripcion</th>
