@@ -153,7 +153,7 @@ export class PuntoInicioComponent implements OnInit {
             this.agendasOriginales = JSON.parse(JSON.stringify(this.agendas));
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
-            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.noNominalizada && !p.solicitud.turno &&
+            this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.tipoPrestacion.noNominalizada && !p.solicitud.turno &&
                 (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
                     p.createdAt <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));

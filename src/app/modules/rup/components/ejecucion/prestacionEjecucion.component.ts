@@ -128,14 +128,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                     this.showPrestacion = true;
                     this.servicioPrestacion.getById(id).subscribe(prestacion => {
                         this.prestacion = prestacion;
-
                         // this.prestacion.ejecucion.registros.sort((a: any, b: any) => a.updatedAt - b.updatedAt);
                         // Si la prestación está validada, navega a la página de validación
                         if (this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada') {
                             this.router.navigate(['/rup/validacion/', this.prestacion.id]);
                         } else {
                             // Carga la información completa del paciente
-                            if (!this.prestacion.noNominalizada) {
+                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                                     this.paciente = paciente;
                                 });
@@ -699,7 +698,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
             this.plex.toast('success', 'Prestación guardada correctamente', 'Prestacion guardada', 100);
-            if (!this.prestacion.noNominalizada) {
+            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 // Si existe un turno y una agenda asociada, y existe un concepto que indica que el paciente no concurrió a la consulta...
                 if (this.idAgenda) {
                     localStorage.removeItem('idAgenda');

@@ -151,7 +151,7 @@
                                                 </div>
 
                                                 <!-- ... Body -->
-                                                <div class="content" *ngIf="paciente || (prestacion.noNominalizada)">
+                                                <div class="content" *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
 
                                                     <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
                                                         <div class="row">
@@ -334,7 +334,7 @@
             <!-- Panel Buscador SNOMED + HUDS -->
             <div class="col-4 tabs-buscador-huds pr-0" *ngIf="prestacion">
                 <plex-box>
-                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.noNominalizada">
+                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)"

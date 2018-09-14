@@ -157,7 +157,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                if (!this.prestacion.noNominalizada) {
+                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                     this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
                         if (prestacionesSolicitadas) {
                             this.cargaPlan(prestacionesSolicitadas);
@@ -172,7 +172,7 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
             // Carga la información completa del paciente
-            if (!this.prestacion.noNominalizada) {
+            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
                     this.prestacion.ejecucion.registros.forEach(registro => {
@@ -218,7 +218,7 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
-        if (!existeDiagnostico && !this.prestacion.noNominalizada) {
+        if (!existeDiagnostico && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
@@ -249,7 +249,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
                     this.motivoReadOnly = true;
                     // actualizamos las prestaciones de la HUDS
-                    if (!this.prestacion.noNominalizada) {
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                             if (prestacionesSolicitadas) {
                                 this.cargaPlan(prestacionesSolicitadas);
@@ -296,7 +296,7 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
-                        if (!this.prestacion.noNominalizada) {
+                        if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                             // actualizamos las prestaciones de la HUDS
                             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                             });

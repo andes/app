@@ -15,7 +15,6 @@ export class IPrestacion {
         sexo: string,
         fechaNacimiento: Date
     };
-    noNominalizada: Boolean;
     // Datos de la solicitud
     solicitud: {
         // Tipo de prestación de ejecutarse

@@ -670,8 +670,6 @@ export class PrestacionesService {
             prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
         }
 
-        prestacion['noNominalizada'] = snomedConcept.noNominalizada ? snomedConcept.noNominalizada : false;
-
         return prestacion;
     }
 

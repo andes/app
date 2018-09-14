@@ -129,7 +129,6 @@ export class PrestacionCrearComponent implements OnInit {
             let nuevaPrestacion;
             nuevaPrestacion = {
                 paciente: pacientePrestacion,
-                noNominalizada: this.tipoPrestacionSeleccionada.noNominalizada,
                 solicitud: {
                     fecha: this.fecha,
                     tipoPrestacion: conceptoSnomed,
