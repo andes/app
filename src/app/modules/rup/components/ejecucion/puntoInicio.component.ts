@@ -126,6 +126,10 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             turno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (turno.paciente && turno.paciente.carpetaEfectores) {
+                                (turno.paciente.carpetaEfectores as any) = turno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
+
                         });
                     });
 
@@ -137,6 +141,9 @@ export class PuntoInicioComponent implements OnInit {
                             });
                             // asignamos la prestacion al turno
                             sobreturno['prestacion'] = this.prestaciones[indexPrestacion];
+                            if (sobreturno.paciente && sobreturno.paciente.carpetaEfectores) {
+                                (sobreturno.paciente.carpetaEfectores as any) = sobreturno.paciente.carpetaEfectores.filter((ce: any) => ce.organizacion._id === this.auth.organizacion.id);
+                            }
                         });
                     }
                 });
@@ -147,8 +154,8 @@ export class PuntoInicioComponent implements OnInit {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
-                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
+                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
+                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
 
             // agregamos el original de las prestaciones que estan fuera

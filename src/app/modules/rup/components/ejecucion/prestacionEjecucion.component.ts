@@ -1,6 +1,5 @@
-import { estados } from './../../../../utils/enumerados';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, ViewChildren, QueryList } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ObjectID } from 'bson';
 import { DropdownItem } from '@andes/plex';
@@ -15,6 +14,7 @@ import { PrestacionesService } from './../../services/prestaciones.service';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
+import { RUPComponent } from '../core/rup.component';
 
 @Component({
     selector: 'rup-prestacionEjecucion',
@@ -26,6 +26,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 export class PrestacionEjecucionComponent implements OnInit {
     idAgenda: any;
     @HostBinding('class.plex-layout') layout = true;
+    @ViewChildren(RUPComponent) rupElements: QueryList<any>;
 
     // prestacion actual en ejecucion
     public prestacion: IPrestacion;
@@ -120,6 +121,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.route.params.subscribe(params => {
             let id = params['id'];
             this.idAgenda = localStorage.getItem('idAgenda');
+
             // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
             this.elementosRUPService.ready.subscribe((resultado) => {
                 if (resultado) {
@@ -208,7 +210,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posición donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
-
         // // buscamos el registro
         let registro = this.prestacion.ejecucion.registros[posicionActual];
 
@@ -399,10 +400,20 @@ export class PrestacionEjecucionComponent implements OnInit {
             esSolicitud = true;
         }
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
+
+        if (elementoRUP && elementoRUP.params) {
+            if (elementoRUP.params.reglasCargar) {
+                if (elementoRUP.params.reglasCargar.evolucionable) {
+                    // console.log(this.servicioPrestacion.getByPacienteKey(this.paciente.id, elementoRUP.conceptos.map(x => x.conceptId)));
+                }
+            }
+        }
+
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
         this.itemsRegistros[nuevoRegistro.id] = { collapse: false, items: null };
         nuevoRegistro['_id'] = nuevoRegistro.id;
+
         // Verificamos si es un plan. Si es un plan seteamos esSolicitud en true
         if (esSolicitud) {
             nuevoRegistro.esSolicitud = true;
@@ -615,33 +626,26 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     private controlValido(registro) {
-        if (registro.registros.length <= 0) {
-            if (registro.valor) {
-                registro.valido = true;
-                if ((typeof registro.valor === 'object') && Object.keys(registro.valor).length === 0) {
-                    registro.valido = false;
-                }
-            } else {
-                registro.valido = false;
-            }
-            // registro.valido = (registro.valor && Object.keys(registro.valor).length === 0) ? true : false;
-            if (!registro.valido) {
-                this.plex.toast('danger', 'Hay registros incompletos', 'Error', 500);
-                this.colapsarPrestaciones('expand');
-            }
-        } else {
+        return true;
+        // if (registro.registros.length <= 0) {
+        //     registro.valido = (registro.valor !== null) ? true : false;
+        //     if (registro.concepto && !registro.valido) {
+        //         this.plex.toast('danger', 'Registro incompleto: ' + registro.concepto.term, 'Error', 3000);
+        //         this.colapsarPrestaciones('expand');
+        //     }
+        // } else {
 
-            let total = registro.registros.length;
-            let contadorValiddos = 0;
-            registro.registros.forEach(r => {
-                let res = this.controlValido(r);
-                if (res) {
-                    contadorValiddos++;
-                }
-            });
-            registro.valido = (contadorValiddos === total) ? true : false;
-        }
-        return registro.valido;
+        //     let total = registro.registros.length;
+        //     let contadorValiddos = 0;
+        //     registro.registros.forEach(r => {
+        //         let res = this.controlValido(r);
+        //         if (res) {
+        //             contadorValiddos++;
+        //         }
+        //     });
+        //     registro.valido = (contadorValiddos === total) ? true : false;
+        // }
+        // return registro.valido;
     }
 
     /**
@@ -655,18 +659,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.prestacion.ejecucion.registros.length) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
-        } else {
-            this.prestacion.ejecucion.registros.forEach(r => {
-                if (!this.controlValido(r)) {
-
-                    this.prestacionValida = false;
-                    this.mostrarMensajes = true;
-                    resultado = false;
-                }
-
-            });
         }
-
         return resultado;
     }
 
@@ -677,15 +670,21 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     guardarPrestacion() {
-
         // validamos antes de guardar
-        if (!this.beforeSave()) {
+        let flag = true;
+        this.rupElements.forEach((item) => {
+
+            let instance = item.rupInstance;
+            flag = flag && (instance.soloValores || instance.validate());
+        });
+        // validamos antes de guardar
+        if (!this.beforeSave() || !flag) {
+            this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
-
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
         registros.forEach(registro => {
-            if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+            if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
                 registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
             }
         });
@@ -730,6 +729,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
         });
     }
+
 
     volver(ambito = 'ambulatorio') {
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';

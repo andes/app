@@ -8,15 +8,15 @@ import { RUPComponent } from './../core/rup.component';
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     ngOnInit() {
-        // buscamos si el hallazgo pertenece a algún referentSet
-        if (this.registro.concepto && this.registro.concepto.refsetIds) {
-            this.registro.concepto.refsetIds.forEach(refSet => {
-                Object.keys(this.prestacionesService.refsetsIds).forEach(k => {
-                    if (this.prestacionesService.refsetsIds[k] === refSet) {
-                        let referencia = k.replace(/_/g, ' ');
-                        this.referentSet.push(referencia);
-                    }
-                });
+        this.registro.valido = true;
+        // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
+        if (!this.soloValores) {
+            this.conceptObserverService.observe(this.registro).subscribe((data) => {
+                // No soy yo mismo
+                if (this.registro !== data && this.registro.valor !== data.valor) {
+                    this.registro.valor = data.valor;
+                    this.emitChange(false);
+                }
             });
         }
     }
