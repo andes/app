@@ -37,6 +37,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     };
     public procedimientosObstetricos = false;
     public ExisteCausaExterna = false;
+    public mostrarValidacion = false;
     public registro = {
         destacado: false,
         esSolicitud: false,
@@ -275,4 +276,21 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             event.callback([]);
         }
     }
+
+
+    // comprobarEgresoParaValidar() {
+    //     // nos fijamos si el concepto ya aparece en los registros
+    //     let egresoExiste = this.registro.valor.InformeEgreso;
+
+    //     if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+    //         if (egresoExiste.fechaEgreso && egresoExiste.tipoEgreso) {
+    //             this.mostrarValidacion = true;
+    //         } else {
+    //             this.mostrarValidacion = false;
+    //         }
+    //     } else {
+    //         this.mostrarValidacion = false;
+    //     }
+    // }
+
 }
