@@ -43,12 +43,13 @@ export class PuntoInicioLaboratorioComponent
             tipoPrestacion: null,
             organizacion: {},
             profesional: null,
-            ambitoOrigen: 'ambulatorio',
+            ambitoOrigen: null,
             fecha: new Date(),
             registros: []
         },
         ejecucion: {
             fecha: new Date(),
+            fechaTomaMuestra: new Date(),
             registros: []
         }
     };
@@ -152,7 +153,8 @@ export class PuntoInicioLaboratorioComponent
             this.protocolos = protocolos;
         }, err => {
             if (err) {
-                console.log(err);
+                this.plex.info('danger', err);
+
             }
         });
     }
@@ -161,7 +163,7 @@ export class PuntoInicioLaboratorioComponent
         return false;
     }
 
-    verProtocolo(protocolo, multiple, e, index) {
+    verProtocolo(protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (protocolo) {
             // this.serviceAgenda.getById(agenda.id).subscribe(ag => {
@@ -214,6 +216,9 @@ export class PuntoInicioLaboratorioComponent
     }
     searchClear() {
         this.pacientes = null;
+        this.pacienteActivo = null;
+      
+        this.refreshSelection(null, '');
     }
 
     searchEnd(resultado: any) {

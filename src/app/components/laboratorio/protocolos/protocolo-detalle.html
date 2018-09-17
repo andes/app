@@ -71,15 +71,20 @@
                     <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">
                         <div class="row">
                             <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="Fecha de solicitud" [required]="true"></plex-datetime>
+                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha " [required]="true"></plex-datetime>
+                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
+                                    [required]="true"></plex-datetime>
+                            </div>
+
+                            <div class="col-3">
+                                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="Fecha de solicitud" [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
                                 <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
                                 <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre" placeholder="Seleccione..."
-                                    label="Efector Solicitante">
+                                    label="Efector Solicitante" [required]="true">
                                 </plex-select>
                             </div>
                             <div class="col-3">
@@ -94,14 +99,18 @@
                                 </plex-select>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="origen" name="ambitoOrigen" (getData)="loadAmbitos($event)" label="Origen" placeholder="Seleccione el origen"
-                                    labelField="term" [required]="true" idField="term">
+                                <plex-select [(ngModel)]="origen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen" placeholder="Seleccione el origen"
+                                    [required]="true">
                                 </plex-select>
+
                             </div>
                             <div class="col-3">
                                 <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" placeholder="Seleccione el servicio"
                                     labelField="term" [required]="true" idField="term">
                                 </plex-select>
+                            </div>
+                            <div class="col-3">
+                                <plex-select [(ngModel)]="laboratorioInterno" name="laboratorioInterno" label="Area" (getData)="loadArea($event)" [required]="true"></plex-select>
                             </div>
                         </div>
                     </article>
@@ -128,23 +137,44 @@
                 </div>
             </div>
             <!-- FIN BUSCADOR DE PRACTICAS -->
-            <!-- TABLA EDICION DE PRACTICAS -->
+
+            <!-- TABLA VISUALIZACION DE PRACTICAS -->
             <hr>
             <div class="row">
                 <div class="col">
-                    <table *ngIf="practicasActivas && practicasActivas.length" class="table table-striped table-sm">
+                    <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
                         <thead>
                             <th>Cod.</th>
                             <th>Descripcion</th>
                             <th class="float-center">S/Muestra</th>
+                            <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
+                                <th class="float-center">Valor</th>
+                                <th class="float-center">UM</th>
+                                <th class="float-center">VR</th>
+                            </ng-container>
+                            <ng-container *ngIf='modo.id === "validacion"'>
+                                <th class="float-center">Val.</th>
+                            </ng-container>
                             <th></th>
                             <th>Acciones</th>
                         </thead>
                         <tbody>
-                            <tr class="hover" *ngFor="let practica of practicasActivas">
+                            <tr class="hover" *ngFor="let practica of getPracticas()">
                                 <td>{{practica.codigo}}</td>
                                 <td>{{practica.descripcion}}</td>
                                 <ng-container>
+                                    <input type='checkbox'>
+                                </ng-container>
+                                <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
+                                    <td>{{practica.valor}}</td>
+                                    <td>
+                                        {{getUnidad(practica.registros)}}
+                                    </td>
+                                    <td>
+                                        10000 - 15000
+                                    </td>
+                                </ng-container>
+                                <ng-container *ngIf='modo.id === "validacion"'>
                                     <input type='checkbox'>
                                 </ng-container>
                                 <td></td>
@@ -156,8 +186,9 @@
                     </table>
                 </div>
             </div>
-            <!-- TABLA EDICION DE PRACTICAS -->
+            <!-- FIN TABLA VISUALIZACION DE PRACTICAS -->
             <hr>
+
 
             <!--OBSERVACIONES - RECEPCION-->
             <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
@@ -186,132 +217,12 @@
      -->
 
 
-        <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
-            <thead>
-                <th>Cod.</th>
-                <th>Descripcion</th>
-                <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
-                    <th class="float-center">Valor</th>
-                    <th class="float-center">UM</th>
-                    <th class="float-center">VR</th>
-                </ng-container>
-                <ng-container *ngIf='modo.id === "validacion"'>
-                    <th class="float-center">Val.</th>
-                </ng-container>
-                <ng-container *ngIf='modo.id === "recepcion"'>
-                    <th class="float-center">S/Muestra</th>
-                </ng-container>
-                <th></th>
-                <th>Acciones</th>
-            </thead>
-            <tbody>
-                <ng-container *ngFor="let practica of getPracticas(modelo.ejecucion.registros); let i=index">
-                    <tr *ngIf="!getPracticas(practica.registros).length > 0" [ngClass]="">
-                        <td>
-                            <span class="float-left">{{getCodigoPractica(practica.registros)}}</span>
-                        </td>
-                        <td>
-                            <span class="float-left">{{practica.nombre}}</span>
-                        </td>
 
-                        <ng-container *ngIf='modo.id !== "control"'>
-                            <td class="text-left align-middle estado">
-                                <p>{{practica.valor}}
-                                    <plex-float [(ngModel)]="practica.valor"></plex-float>
-                                </p>
-                            </td>
-                            <td>
-                                {{getUnidad(practica.registros)}}
-                            </td>
-                            <td>
-                                10000 - 15000
-                            </td>
-                        </ng-container>
-                        <ng-container *ngIf='modo.id === "validacion"'>
-                            <input type='checkbox'>
-                        </ng-container>
-                        <td>
-                            <plex-badge type="danger" class="ml-2"> valores criticos </plex-badge>
-                            <plex-badge type="info" class="ml-2"> F(x) </plex-badge>
-                        </td>
-                        <td>
-                            <plex-button type="info" size="sm" class="ml-2">
-                                <i class="mdi mdi-eye"></i>
-                            </plex-button>
-                            <plex-button type="success" size="sm" class="ml-2">
-                                <i class="mdi mdi-file-document"></i>
-                            </plex-button>
-                            <plex-button type="warning" size="sm" class="ml-2">
-                                <i class="mdi mdi-message-alert"></i>
-                            </plex-button>
-                        </td>
-                    </tr>
-
-                    <ng-container *ngIf="getPracticas(practica.registros).length > 0">
-                        <tr>
-                            <td>
-                                <span class="float-left">{{getCodigoPractica(practica.registros)}}</span>
-                            </td>
-                            <td>
-                                <span class="float-left">
-                                    <strong>{{practica.nombre}}</strong>
-                                </span>
-                            </td>
-                            <td class="text-right align-middle estado">
-                            </td>
-                            <td colspan="5"></td>
-                        </tr>
-                        <tr *ngFor="let subpractica of getPracticas(practica.registros); let i=index" class="hover" [ngClass]="">
-                            <td>
-                                <span class="float-left">{{getCodigoPractica(subpractica.registros)}}</span>
-                            </td>
-                            <td>
-                                <span class="float-left">{{subpractica.nombre}}</span>
-                            </td>
-
-                            <ng-container *ngIf='modo.id !== "control"'>
-                                <td class="text-left align-middle estado">
-                                    <p>{{practica.valor}}
-                                        <plex-float [(ngModel)]="subpractica.valor"></plex-float>
-                                    </p>
-                                </td>
-                                <td>
-                                    {{getUnidad(subpractica.registros)}}
-                                </td>
-                                <td>
-                                    10000 - 15000
-                                </td>
-                            </ng-container>
-                            <ng-container *ngIf='modo.id === "validacion"'>
-                                <input type='checkbox'>
-                            </ng-container>
-
-                            <td>
-                                <plex-badge type="danger" class="ml-2"> valores criticos </plex-badge>
-                                <plex-badge type="info" class="ml-2"> F(x) </plex-badge>
-                            </td>
-                            <td>
-                                <plex-button type="info" size="sm" class="ml-2">
-                                    <i class="mdi mdi-eye"></i>
-                                </plex-button>
-                                <plex-button type="success" size="sm" class="ml-2">
-                                    <i class="mdi mdi-file-document"></i>
-                                </plex-button>
-                                <plex-button type="warning" size="sm" class="ml-2">
-                                    <i class="mdi mdi-message-alert"></i>
-                                </plex-button>
-                            </td>
-                        </tr>
-                    </ng-container>
-                </ng-container>
-            </tbody>
-        </table>
     </plex-layout-main>
 
 
     <plex-layout-sidebar *ngIf='modo.id !== "recepcion"'>
-        <div class="row " *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i'
-            [ngClass]="{'invert': protocolo._id === modelo._id}">
+        <div class="row " *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i' [ngClass]="{'invert': protocolo._id === modelo._id}">
             <div class="col-2">
                 <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                 <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>

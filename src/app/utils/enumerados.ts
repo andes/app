@@ -87,6 +87,11 @@ export enum OrigenLaboratorio {
     'guardia',
     'todos'
 }
+export enum OrigenLaboratorioFiltro {
+    'ambulatorio',
+    'internación',
+    'guardia',
+}
 
 export enum laboratorioInterno {
     'derivaciones',
@@ -254,6 +259,19 @@ export function getCargaLaboratorio() {
 
 export function getOrigenLab() {
     let arrLab = Object.keys(OrigenLaboratorio);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+
+export function getOrigenFiltroLab() {
+    let arrLab = Object.keys(OrigenLaboratorioFiltro);
     arrLab = arrLab.slice(arrLab.length / 2);
     let salida = arrLab.map(elem => {
         return {

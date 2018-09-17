@@ -111,7 +111,7 @@
         <!--SECCION PACIENTE-->
         <div class="col-12">
             <label for="">Paciente</label>
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear($event)"></paciente-buscar>
             <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
                 <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
                     (hover)="hoverPaciente($event)"></paciente-listado>
@@ -129,12 +129,12 @@
 
         <table class="table table-striped table-sm" *ngIf='modo && modo.id !== "recepcion"'>
             <tbody>
-                <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i = index" (click)="verProtocolo(protocolo, false, $event,i)">
+                <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i = index">
                     <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
 
-                        <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
-                        <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
-                        <h2 *ngIf='getNumeroProtocolo(protocolo.ejecucion.registros) !== null'>{{getNumeroProtocolo(protocolo.ejecucion.registros)}}</h2>
+                        <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-26px mdi-rotate-45 rosa"></i>
+                        <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-26px  azul"></i>
+                        <strong *ngIf='getNumeroProtocolo(protocolo.ejecucion.registros) !== null'>{{getNumeroProtocolo(protocolo.ejecucion.registros)}}</strong>
 
                         <br>
                     </td>
@@ -159,7 +159,7 @@
 
                     <td class="badge-container">
                         <plex-badge type="danger" class="ml-2">Prioridad</plex-badge>
-                        <plex-button type="success" size="sm" (click)="cargarResultados()" class="ml-2">{{accion}} Resultados</plex-button>
+                        <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">Ver protocolo</plex-button>
                         <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                             <i class="mdi mdi-file-document"></i>
                         </plex-button>
@@ -184,7 +184,7 @@
                     <td>{{prestacion.paciente.documento}}</td>
                     <td>{{prestacion.paciente | paciente}}</td>
                     <td>
-                        <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, false, $event,i)" class="ml-2">Iniciar protocolo</plex-button>
+                        <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, i)" class="ml-2">Iniciar protocolo</plex-button>
                         <!-- <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
                                 <i class="mdi mdi-file-document"></i>
                             </plex-button> -->
