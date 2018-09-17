@@ -19,4 +19,8 @@ export class ObraSocialService {
     get(opciones: any): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/puco/', { params: opciones });
     }
+
+    getPadrones(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/puco/padrones', { params: opciones });
+    }
 }
