@@ -53,7 +53,6 @@ export class PuntoInicioLaboratorioComponent
         },
         ejecucion: {
             fecha: new Date(),
-            fechaTomaMuestra: new Date(),
             registros: []
         }
     };

@@ -41,10 +41,10 @@
             <section class="labs-listado-item">
                 <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'></plex-button>
                 <div class="listado-contenedor-secundario">
-                    <article class="labs-item-numero">
+                    <article class="labs-item-numero" *ngIf='modo.id !== "recepcion"'>
                         <i class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                         <hr>
-                        <h2>{{modelo.solicitud.registros[0]?.valor.numeroProtoco?.valor}}</h2>
+                        <h2>{{modelo.solicitud.registros[0]?.valor.numeroProtocolo?.valor}}</h2>
                         <hr>
                     </article>
                     <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="contenedor-bloque-texto">
@@ -74,7 +74,7 @@
                                 <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
+                                <plex-datetime type="date" [(ngModel)]="fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
                                     [required]="true"></plex-datetime>
                             </div>
 
@@ -99,14 +99,13 @@
                                 </plex-select>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="origen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen" placeholder="Seleccione el origen"
+                                <plex-select [(ngModel)]="ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen" placeholder="Seleccione el origen"
                                     [required]="true">
                                 </plex-select>
 
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" label="Servicio" placeholder="Seleccione el servicio"
-                                    labelField="term" [required]="true" idField="term">
+                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"  (getData)="loadServicios($event)" labelField='term' >
                                 </plex-select>
                             </div>
                             <div class="col-3">
@@ -140,7 +139,7 @@
 
             <!-- TABLA VISUALIZACION DE PRACTICAS -->
             <hr>
-            <div class="row" *ngIf="modo.id !== 'recepcion'">
+            <div class="row">
                 <div class="col">
                     <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
                         <thead>

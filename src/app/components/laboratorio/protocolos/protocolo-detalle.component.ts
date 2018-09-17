@@ -30,14 +30,15 @@ export class ProtocoloDetalleComponent
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     //estado: any;
-    ambitoOrigen: String;
+    ambitoOrigen: any;
     observaciones: '';
     prioridad: any;
     servicio: any;
+
     laboratorioInterno: any;
 
     fecha: any;
-    fechaTomaMuestra: any;
+    fechaTomaMuestra = new Date();
     prestacionOrigen: any;
     organizacionOrigen: null;
     profesionalOrigen: null;
@@ -88,11 +89,9 @@ export class ProtocoloDetalleComponent
     ) { }
 
     ngOnInit() {
-        console.log("init");
         this.setProtocoloSelected(this.modelo);
         this.loadOrganizacion();
-
-
+        this.fechaTomaMuestra = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra;
     }
 
     carparPracticasAEjecucion() {
@@ -168,32 +167,13 @@ export class ProtocoloDetalleComponent
 
 
     loadServicios($event) {
-        if (this.modelo.solicitud.registros.length > 0) {
-
-            if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.servicio) {
-                this.servicio = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.servicio;
-                $event.callback(this.servicio);
-                return this.servicio;
-            }
-        }
-        if ($event.query) {
-
-            this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
-                $event.callback(organizacion.unidadesOrganizativas);
-            });
-        }
-        else {
-            $event.callback([]);
-        }
-
-
-
+        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
+            $event.callback(organizacion.unidadesOrganizativas);
+        });
     }
 
-
     loadPrioridad(event) {
-
-
+        
         if (this.modelo.solicitud.registros.length > 0) {
             if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.prioridad) {
                 this.prioridad = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.prioridad;
@@ -201,11 +181,11 @@ export class ProtocoloDetalleComponent
                 return this.prioridad;
             }
         }
+        
         if (event.query) {
             event.callback(enumerados.getPrioridadesLab());
             return enumerados.getPrioridadesLab();
-        }
-        else {
+        } else {
             event.callback([]);
         }
 
@@ -217,13 +197,12 @@ export class ProtocoloDetalleComponent
             event.callback(this.ambitoOrigen);
             return this.ambitoOrigen;
         }
-        if (event.query) {
 
+        if (event.query) {
             event.callback(enumerados.getOrigenFiltroLab());
             return enumerados.getOrigenFiltroLab();
-        }
-        else {
-            event.callback([]);
+        } else {
+            return event.callback([]);
         }
     }
 
@@ -272,18 +251,9 @@ export class ProtocoloDetalleComponent
 
         //  if (this.modelo.solicitud.registros) {
         if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.practicas) { // Ya hay practicas
-            console.log("if get practicas");
-
             this.practicasEjecucion = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.practicas;
-
-            console.log("if get practicas", this.practicasEjecucion);
             return this.practicasEjecucion;
-
-
         } else { //caso recepcion
-            console.log("ilse get practicas");
-
-            console.log("else get practicas", this.practicasEjecucion);
             return this.practicasEjecucion;
 
         }
@@ -353,20 +323,22 @@ export class ProtocoloDetalleComponent
 
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
         this.modelo.solicitud.organizacion = this.auth.organizacion;
-        this.modelo.estados = [{ tipo: "pendiente" }];
 
-        if (this.modo.id === 'carga') {
-            this.modelo.solicitud.registros[0].prioridad = this.prioridad;
-            this.modelo.solicitud.registros[0].organizacionDestino = this.auth.organizacion;
-            this.modelo.solicitud.registros[0].servicio = this.servicio;
-            this.modelo.solicitud.registros[0].observaciones = this.observaciones;
+        if (this.modo.id === 'control' || this.modo.id === 'recepcion') {
+            console.log('this.ambitoOrigen', this.ambitoOrigen)
+            this.modelo.solicitud.ambitoOrigen = this.ambitoOrigen.nombre;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad = this.prioridad;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones = this.observaciones;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.laboratorioInterno = this.laboratorioInterno;
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
+            
 
             this.carparPracticasAEjecucion();
         }
 
         if (this.modo.id === 'recepcion') {
-            console.log("iniciar procolot")
-            this.iniciarProtocolo();
+            this.iniciarProtocolo()
         } else {
             this.guardarProtocolo();
         }
@@ -378,6 +350,7 @@ export class ProtocoloDetalleComponent
     }
 
     iniciarProtocolo() {
+        this.modelo.estados = [{ tipo: "ejecucion" }];
         let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
 
