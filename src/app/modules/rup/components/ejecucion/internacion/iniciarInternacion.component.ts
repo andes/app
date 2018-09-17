@@ -17,6 +17,7 @@ import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -35,7 +36,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial = { nombre: '', codigo: '' };
+    public obraSocial: IObraSocial[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -304,8 +305,10 @@ export class IniciarInternacionComponent implements OnInit {
                 let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
                 if (this.obraSocial) {
-                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigo, nombre: this.obraSocial.nombre };
+                    // TODO: Sub-zero wins
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {

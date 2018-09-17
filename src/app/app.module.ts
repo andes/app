@@ -533,6 +533,10 @@ registerLocaleData(localeEs, 'es');
         VistaHudsComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
@@ -541,6 +545,13 @@ registerLocaleData(localeEs, 'es');
         CamaComponent,
         PuntoInicioInternacionComponent,
         LaboratoriosComponent,
+
+        OrganizacionSectoresComponent,
+        PacienteDemoComponent,
+        EgresoInternacionComponent,
+        ResumenInternacionComponent,
+        ListaEsperaInternacionComponent,
+
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
@@ -553,6 +564,8 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+
+        SectoresItemComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
