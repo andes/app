@@ -18,6 +18,9 @@ export class TurnoService {
     getTurnos(params: any): Observable<any[]> {
         return this.server.get(this.turnoUrl + '/turno', { params: params, showError: true });
     }
+    getHistorial(params: any): Observable<any[]> {
+        return this.server.get(this.turnoUrl + '/historial', { params: params, showError: true });
+    }
 
     save(turno: any, options: any = {}): Observable<IAgenda> {
         if (typeof options.showError === 'undefined') {
@@ -25,6 +28,11 @@ export class TurnoService {
         }
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno, options);
+        }
+    }
+    saveDinamica(turno: any): Observable<IAgenda> {
+        if (turno.idAgenda) {
+            return this.server.patch(this.turnoUrl + '/turno/agenda/' + turno.idAgenda, turno);
         }
     }
 
