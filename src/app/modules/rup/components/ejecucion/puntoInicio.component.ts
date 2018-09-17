@@ -358,14 +358,13 @@ export class PuntoInicioComponent implements OnInit {
         this.agendaSeleccionada = agenda ? agenda : 'fueraAgenda';
     }
 
-    routeTo(action, id) { 
+    routeTo(action, id) {
         if (this.agendaSeleccionada && this.agendaSeleccionada !== 'fueraAgenda') {
             let agenda = this.agendaSeleccionada ? this.agendaSeleccionada : null;
             localStorage.setItem('idAgenda', agenda.id);
         }
         this.router.navigate(['rup/' + action + '/', id]);
     }
-
 
     // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
     comprobarPrestacionesPendientes(unaPrestacion) {
