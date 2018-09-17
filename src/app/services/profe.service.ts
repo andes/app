@@ -20,4 +20,8 @@ export class ProfeService {
     get(opciones: any): Observable<IProfe> {
         return this.server.get(this.url + '/profe/', { params: opciones });
     }
+
+    getPadrones(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/profe/padrones', { params: opciones });
+    }
 }
