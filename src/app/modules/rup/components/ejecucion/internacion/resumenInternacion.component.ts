@@ -52,6 +52,11 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         this.btnIniciarEditar = event;
     }
 
+    onEgreso(event) {
+        this.prestacion = event;
+        this.comprobarEgresoParaValidar();
+    }
+
 
     /**
  * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
@@ -104,8 +109,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
-            this.refreshCamas.emit({ cama: this.camaSeleccionada });
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => {
+                this.refreshCamas.emit({ cama: cama });
+            });
+
         }
     }
 
@@ -138,7 +145,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
                 this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                    // this.desocuparCama();
+                    this.desocuparCama();
                     // this.cancelar();
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');

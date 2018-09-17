@@ -5,7 +5,9 @@
                 <div *ngIf="paciente">
                     <fieldset>
                         <!-- <legend class="text-info">Datos de ingreso</legend> -->
-                        <h6><b>Paciente:</b></h6>
+                        <h6>
+                            <b>Paciente:</b>
+                        </h6>
                         <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
                         <hr class="blanco xs separate">
                         <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
@@ -47,33 +49,29 @@
                         </div>
                         <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
-                                <plex-select *ngIf="!soloValores" [required]="true" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
-                                    name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... " idField="nombre"
-                                    labelField="nombre">
+                                <plex-select *ngIf="!soloValores" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral" name="situacionLaboral"
+                                    [data]="situacionesLaborales" placeholder="Seleccione... " idField="nombre" labelField="nombre">
                                 </plex-select>
                             </div>
                             <div class="col-6 ">
-                                <plex-select *ngIf="!soloValores" [required]="true" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual"
-                                    name="ocupacionHabitual" [data]="ocupaciones" placeholder="Seleccione... " idField="nombre"
-                                    labelField="nombre">
+                                <plex-select *ngIf="!soloValores" label="Ocupación habitual " [(ngModel)]="informeIngreso.ocupacionHabitual" name="ocupacionHabitual"
+                                    [data]="ocupaciones" placeholder="Seleccione... " idField="nombre" labelField="nombre">
                                 </plex-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4 ">
-                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
-                                    [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción" idField="nombre"
-                                    labelField="nombre">
+                                <plex-select *ngIf="!soloValores" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
+                                    placeholder="Seleccione..." label="Nivel instrucción" idField="nombre" labelField="nombre">
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-select *ngIf="!soloValores" [required]="true" [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado"
-                                    placeholder="Seleccione... " label="Asociado a" idField="nombre" labelField="nombre">
+                                <plex-select *ngIf="!soloValores" [(ngModel)]="informeIngreso.asociado" name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... "
+                                    label="Asociado a" idField="nombre" labelField="nombre">
                                 </plex-select>
                             </div>
                             <div class="col-4 ">
-                                <plex-text *ngIf="!soloValores" [(ngModel)]="informeIngreso.obraSocial" label="Obra Social" name="obraSocial" [readonly]="true"
-                                    labelfield="nombre"></plex-text>
+                                <plex-text *ngIf="!soloValores && obraSocial" [(ngModel)]="obraSocial.nombre" label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
                             </div>
                         </div>
                         <div class="row">
@@ -94,7 +92,9 @@
         <!-- Datos personales -->
         <fieldset>
             <!-- <legend class="text-info">Datos de ingreso</legend> -->
-            <h6><b>Paciente:</b></h6>
+            <h6>
+                <b>Paciente:</b>
+            </h6>
             <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
             <div class="row" *ngIf="showEditarCarpetaPaciente">
                 <div class="col">
@@ -103,7 +103,7 @@
             </div>
         </fieldset>
         <hr class="blanco xs">
-        
+
         <!-- Datos de internacion -->
         <div class="andes-contenedor-secundario horizontal between">
             <div class="andes-contenedor-secundario vertical">
@@ -143,9 +143,9 @@
                 <b>Asociado a:</b>
                 <p>{{informeIngreso.asociado}}</p>
             </div>
-            <div class="andes-contenedor-secundario vertical">
+            <div *ngIf="informeIngreso.obraSocial && informeIngreso.obraSocial.nombre" class="andes-contenedor-secundario vertical">
                 <b>Obra Social:</b>
-                <p>{{obraSocial.nombre}}</p>
+                <p>{{informeIngreso.obraSocial.nombre}}</p>
             </div>
             <div class="andes-contenedor-secundario vertical">
                 <b>Motivo:</b>

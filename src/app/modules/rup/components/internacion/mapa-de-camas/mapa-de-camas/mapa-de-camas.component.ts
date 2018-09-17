@@ -491,4 +491,8 @@ export class MapaDeCamasComponent implements OnInit {
         this.cambiaTap(1);
     }
 
+
+    actualizarCama($event) {
+    }
+
 }
