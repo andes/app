@@ -53,7 +53,8 @@ export class PucoComponent implements OnInit, OnDestroy {
 
         Observable.forkJoin([
             this.obraSocialService.getPadrones({}),
-            this.profeService.getPadrones({})]).subscribe(padrones => {
+            this.profeService.getPadrones({})]
+        ).subscribe(padrones => {
 
                 let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
 
@@ -121,9 +122,9 @@ export class PucoComponent implements OnInit, OnDestroy {
         let p2 = moment(periodo2).startOf('month').format('YYYY-MM-DD');
 
         if (moment(p1).diff(p2) > 0) {
-            return periodo2;
+            return p2;
         } else {
-            return periodo1;
+            return p1;
         }
     }
 
