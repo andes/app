@@ -361,6 +361,7 @@
                                 </td>
                                 <td>
                                     <span *ngIf="prestacion && prestacion.paciente">{{ prestacion.paciente | paciente }} </span>
+                                    <span *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada">{{prestacion.solicitud.tipoPrestacion.term}}</span>
                                     <small>
                                         <span *ngIf="prestacion && prestacion.paciente">
                                             <br>
@@ -373,7 +374,8 @@
                                         </span>
                                     </small>
                                     <br />
-                                    <small class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                    <small  *ngIf="prestacion && !prestacion.solicitud.tipoPrestacion.noNominalizada" class="text-muted">{{prestacion.solicitud.tipoPrestacion.term}}</small>
+                                    <small  *ngIf="prestacion && prestacion.solicitud.tipoPrestacion.noNominalizada" class="text-muted">No nominalizada</small>
                                     <ng-container *ngIf="prestacion?.solicitud?.profesional">
                                         <br> Prof.: {{prestacion.solicitud.profesional | profesional}}
                                     </ng-container>
@@ -388,7 +390,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <plex-button (click)="routeTo('vista', prestacion.paciente.id)" label="VER HUDS" type="primary btn-sm">
+                                    <plex-button *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada" (click)="routeTo('vista', prestacion.paciente.id)" label="VER HUDS" type="primary btn-sm">
                                     </plex-button>
 
                                     <plex-button *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'ejecucion'" (click)="routeTo('ejecucion', prestacion.id)"
