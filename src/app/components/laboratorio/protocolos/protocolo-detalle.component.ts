@@ -151,12 +151,12 @@ export class ProtocoloDetalleComponent
     }
 
     loadProfesionales(event) {
-
-
         let query = {
             nombreCompleto: event.query
         };
-        this.servicioProfesional.get(query).subscribe(event.callback);
+        this.servicioProfesional.get(query).subscribe((resultado: any) => {
+            event.callback(resultado);
+        });
     }
 
 

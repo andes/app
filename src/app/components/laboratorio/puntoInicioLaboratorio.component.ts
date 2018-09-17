@@ -32,31 +32,7 @@ export class PuntoInicioLaboratorioComponent
     public esPacienteSinTurno = false;
 
     public protocolos: any = [];
-    public protocolo: any = {
-        paciente: {},
-        solicitud: {
-            esSolicitud: true,
-            tipoPrestacion: null,
-            organizacion: {},
-            profesional: {},
-            ambitoOrigen: null,
-            fecha: new Date(),
-            registros: [{
-                nombre: 'Prueba de Laboratorio',
-                concepto: Constantes.conceptoPruebaLaboratorio,
-                valor: {
-                    solicitudPrestacion : {
-                        practicas : [],
-                        fechaTomaMuestra: new Date()
-                    }
-                }
-            }]
-        },
-        ejecucion: {
-            fecha: new Date(),
-            registros: []
-        }
-    };
+    public protocolo: any = {};
 
     public fechaDesde: any = new Date();
     public fechaHasta: any = new Date();
@@ -99,8 +75,7 @@ export class PuntoInicioLaboratorioComponent
         area: null,
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
-        organizacion: this.auth.organizacion._id,
-        profesional: null,
+        organizacion: null,
         estado: ''
     };
 
@@ -116,11 +91,38 @@ export class PuntoInicioLaboratorioComponent
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
-       // this.getlocalStorage();
+        this.resetearProtocolo();
         this.refreshSelection();
 
     }
 
+    resetearProtocolo() {
+        this.protocolo = {
+            paciente: {},
+            solicitud: {
+                esSolicitud: true,
+                tipoPrestacion: null,
+                organizacion: {},
+                profesional: {},
+                ambitoOrigen: null,
+                fecha: new Date(),
+                registros: [{
+                    nombre: 'Prueba de Laboratorio',
+                    concepto: Constantes.conceptoPruebaLaboratorio,
+                    valor: {
+                        solicitudPrestacion : {
+                            practicas : [],
+                            fechaTomaMuestra: new Date()
+                        }
+                    }
+                }]
+            },
+            ejecucion: {
+                fecha: new Date(),
+                registros: []
+            }
+        };
+    }
 
     refreshSelection(value?, tipo?) {
         this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
@@ -321,10 +323,9 @@ export class PuntoInicioLaboratorioComponent
     }
 
     pacienteSinTurno() {
-        // this.seleccionPaciente = true;
+        this.resetearProtocolo();
         this.seleccionPaciente = true;
         this.showProtocoloDetalle = false;
-        // this.showProtocoloDetalle = false;
         this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }

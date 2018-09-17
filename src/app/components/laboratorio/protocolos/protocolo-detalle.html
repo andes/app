@@ -9,14 +9,16 @@
         </header>
 
         <!--SECCION PACIENTE-->
-        <div class="row" *ngIf="seleccionPaciente">
+        <div class="row" *ngIf="seleccionPaciente" style="display: block">
             <div class="col-12">
                 <label>Paciente</label>
                 <pacientesSearch [bloquearCreate]="true" [modoCompleto]="false" [hideFooter]="true" (selected)="seleccionarPaciente($event)">
                 </pacientesSearch>
             </div>
         </div>
-
+        <span *ngIf='modo.id !== "recepcion"' class="badge badge-success" style='float: left; margin-right: 20px;'>
+            <h2>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
+        </span>
         <ng-container *ngIf="!seleccionPaciente">
             <div class="row">
                 <div class="col-12">
@@ -25,7 +27,7 @@
             </div>
             <div class="row">
                 <div class="col-10">
-                    F. Nac.: {{modelo.paciente.fechaNacimiento}}, Sexo: {{modelo.paciente.sexo}}
+                    F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
                 </div>
                 <div class="col-2">
                     <plex-button position="left" type="warning" *ngIf='modo.id !== "recepcion"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
@@ -39,14 +41,8 @@
         <ng-container *ngIf="showProtocoloDetalle">
             <!-- ENCABEZADO DE PROTOCOLO -->
             <section class="labs-listado-item">
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'></plex-button>
+                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'  style='margin-right: 10px;'></plex-button>
                 <div class="listado-contenedor-secundario">
-                    <article class="labs-item-numero" *ngIf='modo.id !== "recepcion"'>
-                        <i class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
-                        <hr>
-                        <h2>{{modelo.solicitud.registros[0]?.valor.numeroProtocolo?.valor}}</h2>
-                        <hr>
-                    </article>
                     <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="contenedor-bloque-texto">
                         <div class="labs-item-texto">
                             <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
@@ -74,12 +70,8 @@
                                 <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
-<<<<<<< HEAD
                                 <plex-datetime type="date" [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
                                     [required]="true"></plex-datetime>
-=======
-                                <plex-datetime type="date" [(ngModel)]="fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra " [required]="true"></plex-datetime>
->>>>>>> 4b60d645c6847ba951fb92b2302e4e7ef08c2804
                             </div>
 
                             <div class="col-3">
@@ -123,7 +115,7 @@
                     <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
                     <plex-badge type="warning" class="ml-2"> estado </plex-badge>
                 </div>
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()'></plex-button>
+                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()'  style='margin-left: 10px;'></plex-button>
 
             </section>
             <!-- FIN ENCABEZADO DE PROTOCOLO -->
