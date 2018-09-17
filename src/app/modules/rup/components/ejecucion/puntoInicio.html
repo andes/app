@@ -228,7 +228,7 @@
                                         </ng-container>
                                         <ng-container *ngIf="agendaSeleccionada.tipoPrestaciones[0].noNominalizada">
                                                 <!--TODO -> revisar cuando se defina el estado final de las agendas no nominalizadas agendaSeleccionada.estado !== 'auditada'-->
-                                                <plex-button *ngIf="agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
+                                                <plex-button *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion && tienePermisos(turno.tipoPrestacion, turno.prestacion)"
                                                     label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacionNoNominalizada(turno.tipoPrestacion, turno.id)"></plex-button>
                 
                                                 <plex-button *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && !turno.prestacion"
