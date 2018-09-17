@@ -33,10 +33,9 @@ export class VistaCDAComponent implements OnInit {
         let data = this.registro;
         this.servicioCDA.getJson(this.registro.data.cda_id).subscribe(
             cda => {
-                this.autorCDA = cda.ClinicalDocument.author.assignedAuthor.assignedPerson ? cda.ClinicalDocument.author.assignedAuthor.assignedPerson : null;
+                this.autorCDA = cda.ClinicalDocument.author.assignedAuthor.assignedPerson ? cda.ClinicalDocument.author.assignedAuthor.assignedPerson.name : null;
                 this.organizacionCDA = cda.ClinicalDocument.author.assignedAuthor.representedOrganization ? cda.ClinicalDocument.author.assignedAuthor.representedOrganization : null;
-                this.codificacionCDA = cda.ClinicalDocument
-                    .component.structuredBody.component.section ? cda.ClinicalDocument.component.structuredBody.component.section : null;
+                this.codificacionCDA = cda.ClinicalDocument.component.structuredBody ? cda.ClinicalDocument.component.structuredBody.component.section : null;
 
             });
     }

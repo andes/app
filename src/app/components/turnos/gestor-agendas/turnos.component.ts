@@ -59,6 +59,7 @@ export class TurnosComponent implements OnInit {
     @Output() recargarBotones = new EventEmitter<boolean>();
 
     // Propiedades públicas
+    showSeleccionarTodos = true;
     showTurnos = true;
     showLiberarTurno = false;
     showSuspenderTurno = false;
@@ -90,6 +91,7 @@ export class TurnosComponent implements OnInit {
         let agendaActualizar = this.agenda;
         // this.agenda = this.actualizarCarpetaPaciente(agendaActualizar);
         this.actualizarBotones();
+        this.showSeleccionarTodos = (this.turnos.length > 0);
     }
 
     seleccionarTurno(turno, multiple = false, sobreturno) {
@@ -295,14 +297,14 @@ export class TurnosComponent implements OnInit {
     }
 
     // Se usa tanto para guardar como cancelar
-    cancelarCarpeta() {
+    afterComponenteCarpeta(carpetas) {
         // Siempre es 1 sólo el seleccionado cuando se edita una carpeta
-        this.serviceAgenda.getById(this.agenda.id).subscribe(ag => {
-            this.agenda = ag;
-            this.showCarpetaPaciente = false;
-            this.showTurnos = true;
-        });
-        // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
+        if (carpetas) {
+            this.turnosSeleccionados[0].paciente.carpetaEfectores = carpetas;
+            // this.seleccionarTurno(this.turnosSeleccionados[0], false, false);
+        }
+        this.showCarpetaPaciente = false;
+        this.showTurnos = true;
     }
 
     eventosTurno(operacion) {

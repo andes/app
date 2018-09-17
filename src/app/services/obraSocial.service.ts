@@ -16,7 +16,7 @@ export class ObraSocialService {
      * @memberof ObraSocialService
      */
 
-    get(opciones: any): Observable<IObraSocial> {
+    get(opciones: any): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/puco/', { params: opciones });
     }
 

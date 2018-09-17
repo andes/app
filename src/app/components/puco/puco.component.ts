@@ -59,9 +59,9 @@ export class PucoComponent implements OnInit, OnDestroy {
 
                 // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
                 for (let i = 0; i < this.cantidadPeriodos; i++) {
-                    let periodoAux = moment(periodoMasActual).subtract(i, 'month').format('YYYY/MM/DD');
+                    let periodoAux = moment(periodoMasActual).subtract(i, 'month');
                     this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
-                    this.periodoSelect = this.periodos[0];
+
                 }
                 this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
                 this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
@@ -117,8 +117,8 @@ export class PucoComponent implements OnInit, OnDestroy {
     verificarPeriodo(periodo1, periodo2) {
         periodo1 = new Date(periodo1);
         periodo2 = new Date(periodo2);
-        let p1 = new Date(periodo1.getFullYear(), periodo1.getMonth(), 1);
-        let p2 = new Date(periodo2.getFullYear(), periodo2.getMonth(), 1);
+        let p1 = moment(periodo1).startOf('month').format('YYYY-MM-DD');
+        let p2 = moment(periodo2).startOf('month').format('YYYY-MM-DD');
 
         if (moment(p1).diff(p2) > 0) {
             return periodo2;
