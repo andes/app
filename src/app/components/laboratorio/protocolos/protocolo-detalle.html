@@ -159,12 +159,12 @@
                                 <td>{{practica.codigo}}</td>
                                 <td>{{practica.nombre}}</td>
                                 <ng-container>
-                                    <input type='checkbox'>
+                                    <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                                 </ng-container>
                                 <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
                                     <td class="text-left align-middle estado">
                                         <p>
-                                            <plex-float [(ngModel)]="practica.resultado.valor"></plex-float>
+                                            <plex-float [(ngModel)]="practica.resultado.valor" [disabled]='practica.resultado.sinMuestra'></plex-float>
 
                                         </p>
                                     </td>
@@ -201,21 +201,13 @@
         </ng-container>
         <!--FIN SECCION PRTOCOLO -->
 
-
-
-
-
-
-
         <!-- Botonera 
         <div class="botonera-container " *ngIf='modo.id !== "recepcion "'>
             <plex-button class="left ml-2 " type="info " icon='chevron-up' label="boton clave 1 "></plex-button>
             <plex-button class="center ml-2 " type="success " icon='chevron-up' label="boton clave 2 "></plex-button>
             <plex-button class="right ml-2 " type="warning " icon='chevron-up' label="boton clave 3 "></plex-button>
         </div>
-        <hr>
-       
-     -->
+        <hr>    -->
 
 
 
@@ -230,7 +222,7 @@
             </div>
             <div class="col-5">
                 <label class="control-label text-info">N° Protocolo</label>
-                <span>{{modelo.solicitud.registros[0].valor.numeroProtoco?.valor}}</span>
+                <span>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</span>
             </div>
             <div class="col-5">
                 <label class="control-label text-info">Fecha</label>

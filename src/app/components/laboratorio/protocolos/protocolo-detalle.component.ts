@@ -309,8 +309,18 @@ export class ProtocoloDetalleComponent
     }
 
     guardarProtocolo() {
+        console.log('guardarProtocolo', this.modelo.id)
         if (this.modelo.id) {
-            this.servicioPrestacion.put(this.modelo).subscribe(respuesta => {
+            let registros = JSON.parse(JSON.stringify(this.modelo.ejecucion.registros));
+            let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
+
+            let params: any = {
+                op: 'registros',
+                registros: registros,
+                solicitud: solicitud
+            };
+    
+            this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
