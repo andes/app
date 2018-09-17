@@ -154,12 +154,12 @@ export class RUPComponent implements OnInit {
 
 
     /**
-     * 
-     * @param fragment 
-     * 
+     *
+     * @param fragment
+     *
      * Simple utilidad para hacer foco automático sobre un registro RUP
      * Por ejemplo: en un Odontograma, al hacer click en un diente que tiene un registro relacionado, se hace scroll automático hacia el registro.
-     * 
+     *
      */
     jumpToId(fragment) {
 
