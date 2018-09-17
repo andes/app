@@ -87,6 +87,7 @@ export class ProtocoloDetalleComponent
     ) { }
 
     ngOnInit() {
+        console.log("this, modelo", this.modelo);
         this.setProtocoloSelected(this.modelo);
         this.loadOrganizacion();
         this.fechaTomaMuestra = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra;
@@ -150,18 +151,14 @@ export class ProtocoloDetalleComponent
     }
 
     loadProfesionales(event) {
-        if (this.modelo.solicitud.profesional) {
-            event.callback(this.modelo.solicitud.profesional);
-        }
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
+
+
+        let query = {
+            nombreCompleto: event.query
+        };
+        this.servicioProfesional.get(query).subscribe(event.callback);
     }
+
 
 
     loadServicios($event) {
@@ -279,12 +276,12 @@ export class ProtocoloDetalleComponent
         console.log('2', this.modelo.solicitud.ambitoOrigen);
         this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
-        this.modelo.solicitud.organizacion = this.auth.organizacion;
+        // this.modelo.solicitud.organizacion = this.auth.organizacion;
 
         if (this.modo.id === 'control' || this.modo.id === 'recepcion') {
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
-            
+
 
             this.carparPracticasAEjecucion();
         }

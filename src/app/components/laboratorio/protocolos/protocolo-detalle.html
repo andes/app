@@ -74,8 +74,12 @@
                                 <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
+<<<<<<< HEAD
                                 <plex-datetime type="date" [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
                                     [required]="true"></plex-datetime>
+=======
+                                <plex-datetime type="date" [(ngModel)]="fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra " [required]="true"></plex-datetime>
+>>>>>>> 4b60d645c6847ba951fb92b2302e4e7ef08c2804
                             </div>
 
                             <div class="col-3">
@@ -105,7 +109,8 @@
 
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"  (getData)="loadServicios($event)" labelField='term' >
+                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"
+                                    (getData)="loadServicios($event)" labelField='term'>
                                 </plex-select>
                             </div>
                             <div class="col-3">

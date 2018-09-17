@@ -38,7 +38,7 @@ export class PuntoInicioLaboratorioComponent
             esSolicitud: true,
             tipoPrestacion: null,
             organizacion: {},
-            profesional: null,
+            profesional: {},
             ambitoOrigen: null,
             fecha: new Date(),
             registros: [{
@@ -100,6 +100,7 @@ export class PuntoInicioLaboratorioComponent
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: this.auth.organizacion._id,
+        profesional: null,
         estado: ''
     };
 
@@ -115,7 +116,7 @@ export class PuntoInicioLaboratorioComponent
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
-        this.getlocalStorage();
+       // this.getlocalStorage();
         this.refreshSelection();
 
     }
@@ -178,7 +179,7 @@ export class PuntoInicioLaboratorioComponent
             this.showCargarSolicitud = true;
         }
     }
-  
+
     volverLista() {
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
@@ -219,7 +220,7 @@ export class PuntoInicioLaboratorioComponent
     searchClear() {
         this.pacientes = null;
         this.pacienteActivo = null;
-      
+
         this.refreshSelection(null, '');
     }
 
@@ -329,35 +330,35 @@ export class PuntoInicioLaboratorioComponent
     }
 
 
-    recordarFiltros() {
-        let filtrosPorDefecto = {
-            busqueda: this.busqueda,
-            profesional: this.auth.profesional._id
-        };
-        localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
-        this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
-    }
+    // recordarFiltros() {
+    //     let filtrosPorDefecto = {
+    //         busqueda: this.busqueda,
+    //         profesional: this.auth.profesional._id
+    //     };
+    //     localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
+    //     this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
+    // }
 
 
-    getlocalStorage() {
-        let ls = JSON.parse(localStorage.getItem('filtros'));
+    // getlocalStorage() {
+    //     let ls = JSON.parse(localStorage.getItem('filtros'));
 
-        console.log('ls profesional', ls.profesional);
+    //     console.log('ls profesional', ls.profesional);
 
-        console.log('ls profesional', this.auth.profesional._id);
-        if (ls.profesional === this.auth.profesional._id) {
-            this.busqueda = ls.busqueda;
-            // this.origen.id = ls.busqueda.origen;
-            // this.area.id = ls.busqueda.area;
-            // this.prioridad.id = ls.busqueda.prioridad;
-            console.log('local storage', this.busqueda);
-            // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
-        }
+    //     console.log('ls profesional', this.auth.profesional._id);
+    //     if (ls.profesional === this.auth.profesional._id) {
+    //         this.busqueda = ls.busqueda;
+    //         // this.origen.id = ls.busqueda.origen;
+    //         // this.area.id = ls.busqueda.area;
+    //         // this.prioridad.id = ls.busqueda.prioridad;
+    //         console.log('local storage', this.busqueda);
+    //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
+    //     }
 
-        if (this.modo.nombre === 'Recepcion') {
-            this.turnosLaboratorio();
-        }
-    }
+    //     if (this.modo.nombre === 'Recepcion') {
+    //         this.turnosLaboratorio();
+    //     }
+    // }
 
 
 
