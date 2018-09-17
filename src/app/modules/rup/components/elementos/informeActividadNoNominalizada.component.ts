@@ -35,6 +35,7 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
     private plex: Plex;
+    private turno;
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -42,9 +43,9 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
                 informe: { pacientes: [] }
             };
         }
-        let turno = this.prestacion.solicitud.turno;
-        if (turno) {
-            this.agendaService.get({ turno: turno }).subscribe(agendas => {
+        this.turno = this.prestacion.solicitud.turno ? this.prestacion.solicitud.turno : null;
+        if (this.turno) {
+            this.agendaService.get({ turno: this.turno }).subscribe(agendas => {
                 this.registro.valor.informe.profesionales = agendas[0].profesionales;
                 this.registro.valor.informe.fecha = agendas[0].horaInicio;
                 this.registro.valor.informe.horaIngreso = agendas[0].horaInicio;

@@ -12,17 +12,17 @@
         <div class="row">
             <div class="col-4 ">
                 <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true" [autoFocus]="autoFocus "
-                    name="fecha" label="Fecha">
+                    name="fecha" label="Fecha" [disabled]="turno">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
                 <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio"
-                    label="Hora inicio ">
+                    label="Hora inicio " [disabled]="turno">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
                 <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin"
-                    label="Hora fin">
+                    label="Hora fin" [disabled]="turno">
                 </plex-datetime>
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="row">
             <div class="col-12">
                 <plex-select [(ngModel)]="registro.valor.informe.profesionales" (getData)="loadProfesionales($event)"
-                    placeholder="Profesionales" labelField="apellido + ' ' + nombre" name="profesionales" [required]="true"
+                    placeholder="Profesionales" labelField="apellido + ' ' + nombre" name="profesionales" [readonly]="turno" [required]="true"
                     [multiple]="true" label="Profesional(es) intervinientes">
                 </plex-select>
             </div>
@@ -127,9 +127,9 @@
     <div class="row" *ngIf="registro.valor.informe?.profesionales">
         <div class="col-12">
             <label>Profesional/es</label>
-            <ng-container *ngIf="registro.valor.informe?.profesionales && registro.valor.informe?.profesionales.length">
+            <ng-container *ngIf="registro.valor.informe?.profesionales && registro.valor.informe.profesionales.length">
                 <ng-container *ngFor="let profesional of registro.valor.informe?.profesionales">
-                    {{ profesional.apellido }}, {{ profesional.nombre }}
+                    {{ profesional.apellido }}, {{ profesional.nombre }} -
                 </ng-container>
             </ng-container>
         </div>
