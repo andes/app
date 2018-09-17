@@ -1,0 +1,37 @@
+<h1 class="text-center"> Agregar Medicamento o Nodo </h1>
+<div class="row">
+    <div class="col-6">
+        <plex-bool type="slide" [(ngModel)]="datosParaAgregar.nodo" [disabled]="true" label="nodo" name="nodo"></plex-bool>
+    </div>
+    <div class="col-6">
+        <plex-bool type="slide" [(ngModel)]="datosParaAgregar.medicamento" label="Medicamento" name="Medicamento"></plex-bool>
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-12">
+        <!-- <plex-text [(ngModel)]="datosParaAgregar.nombre" label="nombre:" placeholder="Ingrese nombre..."></plex-text> -->
+        <plex-select class="col-12" (getData)="loadMedicamentos($event)" [(ngModel)]="datosParaAgregar.concepto" placeholder="Seleccione..."
+            label="Nombre:" labelField='term' idField='conceptId'>
+        </plex-select>
+
+
+    </div>
+    <div class="col-12">
+        <plex-text [(ngModel)]="datosParaAgregar.indicaciones" label="Indicaciones:" placeholder="Ingrese  indicaciones..."></plex-text>
+
+    </div>
+</div>
+<hr>
+<div class="row">
+    <div class="col-12">
+        <plex-bool type="slide" [(ngModel)]="datosParaAgregar.carroEmergencia" label="Carro de emergencia" name="carroDeEmergencia"></plex-bool>
+    </div>
+    <div class="col-12">
+        <plex-int [(ngModel)]="datosParaAgregar.nivelComplejidad" label="complejidad:" placeholder="Ingrese  complejidad..."></plex-int>
+    </div>
+</div>
+
+<hr>
+<button class="btn btn-success" (click)='agregar()'>Agregar</button>

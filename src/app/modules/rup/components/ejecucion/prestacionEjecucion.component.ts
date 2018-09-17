@@ -210,7 +210,6 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @param posicionNueva: posición donde cargar el registro
      */
     moverRegistroEnPosicion(posicionActual: number, posicionNueva: number) {
-
         // // buscamos el registro
         let registro = this.prestacion.ejecucion.registros[posicionActual];
 

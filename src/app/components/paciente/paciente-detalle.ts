@@ -47,8 +47,10 @@ export class PacienteDetalleComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.paciente.fechaNacimiento;
         this.backUpDatos['foto'] = this.paciente.foto;
         this.backUpDatos['cuil'] = this.paciente.cuil;
-        this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
-        this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        if (this.paciente.direccion) {
+            this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
+            this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        }
     }
 
     renaperVerification(patient) {

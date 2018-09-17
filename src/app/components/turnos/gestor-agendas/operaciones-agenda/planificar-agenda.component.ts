@@ -113,6 +113,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadProfesionales(event) {
+        if (this.modelo && this.modelo.profesionales && this.modelo.profesionales.length > 0) {
+            event.callback(this.modelo.profesionales);
+        }
         if (event.query && event.query !== '' && event.query.length > 2) {
             // cancelamos ultimo request
             if (this.lastRequest) {
@@ -132,6 +135,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
             event.callback([]);
         }
+
     }
 
     loadEdificios(event) {
@@ -278,22 +282,26 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     addBloque() {
         const longitud = this.modelo.bloques.length;
-        this.modelo.bloques.push({
-            indice: longitud,
-            'cantidadTurnos': 0,
-            'horaInicio': null,
-            'horaFin': null,
-            'duracionTurno': 0,
-            'cantidadSimultaneos': null,
-            'cantidadBloque': null,
-            'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
-            'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
-            'reservadoGestion': 0, 'reservadoGestionPorc': 0,
-            'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-            'tipoPrestaciones': []
-        });
-        this.activarBloque(longitud);
-        this.inicializarPrestacionesBloques(this.elementoActivo);
+
+        if (longitud === 0 || (this.modelo.bloques[longitud - 1].horaInicio && this.modelo.bloques[longitud - 1].horaFin)) {
+            this.modelo.bloques.push({
+                indice: longitud,
+                // 'descripcion': `Bloque {longitud + 1}°`,
+                'cantidadTurnos': 0,
+                'horaInicio': null,
+                'horaFin': null,
+                'duracionTurno': 0,
+                'cantidadSimultaneos': null,
+                'cantidadBloque': null,
+                'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
+                'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
+                'reservadoGestion': 0, 'reservadoGestionPorc': 0,
+                'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
+                'tipoPrestaciones': []
+            });
+            this.activarBloque(longitud);
+            this.inicializarPrestacionesBloques(this.elementoActivo);
+        }
     }
 
     deleteBloque(indice: number) {
@@ -302,6 +310,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques.splice(indice, 1);
                 this.bloqueActivo = -1;
                 this.validarTodo();
+
+                for (let i = 0; i < this.modelo.bloques.length; i++) {
+                    this.modelo.bloques[i].indice = i;
+                }
             }
         }
         ).catch(() => {
@@ -616,9 +628,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.alertas.push('La hora de inicio no puede igual a la de fin');
             }
         }
+
         // Verificaciones en cada bloque
         if (bloques) {
             bloques.forEach((bloque, index) => {
+
                 let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 

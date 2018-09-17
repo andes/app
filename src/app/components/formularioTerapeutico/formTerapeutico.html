@@ -1,0 +1,39 @@
+<section>
+
+
+    <div class="row">
+        <div class="col">
+            <plex-box>
+                <header>
+                    <!--Busqueda de Pacientes-->
+                    <div class="row">
+                        <div class="clearfix col-10">
+                            <div class="page-title">ARBOL | FORMULARIO TERAPEUTICO</div>
+                        </div>
+                        <div class="col-2">
+                            <button (click)='plegar()' class="btn btn-info">Plegar arbol</button>
+                        </div>
+                    </div>
+                </header>
+                <div *ngFor="let indice of indices">
+                    <arbolItem [indice]="indice" #arbol [newMedicamento]='newMedicamento' (hijosOutPut)='recibeHijos($event)' (borradoOutPut)='borrar($event)' (enviarDetalle)="detallesMedicamento($event)"
+                        (enviarDatosMedicamento)='recibeMedicamenteAgregar($event)'
+                        [deep]="0"></arbolItem>
+                </div>
+            </plex-box>
+        </div>
+        <div class="col-4" *ngIf='detalleMedicamento'>
+            <plex-box>
+                <form-terapeutico-detalle [medicamento]='detalleMedicamento'></form-terapeutico-detalle>
+            </plex-box>
+        </div>
+        <div class="col-4" *ngIf='datosArbol'>
+            <plex-box>
+                <app-addFormTerapeutico (objNuevoMedicamento)="agregar($event)"></app-addFormTerapeutico>
+            </plex-box>
+        </div>
+    </div>
+
+
+
+</section>

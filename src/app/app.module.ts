@@ -83,6 +83,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
@@ -447,6 +448,12 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
+import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
+import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
+import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+
 registerLocaleData(localeEs, 'es');
 
 // Main module
@@ -535,6 +542,12 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+
+        // form Terapeutico
+        FormTerapeuticoComponent,
+        ArbolItemComponent,
+        FormTerapeuticoDetallePageComponent,
+        AddformTerapeuticoComponent,
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
@@ -606,11 +619,12 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
+        FormTerapeuticoService,
         CDAService,
+        FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService
-
     ]
 })
 
