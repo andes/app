@@ -18,6 +18,7 @@ export class PracticaListadoComponent {
     get practicas(): IPracticaMatch[] | IPractica[] {
         return this._practicas;
     }
+    
     set practicas(value: IPracticaMatch[] | IPractica[]) {
 
         this._practicas = value;

@@ -8,6 +8,9 @@ import * as enumerados from './../../utils/enumerados';
 import { OrganizacionService } from '../../services/organizacion.service';
 import { AgendaService } from '../../services/turnos/agenda.service';
 import { TurnoService } from '../../services/turnos/turno.service';
+import { Constantes } from './consts';
+import { ObjectID } from 'bson';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'gestor-protocolos',
@@ -30,14 +33,7 @@ export class PuntoInicioLaboratorioComponent
 
     public protocolos: any = [];
     public protocolo: any = {
-        paciente: {
-            id: '',
-            nombre: '',
-            apellido: '',
-            documento: '',
-            sexo: '',
-            fechaNacimiento: new Date()
-        },
+        paciente: {},
         solicitud: {
             esSolicitud: true,
             tipoPrestacion: null,
@@ -45,7 +41,15 @@ export class PuntoInicioLaboratorioComponent
             profesional: null,
             ambitoOrigen: null,
             fecha: new Date(),
-            registros: []
+            registros: [{
+                nombre: 'Prueba de Laboratorio',
+                concepto: Constantes.conceptoPruebaLaboratorio,
+                valor: {
+                    solicitudPrestacion : {
+                        practicas : []
+                    }
+                }
+            }]
         },
         ejecucion: {
             fecha: new Date(),
@@ -166,17 +170,15 @@ export class PuntoInicioLaboratorioComponent
     verProtocolo(protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (protocolo) {
-            // this.serviceAgenda.getById(agenda.id).subscribe(ag => {
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = index;
-
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
-            // }
         }
     }
+  
     volverLista() {
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
@@ -318,8 +320,10 @@ export class PuntoInicioLaboratorioComponent
     }
 
     pacienteSinTurno() {
+        // this.seleccionPaciente = true;
         this.seleccionPaciente = true;
         this.showProtocoloDetalle = false;
+        // this.showProtocoloDetalle = false;
         this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }

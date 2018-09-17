@@ -41,10 +41,10 @@
             <section class="labs-listado-item">
                 <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'></plex-button>
                 <div class="listado-contenedor-secundario">
-                    <article class="labs-item-numero" *ngIf='getNumeroProtocolo(modelo.solicitud.registros) !== null'>
+                    <article class="labs-item-numero">
                         <i class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
                         <hr>
-                        <h2>{{getNumeroProtocolo(modelo.solicitud.registros)}}</h2>
+                        <h2>{{modelo.solicitud.registros[0]?.valor.numeroProtoco?.valor}}</h2>
                         <hr>
                     </article>
                     <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="contenedor-bloque-texto">
@@ -140,7 +140,7 @@
 
             <!-- TABLA VISUALIZACION DE PRACTICAS -->
             <hr>
-            <div class="row">
+            <div class="row" *ngIf="modo.id !== 'recepcion'">
                 <div class="col">
                     <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
                         <thead>
@@ -161,17 +161,22 @@
                         <tbody>
                             <tr class="hover" *ngFor="let practica of getPracticas()">
                                 <td>{{practica.codigo}}</td>
-                                <td>{{practica.descripcion}}</td>
+                                <td>{{practica.nombre}}</td>
                                 <ng-container>
                                     <input type='checkbox'>
                                 </ng-container>
                                 <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
-                                    <td>{{practica.valor}}</td>
-                                    <td>
-                                        {{getUnidad(practica.registros)}}
+                                    <td class="text-left align-middle estado">
+                                        <p>
+                                            <plex-float [(ngModel)]="practica.resultado.valor"></plex-float>
+
+                                        </p>
                                     </td>
                                     <td>
-                                        10000 - 15000
+                                        {{practica.unidadMedida.term}}
+                                    </td>
+                                    <td>
+                                        {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
                                     </td>
                                 </ng-container>
                                 <ng-container *ngIf='modo.id === "validacion"'>
@@ -229,11 +234,11 @@
             </div>
             <div class="col-5">
                 <label class="control-label text-info">N° Protocolo</label>
-                <span *ngIf='getNumeroProtocolo(protocolo.solicitud.registros) !== null'>{{getNumeroProtocolo(protocolo.solicitud.registros)}}</span>
+                <span>{{modelo.solicitud.registros[0].valor.numeroProtoco?.valor}}</span>
             </div>
             <div class="col-5">
                 <label class="control-label text-info">Fecha</label>
-                <span>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</span>
+                <span>{{modelo.solicitud.fecha | date: 'dd/MM/yyyy'}}</span>
             </div>
             <hr>
         </div>

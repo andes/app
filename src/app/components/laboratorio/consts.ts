@@ -9,16 +9,10 @@ export const Constantes = {
         semanticTag: "procedimiento",
         id: "5b76c3cabd7c1f8e598d7392"
     },
-    conceptIds: {
-        fechaTomaMuestra: '399445004',
-        unidadMedida: '282372007',
-        codigo: '260299005',
-        practica: '122869004',
-        servicioOrigen: '224891009',
-        prioridad: '260870009'
+    conceptopracticaLaboratorio: {
+        fsn:"procedimiento de medición (procedimiento)",
+        term:"procedimiento de medición",
+        conceptId:"122869004",
+        semanticTag:"procedimiento"
     }
-
-
-    
-
 }

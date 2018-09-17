@@ -132,9 +132,9 @@
                 <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i = index">
                     <td *ngIf='modo && modo.id !== "recepcion"' class="labs-item-numero">
 
-                        <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-26px mdi-rotate-45 rosa"></i>
-                        <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-26px  azul"></i>
-                        <strong *ngIf='getNumeroProtocolo(protocolo.ejecucion.registros) !== null'>{{getNumeroProtocolo(protocolo.ejecucion.registros)}}</strong>
+                        <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
+                        <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
+                        <h2>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
 
                         <br>
                     </td>

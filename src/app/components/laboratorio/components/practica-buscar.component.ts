@@ -19,7 +19,7 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
     @Output() busquedaInicial: EventEmitter<any> = new EventEmitter<any>();
     @Output() busquedaFInal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
     @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
-    //@Output() selected: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(
         private plex: Plex,
@@ -65,12 +65,12 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
             this.searchClear.emit();
         }
     }
-    // public seleccionarPractica(practica: any) {
-    //     if (practica) {
-    //         this.seleccion = practica;
-    //         this.selected.emit({});
-    //     }
-
-    // }
+ 
+    public seleccionarPractica(practica: any) {
+        if (practica) {
+            this.seleccion = practica;
+            this.selected.emit({});
+        }
+    }
 
 }
