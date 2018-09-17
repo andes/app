@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IPaciente } from './../../interfaces/IPaciente';
-import {
-    PacienteService
-} from './../../services/paciente.service';
-import {
-    RenaperService
-} from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { PacienteService } from './../../services/paciente.service';
+import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 import { Plex } from '@andes/plex';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -42,6 +39,7 @@ export class PacienteDetalleComponent implements OnInit {
     nombrePattern;
 
     constructor(private renaperService: RenaperService,
+        private sisaService: SisaService,
         private pacienteService: PacienteService,
         private plex: Plex) {
         this.nombrePattern = new RegExp(pacienteService.nombreRegEx.source);
@@ -70,10 +68,14 @@ export class PacienteDetalleComponent implements OnInit {
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
-
+        debugger;
         patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
         sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
         documentoRena = patient.documento;
+
+        this.sisaService.get({ documento: documentoRena, sexo: patient.sexo }).subscribe(res => {
+            console.log(res);
+        });
 
         this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
             // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
