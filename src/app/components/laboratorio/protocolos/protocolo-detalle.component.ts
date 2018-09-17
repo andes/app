@@ -30,13 +30,7 @@ export class ProtocoloDetalleComponent
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     //estado: any;
-    ambitoOrigen: any;
-    observaciones: '';
-    prioridad: any;
-    servicio: any;
-
-    laboratorioInterno: any;
-
+    
     fecha: any;
     fechaTomaMuestra = new Date();
     prestacionOrigen: any;
@@ -64,6 +58,10 @@ export class ProtocoloDetalleComponent
     set cargarProtocolo(value: any) {
         if (value) {
             this.modelo = value;
+            this.modelo.solicitud.ambitoOrigen = {
+                nombre: this.modelo.solicitud.ambitoOrigen,
+                id: this.modelo.solicitud.ambitoOrigen,
+            };
             if (this.modo.id === 'recepcion') {
                 this.carparPracticasAEjecucion();
             }
@@ -172,58 +170,16 @@ export class ProtocoloDetalleComponent
         });
     }
 
-    loadPrioridad(event) {
-        
-        if (this.modelo.solicitud.registros.length > 0) {
-            if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.prioridad) {
-                this.prioridad = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.prioridad;
-                event.callback(this.prioridad);
-                return this.prioridad;
-            }
-        }
-        
-        if (event.query) {
-            event.callback(enumerados.getPrioridadesLab());
-            return enumerados.getPrioridadesLab();
-        } else {
-            event.callback([]);
-        }
-
+    loadPrioridad($event) {
+        $event.callback(enumerados.getPrioridadesLab());
     }
 
-    loadOrigen(event) {
-        if (this.modelo.solicitud.ambitoOrigen) {
-            this.ambitoOrigen = this.modelo.solicitud.ambitoOrigen;
-            event.callback(this.ambitoOrigen);
-            return this.ambitoOrigen;
-        }
-
-        if (event.query) {
-            event.callback(enumerados.getOrigenFiltroLab());
-            return enumerados.getOrigenFiltroLab();
-        } else {
-            return event.callback([]);
-        }
+    loadOrigen($event) {
+        $event.callback(enumerados.getOrigenFiltroLab());
     }
-
 
     loadArea(event) {
-        if (this.modelo.solicitud.registros.length > 0) {
-
-            if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.laboratorioInterno) {
-                this.laboratorioInterno = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.laboratorioInterno;
-                event.callback(this.laboratorioInterno);
-                return this.laboratorioInterno;
-            }
-        }
-        if (event.query) {
-            event.callback(enumerados.getLaboratorioInterno());
-            return enumerados.getLaboratorioInterno();
-        }
-        else {
-            event.callback([]);
-        }
-
+        event.callback(enumerados.getLaboratorioInterno());
     }
 
 
@@ -320,17 +276,13 @@ export class ProtocoloDetalleComponent
 
     async guardarSolicitud($event) {
 
-
+        console.log('2', this.modelo.solicitud.ambitoOrigen);
+        this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
         this.modelo.solicitud.organizacion = this.auth.organizacion;
 
         if (this.modo.id === 'control' || this.modo.id === 'recepcion') {
-            console.log('this.ambitoOrigen', this.ambitoOrigen)
-            this.modelo.solicitud.ambitoOrigen = this.ambitoOrigen.nombre;
-            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad = this.prioridad;
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
-            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones = this.observaciones;
-            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.laboratorioInterno = this.laboratorioInterno;
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
             
 

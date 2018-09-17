@@ -46,7 +46,8 @@ export class PuntoInicioLaboratorioComponent
                 concepto: Constantes.conceptoPruebaLaboratorio,
                 valor: {
                     solicitudPrestacion : {
-                        practicas : []
+                        practicas : [],
+                        fechaTomaMuestra: new Date()
                     }
                 }
             }]
