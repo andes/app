@@ -82,13 +82,16 @@ export class CarpetaPacienteComponent implements OnInit {
             this.servicioPaciente.getNroCarpeta({ documento: paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
                 if (carpeta.nroCarpeta) {
                     this.carpetaPaciente = carpeta;
+                    this.nroCarpetaOriginal = this.carpetaPaciente.nroCarpeta;
+                    this.carpetaEfectores.push(this.carpetaPaciente);
+                    this.indiceCarpeta = this.carpetaEfectores.length - 1;
                 }
-            });
-        }
-        if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
-            this.showNuevaCarpeta = true;
-            this.servicioPaciente.getSiguienteCarpeta().subscribe((sugerenciaCarpeta: string) => {
-                this.nroCarpetaSugerido = '' + sugerenciaCarpeta;
+                if (!this.carpetaPaciente || this.carpetaPaciente.nroCarpeta === '') {
+                    this.showNuevaCarpeta = true;
+                    this.servicioPaciente.getSiguienteCarpeta().subscribe((sugerenciaCarpeta: string) => {
+                        this.nroCarpetaSugerido = '' + sugerenciaCarpeta;
+                    });
+                }
             });
         }
     }
@@ -101,6 +104,7 @@ export class CarpetaPacienteComponent implements OnInit {
                 this.carpetaEfectores[this.indiceCarpeta] = this.carpetaPaciente;
             } else {
                 this.carpetaEfectores.push(this.carpetaPaciente);
+                this.indiceCarpeta = this.carpetaEfectores.length - 1;
             }
 
             this.servicioPaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: this.carpetaEfectores }).subscribe(

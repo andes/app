@@ -1,5 +1,9 @@
 export interface IObraSocial {
-  id: string;
-  codigoPuco: number;
-  nombre: string;
+  tipoDocumento: String;
+  dni: Number;
+  transmite: String;
+  nombre: String;
+  codigoFinanciador: Number;
+  financiador: String;
+  version: Date;
 }

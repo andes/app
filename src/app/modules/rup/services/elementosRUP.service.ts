@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -163,15 +164,11 @@ export class ElementosRUPService {
         }
     }
 
-    selectPorRefsetId(concepto) {
-        // console.log(this.coleccionRetsetId[concepto.conceptId]);
-        if (this.coleccionRetsetId[concepto.conceptId]) {
-            return this.coleccionRetsetId[concepto.conceptId];
+    selectPorRefsetId(concepto, esSolicitud) {
+        let elementoRup = this.buscarElemento(concepto, esSolicitud);
+        if (elementoRup) {
+            return elementoRup.params;
         }
         return null;
     }
-
-
-
-
 }

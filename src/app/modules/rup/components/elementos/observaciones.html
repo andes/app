@@ -1,28 +1,16 @@
 <ng-container *ngIf="!soloValores">
-    <label for="observaciones" *ngIf="!params">
-        Observación
-    </label>
-    <label *ngIf="params && params.titulo">
-        {{params.titulo}}
-    </label>
-    <hr *ngIf="params && params.titulo">
-    <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="observaciones" name="observaciones" placeholder="Ingrese una evolución"
-        (change)="emitChange()"></textarea>
+    <plex-text label="Observaciones" [(ngModel)]="registro.valor" id="observaciones" name="observaciones" [height]="100"
+        [html]="true" [readonly]="false" placeholder="Ingrese una evolución">
+    </plex-text>
 </ng-container>
 
-<p *ngIf="!(soloValores && params && params.hr)" class="readonly">
+<p *ngIf="soloValores && !registro.valor" class="readonly">
+    <span>Observaciones</span>
+    sin valor
+</p>
+<p *ngIf="soloValores && registro.valor" class="readonly">
     <span>Observaciones</span>
     <ng-container>
         <span [innerHTML]="registro.valor"></span>
     </ng-container>
 </p>
-
-<ng-container *ngIf="soloValores && params && params.hr" class="readonly">
-    <label class="title-element">
-        Observaciones:
-    </label>
-    <hr>
-    <p>
-        {{registro.valor}}
-    </p>
-</ng-container>

@@ -18,6 +18,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
+
 // ... Tablas Maestras
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
@@ -68,6 +69,8 @@ import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiag
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 
+// CONFIGURACION PRESTACION
+import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -85,6 +88,9 @@ import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecuc
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
 // Home de Estadisticas
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
@@ -116,7 +122,7 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'citas/puntoInicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
@@ -135,6 +141,9 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
 
+  // configuracion prestacion
+  { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingGuard] },
+
   // Mapa de camas
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
   // internacion Punto inicio
@@ -144,6 +153,9 @@ const appRoutes: Routes = [
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
+
+  // formulario terapeutico
+  { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingGuard] },
 
   // Reportes
   { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },

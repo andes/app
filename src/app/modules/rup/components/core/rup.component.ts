@@ -2,7 +2,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
@@ -18,7 +18,7 @@ import { FinanciadorService } from '../../../../services/financiador.service';
 import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
 import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
-import { Plex } from '@andes/plex';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'rup',
@@ -31,6 +31,10 @@ import { Plex } from '@andes/plex';
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
 export class RUPComponent implements OnInit {
+    @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
+    @ViewChild('form') formulario: any;
+    public rupInstance: any;
+
     // Propiedades
     @Input() elementoRUP: IElementoRUP;
     @Input() prestacion: IPrestacion;
@@ -71,6 +75,8 @@ export class RUPComponent implements OnInit {
 
         // Inicia el detector de cambios
         componentReference.changeDetectorRef.detectChanges();
+
+        this.rupInstance = componentReference.instance;
     }
 
     // Constructor
@@ -90,7 +96,7 @@ export class RUPComponent implements OnInit {
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         public Cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
-        public plex: Plex
+        public route: ActivatedRoute
     ) { }
 
     ngOnInit() {
@@ -124,4 +130,46 @@ export class RUPComponent implements OnInit {
     * @memberof RUPComponent
     */
     public getMensajes() { }
+    /**
+* valida los atomos, moleculas, formulas, etc.
+* Si existe un formulario en el elementoRIP, lo valida automaticamente, y si la misma tiene más elementosRUP
+* adentro ejecuta el validate en cada uno de sus hijos.
+*
+* Cada elementoRUP puede sobreescribir esta funcionalidad, implementando el metodo 'validate'.
+*
+* @protected
+* @memberof RUPComponent
+*/
+    public validate() {
+        return this.validateChild() && this.validateForm();
+    }
+
+    /**
+     * Busca una referencia al formulario, y lo valida.
+    */
+    public validateForm() {
+        if (this.formulario) {
+            for (let key in this.formulario.controls) {
+                let frm = this.formulario.controls[key];
+                frm.markAsTouched();
+                if (frm.validator) {
+                    frm.validator({ value: frm.value });
+                }
+            }
+        }
+        return !this.formulario || !this.formulario.invalid;
+    }
+
+    /**
+     * Busca todos los elementosRUP hijos y los valida.
+    */
+    public validateChild() {
+        let flag = true;
+        this.rupElements.forEach((item) => {
+            let instance = item.rupInstance;
+            flag = flag && (instance.soloValores || instance.validate());
+        });
+        return flag;
+
+    }
 }

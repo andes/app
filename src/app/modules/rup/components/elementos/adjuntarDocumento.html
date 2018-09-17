@@ -19,7 +19,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="image-container hr-inline-group" *ngIf="fotos">
+            <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
                 <ng-container *ngFor="let doc of fotos; let i = index">
                     <a (click)="activaLightbox(i)">
                         <div class="image hover">
