@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-InformeEpicrisisComponent',
-    templateUrl: 'informeEpicrisis.html'
+    templateUrl: 'informeEpicrisis.html',
+    styleUrls: ['informeEpicrisis.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+
 })
 
 export class InformeEpicrisisComponent extends RUPComponent implements OnInit {

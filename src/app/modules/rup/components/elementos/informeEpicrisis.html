@@ -1,4 +1,4 @@
-<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+<ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
         <div class="col-6">
             <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
@@ -10,17 +10,52 @@
         </div>
         <div class="col-3 mt-4">
             Arbol de relaciones
-            <plex-button icon="mdi mdi-source-fork" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button>
+            <plex-button icon="icon icon-andes-arbol" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button>
         </div>
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <plex-panel icon="arrow-down-drop-circle-outline" (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo"
-                tituloPrincipal="{{ item.params.titulo }}">
+            <plex-panel [ngClass]="{'alerta-campo' : prestacion.ejecucion.registros[0].registros[i].valido === false}"
+                icon="arrow-down-drop-circle-outline" (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo">
+
+                <div plex-accordion-title>
+                    <span class="contenedor-icono">
+                        <i class="icon {{ item.params.icon }}"></i>
+                    </span>
+
+                    <span class="titulo">
+                        {{ item.params.titulo }}
+                    </span>
+
+                    <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
+
+                    <span *ngIf="!registro.registros[i].registros.length && i > 0" class="badge badge-warning float-right mr-4">
+                        No hay conceptos registrados
+                    </span>
+                    <span *ngIf="registro.registros[i].registros.length" class="badge badge-info float-right mr-4">
+                        {{registro.registros[i].registros.length}} Conceptos registrados
+                    </span>
+                </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
                     [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
                 </rup>
             </plex-panel>
         </ng-container>
     </plex-accordion>
+</ng-container>
+
+<ng-container *ngIf="soloValores">
+    <strong> Unidad Organizativa de la epicrisis: </strong> <br> {{ registro.valor.unidadOrganizativa.term }}
+    <br>
+    <hr>
+    <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+        <span class="titulo">
+            <strong> {{ item.params.titulo }}</strong>
+        </span>
+        <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
+        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+        </rup>
+        <hr>
+    </ng-container>
 </ng-container>
