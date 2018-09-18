@@ -1,0 +1,42 @@
+.card {
+    background-color: transparent;
+    border: 1px solid #111;
+}
+
+.card-header {
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 0;
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.contenedor-icono{
+    background-color: #00A8E0;
+    color: #ffffff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    padding: 0.46rem;
+    font-size: 1.5rem;
+}
+
+.titulo{
+    margin-left: 26px;
+}
+
+.alerta-campo{
+    .card {
+        background-color: transparent;
+        border: 1px solid red
+    }
+    .contenedor-icono{
+        background-color: red;
+        color: #ffffff;
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        padding: 0.46rem;
+        font-size: 1.5rem;
+    }
+    
+}
