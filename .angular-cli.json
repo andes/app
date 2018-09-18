@@ -3,43 +3,41 @@
         "version": "3.0.0",
         "name": "andes_app"
     },
-    "apps": [
-        {
-            "root": "src",
-            "outDir": "dist",
-            "assets": [
-                {
-                    "glob": "**/*",
-                    "input": "./assets/",
-                    "output": "./assets/"
-                },
-                {
-                    "glob": "favicon.ico",
-                    "input": "./",
-                    "output": "./"
-                }
-            ],
-            "index": "index.html",
-            "main": "main.ts",
-            "test": "test.ts",
-            "tsconfig": "tsconfig.json",
-            "prefix": "app",
-            "mobile": false,
-            "scripts": [
-                "../node_modules/intro.js/intro.js"
-            ],
-            "styles": [
-                "styles.scss"
-            ],
-            "environmentSource": "environments/environment.ts",
-            "environments": {
-                "dev": "environments/environment.ts",
-                "test": "environments/environment.test.ts",
-                "demo": "environments/environment.demo.ts",
-                "prod": "environments/environment.prod.ts"
+    "apps": [{
+        "root": "src",
+        "outDir": "dist",
+        "assets": [{
+                "glob": "**/*",
+                "input": "./assets/",
+                "output": "./assets/"
+            },
+            {
+                "glob": "favicon.ico",
+                "input": "./",
+                "output": "./"
             }
+        ],
+        "index": "index.html",
+        "main": "main.ts",
+        "test": "test.ts",
+        "tsconfig": "tsconfig.json",
+        "prefix": "app",
+        "mobile": false,
+        "styles": [
+            "styles.scss",
+            "app/shared/assets/wizard/styles.scss"
+        ],
+        "scripts": [
+            "../node_modules/intro.js/intro.js"
+        ],
+        "environmentSource": "environments/environment.ts",
+        "environments": {
+            "dev": "environments/environment.ts",
+            "test": "environments/environment.test.ts",
+            "demo": "environments/environment.demo.ts",
+            "prod": "environments/environment.prod.ts"
         }
-    ],
+    }],
     "addons": [],
     "packages": [],
     "e2e": {
@@ -59,10 +57,8 @@
             "showCircularDependencies": false
         }
     },
-    "lint": [
-        {
-            "files": "src/**/*.ts",
-            "project": "src/tsconfig.json"
-        }
-    ]
+    "lint": [{
+        "files": "src/**/*.ts",
+        "project": "src/tsconfig.json"
+    }]
 }

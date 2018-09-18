@@ -1,8 +1,8 @@
 <ng-container *ngIf="!soloValores && registro.valor">
     <div class="row">
         <div class="col-6" *ngIf="situacionesLaborales">
-            <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="registro.valor.informeIngreso.situacionLaboral" name="situacionLaboral"
-                [data]="situacionesLaborales" placeholder="Seleccione... ">
+            <plex-select [required]="true" label=" Situación laboral " [(ngModel)]="registro.valor.informeIngreso.situacionLaboral"
+                name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... ">
             </plex-select>
         </div>
         <div class="col-6 ">
@@ -13,26 +13,26 @@
     </div>
     <div class="row ">
         <div class="col-4 ">
-            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion" [data]="nivelesInstruccion"
-                placeholder="Seleccione..." label="Nivel instrucción">
+            <plex-select [required]="true" [(ngModel)]="registro.valor.informeIngreso.nivelInstruccion" name="nivelInstruccion"
+                [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción">
             </plex-select>
         </div>
         <div class="col-4 ">
-            <plex-select [required]="true " [(ngModel)]="registro.valor.informeIngreso.asociado " name="obraSocial" [data]="pacienteAsociado "
-                placeholder="Seleccione... " label="Asociado a ">
+            <plex-select [required]="true " [(ngModel)]="registro.valor.informeIngreso.asociado " name="obraSocial"
+                [data]="pacienteAsociado " placeholder="Seleccione... " label="Asociado a ">
             </plex-select>
         </div>
         <div class="col-4 ">
-            <plex-select [(ngModel)]="registro.valor.informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales" placeholder="Seleccione... "
-                label="Obra Social ">
+            <plex-select [(ngModel)]="registro.valor.informeIngreso.obraSocial " name="obraSocial " [data]="obrasSociales"
+                placeholder="Seleccione... " label="Obra Social">
             </plex-select>
         </div>
     </div>
 
     <div class="row ">
         <div class="col-4 ">
-            <plex-datetime type="date" [(ngModel)]="registro.valor.informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
-                name="fechaIngreso " label="Fecha Ingreso">
+            <plex-datetime type="date" [(ngModel)]="registro.valor.informeIngreso.fechaIngreso" [required]="true"
+                [autoFocus]="autoFocus " name="fechaIngreso " label="Fecha Ingreso">
             </plex-datetime>
         </div>
         <div class="col-4 ">
@@ -42,7 +42,8 @@
         </div>
         <div class="col-4 ">
             <plex-select [required]="true " [(ngModel)]="registro.valor.informeIngreso.origen " name="origen
-                    " [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
+                    "
+                [data]="origenHospitalizacion " placeholder="Seleccione... " label="Origen hospitalización ">
             </plex-select>
         </div>
     </div>
@@ -75,7 +76,7 @@
         </div>
         <div class="col-4">
             <label class="block">Obra social</label>
-            <span *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial}}</span>
+            <span *ngIf="registro.valor.informeIngreso.obraSocial">{{registro.valor.informeIngreso.obraSocial.financiador}}</span>
         </div>
     </div>
     <div class="row">

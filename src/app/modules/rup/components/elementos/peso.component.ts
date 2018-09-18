@@ -1,15 +1,17 @@
-import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
-import * as moment from 'moment';
 @Component({
     selector: 'rup-peso',
     templateUrl: 'peso.html'
 })
 export class PesoComponent extends RUPComponent implements OnInit {
+    public esRequerido: boolean;
+
     ngOnInit() {
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
+
                 if (this.registro.valor !== data.valor) {
                     this.registro.valor = data.valor;
                     this.emitChange(false);
@@ -18,6 +20,12 @@ export class PesoComponent extends RUPComponent implements OnInit {
         }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
+        }
+
+        if (this.params) {
+            this.esRequerido = this.params.required;
+        } else {
+            this.esRequerido = false;
         }
     }
 

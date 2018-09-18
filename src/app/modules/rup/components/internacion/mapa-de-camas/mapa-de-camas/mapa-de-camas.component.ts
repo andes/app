@@ -320,7 +320,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     countFiltros() {
-        if (this.camas) {
+        if ((this.camas && this.camas.length > 0)) {
             this.cantidadXEstado = {
                 ocupada: this.camas.filter(c => c.ultimoEstado.estado === 'ocupada'),
                 desocupada: this.camas.filter(c => c.ultimoEstado.estado === 'desocupada'),
@@ -329,8 +329,20 @@ export class MapaDeCamasComponent implements OnInit {
                 oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
                 disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
             };
-            this.loadCountFiltros = true;
+        } else {
+            this.cantidadXEstado = {
+                ocupada: 0,
+                desocupada: 0,
+                reparacion: 0,
+                bloqueada: 0,
+                oxigeno: 0,
+                disponible: 0
+            };
         }
+        this.loadCountFiltros = true;
+
+
+
     }
 
     // selecionarCama(cama) {
@@ -475,6 +487,10 @@ export class MapaDeCamasComponent implements OnInit {
     verInternacion(event) {
         this.onCamaSelected(event);
         this.cambiaTap(1);
+    }
+
+
+    actualizarCama($event) {
     }
 
 }

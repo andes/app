@@ -30,12 +30,14 @@ table {
 }
 
 .info-sidebar {
-    color:rgb(204, 204, 204);
+    color: rgb(204, 204, 204);
+
     h2 {
         font-size: 5vw;
         font-weight: bold;
     }
-    span{
+
+    span {
         font-size: 1vw;
         padding: 10px;
         margin: 10px;
@@ -49,20 +51,27 @@ h3 {
 }
 
 .strong {
-        font-weight: 700;
-    }
+    font-weight: 700;
+}
 
 
-    plex-layout-sidebar plex-box > DIV {
+plex-layout-sidebar plex-box>DIV {
 
-        
-    h3,h4,h5,h5,h6,p,strong {
+
+    h3,
+    h4,
+    h5,
+    h5,
+    h6,
+    p,
+    strong {
         color: white;
         margin-bottom: 0.25rem;
     }
 
-    b,label {
-        color: $andes-cyan!important;
+    b,
+    label {
+        color: $andes-cyan !important;
     }
 
     .text-info {
@@ -70,16 +79,17 @@ h3 {
         font-weight: 400;
         text-transform: uppercase;
     }
-    
+
     b {
         text-align: left;
     }
-    .mensaje-resultado{
-        color:#ffffff;
+
+    .mensaje-resultado {
+        color: #ffffff;
         text-align: center;
     }
 
-    & > .plex-box-content {
+    &>.plex-box-content {
         display: flex;
         justify-content: space-between;
         flex-direction: column;
@@ -93,30 +103,32 @@ h3 {
 
 
         table {
-            th, td {
+
+            th,
+            td {
                 color: white;
-    
-            thead th {
-                vertical-align: middle;
-            }
-    
+
+                thead th {
+                    vertical-align: middle;
+                }
+
                 &.txt-responsive {
                     font-size: 0.9vw;
                 }
             }
         }
-    
+
     }
 
 
     // Listados
     li {
         &.list-group-item {
-            padding: 0!important;
+            padding: 0 !important;
         }
     }
 
-    fieldset > [class^="col"] {
+    fieldset>[class^="col"] {
         padding: 0px;
 
         hr {
@@ -125,188 +137,188 @@ h3 {
     }
 
     &.plex-box {
-        padding: 1rem!important;
+        padding: 1rem !important;
         height: 100%;
         background-color: $andes-azul-oscuro;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; 
-        
-
-// Contenedor tabs 
-plex-tabs.andes-contenedor-tabs {
-}
-
-    // tab head
-    %base-tab {
-        display: flex;
-        flex-direction: row;     
-        border: solid 2px white;
-        border-radius: 0px!important;
-        padding: 1rem;
-        width: 100%;
-        color: white;
-        text-transform: uppercase;
-        text-align: center;
-        justify-content: center;
-    }
-
-    .nav-tabs .nav-item {
-        display: flex;
-        width: 100%;
-
-        a > span {
-            align-self: center;
-        }
-    }
-
-    .nav-link {
-        @extend %base-tab;
-        background-color: $andes-gris;
-
-        &.active {
-            background-color: $andes-azul!important;
-        }
-    }
-
-	.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-        @extend %base-tab;
-		background-color: $andes-azul;
+        justify-content: space-between;
 
 
-		&:hover {
-			background-color: $andes-celeste;
-		}
-	}
+        // Contenedor tabs 
+        plex-tabs.andes-contenedor-tabs {}
 
-	// Tab body
-	.andes-tab {
-		display: flex;
-		flex-direction: column;
-        justify-content: space-between; 
-        padding: 0.25rem 0;
-        
-        &.center {
-            align-content: center;
-            text-align: center;
-
-        }
-
-        .input-group-addon {
-            background-color: $andes-azul;
+        // tab head
+        %base-tab {
+            display: flex;
+            flex-direction: row;
+            border: solid 2px white;
+            border-radius: 0px !important;
+            padding: 1rem;
+            width: 100%;
             color: white;
+            text-transform: uppercase;
+            text-align: center;
+            justify-content: center;
         }
-	}
 
-    .andes-sidebar-prefix {
-        color: white;
-        font-size: 1rem;
-        padding-top: 10px;
-    }
+        .nav-tabs .nav-item {
+            display: flex;
+            width: 100%;
 
-.sidebar-imagen-paciente {
-    width: 5rem;
-    height: 5rem;
-    border-radius: 50%;
-    display: flex;
-    align-self: center;
-    background-color: lightblue;
-    margin-right: 1.5rem;
-}
+            a>span {
+                align-self: center;
+            }
+        }
 
-.sidebar-contenedor-texto {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    justify-content: space-between;
-    margin-top: 8%;
+        .nav-link {
+            @extend %base-tab;
+            background-color: $andes-gris;
 
-    // .andes-sidebar-numero {
-    //     // font-size: 5rem;
-    //     text-transform: uppercase;
-        
-    //     &.desocupada {
-    //         color: $desocupada!important;
-    //     }
-    //     &.ocupada {
-    //         color: $ocupada!important;
-    //     }
-    //     &.disponible {
-    //         color: $disponible!important;
-    //     }
-    //     &.reparacion {
-    //         color: $reparacion!important;
-    //     }
-    //     &.bloqueada {
-    //         color: $bloqueada!important;
-    //     }
-    
-    // }
+            &.active {
+                background-color: $andes-azul !important;
+            }
+        }
 
-    .andes-sidebar-prefix {
-        color: white;
-        text-align: left;
-    }
+        .nav-tabs .nav-link.active,
+        .nav-tabs .nav-item.show .nav-link {
+            @extend %base-tab;
+            background-color: $andes-azul;
 
 
-    .andes-sidebar-subfix {
-        color: white;
-        text-transform: uppercase;
-        font-weight: 600;
-            
-    //     &.desocupada {
-    //         color: $desocupada!important;
-    //     }
-    //     &.ocupada {
-    //         color: $ocupada!important;
-    //     }
-    //     &.disponible {
-    //         color: $disponible!important;
-    //     }
-    //     &.reparacion {
-    //         color: $reparacion!important;
-    //     }
-    //     &.bloqueada {
-    //         color: $bloqueada!important;
-    //     }
-     }
-}
+            &:hover {
+                background-color: $andes-celeste;
+            }
+        }
 
-    // Accordions
-    plex-accordion plex-panel div.card {
-        border: 0px;
+        // Tab body
+        .andes-tab {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.25rem 0;
 
-        :active {
-            // border: solid 3px $andes-azul;
+            &.center {
+                align-content: center;
+                text-align: center;
+
+            }
+
+            .input-group-addon {
+                background-color: $andes-azul;
+                color: white;
+            }
+        }
+
+        .andes-sidebar-prefix {
+            color: white;
+            font-size: 1rem;
+            padding-top: 10px;
+        }
+
+        .sidebar-imagen-paciente {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            display: flex;
+            align-self: center;
+            background-color: lightblue;
+            margin-right: 1.5rem;
+        }
+
+        .sidebar-contenedor-texto {
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            justify-content: space-between;
+            margin-top: 8%;
+
+            // .andes-sidebar-numero {
+            //     // font-size: 5rem;
+            //     text-transform: uppercase;
+
+            //     &.desocupada {
+            //         color: $desocupada!important;
+            //     }
+            //     &.ocupada {
+            //         color: $ocupada!important;
+            //     }
+            //     &.disponible {
+            //         color: $disponible!important;
+            //     }
+            //     &.reparacion {
+            //         color: $reparacion!important;
+            //     }
+            //     &.bloqueada {
+            //         color: $bloqueada!important;
+            //     }
+
+            // }
+
+            .andes-sidebar-prefix {
+                color: white;
+                text-align: left;
+            }
+
+
+            .andes-sidebar-subfix {
+                color: white;
+                text-transform: uppercase;
+                font-weight: 600;
+
+                //     &.desocupada {
+                //         color: $desocupada!important;
+                //     }
+                //     &.ocupada {
+                //         color: $ocupada!important;
+                //     }
+                //     &.disponible {
+                //         color: $disponible!important;
+                //     }
+                //     &.reparacion {
+                //         color: $reparacion!important;
+                //     }
+                //     &.bloqueada {
+                //         color: $bloqueada!important;
+                //     }
+            }
+        }
+
+        // Accordions
+        plex-accordion plex-panel div.card {
+            border: 0px;
+
+            :active {
+                // border: solid 3px $andes-azul;
             }
 
             div.card-header {
-                color: $andes-cyan!important;
+                color: $andes-cyan !important;
                 border: solid 2px white;
                 border-radius: 0px;
                 cursor: pointer;
-                
+
                 &:hover {
-                    background-color:#3f5467;
+                    background-color: #3f5467;
                     border: solid 2px $andes-cyan;
-                    color: white!important;
-                    
+                    color: white !important;
+
                 }
 
                 &:active {
-                    background-color:#3f5467;
+                    background-color: #3f5467;
                     border: solid 2px $andes-cyan;
-                    color: white!important;
+                    color: white !important;
                 }
 
-            
-            h5 {
-                font-size: 1.25rem;
-                font-weight: 500;
 
-                &:hover {
-                    color: white;
-                }                
+                h5 {
+                    font-size: 1.25rem;
+                    font-weight: 500;
+
+                    &:hover {
+                        color: white;
+                    }
 
                     i {
                         display: inline-block;
@@ -317,112 +329,113 @@ plex-tabs.andes-contenedor-tabs {
                             &.norotada {
                                 transform: rotate(90deg);
                             }
-                        
+
                             &.rotada {
                                 transform: rotate(0deg);
                             }
                         }
                     }
+                }
+
             }
 
-        }
+            .collapse.show {
+                .card-block {
+                    border: solid 3px $andes-cyan;
+                }
+            }
 
-        .collapse.show {
             .card-block {
-                border: solid 3px $andes-cyan;
+                padding: 1rem 1.2rem;
             }
         }
 
-        .card-block {
-            padding: 1rem 1.2rem;
-        }
-    }
 
-
-    // Iconos
-    .andes-contenedor-iconos {
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        margin-bottom: 2rem;
-    }
-
-    .andes-contenedor-botones,.andes-contenedor-secundario  {
-        display: flex;
-        height: auto;
-        margin-top: 1rem;
-
-
-        &.horizontal {
+        // Iconos
+        .andes-contenedor-iconos {
+            display: flex;
             flex-direction: row;
-        }
-
-        &.vertical {
-            flex-direction: column;
-        }
-
-        &.between {
-            justify-content: space-between;
-        }
-
-        &.start {
-            justify-content: flex-start;
-        }
-
-        &.around {
-            justify-content: space-around;
-        }
-
-        &.end {
-            justify-content: flex-end;
-        }
-
-        &.centrado {
-            align-items: center;
-            align-self: center;
             justify-content: center;
+            margin-bottom: 2rem;
         }
 
-        &.block {
-            width: 100%;
-        }
-
-        plex-button {
+        .andes-contenedor-botones,
+        .andes-contenedor-secundario {
+            display: flex;
+            height: auto;
             margin-top: 1rem;
+
+
+            &.horizontal {
+                flex-direction: row;
+            }
+
+            &.vertical {
+                flex-direction: column;
+            }
+
+            &.between {
+                justify-content: space-between;
+            }
+
+            &.start {
+                justify-content: flex-start;
+            }
+
+            &.around {
+                justify-content: space-around;
+            }
+
+            &.end {
+                justify-content: flex-end;
+            }
+
+            &.centrado {
+                align-items: center;
+                align-self: center;
+                justify-content: center;
+            }
+
+            &.block {
+                width: 100%;
+            }
+
+            plex-button {
+                margin-top: 1rem;
+            }
         }
+
+
+        .plex-box-content {}
+
     }
 
-
-        .plex-box-content {
-
-        }
-
-    }
-
-    b,.form-group > label {
+    b,
+    .form-group>label {
         color: white;
     }
 
-    
 
 
-  header {
-	
-	// background-color: $andes-azul;
-    color: white;
-    font-size: 1rem;
-    text-transform: uppercase;
-    text-align: center;
+
+    header {
+
+        // background-color: $andes-azul;
+        color: white;
+        font-size: 1rem;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .plex-layout>footer {
+        background-color: $andes-azul-oscuro;
+        padding: 0 !important
+    }
+
 }
 
-.plex-layout > footer {
-    background-color: $andes-azul-oscuro;
-    padding: 0!important
-}
-
-}
-
-.andes-contenedor-botones,.andes-contenedor-secundario  {
+.andes-contenedor-botones,
+.andes-contenedor-secundario {
     display: flex;
     height: auto;
     margin-top: 1rem;

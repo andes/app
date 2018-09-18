@@ -17,6 +17,7 @@ import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -35,7 +36,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial = { nombre: '', codigo: '' };
+    public obraSocial: IObraSocial[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -162,16 +163,17 @@ export class IniciarInternacionComponent implements OnInit {
                         if (datosInternacion) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
-                        // Se busca la obra social del paciente y se le asigna
-                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                            if (os) {
-                                this.obraSocial = os;
-                                this.informeIngreso.obraSocial = os;
-                            }
-                        });
                         this.buscandoPaciente = false;
                     });
+                    // Se busca la obra social del paciente y se le asigna
+                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                        if (os && os.length > 0) {
+                            this.obraSocial = [{ nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador }];
+                            this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                        }
+                    });
                 }
+
             });
         } else {
             this.plex.alert('El paciente debe ser registrado en MPI');
@@ -296,6 +298,9 @@ export class IniciarInternacionComponent implements OnInit {
             } else {
                 // armamos el elemento data a agregar al array de registros
                 let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+                if (this.obraSocial) {
+                    this.informeIngreso.obraSocial = this.obraSocial;
+                }
                 nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
                 // el concepto snomed del tipo de prestacion para la internacion
                 let conceptoSnomed = this.tipoPrestacionSeleccionada;
@@ -304,8 +309,10 @@ export class IniciarInternacionComponent implements OnInit {
                 let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
                 if (this.obraSocial) {
-                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigo, nombre: this.obraSocial.nombre };
+                    // TODO: Sub-zero wins
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {

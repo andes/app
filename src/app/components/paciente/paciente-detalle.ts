@@ -47,8 +47,10 @@ export class PacienteDetalleComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.paciente.fechaNacimiento;
         this.backUpDatos['foto'] = this.paciente.foto;
         this.backUpDatos['cuil'] = this.paciente.cuil;
-        this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
-        this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        if (this.paciente.direccion) {
+            this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
+            this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        }
     }
 
     renaperVerification(patient) {
@@ -61,13 +63,10 @@ export class PacienteDetalleComponent implements OnInit {
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
-        if (patient.estado === 'validado') {
-            sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
-            documentoRena = patient.documento;
-        } else {
-            sexoRena = (patient.sexo.id === 'masculino') ? 'M' : 'F';
-            documentoRena = patient.documento;
-        }
+
+        patient.sexo = ((typeof patient.sexo === 'string')) ? patient.sexo : (Object(patient.sexo).id);
+        sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
+        documentoRena = patient.documento;
 
         this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
             // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
@@ -78,7 +77,7 @@ export class PacienteDetalleComponent implements OnInit {
                 if (patient.estado === 'temporal') {
                     patient.nombre = datos.nombres;
                     patient.apellido = datos.apellido;
-                    patient.fechaNacimiento = datos.fechaNacimiento;
+                    patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
                     patient.estado = 'validado';
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;

@@ -15,7 +15,8 @@
                     <div *ngIf="turno" class="p-2" [ngClass]="{'bg-null': indiceTurno % 2 === 0}">
                         <!-- Panel -->
                         <div *ngIf="turno.asistencia == 'asistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-success">{{turno.asistencia}}</div>
-                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{ turno.asistencia }}</div>
+                        <div *ngIf="turno.asistencia == 'noAsistio' && turno.estado !== 'suspendido'" class="float-right badge-dashboard badge badge-danger">{{
+                            turno.asistencia }}</div>
                         <div *ngIf="turno.estado == 'suspendido'" class="float-right badge-dashboard badge badge-danger">Suspendido</div>
                         <h5>{{ turno.tipoPrestacion.term }}</h5>
                         <div class="row" *ngIf="turno.organizacion">
@@ -35,13 +36,14 @@
 
                         <div class="row" *ngIf="turno && turno.profesionales">
                             <div class="col">
-                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre'] }}
+                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre']
+                                }}
                             </div>
                         </div>
                         <br>
                         <div class="row" *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
 
-                            <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio'">
+                            <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id">
                                 <!-- no funcionan bien los title="" -->
                                 <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)"></plex-button>
                             </div>
@@ -65,9 +67,9 @@
     <div *ngIf="showMotivoConsulta">
         <div class="row">
             <div class="col-12">
-                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.nombre">
+                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
                     <label>Obra Social </label>
-                    <div>{{turnoArancelamiento.paciente.obraSocial.nombre}}</div>
+                    <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
                 </span>
                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
