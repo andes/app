@@ -1,7 +1,7 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding, DebugElement } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -126,6 +126,7 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        debugger;
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -144,16 +145,20 @@ export class IniciarInternacionComponent implements OnInit {
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
+                debugger;
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        // Salimos del iniciar internacion
+                        this.data.emit(false);
                         this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
                         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
                         this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            this.prestacion = prestacion;
                             let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                             if (existeRegistro) {
                                 // Carga la información completa del paciente
@@ -209,6 +214,11 @@ export class IniciarInternacionComponent implements OnInit {
             this.ocupaciones = rta;
         });
     }
+
+    actualizarInformeIngreso() {
+
+    }
+
 
     loadProfesionales(event) {
         let listaProfesionales = [];
@@ -279,6 +289,7 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
+        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -304,8 +315,31 @@ export class IniciarInternacionComponent implements OnInit {
                     registros: this.prestacion.ejecucion.registros
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-                    this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
-                    this.data.emit(false);
+                    debugger;
+                    if (this.cama && !this.cama.ultimoEstado.idInternacion) {
+                        // vamos a actualizar el estado de la cama
+                        let dto = {
+                            fecha: new Date(),
+                            estado: 'ocupada',
+                            unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                            especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                            esCensable: this.cama.ultimoEstado.esCensable,
+                            genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                            paciente: this.paciente,
+                            idInternacion: this.prestacion.id
+                        };
+                        this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                            this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                            this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                            this.data.emit(false);
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                        });
+                    } else {
+                        this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                        this.data.emit(false);
+                    }
+
                 }, (err) => {
                     this.plex.info('danger', err);
                 });
@@ -331,7 +365,7 @@ export class IniciarInternacionComponent implements OnInit {
                     if (this.cama) {
                         // vamos a actualizar el estado de la cama
                         let dto = {
-                            fecha: this.informeIngreso.fechaIngreso,
+                            fecha: new Date(),
                             estado: 'ocupada',
                             unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
