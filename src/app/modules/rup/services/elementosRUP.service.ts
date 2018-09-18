@@ -15,7 +15,7 @@ const url = '/modules/rup/elementosRUP';
 @Injectable()
 export class ElementosRUPService {
     // Mantiene un caché de la base de datos de elementos
-    private cache: IElementosRUPCache = {};
+    public cache: IElementosRUPCache = {};
     // Mantiene un caché de la base de datos de elementos
     private cacheParaSolicitud: IElementosRUPCache = {};
     // Precalcula los elementos default
