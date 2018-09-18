@@ -12,23 +12,23 @@
                         <!-- TODO: Ver estilos con julito ,@FerSastre -->
                         <div class="row" *ngIf="camas">
                             <div class="col-md-2">
-                                <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente">
+                                <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente" [required]="true">
                                 </plex-text>
                             </div>
                             <div class="col-md-2">
                                 <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"></plex-select>
+                                    (change)="filtrar()" *ngIf="filtros.opciones.sectores.length" [required]="true"></plex-select>
                             </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <plex-select [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Unidad Organizativa"
-                                        (change)="filtrar()" *ngIf="filtros.opciones.servicios.length"></plex-select>
+                                        (change)="filtrar()" *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
                                 </div>
                             </div>
 
                             <div class="col-md-2">
                                 <plex-select [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()"
-                                    *ngIf="filtros.opciones.tiposCamas.length"></plex-select>
+                                    *ngIf="filtros.opciones.tiposCamas.length" [required]="true"></plex-select>
                             </div>
                             <!-- Filtros por estado -->
                             <div class="col-md-3">
@@ -48,13 +48,13 @@
                                             <i class="icon icon-andes-cama-reloj desocupada"></i>
                                         </button>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <span class="{{(inactive && filtros.estado?.id !== 'reparacion') ? 'inactive' :  ''}} count reparacion">{{cantidadXEstado['reparacion'].length}}</span>
                                         <button title="Camas en reparacion" class="{{(inactive && filtros.estado?.id !== 'reparacion') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'reparacion') ? '-active' : ''}} reparacion"
                                             (click)="filtroEstados('reparacion', inactive)">
                                             <i class="icon icon-andes-cama-herramienta reparacion"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                     <div>
                                         <span class="{{(inactive && filtros.estado?.id !== 'bloqueadas') ? 'inactive' :  ''}} count bloqueada">{{cantidadXEstado['bloqueada'].length}}</span>
                                         <button title="Camas bloqueadas" class="{{(inactive && filtros.estado?.id !== 'bloqueada') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'bloqueada') ? '-active' : ''}} bloqueada"
@@ -69,13 +69,13 @@
                                             <i class="icon icon-andes-paciente ocupada"></i>
                                         </button>
                                     </div>
-                                    <div>
+                                    <!-- <div>
                                         <span class="{{(inactive && filtros.estado?.id !== 'oxigeno') ? 'inactive' :  ''}} count oxigeno">{{cantidadXEstado['oxigeno'].length}}</span>
                                         <button title="Camas con oxigeno" class="{{(inactive && filtros.estado?.id !== 'oxigeno') ? 'btn disabled' :  ''}} estados-icon{{ (filtroActive === 'oxigeno') ? '-active' : ''}} oxigeno"
                                             (click)="filtroEstados('oxigeno', inactive)">
                                             <i class="icon icon-andes-cama-oxigeno oxigeno"></i>
                                         </button>
-                                    </div>
+                                    </div> -->
                                     <!-- <div class="col-md-1 actions-icons">
                                                     <plex-button type="primary" title="limpiar filtros" label="Limpiar" (click)="refresh()"></plex-button>
                                                 </div> -->
@@ -197,10 +197,9 @@
                         <!-- Resumen -->
                         <plex-tab class="andes-tab" label="datos de internacion">
                             <internacion-resumen *ngIf="prestacionPorInternacion" (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
-                                [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"></internacion-resumen>
+                                [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada" (refreshCamas)="actualizarCama($event)"></internacion-resumen>
                             <ng-container *ngIf="!prestacionPorInternacion">
-                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente
-                                    internado
+                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente internado
                                 </h2>
                             </ng-container>
                         </plex-tab>

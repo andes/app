@@ -6,12 +6,18 @@
                     <div class="row ">
                         <div class="col-6 ">
                             <plex-datetime name="fecha-hora" label="Fecha y hora" type="datetime" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
-                                required>
+                                [required]="true">
                             </plex-datetime>
                         </div>
                         <div class="col-6 ">
+                            <plex-int name="diasEstada" label="Días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada"
+                                placeholder="" [required]="true" [disabled]="true"></plex-int>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col">
                             <plex-select (change)="selecOrganizacionDestino() " label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
-                                name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... " required>
+                                name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... " [required]="true">
                             </plex-select>
                         </div>
                     </div>
@@ -35,8 +41,7 @@
                     <div class="row">
                         <div class="col">
                             <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
-                                (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..." labelField="nombre"
-                                required>
+                                (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..." labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
@@ -44,12 +49,12 @@
                         <div class="row" *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
 
                             <div class="col-6">
-                                <plex-select label="Procedimientos Quirúrgicos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
+                                <plex-select label="Procedimientos Quirúrgicos y Obstetricos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
                                     [data]="listaProcedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
                                 </plex-select>
                             </div>
                             <div class="col-5">
-                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha" type="date" [(ngModel)]="procedimiento.fecha">
+                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha del procedimiento" type="date" [(ngModel)]="procedimiento.fecha">
                                 </plex-datetime>
                             </div>
                             <div class="col-1 pt-1">
@@ -200,9 +205,9 @@
                 <footer class="andes-contenedor-botones horizontal between">
                     <plex-button *ngIf="botonera?.cerrar" class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
                     <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) "
-                        type="success " class="float-right "></plex-button>
+                        type="success " validateForm="true " class="float-right "></plex-button>
                     <!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
-                                    (click)="validar() " type="success " class="float-right "></plex-button> -->
+                        (click)="validar() " type="success " class="float-right "></plex-button> -->
 
                     <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo==='validada' && botonera?.validar"
                         label="Romper Validación" (click)="romperValidacion() " type="danger " class="float-right "></plex-button>

@@ -37,6 +37,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     };
     public procedimientosObstetricos = false;
     public ExisteCausaExterna = false;
+    public mostrarValidacion = false;
     public registro = {
         destacado: false,
         esSolicitud: false,
@@ -213,6 +214,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             };
             this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
                 this.prestacionGuardada.emit(prestacionEjecutada);
+                this.btnIniciarEditarEmit.emit('Editar');
                 this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
                 this.cancelar();
             });
@@ -274,4 +276,21 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             event.callback([]);
         }
     }
+
+
+    // comprobarEgresoParaValidar() {
+    //     // nos fijamos si el concepto ya aparece en los registros
+    //     let egresoExiste = this.registro.valor.InformeEgreso;
+
+    //     if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
+    //         if (egresoExiste.fechaEgreso && egresoExiste.tipoEgreso) {
+    //             this.mostrarValidacion = true;
+    //         } else {
+    //             this.mostrarValidacion = false;
+    //         }
+    //     } else {
+    //         this.mostrarValidacion = false;
+    //     }
+    // }
+
 }
