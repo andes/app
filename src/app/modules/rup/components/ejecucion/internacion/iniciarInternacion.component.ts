@@ -267,7 +267,6 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
-        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
