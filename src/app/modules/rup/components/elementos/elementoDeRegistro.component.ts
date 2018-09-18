@@ -1,3 +1,4 @@
+import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
@@ -275,7 +276,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 return true;
             } else {
                 // TODO: Ver el mensaje a mostrar..
-                this.plex.alert('No se puede agregar ese concepto');
+                // this.plex.toast('No se puede agregar ese concepto');
                 return false;
             }
         } else {

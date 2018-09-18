@@ -3,8 +3,9 @@
         <hr> -->
 <div class="row">
     <div class="col-5">
-        <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro.valor.descripcion }" [(ngModel)]="registro.valor.descripcion"
-            rows="6" id="descripcion" name="descripcion"> 
+        <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro.valor.descripcion }"
+            [(ngModel)]="registro.valor.descripcion" rows="6" id="descripcion" name="descripcion">
+
         </textarea>
         <p *ngIf="soloValores" class="readonly mb-5">
             Descripción:
@@ -34,8 +35,8 @@
         <div *ngIf="registro.registros.length">
             <ng-container *ngFor="let registro of registro.registros, let i = index">
 
-                <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
-                    [ngClass]="{'relacionado': registro?.relacionadoCon}">
+                <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)"
+                    [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
                     <div class="rup-card2 {{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
                         <div class="rup-header">
                             <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
@@ -51,7 +52,8 @@
                                     <span class="badge badge-info">
                                         {{registro.relacionadoCon[0].concepto.term }}
                                     </span>
-                                    <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                    <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[0])"
+                                        class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
                                         title="Desvincular" class="btn btn-sm btn-primary">
                                         <i class="mdi mdi-link-variant-off"></i>
                                     </a>
@@ -65,13 +67,14 @@
                                     {{registro.concepto.semanticTag}}
                                 </span>
 
-                                <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')"
-                                    class="btn btn-sm btn-danger eliminar">
+                                <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"
+                                    (click)="confirmarEliminarRegistro(registro, 'card')" class="btn btn-sm btn-danger eliminar">
                                     <i class="mdi mdi-delete"></i>
                                     <i class="mdi mdi-delete-empty"></i>
                                 </a>
 
-                                <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
+                                <a *ngIf="!soloValores" href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)"
+                                    class="btn btn-sm btn-primary collapse-card">
                                     <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
                                 </a>
                             </div>
@@ -87,23 +90,24 @@
                                         Debe completar los datos
                                     </span>
                                 </div>
-                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                    [paciente]="paciente" [registro]="registro" [soloValores]="soloValores" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
+                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
+                                    [prestacion]="prestacion" [paciente]="paciente" [registro]="registro" [soloValores]="soloValores"
+                                    [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
                             </div>
                         </div>
 
                         <!-- ... Footer -->
                         <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
                             <div class="type"></div>
-                            <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length> 0
-                        && confirmarDesvincular[registro.id]">
+                            <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length> 0 && confirmarDesvincular[registro.id]">
 
                                 <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
                                     <b>{{registro.relacionadoCon[0].concepto.term}}</b>?
 
                                     <div class="buttons">
                                         <plex-button (click)="cancelarDesvincular(registro.id)" label="Cancelar" type="default"></plex-button>
-                                        <plex-button (click)="confirmarDesvinculacion(registro.id, i)" label="Desvincular" type="success"></plex-button>
+                                        <plex-button (click)="confirmarDesvinculacion(registro.id, i)" label="Desvincular"
+                                            type="success"></plex-button>
                                     </div>
                                 </div>
                             </div>
@@ -112,8 +116,10 @@
                                 <div class="confirmarDesvincular">
                                     <div>¿Quitar de esta consulta?</div>
                                     <div class="buttons">
-                                        <plex-button type="danger" label="Cancelar" (click)="confirmarEliminar = false;" class="hover"></plex-button>
-                                        <plex-button type="success" label="Confirmar" (click)="eliminarRegistro()" class="confirm hover"></plex-button>
+                                        <plex-button type="danger" label="Cancelar" (click)="confirmarEliminar = false;"
+                                            class="hover"></plex-button>
+                                        <plex-button type="success" label="Confirmar" (click)="eliminarRegistro()"
+                                            class="confirm hover"></plex-button>
                                     </div>
                                 </div>
                             </div>
@@ -127,6 +133,3 @@
         </div>
     </div>
 </div>
-
-<!-- </plex-panel> -->
-<!-- </plex-accordion> -->

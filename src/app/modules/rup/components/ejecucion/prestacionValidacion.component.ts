@@ -94,7 +94,18 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
-    public nombreArchivo = '';
+    // Array con opciones para indicar si es primera vez
+    public opcionDiagnosticoPrincipal = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
+
+    // Array con opciones para indicar si es primera vez
+    public opcionPrimeraVez = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
+    nombreArchivo: any;
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -181,14 +192,13 @@ export class PrestacionValidacionComponent implements OnInit {
                         this.SNOMED.getCie10(parametros).subscribe(codigo => {
                             this.codigosCie10[registro.id] = codigo;
                         });
-
                     }
                 });
 
             });
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.armarRelaciones(this.registrosOrdenados);
+            this.armarRelaciones();
             // this.reordenarRelaciones();
 
         });
@@ -199,16 +209,23 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
+        let existeC2 = this.prestacion.ejecucion.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
 
         if (!existeDiagnostico && this.prestacion.solicitud.ambitoOrigen !== 'internacion') {
             this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
+        }
+        if (existeC2) {
+            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
+            return false;
+        }
+        if (!existeDiagnostico) {
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnostico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -375,25 +392,17 @@ export class PrestacionValidacionComponent implements OnInit {
         }
     }
 
-    diagnosticoPrestacion(elem) {
+    diagnosticoPrestacion(event, elem) {
         this.prestacion.ejecucion.registros.map(reg => reg.esDiagnosticoPrincipal = false);
-        elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
+        elem.esDiagnosticoPrincipal = event && event.value;
     }
 
     defualtDiagnosticoPrestacion() {
         let count = 0;
-        // for (let elemento of this.prestacion.ejecucion.registros) {
         let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }
-
-        // }
-    }
-
-    primeraVez(elem) {
-        // this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
-        elem.esPrimeraVez = !elem.esPrimeraVez;
     }
 
     mostrarDatosSolicitud(bool) {
@@ -414,31 +423,28 @@ export class PrestacionValidacionComponent implements OnInit {
 
     }
 
-    armarRelaciones(registros) {
-
-        registros = this.prestacion.ejecucion.registros;
-
+    // Indices de profundidad de las relaciones
+    registrosDeep: any = {};
+    armarRelaciones() {
         let relacionesOrdenadas = [];
+        let registros = this.prestacion.ejecucion.registros;
+        let roots = registros.filter(x => x.relacionadoCon.length === 0);
 
-        registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
+        let traverse = (_registros, registro, deep) => {
+            let orden = [];
+            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
+            this.registrosDeep[registro.id] = deep;
+            hijos.forEach((hijo) => {
+                orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
+            });
+            return orden;
+        };
 
-            if (esPadre.length > 0) {
-                if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
-                    relacionesOrdenadas.push(cosa);
-                }
-                esPadre.forEach(hijo => {
-                    if (relacionesOrdenadas.filter(x => x === hijo).length === 0) {
-                        relacionesOrdenadas.push(hijo);
-                    }
-                });
-            } else {
-                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
-                    relacionesOrdenadas.push(cosa);
-                }
-            }
-
+        roots.forEach((root) => {
+            this.registrosDeep[root.id] = 0;
+            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
         });
+
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
@@ -599,7 +605,21 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            this.servicioDocumentos.descargar(content).subscribe(data => {
+            // this.servicioDocumentos.descargar(content).subscribe(data => {
+            //     if (data) {
+            //         // Generar descarga como PDF
+            //         this.descargarArchivo(data, { type: 'application/pdf' });
+            //     } else {
+            //         // Fallback a impresión normal desde el navegador
+            //         window.print();
+            //     }
+            // });
+
+            let informe = {
+                idPrestacion: this.prestacion.id
+            };
+
+            this.servicioDocumentos.descargarV2(informe).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
