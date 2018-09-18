@@ -1,4 +1,4 @@
-import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation, OnChanges } from '@angular/core';
 import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Plex } from '@andes/plex';
 import { InternacionService } from '../../../services/internacion.service';
@@ -9,7 +9,7 @@ import { InternacionService } from '../../../services/internacion.service';
     styleUrls: ['resumenInternacion.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
-export class ResumenInternacionComponent implements OnInit {
+export class ResumenInternacionComponent implements OnInit, OnChanges {
     @Input() prestacion;
     @Input() paciente;
     @Input() camaSeleccionada;
@@ -37,7 +37,11 @@ export class ResumenInternacionComponent implements OnInit {
     ) { }
 
 
-    ngOnInit() {
+
+
+    ngOnInit() { }
+
+    ngOnChanges() {
         this.prestacionesService.getPasesInternacion(this.prestacion.id).subscribe(lista => {
             this.pases = lista;
         });
@@ -46,6 +50,11 @@ export class ResumenInternacionComponent implements OnInit {
 
     onBtnIniciarEditar(event) {
         this.btnIniciarEditar = event;
+    }
+
+    onEgreso(event) {
+        this.prestacion = event;
+        this.comprobarEgresoParaValidar();
     }
 
 
@@ -100,8 +109,10 @@ export class ResumenInternacionComponent implements OnInit {
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
-            this.refreshCamas.emit({ cama: this.camaSeleccionada });
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => {
+                this.refreshCamas.emit({ cama: cama });
+            });
+
         }
     }
 
@@ -134,7 +145,7 @@ export class ResumenInternacionComponent implements OnInit {
                 this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                    // this.desocuparCama();
+                    this.desocuparCama();
                     // this.cancelar();
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
