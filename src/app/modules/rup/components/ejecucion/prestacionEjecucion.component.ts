@@ -704,18 +704,22 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                     // Se hace un patch en el turno para indicar que el paciente no asistió (turno.asistencia = "noAsistio")
                     let cambios;
-                    if (this.servicioPrestacion.prestacionPacienteAusente()) {
-                        cambios = {
-                            op: 'noAsistio',
-                            turnos: [this.prestacion.solicitud.turno]
-                        };
-                    } else {
-                        cambios = {
-                            op: 'darAsistencia',
-                            turnos: [this.prestacion.solicitud.turno]
-                        };
-                    }
-                    this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                    this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                        result => {
+                            let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                            if (filtroRegistros && filtroRegistros.length > 0) {
+                                cambios = {
+                                    op: 'noAsistio',
+                                    turnos: [this.prestacion.solicitud.turno]
+                                };
+                            } else {
+                                cambios = {
+                                    op: 'darAsistencia',
+                                    turnos: [this.prestacion.solicitud.turno]
+                                };
+                            }
+                            this.servicioAgenda.patch(this.idAgenda, cambios).subscribe();
+                        });
                 }
                 // Actualizamos las prestaciones de la HUDS
                 this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
