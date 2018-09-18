@@ -61,6 +61,9 @@ export class PuntoInicioLaboratorioComponent
     public prioridad = null;
     public servicio = null;
     public estado;
+    public organizacion;
+    public numProtocoloDesde;
+    public numProtocoloHasta;
     public busqueda = {
         solicitudDesde: new Date(),
         solicitudHasta: new Date(),
@@ -110,8 +113,8 @@ export class PuntoInicioLaboratorioComponent
                     nombre: 'Prueba de Laboratorio',
                     concepto: Constantes.conceptoPruebaLaboratorio,
                     valor: {
-                        solicitudPrestacion : {
-                            practicas : [],
+                        solicitudPrestacion: {
+                            practicas: [],
                             fechaTomaMuestra: new Date()
                         }
                     }
@@ -130,6 +133,12 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
         this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
+        this.busqueda.organizacion = (!this.organizacion || (this.organizacion && this.organizacion.id === null)) ? null : this.organizacion.id;
+        console.log(this.numProtocoloDesde, this.numProtocoloHasta);
+        this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
+        this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
+
+        console.log("bus", this.busqueda);
         if (this.modo.nombre === 'Recepcion') {
             this.busqueda.estado = 'pendiente';
             this.getProtocolos(this.busqueda);

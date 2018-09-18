@@ -21,8 +21,7 @@
 
         <div class="row">
             <div class="col-6">
-                <plex-select [(ngModel)]="modo" name="LaboratorioInterno" (change)='changeServicio()' label="Modo" [data]='cargaLaboratorioEnum'
-                    [required]="false"></plex-select>
+                <plex-select [(ngModel)]="modo" name="area" (change)='changeServicio()' label="Modo" [data]='cargaLaboratorioEnum' [required]="false"></plex-select>
             </div>
             <div class="col-6 text-right">
                 <plex-bool type="slide" [(ngModel)]="espec" label="" name="especialidad.activo" label='Establecer filtros por defecto' (change)='recordarFiltros()'></plex-bool>
@@ -46,8 +45,8 @@
         <div class="row contenedor-filtros">
 
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
-                <plex-select [(ngModel)]="laboratorioInterno" (change)="refreshSelection($event,'laboratorioInterno')" name="laboratorioInterno"
-                    label="Area" [data]='laboratorioInternoEnum' [required]="true"></plex-select>
+                <plex-select [(ngModel)]="area" (change)="refreshSelection($event,'area')" name="area" label="Area" [data]='laboratorioInternoEnum'
+                    [required]="true"></plex-select>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-2">
                 <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="prioridad" label="Prioridad" [data]="prioridadesFiltroEnum"
@@ -94,16 +93,16 @@
                 </plex-select>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
-                <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numeroDesde"
+                <plex-float [(ngModel)]="numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numProtocoloDesde"
                     label="N° protocolo desde"></plex-float>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
-                <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numeroHasta"
+                <plex-float [(ngModel)]="numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numProtocoloHasta"
                     label="N° protocolo hasta"></plex-float>
             </div>
             <div *ngIf='modo && modo.id !== "recepcion"' class="col-3">
-                <plex-select [(ngModel)]="efectorSolicitante" (change)="refreshSelection($event,'efectorSolicitante')" name="efectorSolicitante"
-                    label="Efector Solicitante" (getData)="loadOrganizacion($event)"></plex-select>
+                <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')" name="organizacion" label="Efector Solicitante"
+                    (getData)="loadOrganizacion($event)"></plex-select>
             </div>
         </div>
         <!-- FIN FILTROS AVANZADOS-->
