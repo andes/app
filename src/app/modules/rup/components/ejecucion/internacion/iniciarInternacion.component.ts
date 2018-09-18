@@ -132,6 +132,14 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
+
+                // Chequeamos los datos que ya estan registrados para mostrar
+                // los campos que están ocualtos por defecto
+                this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                this.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
+                    this.origenExterno = true;
+                }
             }
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
@@ -222,7 +230,11 @@ export class IniciarInternacionComponent implements OnInit {
                     }
                 });
             } else {
-                event.callback([]);
+                let profesionalSalida = [];
+                if (this.informeIngreso && this.informeIngreso.profesional) {
+                    profesionalSalida = [this.informeIngreso.profesional];
+                }
+                event.callback(profesionalSalida);
             }
         }
     }
@@ -284,15 +296,18 @@ export class IniciarInternacionComponent implements OnInit {
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
 
             if (this.prestacion && this.prestacion.id) {
+                // reemplazamos el Informde de ingreso en la prestacion
+                let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
                 let cambios = {
-                    op: 'informeIngreso',
-                    informeIngreso: this.informeIngreso
+                    op: 'registros',
+                    registros: this.prestacion.ejecucion.registros
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
                     this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
                     this.data.emit(false);
                 }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+                    this.plex.info('danger', err);
                 });
             } else {
                 // armamos el elemento data a agregar al array de registros
@@ -365,7 +380,11 @@ export class IniciarInternacionComponent implements OnInit {
             };
             this.organizacionService.get(query).subscribe(event.callback);
         } else {
-            event.callback([]);
+            let organizacionSalida = [];
+            if (this.informeIngreso && this.informeIngreso.organizacionOrigen) {
+                organizacionSalida = [this.informeIngreso.organizacionOrigen];
+            }
+            event.callback(organizacionSalida);
         }
     }
 
