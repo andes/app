@@ -35,10 +35,6 @@
         </header>
         <ng-container *ngIf="pacienteSeleccionado">
             <div class="text-center info-sidebar">
-                <span class="badge badge-success">
-                    algo
-                </span>
-                <br>
                 <h3>
                     {{pacienteSeleccionado.nombre}}
                 </h3>
@@ -52,13 +48,29 @@
                     <plex-button label="VER HUDS" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')"></plex-button>
                 </div>
             </div>
-            <b>
-                Lista de epicrisis
-            </b>
+            <br>
+            <br>
+            <table *ngIf="showInternacionEjecucion" class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>
+                            <strong>Hay una Internación en ejecución</strong>
+                        </td>
+                        <!-- <h4 class="info-sidebar">Hay una Internación en ejecución</h4> -->
+                        <td>
+                            <plex-button icon="mdi mdi-pencil" type="info" (click)="ruteo(internacionEjecucion.id, 'epicrisis')">
+                            </plex-button>
+                        </td>
+                    </tr>
+                </thead>
+            </table>
             <ng-container *ngIf="!epicrisisPaciente.length && !showLoader">
                 <p class="mensaje-resultado">
                     No se encontraron Epicrisis anteriores
                 </p>
+            </ng-container>
+            <ng-container *ngIf="epicrisisPaciente.length && !showLoader">
+                <b>Lista de epicrisis</b>
             </ng-container>
             <plex-loader *ngIf="showLoader" type="ball-pulse-sync"></plex-loader>
             <!-- Tabla de las epicrisis -->
