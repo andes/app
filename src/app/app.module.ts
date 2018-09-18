@@ -252,6 +252,8 @@ import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
+import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
+
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
@@ -368,6 +370,7 @@ export let RUPRegistry = {
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
+    'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
@@ -426,6 +429,7 @@ let RUPComponentsArray = [
     InformeEpicrisisComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
+    InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
     PercentiloDeMasaCorporalComponent,
