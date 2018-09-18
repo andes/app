@@ -145,7 +145,6 @@ import { PacienteDetalleActualizarComponent } from './components/paciente/pacien
 import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
 import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
-import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -542,6 +541,12 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+        PucoComponent,
+        // MPI
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+        PacientePanelComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
@@ -551,13 +556,7 @@ registerLocaleData(localeEs, 'es');
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
-        PucoComponent,
-        // MPI
-        PacienteBuscarComponent,
-        PacienteListadoComponent,
-        PacientePanelComponent,
-        PacienteDemoComponent,
-        PacientePanelComponent
+        PucoComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],
