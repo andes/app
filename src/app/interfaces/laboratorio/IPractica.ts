@@ -44,7 +44,23 @@ export interface IPractica {
             decimales: Number,
             exponencial: Boolean,
             multiplicador: Number
-        }
+        },
+        resultadosAnteriores: [
+            {
+                valor: {
+                    type: Number,
+                    required: false
+                },
+                unidadMedida: String,
+                fechaTomaMuestra: {
+                    type: Date,
+                    required: false,
+                    es_indexed: true
+                }
+
+            }
+        ]
+
     };
     reactivos: [
         {

@@ -30,7 +30,7 @@ export class ProtocoloDetalleComponent
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     //estado: any;
-    
+
     fecha: any;
     fechaTomaMuestra = new Date();
     prestacionOrigen: any;
@@ -254,7 +254,7 @@ export class ProtocoloDetalleComponent
     siguiente() {
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
             this.indexProtocolo++;
-            this.protocoloSelected = this.protocolos[this.indexProtocolo];
+            this.modelo = this.protocolos[this.indexProtocolo];
         }
 
     }
@@ -262,7 +262,7 @@ export class ProtocoloDetalleComponent
     anterior() {
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
-            this.protocoloSelected = this.protocolos[this.indexProtocolo];
+            this.modelo = this.protocolos[this.indexProtocolo];
         }
 
     }
@@ -290,13 +290,38 @@ export class ProtocoloDetalleComponent
             this.iniciarProtocolo()
         } else {
             this.guardarProtocolo();
+            this.cargarResultadosAnteriores();
         }
-        // console.log('this.modelo.ejecucion.registros',this.modelo.ejecucion.registros)
-        // }
-        // else {
-        //     this.plex.alert('Debe completar los datos requeridos');
-        // }
+
     }
+
+    cargarResultadosAnteriores() {
+        let practicas = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
+        for (let practica of practicas) {
+            if (practica.resultado && practica.resultado.valor) {
+                console.log(practica.resultado.valor)
+                let resAnteriores = {
+                    valor: practica.resultado.valor,
+                    unidadMedida: practica.unidadMedida.term,
+                    fechaTomaMuestra: this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra
+                }
+
+
+                practica.resultado.resultadosAnteriores.push(resAnteriores);
+
+
+            }
+        }
+
+
+
+    }
+
+    validarProtocolo(){
+        
+    }
+
+
 
     iniciarProtocolo() {
         this.modelo.estados = [{ tipo: "ejecucion" }];
@@ -304,6 +329,7 @@ export class ProtocoloDetalleComponent
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
 
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
+
             this.guardarProtocolo();
         });
     }
@@ -318,16 +344,18 @@ export class ProtocoloDetalleComponent
                 registros: registros,
                 solicitud: solicitud
             };
-    
+
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
+
         } else {
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
         }
+
     }
 }
