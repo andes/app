@@ -39,7 +39,6 @@ export class ProtocoloDetalleComponent
     organizacion: any;
     modelo: any;
     public practicas: IPracticaMatch[] | IPractica[];
-    public practicasEjecucion = [];
 
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
@@ -147,15 +146,14 @@ export class ProtocoloDetalleComponent
             });
             this.organizacion = salida;
         });
-
     }
 
-    loadProfesionales(event) {
+    loadProfesionales($event) {
         let query = {
-            nombreCompleto: event.query
+            nombreCompleto: $event.query
         };
         this.servicioProfesional.get(query).subscribe((resultado: any) => {
-            event.callback(resultado);
+            $event.callback(resultado);
         });
     }
 
@@ -197,21 +195,6 @@ export class ProtocoloDetalleComponent
 
     volverProtocolos() {
         this.volverAListaControEmit.emit(true);
-    }
-
-
-    getPracticas(registros) {
-
-        //  if (this.modelo.solicitud.registros) {
-        if (this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.practicas) { // Ya hay practicas
-            this.practicasEjecucion = this.modelo.solicitud.registros[(this.modelo.solicitud.registros.length) - 1].valor.solicitudPrestacion.practicas;
-            return this.practicasEjecucion;
-        } else { //caso recepcion
-            return this.practicasEjecucion;
-
-        }
-
-        // }
     }
 
     searchStart() {
@@ -272,18 +255,17 @@ export class ProtocoloDetalleComponent
     }
 
     async guardarSolicitud($event) {
-
-        console.log('2', this.modelo.solicitud.ambitoOrigen);
         this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
-        // this.modelo.solicitud.organizacion = this.auth.organizacion;
+
 
         if (this.modo.id === 'control' || this.modo.id === 'recepcion') {
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
 
-
             this.carparPracticasAEjecucion();
+        } else if (this.modo.id === 'validacion' && !this.isProtocoloValidado()) {
+            this.actualizarEstadoValidacion();
         }
 
         if (this.modo.id === 'recepcion') {
@@ -292,7 +274,20 @@ export class ProtocoloDetalleComponent
             this.guardarProtocolo();
             this.cargarResultadosAnteriores();
         }
+    }
 
+    isProtocoloValidado() {
+        return this.modelo.estados[0].tipo === "validado";
+    }
+
+    actualizarEstadoValidacion() {
+        let protocoloValidado = this.modelo.ejecucion.registros[0].valor.every((practica) => {
+            return practica.resultado.validado;
+        });
+
+        if (protocoloValidado) {
+            this.modelo.estados = [{ tipo: "validado" }];
+        }
     }
 
     cargarResultadosAnteriores() {
@@ -305,11 +300,7 @@ export class ProtocoloDetalleComponent
                     unidadMedida: practica.unidadMedida.term,
                     fechaTomaMuestra: this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra
                 }
-
-
                 practica.resultado.resultadosAnteriores.push(resAnteriores);
-
-
             }
         }
 
@@ -321,15 +312,12 @@ export class ProtocoloDetalleComponent
         
     }
 
-
-
     iniciarProtocolo() {
+        console.log("iniciarProtocolo!")
         this.modelo.estados = [{ tipo: "ejecucion" }];
         let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
-
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
-
             this.guardarProtocolo();
         });
     }
@@ -349,7 +337,6 @@ export class ProtocoloDetalleComponent
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
-
         } else {
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.volverAListaControEmit.emit();

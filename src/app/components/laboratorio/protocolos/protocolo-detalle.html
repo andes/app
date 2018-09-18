@@ -169,7 +169,7 @@
                             <th>Acciones</th>
                         </thead>
                         <tbody>
-                            <tr class="hover" *ngFor="let practica of getPracticas()">
+                            <tr class="hover" *ngFor="let practica of modelo.ejecucion.registros[0].valor">
                                 <td>{{practica.codigo}}</td>
                                 <td>{{practica.nombre}}</td>
                                 <ng-container>
