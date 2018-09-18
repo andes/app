@@ -163,16 +163,17 @@ export class IniciarInternacionComponent implements OnInit {
                         if (datosInternacion) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
-                        // Se busca la obra social del paciente y se le asigna
-                        this.obraSocialService.get({ dni: this.paciente.documento }).subscribe(os => {
-                            if (os) {
-                                this.obraSocial = os;
-                                this.informeIngreso.obraSocial = os;
-                            }
-                        });
                         this.buscandoPaciente = false;
                     });
+                    // Se busca la obra social del paciente y se le asigna
+                    this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
+                        if (os && os.length > 0) {
+                            this.obraSocial = [{ nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador }];
+                            this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                        }
+                    });
                 }
+
             });
         } else {
             this.plex.alert('El paciente debe ser registrado en MPI');
@@ -297,6 +298,9 @@ export class IniciarInternacionComponent implements OnInit {
             } else {
                 // armamos el elemento data a agregar al array de registros
                 let nuevoRegistro = new IPrestacionRegistro(null, this.snomedIngreso);
+                if (this.obraSocial) {
+                    this.informeIngreso.obraSocial = this.obraSocial;
+                }
                 nuevoRegistro.valor = { informeIngreso: this.informeIngreso };
                 // el concepto snomed del tipo de prestacion para la internacion
                 let conceptoSnomed = this.tipoPrestacionSeleccionada;
