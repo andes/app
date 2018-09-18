@@ -317,6 +317,10 @@ export class ProtocoloDetalleComponent
 
     }
 
+    validarProtocolo(){
+        
+    }
+
 
 
     iniciarProtocolo() {

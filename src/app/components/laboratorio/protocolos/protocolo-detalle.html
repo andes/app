@@ -198,7 +198,7 @@
                                     </td>
                                 </ng-container>
                                 <ng-container *ngIf='modo.id === "validacion"'>
-                                    <input type='checkbox'>
+                                    <plex-bool type="checkbox" [(ngModel)]="practica.resultado.validado" name="validado"></plex-bool>
                                 </ng-container>
                                 <td></td>
                                 <td>
