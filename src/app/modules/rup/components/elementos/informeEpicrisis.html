@@ -1,8 +1,10 @@
 <ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
         <div class="col-6">
-            <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
-                idField="conceptId" labelField="term" label="Unidad Organizativa"></plex-select>
+            <form>
+                <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
+                    idField="conceptId" labelField="term" label="Unidad Organizativa" [required]="true"></plex-select>
+            </form>
         </div>
         <div class="col-3 mt-4">
             {{mensajeAccionAccordion}} Todos
@@ -15,8 +17,8 @@
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <plex-panel [ngClass]="{'alerta-campo' : prestacion.ejecucion.registros[0].registros[i].valido === false}"
-                icon="arrow-down-drop-circle-outline" (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo">
+            <plex-panel [ngClass]="{'alerta-campo' : !cristinaVolve.isValid}" icon="arrow-down-drop-circle-outline"
+                (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo">
 
                 <div plex-accordion-title>
                     <span class="contenedor-icono">
@@ -37,7 +39,8 @@
                     </span>
                 </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()"
+                    #cristinaVolve>
                 </rup>
             </plex-panel>
         </ng-container>

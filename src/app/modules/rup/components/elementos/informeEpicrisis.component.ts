@@ -39,6 +39,5 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
     }
 
     VerArbolRelaciones() {
-        this.prestacionesService.setShowArbolRelaciones(true);
     }
 }

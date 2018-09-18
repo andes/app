@@ -37,12 +37,8 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 this.conceptosPermitidos = resultado;
             });
         }
-        if (!this.registro.valor) {
-            this.registro.valor = {
-                descripcion: null
-            };
-        }
     }
+
 
     onConceptoDrop(e: any) {
         if (!this.validaConcepto(e.dragData)) {

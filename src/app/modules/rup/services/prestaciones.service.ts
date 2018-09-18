@@ -17,7 +17,6 @@ export class PrestacionesService {
     // ---TODO----- Ver en que servicio dejar esta funcionalidad 
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
-    public showArbolRelaciones = false;
     // ------------
     public refsetsIds = {
         cronico: '1641000013105',
@@ -42,13 +41,6 @@ export class PrestacionesService {
         });
     }
     // ------ TODO----- Ver en que servicio dejar esta funcionalidad 
-    public getShowArbolRelaciones() {
-        return this.showArbolRelaciones;
-    }
-
-    public setShowArbolRelaciones(param) {
-        this.showArbolRelaciones = param;
-    }
 
     /**
      * Le pasamos por parametro un objeto con el nombre y la ruta

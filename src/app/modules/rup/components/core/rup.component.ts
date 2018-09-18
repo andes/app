@@ -172,4 +172,11 @@ export class RUPComponent implements OnInit {
         return flag;
 
     }
+
+    get isValid() {
+        if (this.rupInstance) {
+            return !this.rupInstance.formulario || !this.rupInstance.formulario.dirty || !this.rupInstance.formulario.invalid;
+        }
+        return true;
+    }
 }
