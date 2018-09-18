@@ -70,6 +70,12 @@ export enum CargaLaboratorio {
     'validacion'
 }
 
+export enum ModoCargaLaboratorio {
+    'Por lista de protocolos',
+    'Por hoja de trabajo',
+    'Por análisis'
+}
+
 export enum PrioridadesLaboratorio {
     'normal',
     'urgencia'
@@ -247,6 +253,18 @@ export function getPrioridadesFiltroLab() {
 
 export function getCargaLaboratorio() {
     let arrLab = Object.keys(CargaLaboratorio);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+
+export function getModoCargaLaboratorio() {
+    let arrLab = Object.keys(ModoCargaLaboratorio);
     arrLab = arrLab.slice(arrLab.length / 2);
     let salida = arrLab.map(elem => {
         return {

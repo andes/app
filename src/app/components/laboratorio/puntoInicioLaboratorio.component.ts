@@ -43,6 +43,7 @@ export class PuntoInicioLaboratorioComponent
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
+    public modoCargaLaboratorioEnum;
     public mostrarListaMpi = false;
     public indexProtocolo;
     public accion;
@@ -51,10 +52,14 @@ export class PuntoInicioLaboratorioComponent
         id: 'control',
         nombre: 'Control'
     };
+    // public formaCarga = {
+    //     listProtocolo: false,
+    //     hTrabajo: false,
+    //     pAnalisis: false
+    // };
     public formaCarga = {
-        listProtocolo: false,
-        hTrabajo: false,
-        pAnalisis: false
+        id: 'Por lista de protocolos',
+        nombre: 'Por lista de protocolos'
     };
     public origen = null;
     public area = null;
@@ -94,6 +99,7 @@ export class PuntoInicioLaboratorioComponent
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
+        this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
         this.resetearProtocolo();
         this.refreshSelection();
 
@@ -264,20 +270,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     changeCarga(tipo) {
-        if (tipo === 'pAnalisis') {
-            console.log('por analisis');
-            this.formaCarga.listProtocolo = false;
-            this.formaCarga.hTrabajo = false;
-        } else if (tipo === 'hTrabajo') {
-            console.log('por hTrabajo');
-            this.formaCarga.pAnalisis = false;
-            this.formaCarga.listProtocolo = false;
-        } else if (tipo === 'listProtocolo') {
-            console.log('por listProtocolo');
-            this.formaCarga.pAnalisis = false;
-            this.formaCarga.hTrabajo = false;
-        };
-        console.log(this.formaCarga);
+        
     }
 
     changeServicio() {
@@ -339,15 +332,14 @@ export class PuntoInicioLaboratorioComponent
         this.showCargarSolicitud = true;
     }
 
-
-    // recordarFiltros() {
-    //     let filtrosPorDefecto = {
-    //         busqueda: this.busqueda,
-    //         profesional: this.auth.profesional._id
-    //     };
-    //     localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
-    //     this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
-    // }
+    recordarFiltros() {
+        let filtrosPorDefecto = {
+            busqueda: this.busqueda,
+            profesional: this.auth.profesional._id
+        };
+        localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
+        this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
+    }
 
 
     // getlocalStorage() {

@@ -47,20 +47,17 @@
                         <div class="labs-item-texto">
                             <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
                             <hr>
-                            <strong>Origen: </strong>
-                            <p>{{ modelo.solicitud.ambitoOrigen }}</p>
+                            <strong>Origen:&nbsp;</strong>
+                            <p>{{ modelo.solicitud.ambitoOrigen.nombre}}</p>
                             <hr>
-                            <strong>Servicio: </strong>
+                            <strong>Servicio:&nbsp;</strong>
                             <p>Clinica</p>
                         </div>
                         <div class="labs-item-texto">
-                            <strong>Usuario: </strong>
+                            <strong>Usuario:&nbsp;</strong>
                             <p>{{ modelo.createdBy.nombreCompleto }}</p>
                             <hr>
-                            <strong>Paciente: </strong>
-                            <p>{{modelo.paciente.nombre}}{{modelo.paciente.apellido}}</p>
-                            <hr>
-                            <strong>Fecha de Registro:</strong>
+                            <strong>Fecha de Registro:&nbsp;</strong>
                             <p>{{ modelo.createdAt | date: 'dd/MM/yyyy' }}</p>
                         </div>
                     </article>

@@ -16,29 +16,17 @@
             </section>
         </header>
         <!-- FIN ENCABEZADO -->
-
-
-
         <div class="row">
-            <div class="col-6">
+            <div class="col">
+                <plex-button type="success" size="sm"  name="especialidad.activo" label='Recordar filtros' position="right" style="float: right" (click)='recordarFiltros()'></plex-button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2">
                 <plex-select [(ngModel)]="modo" name="area" (change)='changeServicio()' label="Modo" [data]='cargaLaboratorioEnum' [required]="false"></plex-select>
             </div>
-            <div class="col-6 text-right">
-                <plex-bool type="slide" [(ngModel)]="espec" label="" name="especialidad.activo" label='Establecer filtros por defecto' (change)='recordarFiltros()'></plex-bool>
-            </div>
-
-
-
-            <!-- FILTROS BASICOS -->
-            <div class="col-6" *ngIf='modo && modo.id === "carga"'>
-                <label for="">Forma de cargar</label>
-                <plex-bool type="checkbox" [(ngModel)]="formaCarga.listProtocolo" label="Por lista de protocolos" (change)='changeCarga("listProtocolo")'
-                    name="protocolos"></plex-bool>
-                <br>
-                <plex-bool type="checkbox" [(ngModel)]="formaCarga.hTrabajo" label="Por hoja de trabajo" (change)='changeCarga("hTrabajo")'
-                    name="trabajo"></plex-bool>
-                <br>
-                <plex-bool type="checkbox" [(ngModel)]="formaCarga.pAnalisis" label="Por analisis" (change)='changeCarga("pAnalisis")' name="analisis"></plex-bool>
+            <div class="col-3" *ngIf='modo && (modo.id === "carga" || modo.id === "validacion")'>
+                <plex-select [(ngModel)]="formaCarga" name="formaCarga" label="Forma de carga" (change)="refreshSelection($event,'area')" [data]='modoCargaLaboratorioEnum' [required]="true"></plex-select>
             </div>
         </div>
 

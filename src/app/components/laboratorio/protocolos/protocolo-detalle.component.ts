@@ -309,7 +309,6 @@ export class ProtocoloDetalleComponent
     }
 
     guardarProtocolo() {
-        console.log('guardarProtocolo', this.modelo.id)
         if (this.modelo.id) {
             let registros = JSON.parse(JSON.stringify(this.modelo.ejecucion.registros));
             let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
