@@ -41,27 +41,39 @@
         <ng-container *ngIf="showProtocoloDetalle">
             <!-- ENCABEZADO DE PROTOCOLO -->
             <section class="labs-listado-item">
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()'  style='margin-right: 10px;'></plex-button>
+                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()' style='margin-right: 10px;'></plex-button>
                 <div class="listado-contenedor-secundario">
                     <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="contenedor-bloque-texto">
                         <div class="labs-item-texto">
+                            <strong>Fecha de solicitud: </strong>
                             <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
                             <hr>
+                            <strong>Fecha de toma de muestra: </strong>
+                            <p>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra | date: 'dd/MM/yyyy'
+                                }}
+                            </p>
+                            <hr>
+
                             <strong>Origen: </strong>
                             <p>{{ modelo.solicitud.ambitoOrigen }}</p>
                             <hr>
                             <strong>Servicio: </strong>
-                            <p>Clinica</p>
+                            <p>{{modelo.solicitud.registros[0]?.valor?.solicitudPrestacion?.servicio.term}}</p>
                         </div>
                         <div class="labs-item-texto">
                             <strong>Usuario: </strong>
                             <p>{{ modelo.createdBy.nombreCompleto }}</p>
                             <hr>
-                            <strong>Paciente: </strong>
-                            <p>{{modelo.paciente.nombre}}{{modelo.paciente.apellido}}</p>
-                            <hr>
                             <strong>Fecha de Registro:</strong>
                             <p>{{ modelo.createdAt | date: 'dd/MM/yyyy' }}</p>
+                            <hr>
+                        </div>
+                        <div class="labs-item-texto">
+                            <strong>Profesional Solicitante: </strong>
+                            <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
+                            <hr>
+                            <strong>Efector Solicitante: </strong>
+                            <p>{{ modelo.solicitud.organizacion.nombre }}</p>
                         </div>
                     </article>
                     <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">
@@ -70,8 +82,8 @@
                                 <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra" label="Fecha toma de muestra "
-                                    [required]="true"></plex-datetime>
+                                <plex-datetime type="date" [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra"
+                                    label="Fecha toma de muestra " [required]="true"></plex-datetime>
                             </div>
 
                             <div class="col-3">
@@ -90,13 +102,13 @@
                                 </plex-select>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad" name="prioridad" (getData)="loadPrioridad($event)" label="Prioridad" placeholder="Seleccione la prioridad"
-                                    labelField="nombre" [required]="true">
+                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad" name="prioridad" (getData)="loadPrioridad($event)"
+                                    label="Prioridad" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
                                 </plex-select>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen" placeholder="Seleccione el origen"
-                                    [required]="true">
+                                <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen"
+                                    placeholder="Seleccione el origen" [required]="true">
                                 </plex-select>
 
                             </div>
@@ -106,16 +118,17 @@
                                 </plex-select>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.area" name="laboratorioInterno" label="Area" (getData)="loadArea($event)" [required]="true"></plex-select>
+                                <plex-select [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.area" name="laboratorioInterno" label="Area"
+                                    (getData)="loadArea($event)" [required]="true"></plex-select>
                             </div>
                         </div>
                     </article>
                 </div>
                 <div *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="badge-container">
-                    <plex-badge type="danger" class="ml-2"> prioridad </plex-badge>
-                    <plex-badge type="warning" class="ml-2"> estado </plex-badge>
+                    <plex-badge type="danger" class="ml-2"> {{modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}} </plex-badge>
+                    <plex-badge type="warning" class="ml-2"> {{modelo.estados[0].tipo}} </plex-badge>
                 </div>
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()'  style='margin-left: 10px;'></plex-button>
+                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
 
             </section>
             <!-- FIN ENCABEZADO DE PROTOCOLO -->
@@ -145,6 +158,7 @@
                             <th class="float-center">S/Muestra</th>
                             <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
                                 <th class="float-center">Valor</th>
+                                <th *ngIf='modo.id === "validacion"' class="float-center">R. Anterior</th>
                                 <th class="float-center">UM</th>
                                 <th class="float-center">VR</th>
                             </ng-container>
@@ -167,6 +181,14 @@
                                             <plex-float [(ngModel)]="practica.resultado.valor" [disabled]='practica.resultado.sinMuestra'></plex-float>
 
                                         </p>
+                                    </td>
+
+                                    <td *ngIf='modo.id === "validacion"'>
+                                        {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
+                                        <!-- <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
+                                        - 1]?.unidadMedida.term}}
+                                        <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)-
+                                        1]?.fechaTomaMuestra | date: 'dd/MM/yyyy' }} -->
                                     </td>
                                     <td>
                                         {{practica.unidadMedida.term}}
@@ -194,7 +216,8 @@
             <!--OBSERVACIONES - RECEPCION-->
             <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
                 <div class="col-12 ">
-                    <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones" label="Observaciones " name="observaciones " multiline="true ">
+                    <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones" label="Observaciones " name="observaciones "
+                        multiline="true ">
                     </plex-text>
                 </div>
             </div>
