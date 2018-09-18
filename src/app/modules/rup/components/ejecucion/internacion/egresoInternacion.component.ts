@@ -22,6 +22,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
 
+
     public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
     public listaProcedimientosQuirurgicos: any[];

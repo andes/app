@@ -316,7 +316,7 @@ export class IniciarInternacionComponent implements OnInit {
                     if (this.cama) {
                         // vamos a actualizar el estado de la cama
                         let dto = {
-                            fecha: this.informeIngreso.fechaIngreso,
+                            fecha: new Date(),
                             estado: 'ocupada',
                             unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
