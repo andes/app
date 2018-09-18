@@ -228,7 +228,7 @@ export class PanelAgendaComponent implements OnInit {
                         desde: this.agenda.horaInicio,
                         hasta: this.agenda.horaFin,
                         estados: ['planificacion', 'disponible', 'publicada', 'pausada']
-                    }
+                    };
                     // this.serviceAgenda.get({ 'organizacion': this.auth.organizacion.id, 'idProfesional': profesional.id, 'rango': true, 'desde': this.agenda.horaInicio, 'hasta': this.agenda.horaFin }).subscribe(agendas => {
                     this.serviceAgenda.get(params).subscribe(agendas => {
                         // Hay problemas de solapamiento?
