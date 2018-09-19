@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-3">
                             <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio"
-                                label="Fecha" [required]="true">
+                                label="Fecha" [required]="true" skipBy="day">
                             </plex-datetime>
                         </div>
                         <div class="col-3">
