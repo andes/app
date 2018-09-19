@@ -1,7 +1,7 @@
 <header *ngIf="prestacion">
     <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
 </header>
-<section *ngIf="prestacion && paciente && !showDarTurnos">
+<section *ngIf="prestacion && !showDarTurnos">
     <plex-box>
         <header>
             <div class="row">
@@ -14,13 +14,10 @@
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                                 (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
-                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
+                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !prestacion.solicitud.tipoPrestacion.noNominalizada">
                                 <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
                                     (click)="descargarResumen()"></plex-button>
                             </ng-container>
-                            <!-- <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !puedeDescargarPDF">
-                                <plex-button type="disabled" icon="download mdi-14px" class="float-right ml-1" title="Sin permiso para descargar" titlePosition="top"></plex-button>
-                            </ng-container> -->
                         </div>
                     </div>
                 </div>

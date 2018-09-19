@@ -29,7 +29,7 @@
         ],
         "scripts": [
             "../node_modules/intro.js/intro.js"
-          ],
+        ],
         "environmentSource": "environments/environment.ts",
         "environments": {
             "dev": "environments/environment.ts",
