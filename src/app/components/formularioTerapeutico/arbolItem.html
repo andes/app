@@ -1,0 +1,42 @@
+
+<div content class="content-last-child" *ngIf="esHoja()"  [ngClass]="'child-nested-' + deep">
+    <div class="row">
+        <div class="col-10" >
+            <div class="badge badge-info" (click)="verDetalle(indice)" style="font-size: 1.1rem;
+            margin-bottom: 6px;"> 
+                {{ indice.descripcion }}
+            </div>
+
+        </div>
+        <div class="col-2">
+            <button class="btn btn-danger" (click)="borrar(indice)">Eliminar</button>
+
+        </div>
+    </div>
+
+</div>
+
+<plex-accordion>
+
+    <plex-panel *ngIf="!esHoja()" style="padding:unset">
+        <div plex-accordion-title (click)="buscarHijos()">
+            {{indice.descripcion}}
+
+        </div>
+
+        <div [ngClass]="'child-nested-' + deep">
+            <button class="btn btn-success text-right" (click)='agregarMedicamento()'>Agregar</button>
+            <hr>
+            <!-- <span>{{ indice.descripcion }} sadasdas</span> -->
+            <span>
+                <arbolItem class="arbol-hijo" [indice]="i" [deep]="deep + 1" *ngFor="let i of hijos" 
+                (hijosOutPut)='buscarHijos()'
+                 (enviarDatosMedicamento)="enviarDatosMedicamento.emit($event)"
+                  (enviarDetalle)="enviarDetalle.emit($event)"
+                  (borradoOutPut)='borradoOutPut.emit($event)'>
+               </arbolItem>
+            </span>
+        </div>
+    </plex-panel>
+
+</plex-accordion>

@@ -5,8 +5,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
-import { PeriodoPadronesPucoService } from '../../services/periodoPadronesPuco.service';
-import { PeriodoPadronesProfeService } from '../../services/periodoPadronesProfe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 
 @Component({
@@ -42,8 +40,6 @@ export class PucoComponent implements OnInit, OnDestroy {
     constructor(
         private obraSocialService: ObraSocialService,
         private profeService: ProfeService,
-        private periodoPadronesPucoService: PeriodoPadronesPucoService,
-        private periodoPadronesProfeService: PeriodoPadronesProfeService,
         private sugerenciasService: SugerenciasService,
         private plex: Plex) { }
 
@@ -56,24 +52,23 @@ export class PucoComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         Observable.forkJoin([
-            this.periodoPadronesPucoService.get({}),
-            this.periodoPadronesProfeService.get({})]).subscribe(padrones => {
-                let arrAux = padrones[0].concat(padrones[1]);
-                arrAux.sort((a, b) => a.version < b.version);
-                //  let periodoMasActual = new Date(arrAux[0].version); // el padron mas actual entre puco y profe
-                let periodoMasActual = new Date();  // fecha actual
+            this.obraSocialService.getPadrones({}),
+            this.profeService.getPadrones({})]
+        ).subscribe(padrones => {
 
+                let periodoMasActual = new Date();  // fecha actual para configurar el select a continuacion ..
+
+                // se construye el contenido del select segun la cantidad de meses hacia atras que se pudiera consultar
                 for (let i = 0; i < this.cantidadPeriodos; i++) {
                     let periodoAux = moment(periodoMasActual).subtract(i, 'month');
                     this.periodos[i] = { id: i, nombre: moment(periodoAux).format('MMMM [de] YYYY'), version: periodoAux };    // Ej: {1, "mayo 2018", "2018/05/05"}
 
                 }
-                this.periodoSelect = this.periodos[0];
-                this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo mas actual
-                this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];
+                this.setPeriodo(this.periodos[0]);  // por defecto se setea el periodo en el corriente mes
+                this.periodoMasAntiguo = this.periodos[this.cantidadPeriodos - 1];  // ultimo mes hacia atras que mostrará el select
 
 
-                // Se almacenan los padrones de puco
+                // (Para el sidebar) Se setean las variables para mostrar los padrones de PUCO que se encuentran disponibles.
                 if (padrones[0].length) {
                     for (let i = 0; i < padrones[0].length; i++) {
 
@@ -87,7 +82,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                 }
 
 
-                // Se almacenan los padrones de incluid salud
+                // (Para el sidebar) Se setean las variables para mostrar los padrones de INCLUIR SALUD que se encuentran disponibles.
                 if (padrones[1].length) {
                     for (let i = 0; i < padrones[1].length; i++) {
 
@@ -103,6 +98,7 @@ export class PucoComponent implements OnInit, OnDestroy {
             });
     }
 
+    // Realiza controles simples cuando se modifica el valor del select
     public setPeriodo(periodo) {
         if (periodo === null) {
             this.usuarios = []; // Si se borra el periodo del select, se borran los resultados
@@ -116,8 +112,8 @@ export class PucoComponent implements OnInit, OnDestroy {
         }
     }
 
-    /* Verifica que el periodo seleccionado para la búsqueda corresponda a un padrón ya actualizado.
-    * De ser asi retorna dicho periodo, de lo contrario retorna el periodo más actual.
+    /* Al realizar una búsqueda, verifica que esta no se realice sobre un periodo/mes aún no actualizado (Sin padrón correspondiente).
+    * De ser asi retorna el padrón mas actual para que la búsqueda se realice sobre este.
     */
     verificarPeriodo(periodo1, periodo2) {
         periodo1 = new Date(periodo1);
@@ -126,9 +122,9 @@ export class PucoComponent implements OnInit, OnDestroy {
         let p2 = moment(periodo2).startOf('month').format('YYYY-MM-DD');
 
         if (moment(p1).diff(p2) > 0) {
-            return periodo2;
+            return p2;
         } else {
-            return periodo1;
+            return p1;
         }
     }
 
@@ -151,6 +147,7 @@ export class PucoComponent implements OnInit, OnDestroy {
             this.timeoutHandle = window.setTimeout(() => {
                 this.timeoutHandle = null;
                 if (this.periodoSelect) {
+                    // se verifica que el periodo seleccionado corresponda a un padrón existente.
                     let periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
                     let periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
 

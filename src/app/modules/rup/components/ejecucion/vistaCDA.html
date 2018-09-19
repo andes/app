@@ -7,8 +7,10 @@
     <div class="row">
         <div class="col">
             <strong>Profesional: </strong>
-            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional.apellido }} {{registro?.data.profesional.nombre }}</ng-container>
-            <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}} {{autorCDA?.name?.given}}</ng-container>
+            <ng-container *ngIf="registro?.data.profesional">{{registro?.data.profesional.apellido }}
+                {{registro?.data.profesional.nombre }}</ng-container>
+            <ng-container *ngIf="!registro?.data.profesional && autorCDA">{{autorCDA?.name?.family}}
+                {{autorCDA?.name?.given}}</ng-container>
         </div>
     </div>
     <div class="row">
@@ -33,15 +35,15 @@
     </div>
     <div class="row" *ngIf="codificacionCDA">
         <div class="col">
-            <ng-container *ngIf="codificacionCDA.code.$">
+            <ng-container *ngIf="codificacionCDA.code && codificacionCDA.code.$">
                 {{codificacionCDA.code.$.code }} - {{codificacionCDA.code.$.displayName}}
             </ng-container>
         </div>
     </div>
     <div class="row" *ngIf="codificacionCDA">
         <div class="col">
-            <ng-container *ngIf="codificacionCDA.title && codificacionCDA.text">
-                {{codificacionCDA.title }}: {{codificacionCDA.text}}
+            <ng-container *ngIf="codificacionCDA.text">
+                <b>Evolución: </b> {{codificacionCDA.text}}
             </ng-container>
         </div>
     </div>

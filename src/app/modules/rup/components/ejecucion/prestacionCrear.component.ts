@@ -38,7 +38,8 @@ export class PrestacionCrearComponent implements OnInit {
     // Paciente sleccionado
     public paciente: IPaciente;
     public buscandoPaciente = false;
-
+    // segun el tipo de prestación elegida se selecciona paciente o no
+    public mostrarPaciente = false;
     /**
      * Indica si muestra el calendario para dar turno autocitado
      */
@@ -83,6 +84,15 @@ export class PrestacionCrearComponent implements OnInit {
         this.onReturn();
     }
 
+    seleccionarTipoPrestacion() {
+
+        this.mostrarPaciente = this.tipoPrestacionSeleccionada && !this.tipoPrestacionSeleccionada.noNominalizada;
+
+    }
+
+
+
+
     /**
      * Vuelve a la página anterior
      */
@@ -102,50 +112,56 @@ export class PrestacionCrearComponent implements OnInit {
      */
     iniciarPrestacion() {
 
-        this.existePaciente();
-
-        let conceptoSnomed = this.tipoPrestacionSeleccionada;
-        let nuevaPrestacion;
-        nuevaPrestacion = {
-            paciente: {
-                id: this.paciente.id,
-                nombre: this.paciente.nombre,
-                apellido: this.paciente.apellido,
-                documento: this.paciente.documento,
-                sexo: this.paciente.sexo,
-                fechaNacimiento: this.paciente.fechaNacimiento
-            },
-            solicitud: {
-                fecha: this.fecha,
-                tipoPrestacion: conceptoSnomed,
-                // profesional logueado
-                profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
-            },
-            ejecucion: {
-                fecha: this.fecha,
-                registros: [],
-                // organizacion desde la que se solicita la prestacion
-                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
-            },
-            estados: {
-                fecha: new Date(),
-                tipo: 'ejecucion'
+        if (this.tipoPrestacionSeleccionada) {
+            let pacientePrestacion = undefined;
+            if (!this.tipoPrestacionSeleccionada.noNominalizada) {
+                this.existePaciente();
+                pacientePrestacion = {
+                    id: this.paciente.id,
+                    nombre: this.paciente.nombre,
+                    apellido: this.paciente.apellido,
+                    documento: this.paciente.documento,
+                    sexo: this.paciente.sexo,
+                    fechaNacimiento: this.paciente.fechaNacimiento
+                };
             }
-        };
-
-        nuevaPrestacion.paciente['_id'] = this.paciente.id;
-        this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-            localStorage.removeItem('idAgenda');
-            this.router.navigate(['/rup/ejecucion', prestacion.id]);
-        }, (err) => {
-            this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
-        });
+            let conceptoSnomed = this.tipoPrestacionSeleccionada;
+            let nuevaPrestacion;
+            nuevaPrestacion = {
+                paciente: pacientePrestacion,
+                solicitud: {
+                    fecha: this.fecha,
+                    tipoPrestacion: conceptoSnomed,
+                    // profesional logueado
+                    profesional:
+                        {
+                            id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                            apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                        },
+                    // organizacion desde la que se solicita la prestacion
+                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
+                },
+                ejecucion: {
+                    fecha: this.fecha,
+                    registros: [],
+                    // organizacion desde la que se solicita la prestacion
+                    organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+                },
+                estados: {
+                    fecha: new Date(),
+                    tipo: 'ejecucion'
+                }
+            };
+            if (pacientePrestacion) {
+                nuevaPrestacion.paciente['_id'] = this.paciente.id;
+            }
+            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                localStorage.removeItem('idAgenda');
+                this.router.navigate(['/rup/ejecucion', prestacion.id]);
+            }, (err) => {
+                this.plex.info('danger', 'La prestación no pudo ser registrada. ' + err);
+            });
+        }
     }
 
     darTurnoAutocitado() {

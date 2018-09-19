@@ -6,10 +6,7 @@ import {
 import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
-import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 import { Plex } from '@andes/plex';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-
 
 @Component({
     selector: 'paciente-detalle',
@@ -50,8 +47,10 @@ export class PacienteDetalleComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.paciente.fechaNacimiento;
         this.backUpDatos['foto'] = this.paciente.foto;
         this.backUpDatos['cuil'] = this.paciente.cuil;
-        this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
-        this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        if (this.paciente.direccion) {
+            this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
+            this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+        }
     }
 
     renaperVerification(patient) {

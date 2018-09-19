@@ -53,7 +53,6 @@ export class LiberarTurnoComponent implements OnInit {
             return;
         }
 
-        let alertCount = 0;
         let patch = {
             op: 'liberarTurno',
             turnos: this.turnos.map((resultado) => { return resultado._id; })
