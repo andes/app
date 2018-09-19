@@ -140,7 +140,6 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
         this.busqueda.organizacion = (!this.organizacion || (this.organizacion && this.organizacion.id === null)) ? null : this.organizacion.id;
-        console.log(this.numProtocoloDesde, this.numProtocoloHasta);
         this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
         this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
 

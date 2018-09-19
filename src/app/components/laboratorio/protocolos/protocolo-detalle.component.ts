@@ -38,6 +38,7 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
+    flagMarcarTodas: Boolean = false;
     public practicas: IPracticaMatch[] | IPractica[];
 
     public mostrarMasOpciones = false;
@@ -277,7 +278,7 @@ export class ProtocoloDetalleComponent
     }
 
     isProtocoloValidado() {
-        return this.modelo.estados[0].tipo === "validado";
+        return this.modelo.estados[this.modelo.estados.length - 1].tipo === "validada";
     }
 
     actualizarEstadoValidacion() {
@@ -286,7 +287,19 @@ export class ProtocoloDetalleComponent
         });
 
         if (protocoloValidado) {
-            this.modelo.estados = [{ tipo: "validado" }];
+            this.modelo.estados.push(Constantes.estadoValidada);
+        }
+    }
+
+    validarTodas(event) {
+        this.modelo.ejecucion.registros[0].valor.forEach(practica => {
+                practica.resultado.validado = event.value;
+        });
+    }
+
+    clickValidar(event) {
+        if(!event.value) {
+            this.flagMarcarTodas = false;
         }
     }
 
@@ -303,17 +316,9 @@ export class ProtocoloDetalleComponent
                 practica.resultado.resultadosAnteriores.push(resAnteriores);
             }
         }
-
-
-
-    }
-
-    validarProtocolo(){
-        
     }
 
     iniciarProtocolo() {
-        console.log("iniciarProtocolo!")
         this.modelo.estados = [{ tipo: "ejecucion" }];
         let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
@@ -328,10 +333,16 @@ export class ProtocoloDetalleComponent
             let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
 
             let params: any = {
-                op: 'registros',
-                registros: registros,
-                solicitud: solicitud
+                registros: registros
             };
+
+            if (this.modo.id === 'validacion' && this.isProtocoloValidado()) {
+                params.op = 'estadoPush';
+                params.estado = Constantes.estadoValidada;
+            } else {
+                params.op = 'registros';
+                params.solicitud = solicitud;
+            }
 
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
                 this.volverAListaControEmit.emit();

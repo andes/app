@@ -14,5 +14,6 @@ export const Constantes = {
         term:"procedimiento de medición",
         conceptId:"122869004",
         semanticTag:"procedimiento"
-    }
+    },
+    estadoValidada: { tipo: 'validada' }
 }
