@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChildren, QueryList } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { PrestarHcComponent } from './prestar-hc.component';
 import { SolicitudManualComponent } from './solicitud-manual-hc.component';
@@ -15,11 +15,14 @@ import { TipoPrestacionService } from '../../../services/tipoPrestacion.service'
 import { EspacioFisicoService } from '../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from '../../../services/profesional.service';
 import { ObraSocialService } from './../../../services/obraSocial.service';
+import { CDAService } from './../../../modules/rup/services/CDA.service';
+
 import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 // Interfaces
 import { IPaciente } from './../../../interfaces/IPaciente';
 import { debug } from 'util';
+import { environment } from '../../../../environments/environment';
 
 @Component({
     selector: 'app-listar-solicitudes',
@@ -28,6 +31,10 @@ import { debug } from 'util';
 })
 
 export class ListarSolicitudesComponent implements OnInit {
+    @ViewChildren('upload') childsComponents: QueryList<any>;
+    extensionPermitida = 'pdf';
+    errorExt = -1;
+
     public carpetas: any[] = [];
     public prestacionesPermisos = [];
     public espacioFisico = [];
@@ -93,7 +100,9 @@ export class ListarSolicitudesComponent implements OnInit {
         public servicioProfesional: ProfesionalService,
         public auth: Auth,
         public servicePaciente: PacienteService,
-        public servicioOS: ObraSocialService) {
+        public servicioOS: ObraSocialService,
+        public servicioCDA: CDAService,
+    ) {
     }
 
     ngOnInit() {
@@ -394,5 +403,65 @@ export class ListarSolicitudesComponent implements OnInit {
             });
         }
         return (this.carpetaEfector ? true : false);
+    }
+
+    changeListener($event, index, _carpeta): void {
+        this.readThis($event.target, index, _carpeta);
+    }
+
+
+    readThis(inputValue: any, index, _carpeta): void {
+        // ConceptId que se utilizará para la digitalización
+        let conceptSnomed = {
+            term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
+            conceptId: '2881000013106'
+        };
+        let ext = this.fileExtension(inputValue.value);
+        this.errorExt = -1;
+        if (ext.toLowerCase() !== this.extensionPermitida) {
+            this.plex.toast('danger', 'Archivo inválido. Solo se admite PDF', 'Información', 1000);
+            this.errorExt = index;
+            return;
+        }
+        let file: File = inputValue.files[0];
+        let myReader: FileReader = new FileReader();
+
+        myReader.onloadend = (e) => {
+            let id;
+            let profesional = this.auth.usuario;
+            if (_carpeta.tipo === 'Manual') {
+                id = _carpeta.idSolicitud;
+            } else if (_carpeta.tipo === 'Automatica') {
+                id = _carpeta.datosPrestamo.turno.id;
+            }
+            let metadata = {
+                id: id,
+                tipoPrestacion: conceptSnomed.conceptId,
+                fecha: new Date(),
+                paciente: _carpeta.paciente,
+                profesional: profesional,
+                file: myReader.result,
+                texto: 'Se adjunta/n historia clínica digitalizada por un administrativo'
+            };
+            this.servicioCDA.post(myReader.result, metadata).subscribe((data) => {
+                this.plex.toast('success', 'Se adjuntó correctamente', 'Información', 1000);
+                this.getCarpetas({}, null);
+            });
+        };
+        myReader.readAsDataURL(file);
+    }
+
+    fileExtension(file) {
+        if (file.lastIndexOf('.') >= 0) {
+            return file.slice((file.lastIndexOf('.') + 1));
+        } else {
+            return '';
+        }
+    }
+
+    descargar(archivo) {
+        let token = window.sessionStorage.getItem('jwt');
+        let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
+        window.open(url);
     }
 }

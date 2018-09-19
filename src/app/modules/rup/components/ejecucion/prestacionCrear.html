@@ -11,11 +11,11 @@
                         <plex-datetime type="datetime" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha y hora de la prestación">
                         </plex-datetime>
                         <plex-select [(ngModel)]="tipoPrestacionSeleccionada" name="nombrePrestacion" label="Seleccione el tipo de prestación" labelField="term"
-                            [data]="tiposPrestacion" [required]="true">
+                            [data]="tiposPrestacion" [required]="true" (change)="seleccionarTipoPrestacion()">
                         </plex-select>
                     </fieldset>
                 </div>
-                <div class="col-6">
+                <div *ngIf="mostrarPaciente" class="col-6">
                     <fieldset>
                         <legend>Datos del paciente</legend>
                         <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>

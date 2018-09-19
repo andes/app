@@ -95,7 +95,6 @@
                                                 </div>
 
                                                 <div class="title">
-                                                    <!-- <div class="title"> -->
                                                     {{registro.nombre}}
 
                                                     <!-- vinculacion / desvinculacion -->
@@ -109,7 +108,6 @@
                                                             <i class="mdi mdi-link-variant-off"></i>
                                                         </a>
                                                     </div>
-                                                    <!-- </div> -->
                                                 </div>
 
                                                 <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
@@ -146,14 +144,13 @@
                                                 <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                                     [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
                                                     (onDragEnd)="draggingRegistro(i, registro, false)">
-                                                    <!-- <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i> -->
                                                     <span>
-                                                        {{registro.concepto.semanticTag}}
+                                                        {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
                                                     </span>
                                                 </div>
 
                                                 <!-- ... Body -->
-                                                <div class="content" *ngIf="paciente">
+                                                <div class="content" *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
 
                                                     <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
                                                         <div class="row">
@@ -173,7 +170,7 @@
 
                                                     <!-- RUP Loader  (change)="prestacionChanged()"-->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto, registro.esSolicitud)"></rup>
 
                                                 </div>
                                             </div>
@@ -299,7 +296,7 @@
                                                     <div class="rup-body">
                                                         <div class="legend">
                                                             <span>
-                                                                {{elemento.concepto.semanticTag}}
+                                                                {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
                                                             </span>
                                                         </div>
                                                         <div class="content">
@@ -337,7 +334,7 @@
             <!-- Panel Buscador SNOMED + HUDS -->
             <div class="col-4 tabs-buscador-huds pr-0" *ngIf="prestacion">
                 <plex-box>
-                    <plex-tabs [activeIndex]="panelIndex">
+                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)"

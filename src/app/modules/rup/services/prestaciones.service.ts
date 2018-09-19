@@ -589,16 +589,29 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
-
-        let prestacion = {
-            paciente: {
+        let pacientePrestacion;
+        if (!paciente) {
+            pacientePrestacion = undefined;
+        } else {
+            pacientePrestacion = {
                 id: paciente.id,
                 nombre: paciente.nombre,
                 apellido: paciente.apellido,
                 documento: paciente.documento,
                 sexo: paciente.sexo,
                 fechaNacimiento: paciente.fechaNacimiento
-            }
+            };
+        }
+        let prestacion = {
+            paciente: pacientePrestacion
+            // paciente: {
+            //     id: paciente.id,
+            //     nombre: paciente.nombre,
+            //     apellido: paciente.apellido,
+            //     documento: paciente.documento,
+            //     sexo: paciente.sexo,
+            //     fechaNacimiento: paciente.fechaNacimiento
+            // }
         };
 
         if (momento === 'solicitud') {
@@ -670,9 +683,10 @@ export class PrestacionesService {
                 tipo: 'pendiente'
             };
         }
-
-        prestacion.paciente['_id'] = paciente.id;
-        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
+        if (paciente) {
+            prestacion.paciente['_id'] = paciente.id;
+            prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
+        }
 
         return prestacion;
     }

@@ -4,4 +4,5 @@ export interface ITipoPrestacion {
     term: String;
     fsn: String;
     semanticTag: String;
+    noNominalizada?: Boolean;
 }
