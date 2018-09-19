@@ -20,6 +20,7 @@ import { Cie10Service } from '../../../../services/term/cie10.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { ActivatedRoute } from '@angular/router';
 
+
 @Component({
     selector: 'rup',
     styleUrls: [
@@ -179,4 +180,5 @@ export class RUPComponent implements OnInit {
         }
         return true;
     }
+
 }

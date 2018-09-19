@@ -32,6 +32,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     public collapse = true;
 
     ngOnInit() {
+        this.params.required = this.params.required ? this.params.required : false;
         if (this.params.refsetId) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptosPermitidos = resultado;

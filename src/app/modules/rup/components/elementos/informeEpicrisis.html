@@ -31,10 +31,13 @@
 
                     <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
 
-                    <span *ngIf="!registro.registros[i].registros.length && i > 0" class="badge badge-warning float-right mr-4">
+                    <span *ngIf="!cristinaVolve.isValid" class="badge badge-danger float-right mr-4">
+                        Hay registros incompletos
+                    </span>
+                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && cristinaVolve.isValid" class="badge badge-warning float-right mr-4">
                         No hay conceptos registrados
                     </span>
-                    <span *ngIf="registro.registros[i].registros.length" class="badge badge-info float-right mr-4">
+                    <span *ngIf="registro.registros[i].registros.length && cristinaVolve.isValid" class="badge badge-info float-right mr-4">
                         {{registro.registros[i].registros.length}} Conceptos registrados
                     </span>
                 </div>

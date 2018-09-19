@@ -101,6 +101,8 @@ export class PrestacionEjecucionComponent implements OnInit {
     public btnVolver = 'Mapa de camas';
     public rutaVolver;
 
+    public flagValid = true;
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -696,14 +698,14 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     guardarPrestacion() {
         // validamos antes de guardar
-        let flag = true;
+
         this.rupElements.forEach((item) => {
 
             let instance = item.rupInstance;
-            flag = flag && (instance.soloValores || instance.validate());
+            this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
         // validamos antes de guardar
-        if (!this.beforeSave() || !flag) {
+        if (!this.beforeSave() || !this.flagValid) {
             this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
