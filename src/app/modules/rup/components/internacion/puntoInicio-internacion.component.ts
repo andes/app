@@ -93,6 +93,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
                     this.internacionEjecucion = prestacionExiste[0];
                 });
                 this.showInternacionEjecucion = true;
+            } else {
+                this.showInternacionEjecucion = false;
             }
         });
         this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.snomedEpicrisis.conceptId).subscribe(epicrisis => {
