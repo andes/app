@@ -6,6 +6,7 @@ import { PrestacionesService } from '../../../services/prestaciones.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
     selector: 'rup-egresoInternacion',
@@ -62,7 +63,8 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         private route: ActivatedRoute,
         private location: Location,
         public plex: Plex,
-        public servicioOrganizacion: OrganizacionService
+        public servicioOrganizacion: OrganizacionService,
+        public internacionService: InternacionService
     ) { }
 
     ngOnInit() {
@@ -278,20 +280,23 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         }
     }
 
-
-    // comprobarEgresoParaValidar() {
-    //     // nos fijamos si el concepto ya aparece en los registros
-    //     let egresoExiste = this.registro.valor.InformeEgreso;
-
-    //     if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada') {
-    //         if (egresoExiste.fechaEgreso && egresoExiste.tipoEgreso) {
-    //             this.mostrarValidacion = true;
-    //         } else {
-    //             this.mostrarValidacion = false;
-    //         }
-    //     } else {
-    //         this.mostrarValidacion = false;
-    //     }
-    // }
+    /**
+    * Al registrar la fecha de egreso se calculan los dias de estada
+    *
+    */
+    calcularDiasEstada() {
+        if (this.registro.valor.InformeEgreso.fechaEgreso) {
+            // vamos a recuperara la fecha de ingreso de la prestacion
+            let informeIngreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.ingreso.conceptId);
+            if (informeIngreso) {
+                let fechaIngreso = informeIngreso.valor.informeIngreso.fechaIngreso;
+                if (fechaIngreso) {
+                    let fechaEgreso = moment(this.registro.valor.InformeEgreso.fechaEgreso);
+                    let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') : '0';
+                    this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
+                }
+            }
+        }
+    }
 
 }
