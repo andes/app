@@ -197,6 +197,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     volverLista() {
+        this.refreshSelection();
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;

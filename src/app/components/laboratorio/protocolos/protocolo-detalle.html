@@ -43,37 +43,47 @@
             <section class="labs-listado-item">
                 <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()' style='margin-right: 10px;'></plex-button>
                 <div class="listado-contenedor-secundario">
-                    <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="contenedor-bloque-texto">
-                        <div class="labs-item-texto">
-                            <strong>Fecha de solicitud: </strong>
-                            <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
-                            <hr>
-                            <strong>Fecha de toma de muestra: </strong>
-                            <p>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra | date: 'dd/MM/yyyy'
-                                }}
-                            </p>
-                            <hr>
+                    <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="labs-item-numero">
+                        <div class="row">
+                            <div class="col-3">
+                                <strong>Fecha de solicitud: </strong>
+                                <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Fecha de toma de muestra: </strong>
+                                <p>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra | date: 'dd/MM/yyyy'
+                                    }}
+                                </p>
+                            </div>
+                            <div class="col-3">
 
-                            <strong>Origen: </strong>
-                            <p>{{ modelo.solicitud.ambitoOrigen.nombre}}</p>
-                            <hr>
-                            <strong>Servicio: </strong>
-                            <p>{{modelo.solicitud.registros[0]?.valor?.solicitudPrestacion?.servicio.term}}</p>
-                        </div>
-                        <div class="labs-item-texto">
-                            <strong>Usuario:&nbsp;</strong>
-                            <p>{{ modelo.createdBy.nombreCompleto }}</p>
-                            <hr>
-                            <strong>Fecha de Registro:&nbsp;</strong>
-                            <p>{{ modelo.createdAt | date: 'dd/MM/yyyy' }}</p>
-                            <hr>
-                        </div>
-                        <div class="labs-item-texto">
-                            <strong>Profesional Solicitante: </strong>
-                            <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
-                            <hr>
-                            <strong>Efector Solicitante: </strong>
-                            <p>{{ modelo.solicitud.organizacion.nombre }}</p>
+                                <strong>Origen: </strong>
+                                <p>{{ modelo.solicitud.ambitoOrigen.nombre}}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Servicio: </strong>
+                                <p>{{modelo.solicitud.registros[0]?.valor?.solicitudPrestacion?.servicio.term}}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Usuario:&nbsp;</strong>
+                                <p>{{ modelo.createdBy.nombreCompleto }}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Fecha de Ejecucion:&nbsp;</strong>
+                                <p>{{ modelo.ejecucion.fecha | date: 'dd/MM/yyyy' }}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Profesional Solicitante: </strong>
+                                <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Efector Solicitante: </strong>
+                                <p>{{ modelo.solicitud.organizacion.nombre }}</p>
+                            </div>
+                            <div class="col-3">
+                                <strong>Diagnostico: </strong>
+                                <p>{{ modelo.solicitud.registros[0]?.valor?.solicitudPrestacion.diagnostico }}</p>
+                            </div>
                         </div>
                     </article>
                     <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">
@@ -134,87 +144,116 @@
             <!-- FIN ENCABEZADO DE PROTOCOLO -->
             <hr>
             <!-- BUSCADOR DE PRACTICAS -->
-            <div class="row" *ngIf="(modo.id === 'recepcion') || modo.id === 'control'">
-                <div class="col-12">
-                    <label>Practicas</label>
-                    <practica-buscar (busquedaInicial)="busquedaInicial()" (busquedaFInal)="busquedaFInal($event)" (searchClear)="searchClear()">
-                    </practica-buscar>
-                </div>
-                <practica-listado *ngIf="practicas && practicas.length" [practicas]="practicas" [autoselect]="false" (selected)="seleccionarPractica($event)"></practica-listado>
-                <div *ngIf="practicas && !practicas.length" class="alert alert-default">
-                    ¡No se encontró ningúna practica!
-                </div>
-            </div>
-            <!-- FIN BUSCADOR DE PRACTICAS -->
+            <plex-tabs>
+                <plex-tab label="Analisis">
 
-            <!-- TABLA VISUALIZACION DE PRACTICAS -->
-            <hr>
-            <div class="row">
-                <div class="col">
-                    <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
-                        <thead>
-                            <th>Cod.</th>
-                            <th>Descripcion</th>
-                            <th class="float-center">S/Muestra</th>
-                            <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
-                                <th class="float-center">Valor</th>
-                                <th *ngIf='modo.id === "validacion"' class="float-center">R. Anterior</th>
-                                <th class="float-center">UM</th>
-                                <th class="float-center">VR</th>
-                            </ng-container>
-                            <ng-container *ngIf='modo.id === "validacion"'>
-                                <th class="float-center"><div><plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas"  (change)="validarTodas($event)" name="validarTodos"></plex-bool></div>Validar </th>
-                            </ng-container>
-                            <th></th>
-                            <th>Acciones</th>
-                        </thead>
-                        <tbody>
-                            <tr class="hover" *ngFor="let practica of modelo.ejecucion.registros[0].valor">
-                                <td>{{practica.codigo}}</td>
-                                <td>{{practica.nombre}}</td>
-                                <ng-container>
-                                    <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra" ></plex-bool>
-                                </ng-container>
-                                <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
-                                    <td class="text-left align-middle estado">
-                                        <p>
-                                            <plex-float [(ngModel)]="practica.resultado.valor" [disabled]='practica.resultado.sinMuestra'></plex-float>
+                    <div class="row" *ngIf="(modo.id === 'recepcion') || modo.id === 'control'">
+                        <div class="col-12">
+                            <label>Practicas</label>
+                            <practica-buscar (busquedaInicial)="busquedaInicial()" (busquedaFInal)="busquedaFInal($event)" (searchClear)="searchClear()">
+                            </practica-buscar>
+                        </div>
+                        <practica-listado *ngIf="practicas && practicas.length" [practicas]="practicas" [autoselect]="false" (selected)="seleccionarPractica($event)"></practica-listado>
+                        <div *ngIf="practicas && !practicas.length" class="alert alert-default">
+                            ¡No se encontró ningúna practica!
+                        </div>
+                    </div>
+                    <!-- FIN BUSCADOR DE PRACTICAS -->
 
-                                        </p>
-                                    </td>
+                    <!-- TABLA VISUALIZACION DE PRACTICAS -->
+                    <hr>
+                    <div class="row">
+                        <div class="col">
+                            <table *ngIf="modelo.ejecucion?.registros.length> 0" class="table table-striped table-sm">
+                                <thead>
+                                    <th>Cod.</th>
+                                    <th>Descripcion</th>
+                                    <th *ngIf='modo.id === "recepcion" || modo.id === "control"' class="float-center">S/Muestra</th>
+                                    <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
+                                        <th class="float-center">Valor</th>
+                                        <th *ngIf='modo.id === "validacion"' class="float-center">R. Anterior</th>
+                                        <th class="float-center">UM</th>
+                                        <th class="float-center">VR</th>
+                                    </ng-container>
+                                    <ng-container *ngIf='modo.id === "validacion"'>
+                                            <th class="float-center"><div><plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas"  (change)="validarTodas($event)" name="validarTodos"></plex-bool></div>Validar </th>
+                                    </ng-container>
+                                    <th></th>
+                                    <th *ngIf='modo.id === "recepcion" || modo.id === "control"'>Acciones</th>
+                                    <th *ngIf='modo.id === "carga" || modo.id === "validacion"'>Observaciones</th>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover" *ngFor="let practica of modelo.ejecucion.registros[0].valor">
+                                        <td>{{practica.codigo}}</td>
+                                        <td>{{practica.nombre}}</td>
+                                        <ng-container *ngIf='modo.id === "recepcion" || modo.id === "control"'>
+                                            <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool>
+                                        </ng-container>
+                                        <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
+                                            <td class="text-left align-middle estado">
+                                                <p>
+                                                    <plex-float *ngIf="!practica.resultado.sinMuestra" [(ngModel)]="practica.resultado.valor"></plex-float>
+                                                    <b *ngIf="practica.resultado.sinMuestra"> Sin muestra</b>
+                                                </p>
+                                            </td>
 
-                                    <td *ngIf='modo.id === "validacion"'>
-                                        {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
-                                        <!-- <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
-                                        - 1]?.unidadMedida.term}}
-                                        <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)-
-                                        1]?.fechaTomaMuestra | date: 'dd/MM/yyyy' }} -->
-                                    </td>
-                                    <td>
-                                        {{practica.unidadMedida.term}}
-                                    </td>
-                                    <td>
-                                        {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
-                                    </td>
-                                </ng-container>
-                                <ng-container *ngIf='modo.id === "validacion"'>
-                                    <td >
-                                        <plex-bool type="checkbox" [(ngModel)]="practica.resultado.validado" name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
-                                    </td>
-                                </ng-container>
-                                <td></td>
-                                <td>
-                                    <plex-button label=" " type="danger btn-sm " icon="delete " (click)="eliminarPractica(practica) "></plex-button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- FIN TABLA VISUALIZACION DE PRACTICAS -->
-            <hr>
+                                            <td *ngIf='modo.id === "validacion"'>
+                                                <span style='color:green'>
+                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}} <br> 
+                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.unidadMedida}} <br> 
+                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.fecha | date: 'dd/MM/yyyy' }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {{practica.unidadMedida.term}}
+                                            </td>
+                                            <td>
+                                                {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf='modo.id === "validacion"'>
+                                            <td >
+                                                <plex-bool type="checkbox" [(ngModel)]="practica.resultado.validado" name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
+                                            </td>
+                                        </ng-container>
+                                        <td></td>
+                                        <ng-container *ngIf='modo.id === "recepcion" || modo.id === "control"'>
+                                            <td>
+                                                <plex-button label=" " type="danger btn-sm " icon="delete " (click)="eliminarPractica(practica) "></plex-button>
+                                            </td>
+                                        </ng-container>
+                                        <ng-container *ngIf='(modo.id === "carga" || modo.id === "validacion") && !showObservaciones'>
+                                            <td>
+                                                <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
+                                                </plex-button>
+                                            </td>
+                                        </ng-container>
+                                        <div class="row" *ngIf=" showObservaciones ">
+                                            <div class="col-12">
+                                                <plex-text name="observaciones" [(ngModel)]="practica.observaciones">
+                                                </plex-text>
+                                            </div>
 
-
+                                        </div>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- FIN TABLA VISUALIZACION DE PRACTICAS -->
+                    <hr>
+                </plex-tab>
+                <plex-tab *ngIf='modo.id === "recepcion" || modo.id === "control"' label="Diagnostico">
+                    <div class="row ">
+                        <div class="col-12 ">
+                            <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.diagnostico" label="Diagnostico " name="diagnostico "
+                                multiline="true ">
+                            </plex-text>
+                        </div>
+                    </div>
+                </plex-tab>
+                <plex-tab label="Incidencias"></plex-tab>
+            </plex-tabs>
             <!--OBSERVACIONES - RECEPCION-->
             <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
                 <div class="col-12 ">

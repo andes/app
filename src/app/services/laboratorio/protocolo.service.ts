@@ -4,10 +4,14 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class ProtocoloService {
-    private protocoloUrl = '/modules/laboratorio/protocolo'; // URL API
+    private laboratorioUrl = '/modules/laboratorio/'; // URL API
     constructor(private server: Server) { }
 
     getNumeroProtocolo(idOrganizacion) {
-        return this.server.get('/modules/laboratorio/protocolo/numero?idEfector=' + idOrganizacion, { params: {}, showError: true })
+        return this.server.get(this.laboratorioUrl + 'protocolo/numero?idEfector=' + idOrganizacion, { params: {}, showError: true });
+    }
+
+    getResultadosAnteriores(idPaciente, practicaConceptId) {
+        return this.server.get(this.laboratorioUrl + 'practicas/resultadosAnteriores', { params: { idPaciente: idPaciente, practicaConceptId: practicaConceptId}, showError: true });
     }
 }

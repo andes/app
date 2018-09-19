@@ -38,14 +38,14 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    flagMarcarTodas: Boolean = false;
+    flagMarcarTodas: Boolean = false;res
     public practicas: IPracticaMatch[] | IPractica[];
-
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi = false;
+    showObservaciones = false;
 
     @Input() seleccionPaciente: any;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -87,10 +87,21 @@ export class ProtocoloDetalleComponent
     ) { }
 
     ngOnInit() {
-        console.log("this, modelo", this.modelo);
         this.setProtocoloSelected(this.modelo);
         this.loadOrganizacion();
         this.fechaTomaMuestra = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra;
+        if (this.modo.id === 'validacion') {
+            this.cargarResultadosAnteriores();
+        }
+    }
+
+    cargarResultadosAnteriores() {
+        this.modelo.ejecucion.registros[0].valor.forEach((practica) => {
+            console.log('cargarResultadosAnteriores', practica.concepto.term)
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practica.resultado.resultadosAnteriores = resultadosAnteriores;
+            });
+        });
     }
 
     carparPracticasAEjecucion() {
@@ -113,7 +124,6 @@ export class ProtocoloDetalleComponent
     }
 
     seleccionarPractica(practica: IPractica) {
-
         let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
 
         if (existe === -1) {
@@ -302,25 +312,18 @@ export class ProtocoloDetalleComponent
             this.flagMarcarTodas = false;
         }
     }
+    verObservaciones() {
+        this.showObservaciones = true;
+    }
 
-    cargarResultadosAnteriores() {
-        let practicas = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
-        for (let practica of practicas) {
-            if (practica.resultado && practica.resultado.valor) {
-                console.log(practica.resultado.valor)
-                let resAnteriores = {
-                    valor: practica.resultado.valor,
-                    unidadMedida: practica.unidadMedida.term,
-                    fechaTomaMuestra: this.modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra
-                }
-                practica.resultado.resultadosAnteriores.push(resAnteriores);
-            }
-        }
+    cerrarObservacion() {
+        this.showObservaciones = false;
+
     }
 
     iniciarProtocolo() {
         this.modelo.estados = [{ tipo: "ejecucion" }];
-        let organizacionSolicitud = this.modelo.solicitud ? this.modelo.solicitud.organizacion.id : this.auth.organizacion.id;
+        let organizacionSolicitud = this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
             this.guardarProtocolo();
