@@ -16,8 +16,8 @@ export class ObraSocialService {
      * @memberof ObraSocialService
      */
 
-    get(opciones: any): Observable<IObraSocial[]> {
-        return this.server.get(this.url + '/puco/', { params: opciones });
+    get(opciones: any, showError = true ): Observable<IObraSocial[]> {
+        return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
     }
 
     getPadrones(opciones: any): Observable<any[]> {

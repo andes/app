@@ -1,3 +1,5 @@
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { TurnoService } from './../../../../services/turnos/turno.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
@@ -96,7 +98,8 @@ export class RUPComponent implements OnInit {
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
         public Cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
-        public route: ActivatedRoute
+        public route: ActivatedRoute,
+        public agendaService: AgendaService
     ) { }
 
     ngOnInit() {
