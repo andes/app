@@ -96,7 +96,9 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
                         unValor = unConcepto.contenido.valor;   // Si valor es un número
                     }
                 }
-                (unValor === null) ? unValor = 'S/D' : null;
+                if (unValor === null) {
+                    unValor = 'S/D';
+                }
                 filaTabla.push({ titulo: unConcepto.titulo, valor: unValor });
             });
             this.tabla.push(filaTabla);
