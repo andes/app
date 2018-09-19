@@ -24,6 +24,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
     ultimoOdontograma: IPrestacionRegistro;
     showUltimoOdontograma = true;
     odontogramasHUDS: IPrestacion[];
+    odontogramasHUDSAux: IPrestacion[];
     public piezasSeleccionadas: any[] = [];
 
     public caraSeleccionada: any;
@@ -124,8 +125,15 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             };
 
             this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-
-                this.odontogramasHUDS = odontogramasPaciente;
+                this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
+                    let odonto = null;
+                    if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                        if (odonto.valor) {
+                            return unaPrestacion;
+                        }
+                    }
+                });
+                // this.odontogramasHUDS = odontogramasPaciente;
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                     this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
@@ -183,7 +191,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             estado: 'validada'
         };
         this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-            this.odontogramasHUDS = odontogramasPaciente;
+            this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
+                let odonto = null;
+                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                    if (odonto.valor) {
+                        return unaPrestacion;
+                    }
+                }
+            });
             if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                 if (this.ultimoOdontogramaIndex > 0) {
                     this.ultimoOdontogramaIndex--;
@@ -204,7 +219,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             estado: 'validada'
         };
         this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
-            this.odontogramasHUDS = odontogramasPaciente;
+            this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
+                let odonto = null;
+                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                    if (odonto.valor) {
+                        return unaPrestacion;
+                    }
+                }
+            });
             if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                 if (this.ultimoOdontogramaIndex < this.odontogramasHUDS.length - 1) {
                     this.ultimoOdontogramaIndex++;

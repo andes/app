@@ -139,7 +139,8 @@
 
                                 <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
                                     <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'
-                                        }}</b>
+                                        }}
+                                    </b>
                                 </div>
                                 <div class="float-left" *ngIf="elemento?.relacionadoCon">
                                     <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
@@ -154,11 +155,8 @@
 
                                             <span class="badge badge-info">
                                                 <!-- ODONTO -->
-                                                {{ relacion?.cara ? 'diente ' +
-                                                relacion?.concepto?.term + ' (cara ' +
-                                                relacion.cara + ')' :
-                                                relacion.concepto.term
-                                                }}
+                                                {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' +
+                                                relacion.cara + ')' : relacion.concepto.term }}
                                             </span>
 
 
@@ -167,11 +165,13 @@
                                 </div>
                             </div>
                             <div class="actions">
-                                <!-- <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
+                                <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
+                                    diagnóstico principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small> -->
+                                    <b>Relacionado con:</b> {{
+                                    elemento.relacionadoCon[0].concepto.term[0].toUpperCase() +
+                                    elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>

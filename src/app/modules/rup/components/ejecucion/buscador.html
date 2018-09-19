@@ -5,10 +5,12 @@
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('sugeridos')" [ngClass]="{'active': busquedaActual === 'sugeridos'}">SUGERIDOS</button>
 
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('misFrecuentes')" [ngClass]="{'active': busquedaActual === 'misFrecuentes'}">MIS
-            FRECUENTES</button>
+            FRECUENTES
+        </button>
 
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR
-            BÁSICO</button>
+            BÁSICO
+        </button>
 
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES
             POR PRESTACION</button>
@@ -38,7 +40,7 @@
         <ng-container *ngIf="busquedaActual !== 'busquedaGuiada'">
             <div class="container-filtros">
                 <ul class="botones-filtros" [plexWizard]="0">
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
@@ -48,7 +50,7 @@
                             TODOS
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('hallazgos')" class="badge badge-hallazgo ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
                             getCantidadResultados('hallazgos')}}</small>
@@ -61,10 +63,10 @@
                         </button>
                     </li>
 
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('trastornos')" class="badge badge-trastorno ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'trastornos'}">{{
-                            getCantidadResultados('trastornos') }}</small>
+                            getCantidadResultados('trastornos')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0" class="btn btn-block btn-trastorno"
@@ -74,10 +76,10 @@
                         </button>
                     </li>
 
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('procedimientos')" class="badge badge-procedimiento ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
-                            getCantidadResultados('procedimientos') }}</small>
+                            getCantidadResultados('procedimientos')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}"
                             [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0" class="btn btn-block btn-procedimiento"
@@ -86,9 +88,9 @@
                             PROCEDIM.
                         </button>
                     </li>
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes') }}</small>
+                            [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
                             [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4"
@@ -98,7 +100,7 @@
                         </button>
                     </li>
 
-                    <li class="">
+                    <li>
                         <small *ngIf="getCantidadResultados('productos')" class="badge badge-producto ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'productos'}">{{
                             getCantidadResultados('productos')}}</small>
@@ -156,8 +158,9 @@
             <li>
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="rup-header">
-                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup', 'vincular-registros-rup']"
+                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']"
                             [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
+
                             <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                         </div>
@@ -174,7 +177,7 @@
                                 <div class="col-6 p-0 m-0">
                                     <div class="p-0 pt-1 pr-1 float-right">
                                         <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
-                                            {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ?
+                                            {{ (item.plan || filtroActual==='planes' || esTurneable(item)) ?
                                             'solicitud' : item.semanticTag }}
                                         </small>
                                         <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
@@ -250,7 +253,7 @@
                                             <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
 
-                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
+                                                    <small class="badge badge-{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) } text-default  pl-1 pr-1">
                                                         {{ (item.plan || items.nombre === 'planes' ||
                                                         esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>

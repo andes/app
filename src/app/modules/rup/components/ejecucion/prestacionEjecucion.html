@@ -125,8 +125,7 @@
                                                                             {{ relacion?.cara ? 'diente ' +
                                                                             relacion?.concepto?.term + ' (cara ' +
                                                                             relacion.cara + ')' :
-                                                                            relacion.concepto.term
-                                                                            }}
+                                                                            relacion.concepto.term }}
                                                                         </small>
                                                                         <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[r])"
                                                                             class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
@@ -224,9 +223,10 @@
 
                                                     <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
                                                         <b class="text-capitalize">{{
-                                                            mostrarVinculacion(registro).concepto.term }} <span *ngIf="mostrarVinculacion(registro)?.cara">/
-                                                                {{
-                                                                mostrarVinculacion(registro)?.cara }}</span></b>?
+                                                            mostrarVinculacion(registro).concepto.term }}
+                                                            <span *ngIf="mostrarVinculacion(registro)?.cara">/ {{
+                                                                mostrarVinculacion(registro)?.cara }}</span>
+                                                        </b>?
                                                         <div class="buttons">
                                                             <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)"
                                                                 class="btn btn-default">
@@ -351,7 +351,8 @@
                                                                         <span *ngIf="relacion.piezaCompleta && !relacion.cara">
                                                                             / pieza</span>
                                                                         <span *ngIf="relacion.cara"> / {{ relacion.cara
-                                                                            }}</span>
+                                                                            }}
+                                                                        </span>
                                                                     </ng-container>
                                                                 </span>
 

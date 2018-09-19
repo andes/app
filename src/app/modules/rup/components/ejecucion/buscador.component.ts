@@ -5,9 +5,9 @@ import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBind
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { FrecuentesProfesionalService } from '../../services/frecuentesProfesional.service';
 import { Auth } from '@andes/auth';
-import { IPrestacion } from '../../interfaces/prestacion.interface';
+import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
-import { ISnomedSearchResult } from '../../interfaces/snomedSearchResult.interface';
+import { ISnomedSearchResult } from './../../interfaces/snomedSearchResult.interface';
 
 @Component({
     selector: 'rup-buscador',
@@ -129,6 +129,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         private auth: Auth, private elementoRUP: ElementosRUPService,
         public servicioPrestacion: PrestacionesService,
+        public renderer: Renderer2,
         private plex: Plex) {
     }
 
@@ -139,7 +140,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.busquedaRefSet = refset;
             // inicializamos variable resultsAux con la misma estructura que results
             this.resultsAux = Object.assign({}, this.results);
-
+            // inicializamos el filtro actual para los hallazgos
+            this.filtroActual = 'todos';
+            this.ultimoTipoBusqueda = this.busquedaActual;
             // Se inicializa el buscador básico, principal
             await this.inicializarBuscadorBasico();
 
@@ -148,12 +151,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
             this.filtrarResultadosBusquedaGuiada();
 
-
-            // inicializamos el filtro actual para los hallazgos
-            this.filtroActual = 'todos';
-            this.ultimoTipoBusqueda = this.busquedaActual;
         });
-
 
     }
 
@@ -185,7 +183,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
             let fp = await this.inicializarFrecuentesProfesional();
             if (fp && fp.length) {
-                const frecuentesProfesional = fp[0].frecuentes.map(res => {
+                const frecuentesProfesional = fp.map((res: any) => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
                     return concepto;
@@ -312,31 +310,36 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length === 0) {
             this.filtroActual = 'todos';
         }
-
         // reiniciamos los resultados desde la copia auxiliar que tenemos
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
 
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
 
             let search = this.search.toLowerCase();
+            let words = search.split(' ');
             // filtramos uno a uno los conceptos segun el string de busqueda
             // TODO:: buscar por cada palabra.. hacer una separacion de la busqueda por palabras
             Object.keys(this.conceptos).forEach(concepto => {
-                if (this.results[this.busquedaActual][concepto]) {
-                    this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
-                        return registro.term.toLowerCase().indexOf(search) >= 0;
-                    });
-                    if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                        this.results.buscadorBasico[concepto] = this.results.buscadorBasico[concepto].filter(x => {
-                            return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                words.forEach(word => {
+                    if (this.results[this.busquedaActual][concepto]) {
+                        this.results[this.busquedaActual][concepto] = this.results[this.busquedaActual][concepto].filter(registro => {
+                            return registro.term.toLowerCase().indexOf(word) >= 0;
                         });
                     }
-                }
+
+
+                });
+
             });
 
-            // También filtramos el campo 'todos' segun el string de búsqueda
-            this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
-                return registro.term.toLowerCase().indexOf(search) >= 0;
+            // tambien filtramos el campo 'todos' segun el string de busqueda
+            words = search.split(' ');
+            words.forEach(word => {
+                if (this.results[this.busquedaActual]['todos']) {
+                    this.results[this.busquedaActual]['todos'] = this.results[this.busquedaActual]['todos'].filter(registro => {
+                        return registro.term.toLowerCase().indexOf(word) >= 0;
+                    });
+                }
             });
 
         } else {
@@ -447,13 +450,14 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     public filtrarResultados(busquedaActual = 'busquedaActual') {
-
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual][this.filtroActual];
 
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
+
+
                 if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
                     this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
                         return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
@@ -481,6 +485,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         }
     }
 
+    /**
+     * Resuelve los filtros sobre los conceptos que se visualizan en la busqueda guiada.
+     * POR AHORA NO ESTA EN FUNCIONAMIENTO.
+    */
     public filtrarResultadosBusquedaGuiada() {
         // this.results.busquedaGuiada = [];
 
@@ -587,9 +595,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.filtroActual = key;
         } else {
             this.filtroActual = key;
-            // this.busquedaPorConcepto = this.busquedaRefSet.conceptos;
         }
-        // this.filtrarResultados(this.busquedaActual);
     }
 
     /**
@@ -599,28 +605,17 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
      * @memberof BuscadorComponent
      */
     public seleccionarConcepto(concepto) {
-        let filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
-        // let filtro = this.getFiltroSeleccionado();
+        let filtro;
 
-        // Devolvemos los tipos de filtros
-        // if (this.busquedaRefSet && this.busquedaRefSet.refsetId) {
-        //     // Devolvemos si queremos que se genere una relación
-        //     // this.tagBusqueda.emit([...filtro, this.busquedaRefSet]);
-        //     this.tagBusqueda.emit(filtro);
-        //     this.filtroRefSet.emit(this.busquedaRefSet);
-        //     // this.tagBusqueda.emit(filtro);
-        // } else {
-        //     // Devolvemos los tipos de filtros
-        //     this.tagBusqueda.emit(filtro);
-        // }
-        // this.busquedaRefSet = null;
-        // this.filtroRefSet = null;
-
+        if (concepto.plan) {
+            filtro = ['planes'];
+        } else {
+            filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
+        }
+        // devolvemos los tipos de filtros
+        // this.tagBusqueda.emit(filtro);
         // Devolvemos el concepto SNOMED
-        this.evtData.emit([this.filtroActual, concepto]);
-        // this.servicioPrestacion.clearRefSetData();
-        // this.search = null;
-
+        this.evtData.emit([filtro, concepto]);
     }
 
     getFiltroSeleccionado() {

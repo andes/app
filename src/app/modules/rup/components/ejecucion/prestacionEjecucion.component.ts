@@ -511,8 +511,7 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ejecutarConcepto(snomedConcept, registroDestino = null) {
-
-        if (snomedConcept[0] === 'planes') {
+        if (snomedConcept[0] && snomedConcept[0][0] === 'planes') {
             snomedConcept = JSON.parse(JSON.stringify(snomedConcept[1]));
             snomedConcept.semanticTag = 'plan';
         }
@@ -633,6 +632,7 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 }
                             }
 
+
                         } else {
                             resultado = this.cargarNuevoRegistro(snomedConcept);
                             if (resultado && this.tipoBusqueda) {
@@ -650,8 +650,6 @@ export class PrestacionEjecucionComponent implements OnInit {
 
 
             } else {
-
-
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
                     registroDestino.relacionadoCon = [resultado];
@@ -885,6 +883,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
                 if (ambito === 'ambulatorio') {
+                    this.servicioPrestacion.clearRefSetData();
                     this.router.navigate(['rup']);
                 } else {
                     this.router.navigate(['mapa-de-camas']);
@@ -935,7 +934,10 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     getTipoBusqueda(tipoDeBusqueda) {
-        this.tipoBusqueda = [...tipoDeBusqueda, this.tipoBusqueda];
+        if (tipoDeBusqueda) {
+            this.tipoBusqueda = [...tipoDeBusqueda, this.tipoBusqueda];
+        }
+
     }
 
     getFiltroRefset(filtroRefSet) {
