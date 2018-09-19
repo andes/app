@@ -81,21 +81,19 @@ $rotate: -90deg;
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
             &:hover {
-                border-left: 2px solid $color;
-                border-right: 2px solid $color;
-                border-bottom: 2px solid $color;
-                border-top: 2px solid $color;
+                border: 2px solid $color;
                 box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
-            .rup-header,
+            > .rup-header,
             .rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
                 background: $color;
             }
-            .rup-header .icon-rup {
+            > .rup-header .icon-rup {
                 border-bottom: 1px solid $color;
-                mix-blend-mode: hard-light;
+                background: $color !important;
+                //mix-blend-mode: hard-light;
             }
         }
     }
