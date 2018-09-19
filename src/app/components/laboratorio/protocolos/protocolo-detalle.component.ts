@@ -39,12 +39,12 @@ export class ProtocoloDetalleComponent
     organizacion: any;
     modelo: any;
     public practicas: IPracticaMatch[] | IPractica[];
-
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi = false;
+    showObservaciones = false;
 
     @Input() seleccionPaciente: any;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
@@ -289,9 +289,16 @@ export class ProtocoloDetalleComponent
             this.modelo.estados = [{ tipo: "validado" }];
         }
     }
+    verObservaciones() {
+        this.showObservaciones = true;
+    }
 
+    cerrarObservacion() {
+        this.showObservaciones = false;
+
+    }
     cargarResultadosAnteriores() {
-        let practicas = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
+        let practicas = this.modelo.ejecucion.registros[0];
         for (let practica of practicas) {
             if (practica.resultado && practica.resultado.valor) {
                 console.log(practica.resultado.valor)
@@ -306,10 +313,6 @@ export class ProtocoloDetalleComponent
 
 
 
-    }
-
-    validarProtocolo(){
-        
     }
 
     iniciarProtocolo() {
