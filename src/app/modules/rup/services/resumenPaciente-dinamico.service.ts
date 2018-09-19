@@ -30,17 +30,7 @@ export class ResumenPacienteDinamicoService {
      * Además se especifica la expresion de la consulta a filtrar y un arreglo con los conceptos buscados.
      */
     get(idPaciente: String): Observable<any[]> {
-        let expresion = '';
-        this.conceptosBuscados.forEach(unConcepto => {
-            // se arma una sola expresion para la búsqueda snomed de todos los conceptos
-            if (expresion === '') {
-                expresion += unConcepto.conceptId;
-            } else {
-                expresion += ' OR ' + unConcepto.conceptId;
-            }
-        });
-
-        let params = { consultaPrincipal: this.consultaPrincipal, expresion: JSON.stringify(expresion) };
+        let params = { consultaPrincipal: this.consultaPrincipal, conceptos: JSON.stringify(this.conceptosBuscados) };
         return this.server.get(this.resumenURL + '/resumenPaciente/' + idPaciente, { params: params, showError: true });
     }
 }
