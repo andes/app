@@ -699,6 +699,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     guardarPrestacion() {
         // validamos antes de guardar
 
+        this.flagValid = true;
         this.rupElements.forEach((item) => {
 
             let instance = item.rupInstance;
