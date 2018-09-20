@@ -94,6 +94,18 @@ export class PrestacionValidacionComponent implements OnInit {
     // Array que guarda los grupos de conceptos en la Búsqueda Guiada
     public gruposGuiada: any[] = [];
 
+    // Array con opciones para indicar si es primera vez
+    public opcionDiagnosticoPrincipal = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
+
+    // Array con opciones para indicar si es primera vez
+    public opcionPrimeraVez = [
+        { id: true, label: 'Si' },
+        { id: false, label: 'No' }
+    ];
+
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
@@ -124,9 +136,6 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
-        // this.zone.runOutsideAngular(() => {
-        //     console.log(22);
-        // });
     }
 
     redirect(pagina: string) {
@@ -148,12 +157,14 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
-                    if (prestacionesSolicitadas) {
-                        this.cargaPlan(prestacionesSolicitadas);
-                    }
-                });
-                this.motivoReadOnly = true;
+                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
+                        if (prestacionesSolicitadas) {
+                            this.cargaPlan(prestacionesSolicitadas);
+                        }
+                    });
+                    this.motivoReadOnly = true;
+                }
             }
 
             this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
@@ -161,32 +172,34 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
             // Carga la información completa del paciente
-            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                this.paciente = paciente;
-                this.prestacion.ejecucion.registros.forEach(registro => {
-                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                        registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                            return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
-                        });
-                    }
-                    if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
-                        let parametros = {
-                            conceptId: registro.concepto.conceptId,
-                            paciente: this.paciente,
-                            secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
-                        };
-                        this.codigosCie10[registro.id] = {};
-                        this.SNOMED.getCie10(parametros).subscribe(codigo => {
-                            this.codigosCie10[registro.id] = codigo;
-                        });
+            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.paciente = paciente;
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            });
+                        }
+                        if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
+                            let parametros = {
+                                conceptId: registro.concepto.conceptId,
+                                paciente: this.paciente,
+                                secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                            };
+                            this.codigosCie10[registro.id] = {};
+                            this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                                this.codigosCie10[registro.id] = codigo;
+                            });
 
-                    }
+                        }
+                    });
+
                 });
-
-            });
+            }
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
-            this.armarRelaciones(this.registrosOrdenados);
+            this.armarRelaciones();
             // this.reordenarRelaciones();
 
         });
@@ -197,16 +210,20 @@ export class PrestacionValidacionComponent implements OnInit {
      * @memberof PrestacionValidacionComponent
      */
     validar() {
-
         let existeDiagnostico = this.prestacion.ejecucion.registros.find(p => p.esDiagnosticoPrincipal === true);
         let diagnosticoRepetido = this.prestacion.ejecucion.registros.filter(p => p.esDiagnosticoPrincipal === true).length > 1;
+        let existeC2 = this.prestacion.ejecucion.registros.find(p => (p.esPrimeraVez === undefined && this.codigosCie10[p.id] && this.codigosCie10[p.id].c2));
 
-        if (!existeDiagnostico) {
-            this.plex.toast('info', 'Debe seleccionar un motivo de consulta principal', 'Motivo de consulta principal', 1000);
+        if (existeC2) {
+            this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
+            return false;
+        }
+        if (!existeDiagnostico && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+            this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
         if (diagnosticoRepetido) {
-            this.plex.toast('info', 'No puede seleccionar más de un motivo de consulta principal');
+            this.plex.toast('info', 'No puede seleccionar más de un procedimiento / diagnostico principal');
             return false;
         }
         this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
@@ -229,20 +246,24 @@ export class PrestacionValidacionComponent implements OnInit {
                             registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
                         }
                     });
-                    // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
-                        if (prestacionesSolicitadas) {
-                            this.cargaPlan(prestacionesSolicitadas);
-                        }
-                    });
 
                     this.motivoReadOnly = true;
-
-                    // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                    if (this.prestacion.solicitud.turno && !this.servicioPrestacion.prestacionPacienteAusente(this.prestacion)) {
-                        this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                    // actualizamos las prestaciones de la HUDS
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
+                            if (prestacionesSolicitadas) {
+                                this.cargaPlan(prestacionesSolicitadas);
+                            }
+                        });
+                        // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
+                        this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                            result => {
+                                let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                                if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
+                                    this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                                }
+                            });
                     }
-
 
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
@@ -278,9 +299,11 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
                         this.prestacion = prestacion;
 
-                        // actualizamos las prestaciones de la HUDS
-                        this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                        });
+                        if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                            // actualizamos las prestaciones de la HUDS
+                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                            });
+                        }
 
                         this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                     }, (err) => {
@@ -360,63 +383,64 @@ export class PrestacionValidacionComponent implements OnInit {
         }
     }
 
-    diagnosticoPrestacion(elem) {
+    diagnosticoPrestacion(event, elem) {
         this.prestacion.ejecucion.registros.map(reg => reg.esDiagnosticoPrincipal = false);
-        elem.esDiagnosticoPrincipal = !elem.esDiagnosticoPrincipal;
+        elem.esDiagnosticoPrincipal = event && event.value;
     }
 
     defualtDiagnosticoPrestacion() {
         let count = 0;
-        // for (let elemento of this.prestacion.ejecucion.registros) {
         let items = this.prestacion.ejecucion.registros.filter(elemento => ['hallazgo', 'trastorno', 'situación', 'procedimiento', 'entidad observable', 'régimen/tratamiento', 'producto'].indexOf(elemento.concepto.semanticTag) >= 0);
         if (items.length === 1) {
             items[0].esDiagnosticoPrincipal = true;
         }
-
-        // }
-    }
-
-    primeraVez(elem) {
-        // this.prestacion.ejecucion.registros.map(reg => reg.esPrimeraVez = false);
-        elem.esPrimeraVez = !elem.esPrimeraVez;
     }
 
     mostrarDatosSolicitud(bool) {
         this.showDatosSolicitud = bool;
     }
 
-    relacionadoConPadre(id) {
-        return this.prestacion.ejecucion.registros.filter(rel => rel.relacionadoCon[0] === id);
-    }
-
-    armarRelaciones(registros) {
-
-        registros = this.prestacion.ejecucion.registros;
-
-        let relacionesOrdenadas = [];
-
-        registros.forEach((cosa, index) => {
-            let esPadre = registros.filter(x => x.relacionadoCon[0] === cosa.id);
-
-            if (esPadre.length > 0) {
-                if (relacionesOrdenadas.filter(x => x === cosa).length === 0) {
-                    relacionesOrdenadas.push(cosa);
-                }
-                esPadre.forEach(hijo => {
-                    if (relacionesOrdenadas.filter(x => x === hijo).length === 0) {
-                        relacionesOrdenadas.push(hijo);
-                    }
-                });
-            } else {
-                if (cosa.relacionadoCon && registros.filter(x => x.id === cosa.relacionadoCon[0] || x.relacionadoCon[0] === cosa.id).length === 0) {
-                    relacionesOrdenadas.push(cosa);
+    relacionadoConPadreDeep(registros: any[], conceptId) {
+        if (registros) {
+            for (let i = 0; i < registros.length; i++) {
+                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
+                    return i;
+                } else {
+                    this.relacionadoConPadreDeep(registros[i].registros, conceptId);
                 }
             }
+            return false;
+        }
 
+    }
+
+    // Indices de profundidad de las relaciones
+    registrosDeep: any = {};
+    armarRelaciones() {
+        let relacionesOrdenadas = [];
+        let registros = this.prestacion.ejecucion.registros;
+        let roots = registros.filter(x => x.relacionadoCon.length === 0);
+
+        let traverse = (_registros, registro, deep) => {
+            let orden = [];
+            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
+            this.registrosDeep[registro.id] = deep;
+            hijos.forEach((hijo) => {
+                orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
+            });
+            return orden;
+        };
+
+        roots.forEach((root) => {
+            this.registrosDeep[root.id] = 0;
+            relacionesOrdenadas = [...relacionesOrdenadas, root, ...traverse(this.prestacion.ejecucion.registros, root, 1)];
         });
+
 
         this.registrosOrdenados = relacionesOrdenadas;
     }
+
+
 
     reordenarRelaciones() {
         let rel: any;
@@ -537,28 +561,20 @@ export class PrestacionValidacionComponent implements OnInit {
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
 
-            /**
-             * Cada logo va a quedar generado como base64 desde la API:
-             *
-             * <img src="data:image/png;base64,..." style="float: left;">
-             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
-             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
-             *
-             */
 
             const header = `
-                <div class="resumen-solicitud">
-                    ${datosSolicitud.innerHTML}
-                </div>
-            `;
+                    <div class="resumen-solicitud">
+                        ${datosSolicitud.innerHTML}
+                    </div>
+                `;
 
             content += header;
             content += `
-            <div class="paciente">
-                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
-                ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
-            </div>
-            `;
+                <div class="paciente">
+                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                    ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
+                </div>
+                `;
 
             // agregamos prestaciones
             let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
@@ -571,7 +587,21 @@ export class PrestacionValidacionComponent implements OnInit {
             // Sanitizar? no se recibe HTML "foráneo", quizá no haga falta
             // content = this.sanitizer.sanitize(1, content);
 
-            this.servicioDocumentos.descargar(content).subscribe(data => {
+            // this.servicioDocumentos.descargar(content).subscribe(data => {
+            //     if (data) {
+            //         // Generar descarga como PDF
+            //         this.descargarArchivo(data, { type: 'application/pdf' });
+            //     } else {
+            //         // Fallback a impresión normal desde el navegador
+            //         window.print();
+            //     }
+            // });
+
+            let informe = {
+                idPrestacion: this.prestacion.id
+            };
+
+            this.servicioDocumentos.descargarV2(informe).subscribe(data => {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
@@ -587,7 +617,7 @@ export class PrestacionValidacionComponent implements OnInit {
         let blob = new Blob([data], headers);
         let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
         saveAs(blob, nombreArchivo);
-    }
+    };
 
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto

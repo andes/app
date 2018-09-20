@@ -4,6 +4,8 @@ import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
+import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
+import { SnomedService } from '../../../services/term/snomed.service';
 
 @Injectable()
 export class PrestacionesService {
@@ -26,16 +28,10 @@ export class PrestacionesService {
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
-    public conceptosNoConcurrio = [
-        '397710003',
-        '281399006',
-        '270426007',
-        '275694009'
-    ];
 
     public conceptosTurneables: any[];
 
-    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService) {
+    constructor(private server: Server, public auth: Auth, private servicioTipoPrestacion: TipoPrestacionService, public snomed: SnomedService) {
 
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
@@ -143,7 +139,7 @@ export class PrestacionesService {
      */
     getByPacienteKey(idPaciente: any, key: any): Observable<any[]> {
         return this.getByPaciente(idPaciente).map(prestaciones => {
-            let registros = [];
+            let registros: IPrestacionRegistro[] = [];
 
             prestaciones.forEach(prestacion => {
                 if (prestacion.ejecucion) {
@@ -151,7 +147,6 @@ export class PrestacionesService {
 
                 }
             });
-            let registroSalida = [];
             let registroEncontrado = this.findValues(registros, key);
             if (registroEncontrado && registroEncontrado.length > 0) {
                 return registroEncontrado[0];
@@ -189,14 +184,17 @@ export class PrestacionesService {
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
             }
-            prestaciones.forEach(prestacion => {
+            prestaciones.forEach((prestacion: any) => {
                 if (prestacion.ejecucion) {
                     let agregar = prestacion.ejecucion.registros
                         .filter(registro =>
                             registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno')
                         .map(registro => { registro['idPrestacion'] = prestacion.id; return registro; });
+                    // COnceptId del informe requerido en en todas las prestaciones ambulatorias
+                    if (agregar.length > 0) {
+                        agregar[0].informeRequerido = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === '371531000');
+                    }
                     registros = [...registros, ...agregar];
-
                 }
             });
             let registroSalida = [];
@@ -229,7 +227,8 @@ export class PrestacionesService {
                             idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : null,
                             idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : null,
                             origen: registro.valor.origen ? registro.valor.origen : null,
-                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null
+                            idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : null,
+                            informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                         }]
                     };
                     registroSalida.push(dato);
@@ -245,7 +244,8 @@ export class PrestacionesService {
                         idRegistroOrigen: registro.valor.idRegistroOrigen ? registro.valor.idRegistroOrigen : ultimaEvolucion.idRegistroOrigen,
                         idRegistroTransformado: registro.valor.idRegistroTransformado ? registro.valor.idRegistroTransformado : ultimaEvolucion.idRegistroTransformado,
                         origen: registro.valor.origen ? registro.valor.origen : ultimaEvolucion.origen,
-                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado
+                        idRegistroGenerado: registro.valor.idRegistroGenerado ? registro.valor.idRegistroGenerado : ultimaEvolucion.idRegistroGenerado,
+                        informeRequerido: registro.informeRequerido ? registro.informeRequerido : null
                     };
                     registroEncontrado.prestaciones.push(registro.idPrestacion);
                     registroEncontrado.evoluciones.push(nuevaEvolucion);
@@ -526,10 +526,10 @@ export class PrestacionesService {
      * @returns {any[]} Prestaciones del paciente que coincidan con los conceptIds
      * @memberof PrestacionesService
      */
-    getRegistrosHuds(idPaciente: string, conceptIds: any[]) {
+    getRegistrosHuds(idPaciente: string, expresion) {
         let opt = {
             params: {
-                'conceptIds': conceptIds,
+                'expresion': expresion
             },
             options: {
                 showError: true
@@ -571,15 +571,29 @@ export class PrestacionesService {
      * @memberof PrestacionesService
      */
     inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null): any {
-        let prestacion = {
-            paciente: {
+        let pacientePrestacion;
+        if (!paciente) {
+            pacientePrestacion = undefined;
+        } else {
+            pacientePrestacion = {
                 id: paciente.id,
                 nombre: paciente.nombre,
                 apellido: paciente.apellido,
                 documento: paciente.documento,
                 sexo: paciente.sexo,
                 fechaNacimiento: paciente.fechaNacimiento
-            }
+            };
+        }
+        let prestacion = {
+            paciente: pacientePrestacion
+            // paciente: {
+            //     id: paciente.id,
+            //     nombre: paciente.nombre,
+            //     apellido: paciente.apellido,
+            //     documento: paciente.documento,
+            //     sexo: paciente.sexo,
+            //     fechaNacimiento: paciente.fechaNacimiento
+            // }
         };
 
         if (momento === 'solicitud') {
@@ -589,10 +603,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -610,10 +624,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -637,10 +651,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -651,9 +665,10 @@ export class PrestacionesService {
                 tipo: 'pendiente'
             };
         }
-
-        prestacion.paciente['_id'] = paciente.id;
-        prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
+        if (paciente) {
+            prestacion.paciente['_id'] = paciente.id;
+            prestacion['solicitud'].ambitoOrigen = ambitoOrigen;
+        }
 
         return prestacion;
     }
@@ -782,14 +797,8 @@ export class PrestacionesService {
      * @returns  {boolean}
      * @memberof BuscadorComponent
      */
-    public prestacionPacienteAusente(prestacion) {
-        let filtroRegistros = null;
-        filtroRegistros = prestacion.ejecucion.registros.filter(x => this.conceptosNoConcurrio.find(y => y === x.concepto.conceptId));
-        if (filtroRegistros && filtroRegistros.length > 0) {
-            return true;
-        } else {
-            return false;
-        }
+    public prestacionPacienteAusente(): Observable<any[]> {
+        return this.snomed.getQuery({ expression: '<<281399006' });
 
     }
 
@@ -804,9 +813,7 @@ export class PrestacionesService {
     public getCssClass(conceptoSNOMED, filtroActual) {
         let clase = conceptoSNOMED.semanticTag;
 
-        // ((filtroActual === 'planes' || esTurneable(item)) ? 'plan' : ((item.semanticTag === 'régimen/tratamiento') ? 'regimen' : ((item.semanticTag === 'elemento de registro') ? 'elementoderegistro' : item.semanticTag)))
-
-        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
             clase = 'plan';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
@@ -828,7 +835,7 @@ export class PrestacionesService {
     public getIcon(conceptoSNOMED, filtroActual: null) {
         let icon = conceptoSNOMED.semanticTag;
 
-        if (this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
+        if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
             icon = 'plan';
         } else {
             switch (conceptoSNOMED.semanticTag) {

@@ -95,7 +95,6 @@
                                                 </div>
 
                                                 <div class="title">
-                                                    <!-- <div class="title"> -->
                                                     {{registro.nombre}}
 
                                                     <!-- vinculacion / desvinculacion -->
@@ -109,20 +108,19 @@
                                                             <i class="mdi mdi-link-variant-off"></i>
                                                         </a>
                                                     </div>
-                                                    <!-- </div> -->
                                                 </div>
 
                                                 <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-                                                    <span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                                    <!--span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
-                                                    </span>
+                                                    </span-->
 
-                                                    <a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
+                                                    <!--a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
                                                         *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                         <i class="mdi mdi-vector-difference-ba"></i>
                                                         <i class="mdi mdi-vector-difference-ab"></i>
-                                                    </a>
+                                                    </a-->
 
                                                     <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
                                                         <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
@@ -146,14 +144,13 @@
                                                 <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                                     [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
                                                     (onDragEnd)="draggingRegistro(i, registro, false)">
-                                                    <!-- <i class="drag-orden mdi mdi-drag-vertical" aria-hidden="true"></i> -->
                                                     <span>
-                                                        {{registro.concepto.semanticTag}}
+                                                        {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
                                                     </span>
                                                 </div>
 
                                                 <!-- ... Body -->
-                                                <div class="content" *ngIf="paciente">
+                                                <div class="content" *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
 
                                                     <ng-container *ngIf="matchinBusquedaGuiada(registro.concepto)">
                                                         <div class="row">
@@ -173,7 +170,7 @@
 
                                                     <!-- RUP Loader  (change)="prestacionChanged()"-->
                                                     <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto)"></rup>
+                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" [params]="elementosRUPService.selectPorRefsetId(registro.concepto, registro.esSolicitud)"></rup>
 
                                                 </div>
                                             </div>
@@ -298,7 +295,7 @@
                                                     <div class="rup-body">
                                                         <div class="legend">
                                                             <span>
-                                                                {{elemento.concepto.semanticTag}}
+                                                                {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
                                                             </span>
                                                         </div>
                                                         <div class="content">
@@ -336,7 +333,7 @@
             <!-- Panel Buscador SNOMED + HUDS -->
             <div class="col-4 tabs-buscador-huds pr-0" *ngIf="prestacion">
                 <plex-box>
-                    <plex-tabs [activeIndex]="panelIndex">
+                    <plex-tabs [activeIndex]="panelIndex" *ngIf="!prestacion.solicitud.tipoPrestacion.noNominalizada">
                         <plex-tab label="Buscador" (click)="panelIndex = 0">
                             <rup-buscador [prestacion]="prestacion" [frecuentesTipoPrestacion]="masFrecuentes" [conceptoFrecuente]="conceptoFrecuente"
                                 [showFrecuentesTipoPrestacion]="tengoResultado" (tengoResultado)="recibeSitengoResultado($event)"
@@ -382,7 +379,6 @@
             </div>
 
             <div class="col-4" *ngIf="!showCambioPaciente">
-
                 <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success"
                     class="float-right"></plex-button>
             </div>
