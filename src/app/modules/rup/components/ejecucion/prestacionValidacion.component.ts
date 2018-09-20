@@ -133,7 +133,6 @@ export class PrestacionValidacionComponent implements OnInit {
             });
 
         });
-
     }
 
     redirect(pagina: string) {
@@ -155,12 +154,14 @@ export class PrestacionValidacionComponent implements OnInit {
 
             // Una vez que esta la prestacion llamamos a la funcion cargaPlan que muestra para cargar turnos si tienen permisos
             if (prestacion.estados[prestacion.estados.length - 1].tipo === 'validada') {
-                this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
-                    if (prestacionesSolicitadas) {
-                        this.cargaPlan(prestacionesSolicitadas);
-                    }
-                });
-                this.motivoReadOnly = true;
+                if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.prestacion.paciente.id).subscribe(prestacionesSolicitadas => {
+                        if (prestacionesSolicitadas) {
+                            this.cargaPlan(prestacionesSolicitadas);
+                        }
+                    });
+                    this.motivoReadOnly = true;
+                }
             }
 
             // Trae el elementoRUP que implementa esta Prestación
@@ -175,27 +176,29 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.gruposGuiada = grupos;
             });
 
-            // Carga la información completa del paciente
-            this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
-                this.paciente = paciente;
+            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                // Carga la información completa del paciente
+                this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
+                    this.paciente = paciente;
 
 
-                this.prestacion.ejecucion.registros.forEach(registro => {
+                    this.prestacion.ejecucion.registros.forEach(registro => {
 
-                    if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
-                        let parametros = {
-                            conceptId: registro.concepto.conceptId,
-                            paciente: this.paciente,
-                            secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
-                        };
-                        this.codigosCie10[registro.id] = {};
-                        this.SNOMED.getCie10(parametros).subscribe(codigo => {
-                            this.codigosCie10[registro.id] = codigo;
-                        });
-                    }
+                        if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
+                            let parametros = {
+                                conceptId: registro.concepto.conceptId,
+                                paciente: this.paciente,
+                                secondaryConcepts: this.prestacion.ejecucion.registros.map(r => r.concepto.conceptId)
+                            };
+                            this.codigosCie10[registro.id] = {};
+                            this.SNOMED.getCie10(parametros).subscribe(codigo => {
+                                this.codigosCie10[registro.id] = codigo;
+                            });
+                        }
+                    });
+
                 });
-
-            });
+            }
 
             if (this.prestacion) {
                 this.prestacion.ejecucion.registros.forEach(registro => {
@@ -273,15 +276,16 @@ export class PrestacionValidacionComponent implements OnInit {
                     });
 
                     this.motivoReadOnly = true;
-
-                    // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
-                    this.servicioPrestacion.prestacionPacienteAusente().subscribe(
-                        result => {
-                            let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
-                            if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
-                                this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
-                            }
-                        });
+                    if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
+                        this.servicioPrestacion.prestacionPacienteAusente().subscribe(
+                            result => {
+                                let filtroRegistros = this.prestacion.ejecucion.registros.filter(x => result.find(y => y.conceptId === x.concepto.conceptId));
+                                if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
+                                    this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
+                                }
+                            });
+                    }
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -568,28 +572,20 @@ export class PrestacionValidacionComponent implements OnInit {
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
 
-            /**
-             * Cada logo va a quedar generado como base64 desde la API:
-             *
-             * <img src="data:image/png;base64,..." style="float: left;">
-             * <img src="data:image/png;base64,..." style="width: 80px; margin-right: 10px;">
-             * <img src="data:image/png;base64,..." style="display: inline-block; width: 100px; float: right;">
-             *
-             */
 
             const header = `
-                <div class="resumen-solicitud">
-                    ${datosSolicitud.innerHTML}
-                </div>
-            `;
+                    <div class="resumen-solicitud">
+                        ${datosSolicitud.innerHTML}
+                    </div>
+                `;
 
             content += header;
             content += `
-            <div class="paciente">
-                <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
-                ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
-            </div>
-            `;
+                <div class="paciente">
+                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                    ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
+                </div>
+                `;
 
             // agregamos prestaciones
             let elementosRUP: HTMLCollection = document.getElementsByClassName('rup-card');
