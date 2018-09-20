@@ -138,11 +138,13 @@ export class RUPComponent implements OnInit {
 *
 * Cada elementoRUP puede sobreescribir esta funcionalidad, implementando el metodo 'validate'.
 *
-* @protected
+* @protected8
 * @memberof RUPComponent
 */
     public validate() {
-        return this.validateChild() && this.validateForm();
+        const validChild = this.validateChild();
+        const validForm = this.validateForm();
+        return validChild && validForm;
     }
 
     /**
@@ -167,8 +169,9 @@ export class RUPComponent implements OnInit {
     public validateChild() {
         let flag = true;
         this.rupElements.forEach((item) => {
-            let instance = item.rupInstance;
-            flag = flag && (instance.soloValores || instance.validate());
+            const instance = item.rupInstance;
+            const childValid = instance.validate();
+            flag = flag && (instance.soloValores || childValid);
         });
         return flag;
 
@@ -176,7 +179,7 @@ export class RUPComponent implements OnInit {
 
     get isValid() {
         if (this.rupInstance) {
-            return !this.rupInstance.formulario || !this.rupInstance.formulario.dirty || !this.rupInstance.formulario.invalid;
+            return !this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid);
         }
         return true;
     }

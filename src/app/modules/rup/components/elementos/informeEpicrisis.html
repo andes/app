@@ -1,7 +1,7 @@
 <ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
     <div class="row">
         <div class="col-6">
-            <form>
+            <form #form="ngForm">
                 <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
                     idField="conceptId" labelField="term" label="Unidad Organizativa" [required]="true"></plex-select>
             </form>
