@@ -7,6 +7,7 @@ import { IPaciente } from './../../interfaces/IPaciente';
 import { DocumentoEscaneado, DocumentoEscaneados } from './documento-escaneado.const';
 import { Auth } from '@andes/auth';
 import { LogService } from './../../services/log.service';
+import { ISubscription } from 'rxjs/Subscription';
 @Component({
     selector: 'pacientesSearch',
     templateUrl: 'paciente-search.html',
@@ -32,6 +33,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     public showCreateUpdate = false;
     public mostrarNuevo = false;
     public autoFocus = 0;
+
+    // ultima request de profesionales que se almacena con el subscribe
+    private lastRequestScan: ISubscription;
+    private lastRequest: ISubscription;
+
+
     /**
      * Indica si muestra el botón Cancelar/Volver en el footer
      */
@@ -80,6 +87,10 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         clearInterval(this.intervalHandle);
+
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
     }
 
     /**
@@ -220,6 +231,15 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             window.clearTimeout(this.timeoutHandle);
         }
 
+        // cancelamos ultimo request
+        if (this.lastRequest) {
+            this.lastRequest.unsubscribe();
+        }
+        if (this.lastRequestScan) {
+            this.lastRequestScan.unsubscribe();
+            this.textoLibre = '';
+        }
+
         // Limpia los resultados de la búsqueda anterior
         this.resultado = null;
         this.pacientesSimilares = null;
@@ -240,7 +260,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                     this.loading = true;
                     let pacienteEscaneado = this.parseDocumentoEscaneado(documentoEscaneado);
                     // Consulta API
-                    this.pacienteService.get({
+                    this.lastRequestScan = this.pacienteService.get({
                         type: 'simplequery',
                         apellido: pacienteEscaneado.apellido.toString(),
                         nombre: pacienteEscaneado.nombre.toString(),
@@ -257,7 +277,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
                             this.showCreateUpdate = true;
                         } else {
                             // Realizamos una busqueda por Suggest
-                            this.pacienteService.get({
+                            this.lastRequestScan = this.pacienteService.get({
                                 type: 'suggest',
                                 claveBlocking: 'documento',
                                 percentage: true,
@@ -325,7 +345,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
 
                 } else {
                     // Si no es un documento escaneado, hace una búsqueda multimatch
-                    this.pacienteService.get({
+                    this.lastRequest = this.pacienteService.get({
                         type: 'multimatch',
                         cadenaInput: this.textoLibre
                     }).subscribe(resultado => {
