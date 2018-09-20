@@ -9,9 +9,6 @@
                             <b>Paciente:</b>
                         </h6>
                         <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
-                        <hr class="blanco xs separate">
-                        <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos
-                                para una mejor visualizacion de la carga de datos -->
                         <div class="row">
                             <div class="col" *ngIf="!soloValores">
                                 <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) "></carpeta-paciente>
@@ -102,8 +99,6 @@
                 </div>
             </div>
         </fieldset>
-        <hr class="blanco xs">
-
         <!-- Datos de internacion -->
         <div class="andes-contenedor-secundario horizontal between">
             <div class="andes-contenedor-secundario vertical">
@@ -147,6 +142,8 @@
                 <b>Obra Social:</b>
                 <p>{{informeIngreso.obraSocial.nombre}}</p>
             </div>
+        </div>
+        <div class="andes-contenedor-secundario horizontal between">
             <div class="andes-contenedor-secundario vertical">
                 <b>Motivo:</b>
                 <p>{{informeIngreso.motivo}}</p>
