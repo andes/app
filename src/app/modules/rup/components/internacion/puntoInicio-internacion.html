@@ -3,7 +3,7 @@
         <header>
             <h3>Punto de inicio</h3>
         </header>
-        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
+        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
         <!-- Tabla / listado de pacientes -->
         <table *ngIf="listado && listado.length" class="table table-striped table-hover">
             <tbody>
