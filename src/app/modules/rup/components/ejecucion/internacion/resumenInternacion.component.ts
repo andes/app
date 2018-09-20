@@ -59,8 +59,8 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
 
     /**
- * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
- */
+     * Devuelve el nombre del sector hoja donde esta la cama. Por lo general, debería ser la habitación.
+     */
     public getHabitacionName(pase) {
         let sec = pase.sectores;
         if (sec && sec.length > 0) {
@@ -110,7 +110,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
             this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => {
-                this.refreshCamas.emit({ cama: cama });
+                this.refreshCamas.emit({ cama: cama, desocupaCama: true });
             });
 
         }
@@ -137,15 +137,16 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
      * y regresamos al mapa de camas
      */
     validar() {
-        this.plex.confirm('Luego de validar la prestación no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
+        this.plex.confirm('Luego de validar la prestación ya no podrá editarse.<br />¿Desea continuar?', 'Confirmar validación').then(validar => {
             if (!validar) {
                 return false;
             } else {
                 let planes = [];
                 this.prestacionesService.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                     this.desocuparCama();
+                    this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
+
                     // this.cancelar();
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
