@@ -126,7 +126,6 @@ export class IniciarInternacionComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        debugger;
         if (this.prestacion) {
             this.btnIniciarGuardar = 'GUARDAR';
             let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
@@ -145,7 +144,6 @@ export class IniciarInternacionComponent implements OnInit {
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
             this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
-                debugger;
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
@@ -289,7 +287,6 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
-        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -315,7 +312,6 @@ export class IniciarInternacionComponent implements OnInit {
                     registros: this.prestacion.ejecucion.registros
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-                    debugger;
                     if (this.cama && !this.cama.ultimoEstado.idInternacion) {
                         // vamos a actualizar el estado de la cama
                         let dto = {
