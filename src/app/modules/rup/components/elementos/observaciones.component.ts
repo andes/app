@@ -8,7 +8,10 @@ import { RUPComponent } from './../core/rup.component';
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
     ngOnInit() {
-        this.params.required = this.params.required ? this.params.required : false;
+        if (!this.params) {
+            this.params = {};
+        }
+        this.params.required = this.params && this.params.required ? this.params.required : false;
         this.registro.valido = true;
         // Observa cuando cambia la propiedad 'Sistolica' en otro elemento RUP
         if (!this.soloValores) {

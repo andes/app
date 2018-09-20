@@ -4,7 +4,7 @@
             Observación
         </label>
         <plex-text [html]="true" class="form-control" [(ngModel)]="registro.valor" id="observaciones" name="observaciones"
-            placeholder="Ingrese una evolución" (change)="emitChange()" [required]="params.required"></plex-text>
+            placeholder="Ingrese una evolución" (change)="emitChange()" [required]="params?.required"></plex-text>
     </ng-container>
 
     <p *ngIf="soloValores" class="readonly">
