@@ -1,7 +1,7 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
 import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, HostBinding, DebugElement } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
@@ -132,6 +132,14 @@ export class IniciarInternacionComponent implements OnInit {
             if (existeRegistro) {
                 this.paciente = this.prestacion.paciente;
                 this.informeIngreso = existeRegistro.valor.informeIngreso;
+
+                // Chequeamos los datos que ya estan registrados para mostrar
+                // los campos que están ocualtos por defecto
+                this.informeIngreso.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                this.obraSocial = existeRegistro.valor.informeIngreso.obraSocial;
+                if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
+                    this.origenExterno = true;
+                }
             }
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
@@ -140,12 +148,15 @@ export class IniciarInternacionComponent implements OnInit {
                 if (resultado) {
                     if (resultado.cama) {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        // Salimos del iniciar internacion
+                        this.data.emit(false);
                         this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
                         this.plex.alert('El paciente tiene una internación en ejecución');
                         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
                         this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
+                            this.prestacion = prestacion;
                             let existeRegistro = prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
                             if (existeRegistro) {
                                 // Carga la información completa del paciente
@@ -202,6 +213,11 @@ export class IniciarInternacionComponent implements OnInit {
         });
     }
 
+    actualizarInformeIngreso() {
+
+    }
+
+
     loadProfesionales(event) {
         let listaProfesionales = [];
         if (event.query) {
@@ -222,7 +238,11 @@ export class IniciarInternacionComponent implements OnInit {
                     }
                 });
             } else {
-                event.callback([]);
+                let profesionalSalida = [];
+                if (this.informeIngreso && this.informeIngreso.profesional) {
+                    profesionalSalida = [this.informeIngreso.profesional];
+                }
+                event.callback(profesionalSalida);
             }
         }
     }
@@ -284,15 +304,40 @@ export class IniciarInternacionComponent implements OnInit {
             this.informeIngreso.origen = ((typeof this.informeIngreso.origen === 'string')) ? this.informeIngreso.origen : (Object(this.informeIngreso.origen).nombre);
 
             if (this.prestacion && this.prestacion.id) {
+                // reemplazamos el Informde de ingreso en la prestacion
+                let indexInforme = this.prestacion.ejecucion.registros.findIndex(r => r.concepto.conceptId === this.snomedIngreso.conceptId);
+                this.prestacion.ejecucion.registros[indexInforme].valor = { informeIngreso: this.informeIngreso };
                 let cambios = {
-                    op: 'informeIngreso',
-                    informeIngreso: this.informeIngreso
+                    op: 'registros',
+                    registros: this.prestacion.ejecucion.registros
                 };
                 this.servicioPrestacion.patch(this.prestacion.id, cambios).subscribe(p => {
-                    this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
-                    this.data.emit(false);
+                    if (this.cama && !this.cama.ultimoEstado.idInternacion) {
+                        // vamos a actualizar el estado de la cama
+                        let dto = {
+                            fecha: new Date(),
+                            estado: 'ocupada',
+                            unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
+                            especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
+                            esCensable: this.cama.ultimoEstado.esCensable,
+                            genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
+                            paciente: this.paciente,
+                            idInternacion: this.prestacion.id
+                        };
+                        this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+                            this.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                            this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                            this.data.emit(false);
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+                        });
+                    } else {
+                        this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                        this.data.emit(false);
+                    }
+
                 }, (err) => {
-                    this.plex.info('danger', 'La prestación no pudo ser registrada. Por favor verifica la conectividad de la red.');
+                    this.plex.info('danger', err);
                 });
             } else {
                 // armamos el elemento data a agregar al array de registros
@@ -365,7 +410,11 @@ export class IniciarInternacionComponent implements OnInit {
             };
             this.organizacionService.get(query).subscribe(event.callback);
         } else {
-            event.callback([]);
+            let organizacionSalida = [];
+            if (this.informeIngreso && this.informeIngreso.organizacionOrigen) {
+                organizacionSalida = [this.informeIngreso.organizacionOrigen];
+            }
+            event.callback(organizacionSalida);
         }
     }
 
