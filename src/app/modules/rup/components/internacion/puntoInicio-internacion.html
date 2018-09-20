@@ -84,11 +84,13 @@
                         </plex-button>
                     </div>
                 </div>
-                <div *ngIf="!epicrisisPaciente.length && !showLoader" class="row badge-internacion warning">
-                    <div class="col-12 text-center">
-                        No hay epicrisis del paciente
+                <ng-container *ngIf="!epicrisisPaciente.length && !showLoader">
+                    <div class="row badge-internacion warning">
+                        <div class="col-12 text-center">
+                            No hay epicrisis del paciente
+                        </div>
                     </div>
-                </div>
+                </ng-container>
             </div>
             <br>
             <ng-container *ngIf="epicrisisPaciente.length && !showLoader">
@@ -97,7 +99,8 @@
                         <h4 class="text-info">Lista de epicrisis</h4>
                     </div>
                     <div class="col-2">
-                        <plex-button icon="mdi mdi-plus" type="success" position="right" (click)="nuevaEpicrisis(pacienteSeleccionado)"></plex-button>
+                        <plex-button title="Nueva Epicrisis" icon="mdi mdi-plus" type="success" position="right"
+                            (click)="nuevaEpicrisis(pacienteSeleccionado)"></plex-button>
                     </div>
                 </div>
             </ng-container>
@@ -138,6 +141,8 @@
                 </table>
             </section>
         </ng-container>
+        <plex-button *ngIf="!epicrisisPaciente.length && !showLoader" class="align-self-end" label="Nueva Epicrisis"
+            icon="mdi mdi-plus" type="success" position="right" (click)="nuevaEpicrisis(pacienteSeleccionado)"></plex-button>
     </plex-layout-sidebar>
     <!-- footer -->
     <plex-layout-footer>
