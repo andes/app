@@ -94,7 +94,6 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
         if (registros) {
             for (let i = 0; i < registros.length; i++) {
                 if (registros[i].valor) {
-                    console.log('registros[i].valor', registros[i].valor);
                     return true;
                 } else {
                     this.hayAlgunValor(registros[i].registros);
