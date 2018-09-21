@@ -79,6 +79,10 @@ export class PuntoInicioInternacionComponent implements OnInit {
         });
     }
 
+    html2text(html: string) {
+        return html.replace(/<[^>]*>/g, '');
+    }
+
     /**
      * Ruteo a epicris/huds
      * @param id

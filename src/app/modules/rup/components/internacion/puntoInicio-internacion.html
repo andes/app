@@ -35,8 +35,8 @@
         </header>
         <ng-container *ngIf="pacienteSeleccionado">
             <div class="text-center info-sidebar">
-                <span class="badge badge-success">
-                    algo
+                <span class="badge" [ngClass]="{'badge-success': pacienteSeleccionado.estado === 'validado', 'badge-warning': pacienteSeleccionado.estado === 'temporal'}">
+                    {{ pacienteSeleccionado.estado }}
                 </span>
                 <br>
                 <h3>
@@ -80,13 +80,13 @@
                     <tbody>
                         <tr class="hover" *ngFor="let epicrisis of epicrisisPaciente">
                             <td>
-                                {{epicrisis.solicitud.fecha | date}}
+                                {{ epicrisis.solicitud.fecha | date }}
                             </td>
                             <td>
                                 <ng-container *ngIf="epicrisis.ejecucion.registros[0]?.registros">
 
                                     <span>
-                                        {{epicrisis.ejecucion.registros[0].registros[0].valor}}
+                                        {{ html2text(epicrisis.ejecucion.registros[0].registros[0].valor) }}
                                     </span>
                                 </ng-container>
                             </td>

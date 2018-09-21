@@ -6,19 +6,15 @@
                     idField="conceptId" labelField="term" label="Unidad Organizativa" [required]="true"></plex-select>
             </form>
         </div>
-        <div class="col-3 mt-4">
-            {{mensajeAccionAccordion}} Todos
-            <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm" (click)="desplegarAccordions()"></plex-button>
-        </div>
-        <div class="col-3 mt-4">
-            Arbol de relaciones
-            <plex-button icon="icon icon-andes-arbol" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button>
+        <div class="col mt-4">
+            <plex-button label="{{ mensajeAccionAccordion }} Todos" type="primary btn-sm" (click)="desplegarAccordions()"></plex-button>
+            <plex-button label="Árbol de relaciones" type="primary btn-sm" (click)="VerArbolRelaciones()"></plex-button>
         </div>
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <plex-panel [ngClass]="{'alerta-campo' : !cristinaVolve.isValid}" icon="arrow-down-drop-circle-outline"
-                (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo">
+                (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo" class="hover">
 
                 <div plex-accordion-title>
                     <span class="contenedor-icono">
@@ -26,7 +22,7 @@
                     </span>
 
                     <span class="titulo">
-                        {{ item.concepto.term}}
+                        {{ item.concepto.term }}
                     </span>
 
                     <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
@@ -38,7 +34,7 @@
                         No hay conceptos registrados
                     </span>
                     <span *ngIf="registro.registros[i].registros.length && cristinaVolve.isValid" class="badge badge-info float-right mr-4">
-                        {{registro.registros[i].registros.length}} Conceptos registrados
+                        {{ registro.registros[i].registros.length }} Conceptos registrados
                     </span>
                 </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
