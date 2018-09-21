@@ -462,19 +462,17 @@ export class MapaDeCamasComponent implements OnInit {
        * Nos rutea a la ejecucion de RUP.
        */
     generaEpicrisis() {
-        let epicrisisEjecucion;
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacionPorInternacion.id }).subscribe(prestacionExiste => {
-            epicrisisEjecucion = prestacionExiste;
+            if (prestacionExiste.length === 0) {
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
+                nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
+                this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
+                    this.router.navigate(['rup/ejecucion', prestacion.id]);
+                });
+            } else {
+                this.router.navigate(['rup/ejecucion', prestacionExiste[0].id]);
+            }
         });
-        if (!epicrisisEjecucion) {
-            let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
-            nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
-            this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
-                this.router.navigate(['rup/ejecucion', prestacion.id]);
-            });
-        } else {
-            this.router.navigate(['rup/ejecucion', epicrisisEjecucion[0].id]);
-        }
     }
 
 
