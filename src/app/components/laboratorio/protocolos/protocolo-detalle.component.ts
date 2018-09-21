@@ -38,7 +38,7 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    flagMarcarTodas: Boolean = false;res
+    flagMarcarTodas: Boolean = false; res
     public practicas: IPracticaMatch[] | IPractica[];
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
@@ -58,10 +58,10 @@ export class ProtocoloDetalleComponent
     set cargarProtocolo(value: any) {
         if (value) {
             this.modelo = value;
-            this.modelo.solicitud.ambitoOrigen = {
-                nombre: this.modelo.solicitud.ambitoOrigen,
-                id: this.modelo.solicitud.ambitoOrigen,
-            };
+            // this.modelo.solicitud.ambitoOrigen = {
+            //     nombre: this.modelo.solicitud.ambitoOrigen,
+            //     id: this.modelo.solicitud.ambitoOrigen,
+            // };
             if (this.modo.id === 'recepcion') {
                 this.carparPracticasAEjecucion();
             }
@@ -97,7 +97,6 @@ export class ProtocoloDetalleComponent
 
     cargarResultadosAnteriores() {
         this.modelo.ejecucion.registros[0].valor.forEach((practica) => {
-            console.log('cargarResultadosAnteriores', practica.concepto.term)
             this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
                 practica.resultado.resultadosAnteriores = resultadosAnteriores;
             });
@@ -117,17 +116,17 @@ export class ProtocoloDetalleComponent
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
 
         let practicasCargar = practicasSolicitud.filter((practicaSolicitud) => {
-            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId == practicaSolicitud.concepto.conceptId) == -1;
+            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId === practicaSolicitud.conceptId) == -1;
         });
 
         Array.prototype.push.apply(this.modelo.ejecucion.registros[0].valor, practicasCargar);
     }
 
     seleccionarPractica(practica: IPractica) {
-        let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
+        let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.conceptId === practica.concepto.conceptId);
 
         if (existe === -1) {
-            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica);
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica.concepto);
             this.modelo.ejecucion.registros[0].valor.push(practica);
         } else {
             this.plex.alert('', 'Práctica ya ingresada');
@@ -303,12 +302,12 @@ export class ProtocoloDetalleComponent
 
     validarTodas(event) {
         this.modelo.ejecucion.registros[0].valor.forEach(practica => {
-                practica.resultado.validado = event.value;
+            practica.resultado.validado = event.value;
         });
     }
 
     clickValidar(event) {
-        if(!event.value) {
+        if (!event.value) {
             this.flagMarcarTodas = false;
         }
     }

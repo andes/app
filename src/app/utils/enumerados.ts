@@ -67,7 +67,8 @@ export enum CargaLaboratorio {
     'recepcion',
     'control',
     'carga',
-    'validacion'
+    'validacion',
+    'listado'
 }
 
 export enum ModoCargaLaboratorio {
@@ -115,6 +116,12 @@ export enum EstadosEspacios {
     'mantenimiento',
     'clausurado',
     'baja permanente'
+}
+export enum EstadosLabo {
+    'pendiente',
+    'ejecucion',
+    'validada',
+    'todos'
 }
 
 export function titleCase(str) {
@@ -241,6 +248,17 @@ export function getPrioridadesLab() {
 
 export function getPrioridadesFiltroLab() {
     let arrLab = Object.keys(PrioridadesLaboratorioFiltro);
+    arrLab = arrLab.slice(arrLab.length / 2);
+    let salida = arrLab.map(elem => {
+        return {
+            'id': elem,
+            'nombre': titleCase(elem)
+        };
+    });
+    return salida;
+}
+export function getEstadosFiltroLab() {
+    let arrLab = Object.keys(EstadosLabo);
     arrLab = arrLab.slice(arrLab.length / 2);
     let salida = arrLab.map(elem => {
         return {

@@ -30,7 +30,7 @@
                     F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
                 </div>
                 <div class="col-2">
-                    <plex-button position="left" type="warning" *ngIf='modo.id !== "recepcion"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                    <plex-button position="left" type="warning" *ngIf='modo.id === "control"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
                 </div>
             </div>
             <br>
@@ -56,9 +56,8 @@
                                 </p>
                             </div>
                             <div class="col-3">
-
                                 <strong>Origen: </strong>
-                                <p>{{ modelo.solicitud.ambitoOrigen.nombre}}</p>
+                                <p>{{ modelo.solicitud.ambitoOrigen}}</p>
                             </div>
                             <div class="col-3">
                                 <strong>Servicio: </strong>
@@ -176,7 +175,10 @@
                                         <th class="float-center">VR</th>
                                     </ng-container>
                                     <ng-container *ngIf='modo.id === "validacion"'>
-                                            <th class="float-center"><div><plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas"  (change)="validarTodas($event)" name="validarTodos"></plex-bool></div>Validar </th>
+                                        <th class="float-center">
+                                            <div>
+                                                <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)" name="validarTodos"></plex-bool>
+                                            </div>Validar </th>
                                     </ng-container>
                                     <th></th>
                                     <th *ngIf='modo.id === "recepcion" || modo.id === "control"'>Acciones</th>
@@ -199,9 +201,11 @@
 
                                             <td *ngIf='modo.id === "validacion"'>
                                                 <span style='color:green'>
-                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}} <br> 
-                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.unidadMedida}} <br> 
-                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.fecha | date: 'dd/MM/yyyy' }}
+                                                    {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
+                                                    <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
+                                                    - 1]?.unidadMedida}}
+                                                    <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
+                                                    - 1]?.fecha | date: 'dd/MM/yyyy' }}
                                                 </span>
                                             </td>
                                             <td>
@@ -212,7 +216,7 @@
                                             </td>
                                         </ng-container>
                                         <ng-container *ngIf='modo.id === "validacion"'>
-                                            <td >
+                                            <td>
                                                 <plex-bool type="checkbox" [(ngModel)]="practica.resultado.validado" name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
                                             </td>
                                         </ng-container>
@@ -228,10 +232,15 @@
                                                 </plex-button>
                                             </td>
                                         </ng-container>
-                                        <div class="row" *ngIf=" showObservaciones ">
+                                        <div class="row">
                                             <div class="col-12">
-                                                <plex-text name="observaciones" [(ngModel)]="practica.observaciones">
+                                                <plex-text *ngIf=" showObservaciones " name="observaciones" [(ngModel)]="practica.observaciones">
                                                 </plex-text>
+                                            </div>
+
+                                            <div *ngIf="showObservaciones" class="col-1 btnEdit">
+                                                <plex-button type="danger" icon="close-circle-outline" title="Guardar" (click)="cerrarObservacion()">
+                                                </plex-button>
                                             </div>
 
                                         </div>
@@ -255,11 +264,14 @@
                 <plex-tab label="Incidencias"></plex-tab>
             </plex-tabs>
             <!--OBSERVACIONES - RECEPCION-->
-            <div class="row " *ngIf="modo.id==='recepcion' || modo.id==='control' ">
-                <div class="col-12 ">
+            <div class="row ">
+                <div *ngIf="modo.id==='recepcion' || modo.id==='control' || modo.id==='carga' " class="col-12 ">
                     <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones" label="Observaciones " name="observaciones "
                         multiline="true ">
                     </plex-text>
+                </div>
+                <div *ngIf="modo.id==='validacion' " class="col-12 ">
+                    <b> {{modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones}} </b>
                 </div>
             </div>
         </ng-container>
@@ -275,9 +287,8 @@
 
 
 
+
     </plex-layout-main>
-
-
     <plex-layout-sidebar *ngIf='modo.id !== "recepcion"'>
         <div class="row " *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i' [ngClass]="{'invert': protocolo._id === modelo._id}">
             <div class="col-2">
@@ -286,11 +297,11 @@
             </div>
             <div class="col-5">
                 <label class="control-label text-info">N° Protocolo</label>
-                <span>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</span>
+                <span>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</span>
             </div>
             <div class="col-5">
                 <label class="control-label text-info">Fecha</label>
-                <span>{{modelo.solicitud.fecha | date: 'dd/MM/yyyy'}}</span>
+                <span>{{protocolo.solicitud.fecha | date: 'dd/MM/yyyy'}}</span>
             </div>
             <hr>
         </div>
@@ -298,9 +309,12 @@
 
     <plex-layout-footer>
         <plex-button position="left" type="warning" (click)="volverProtocolos()">Volver</plex-button>
-        <plex-button *ngIf='modo.id !== "validacion"' position="right" class="float-right mr-1" type="success" label="Guardar" (click)="guardarSolicitud($event)"></plex-button>
-        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar todos" (click)="guardarSolicitud($event)"></plex-button>
-        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar pendientes" (click)="guardarSolicitud($event)"></plex-button>
-        
+        <plex-button *ngIf='modo.id !== "validacion" && !seleccionPaciente' position="right" class="float-right mr-1" type="success"
+            label="Guardar" (click)="guardarSolicitud($event)"></plex-button>
+        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar todos"
+            (click)="guardarSolicitud($event)"></plex-button>
+        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar pendientes"
+            (click)="guardarSolicitud($event)"></plex-button>
+
     </plex-layout-footer>
 </plex-layout>

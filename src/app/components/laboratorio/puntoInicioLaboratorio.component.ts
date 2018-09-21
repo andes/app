@@ -38,6 +38,8 @@ export class PuntoInicioLaboratorioComponent
     public fechaHasta: any = new Date();
     public origenEnum: any;
     public prioridadesFiltroEnum;
+    public estadosFiltroEnum;
+
     public laboratorioInternoEnum: any;
     public dniPaciente: any;
     public pacientes;
@@ -96,6 +98,8 @@ export class PuntoInicioLaboratorioComponent
 
     ngOnInit() {
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
+
+        this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
@@ -139,17 +143,22 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
         this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
-        this.busqueda.organizacion = (!this.organizacion || (this.organizacion && this.organizacion.id === null)) ? null : this.organizacion.id;
+        this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
         this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
         this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
-
-        console.log("bus", this.busqueda);
         if (this.modo.nombre === 'Recepcion') {
             this.busqueda.estado = 'pendiente';
             this.getProtocolos(this.busqueda);
         } else {
-            this.busqueda.estado = 'ejecucion';
-            this.getProtocolos(this.busqueda);
+            if (this.modo.nombre === 'Listado') {
+                this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
+
+                this.getProtocolos(this.busqueda);
+            }
+            else {
+                this.busqueda.estado = 'ejecucion';
+                this.getProtocolos(this.busqueda);
+            }
         }
     };
 
@@ -270,7 +279,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     changeCarga(tipo) {
-        
+
     }
 
     changeServicio() {
@@ -295,6 +304,10 @@ export class PuntoInicioLaboratorioComponent
 
                 this.refreshSelection();
                 break;
+            case 'Listado':
+                this.accion = 'Listar';
+                this.refreshSelection();
+                break;
         }
 
     }
@@ -309,11 +322,9 @@ export class PuntoInicioLaboratorioComponent
         if (this.pacienteActivo) {
             busqueda.pacienteDni = this.pacienteActivo.documento;
         }
-        console.log('busqueda turnos', this.turnosRecepcion);
         // this.turnoService.getTurnosLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; });
         this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => {
             this.turnosRecepcion = turnos;
-            console.log('turnos recepcion', this.turnosRecepcion);
         });
     }
 
