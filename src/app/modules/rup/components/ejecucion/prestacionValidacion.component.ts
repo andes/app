@@ -245,7 +245,7 @@ export class PrestacionValidacionComponent implements OnInit {
             this.plex.toast('info', existeC2.concepto.term.toUpperCase() + '. Debe indicar si es primera vez.');
             return false;
         }
-        if (!existeDiagnostico) {
+        if (!existeDiagnostico && !this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
             this.plex.toast('info', 'Debe seleccionar un procedimiento / diagnostico principal', 'procedimiento / diagnostico principal', 1000);
             return false;
         }
@@ -268,15 +268,14 @@ export class PrestacionValidacionComponent implements OnInit {
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
 
-                    // actualizamos las prestaciones de la HUDS
-                    this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
-                        if (prestacionesSolicitadas) {
-                            this.cargaPlan(prestacionesSolicitadas);
-                        }
-                    });
-
                     this.motivoReadOnly = true;
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // actualizamos las prestaciones de la HUDS
+                        this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
+                            if (prestacionesSolicitadas) {
+                                this.cargaPlan(prestacionesSolicitadas);
+                            }
+                        });
                         // Cargar el mapeo de snomed a cie10 para las prestaciones que vienen de agendas
                         this.servicioPrestacion.prestacionPacienteAusente().subscribe(
                             result => {
