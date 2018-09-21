@@ -60,7 +60,7 @@
                                 <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
                                     <span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : prestacionesService.getCssClass(registro.concepto) }}">
-                                        {{registro.concepto.semanticTag}}
+                                        {{!registro.esSolicitud ? registro.concepto.semanticTag : 'solicitud'}}
                                     </span>
 
                                     <a *ngIf="!soloValores" href="javascript:void(0);" title="Quitar de la consulta"

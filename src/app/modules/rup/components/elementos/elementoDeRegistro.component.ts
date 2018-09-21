@@ -31,6 +31,8 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     // boleean para verificar si estan todos los conceptos colapsados
     public collapse = true;
 
+    public conceptosTurneables: any[];
+
     ngOnInit() {
         this.params.required = this.params.required ? this.params.required : false;
         if (this.params.refsetId) {
@@ -38,6 +40,9 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                 this.conceptosPermitidos = resultado;
             });
         }
+        this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
+            this.conceptosTurneables = conceptosTurneables;
+        });
     }
 
 
@@ -94,9 +99,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        // if (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') {
-        //     esSolicitud = true;
-        // }
+        esSolicitud = this.esTurneable(snomedConcept);
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);
@@ -295,6 +298,15 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             if (unRegistro !== this.collapse) {
                 this.collapse = !this.collapse;
             }
+        });
+    }
+
+    public esTurneable(concepto: any) {
+        if (!this.conceptosTurneables) {
+            return false;
+        }
+        return this.conceptosTurneables.find(x => {
+            return x.conceptId === concepto.conceptId;
         });
     }
 }
