@@ -9,15 +9,15 @@ export class PrestamosService {
     constructor(private server: Server) { }
 
     getCarpetasSolicitud(filtros): Observable<any[]> {
-        return this.server.post(this.turnoUrl + '/prestamosHC/getCarpetasSolicitud', filtros);
+        return this.server.get(this.turnoUrl + '/prestamosHC/solicitudes', { params: filtros });
     }
 
     getCarpetasPrestamo(filtros): Observable<any[]> {
-        return this.server.post(this.turnoUrl + '/prestamosHC/getCarpetasPrestamo', filtros);
+        return this.server.get(this.turnoUrl + '/prestamosHC/prestamos', { params: filtros });
     }
 
     getHistorialCarpetas(filtros): Observable<any[]> {
-        return this.server.post(this.turnoUrl + '/prestamosHC/historial', filtros);
+        return this.server.get(this.turnoUrl + '/prestamosHC/historial', { params: filtros });
     }
 
     prestarCarpeta(carpeta: any): Observable<any[]> {
@@ -37,6 +37,6 @@ export class PrestamosService {
     }
 
     solicitudManualCarpeta(solicitud): Observable<any[]> {
-        return this.server.post(this.turnoUrl + '/prestamosHC/solicitudManualCarpeta', solicitud);
+        return this.server.post(this.turnoUrl + '/prestamosHC/manual', solicitud);
     }
 }
