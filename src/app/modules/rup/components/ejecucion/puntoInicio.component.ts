@@ -104,7 +104,8 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
-                sinEstado: 'modificada'
+                sinEstado: 'modificada',
+                ambitoOrigen: 'ambulatorio'
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
                 // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
