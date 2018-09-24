@@ -138,8 +138,14 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
+                /* Se hace la asignación del resultado a organizacionModel
+                // antes de la instruccion IF dado que si la organización
+                // no posee servicios cargados, no realiza la carga de los
+                // Datos al formulario
+                */
+                Object.assign(this.organizacionModel, resultado);
                 if (resultado.servicios) {
-                    Object.assign(this.organizacionModel, resultado);
+                    // Object.assign(this.organizacionModel, resultado);
                     // Lo mapeamos para que los tome el plex-select
                     this.serviciosSeleccionados = this.organizacionModel.servicios.map(function (obj) {
                         return { id: obj.conceptId, nombre: obj.term, concepto: obj };
