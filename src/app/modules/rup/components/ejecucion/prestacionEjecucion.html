@@ -205,7 +205,7 @@
                                                 <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]">
 
                                                     <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
-                                                        <b class="text-capitalize">{{ mostrarVinculacion(registro).concepto.term }}
+                                                        <b class="text-capitalize">{{ mostrarVinculacion(registro)?.concepto.term }}
                                                             <span *ngIf="mostrarVinculacion(registro)?.cara">/ {{ mostrarVinculacion(registro)?.cara }}</span>
                                                         </b>?
                                                         <div class="buttons">

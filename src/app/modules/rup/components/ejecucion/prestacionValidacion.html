@@ -190,13 +190,12 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                            [registro]="elemento" [soloValores]="true" [params]="this.elementosRUPService.coleccionRetsetId[elemento.concepto.conceptId]"></rup>
+                                            [registro]="elemento" [soloValores]="true" [params]="elementosRUPService.selectPorRefsetId(elemento.concepto, elemento.esSolicitud)"></rup>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
                                                 title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal d-flex align-items-end">
                                                 ¿Procedimiento/Diagnóstico principal? &nbsp;

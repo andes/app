@@ -620,10 +620,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -641,10 +641,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -668,10 +668,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                {
-                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                },
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
