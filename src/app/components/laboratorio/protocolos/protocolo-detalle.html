@@ -1,10 +1,10 @@
 <plex-layout main="9">
     <plex-layout-main>
         <!--ENCABEZADO-->
-        <header *ngIf='modo && modo.id !== "recepcion"'>
+        <header *ngIf='modo && modo.id !=="recepcion"'>
             <h4>Laboratorio general | Practicas y resultados</h4>
         </header>
-        <header *ngIf='modo && modo.id === "recepcion"'>
+        <header *ngIf='modo && modo.id ==="recepcion"'>
             <div class="page-title">NUEVA SOLICITUD</div>
         </header>
 
@@ -16,7 +16,7 @@
                 </pacientesSearch>
             </div>
         </div>
-        <span *ngIf='modo.id !== "recepcion"' class="badge badge-success" style='float: left; margin-right: 20px;'>
+        <span *ngIf='modo.id !=="recepcion"' class="badge badge-success" style='float: left; margin-right: 20px;'>
             <h2>{{modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
         </span>
         <ng-container *ngIf="!seleccionPaciente">
@@ -30,7 +30,7 @@
                     F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
                 </div>
                 <div class="col-2">
-                    <plex-button position="left" type="warning" *ngIf='modo.id === "control"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                    <plex-button position="left" type="warning" *ngIf='modo.id ==="control"' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
                 </div>
             </div>
             <br>
@@ -41,9 +41,9 @@
         <ng-container *ngIf="showProtocoloDetalle">
             <!-- ENCABEZADO DE PROTOCOLO -->
             <section class="labs-listado-item">
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon="chevron-left" (click)='anterior()' style='margin-right: 10px;'></plex-button>
+                <plex-button *ngIf='modo.id !=="recepcion"' type="info" icon="chevron-left" (click)='anterior()' style='margin-right: 10px;'></plex-button>
                 <div class="listado-contenedor-secundario">
-                    <article *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="labs-item-numero">
+                    <article *ngIf='modo.id !=="recepcion" && modo.id !=="control"' class="labs-item-numero">
                         <div class="row">
                             <div class="col-3">
                                 <strong>Fecha de solicitud: </strong>
@@ -85,14 +85,14 @@
                             </div>
                         </div>
                     </article>
-                    <article *ngIf='modo.id === "recepcion" || modo.id === "control"' class="labs-item-numero">
+                    <article *ngIf='modo.id ==="recepcion" || modo.id ==="control"' class="labs-item-numero">
                         <div class="row">
                             <div class="col-3">
-                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual " [required]="true"></plex-datetime>
+                                <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha Actual" [required]="true"></plex-datetime>
                             </div>
                             <div class="col-3">
                                 <plex-datetime type="date" [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.fechaTomaMuestra" name="fechaTomaMuestra"
-                                    label="Fecha toma de muestra " [required]="true"></plex-datetime>
+                                    label="Fecha toma de muestra" [required]="true"></plex-datetime>
                             </div>
 
                             <div class="col-3">
@@ -133,11 +133,11 @@
                         </div>
                     </article>
                 </div>
-                <div *ngIf='modo.id !== "recepcion" && modo.id !== "control"' class="badge-container">
+                <div *ngIf='modo.id !=="recepcion" && modo.id !=="control"' class="badge-container">
                     <plex-badge type="danger" class="ml-2"> {{modelo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}} </plex-badge>
                     <plex-badge type="warning" class="ml-2"> {{modelo.estados[0].tipo}} </plex-badge>
                 </div>
-                <plex-button *ngIf='modo.id !== "recepcion"' type="info" icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
+                <plex-button *ngIf='modo.id !=="recepcion"' type="info" icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
 
             </section>
             <!-- FIN ENCABEZADO DE PROTOCOLO -->
@@ -167,31 +167,31 @@
                                 <thead>
                                     <th>Cod.</th>
                                     <th>Descripcion</th>
-                                    <th *ngIf='modo.id === "recepcion" || modo.id === "control"' class="float-center">S/Muestra</th>
-                                    <ng-container *ngIf='modo.id !== "control" && modo.id !== "recepcion"'>
+                                    <th *ngIf='modo.id ==="recepcion" || modo.id ==="control"' class="float-center">S/Muestra</th>
+                                    <ng-container *ngIf='modo.id !=="control" && modo.id !=="recepcion"'>
                                         <th class="float-center">Valor</th>
-                                        <th *ngIf='modo.id === "validacion"' class="float-center">R. Anterior</th>
+                                        <th *ngIf='modo.id ==="validacion"' class="float-center">R. Anterior</th>
                                         <th class="float-center">UM</th>
                                         <th class="float-center">VR</th>
                                     </ng-container>
-                                    <ng-container *ngIf='modo.id === "validacion"'>
+                                    <ng-container *ngIf='modo.id ==="validacion"'>
                                         <th class="float-center">
                                             <div>
                                                 <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)" name="validarTodos"></plex-bool>
                                             </div>Validar </th>
                                     </ng-container>
                                     <th></th>
-                                    <th *ngIf='modo.id === "recepcion" || modo.id === "control"'>Acciones</th>
-                                    <th *ngIf='modo.id === "carga" || modo.id === "validacion"'>Observaciones</th>
+                                    <th *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>Acciones</th>
+                                    <th *ngIf='modo.id ==="carga" || modo.id ==="validacion"'>Observaciones</th>
                                 </thead>
                                 <tbody>
                                     <tr class="hover" *ngFor="let practica of modelo.ejecucion.registros[0].valor">
                                         <td>{{practica.codigo}}</td>
                                         <td>{{practica.nombre}}</td>
-                                        <ng-container *ngIf='modo.id === "recepcion" || modo.id === "control"'>
+                                        <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
                                             <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                                         </ng-container>
-                                        <ng-container *ngIf='modo.id !== "control"&& modo.id !== "recepcion"'>
+                                        <ng-container *ngIf='modo.id !=="control"&& modo.id !=="recepcion"'>
                                             <td class="text-left align-middle estado">
                                                 <p>
                                                     <plex-float *ngIf="!practica.resultado.sinMuestra" [(ngModel)]="practica.resultado.valor"></plex-float>
@@ -199,7 +199,7 @@
                                                 </p>
                                             </td>
 
-                                            <td *ngIf='modo.id === "validacion"'>
+                                            <td *ngIf='modo.id ==="validacion"'>
                                                 <span style='color:green'>
                                                     {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
                                                     <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
@@ -215,18 +215,18 @@
                                                 {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
                                             </td>
                                         </ng-container>
-                                        <ng-container *ngIf='modo.id === "validacion"'>
+                                        <ng-container *ngIf='modo.id ==="validacion"'>
                                             <td>
                                                 <plex-bool type="checkbox" [(ngModel)]="practica.resultado.validado" name="validado" (change)="clickValidar($event)" name="clickValidar"></plex-bool>
                                             </td>
                                         </ng-container>
                                         <td></td>
-                                        <ng-container *ngIf='modo.id === "recepcion" || modo.id === "control"'>
+                                        <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
                                             <td>
-                                                <plex-button label=" " type="danger btn-sm " icon="delete " (click)="eliminarPractica(practica) "></plex-button>
+                                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
                                             </td>
                                         </ng-container>
-                                        <ng-container *ngIf='(modo.id === "carga" || modo.id === "validacion") && !showObservaciones'>
+                                        <ng-container *ngIf='(modo.id ==="carga" || modo.id ==="validacion") && !showObservaciones'>
                                             <td>
                                                 <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
                                                 </plex-button>
@@ -234,7 +234,7 @@
                                         </ng-container>
                                         <div class="row">
                                             <div class="col-12">
-                                                <plex-text *ngIf=" showObservaciones " name="observaciones" [(ngModel)]="practica.observaciones">
+                                                <plex-text *ngIf=" showObservaciones" name="observaciones" [(ngModel)]="practica.observaciones">
                                                 </plex-text>
                                             </div>
 
@@ -252,11 +252,11 @@
                     <!-- FIN TABLA VISUALIZACION DE PRACTICAS -->
                     <hr>
                 </plex-tab>
-                <plex-tab *ngIf='modo.id === "recepcion" || modo.id === "control"' label="Diagnostico">
-                    <div class="row ">
-                        <div class="col-12 ">
-                            <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.diagnostico" label="Diagnostico " name="diagnostico "
-                                multiline="true ">
+                <plex-tab *ngIf='modo.id ==="recepcion" || modo.id ==="control"' label="Diagnostico">
+                    <div class="row">
+                        <div class="col-12">
+                            <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.diagnostico" label="Diagnostico" name="diagnostico"
+                                multiline="true">
                             </plex-text>
                         </div>
                     </div>
@@ -264,13 +264,13 @@
                 <plex-tab label="Incidencias"></plex-tab>
             </plex-tabs>
             <!--OBSERVACIONES - RECEPCION-->
-            <div class="row ">
-                <div *ngIf="modo.id==='recepcion' || modo.id==='control' || modo.id==='carga' " class="col-12 ">
-                    <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones" label="Observaciones " name="observaciones "
-                        multiline="true ">
+            <div class="row">
+                <div *ngIf="modo.id==='recepcion' || modo.id==='control' || modo.id==='carga'" class="col-12">
+                    <plex-text [(ngModel)]="modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones" label="Observaciones" name="observaciones"
+                        multiline="true">
                     </plex-text>
                 </div>
-                <div *ngIf="modo.id==='validacion' " class="col-12 ">
+                <div *ngIf="modo.id==='validacion'" class="col-12">
                     <b> {{modelo.solicitud.registros[0].valor.solicitudPrestacion.observaciones}} </b>
                 </div>
             </div>
@@ -278,10 +278,10 @@
         <!--FIN SECCION PRTOCOLO -->
 
         <!-- Botonera 
-        <div class="botonera-container " *ngIf='modo.id !== "recepcion "'>
-            <plex-button class="left ml-2 " type="info " icon='chevron-up' label="boton clave 1 "></plex-button>
-            <plex-button class="center ml-2 " type="success " icon='chevron-up' label="boton clave 2 "></plex-button>
-            <plex-button class="right ml-2 " type="warning " icon='chevron-up' label="boton clave 3 "></plex-button>
+        <div class="botonera-container" *ngIf='modo.id !=="recepcion"'>
+            <plex-button class="left ml-2" type="info" icon='chevron-up' label="boton clave 1"></plex-button>
+            <plex-button class="center ml-2" type="success" icon='chevron-up' label="boton clave 2"></plex-button>
+            <plex-button class="right ml-2" type="warning" icon='chevron-up' label="boton clave 3"></plex-button>
         </div>
         <hr>    -->
 
@@ -289,11 +289,11 @@
 
 
     </plex-layout-main>
-    <plex-layout-sidebar *ngIf='modo.id !== "recepcion"'>
-        <div class="row " *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i' [ngClass]="{'invert': protocolo._id === modelo._id}">
+    <plex-layout-sidebar *ngIf='modo.id !=="recepcion"'>
+        <div class="row" *ngFor="let protocolo of protocolos; let i=index" (click)='modelo = protocolo; indexProtocolo = i' [ngClass]="{'invert': protocolo._id === modelo._id}">
             <div class="col-2">
-                <i *ngIf='protocolo.paciente.sexo === "femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
-                <i *ngIf='protocolo.paciente.sexo === "masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
+                <i *ngIf='protocolo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45 rosa"></i>
+                <i *ngIf='protocolo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
             </div>
             <div class="col-5">
                 <label class="control-label text-info">N° Protocolo</label>
@@ -309,11 +309,11 @@
 
     <plex-layout-footer>
         <plex-button position="left" type="warning" (click)="volverProtocolos()">Volver</plex-button>
-        <plex-button *ngIf='modo.id !== "validacion" && !seleccionPaciente' position="right" class="float-right mr-1" type="success"
+        <plex-button *ngIf='modo.id !=="validacion" && !seleccionPaciente' position="right" class="float-right mr-1" type="success"
             label="Guardar" (click)="guardarSolicitud($event)"></plex-button>
-        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar todos"
+        <plex-button *ngIf='modo.id ==="validacion"' position="right" class="float-right mr-1" type="success" label="Validar todos"
             (click)="guardarSolicitud($event)"></plex-button>
-        <plex-button *ngIf='modo.id === "validacion"' position="right" class="float-right mr-1" type="success" label="Validar pendientes"
+        <plex-button *ngIf='modo.id ==="validacion"' position="right" class="float-right mr-1" type="success" label="Validar pendientes"
             (click)="guardarSolicitud($event)"></plex-button>
 
     </plex-layout-footer>
