@@ -154,8 +154,7 @@ export class PuntoInicioLaboratorioComponent
                 this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
 
                 this.getProtocolos(this.busqueda);
-            }
-            else {
+            } else {
                 this.busqueda.estado = 'ejecucion';
                 this.getProtocolos(this.busqueda);
             }

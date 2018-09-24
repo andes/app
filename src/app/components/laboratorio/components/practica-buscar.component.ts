@@ -65,7 +65,7 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
             this.searchClear.emit();
         }
     }
- 
+
     public seleccionarPractica(practica: any) {
         if (practica) {
             this.seleccion = practica;

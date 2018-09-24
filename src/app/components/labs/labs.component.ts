@@ -6,25 +6,25 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./labs.component.scss']
 })
 export class LabsComponent implements OnInit {
-  
+
   constructor() { }
-    
+
   ngOnInit() {
   }
 
   // Modelos
-  model:any = {};
-  model2:any = {};
+  model: any = {};
+  model2: any = {};
 
 
   public mostrarMasOpciones = false;
 
-  msg:string = '';
-  
+  msg = '';
+
   fechaDesde;
-  
+
   fechaHasta;
-  
+
   prestaciones;
 
   profesionales;
@@ -32,7 +32,7 @@ export class LabsComponent implements OnInit {
   espacioFisico;
 
   estado;
-  
+
   // Hardcodeo
   protocolos = [
     {
@@ -64,16 +64,16 @@ export class LabsComponent implements OnInit {
     }
   ];
 
-    
-// Funciones
-  addProtocolo():void{
+
+  // Funciones
+  addProtocolo(): void {
     this.protocolos.push(this.model);
     this.msg = 'campo agregado';
   }
 
- 
+
   myValue;
-  editProtocolo(i):void {
+  editProtocolo(i): void {
     this.model2.id = this.protocolos[i].id;
     this.model2.fecha = this.protocolos[i].fecha;
     this.model2.origen = this.protocolos[i].origen;
@@ -87,4 +87,4 @@ export class LabsComponent implements OnInit {
   loadEspacios(event) {
 
   }
-}
+};

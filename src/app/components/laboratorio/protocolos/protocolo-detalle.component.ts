@@ -29,7 +29,7 @@ export class ProtocoloDetalleComponent
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    //estado: any;
+    // estado: any;
 
     fecha: any;
     fechaTomaMuestra = new Date();
@@ -38,7 +38,7 @@ export class ProtocoloDetalleComponent
     profesionalOrigen: null;
     organizacion: any;
     modelo: any;
-    flagMarcarTodas: Boolean = false; res
+    flagMarcarTodas: Boolean = false;
     public practicas: IPracticaMatch[] | IPractica[];
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
@@ -106,7 +106,7 @@ export class ProtocoloDetalleComponent
     carparPracticasAEjecucion() {
         if (this.modelo.ejecucion.registros.length === 0) {
             this.modelo.ejecucion.registros.push({
-                nombre: "Practicas",
+                nombre: 'Practicas',
                 concepto: Constantes.conceptoPruebaLaboratorio,
                 valor: []
             });
@@ -116,7 +116,7 @@ export class ProtocoloDetalleComponent
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
 
         let practicasCargar = practicasSolicitud.filter((practicaSolicitud) => {
-            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId === practicaSolicitud.conceptId) == -1;
+            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId === practicaSolicitud.conceptId) === -1;
         });
 
         Array.prototype.push.apply(this.modelo.ejecucion.registros[0].valor, practicasCargar);
@@ -279,7 +279,7 @@ export class ProtocoloDetalleComponent
         }
 
         if (this.modo.id === 'recepcion') {
-            this.iniciarProtocolo()
+            this.iniciarProtocolo();
         } else {
             this.guardarProtocolo();
             this.cargarResultadosAnteriores();
@@ -287,7 +287,7 @@ export class ProtocoloDetalleComponent
     }
 
     isProtocoloValidado() {
-        return this.modelo.estados[this.modelo.estados.length - 1].tipo === "validada";
+        return this.modelo.estados[this.modelo.estados.length - 1].tipo === 'validada';
     }
 
     actualizarEstadoValidacion() {
@@ -321,7 +321,7 @@ export class ProtocoloDetalleComponent
     }
 
     iniciarProtocolo() {
-        this.modelo.estados = [{ tipo: "ejecucion" }];
+        this.modelo.estados = [{ tipo: 'ejecucion' }];
         let organizacionSolicitud = this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;

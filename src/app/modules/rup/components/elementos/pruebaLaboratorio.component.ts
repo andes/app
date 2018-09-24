@@ -27,7 +27,7 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
                 solicitudPrestacion: {}
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
-            //this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.registro.concepto.conceptId);
+            // this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.registro.concepto.conceptId);
 
             this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
 
@@ -92,9 +92,7 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
             let query = {
                 cadenaInput: event.query
             };
-            console.log("query", query);
             this.servicioPractica.getMatch(query).subscribe(resultado => {
-                console.log("resultado", resultado)
                 event.callback(resultado);
             });
             // resultado => this.busquedaFInal.emit({ practicas: resultado, err: null }),

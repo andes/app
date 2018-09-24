@@ -553,7 +553,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        //LABORATORIO
+        // LABORATORIO
         PracticaBuscarComponent,
         PracticaDemoComponent,
         PracticaListadoComponent,
