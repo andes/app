@@ -66,6 +66,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
 
     public seleccionMultiple = false;
     public ocultarTemporales = true;
+    public conceptoOdontograma = '3561000013109';
 
     // El paciente no tiene odontogramas anteriores, hasta que se revise la HUDS
     public cargandoUltimoOdontograma = true;
@@ -127,7 +128,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
                 this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
                     let odonto = null;
-                    if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                    if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === this.conceptoOdontograma)) {
                         if (odonto.valor) {
                             return unaPrestacion;
                         }
@@ -135,7 +136,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 });
                 // this.odontogramasHUDS = odontogramasPaciente;
                 if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
-                    this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.odontogramasHUDS.length - 1].ejecucion.registros.filter(x => x.concepto.conceptId === this.conceptoOdontograma)[0];
                     this.ultimoOdontogramaIndex = this.odontogramasHUDS.length - 1;
                 }
                 this.cargandoUltimoOdontograma = false;
@@ -193,7 +194,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
             this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
                 let odonto = null;
-                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === this.conceptoOdontograma)) {
                     if (odonto.valor) {
                         return unaPrestacion;
                     }
@@ -202,7 +203,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                 if (this.ultimoOdontogramaIndex > 0) {
                     this.ultimoOdontogramaIndex--;
-                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === this.conceptoOdontograma)[0];
                     this.armarRelaciones();
                     this.showUltimoOdontograma = true;
                 }
@@ -221,7 +222,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
         this.prestacionesService.get(params).subscribe(odontogramasPaciente => {
             this.odontogramasHUDS = odontogramasPaciente.filter(unaPrestacion => {
                 let odonto = null;
-                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === '721145008')) {
+                if (odonto = unaPrestacion.ejecucion.registros.find(x => x.concepto.conceptId === this.conceptoOdontograma)) {
                     if (odonto.valor) {
                         return unaPrestacion;
                     }
@@ -230,7 +231,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
             if (this.odontogramasHUDS && this.odontogramasHUDS.length > 0) {
                 if (this.ultimoOdontogramaIndex < this.odontogramasHUDS.length - 1) {
                     this.ultimoOdontogramaIndex++;
-                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === '721145008')[0];
+                    this.ultimoOdontograma = this.odontogramasHUDS[this.ultimoOdontogramaIndex].ejecucion.registros.filter(x => x.concepto.conceptId === this.conceptoOdontograma)[0];
                     this.armarRelaciones();
                     this.showUltimoOdontograma = true;
                 }

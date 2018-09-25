@@ -267,7 +267,6 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-                    debugger;
                     this.motivoReadOnly = true;
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         // actualizamos las prestaciones de la HUDS
