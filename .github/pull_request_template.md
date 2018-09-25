@@ -27,13 +27,13 @@ _____________________________________________
 
 ### UserStories llegó a completarse
 <!-- Marca con una X la casilla correcta-->
-- [] Si
-- [] No
+- [ ] Si
+- [ ] No
 
 ### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
-- [] Si
-- [] No
+- [ ] Si
+- [ ] No
 
 
 <!-- Agregar captura de pantalla, si fuera relevante  -->

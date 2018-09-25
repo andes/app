@@ -147,7 +147,6 @@ import { PacienteDetalleActualizarComponent } from './components/paciente/pacien
 import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
 import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
 import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
-import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -259,6 +258,8 @@ import { InformeEpicrisisComponent } from './modules/rup/components/elementos/in
 import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
+import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
+
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
@@ -381,6 +382,7 @@ export let RUPRegistry = {
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
+    'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
@@ -441,6 +443,7 @@ let RUPComponentsArray = [
     ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
+    InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
     PercentiloDeMasaCorporalComponent,
@@ -547,7 +550,6 @@ registerLocaleData(localeEs, 'es');
         LaboratoriosComponent,
 
         OrganizacionSectoresComponent,
-        PacienteDemoComponent,
         EgresoInternacionComponent,
         ResumenInternacionComponent,
         ListaEsperaInternacionComponent,
@@ -566,6 +568,12 @@ registerLocaleData(localeEs, 'es');
         OcuparCamaComponent,
 
         SectoresItemComponent,
+        PucoComponent,
+        // MPI
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+        PacientePanelComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,

@@ -44,7 +44,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
-import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -108,7 +107,6 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/demo', component: PacienteDemoComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
