@@ -3,7 +3,6 @@ import { IPaciente } from './../../interfaces/IPaciente';
 import { PacienteService } from './../../services/paciente.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
-import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 import { Plex } from '@andes/plex';
 
 @Component({
