@@ -139,7 +139,8 @@
                             <div class="actions">
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
+                                    elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
                                 </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
@@ -177,7 +178,7 @@
                                     </div>
                                 </ng-container>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" *ngIf="paciente || prestacion.solicitud.tipoPrestacion?.noNominalizada">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                             [registro]="elemento" [soloValores]="true"></rup>
                                     </div>
