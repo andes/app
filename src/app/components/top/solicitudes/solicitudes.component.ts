@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
@@ -11,6 +11,7 @@ import { TurnoService } from '../../../services/turnos/turno.service';
     styles: [' .blue  {color: #00A8E0 }']
 })
 export class SolicitudesComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
 
     paciente: any;
     turnoSeleccionado: any;
