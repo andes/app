@@ -236,6 +236,11 @@ export class MapaDeCamasComponent implements OnInit {
                 this.cambiaTap(1);
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
+            if (e.desocupaCama) {
+                this.showIngreso = false;
+                this.showEgreso = false;
+            }
+
         }
     }
 
@@ -425,6 +430,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     prestacionDelPaciente(cama) {
+
         if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
             this.showLoaderSidebar = true;
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
@@ -487,10 +493,6 @@ export class MapaDeCamasComponent implements OnInit {
     verInternacion(event) {
         this.onCamaSelected(event);
         this.cambiaTap(1);
-    }
-
-
-    actualizarCama($event) {
     }
 
 }
