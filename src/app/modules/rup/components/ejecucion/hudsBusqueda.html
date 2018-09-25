@@ -9,41 +9,52 @@
             <div class="container-filtros">
                 <ul class="botones-filtros">
                     <li class="">
-                        <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
+                        <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
-                        <button (click)="filtroBuscador('todos')" [ngClass]="{'active': filtroActual === 'todos'}" class="btn btn-block p-0 btn-todos">
+                        <button (click)="filtroBuscador('todos')" [ngClass]="{'active': filtroActual === 'todos'}"
+                            class="btn btn-block p-0 btn-todos">
                             <i class="icon icon-rup-semantic-todos"></i>
                             ACTIVOS
                         </button>
                     </li>
                     <li class="">
-                        <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right" [ngClass]="{'active': filtroActual === 'hallazgo'}">{{ getCantidadResultados('hallazgo')}}</small>
+                        <small *ngIf="getCantidadResultados('hallazgo')" class="badge badge-hallazgo ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'hallazgo'}">{{ getCantidadResultados('hallazgo')}}</small>
 
-                        <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}" class="btn btn-block p-0 btn-hallazgo">
+                        <button (click)="filtroBuscador('hallazgo')" [ngClass]="{'active': filtroActual === 'hallazgo'}"
+                            class="btn btn-block p-0 btn-hallazgo">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
                     </li>
 
                     <li class="">
-                        <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right" [ngClass]="{'active': filtroActual === 'trastorno'}">{{ getCantidadResultados('trastorno')}}</small>
+                        <small *ngIf="getCantidadResultados('trastorno')" class="badge badge-trastorno ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'trastorno'}">{{
+                            getCantidadResultados('trastorno')}}</small>
 
-                        <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}" class="btn btn-block p-0 btn-trastorno">
+                        <button (click)="filtroBuscador('trastorno')" [ngClass]="{'active': filtroActual === 'trastorno'}"
+                            class="btn btn-block p-0 btn-trastorno">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
                     </li>
 
                     <li class="">
-                        <small *ngIf="getCantidadResultados('procedimiento')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimiento'}">{{ getCantidadResultados('procedimiento')}}</small>
+                        <small *ngIf="getCantidadResultados('procedimiento')" class="badge badge-procedimiento ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'procedimiento'}">{{
+                            getCantidadResultados('procedimiento')}}</small>
 
-                        <button (click)="filtroBuscador('procedimiento')" [ngClass]="{'active': filtroActual === 'procedimiento'}" class="btn btn-block p-0 btn-procedimiento">
+                        <button (click)="filtroBuscador('procedimiento')" [ngClass]="{'active': filtroActual === 'procedimiento'}"
+                            class="btn btn-block p-0 btn-procedimiento">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROC.
                         </button>
                     </li>
                     <li class="">
-                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                         <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}">
                             <i class="icon icon-rup-semantic-plan"></i>
@@ -52,26 +63,33 @@
                     </li>
 
                     <li class="">
-                        <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right" [ngClass]="{'active': filtroActual === 'producto'}">{{ getCantidadResultados('producto')}}</small>
+                        <small *ngIf="getCantidadResultados('producto')" class="badge badge-producto ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'producto'}">{{ getCantidadResultados('producto')}}</small>
 
-                        <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}" class="btn btn-block p-0 btn-producto">
+                        <button (click)="filtroBuscador('producto')" [ngClass]="{'active': filtroActual === 'producto'}"
+                            class="btn btn-block p-0 btn-producto">
                             <i class="icon icon-rup-semantic-producto"></i>
                             PRODUCTOS
                         </button>
                     </li>
 
                     <li class="">
-                        <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
+                        <small *ngIf="getCantidadResultados('otros')" class="badge badge-otro ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'otros'}">{{ getCantidadResultados('otros')}}</small>
 
-                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}" class="btn btn-block p-0 btn-otro">
+                        <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}"
+                            class="btn btn-block p-0 btn-otro">
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                             ELEM. REG.
                         </button>
                     </li>
                     <li class="">
-                        <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right" [ngClass]="{'active': filtroActual === 'laboratorios'}">{{ getCantidadResultados('laboratorios')}}</small>
+                        <small *ngIf="getCantidadResultados('laboratorios')" class="badge badge-otro ml-1 float-right"
+                            [ngClass]="{'active': filtroActual === 'laboratorios'}">{{
+                            getCantidadResultados('laboratorios')}}</small>
 
-                        <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}" class="btn btn-block p-0 btn-laboratorio">
+                        <button (click)="filtroBuscador('laboratorios')" [ngClass]="{'active': filtroActual === 'laboratorios'}"
+                            class="btn btn-block p-0 btn-laboratorio">
                             <i class="icon mdi mdi-flask-empty-outline"></i>
                             LABORATORIOS
                         </button>
@@ -94,7 +112,8 @@
 
             <!-- HALLAZGOS CRÓNICOS ONLY -->
             <div *ngIf="filtroActual === 'trastorno' || filtroActual === 'todos'" class="vista-titulo">
-                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's crónicos' : 'Trastornos crónicos'}}
+                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's crónicos' :
+                'Trastornos crónicos'}}
                 <div *ngIf="hallazgosCronicos.length > 0" class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'crónicos')">
                         <i class="mdi mdi-calendar-clock"></i>
@@ -110,11 +129,13 @@
             <ul *ngIf="hallazgosCronicos && colapsadoCronicos" class="conceptos list-unstyled">
                 <ng-container *ngFor="let hallazgo of hallazgosCronicos; let iCronico = index">
                     <li>
-                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}" [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
+                        <div class="rup-card mini {{ servicioPrestacion.getCssClass(hallazgo.concepto, filtroActual) }}"
+                            [ngClass]="{'active': estaEnTabs(hallazgo, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
+                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
                                     </div>
@@ -132,7 +153,8 @@
                                                 {{ hallazgo.concepto.term }}
                                                 <br>
                                                 <ng-container *ngIf="hallazgo.evoluciones">
-                                                    <small class="sugerido">última evolución: {{ hallazgo.evoluciones[0].fechaCarga | fecha }}</small>
+                                                    <small class="sugerido">última evolución: {{
+                                                        hallazgo.evoluciones[0].fechaCarga | fecha }}</small>
                                                 </ng-container>
                                             </div>
                                         </div>
@@ -140,11 +162,13 @@
                                         <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="hallazgo.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">{{ hallazgo.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{
+                                                        hallazgo.evoluciones[0].estado }}</small>
                                                 </ng-container>
 
-                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(hallazgo, 'hallazgo')"
-                                                    title="Agregar a la consulta" titlePosition="left">
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos"
+                                                    (click)="devolverHallazgo(hallazgo, 'hallazgo')" title="Agregar a la consulta"
+                                                    titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
                                                 </button>
 
@@ -157,11 +181,13 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="(filtroActual === 'trastorno' || filtroActual === 'todos') && hallazgosCronicos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : 'trastornos' }} crónicos</div>
+            <div *ngIf="(filtroActual === 'trastorno' || filtroActual === 'todos') && hallazgosCronicos.length === 0">No
+                hay {{filtroActual !== 'todos' ? filtroActual + 's' : 'trastornos' }} crónicos</div>
 
             <!-- HALLAZGOS ACTIVOS ONLY -->
             <div class="vista-titulo">
-                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's activos' : 'Activos'}}
+                {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's activos' :
+                'Activos'}}
                 <div *ngIf="problemasActivos.length > 0" class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'activos')">
                         <i class="mdi mdi-calendar-clock"></i>
@@ -178,11 +204,13 @@
                 <ng-container *ngFor="let problema of problemasActivos; let iActivo = index">
                     <li>
 
-                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
+                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}"
+                            [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
+                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
@@ -200,7 +228,8 @@
                                                 {{ problema.concepto.term }}
                                                 <br>
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="sugerido">última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
+                                                    <small class="sugerido">última evolución: {{
+                                                        problema.evoluciones[0].fechaCarga | fecha }}</small>
                                                 </ng-container>
                                             </div>
                                         </div>
@@ -208,10 +237,12 @@
                                             <div class="p-0 pt-1 pr-1 float-right">
 
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">{{ problema.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{
+                                                        problema.evoluciones[0].estado }}</small>
                                                 </ng-container>
 
-                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos" (click)="devolverHallazgo(problema)" title="Agregar a la consulta"
+                                                <button class="btn btn-sm btn-primary btn-icon-rup p-0" *ngIf="emitirConceptos"
+                                                    (click)="devolverHallazgo(problema)" title="Agregar a la consulta"
                                                     titlePosition="left">
                                                     <i class="mdi mdi-plus"></i>
                                                 </button>
@@ -225,11 +256,13 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="problemasActivos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : '' }} activos</div>
+            <div *ngIf="problemasActivos.length === 0">No hay {{filtroActual !== 'todos' ? filtroActual + 's' : '' }}
+                activos</div>
 
             <!-- OTROS HALLAZGOS -->
             <div class="vista-titulo">
-                Otros {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's' : '' }}
+                Otros {{filtroActual !== 'todos' ? (filtroActual[0].toUpperCase() + filtroActual.slice(1)) + 's' : ''
+                }}
                 <span *ngIf="tipoOrden">filtro: {{tipoOrden[filtroActual]}}</span>
                 <div *ngIf="hallazgosNoActivos.length > 0" class="float-right">
                     <button class="btn btn-primary btn-sm p-0" (click)="ordenarRegistros('fecha', 'otros')">
@@ -246,11 +279,13 @@
             <ul *ngIf="hallazgosNoActivos && colapsadoOtros" class="conceptos list-unstyled">
                 <ng-container *ngFor="let problema of hallazgosNoActivos; let iOtros = index">
                     <li>
-                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}" [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
+                        <div class="rup-card mini {{servicioPrestacion.getCssClass(problema.concepto, filtroActual)}}"
+                            [ngClass]="{'active': estaEnTabs(problema, 'hallazgo')}">
                             <div class="rup-header">
 
                                 <ng-container *ngIf="emitirConceptos">
-                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                    <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
+                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
@@ -268,7 +303,8 @@
                                                 {{ problema.concepto.term }}
                                                 <br>
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small>última evolución: {{ problema.evoluciones[0].fechaCarga | fecha }}</small>
+                                                    <small>última evolución: {{ problema.evoluciones[0].fechaCarga |
+                                                        fecha }}</small>
                                                     <small class="badge badge-info text-default p-1" *ngIf="problema.evoluciones[0].estado === 'transformado'">
                                                         Transformado en: {{ problema.transformado?.concepto.term }}
                                                     </small>
@@ -281,7 +317,8 @@
                                         <div class="col-5 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="problema.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">{{ problema.evoluciones[0].estado }}</small>
+                                                    <small class="badge badge-success text-default p-1">{{
+                                                        problema.evoluciones[0].estado }}</small>
 
                                                 </ng-container>
 
@@ -294,7 +331,8 @@
                     </li>
                 </ng-container>
             </ul>
-            <div *ngIf="hallazgosNoActivos.length === 0">No hay otros {{filtroActual !== 'todos' ? filtroActual + 's' : '' }}</div>
+            <div *ngIf="hallazgosNoActivos.length === 0">No hay otros {{filtroActual !== 'todos' ? filtroActual + 's' :
+                '' }}</div>
         </ng-container>
 
         <!-- Vista: PROCEDIMIENTOS -->
@@ -337,7 +375,8 @@
                                                             <div class="sugerido">
                                                                 <small>Creada: {{ procedimiento.createdAt | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{ procedimiento.createdBy.nombreCompleto}}</small>
+                                                                <small>Profesional: {{
+                                                                    procedimiento.createdBy.nombreCompleto}}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -402,7 +441,8 @@
                                                             <div class="sugerido">
                                                                 <small>Fecha: {{ prestacion.fecha | fecha }}</small>
                                                                 <br>
-                                                                <small>Profesional: {{ prestacion.profesional | profesional}}</small>
+                                                                <small>Profesional: {{ prestacion.profesional |
+                                                                    profesional}}</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -412,7 +452,8 @@
 
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
-                                                <small class="badge badge-{{prestacion.estado}} text-default p-1">{{prestacion.estado}} </small>
+                                                <small class="badge badge-{{prestacion.estado}} text-default p-1">{{prestacion.estado}}
+                                                </small>
 
                                             </div>
                                         </div>
@@ -458,7 +499,8 @@
                                             <div class="row m-0 p-0">
 
                                                 <ng-container *ngIf="emitirConceptos">
-                                                    <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': producto, 'huds': true}"
+                                                    <div class="icon-rup" draggable [dragScope]="_dragScope"
+                                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': producto, 'huds': true}"
                                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                         <i class="icon icon-rup-semantic-producto"></i>
                                                     </div>
@@ -475,7 +517,8 @@
                                                     <div class="row p-0 m-0">
                                                         <div class="col-10 p-0 m-0">
                                                             <ng-container *ngIf="producto.evoluciones">
-                                                                <small class="sugerido">último registro: {{ producto.evoluciones[0].fechaCarga |
+                                                                <small class="sugerido">último registro: {{
+                                                                    producto.evoluciones[0].fechaCarga |
                                                                     fecha }}
                                                                 </small>
                                                             </ng-container>
@@ -488,7 +531,8 @@
                                         <div class="col-2 p-0 m-0">
                                             <div class="p-0 pt-1 pr-1 float-right">
                                                 <ng-container *ngIf="producto.evoluciones">
-                                                    <small class="badge badge-success text-default p-1">{{ producto.evoluciones[producto.evoluciones.length-1].estado }}
+                                                    <small class="badge badge-success text-default p-1">{{
+                                                        producto.evoluciones[producto.evoluciones.length-1].estado }}
                                                     </small>
                                                 </ng-container>
                                             </div>
@@ -537,7 +581,8 @@
                                                 <div class="row m-0 p-0">
 
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup " draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
+                                                        <div class="icon-rup " draggable [dragScope]="_dragScope"
+                                                            [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                                                         </div>
@@ -553,7 +598,8 @@
                                                         <div class="row p-0 m-0">
                                                             <div class="col-10 p-0 m-0">
                                                                 <ng-container *ngIf="elementoRegistro">
-                                                                    <small class="sugerido">Creado: {{elementoRegistro.updatedAt | fecha:[]:true}}
+                                                                    <small class="sugerido">Creado:
+                                                                        {{elementoRegistro.updatedAt | fecha:[]:true}}
                                                                     </small>
                                                                 </ng-container>
                                                             </div>
@@ -619,7 +665,8 @@
                                                 <div class="row m-0 p-0">
 
                                                     <ng-container *ngIf="emitirConceptos">
-                                                        <div class="icon-rup" draggable [dragScope]="_dragScope" [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                        <div class="icon-rup" draggable [dragScope]="_dragScope"
+                                                            [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>
@@ -639,9 +686,11 @@
                                                                         <ng-container *ngIf="laboratorio?.profesional">{{laboratorio?.profesional?.nombre}}</ng-container>
                                                                     </div>
                                                                     <div class="text-sm">Organización:
-                                                                        <ng-container *ngIf="laboratorio?.organizacion">{{laboratorio?.organizacion?.nombre }}</ng-container>
+                                                                        <ng-container *ngIf="laboratorio?.organizacion">{{laboratorio?.organizacion?.nombre
+                                                                            }}</ng-container>
                                                                     </div>
-                                                                    <small class="sugerido">Fecha: {{laboratorio?.Fecha | fecha}}
+                                                                    <small class="sugerido">Fecha: {{laboratorio?.fecha
+                                                                        | fecha}}
                                                                     </small>
                                                                 </ng-container>
 
