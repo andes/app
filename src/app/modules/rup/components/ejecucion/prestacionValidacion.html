@@ -178,7 +178,7 @@
                                     </div>
                                 </ng-container>
                                 <div class="row">
-                                    <div class="col-12" *ngIf="paciente">
+                                    <div class="col-12" *ngIf="paciente || prestacion.solicitud.tipoPrestacion?.noNominalizada">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
                                             [registro]="elemento" [soloValores]="true"></rup>
                                     </div>
