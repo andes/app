@@ -62,9 +62,7 @@ export class PacienteDetalleComponent implements OnInit {
     renaperVerification(patient) {
         // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
-        // Cancela la búsqueda anterior
 
-        window.document.getElementById('detalleContenedor').classList.add('loadMode');
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
@@ -86,7 +84,6 @@ export class PacienteDetalleComponent implements OnInit {
                         patient.apellido = datos.apellido;
                         patient.estado = 'validado';
                         this.renaperNotification.emit(true);
-                        window.document.getElementById('detalleContenedor').classList.remove('loadMode');
                         this.loading = false;
                     } else {
                         let dto = {
@@ -104,11 +101,9 @@ export class PacienteDetalleComponent implements OnInit {
                                 patient.estado = 'validado';
                                 this.renaperNotification.emit(true);
                                 this.loading = false;
-                                window.document.getElementById('detalleContenedor').classList.remove('loadMode');
                             } else {
                                 this.renaperNotification.emit(false);
                                 this.loading = false;
-                                window.document.getElementById('detalleContenedor').classList.remove('loadMode');
                                 this.plex.toast('danger', 'Algunos campos contienen caracteres ilegibles.', 'Información', 5000);
                             }
                         });
@@ -123,6 +118,7 @@ export class PacienteDetalleComponent implements OnInit {
                     if (!this.paciente.cuil) {
                         this.paciente.cuil = datos.cuil;
                     }
+                    this.loading = false;
                 }
                 patient.foto = resultado.datos.foto;
             } else {
