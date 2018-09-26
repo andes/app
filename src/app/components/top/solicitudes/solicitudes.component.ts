@@ -35,7 +35,10 @@ export class SolicitudesComponent implements OnInit {
     public visualizarEntrada = [];
     public tipoSolicitud = 'entrada';
     public prestacionesSalida: any;
+    public salidaCache: any;
     public prestacionesEntrada: any;
+    public entradaCache: any;
+
     public showEditarReglas = false;
     public panelIndex = 0;
     public pacienteSolicitud: any;
@@ -61,16 +64,42 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
-    cambiarDia(fecha, dias, dir) {
-        switch (dir) {
-            case 'sumar':
-                this[String(fecha)] = moment(this[String(fecha)]).add(1, 'days');
-                break;
-            case 'restar':
-                this[String(fecha)] = moment(this[String(fecha)]).subtract(1, 'days');
-                break;
+    filtrarPaciente() {
+        if (this.paciente) {
+            let auxEntrada = this.prestacionesEntrada;
+            let auxSalida = this.prestacionesSalida;
+
+            let search = this.paciente.toLowerCase();
+            this.prestacionesEntrada = auxEntrada.filter(t => {
+                let nombreCompleto = '';
+                if (t.paciente && t.paciente.id) {
+                    nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
+                }
+                return (t.paciente && t.paciente.id &&
+                    (nombreCompleto.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.documento.toLowerCase().indexOf(search) >= 0)
+                );
+            });
+            this.prestacionesSalida = auxSalida.filter(t => {
+                let nombreCompleto = '';
+                if (t.paciente && t.paciente.id) {
+                    nombreCompleto = t.paciente.apellido + ' ' + t.paciente.nombre;
+                }
+                return (t.paciente && t.paciente.id &&
+                    (nombreCompleto.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.nombre.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.apellido.toLowerCase().indexOf(search) >= 0
+                        || t.paciente.documento.toLowerCase().indexOf(search) >= 0)
+                );
+            });
+            this.setearArreglos();
+            // console.log('pe ', PE);
+        } else {
+            this.prestacionesEntrada = this.entradaCache;
+            this.prestacionesSalida = this.salidaCache;
         }
-        this.cargarSolicitudes();
     }
 
     cambio(activeTab) {
@@ -154,17 +183,6 @@ export class SolicitudesComponent implements OnInit {
         this.pacienteSolicitud = this.prestaciones[indicePrestacion].paciente;
         this.showAuditar = true;
         this.showSidebar = false;
-        // this.plex.confirm('', '¿Aprobar Solicitud?').then((confirmado) => {
-        //     if (!confirmado) {
-        //         return false;
-        //     }
-        //     if (this.prestacionSeleccionada.estados && this.prestacionSeleccionada.estados.length > 0) {
-        //         this.prestacionSeleccionada.estados.push({ tipo: 'pendiente' });
-        //         this.servicioPrestacion.put(this.prestacionSeleccionada).subscribe(respuesta => {
-        //             this.cargarSolicitudes();
-        //         });
-        //     }
-        // });
     }
 
     editarReglas() {
@@ -187,127 +205,13 @@ export class SolicitudesComponent implements OnInit {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
                 this.prestacionesEntrada = resultado.filter((prest: any) => { return (prest.solicitud.organizacion) ? this.auth.organizacion.id === prest.solicitud.organizacion.id : false; });
-
-                for (let i = 0; i < this.prestacionesSalida.length; i++) {
-
-                    switch (this.prestacionesSalida[i].estados[this.prestacionesSalida[i].estados.length - 1].tipo) {
-                        case 'pendiente':
-
-                            // Se puede auditar?
-                            this.auditarArraySalida[i] = false;
-
-                            // Hay turno?
-                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarSalida[i] = true;
-                            } else {
-                                // Se puede dar turno?
-                                this.darTurnoArraySalida[i] = true;
-
-                                // Se puede visualizar?
-                                this.visualizarSalida[i] = false;
-                            }
-                            break;
-                        case 'auditoria':
-
-                            // Se puede dar turno?
-                            this.darTurnoArraySalida[i] = false;
-
-                            // Se puede visualizar?
-                            this.visualizarSalida[i] = false;
-
-                            // Se puede auditar?
-                            this.auditarArraySalida[i] = true;
-
-                            // Hay turno?
-                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarSalida[i] = true;
-                            } else {
-                                // Se puede visualizar?
-                                this.visualizarSalida[i] = false;
-                            }
-                            break;
-                        case 'rechazada':
-
-                            // Se puede dar turno?
-                            this.darTurnoArraySalida[i] = false;
-
-                            // Se puede visualizar?
-                            this.visualizarSalida[i] = false;
-
-                            // Se puede auditar?
-                            this.auditarArraySalida[i] = false;
-                            break;
-                        case 'validada':
-
-                            // Hay turno?
-                            if (this.prestacionesSalida[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarSalida[i] = true;
-                            }
-                            // Se puede dar turno?
-                            this.darTurnoArraySalida[i] = false;
-                            // Se puede auditar?
-                            this.auditarArraySalida[i] = false;
-                            break;
-                    }
+                if (this.paciente) {
+                    this.filtrarPaciente();
                 }
-                for (let i = 0; i < this.prestacionesEntrada.length; i++) {
+                this.entradaCache = this.prestacionesEntrada;
+                this.salidaCache = this.prestacionesSalida;
+                this.setearArreglos();
 
-                    switch (this.prestacionesEntrada[i].estados[this.prestacionesEntrada[i].estados.length - 1].tipo) {
-                        case 'pendiente':
-
-                            // Se puede auditar?
-                            this.auditarArrayEntrada[i] = false;
-
-                            // Hay turno?
-                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarEntrada[i] = true;
-                            } else {
-                                // Se puede dar turno?
-                                this.darTurnoArrayEntrada[i] = true;
-
-                                // Se puede visualizar?
-                                this.visualizarEntrada[i] = false;
-                            }
-                            break;
-                        case 'auditoria':
-
-                            // Se puede dar turno?
-                            this.darTurnoArrayEntrada[i] = false;
-
-                            // Se puede visualizar?
-                            this.visualizarEntrada[i] = false;
-
-                            // Se puede auditar?
-                            this.auditarArrayEntrada[i] = true;
-
-                            // Hay turno?
-                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarEntrada[i] = true;
-                            } else {
-                                // Se puede visualizar?
-                                this.visualizarEntrada[i] = false;
-                            }
-                            break;
-                        case 'validada':
-
-                            // Hay turno?
-                            if (this.prestacionesEntrada[i].solicitud.turno !== null) {
-                                // Se puede visualizar?
-                                this.visualizarEntrada[i] = true;
-                            }
-                            // Se puede dar turno?
-                            this.darTurnoArrayEntrada[i] = false;
-                            // Se puede auditar?
-                            this.auditarArrayEntrada[i] = false;
-                            break;
-                    }
-                }
-                // console.log('prestaciones ', this.prestaciones);
             }, err => {
                 if (err) {
                     console.log(err);
@@ -316,6 +220,128 @@ export class SolicitudesComponent implements OnInit {
         }
     }
 
+    // TODO: Refactor
+    setearArreglos() {
+        for (let i = 0; i < this.prestacionesSalida.length; i++) {
+
+            switch (this.prestacionesSalida[i].estados[this.prestacionesSalida[i].estados.length - 1].tipo) {
+                case 'pendiente':
+
+                    // Se puede auditar?
+                    this.auditarArraySalida[i] = false;
+
+                    // Hay turno?
+                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarSalida[i] = true;
+                    } else {
+                        // Se puede dar turno?
+                        this.darTurnoArraySalida[i] = true;
+
+                        // Se puede visualizar?
+                        this.visualizarSalida[i] = false;
+                    }
+                    break;
+                case 'auditoria':
+
+                    // Se puede dar turno?
+                    this.darTurnoArraySalida[i] = false;
+
+                    // Se puede visualizar?
+                    this.visualizarSalida[i] = false;
+
+                    // Se puede auditar?
+                    this.auditarArraySalida[i] = true;
+
+                    // Hay turno?
+                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarSalida[i] = true;
+                    } else {
+                        // Se puede visualizar?
+                        this.visualizarSalida[i] = false;
+                    }
+                    break;
+                case 'rechazada':
+
+                    // Se puede dar turno?
+                    this.darTurnoArraySalida[i] = false;
+
+                    // Se puede visualizar?
+                    this.visualizarSalida[i] = false;
+
+                    // Se puede auditar?
+                    this.auditarArraySalida[i] = false;
+                    break;
+                case 'validada':
+
+                    // Hay turno?
+                    if (this.prestacionesSalida[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarSalida[i] = true;
+                    }
+                    // Se puede dar turno?
+                    this.darTurnoArraySalida[i] = false;
+                    // Se puede auditar?
+                    this.auditarArraySalida[i] = false;
+                    break;
+            }
+        }
+        for (let i = 0; i < this.prestacionesEntrada.length; i++) {
+
+            switch (this.prestacionesEntrada[i].estados[this.prestacionesEntrada[i].estados.length - 1].tipo) {
+                case 'pendiente':
+
+                    // Se puede auditar?
+                    this.auditarArrayEntrada[i] = false;
+
+                    // Hay turno?
+                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = true;
+                    } else {
+                        // Se puede dar turno?
+                        this.darTurnoArrayEntrada[i] = true;
+
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = false;
+                    }
+                    break;
+                case 'auditoria':
+
+                    // Se puede dar turno?
+                    this.darTurnoArrayEntrada[i] = false;
+
+                    // Se puede visualizar?
+                    this.visualizarEntrada[i] = false;
+
+                    // Se puede auditar?
+                    this.auditarArrayEntrada[i] = true;
+
+                    // Hay turno?
+                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = true;
+                    } else {
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = false;
+                    }
+                    break;
+                case 'validada':
+
+                    // Hay turno?
+                    if (this.prestacionesEntrada[i].solicitud.turno !== null) {
+                        // Se puede visualizar?
+                        this.visualizarEntrada[i] = true;
+                    }
+                    // Se puede dar turno?
+                    this.darTurnoArrayEntrada[i] = false;
+                    // Se puede auditar?
+                    this.auditarArrayEntrada[i] = false;
+                    break;
+            }
+        }
+    }
 
 
     formularioSolicitud(tipoSolicitud) {

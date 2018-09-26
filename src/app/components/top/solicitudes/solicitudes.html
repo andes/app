@@ -19,14 +19,9 @@
                                     label="Hasta" class="fechas">
                                 </plex-datetime>
                             </div>
-                            <!-- <div class="col-1  d-flex">
-                                <plex-button class="align-self-end" icon="ruler" type="info" (click)="editarReglas()"
-                                    title="Editar reglas"> </plex-button>
-                            </div> -->
-                            <!-- <div class="col-1 d-flex">
-                                <plex-button title="Nueva Solicitud" icon="plus" class="align-self-end" type="success"
-                                    (click)="formularioSolicitud('activeTab')"></plex-button>
-                            </div> -->
+                            <div class="col-3">
+                                <plex-text [(ngModel)]="paciente" name="paciente" (change)="filtrarPaciente()" label="Buscar paciente"></plex-text>
+                            </div>
                         </div>
                         <br>
                     </header>
