@@ -109,10 +109,7 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
         let egresoExiste = registros.find(registro => registro.concepto.conceptId === this.conceptoEgreso.conceptId);
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo === 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => {
-                this.refreshCamas.emit({ cama: cama, desocupaCama: true });
-            });
-
+            this.refreshCamas.emit({ cama: this.camaSeleccionada, desocupaCama: true });
         }
     }
 

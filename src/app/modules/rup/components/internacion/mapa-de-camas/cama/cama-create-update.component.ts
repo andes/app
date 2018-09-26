@@ -7,6 +7,7 @@ import { Auth } from '@andes/auth';
 import { SnomedService } from '../../../../../../services/term/snomed.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
+import { InternacionService } from '../../../../services/internacion.service';
 
 @Component({
     selector: 'cama-create-update',
@@ -50,7 +51,8 @@ export class CamaCreateUpdateComponent implements OnInit {
         private route: ActivatedRoute,
         private authService: Auth,
         private router: Router,
-        public snomed: SnomedService
+        public snomed: SnomedService,
+        private internacionService: InternacionService
     ) { }
 
     ngOnInit() {
@@ -86,6 +88,10 @@ export class CamaCreateUpdateComponent implements OnInit {
                     this.cama.estados.push(this.estado);
                 }
             } else {
+                // si la organizacion no usa el workflow completo el estado inicial es disponible
+                if (!this.internacionService.usaWorkflowCompleto(this.organizacion.id)) {
+                    this.estado.estado = 'disponible';
+                }
                 this.cama.estados = [this.estado];
             }
 
@@ -122,7 +128,7 @@ export class CamaCreateUpdateComponent implements OnInit {
         this.sectores = this.organizacionService.getRuta(org, $event.value);
     }
 
-    loadSectores ($event) {
+    loadSectores($event) {
         let query = $event.query;
         let items = this.organizacionService.getFlatTree(this.organizacion);
         $event.callback(items);

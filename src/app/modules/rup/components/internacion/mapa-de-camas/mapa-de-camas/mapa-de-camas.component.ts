@@ -9,6 +9,7 @@ import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
+import { InternacionService } from '../../../../services/internacion.service';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -91,6 +92,7 @@ export class MapaDeCamasComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
+        private internaiconService: InternacionService,
         public camasService: CamasService) { }
 
     ngOnInit() {
@@ -237,6 +239,26 @@ export class MapaDeCamasComponent implements OnInit {
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
             if (e.desocupaCama) {
+                // vamos a liberar la cama
+                let dto = {
+                    fecha: new Date(),
+                    estado: this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                    unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
+                    especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
+                    esCensable: e.cama.ultimoEstado.esCensable,
+                    genero: e.cama.ultimoEstado.genero ? e.cama.ultimoEstado.genero : null,
+                    paciente: null,
+                    idInternacion: null
+                };
+
+                this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
+                    e.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    this.onCamaSelected(e.cama);
+                }, (err1) => {
+                    this.plex.info('danger', 'Error al intentar desocupar la cama');
+                });
+
+
                 this.showIngreso = false;
                 this.showEgreso = false;
             }

@@ -7,7 +7,6 @@ import { Observable } from 'rxjs/Observable';
 export class InternacionService {
 
     private url = '/modules/rup/internaciones';
-    constructor(private server: Server) { }
     public conceptosInternacion = {
         ingreso: {
             fsn: 'documento de solicitud de admisión (elemento de registro)',
@@ -24,6 +23,11 @@ export class InternacionService {
             term: 'alta del paciente'
         }
     };
+
+    public workflowCompleto = [{ 'id': '57e9670e52df311059bc8964', 'nombre': 'HOSPITAL PROVINCIAL NEUQUEN - DR. EDUARDO CASTRO RENDON' }];
+
+    constructor(private server: Server) { }
+
 
     getInfoCenso(params: any): Observable<any[]> {
         return this.server.get(this.url + '/censo', { params: params });
@@ -42,6 +46,14 @@ export class InternacionService {
 
     getCamaDisponibilidadCenso(params: any): Observable<any[]> {
         return this.server.get(this.url + '/censo/disponibilidad', { params: params });
+    }
+
+    usaWorkflowCompleto(idOrganizacion: string) {
+        if (this.workflowCompleto.find(o => o.id === idOrganizacion)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
