@@ -32,6 +32,7 @@ export class CamaComponent implements OnInit {
     public opcionesDropdown: any = [];
     public estadoDesbloqueo: String = 'desocupada';
     public fecha = new Date();
+    public hora = new Date();
     public disabledButton = false;
     public camaSeleccionPase;
     // lista de los motivos del bloque, luego los va a traer desde snomed
@@ -89,6 +90,11 @@ export class CamaComponent implements OnInit {
         }
         return '';
     }
+    public opcionesDesbloqueo = [
+        { id: 'desocupada', label: 'Para desinfectar' },
+        { id: 'disponible', label: 'Disponible' }
+    ];
+
 
     /**
      * Buscar un paciente para internar.
@@ -135,7 +141,7 @@ export class CamaComponent implements OnInit {
 
     public devolverCama(cama) {
         let dto = {
-            fecha: this.fecha,
+            fecha: this.combinarFechas(),
             estado: cama.ultimoEstado.estado,
             unidadOrganizativa: cama.unidadOrganizativaOriginal,
             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
@@ -151,7 +157,7 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            fecha: this.fecha,
+            fecha: this.combinarFechas(),
             estado: estado,
             unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
@@ -160,7 +166,6 @@ export class CamaComponent implements OnInit {
             paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
             idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
         };
-
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
@@ -203,7 +208,7 @@ export class CamaComponent implements OnInit {
         let paciente = cama.ultimoEstado.paciente;
         let idInternacion = cama.ultimoEstado.idInternacion;
         let dto = {
-            fecha: this.fecha,
+            fecha: this.combinarFechas(),
             estado: 'desocupada',
             unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
@@ -287,6 +292,23 @@ export class CamaComponent implements OnInit {
 
     camaSeleccionada() {
         this.camaSelected.emit(this.cama);
+    }
+
+
+
+    combinarFechas() {
+        if (this.fecha && this.hora) {
+            let horas: number;
+            let minutes: number;
+            let auxiliar: Date;
+            auxiliar = new Date(this.fecha);
+            horas = this.hora.getHours();
+            minutes = this.hora.getMinutes();
+            auxiliar.setHours(horas, minutes, 0, 0);
+            return auxiliar;
+        } else {
+            return null;
+        }
     }
 
 }
