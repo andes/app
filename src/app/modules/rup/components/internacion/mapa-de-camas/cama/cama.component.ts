@@ -7,6 +7,7 @@ import { PacienteService } from '../../../../../../services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
+import { ICamaEstado } from '../../../../interfaces/ICamaEstado';
 
 @Component({
     selector: 'app-cama',
@@ -211,6 +212,7 @@ export class CamaComponent implements OnInit {
             genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
             paciente: null,
             idInternacion: null,
+            esMovimiento: true,
             sugierePase: this.PaseAunidadOrganizativa
         };
 
