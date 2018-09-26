@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex, SelectEvent } from '@andes/plex';
+import { Plex } from '@andes/plex';
 import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { CamasService } from '../../../../services/camas.service';
@@ -9,6 +9,7 @@ import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
+import { ElementosRUPService } from '../../../../services/elementosRUP.service';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -16,14 +17,6 @@ import { IPaciente } from '../../../../../../interfaces/IPaciente';
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 export class MapaDeCamasComponent implements OnInit {
-
-
-    public epicrisis = {
-        'conceptId': '721919000',
-        'term': 'epicrisis de enfermería',
-        'fsn': 'epicrisis de enfermería (elemento de registro)',
-        'semanticTag': 'elemento de registro'
-    };
 
     // listado de camas de la organizacion
     public camas: any[] = [];
@@ -60,7 +53,7 @@ export class MapaDeCamasComponent implements OnInit {
     public camaInternacion;
     public loadCountFiltros = false;
     public editarIngreso;
-
+    public conceptosInternacion;
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -91,10 +84,14 @@ export class MapaDeCamasComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
-        public camasService: CamasService) { }
+        public camasService: CamasService,
+        private elementoRupService: ElementosRUPService) { }
 
     ngOnInit() {
         this.refresh();
+        this.elementoRupService.ready.subscribe(() => {
+            this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
+        });
     }
 
 
@@ -350,25 +347,6 @@ export class MapaDeCamasComponent implements OnInit {
 
     }
 
-    // selecionarCama(cama) {
-    //     if (cama.ultimoEstado.paciente) {
-    //         this.showLoaderSidebar = true;
-    //         this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
-    //             this.prestacionPorInternacion = prestacion;
-    //             this.showLoaderSidebar = false;
-    //         });
-    //     }
-    //     if (this.camaSeleccionada === cama) {
-    //         this.camaSeleccionada = null;
-    //     } else {
-    //         this.showMenu = true;
-    //         this.showIngreso = false;
-    //         this.showResumen = false;
-    //         this.camaSeleccionada = cama;
-    //         this.prestacionPorInternacion = null;
-    //     }
-    // }
-
     /**
      * Captura el evento que emite el componente y cierra/oculta los mismos
      * @param event
@@ -470,7 +448,7 @@ export class MapaDeCamasComponent implements OnInit {
     generaEpicrisis() {
         this.servicioPrestacion.get({ idPrestacionOrigen: this.prestacionPorInternacion.id }).subscribe(prestacionExiste => {
             if (prestacionExiste.length === 0) {
-                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.epicrisis, 'ejecucion', 'internacion');
+                let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.prestacionPorInternacion.paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
                 nuevaPrestacion.solicitud.prestacionOrigen = this.prestacionPorInternacion.id;
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
                     this.router.navigate(['rup/ejecucion', prestacion.id]);

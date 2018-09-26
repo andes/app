@@ -3,7 +3,7 @@ import { PacienteBuscarResultado } from '../../../mpi/interfaces/PacienteBuscarR
 import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../services/prestaciones.service';
-import { IPrestacionRegistro } from '../../interfaces/prestacion.registro.interface';
+import { ElementosRUPService } from '../../services/elementosRUP.service';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -19,29 +19,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public showLoader = false;
     public showInternacionEjecucion = false;
     public internacionEjecucion;
-    public snomedEpicrisis = {
-        'conceptId': '721919000',
-        'term': 'epicrisis de enfermería',
-        'fsn': 'epicrisis de enfermería (elemento de registro)',
-        'semanticTag': 'elemento de registro'
-    };
-
-    public snomedInternacion = {
-        fsn: 'admisión hospitalaria (procedimiento)',
-        semanticTag: 'procedimiento',
-        conceptId: '32485007',
-        term: 'internación'
-    };
-
-    // armamos el registro para los datos del formulario de ingreso hospitalario
-    public snomedIngreso: any = {
-        fsn: 'documento de solicitud de admisión (elemento de registro)',
-        semanticTag: 'elemento de registro',
-        refsetIds: ['900000000000497000'],
-        conceptId: '721915006',
-        term: 'documento de solicitud de admisión'
-    };
-
+    public conceptosInternacion;
     public informeIngreso = {
         fechaIngreso: new Date(),
         origen: null,
@@ -59,9 +37,14 @@ export class PuntoInicioInternacionComponent implements OnInit {
         public servicioPrestacion: PrestacionesService,
         private plex: Plex,
         private router: Router,
+        private elementoRupService: ElementosRUPService
     ) { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        this.elementoRupService.ready.subscribe(() => {
+            this.conceptosInternacion = this.elementoRupService.getConceptosInternacion();
+        });
+    }
 
     /**
      * Funcionalidades del buscador de MPI
@@ -97,7 +80,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
                 this.showInternacionEjecucion = false;
             }
         });
-        this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.snomedEpicrisis.conceptId).subscribe(epicrisis => {
+        this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis).subscribe(epicrisis => {
             this.epicrisisPaciente = epicrisis
                 .map(e => {
                     if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros) {
@@ -115,7 +98,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
      * @param paciente
      */
     nuevaEpicrisis(paciente) {
-        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.snomedEpicrisis, 'ejecucion', 'internacion');
+        let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(paciente, this.conceptosInternacion.epicrisis, 'ejecucion', 'internacion');
         // nuevaPrestacion.solicitud.prestacionOrigen = nuevaInternacion.id;
         this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
             this.router.navigate(['rup/ejecucion', prestacion.id]);
