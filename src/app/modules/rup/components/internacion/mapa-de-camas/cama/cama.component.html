@@ -5,7 +5,7 @@
             <!-- Botonera lateral -->
             <div class="card-contenedor-lateral"></div>
             <div class="card-contenedor-central">
-                <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div>
+                <!-- <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div> -->
                 <div (click)="camaSeleccionada()" class="contenedor-cama">
                     <article class="contenedor-texto">
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
@@ -56,13 +56,13 @@
                         *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
                     <!-- disponible -->
-                    <plex-button type="success" label="Internar paciente" title="Agregar paciente en cama" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
+                    <!-- <plex-button type="success" label="Internar paciente" title="Agregar paciente en cama" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly">
-                    </plex-button>
+                    </plex-button> -->
                     <!-- Preparar cama -->
-                    <plex-button type="success" label="Preparar cama" title="Preparar cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
+                    <!-- <plex-button type="success" label="Preparar cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
                         *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
-                    </plex-button>
+                    </plex-button> -->
                     <!-- Ver internacion -->
                     <plex-button type="success" (click)="verPrestacion(cama)" label="Ver internación" title="Ver internación"
                         *ngIf="cama.ultimoEstado?.paciente?._id">
@@ -84,14 +84,25 @@
                     <i class="mdi mdi-close-box"></i>
                 </button>
                 <!-- Editar datos de la cama -->
-                <button class="rounded left btn-primary" title="Editar cama" (click)="editarCama(cama)">
+                <button class="rounded left btn-primary" (click)="editarCama(cama)">
                     <i class="mdi mdi-mdi mdi-pencil"></i>
                 </button>
                 <!-- bloquear cama -->
-                <button class="rounded left btn-danger" title="Bloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                <button class="rounded left btn-danger" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                     *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
                     <i class="mdi mdi-lock"></i>
                 </button>
+                <!-- Internar paciente -->
+                <button class="rounded left btn-success" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
+                    *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly">
+                    <i class="mdi mdi-account-plus"></i>
+                </button>
+                <!-- Prearar cama -->
+                <button class="rounded left btn-warning" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
+                    *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
+                    <i class="mdi mdi-spray"></i>
+                </button>
+                <!-- spray -->
             </div>
         </div>
 
