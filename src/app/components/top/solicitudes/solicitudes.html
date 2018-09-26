@@ -59,7 +59,7 @@
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.fecha
                                                         | date: 'dd/MM/yyyy'}}</td>
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.paciente
-                                                        | paciente}}</td>
+                                                        | paciente}}<br>DNI {{prestacion.paciente.documento}}</td>
                                                     <td *ngIf="prestacion.solicitud.organizacionOrigen" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
                                                     <td *ngIf="!prestacion.solicitud.organizacionOrigen" (click)="seleccionar(prestacionesEntrada,i)"></td>
                                                     <td *ngIf="prestacion.solicitud.profesionalOrigen" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.profesionalOrigen
@@ -137,7 +137,9 @@
                                                     (click)="seleccionar(prestacionesSalida,i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
 
                                                     <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
-                                                    <td>{{prestacion.paciente | paciente}}</td>
+                                                    <td>{{prestacion.paciente | paciente}}<br>DNI
+                                                        {{prestacion.paciente.documento}}</td>
+                                                    <!-- <td>{{prestacion.paciente | paciente}}</td> -->
                                                     <td *ngIf="prestacion.solicitud.organizacionOrigen">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
                                                     <td *ngIf="!prestacion.solicitud.organizacionOrigen"></td>
                                                     <td *ngIf="prestacion.solicitud.profesionalOrigen">{{prestacion.solicitud.profesionalOrigen
