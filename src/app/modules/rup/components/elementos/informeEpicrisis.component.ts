@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
@@ -6,7 +6,6 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'informeEpicrisis.html',
     styleUrls: ['informeEpicrisis.scss'],
     encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
-
 })
 
 export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
@@ -16,7 +15,9 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
     public desplegarTodo = false;
     public mensajeAccionAccordion = 'Desplegar';
 
+
     ngOnInit() {
+
         if (!this.registro.valor) {
             this.registro.valor = {
                 unidadOrganizativa: null
@@ -28,8 +29,9 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
         });
     }
 
-    accordionSeleccionado(i) {
+    accordionSeleccionado(i, concepto) {
         this.accordionActive = i;
+        this.prestacionesService.setRefSetData(concepto);
     }
 
     desplegarAccordions() {
