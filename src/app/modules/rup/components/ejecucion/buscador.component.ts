@@ -82,7 +82,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         planes: ['procedimiento', 'régimen/tratamiento'],
         productos: ['producto'],
         otros: ['elemento de registro']
-
     };
 
     // Listados de grupos de la busqueda guiada
@@ -118,6 +117,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         planes: 'Incluye todos los procedimientos/prácticas que se solicitan o planifican a futuro.<br><br>Ejemplos: Consulta de Neurología, Resonancia Magnética, Placa de torax',
         productos: 'Incluye medicamentos e insumos<br><br>Ejemplos: Amoxicilina 500 mg en capsulas, Acido Clavulánico, etc.',
     };
+    secciones: any;
 
     constructor(public servicioTipoPrestacion: TipoPrestacionService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -195,6 +195,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // inicializamos el filtro actual para los hallazgos
             this.filtroActual = 'todos';
         });
+
     }
 
     ngAfterViewInit() {
@@ -247,6 +248,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 }
             });
         }
+        this.servicioPrestacion.getRefSetData().subscribe(concepto => {
+            this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
+        });
+
     }
 
     /**
@@ -523,10 +528,15 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         } else {
             filtro = this.esTurneable(concepto) ? ['planes'] : this.getFiltroSeleccionado();
         }
-        // devolvemos los tipos de filtros
-        this.tagBusqueda.emit(filtro);
-        // devolvemos el concepto SNOMED
-        this.evtData.emit(copiaConcepto);
+
+        if (!this.secciones) {
+            // devolvemos los tipos de filtros
+            this.tagBusqueda.emit(filtro);
+            // devolvemos el concepto SNOMED
+            this.evtData.emit(copiaConcepto);
+        } else {
+            this.servicioPrestacion.setData(copiaConcepto);
+        }
     }
 
     getFiltroSeleccionado() {
