@@ -43,13 +43,23 @@
                 </div>
             </div>
             <div class="row">
-
-
                 <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
                 <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
                     {{_paciente.contacto[0].valor}}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <i class="mdi mdi-medical-bag"></i>
+                    <span style="color: #00A8E0">Obra Social</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <span *ngIf="obraSocial">{{ obraSocial.financiador }}</span>
+                    <span *ngIf="!obraSocial">Sin obra social</span>
                 </div>
             </div>
             <br>

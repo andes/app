@@ -7,6 +7,8 @@ import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { Plex } from '@andes/plex';
+import { ObraSocialService } from '../../services/obraSocial.service';
+import { IObraSocial } from '../../interfaces/IObraSocial';
 
 @Component({
     selector: 'paciente-detalle',
@@ -36,8 +38,10 @@ export class PacienteDetalleComponent implements OnInit {
     deshabilitarValidar = false;
     inconsistenciaDatos = false;
     backUpDatos = [];
+    obraSocial: IObraSocial;    // Si existen mas de dos se muestra solo la de la primera posicion del array
 
-    constructor(private renaperService: RenaperService, private plex: Plex) { }
+    constructor(private renaperService: RenaperService, private plex: Plex,
+        private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
         this.backUpDatos['nombre'] = this.paciente.nombre;
@@ -51,6 +55,16 @@ export class PacienteDetalleComponent implements OnInit {
             this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
             this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
         }
+
+        this.loadObraSocial();
+    }
+
+    loadObraSocial() {
+        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocial = resultado[0];
+            }
+        });
     }
 
     renaperVerification(patient) {

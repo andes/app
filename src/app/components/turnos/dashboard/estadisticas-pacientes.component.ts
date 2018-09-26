@@ -9,6 +9,8 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -44,6 +46,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
+    obraSocial: IObraSocial;
 
     // Inicialización
     constructor(
@@ -51,7 +54,8 @@ export class EstadisticasPacientesComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
-        public servicePaciente: PacienteService) { }
+        public servicePaciente: PacienteService,
+        private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
         // Se cargan los datos calculados
@@ -69,6 +73,15 @@ export class EstadisticasPacientesComponent implements OnInit {
             nroCarpeta: ''
         };
         this.getPaciente();
+        this.loadObraSocial();
+    }
+
+    loadObraSocial() {
+        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocial = resultado[0];
+            }
+        });
     }
 
     arancelamiento(turno) {
