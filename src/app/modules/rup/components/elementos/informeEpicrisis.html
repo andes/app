@@ -14,7 +14,8 @@
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <plex-panel [ngClass]="{'alerta-campo' : !cristinaVolve.isValid}" icon="arrow-down-drop-circle-outline"
-                (click)="accordionSeleccionado(i)" [active]="accordionActive === i || desplegarTodo" class="hover">
+                (click)="accordionSeleccionado(i, item.concepto)" [active]="accordionActive === i || desplegarTodo"
+                class="hover">
 
                 <div plex-accordion-title>
                     <span class="contenedor-icono">
