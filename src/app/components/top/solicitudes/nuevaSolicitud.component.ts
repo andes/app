@@ -16,6 +16,7 @@ import { AdjuntosService } from '../../../modules/rup/services/adjuntos.service'
     styleUrls: ['adjuntarDocumento.scss'],
 })
 export class NuevaSolicitudComponent implements OnInit {
+    @HostBinding('class.plex-layout') layout = true;
     @ViewChildren('upload') childsComponents: QueryList<any>;
 
     showSeleccionarPaciente = true;

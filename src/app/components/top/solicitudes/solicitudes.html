@@ -187,7 +187,6 @@
             </div>
         </div>
         <!-- Configuración de Reglas -->
-        <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
     </section>
     <footer *ngIf="!showEditarReglas">
         <plex-button type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
@@ -195,6 +194,7 @@
             <plex-button type="success" label="Nueva Solicitud" (click)="formularioSolicitud('activeTab')"></plex-button>
         </div>
     </footer>
+    <reglas *ngIf="showEditarReglas" (cancel)="volverReglas($event)"></reglas>
 </form>
 <!-- Calendario para dar turnos -->
 <dar-turnos *ngIf="showDarTurnos && solicitudTurno && !showCargarSolicitud" (volverAlGestor)="volverDarTurno($event)"
