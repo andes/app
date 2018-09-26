@@ -1,5 +1,5 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { Injectable } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
@@ -7,8 +7,11 @@ import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
 
+
 @Injectable()
 export class PrestacionesService {
+
+    @Output() notifySelection: EventEmitter<any> = new EventEmitter<any>();
 
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
@@ -17,6 +20,34 @@ export class PrestacionesService {
     // ---TODO----- Ver en que servicio dejar esta funcionalidad
     public destinoRuta = new BehaviorSubject<boolean>(false);
     public rutaVolver = this.destinoRuta.asObservable();
+
+    private datosRefSet = new BehaviorSubject<any>(null);
+    private concepto = new BehaviorSubject<any>(null);
+
+    setData(concepto: IPrestacion) {
+        this.concepto.next({ concepto });
+        this.notifySelection.emit(true);
+    }
+
+    getData(): Observable<any> {
+        return this.concepto.asObservable();
+    }
+
+    clearData() {
+        this.concepto.next(null);
+    }
+
+    setRefSetData(datos: IPrestacion[], refsetId?) {
+        this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
+    }
+
+    getRefSetData(): Observable<any> {
+        return this.datosRefSet.asObservable();
+    }
+
+    clearRefSetData() {
+        this.datosRefSet.next(null);
+    }
 
 
     public refsetsIds = {
