@@ -31,7 +31,8 @@
         <table *ngIf="datos && datos.length" class="table table-fixed">
           <tbody>
             <tr class="hover" *ngFor="let organizacion of datos">
-              <td>{{organizacion.codigo.sisa}}</td>
+              <td *ngIf="organizacion.codigo.sisa; else elseSisa">{{organizacion.codigo.sisa}}</td>
+              <ng-template #elseSisa><td>NO REGISTRADO</td></ng-template>
               <td>{{organizacion.nombre}}</td>
               <td>
                 <p >{{organizacion.nivelComplejidad}}</p>
