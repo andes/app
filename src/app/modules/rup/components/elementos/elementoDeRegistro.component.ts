@@ -2,6 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
+import { Subscription } from 'rxjs';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
     templateUrl: 'elementoDeRegistro.html',
@@ -32,8 +33,8 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     public collapse = true;
 
     public conceptosTurneables: any[];
-    suscriptionConcepto: import('/home/andrrr/andes/app/node_modules/rxjs/Subscription').Subscription;
-    suscriptionSeccion: import('/home/andrrr/andes/app/node_modules/rxjs/Subscription').Subscription;
+    suscriptionConcepto: Subscription;
+    suscriptionSeccion: Subscription;
     suscriptionBuscador: any;
     seleccionado: any;
 
@@ -52,15 +53,18 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
             this.seleccionado = seleccionado;
             this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+                // Estamos en la sección que tiene el foco actual?
                 if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
                     this.suscriptionConcepto = this.prestacionesService.getData().subscribe(data => {
+
                         if (data && data.concepto) {
-                            // Si estamos en la sección que tiene el foco actual
                             this.ejecutarConceptoInside(data.concepto);
                         }
+                        // Se limpia el concepto agregado (viene desde el buscador)
                         this.suscriptionConcepto.unsubscribe();
-                        this.suscriptionBuscador.unsubscribe();
 
+                        // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
+                        this.suscriptionBuscador.unsubscribe();
                     });
                 }
             });
