@@ -1,5 +1,6 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     selector: 'rup-observaciones',
@@ -7,6 +8,10 @@ import { RUPComponent } from './../core/rup.component';
 })
 export class ObservacionesComponent extends RUPComponent implements OnInit {
     public referentSet = [];
+    suscriptionSeccion: Subscription;
+    seleccionado: any;
+    suscriptionBuscador: any;
+    suscriptionConcepto: Subscription;
     ngOnInit() {
         if (!this.params) {
             this.params = {};
@@ -22,6 +27,34 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
                     this.emitChange(false);
                 }
             });
+
+            this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+
+                this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
+                    this.seleccionado = seleccionado;
+
+
+                    // Estamos en la sección que tiene el foco actual?
+                    if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
+                        this.plex.toast('danger', 'No se pueden agregar conceptos a esta sección', 'Acción no permitida');
+                        this.suscriptionBuscador.unsubscribe();
+                        this.suscriptionSeccion.unsubscribe();
+                        return false;
+
+
+                        // if (data && data.concepto) {
+                        //     // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
+                        // }
+                        // // Se limpia el concepto agregado (viene desde el buscador)
+                        // if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
+                        //     this.suscriptionConcepto.unsubscribe();
+                        // } else {
+                        //     this.suscriptionConcepto.unsubscribe();
+                        // }
+                    }
+                });
+            });
+
         }
     }
 }

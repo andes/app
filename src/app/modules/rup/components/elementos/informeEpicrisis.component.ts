@@ -1,3 +1,4 @@
+import { IPrestacion } from './../../interfaces/prestacion.interface';
 import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
@@ -29,7 +30,7 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
         });
     }
 
-    accordionSeleccionado(i, concepto) {
+    accordionSeleccionado(i, concepto: any) {
         this.accordionActive = i;
         this.prestacionesService.setRefSetData(concepto);
     }

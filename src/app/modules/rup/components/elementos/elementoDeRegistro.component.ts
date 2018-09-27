@@ -52,24 +52,31 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
         this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
             this.seleccionado = seleccionado;
+
             this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+
                 // Estamos en la sección que tiene el foco actual?
                 if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
+
                     this.suscriptionConcepto = this.prestacionesService.getData().subscribe(data => {
 
                         if (data && data.concepto) {
                             this.ejecutarConceptoInside(data.concepto);
+                            // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
                         }
                         // Se limpia el concepto agregado (viene desde el buscador)
-                        this.suscriptionConcepto.unsubscribe();
-
-                        // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
-                        this.suscriptionBuscador.unsubscribe();
+                        if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
+                            this.suscriptionConcepto.unsubscribe();
+                        } else {
+                            this.suscriptionConcepto.unsubscribe();
+                        }
                     });
+                    this.suscriptionBuscador.unsubscribe();
                 }
             });
         });
     }
+
 
 
     onConceptoDrop(e: any) {
