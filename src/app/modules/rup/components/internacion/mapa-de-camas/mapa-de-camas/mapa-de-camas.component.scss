@@ -148,8 +148,6 @@ $andes-verde-claro: #63c7b7;
             background-color: rgba(0, 0, 0, 0);
             box-shadow: none;
             padding: 0 0;
-            min-height: 220px;
-            /*min-height: 265px;*/
             .content .footer {
                 padding: 0;
                 margin: 0;
@@ -197,7 +195,7 @@ $andes-verde-claro: #63c7b7;
         .header {
             /*padding: 15px 20px;*/
             padding: 0 0 0 10px;
-            height: 51px;
+            height: 120px;
         }
         .icon {
             text-align: center;
@@ -346,7 +344,7 @@ $andes-verde-claro: #63c7b7;
                 border: solid 3px $andes-azul;
                 padding: 0;
                 box-sizing: border-box;
-                height: 330px;
+                height: 335px;
                 z-index: 4;
             }
         }
@@ -371,7 +369,7 @@ $andes-verde-claro: #63c7b7;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        height: 300px;
+        height: 325px;
         width: 70%;
 
         .contenedor-cama {
@@ -552,7 +550,7 @@ button {
 }
 
 .icon-content {
-    font-size: 13.5rem;
+    font-size: 13rem;
 
     &.desocupada{
         color:$desocupada;

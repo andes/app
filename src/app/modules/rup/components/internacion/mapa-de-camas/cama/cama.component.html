@@ -8,8 +8,9 @@
                 <!-- <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div> -->
                 <div (click)="camaSeleccionada()" class="contenedor-cama">
                     <article class="contenedor-texto">
+                        <div>{{ getHabitacionName()}}</div>
+                        <!-- <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div> -->
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
-                        <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div>
                     </article>
                     <!-- Icono cama -->
                     <!-- Iconos redondos sobre la cama 
@@ -64,13 +65,13 @@
                         *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
                     </plex-button> -->
                     <!-- Ver internacion -->
-                    <plex-button type="success" (click)="verPrestacion(cama)" label="Ver internación" title="Ver internación"
+                    <!-- <plex-button type="success" (click)="verPrestacion(cama)" label="Ver internación" title="Ver internación"
                         *ngIf="cama.ultimoEstado?.paciente?._id">
-                    </plex-button>
+                    </plex-button> -->
                     <!-- Desbloquear cama -->
-                    <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                    <!-- <plex-button type="success" label="Desbloquear cama" title="Desbloquear cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
                         *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly">
-                    </plex-button>
+                    </plex-button> -->
                     <!-- Confirmar reparacion -->
                     <plex-button type="success" label="Confirmar reparación" title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; SetFecha()"
                         *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion' && !readOnly">
@@ -99,10 +100,13 @@
                 </button>
                 <!-- Prearar cama -->
                 <button class="rounded left btn-warning" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                    *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly">
+                    *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly" title="Preparar cama">
                     <i class="mdi mdi-spray"></i>
                 </button>
-                <!-- spray -->
+                <button class="rounded left btn-success" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                    *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly">
+                    <i class="mdi mdi-lock-open"></i>
+                </button>
             </div>
         </div>
 
@@ -110,7 +114,13 @@
         <div class="back" *ngIf="cama.$rotar">
             <!-- Header del back de las tarjetas -->
             <div class="header">
-                <div class="float-left">
+                <fieldset>
+                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">Desbloquear</legend>
+                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'desocupada'">Bloquear</legend>
+                    <legend *ngIf="cama.$action && cama.$action !== 'bloquear'">{{cama.$action.toString()}}</legend>
+                </fieldset>
+                <!-- {{cama.$action | json}} -->
+                <div>
                     <div class="numero-habitacion">
                         {{ getHabitacionName() }} / {{cama.nombre}}
                     </div>
@@ -178,7 +188,6 @@
                         <p>
                             <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
                             </plex-datetime>
-                            <br>
                             <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                             </plex-datetime>
                         </p>
@@ -219,7 +228,6 @@
                         <p>
                             <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
                             </plex-datetime>
-                            <br>
                             <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                             </plex-datetime>
                         </p>
@@ -260,7 +268,6 @@
                         <p>
                             <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
                             </plex-datetime>
-                            <br>
                             <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                             </plex-datetime>
                         </p>
@@ -297,7 +304,6 @@
                         <p>
                             <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
                             </plex-datetime>
-                            <br>
                             <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                             </plex-datetime>
                         </p>
@@ -328,13 +334,10 @@
             <div *ngIf="cama.$action == 'bloquear' && (cama.ultimoEstado.estado == 'desocupada' || cama.ultimoEstado.estado == 'disponible')">
                 <form #formBloqueo="ngForm">
                     <div class="content" [ngClass]="{'bloquear': cama.$action == 'bloquear' }">
-                        <p>
-                            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
-                            </plex-datetime>
-                            <br>
-                            <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
-                            </plex-datetime>
-                        </p>
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
                         <div class="main">
                             <div class="form-group">
                                 <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo"
@@ -368,17 +371,17 @@
             <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
                 <form #formDesbloqueo="ngForm">
                     <div class="content" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
-                        <p>
-                            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
-                            </plex-datetime>
-                            <br>
-                            <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
-                            </plex-datetime>
-                        </p>
+                        <!-- <p> -->
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                        <!-- <br> -->
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
+                        <!-- </p> -->
                         <div>
-                            <p class="text-center">
-                                Estado luego del desbloqueo:
-                            </p>
+                            <!-- <p> -->
+                            Estado luego del desbloqueo:
+                            <!-- </p> -->
                             <plex-radio [(ngModel)]="estadoDesbloqueo" [data]="opcionesDesbloqueo" name="estados">
                             </plex-radio>
                         </div>
