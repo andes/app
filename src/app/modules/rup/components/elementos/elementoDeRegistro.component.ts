@@ -32,6 +32,10 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     public collapse = true;
 
     public conceptosTurneables: any[];
+    suscriptionConcepto: import('/home/andrrr/andes/app/node_modules/rxjs/Subscription').Subscription;
+    suscriptionSeccion: import('/home/andrrr/andes/app/node_modules/rxjs/Subscription').Subscription;
+    suscriptionBuscador: any;
+    seleccionado: any;
 
     ngOnInit() {
 
@@ -43,18 +47,29 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         }
         this.servicioTipoPrestacion.get({}).subscribe(conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
-            this.prestacionesService.getRefSetData().subscribe(seleccionado => {
-                this.prestacionesService.notifySelection.subscribe(() => {
-                    if (seleccionado && this.registro.concepto.conceptId === seleccionado.conceptos.conceptId) {
-                        this.prestacionesService.getData().subscribe(async data => {
+        });
+
+        this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
+            this.seleccionado = seleccionado;
+            this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+                if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
+                    this.suscriptionConcepto = this.prestacionesService.getData().subscribe(data => {
+                        if (data && data.concepto) {
                             // Si estamos en la sección que tiene el foco actual
                             this.ejecutarConceptoInside(data.concepto);
-                        });
-                    }
-                });
-            });
+                            this.suscriptionBuscador.unsubscribe();
+                            this.suscriptionSeccion.unsubscribe();
+                            this.prestacionesService.notifySelection.complete();
 
+                        }
+
+                    });
+                }
+                // suscriptionSeccion.unsubscribe();
+            });
         });
+
+        // this.prestacionesService.notifySelection.unsubscribe();
 
     }
 
@@ -104,7 +119,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
 
-        this.prestacionesService.notifySelection.unsubscribe();
         console.log('snomedConcept', snomedConcept);
 
         // Si proviene del drag and drop
@@ -128,6 +142,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         nuevoRegistro.valor = valor;
 
         this.registro.registros.push(nuevoRegistro);
+
     }
 
 

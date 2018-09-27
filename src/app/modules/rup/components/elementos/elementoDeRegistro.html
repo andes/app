@@ -1,6 +1,9 @@
 <form #form="ngForm">
     <div class="row">
         <div class="col-5">
+            {{ seleccionado?.conceptos?.conceptId }}
+            {{ registro?.concepto?.conceptId }}
+            {{ seleccionado?.conceptos?.conceptId === registro?.concepto?.conceptId }}
             <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro.valor }"
                 [(ngModel)]="registro.valor" rows="6" id="descripcion" name="descripcion" [required]="params.required"></textarea>
             <p *ngIf="soloValores" class="readonly mb-5">
