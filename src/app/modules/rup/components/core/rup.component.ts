@@ -1,7 +1,7 @@
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { TurnoService } from './../../../../services/turnos/turno.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ProfesionalService } from './../../../../services/profesional.service';
+import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild } from '@angular/core';
@@ -100,7 +100,8 @@ export class RUPComponent implements OnInit {
         public Cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
         public route: ActivatedRoute,
-        public agendaService: AgendaService
+        public agendaService: AgendaService,
+        public plex: Plex
     ) { }
 
     ngOnInit() {
