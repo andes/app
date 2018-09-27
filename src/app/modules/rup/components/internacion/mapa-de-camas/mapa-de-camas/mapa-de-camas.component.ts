@@ -226,8 +226,9 @@ export class MapaDeCamasComponent implements OnInit {
         if (e) {
             this.countFiltros();
             // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
-            let i = this.camas.findIndex(c => c.id === e.cama.id);
-            if (e.cama) {
+
+            if (!e.movimientoCama && e.cama) {
+                let i = this.camas.findIndex(c => c.id === e.cama.id);
                 this.camas[i] = e.cama;
                 this.camaSeleccionada = e.cama;
                 this.prestacionDelPaciente(e.cama);
@@ -263,6 +264,17 @@ export class MapaDeCamasComponent implements OnInit {
                 this.showEgreso = false;
             }
 
+            if (e.movimientoCama) {
+                if (e.cama) {
+                    let i = this.camas.findIndex(c => c.id === e.cama.id);
+                    let indexCambio = this.camas.findIndex(c => c.id === e.camaCambio.id);
+                    this.camas[i] = e.cama;
+                    this.camas[indexCambio] = e.camaCambio;
+                    this.camaSeleccionada = null;
+                    this.prestacionDelPaciente(e.cama);
+                }
+
+            }
         }
     }
 

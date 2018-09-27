@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
+import { ICama } from '../interfaces/ICama';
 
 
 @Injectable()
@@ -55,5 +56,10 @@ export class InternacionService {
             return false;
         }
     }
+
+    cambiarEstadoCama(cama: ICama, estado: string) {
+
+    }
+
 
 }
