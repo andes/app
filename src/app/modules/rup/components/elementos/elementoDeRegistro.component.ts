@@ -57,20 +57,14 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                         if (data && data.concepto) {
                             // Si estamos en la sección que tiene el foco actual
                             this.ejecutarConceptoInside(data.concepto);
-                            this.suscriptionBuscador.unsubscribe();
-                            this.suscriptionSeccion.unsubscribe();
-                            this.prestacionesService.notifySelection.complete();
-
                         }
+                        this.suscriptionConcepto.unsubscribe();
+                        this.suscriptionBuscador.unsubscribe();
 
                     });
                 }
-                // suscriptionSeccion.unsubscribe();
             });
         });
-
-        // this.prestacionesService.notifySelection.unsubscribe();
-
     }
 
 
@@ -118,8 +112,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     }
 
     cargarNuevoRegistro(snomedConcept, valor = null) {
-
-        console.log('snomedConcept', snomedConcept);
 
         // Si proviene del drag and drop
         if (snomedConcept.dragData) {
