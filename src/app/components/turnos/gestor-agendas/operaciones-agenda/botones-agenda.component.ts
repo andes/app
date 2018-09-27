@@ -157,7 +157,7 @@ export class BotonesAgendaComponent implements OnInit {
             // Agregar un sobreturno
             agregarSobreturno: (this.cantidadSeleccionadas === 1) && this.puedoAgregar() && puedeDarSobreturno,
             // Revisión de agenda
-            revisionAgenda: true,
+            revisionAgenda: (this.cantidadSeleccionadas === 1) && this.puedoRevisar(),
             // Reasignar turnos
             reasignarTurnos: (this.cantidadSeleccionadas === 1) && (this.hayAgendasSuspendidas() || this.hayTurnosSuspendidos()) && puedeReasignar,
             // Imprimir pdf
