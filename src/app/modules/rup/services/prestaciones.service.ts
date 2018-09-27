@@ -24,6 +24,16 @@ export class PrestacionesService {
     private datosRefSet = new BehaviorSubject<any>(null);
     private concepto = new BehaviorSubject<any>(null);
 
+    public esSolicitud = new BehaviorSubject<boolean>(false);
+
+    setEsSolicitud(esSolicitud) {
+        this.esSolicitud.next(esSolicitud);
+    }
+
+    getEsSolicitud() {
+        return this.esSolicitud.asObservable();
+    }
+
     setData(concepto: IPrestacion) {
         this.concepto.next({ concepto });
         this.notifySelection.emit(true);

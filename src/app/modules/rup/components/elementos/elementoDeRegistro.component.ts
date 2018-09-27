@@ -64,7 +64,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                         this.suscriptionConcepto.unsubscribe();
 
                         // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
-                        this.suscriptionBuscador.unsubscribe();
+                        // this.suscriptionBuscador.unsubscribe();
                     });
                 }
             });
@@ -125,7 +125,15 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let esSolicitud = false;
 
         // Si es un plan seteamos el true para que nos traiga el elemento rup por default
-        esSolicitud = this.esTurneable(snomedConcept);
+
+        this.prestacionesService.getEsSolicitud().subscribe(resp => {
+            if (this.esTurneable(snomedConcept) || resp) {
+                esSolicitud = true;
+            }
+        });
+
+
+        // esSolicitud = this.esTurneable(snomedConcept);
         let elementoRUP = this.elementosRUPService.buscarElemento(snomedConcept, esSolicitud);
         // armamos el elemento data a agregar al array de registros
         let nuevoRegistro = new IPrestacionRegistro(elementoRUP, snomedConcept);

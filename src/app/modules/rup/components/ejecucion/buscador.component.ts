@@ -540,6 +540,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     getFiltroSeleccionado() {
+        this.servicioPrestacion.setEsSolicitud(false);
         // let filtro = this.esTurneable(concepto) ? ['planes'] : this.filtroActual;
         let filtro = (this.conceptos[this.filtroActual]) ? this.conceptos[this.filtroActual] : null;
         // si estamos en buscador basico nos fijamos si el filtro seleccionado es planes
@@ -547,6 +548,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         // entonces sobreescribmos el filtro a emitir como ['planes']
         if (this.filtroActual === 'planes' || this.opcionDesplegada === 'planes') {
             filtro = ['planes'];
+            this.servicioPrestacion.setEsSolicitud(true);
         }
         return filtro;
     }
