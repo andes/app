@@ -248,7 +248,6 @@ import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/componen
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-// import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
@@ -435,7 +434,6 @@ let RUPComponentsArray = [
     OtoemisionAcusticaDeOidoIzquierdoComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
-    // EjecucionInternacionComponent,
     PasesCamaComponent,
     CensoDiarioComponent,
     CensoMensualComponent,
