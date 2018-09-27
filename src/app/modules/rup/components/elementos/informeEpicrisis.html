@@ -55,7 +55,6 @@
         <span class="titulo">
             <strong> {{ item.params.titulo }}</strong>
         </span>
-        <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
         <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
             [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
         </rup>
