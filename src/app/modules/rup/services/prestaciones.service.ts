@@ -702,7 +702,6 @@ export class PrestacionesService {
         if (planes.length) {
             planesCrear = [];
             planes.forEach(plan => {
-
                 if (plan.semanticTag !== 'metadato fundacional') {
 
                     // verificamos si existe la prestacion creada anteriormente. Para no duplicar.
@@ -720,7 +719,8 @@ export class PrestacionesService {
 
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
-                        let turneable = this.conceptosTurneables.find(c => c.conceptId === plan.concepto.conceptId);
+
+                        let turneable = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
                         if (turneable) {
                             // creamos objeto de prestacion
                             let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
