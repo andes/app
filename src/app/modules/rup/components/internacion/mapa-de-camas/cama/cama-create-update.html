@@ -4,22 +4,23 @@
             <div class="col-md-8 col-sm-12">
                 <plex-box>
                     <header>
-                        <div class="page-title">Crear cama</div>
+                        <div class="page-title">Datos de la cama</div>
                     </header>
                     <div class="row">
                         <div class="col-8">
-                            <plex-text [(ngModel)]="cama.nombre" name="nombre" label="Nombre" placeholder="nombre" [required]="true"></plex-text>
+                            <plex-text [(ngModel)]="cama.nombre" name="nombre" label="Nombre" placeholder="nombre"
+                                [required]="true"></plex-text>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <plex-select name="equipamiento" [multiple]="true" (getData)="loadEquipamientos($event)" idField="term" labelField="term"
-                                [(ngModel)]="cama.equipamiento" label="Equipamiento">
+                            <plex-select name="equipamiento" [multiple]="true" (getData)="loadEquipamientos($event)"
+                                idField="term" labelField="term" [(ngModel)]="cama.equipamiento" label="Equipamiento">
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term" [required]="true" [(ngModel)]="cama.tipoCama"
-                                label="Tipo de cama">
+                            <plex-select name="tipoCama" (getData)="loadTipoDeCama($event)" idField="term" labelField="term"
+                                [required]="true" [(ngModel)]="cama.tipoCama" label="Tipo de cama">
                             </plex-select>
                         </div>
                         <div class="col-4 pt-4">
@@ -28,37 +29,26 @@
                     </div>
                     <div class="row">
                         <div class="col-4">
-                            <plex-select name="servicio" [required]="true" [data]="organizacion?.unidadesOrganizativas" idField="term" labelField="term"
-                                [(ngModel)]="estado.unidadOrganizativa" label="Unidad organizativa">
+                            <plex-select name="servicio" [required]="true" [data]="organizacion?.unidadesOrganizativas"
+                                idField="term" labelField="term" [(ngModel)]="estado.unidadOrganizativa" label="Unidad organizativa">
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)" idField="term" labelField="term"
-                                [(ngModel)]="estado.especialidades" [multiple]="true" label="Especialidad/es">
+                            <plex-select name="especialidad" [required]="true" (getData)="loadEspecialidades($event)"
+                                idField="term" labelField="term" [(ngModel)]="estado.especialidades" [multiple]="true"
+                                label="Especialidad/es">
                             </plex-select>
                         </div>
                         <div class="col-4">
-                            <plex-select name="genero" (getData)="loadGenero($event)" label="Genero" idField="term" labelField="term" [(ngModel)]="estado.genero">
+                            <plex-select name="genero" (getData)="loadGenero($event)" label="Genero" idField="term"
+                                labelField="term" [(ngModel)]="estado.genero">
                             </plex-select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)" label="Ubicación de la cama"
-                                idField="id" labelField="nombre" [(ngModel)]="cama.sector"></plex-select>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="row">
-                            <div class="col-3" *ngFor="let sec of sectores">
-
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ sec.tipoSector.term }}</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">{{ sec.nombre }}</h6>
-                                    </div>
-                                </div>
-                            </div>
+                            <plex-select name="sectores" (change)="onSectorSelect($event, this.organizacion)" (getData)="loadSectores($event)"
+                                label="Ubicación de la cama" idField="id" labelField="nombre" [(ngModel)]="cama.sector"></plex-select>
                         </div>
                     </div>
                 </plex-box>
@@ -69,7 +59,8 @@
                         <div class="page-title">Mapa de la organización</div>
                     </header>
                     <div *ngIf="organizacion">
-                        <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" (onSelect)="onSelectItem($event)" [actions]="false"></sectores-item>
+                        <sectores-item *ngFor="let unidad of organizacion.mapaSectores" [root]="unidad" (onSelect)="onSelectItem($event)"
+                            [actions]="false"></sectores-item>
                     </div>
                 </plex-box>
             </div>

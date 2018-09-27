@@ -137,17 +137,19 @@
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs class="andes-contenedor-tabs" [activeIndex]="activo" (change)="cambiaTap($event)">
+                    <plex-tabs>
+
+
                         <!-- Tab cama -->
-                        <plex-tab class="andes-tab center" label="Datos de cama">
+                        <plex-tab label="Datos de cama">
                             <div class="sidebar-contenedor-texto">
                                 <div class="text-center info-cama-menu">
+                                    <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
+                                    <hr class="blanco xs">
+
                                     <span class="badge badge-{{camaSeleccionada.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': camaSeleccionada.ultimoEstado.estado === 'desocupada'}">
                                         {{camaSeleccionada.ultimoEstado.estado}}
                                     </span>
-                                    <h3>Cama</h3>
-                                    <hr class="blanco xs">
-                                    <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
                                     <!-- Data paciente -->
                                     <div class="andes-contenedor-secundario horizontal centrado">
                                         <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente"
@@ -157,6 +159,14 @@
                                                 <b>{{camaSeleccionada.ultimoEstado.paciente.apellido}}</b>
                                                 <br>{{camaSeleccionada.ultimoEstado.paciente.nombre}}
                                                 <br>{{camaSeleccionada.ultimoEstado.paciente.documento}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="andes-contenedor-secundario horizontal centrado">
+                                        <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'bloqueada'">
+                                        <div class="andes-sidebar-prefix">
+                                            <p *ngIf="camaSeleccionada.cama?.$action">
+                                                <b>{{camaSeleccionada.cama.$action}}</b>
                                             </p>
                                         </div>
                                     </div>
@@ -203,15 +213,21 @@
                             </footer>
                         </plex-tab>
                         <!-- Resumen -->
-                        <plex-tab class="andes-tab" label="datos de internacion">
-                            <internacion-resumen *ngIf="prestacionPorInternacion" (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
+                        <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
+                            <internacion-resumen (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
                                 (refreshCamas)="updateCama($event)"></internacion-resumen>
-                            <ng-container *ngIf="!prestacionPorInternacion">
-                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay
-                                    paciente internado
-                                </h2>
-                            </ng-container>
+                            <!-- <ng-container *ngIf="!prestacionPorInternacion">
+                        <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay
+                            paciente internado
+                        </h2>
+                    </ng-container> -->
+                        </plex-tab>
+
+                        <!-- Historial de cama -->
+                        <plex-tab class="andes-tab" label="Historial de la cama">
+
+
                         </plex-tab>
 
                         <!-- Egreso -->
