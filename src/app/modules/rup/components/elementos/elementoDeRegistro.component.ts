@@ -1,4 +1,3 @@
-import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
@@ -144,9 +143,11 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             nuevoRegistro.esSolicitud = true;
         }
         nuevoRegistro.valor = valor;
+        let existeRegistro = this.registroRepetido(nuevoRegistro);
 
-        this.registro.registros.push(nuevoRegistro);
-
+        if (existeRegistro) {
+            this.registro.registros.push(nuevoRegistro);
+        }
     }
 
 
@@ -304,9 +305,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
 
     validaConcepto(concepto) {
         if (this.conceptosPermitidos.length) {
-
             let control = this.conceptosPermitidos.find(c => c.conceptId === concepto.conceptId);
-
             if (control) {
                 return true;
             } else {
@@ -343,5 +342,16 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
+    }
+
+    registroRepetido(nuevoRegistro) {
+        let existeRegistro = [];
+        existeRegistro = this.registro.registros.filter(r => (r.concepto.conceptId === nuevoRegistro.concepto.conceptId) && (r.esSolicitud === nuevoRegistro.esSolicitud));
+        if (existeRegistro.length > 0) {
+            alert('No se puede agregar pue ');
+            // this.plex.toast('warning', 'El elemento seleccionados ya se encuentra agregado.');
+            return false;
+        }
+        return true;
     }
 }
