@@ -9,6 +9,7 @@ import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
 import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
+import { InternacionService } from '../../../../services/internacion.service';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -81,7 +82,7 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    public activo = 0;
+    public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
 
@@ -91,6 +92,7 @@ export class MapaDeCamasComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
+        private internaiconService: InternacionService,
         public camasService: CamasService) { }
 
     ngOnInit() {
@@ -223,24 +225,52 @@ export class MapaDeCamasComponent implements OnInit {
     public updateCama(e: any) {
         if (e) {
             this.countFiltros();
-            // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
-            let i = this.camas.findIndex(c => c.id === e.cama.id);
-            if (e.cama) {
-                this.camas[i] = e.cama;
-                this.camaSeleccionada = e.cama;
-                this.prestacionDelPaciente(e.cama);
-            } else {
-                this.refresh();
-            }
+
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
+                if (e.cama) {
+                    let i = this.camas.findIndex(c => c.id === e.cama.id);
+                    this.camas[i] = e.cama;
+                    this.camaSeleccionada = e.cama;
+                    this.prestacionDelPaciente(e.cama);
+                }
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
             if (e.desocupaCama) {
+                // vamos a liberar la cama
+                let dto = {
+                    fecha: new Date(),
+                    estado: this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                    unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
+                    especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
+                    esCensable: e.cama.ultimoEstado.esCensable,
+                    genero: e.cama.ultimoEstado.genero ? e.cama.ultimoEstado.genero : null,
+                    paciente: null,
+                    idInternacion: null
+                };
+
+                this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
+                    e.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    this.onCamaSelected(e.cama);
+                }, (err1) => {
+                    this.plex.info('danger', 'Error al intentar desocupar la cama');
+                });
+
                 this.showIngreso = false;
                 this.showEgreso = false;
             }
 
+            if (e.movimientoCama) {
+                if (e.camaDesocupada && e.camaOcupada) {
+                    //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
+                    let i = this.camas.findIndex(c => c.id === e.camaDesocupada.id);
+                    let indexCambio = this.camas.findIndex(c => c.id === e.camaOcupada.id);
+                    this.camas[i] = JSON.parse(JSON.stringify(e.camaDesocupada));
+                    this.camas[indexCambio] = JSON.parse(JSON.stringify(e.camaOcupada));
+                    this.camaSeleccionada = null;
+                    this.camas = [...this.camas];
+                }
+            }
         }
     }
 
@@ -446,7 +476,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.editarIngreso = true;
                 break;
             case 'egreso':
-                // this.showEgreso = event;
+                this.showEgreso = true;
                 break;
             default:
                 break;
@@ -458,7 +488,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @param value
      */
     public cambiaTap(value) {
-        this.activo = value;
+        this.panelIndex = value;
     }
 
 
@@ -494,7 +524,9 @@ export class MapaDeCamasComponent implements OnInit {
 
     verInternacion(event) {
         this.onCamaSelected(event);
-        this.cambiaTap(1);
+        this.panelIndex = 1;
+        this.showEgreso = true;
     }
+
 
 }

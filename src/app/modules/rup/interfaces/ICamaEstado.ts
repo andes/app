@@ -11,4 +11,5 @@ export interface ICamaEstado {
     especialidades: ISnomedConcept[];
     esCensable: Boolean;
     genero: ISnomedConcept;
+    esMovimiento: Boolean;
 };
