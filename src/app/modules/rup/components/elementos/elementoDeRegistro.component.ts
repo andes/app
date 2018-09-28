@@ -355,8 +355,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         let existeRegistro = [];
         existeRegistro = this.registro.registros.filter(r => (r.concepto.conceptId === nuevoRegistro.concepto.conceptId) && (r.esSolicitud === nuevoRegistro.esSolicitud));
         if (existeRegistro.length > 0) {
-            alert('No se puede agregar pue ');
-            // this.plex.toast('warning', 'El elemento seleccionados ya se encuentra agregado.');
+            this.plex.toast('warning', 'El elemento seleccionados ya se encuentra agregado.');
             return false;
         }
         return true;
