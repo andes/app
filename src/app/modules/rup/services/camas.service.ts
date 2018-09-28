@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ICama } from '../interfaces/ICama';
 import { ICamaEstado } from '../interfaces/ICamaEstado';
+import { IPaciente } from '../../../interfaces/IPaciente';
 
 @Injectable()
 export class CamasService {
@@ -138,5 +139,29 @@ export class CamasService {
             sectorId: idSector
         };
         return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
+
+
+    estadoEstadoMovimiento(cama: ICama, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
+
+        if (paciente) {
+            paciente.id = paciente['_id'];
+        }
+
+        let dto = {
+            fecha: fecha,
+            estado: estado,
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: paciente ? paciente : null,
+            idInternacion: internacion ? internacion : null,
+            esMovimiento: true,
+            sugierePase: sugierePase ? sugierePase : null
+        };
+
+        return this.cambiaEstado(cama.id, dto);
+
     }
 }

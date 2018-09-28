@@ -227,14 +227,15 @@ export class MapaDeCamasComponent implements OnInit {
             this.countFiltros();
             // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
 
-            if (!e.movimientoCama && e.cama) {
-                let i = this.camas.findIndex(c => c.id === e.cama.id);
-                this.camas[i] = e.cama;
-                this.camaSeleccionada = e.cama;
-                this.prestacionDelPaciente(e.cama);
-            } else {
-                this.refresh();
-            }
+            /* if (e.cama) {
+                 let i = this.camas.findIndex(c => c.id === e.cama.id);
+                 this.camas[i] = e.cama;
+                 this.camaSeleccionada = e.cama;
+                 this.prestacionDelPaciente(e.cama);
+             } else {
+                 this.refresh();
+             }*/
+
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
@@ -265,15 +266,15 @@ export class MapaDeCamasComponent implements OnInit {
             }
 
             if (e.movimientoCama) {
-                if (e.cama) {
-                    let i = this.camas.findIndex(c => c.id === e.cama.id);
-                    let indexCambio = this.camas.findIndex(c => c.id === e.camaCambio.id);
-                    this.camas[i] = e.cama;
-                    this.camas[indexCambio] = e.camaCambio;
+                if (e.camaDesocupada && e.camaOcupada) {
+                    //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
+                    let i = this.camas.findIndex(c => c.id === e.camaDesocupada.id);
+                    let indexCambio = this.camas.findIndex(c => c.id === e.camaOcupada.id);
+                    this.camas[i] = JSON.parse(JSON.stringify(e.camaDesocupada));
+                    this.camas[indexCambio] = JSON.parse(JSON.stringify(e.camaOcupada));
                     this.camaSeleccionada = null;
-                    this.prestacionDelPaciente(e.cama);
+                    this.camas = [...this.camas];
                 }
-
             }
         }
     }
@@ -528,7 +529,10 @@ export class MapaDeCamasComponent implements OnInit {
 
     verInternacion(event) {
         this.onCamaSelected(event);
-        this.cambiaTap(1);
+        this.activo++;
+        if (this.activo >= 2) {
+            this.activo = 0;
+        }
     }
 
 }
