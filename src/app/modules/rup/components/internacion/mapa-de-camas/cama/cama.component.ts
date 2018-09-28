@@ -33,7 +33,7 @@ export class CamaComponent implements OnInit {
     public PaseAunidadOrganizativa: any;
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
-    public estadoDesbloqueo: String = 'desocupada';
+    public estadoDesbloqueo: String = 'disponible';
     public fecha = new Date();
     public hora = new Date();
     public disabledButton = false;
@@ -185,7 +185,8 @@ export class CamaComponent implements OnInit {
             esCensable: cama.ultimoEstado.esCensable,
             genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
             paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
-            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null,
+            esMovimiento: false
         };
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
@@ -232,10 +233,10 @@ export class CamaComponent implements OnInit {
             if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                 let nuevoEstado = this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                 // Primero desocupamos la cama donde esta el paciente actualmente
-                this.camasService.estadoEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
+                this.camasService.cambioEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
                     cama.ultimoEstado = camaActualizada.ultimoEstado;
                     // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
-                    this.camasService.estadoEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
+                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
                         this.PaseAunidadOrganizativa).subscribe(camaCambio => {
                             this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                             this.rotarDesocuparCama();
@@ -303,7 +304,7 @@ export class CamaComponent implements OnInit {
         let fecha = moment().endOf('day').toDate();
         this.camasService.getCamasXFecha(this.auth.organizacion.id, fecha).subscribe(resultado => {
             if (resultado) {
-                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && this.cama.ultimoEstado.unidadOrganizativa.id === c.ultimoEstado.unidadOrganizativa.id);
+                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.id === idUnidadOrganizativa);
                 this.listadoCamas = [...lista];
             }
 
@@ -360,5 +361,7 @@ export class CamaComponent implements OnInit {
         this.listadoCamas = [];
     }
 
-
+    comprobarWorkflow() {
+        return this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id);
+    }
 }

@@ -142,7 +142,7 @@ export class CamasService {
     }
 
 
-    estadoEstadoMovimiento(cama: ICama, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
+    cambioEstadoMovimiento(cama: ICama, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
 
         if (paciente) {
             paciente.id = paciente['_id'];

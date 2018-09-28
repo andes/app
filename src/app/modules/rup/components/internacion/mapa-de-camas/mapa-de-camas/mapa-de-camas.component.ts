@@ -82,7 +82,7 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    public panelIndex = 1;
+    public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
 
@@ -532,5 +532,6 @@ export class MapaDeCamasComponent implements OnInit {
         this.panelIndex = 1;
         this.showEgreso = true;
     }
+
 
 }

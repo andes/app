@@ -218,7 +218,6 @@
                     <div class="content" [ngClass]="{'reparacion': cama.$action == 'desocupar' }">
                         <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
                         </plex-datetime>
-                        <br>
                         <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                         </plex-datetime>
                         <br>
@@ -236,7 +235,7 @@
                             </plex-select>
                         </div>
                     </div>
-                    <div class="footer with-buttons row" *ngIf="!elegirDesocupar">
+                    <div class="footer with-buttons row">
                         <div class="col-6">
                             <div class="form-group">
                                 <plex-button type="danger" (click)="rotarDesocuparCama()">
@@ -245,7 +244,7 @@
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
+                            <div class="form-group" *ngIf="!elegirDesocupar">
                                 <plex-button type="success" validateForm="true " (click)="desocuparCama($event, cama, 'desocupada')">
                                     <i class="mdi mdi-check"></i>
                                 </plex-button>
@@ -336,7 +335,6 @@
                                 <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo" idField="name" labelField="name" [(ngModel)]="cama.$motivo"
                                     label="Motivo del bloqueo">
                                 </plex-select>
-
                             </div>
                         </div>
                     </div>
@@ -370,7 +368,7 @@
                         <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
                         </plex-datetime>
                         <!-- </p> -->
-                        <div>
+                        <div *ngIf="comprobarWorkflow()">
                             <!-- <p> -->
                             Estado luego del desbloqueo:
                             <!-- </p> -->
