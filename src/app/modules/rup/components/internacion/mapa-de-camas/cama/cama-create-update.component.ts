@@ -100,10 +100,8 @@ export class CamaCreateUpdateComponent implements OnInit {
             operacion.subscribe(result => {
                 if (result) {
                     if (this.cama.id) {
-                        this.plex.alert('Los datos de la cama se han actualizado correctamente correctamente');
                         this.router.navigate(['/internacion/camas']);
                     } else {
-                        this.plex.alert('La cama se creo correctamente');
                         this.router.navigate(['/internacion/camas']);
                     }
 
@@ -122,7 +120,7 @@ export class CamaCreateUpdateComponent implements OnInit {
         this.sectores = this.organizacionService.getRuta(org, $event.value);
     }
 
-    loadSectores ($event) {
+    loadSectores($event) {
         let query = $event.query;
         let items = this.organizacionService.getFlatTree(this.organizacion);
         $event.callback(items);
