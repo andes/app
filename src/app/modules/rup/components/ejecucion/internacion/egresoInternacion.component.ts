@@ -23,7 +23,8 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     @Output() btnIniciarEditarEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() prestacionGuardada: EventEmitter<any> = new EventEmitter<any>();
 
-
+    public fechaEgreso = null;
+    public horaEgreso = null;
     public listaUnidadesOrganizativas: any[];
     public copiaListaUnidadesOrganizativas = [];
     public listaProcedimientosQuirurgicos: any[];
@@ -115,6 +116,24 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     ngOnChanges(changes: any) {
         // this.hayInformeEgreso = true;
         // this.soloValores = false;
+    }
+
+    /**
+     * Buscar organizaciones
+     */
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            let organizacionSalida = [];
+            if (this.registro.valor.InformeEgreso.UnidadOrganizativaDestino && this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.organizacionOrigen) {
+                organizacionSalida = [this.registro.valor.InformeEgreso.UnidadOrganizativaDestino.organizacionOrigen];
+            }
+            event.callback(organizacionSalida);
+        }
     }
 
     /**
@@ -285,14 +304,17 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     *
     */
     calcularDiasEstada() {
-        if (this.registro.valor.InformeEgreso.fechaEgreso) {
+
+
+        if (this.fechaEgreso && this.horaEgreso) {
+            this.registro.valor.InformeEgreso.fechaEgreso = this.internacionService.combinarFechas(this.fechaEgreso, this.horaEgreso);
             // vamos a recuperara la fecha de ingreso de la prestacion
             let informeIngreso = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.internacionService.conceptosInternacion.ingreso.conceptId);
             if (informeIngreso) {
                 let fechaIngreso = informeIngreso.valor.informeIngreso.fechaIngreso;
                 if (fechaIngreso) {
                     let fechaEgreso = moment(this.registro.valor.InformeEgreso.fechaEgreso);
-                    let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') : '0';
+                    let diasEstada = fechaEgreso ? fechaEgreso.diff(moment(fechaIngreso), 'days') : '1';
                     this.registro.valor.InformeEgreso.diasDeEstada = diasEstada;
                 }
             }

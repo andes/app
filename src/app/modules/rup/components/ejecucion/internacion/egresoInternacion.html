@@ -5,17 +5,20 @@
                 <ng-container>
                     <div class="row ">
                         <div class="col-6 ">
-                            <plex-datetime name="fecha-hora" label="Fecha y hora" type="datetime" [(ngModel)]="registro.valor.InformeEgreso.fechaEgreso"
-                                [required]="true" (change)="calcularDiasEstada()">
+                            <plex-datetime type="date" name="fecha-hora" label="Fecha" [(ngModel)]="fechaEgreso" [required]="true" (change)="calcularDiasEstada()">
                             </plex-datetime>
                         </div>
+                        <div class="col-6 ">
+                            <plex-datetime type="time" name="fecha-hora" label="Hora" [(ngModel)]="horaEgreso" [required]="true" (change)="calcularDiasEstada()">
+                            </plex-datetime>
+                        </div>
+                    </div>
+                    <div class="row ">
                         <div class="col-6 ">
                             <plex-int name="diasEstada" label="Días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasDeEstada"
                                 placeholder="" [required]="true" [disabled]="true"></plex-int>
                         </div>
-                    </div>
-                    <div class="row ">
-                        <div class="col">
+                        <div class="col-6">
                             <plex-select (change)="selecOrganizacionDestino() " label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
                                 name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... " [required]="true">
                             </plex-select>
@@ -24,7 +27,7 @@
                     <div class="row ">
                         <div class="col ">
                             <plex-select *ngIf="listaUnidadesOrganizativas?.length> 0" label="Unidad organizativa de destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
-                                name="InformeEgreso.UnidadOrganizativaDestino" [data]="listaUnidadesOrganizativas" placeholder="Seleccione..."
+                                name="InformeEgreso.UnidadOrganizativaDestino" (getData)="loadOrganizacion($event)" placeholder="Seleccione..."
                                 required>
                             </plex-select>
                         </div>
@@ -65,14 +68,14 @@
                     </ng-container>
                     <div class="row">
                         <div class="col-12">
-                            <plex-select label="Otras circunstancias que prolongan la internación" [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias"
-                                name="otrasCircunstancias" (getData)="codigoCIE10($event)" placeholder="buscar...">
+                            <plex-select label="Otras circunstancias" [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias" name="otrasCircunstancias"
+                                (getData)="codigoCIE10($event)" placeholder="buscar...">
                             </plex-select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <plex-int name="diasDeEstada" label="Días de estada por otras circunstancias" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
+                            <plex-int name="diasDeEstada" label="Otros días de estada" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
                                 placeholder=""></plex-int>
                         </div>
                         <div class="col-6">
