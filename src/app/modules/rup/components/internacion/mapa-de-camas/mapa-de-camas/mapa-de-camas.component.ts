@@ -82,7 +82,7 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    public activo = 0;
+    public panelIndex = 1;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
 
@@ -481,7 +481,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.editarIngreso = true;
                 break;
             case 'egreso':
-                // this.showEgreso = event;
+                this.showEgreso = true;
                 break;
             default:
                 break;
@@ -493,7 +493,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @param value
      */
     public cambiaTap(value) {
-        this.activo = value;
+        this.panelIndex = value;
     }
 
 
@@ -529,10 +529,8 @@ export class MapaDeCamasComponent implements OnInit {
 
     verInternacion(event) {
         this.onCamaSelected(event);
-        this.activo++;
-        if (this.activo >= 2) {
-            this.activo = 0;
-        }
+        this.panelIndex = 1;
+        this.showEgreso = true;
     }
 
 }

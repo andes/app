@@ -27,6 +27,7 @@ export class CamaComponent implements OnInit {
     @Output() buscarPaciente: EventEmitter<any> = new EventEmitter<any>();
     @Output() camaSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion: any;
     public PaseAunidadOrganizativa: any;

@@ -14,12 +14,13 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
     @Input() paciente;
     @Input() camaSeleccionada;
     @Input() soloValores;
+    @Input() editarEgreso;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
 
     public pases;
     public editarIngreso = false;
-    public editarEgreso = false;
+    // public editarEgreso = false;
     public btnIniciarEditar;
     public mostrarValidacion = false;
 
