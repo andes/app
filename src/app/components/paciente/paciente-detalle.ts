@@ -27,6 +27,8 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     @Output() renaperNotification: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() setProvincia: EventEmitter<String> = new EventEmitter<String>();
+    @Output() setLocalidad: EventEmitter<String> = new EventEmitter<String>();
 
     _paciente: IPaciente;
     loading = false;
@@ -50,9 +52,22 @@ export class PacienteDetalleComponent implements OnInit {
         this.backUpDatos['fechaNacimiento'] = this.paciente.fechaNacimiento;
         this.backUpDatos['foto'] = this.paciente.foto;
         this.backUpDatos['cuil'] = this.paciente.cuil;
+
         if (this.paciente.direccion) {
             this.backUpDatos['direccion'] = this.paciente.direccion[0].valor;
             this.backUpDatos['codigoPostal'] = this.paciente.direccion[0].codigoPostal;
+            if (this.paciente.direccion[0].ubicacion.localidad) {
+                // Se almacena sólo el nombre ya que es lo unico que se envia en el emit.
+                this.backUpDatos['localidad'] = this.paciente.direccion[0].ubicacion.localidad.nombre;
+            } else {
+                this.backUpDatos['localidad'] = '';
+            }
+            if (this.paciente.direccion[0].ubicacion.provincia) {
+                // Se almacena sólo el nombre ya que es lo unico que se envia en el emit.
+                this.backUpDatos['provincia'] = this.paciente.direccion[0].ubicacion.provincia.nombre;
+            } else {
+                this.backUpDatos['provincia'] = '';
+            }
         }
     }
 
@@ -107,6 +122,8 @@ export class PacienteDetalleComponent implements OnInit {
                     }
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;
+                    this.setProvincia.emit(datos.provincia);
+                    this.setLocalidad.emit(datos.ciudad);
                     patient.cuil = datos.cuil;
                 } else {
                     if (!this.paciente.direccion[0].valor) {
@@ -114,6 +131,12 @@ export class PacienteDetalleComponent implements OnInit {
                     }
                     if (!this.paciente.cuil) {
                         this.paciente.cuil = datos.cuil;
+                    }
+                    if (!this.paciente.direccion[0].ubicacion.localidad) {
+                        this.setLocalidad.emit(datos.ciudad);
+                    }
+                    if (!this.paciente.direccion[0].ubicacion.provincia) {
+                        this.setProvincia.emit(datos.provincia);
                     }
                     this.loading = false;
                 }
@@ -131,6 +154,8 @@ export class PacienteDetalleComponent implements OnInit {
         patient.foto = this.backUpDatos['foto'];
         this.paciente.direccion[0].valor = this.backUpDatos['direccion'];
         this.paciente.direccion[0].codigoPostal = this.backUpDatos['codigoPostal'];
+        this.setProvincia.emit(this.backUpDatos['provincia']);
+        this.setLocalidad.emit(this.backUpDatos['localidad']);
 
         if (this.backUpDatos['estado'] === 'temporal') {
             patient.nombre = this.backUpDatos['nombre'];

@@ -165,6 +165,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         activo: true,
         ultimaActualizacion: new Date()
     };
+    backUpContactos = []; // Unicamente para el check "No posee ningun contacto"
 
     direccion: IDireccion = {
         valor: '',
@@ -298,6 +299,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                             }
                             this.seleccion = Object.assign({}, resultado);
                         }
+                        this.backUpContactos = resultado.contacto;
                         this.actualizarDatosPaciente();
 
                     });
@@ -464,6 +466,53 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
+    /**
+     * Busca la provincia ingresada por parametro para setear el select.
+     * @param {string} event : provincia obtenida de WS Renaper.
+     */
+    changeProvincia(event) {
+        let prov = null;
+        this.viveProvNeuquen = (event === 'NEUQUEN');
+
+        if (event.length) {
+            // Regex para matchear 'event' (nombre de provincia: string) con alguna provincia de la coleccion.
+            let busqueda = new RegExp(event, 'ig');
+            // Match entre 'event' y cada provincia de la coleccion (Una vez quitadas las tildes a los nombres).
+            prov = this.provincias.find(p => this.removerTilde(p.nombre).match(busqueda));
+        }
+        this.pacienteModel.direccion[0].ubicacion.provincia = prov;
+    }
+
+    /**
+     * Busca la localidad ingresada por parametro para setear el select. (Solo para neuquen)
+     * @param {string} event : provincia obtenida de WS Renaper.
+     */
+    async changeLocalidad(event) {
+        let loc = null;
+        this.viveEnNeuquen = (event === 'NEUQUEN');
+
+        if (event.length) {
+            let localidadesNqn: any = await this.loadLocalidades(this.provinciaNeuquen); // localidades de la prov de neuquen
+
+            // Regex para matchear 'event' (nombre de localidad: string) con alguna localidad de la coleccion.
+            let busqueda = new RegExp(event, 'ig');
+            // Match entre 'event' y cada localidad de la coleccion (Una vez quitadas las tildes a los nombres).
+            loc = localidadesNqn.find(l => this.removerTilde(l.nombre).match(busqueda));
+        }
+        this.pacienteModel.direccion[0].ubicacion.localidad = loc;
+    }
+
+    // Elimina las tildes de un string
+    removerTilde(texto) {
+        texto = texto.replace(new RegExp('[ÁÀÂÃ]', 'gi'), 'a');
+        texto = texto.replace(new RegExp('[ÉÈÊ]', 'gi'), 'e');
+        texto = texto.replace(new RegExp('[ÍÌÎ]', 'gi'), 'i');
+        texto = texto.replace(new RegExp('[ÓÒÔÕ]', 'gi'), 'o');
+        texto = texto.replace(new RegExp('[ÚÙÛ]', 'gi'), 'u');
+        texto = texto.replace(new RegExp('[Ç]', 'gi'), 'c');
+        return texto;
+    }
+
     completarGenero() {
         if (!this.pacienteModel.genero) {
             this.pacienteModel.genero = ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id);
@@ -478,7 +527,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
     limpiarContacto() {
         if (this.noPoseeContacto) {
-            this.pacienteModel.contacto = [this.contacto];
+            this.pacienteModel.contacto = [this.contacto];  // asigna contacto vacío
+        } else {
+            this.pacienteModel.contacto = this.backUpContactos; // recupera los contactos que tenia antes de presionar el checkbox
         }
     }
 
@@ -503,7 +554,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {
@@ -564,6 +614,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             let operacionPac: Observable<IPaciente>;
             // generamos pacientes temporales a partir de las nuevas relaciones
             if (pacienteGuardar.documento) {
+                pacienteGuardar.documento = pacienteGuardar.documento.replace(/^0+/, '');   // eliminamos los posibles ceros iniciales
                 await this.crearTemporales(pacienteGuardar);
             }
             operacionPac = this.pacienteService.save(pacienteGuardar);

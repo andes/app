@@ -95,10 +95,10 @@
                                 <legend>Datos de contacto</legend>
                                 <div *ngIf="pacienteModel.contacto">
                                     <div class="row">
-                                        <div class="col-10 text-right">
+                                        <div class="col-8">
                                             <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
                                         </div>
-                                        <div class="col-2 text-right">
+                                        <div class="col-4">
                                             <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
                                         </div>
                                     </div>
@@ -365,7 +365,8 @@
             <div class="col-3">
                 <plex-box>
                     <div *ngIf='!showMobile'>
-                        <paciente-detalle [paciente]="pacienteModel" (renaperNotification)="renaperNotification($event)" [mostrarRenaper]="true"></paciente-detalle>
+                        <paciente-detalle [paciente]="pacienteModel" [mostrarRenaper]="true" (renaperNotification)="renaperNotification($event)"
+                            (setProvincia)="changeProvincia($event)" (setLocalidad)="changeLocalidad($event)"></paciente-detalle>
 
                         <!-- Pacientes candidatos -->
                         <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">
@@ -377,10 +378,12 @@
                                     <div class="hover" *ngIf="!pacientesSearch">
                                         <ul class="list-group">
                                             <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
+                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre|
+                                                    uppercase}}
                                                     <br>
                                                     <small>Documento: {{elem.paciente.documento}}
-                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha
+                                                        }}
                                                         <br> Sexo: {{elem.paciente.sexo}}
                                                     </small>
 
