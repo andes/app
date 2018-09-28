@@ -364,6 +364,7 @@ export class IniciarInternacionComponent implements OnInit {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
                 if (this.obraSocial) {
                     nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoPuco, nombre: this.obraSocial.nombre };
+                    this.informeIngreso.obraSocial = this.obraSocial;
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
