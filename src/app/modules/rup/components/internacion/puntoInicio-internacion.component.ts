@@ -73,14 +73,16 @@ export class PuntoInicioInternacionComponent implements OnInit {
             // Si el paciente ya tiene una internacion en ejecucion
             if (resultado) {
                 this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
-                    this.internacionEjecucion = prestacionExiste[0];
+                    if (prestacionExiste.length) {
+                        this.internacionEjecucion = prestacionExiste[0];
+                        this.showInternacionEjecucion = true;
+                    };
                 });
-                this.showInternacionEjecucion = true;
             } else {
                 this.showInternacionEjecucion = false;
             }
         });
-        this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis).subscribe(epicrisis => {
+        this.servicioPrestacion.getPrestacionesXtipo(paciente.id, this.conceptosInternacion.epicrisis.conceptId).subscribe(epicrisis => {
             this.epicrisisPaciente = epicrisis
                 .map(e => {
                     if (e.ejecucion.registros && e.ejecucion.registros[0] && e.ejecucion.registros[0].registros) {
