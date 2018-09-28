@@ -119,11 +119,18 @@
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                 <ng-container *ngIf="buscandoPaciente">
                     <div class="row">
-                        <div class="col-10">
+                        <div class="col">
+                            <h5>
+                                Agregar paciente a cama
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-9">
                             <!-- Buscador adaptable de MPI -->
                             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
                         </div>
-                        <div class="col-2">
+                        <div class="col-3">
                             <plex-button type="danger" label="Cancelar" (click)="cancelarInternacion()"></plex-button>
                         </div>
                     </div>

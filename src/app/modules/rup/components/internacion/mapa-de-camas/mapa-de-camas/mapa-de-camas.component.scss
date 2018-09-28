@@ -57,12 +57,12 @@ $andes-verde-claro: #63c7b7;
     }
 }
 .cama-container {
-    padding: 1rem 0;
+    padding: 0 0;
     -webkit-perspective: 800px;
     -moz-perspective: 800px;
     -o-perspective: 800px;
     perspective: 800px;
-    min-height: 450px;
+    min-height: 330px;
     width: 100%;
     box-shadow: 0px 0px 2px 2px rgba(0, 0, 0, 0.25);
     
@@ -105,7 +105,7 @@ $andes-verde-claro: #63c7b7;
             top: 0;
             left: 0;
             background-color: #FFF;
-            min-height: 430px;
+            min-height: 330px;
             width: 100%;
             // margin-bottom: 20px;
             // margin-top: 10px;
@@ -147,9 +147,7 @@ $andes-verde-claro: #63c7b7;
         .content {
             background-color: rgba(0, 0, 0, 0);
             box-shadow: none;
-            padding: 20px 15px;
-            min-height: 275px;
-            /*min-height: 265px;*/
+            padding: 0 0;
             .content .footer {
                 padding: 0;
                 margin: 0;
@@ -196,8 +194,8 @@ $andes-verde-claro: #63c7b7;
         }
         .header {
             /*padding: 15px 20px;*/
-            padding: 10px 0 0 10px;
-            height: 60px;
+            padding: 0 0 0 10px;
+            height: 120px;
         }
         .icon {
             text-align: center;
@@ -346,7 +344,7 @@ $andes-verde-claro: #63c7b7;
                 border: solid 3px $andes-azul;
                 padding: 0;
                 box-sizing: border-box;
-                height: 450px;
+                height: 335px;
                 z-index: 4;
             }
         }
@@ -371,13 +369,13 @@ $andes-verde-claro: #63c7b7;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        height: 420px;
+        height: 325px;
         width: 70%;
 
         .contenedor-cama {
             article.contenedor-texto {
                 position: absolute;
-                top: 43%;
+                top: 45%;
                 left: 25%;
                 color: white;
                 width: calc(100% - 8vw);
@@ -390,7 +388,7 @@ $andes-verde-claro: #63c7b7;
 
         .card-contenedor-inferior {
             display: flex;
-            height: 200px;
+            height: 100px;
             flex-direction: column;
             // height: 160px;
             justify-content: flex-end;
@@ -552,7 +550,7 @@ button {
 }
 
 .icon-content {
-    font-size: 13.5rem;
+    font-size: 13rem;
 
     &.desocupada{
         color:$desocupada;
@@ -574,7 +572,7 @@ button {
 .data-icon {
     position: absolute;
     left: 60%;
-    top: 10%;
+    // top: 1%;
     color: rgb(0, 0, 0);
     z-index: 3;
     font-size: 30px;
