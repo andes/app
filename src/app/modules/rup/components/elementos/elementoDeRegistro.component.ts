@@ -38,8 +38,11 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     seleccionado: any;
 
     ngOnInit() {
-
+        this.registro.registros.forEach((registro: any) => {
+            this.itemsRegistros[registro.id] = { collapse: true, items: null };
+        });
         this.params.required = this.params.required ? this.params.required : false;
+        // buscamos si existe por parametro alguna restriccion en los conceptos.
         if (this.params.refsetId) {
             this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
                 this.conceptosPermitidos = resultado;
