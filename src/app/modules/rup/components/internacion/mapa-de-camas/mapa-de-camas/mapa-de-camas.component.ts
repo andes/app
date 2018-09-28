@@ -225,19 +225,15 @@ export class MapaDeCamasComponent implements OnInit {
     public updateCama(e: any) {
         if (e) {
             this.countFiltros();
-            // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
-
-            /* if (e.cama) {
-                 let i = this.camas.findIndex(c => c.id === e.cama.id);
-                 this.camas[i] = e.cama;
-                 this.camaSeleccionada = e.cama;
-                 this.prestacionDelPaciente(e.cama);
-             } else {
-                 this.refresh();
-             }*/
 
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
+                if (e.cama) {
+                    let i = this.camas.findIndex(c => c.id === e.cama.id);
+                    this.camas[i] = e.cama;
+                    this.camaSeleccionada = e.cama;
+                    this.prestacionDelPaciente(e.cama);
+                }
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
             if (e.desocupaCama) {
@@ -259,7 +255,6 @@ export class MapaDeCamasComponent implements OnInit {
                 }, (err1) => {
                     this.plex.info('danger', 'Error al intentar desocupar la cama');
                 });
-
 
                 this.showIngreso = false;
                 this.showEgreso = false;
