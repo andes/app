@@ -32,7 +32,7 @@ export class IniciarInternacionComponent implements OnInit {
     @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
-
+    nroCarpetaOriginal: string;
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
@@ -102,6 +102,7 @@ export class IniciarInternacionComponent implements OnInit {
         nivelInstruccion: null,
         asociado: null,
         obraSocial: null,
+        nroCarpeta: null,
         motivo: null,
         organizacionOrigen: null,
         profesional: null
@@ -136,6 +137,7 @@ export class IniciarInternacionComponent implements OnInit {
                 if (existeRegistro.valor.informeIngreso.origen && (existeRegistro.valor.informeIngreso.origen === 'Traslado' || existeRegistro.valor.informeIngreso.origen === 'Consultorio externo')) {
                     this.origenExterno = true;
                 }
+
             }
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
@@ -178,6 +180,13 @@ export class IniciarInternacionComponent implements OnInit {
                             this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
                         }
                     });
+                    let indiceCarpeta = -1;
+                    if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
+                        indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
+                        if (indiceCarpeta > -1) {
+                            this.informeIngreso.nroCarpeta = this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta;
+                        }
+                    }
                 }
 
             });
@@ -213,6 +222,9 @@ export class IniciarInternacionComponent implements OnInit {
 
     }
 
+    routeTo(action, id) {
+        this.router.navigate(['rup/' + action + '/', id]);
+    }
 
     loadProfesionales(event) {
         let listaProfesionales = [];
