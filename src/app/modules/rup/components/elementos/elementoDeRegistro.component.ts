@@ -2,7 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, OnInit } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 import { IPrestacionRegistro } from './../../interfaces/prestacion.registro.interface';
-import { Subscription } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
 @Component({
     selector: 'rup-ElementoDeRegistroComponent',
     templateUrl: 'elementoDeRegistro.html',
