@@ -12,25 +12,29 @@
                         <!-- TODO: Ver estilos con julito ,@FerSastre -->
                         <div class="row" *ngIf="camas">
                             <div class="col-2">
-                                <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente" [required]="true">
+                                <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente"
+                                    [required]="true">
                                 </plex-text>
                             </div>
                             <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.sectores.length" [required]="true"></plex-select>
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores"
+                                    label="Sector" (change)="filtrar()" *ngIf="filtros.opciones.sectores.length"
+                                    [required]="true"></plex-select>
 
 
                             </div>
                             <div class="col-4">
                                 <div class="form-group">
-                                    <plex-select [disabled]="true" [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Unidad Organizativa"
-                                        (change)="filtrar()" *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
+                                    <plex-select [disabled]="true" [(ngModel)]="filtros.servicio" name="servicio2"
+                                        [data]="filtros.opciones.servicios" label="Unidad Organizativa" (change)="filtrar()"
+                                        *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
                                 </div>
                             </div>
 
                             <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length" [required]="true"></plex-select>
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas"
+                                    label="Tipo de cama" (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length"
+                                    [required]="true"></plex-select>
                             </div>
                             <!-- Filtros por estado -->
                             <!-- <div class="col-md-3">
@@ -134,8 +138,9 @@
                 </ng-container>
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
-                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
-                        [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
+                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected"
+                        [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion" [soloValores]="editarIngreso"
+                        (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
@@ -153,7 +158,8 @@
                                     </span>
                                     <!-- Data paciente -->
                                     <div class="andes-contenedor-secundario horizontal centrado">
-                                        <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente" src="" alt="">
+                                        <img *ngIf="camaSeleccionada.ultimoEstado.estado == 'ocupada'" class="sidebar-imagen-paciente"
+                                            src="" alt="">
                                         <div class="andes-sidebar-prefix">
                                             <p *ngIf="camaSeleccionada.ultimoEstado?.paciente">
                                                 <b>{{camaSeleccionada.ultimoEstado.paciente.apellido}}</b>
@@ -214,12 +220,70 @@
                         </plex-tab>
                         <!-- Resumen -->
                         <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
-                            <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion"
-                                [camaSeleccionada]="camaSeleccionada" (refreshCamas)="updateCama($event)"></internacion-resumen>
+                            <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
+                                [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
+                                (refreshCamas)="updateCama($event)"></internacion-resumen>
                         </plex-tab>
 
                         <!-- Historial de cama -->
                         <plex-tab class="andes-tab" label="Historial de la cama">
+
+
+
+                            <div class="row" style="margin-bottom: 0.25rem">
+                                <div class="col-5">
+                                    <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde"
+                                        [required]="true" name="fechaDesde" label="Fecha Desde">
+                                    </plex-datetime>
+                                </div>
+                                <div class="col-5">
+                                    <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta"
+                                        [required]="true" name="fechaHasta" label="Fecha Hasta">
+                                    </plex-datetime>
+                                </div>
+                                <div class="col-4" style="margin-top: 10px;margin-bottom: 10px;">
+                                    <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
+                                    </plex-button>
+                                </div>
+                            </div>
+
+                            <table *ngIf="historial && historial.length" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Estado</th>
+                                        <th>Unidad organizativa</th>
+                                        <th>Paciente</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let movimiento of historial">
+                                        <td>
+                                            {{movimiento.fecha | fecha}}
+                                        </td>
+                                        <td>
+                                            {{movimiento.estado}}
+                                        </td>
+                                        <td>
+                                            {{movimiento.unidadOrganizativa}}
+                                        </td>
+                                        <td *ngIf="movimiento.estado === 'ocupada'">
+                                            {{movimiento.paciente | paciente }}
+
+                                        </td>
+                                        <td *ngIf="movimiento.estado !== 'ocupada'">
+                                            Sin paciente
+
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="row" *ngIf="inicioBusqueda && !historial.length">
+                                <div class="col-12 text-center" style="margin: 2px">
+                                    <h5>No hay historial en ese rango de fechas</h5>
+                                </div>
+                            </div>
                         </plex-tab>
                     </plex-tabs>
                 </ng-container>

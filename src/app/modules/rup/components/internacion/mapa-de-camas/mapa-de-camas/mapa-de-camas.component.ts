@@ -37,6 +37,10 @@ export class MapaDeCamasComponent implements OnInit {
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
+
+    public fechaDesde = new Date;
+
+    public fechaHasta = new Date;
     public loader = true;
     public showMenu = true;
     public historicoMode = false;
@@ -85,7 +89,8 @@ export class MapaDeCamasComponent implements OnInit {
     public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-
+    public historial: any[] = [];
+    public inicioBusqueda = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -457,6 +462,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.camaSeleccionada = cama;
             this.prestacionPorInternacion = null;
         }
+        this.reseteaBusqueda();
     }
 
     prestacionDelPaciente(cama) {
@@ -526,6 +532,23 @@ export class MapaDeCamasComponent implements OnInit {
         this.onCamaSelected(event);
         this.panelIndex = 1;
         this.showEgreso = true;
+    }
+
+    buscarHistorial() {
+        this.camasService.getHistorialCama(this.auth.organizacion._id, this.fechaDesde, this.fechaHasta, this.camaSeleccionada.id).subscribe(historial => {
+            this.inicioBusqueda = true;
+            if (historial.length > 0) {
+                this.historial = historial;
+            } else {
+                this.historial = [];
+            }
+        });
+
+
+    }
+
+    reseteaBusqueda() {
+        this.historial = [];
     }
 
 
