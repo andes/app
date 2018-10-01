@@ -937,17 +937,37 @@ export class DarTurnosComponent implements OnInit {
     enviarSMS(paciente: any) {
         // Enviar SMS sólo en Producción
         if (environment.production === true) {
-            let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
+            let dia = moment(this.turno.horaInicio).format('DD/MMM');
             let horario = moment(this.turno.horaInicio).format('HH:mm');
-            // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-            let mensaje = this.paciente.apellido + ' el ' + this.agenda.organizacion.nombre + ' le recuerda su turno de ' + this.turnoTipoPrestacion.term +
-                ' el dia ' + dia + ' a las ' + horario + ' hs. ';
+            // Inicial del nombre. más Apellidos (Max 20 caracteres)
+            let nombrePaciente = paciente.nombre.substr(0, 1) + '. ' + this.paciente.apellido.substr(0, 20);
+            // Max 30 caracteres
+            let prestacion = this.turnoTipoPrestacion.term.substr(0, 30);
+            let nombreOrganizacion = this.agenda.organizacion.nombre.toLocaleLowerCase();
+            // Se reemplazan nombres de organización por 
+            if (nombreOrganizacion.indexOf('hospital') !== -1) {
+                nombreOrganizacion = nombreOrganizacion.replace('hospital', 'HOSP');
+            } else if (nombreOrganizacion.indexOf('centro de salud') !== -1) {
+                nombreOrganizacion = nombreOrganizacion.replace('centro de salud', 'CS');
+            } else if (nombreOrganizacion.indexOf('puesto sanitario') !== -1) {
+                nombreOrganizacion = nombreOrganizacion.replace('puesto sanitario', 'PS');
+            }
+            // Cortar del guion "-" en adelante
+            // Max 30 caracteres
+            if (nombreOrganizacion.indexOf("-") !== -1) {
+                nombreOrganizacion = nombreOrganizacion.substr(0, nombreOrganizacion.indexOf("-"));
+                nombreOrganizacion = nombreOrganizacion.substring(0, 30);
+            }
+
+            let mensaje = 'Confirmación turno ' + nombrePaciente + ' | ' + dia + ' | ' + horario + 'Hs | ' + prestacion + ' | ' + nombreOrganizacion;
+            // Palabra consultorio -> consult. (Max 30 caracteres)
             if (this.agenda.espacioFisico) {
-                mensaje = mensaje + 'en ' + this.agenda.espacioFisico.nombre + '.';
+                let consultorioNombre = this.agenda.espacioFisico.nombre.toLocaleLowerCase().replace("consultorio", "consult.");
+                mensaje = mensaje + ' | ' + consultorioNombre.substr(0, 30);
             }
             let smsParams = {
                 telefono: paciente.telefono,
-                mensaje: mensaje,
+                mensaje: mensaje.toLocaleUpperCase(),
             };
             this.smsService.enviarSms(smsParams).subscribe(
                 sms => {
