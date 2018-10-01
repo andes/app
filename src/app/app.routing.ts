@@ -139,8 +139,8 @@ const appRoutes: Routes = [
 
   // Mapa de camas
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
-  // internacion Punto inicio
-  { path: 'internacion/puntoInicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingGuard] },
+  { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingGuard] },
+
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },
 
