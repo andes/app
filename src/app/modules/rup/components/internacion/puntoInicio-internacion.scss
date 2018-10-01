@@ -37,8 +37,8 @@ table {
         font-weight: bold;
     }
 
-    span {
-        font-size: 1vw;
+    .badge {
+        font-size: 1rem;
         padding: 10px;
         margin: 10px;
     }
@@ -62,8 +62,8 @@ h3 {
     }
 
     &.sm {
-        width: 8rem;
-        height: 8rem;
+        width: 6rem;
+        height: 6rem;
     } 
 
 }
@@ -136,7 +136,7 @@ hr {
     }
 }
 
-plex-layout-sidebar plex-box>DIV {
+plex-layout-sidebar > DIV {
 
 
     h3,
@@ -176,11 +176,13 @@ plex-layout-sidebar plex-box>DIV {
         flex-direction: column;
     }
 
+    // Botones
+    plex-button button {
+        line-height: normal !important;
+    }
+
     // Si hay tabla
-    .contenedor-tabla {
-        height: 35vh;
-        overflow-y: scroll;
-        overflow-x: hidden;
+    .contenedor-tabla { 
 
 
         table {

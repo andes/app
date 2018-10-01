@@ -106,6 +106,8 @@ export class PrestacionValidacionComponent implements OnInit {
         { id: false, label: 'No' }
     ];
     nombreArchivo: any;
+    public btnVolver;
+    public rutaVolver;
 
     constructor(private servicioPrestacion: PrestacionesService,
         private frecuentesProfesionalService: FrecuentesProfesionalService,
@@ -119,6 +121,13 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     ngOnInit() {
+        // consultamos desde que pagina se ingreso para poder volver a la misma
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+            }
+        });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -337,15 +346,22 @@ export class PrestacionValidacionComponent implements OnInit {
         this.router.navigate(['rup/ejecucion/', this.prestacion.id]);
     }
 
-    volverInicio(ambito = 'ambulatorio') {
+    volverInicio(ambito = 'ambulatorio', ruta = null) {
         let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+        let ruteo;
+        if (ambito === 'ambulatorio') {
+            ruteo = 'rup';
+            this.btnVolver = mensaje;
+        } else {
+            if (ruta) {
+                ruteo = ruta;
+            } else {
+                ruteo = '/internacion/camas';
+            }
+        }
         this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
-                if (ambito === 'ambulatorio') {
-                    this.router.navigate(['rup']);
-                } else {
-                    this.router.navigate(['/internacion/camas']);
-                }
+                this.router.navigate([ruteo]);
             } else {
                 return;
             }
