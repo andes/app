@@ -16,10 +16,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col">
                                 <p> <b>Fecha de Nacimiento:</b> {{ paciente.fechaNacimiento | fecha }}</p>
                             </div>
-                            <div class="col-6">
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <p> <b>Sexo:</b> {{ paciente.sexo }}</p>
                             </div>
                         </div>
@@ -42,8 +44,11 @@
                                     (cancelarCarpetaEmit)="afterComponenteCarpeta($event) "></carpeta-paciente>
                             </div>
                         </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Datos de la Internación</legend>
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col">
                                 <plex-datetime *ngIf="!soloValores" type="datetime" [(ngModel)]="informeIngreso.fechaIngreso"
                                     [required]="true" [autoFocus]="autoFocus " name="fechaIngreso " label="Fecha Ingreso">
                                 </plex-datetime>
@@ -71,6 +76,16 @@
                             </div>
                         </div>
                         <div class="row">
+                            <div class="col">
+                                <plex-text *ngIf="!soloValores" label="Motivo de Internación" name="motivo" multiline="true"
+                                    [(ngModel)]="informeIngreso.motivo">
+                                </plex-text>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Datos Estadísticos</legend>
+                        <div class="row">
                             <div class="col-6" *ngIf="situacionesLaborales">
                                 <plex-select *ngIf="!soloValores" label=" Situación laboral " [(ngModel)]="informeIngreso.situacionLaboral"
                                     name="situacionLaboral" [data]="situacionesLaborales" placeholder="Seleccione... "
@@ -85,7 +100,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-4 ">
+                            <div class="col">
                                 <plex-select *ngIf="!soloValores" [(ngModel)]="informeIngreso.nivelInstruccion" name="nivelInstruccion"
                                     [data]="nivelesInstruccion" placeholder="Seleccione..." label="Nivel instrucción"
                                     idField="nombre" labelField="nombre">
@@ -93,14 +108,6 @@
                             </div>
 
                         </div>
-                        <div class="row">
-                            <div class="col">
-                                <plex-text *ngIf="!soloValores" label="Motivo de Internación" name="motivo" multiline="true"
-                                    [(ngModel)]="informeIngreso.motivo">
-                                </plex-text>
-                            </div>
-                        </div>
-                        <div class="row">&nbsp;</div>
                     </fieldset>
                 </div>
             </div>
