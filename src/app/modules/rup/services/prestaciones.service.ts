@@ -735,6 +735,7 @@ export class PrestacionesService {
                             nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
                         }
                         // Si se asignó un profesional destino desde la prestación que origina la solicitud
+                        nuevaPrestacion.solicitud.profesional = {};
                         if (plan.valor.solicitudPrestacion.profesionalesDestino) {
                             nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
                         }
