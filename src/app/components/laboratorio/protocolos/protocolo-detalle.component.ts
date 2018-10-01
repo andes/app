@@ -92,6 +92,7 @@ export class ProtocoloDetalleComponent
             this.cargarResultadosAnteriores();
         }
     }
+
     /**
      * Setea al resultado de cada práctica un array con la lista de resultados anteriores registrados para el paciente de la práctica
      *
@@ -148,16 +149,18 @@ export class ProtocoloDetalleComponent
     }
 
    /**
- * Elimina una práctica seleccionada tanto de la solicitud como de la ejecución
- *
- * @param {IPractica} practica
- * @memberof ProtocoloDetalleComponent
- */ eliminarPractica(practica: IPractica) {
+     * Elimina una práctica seleccionada tanto de la solicitud como de la ejecución
+     *
+     * @param {IPractica} practica
+     * @memberof ProtocoloDetalleComponent
+     */
+    eliminarPractica(practica: IPractica) {
         let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         practicasSolicitud.splice(practicasSolicitud.findIndex(x => x.id === practica.id), 1);
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
         practicasEjecucion.splice(practicasEjecucion.findIndex(x => x.id === practica.id), 1);
     }
+
     /**
      * Asigna paciente al modelo, oculta componente de búsqueda de paciente y exhibe panel de datos de paciente
      *
@@ -308,10 +311,10 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-  * Navega al protocolo anterior de la lista de trabajo
-  *
-  * @memberof ProtocoloDetalleComponent
-  */
+     * Navega al protocolo anterior de la lista de trabajo
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     anterior() {
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
@@ -319,6 +322,7 @@ export class ProtocoloDetalleComponent
         }
 
     }
+
     /**
      * Muestra el componente de selección de paciente.
      *
@@ -349,6 +353,7 @@ export class ProtocoloDetalleComponent
             this.cargarResultadosAnteriores();
         }
     }
+
     /**
      * Retorna true si el último estado registrado es de validada, false si no.
      *
@@ -358,6 +363,7 @@ export class ProtocoloDetalleComponent
     isProtocoloValidado() {
         return this.modelo.estados[this.modelo.estados.length - 1].tipo === 'validada';
     }
+
     /**
      * Agrega estado validado al protocolo en caso que todos los resultados del mismo se encuentren marcados como validados.
      *
@@ -372,6 +378,7 @@ export class ProtocoloDetalleComponent
             this.modelo.estados.push(Constantes.estadoValidada);
         }
     }
+
     /**
      * Marca los resultados de todas las prácticas como validados
      *
@@ -395,6 +402,7 @@ export class ProtocoloDetalleComponent
             this.flagMarcarTodas = false;
         }
     }
+
     /**
      * Muestra panel de observación
      *
@@ -403,6 +411,7 @@ export class ProtocoloDetalleComponent
     verObservaciones() {
         this.showObservaciones = true;
     }
+
     /**
      * Oculta panel de observación
      *
@@ -412,6 +421,7 @@ export class ProtocoloDetalleComponent
         this.showObservaciones = false;
 
     }
+
     /**
      * Para solicitudes no ejecutas. Agrega estado en ejecución y asigna número de protocolo
      *
@@ -461,6 +471,5 @@ export class ProtocoloDetalleComponent
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
         }
-
     }
 }

@@ -40,7 +40,7 @@ export class PuntoInicioLaboratorioComponent
     public modoCargaLaboratorioEnum;
     public mostrarListaMpi = false;
     public indexProtocolo;
-    public accion;
+    // public accion;
     public turnosRecepcion;
     public modo = {
         id: 'control',
@@ -94,6 +94,7 @@ export class PuntoInicioLaboratorioComponent
         this.refreshSelection();
 
     }
+
     /**
      * resetearProtocolo resetea el atributo protoloco con un esquema de prestación vacio
      *
@@ -126,6 +127,7 @@ export class PuntoInicioLaboratorioComponent
             }
         };
     }
+
     /**
      * Realiza la búsqueda de prestaciones según selección de filtros
      *
@@ -190,6 +192,7 @@ export class PuntoInicioLaboratorioComponent
             this.showCargarSolicitud = true;
         }
     }
+
     /**
      * volverLista oculta panel de detalle de protolo y muestra en su lugar panel de lista de protocolos
      *
@@ -201,6 +204,7 @@ export class PuntoInicioLaboratorioComponent
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
     }
+
     /**
      * Busca unidades organizativas de la organización
      *
@@ -237,7 +241,6 @@ export class PuntoInicioLaboratorioComponent
      * @returns
      * @memberof PuntoInicioLaboratorioComponent
      */
-
     loadPrioridad(event) {
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();
@@ -300,6 +303,7 @@ export class PuntoInicioLaboratorioComponent
         }
 
     }
+
     /**
      * Asigna paciente activo
      *
@@ -314,35 +318,35 @@ export class PuntoInicioLaboratorioComponent
 
     }
 
-    changeServicio() {
-        this.busqueda.servicio = null;
-        this.accion = this.modo.nombre;
+    // changeServicio() {
+    //     this.busqueda.servicio = null;
+    //     this.accion = this.modo.nombre;
 
-        switch (this.modo.nombre) {
-            case 'Carga':
-                this.accion = 'Cargar';
-                this.refreshSelection();
-                break;
-            case 'Control':
-                this.accion = 'Control';
-                this.refreshSelection();
-                break;
-            case 'Validacion':
-                this.accion = 'Validar';
-                this.refreshSelection();
-                break;
-            case 'Recepcion':
-                this.accion = 'Recepcionar';
+    //     switch (this.modo.nombre) {
+    //         case 'Carga':
+    //             this.accion = 'Cargar';
+    //             this.refreshSelection();
+    //             break;
+    //         case 'Control':
+    //             this.accion = 'Control';
+    //             this.refreshSelection();
+    //             break;
+    //         case 'Validacion':
+    //             this.accion = 'Validar';
+    //             this.refreshSelection();
+    //             break;
+    //         case 'Recepcion':
+    //             this.accion = 'Recepcionar';
 
-                this.refreshSelection();
-                break;
-            case 'Listado':
-                this.accion = 'Listar';
-                this.refreshSelection();
-                break;
-        }
+    //             this.refreshSelection();
+    //             break;
+    //         case 'Listado':
+    //             this.accion = 'Listar';
+    //             this.refreshSelection();
+    //             break;
+    //     }
 
-    }
+    // }
 
     /**
      * Cambia configuración de paneles para modo recepción paciente sin turno
@@ -356,6 +360,7 @@ export class PuntoInicioLaboratorioComponent
         this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }
+
     /**
      * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
      *
@@ -403,8 +408,6 @@ export class PuntoInicioLaboratorioComponent
     //         this.turnosLaboratorio();
     //     }
     // }
-
-
 }
 
 

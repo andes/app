@@ -24,7 +24,7 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <plex-select [(ngModel)]="modo" name="area" (change)='changeServicio()' label="Modo" [data]='cargaLaboratorioEnum' [required]="false"></plex-select>
+                <plex-select [(ngModel)]="modo" name="area" label="Modo" [data]='cargaLaboratorioEnum' [required]="false"></plex-select>
             </div>
             <div class="col-3" *ngIf='modo && (modo.id ==="carga" || modo.id ==="validacion")'>
                 <plex-select [(ngModel)]="formaCarga" name="formaCarga" label="Forma de carga" (change)="refreshSelection($event,'area')"
