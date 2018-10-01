@@ -96,6 +96,9 @@ export class MapaDeCamasComponent implements OnInit {
 
 
     refresh(event = null) {
+        // Se setea ruta actual
+        this.servicioPrestacion.notificaRuta({ nombre: 'Mapa de Camas', ruta: 'internacion/camas' });
+
         // verificar permisos
         // buscar camas para la organización
         this.limpiarFiltros();

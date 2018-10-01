@@ -38,7 +38,6 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
                     if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
                         this.plex.toast('danger', 'No se pueden agregar conceptos a esta sección', 'Acción no permitida');
                         this.suscriptionBuscador.unsubscribe();
-                        this.suscriptionSeccion.unsubscribe();
                         return false;
 
 
@@ -52,6 +51,7 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
                         //     this.suscriptionConcepto.unsubscribe();
                         // }
                     }
+                    this.suscriptionSeccion.unsubscribe();
                 });
             });
 
