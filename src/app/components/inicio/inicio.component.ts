@@ -13,6 +13,7 @@ export class InicioComponent implements AfterViewInit {
     public mpi = '';
     public rup = '';
     public internacion = '';
+    public internacionEpicrisis = '';
     public solicitudes = '';
     public prestamosHC = '';
     public denied = false;
@@ -49,6 +50,13 @@ export class InicioComponent implements AfterViewInit {
                 this.internacion = 'internacion';
                 this.denied = false;
             }
+
+            if (this.auth.getPermissions('internacion:inicio').length > 0) {
+                this.internacionEpicrisis = 'internacionEpicrisis';
+                this.denied = false;
+            }
+
+
 
             if (this.auth.getPermissions('solicitudes:?').length > 0) {
                 this.solicitudes = 'solicitudes';

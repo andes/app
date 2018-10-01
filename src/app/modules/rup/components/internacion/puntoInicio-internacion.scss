@@ -37,7 +37,7 @@ table {
         font-weight: bold;
     }
 
-    span {
+    .badge {
         font-size: 1rem;
         padding: 10px;
         margin: 10px;
@@ -136,7 +136,7 @@ hr {
     }
 }
 
-plex-layout-sidebar plex-box>DIV {
+plex-layout-sidebar > DIV {
 
 
     h3,
@@ -182,10 +182,7 @@ plex-layout-sidebar plex-box>DIV {
     }
 
     // Si hay tabla
-    .contenedor-tabla {
-        height: 35vh;
-        overflow-y: scroll;
-        overflow-x: hidden;
+    .contenedor-tabla { 
 
 
         table {

@@ -20,18 +20,6 @@ export class PuntoInicioInternacionComponent implements OnInit {
     public showInternacionEjecucion = false;
     public internacionEjecucion;
     public conceptosInternacion;
-    public informeIngreso = {
-        fechaIngreso: new Date(),
-        origen: null,
-        ocupacionHabitual: null,
-        situacionLaboral: null,
-        nivelInstruccion: null,
-        asociado: null,
-        obraSocial: null,
-        motivo: null,
-        organizacionOrigen: null,
-        profesional: null
-    };
 
     constructor(
         public servicioPrestacion: PrestacionesService,
@@ -107,17 +95,13 @@ export class PuntoInicioInternacionComponent implements OnInit {
         });
     }
 
-    html2text(html: string) {
-        return html.replace(/<[^>]*>/g, '');
-    }
-
     /**
      * Ruteo a epicris/huds
      * @param id
      * @param key
      */
     ruteo(id, key) {
-        this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/puntoInicio' });
+        this.servicioPrestacion.notificaRuta({ nombre: 'Punto inicio', ruta: 'internacion/inicio' });
         switch (key) {
             case 'huds':
                 this.router.navigate(['rup/vista/', id]);

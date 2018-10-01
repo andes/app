@@ -21,7 +21,7 @@
                     </td>
                     <td>
                         <span class="float-right">
-                            <plex-button label="VER DETALLE" (click)="onPacienteSelected(paciente)" type="info"></plex-button>
+                            <plex-button label="VER DETALLE" type="info"></plex-button>
                         </span>
                     </td>
                 </tr>
@@ -57,9 +57,8 @@
                             <h4 class="text-info">Lista de epicrisis</h4>
                         </div>
                         <div class="col-8 text-right inline">
-                            <plex-button class="d-inline" label="CREAR EPICRISIS" type="success" position="right"
-                                (click)="nuevaEpicrisis(pacienteSeleccionado)"></plex-button>
-                            <plex-button class="d-inline" label="VER HUDS" type="info" position="right" (click)="ruteo(pacienteSeleccionado.id, 'huds')"></plex-button>
+                            <plex-button class="d-inline" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">CREAR EPICRISIS</plex-button>
+                            <plex-button class="d-inline" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">VER HUDS</plex-button>
                         </div>
                     </div>
                 </ng-container>
@@ -75,7 +74,7 @@
                                 <td>
                                     <strong>Abstracto</strong>
                                 </td>
-                                <td>
+                                <td class="text-right">
                                     <strong>Acciones</strong>
                                 </td>
                             </tr>
@@ -98,11 +97,11 @@
                                     <td>
                                         <ng-container *ngIf="epicrisis.ejecucion.registros[0]?.registros">
                                             <span>
-                                                {{ html2text(epicrisis.ejecucion.registros[0].registros[0].valor) }}
+                                                {{ epicrisis.ejecucion.registros[0].registros[0].valor | html }}
                                             </span>
                                         </ng-container>
                                     </td>
-                                    <td>
+                                    <td class="text-right">
                                         <plex-button icon="mdi mdi-eye" title="Ver epicrisis" type="info" (click)="ruteo(epicrisis.id, 'epicrisis')"></plex-button>
                                     </td>
                                 </tr>
