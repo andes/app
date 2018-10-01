@@ -1,44 +1,17 @@
-import {
-    Plex
-} from '@andes/plex';
-import {
-    Component,
-    OnInit,
-    HostBinding,
-    Output,
-    EventEmitter
-} from '@angular/core';
-import {
-    FormBuilder,
-    FormGroup,
-    Validators,
-    FormsModule,
-    ReactiveFormsModule
-} from '@angular/forms';
-import {
-    IAudit
-} from '../../interfaces/auditoria/IAudit';
-import {} from './../../services/paciente.service';
+import { Plex } from '@andes/plex';
+import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
+import { IAudit } from '../../interfaces/auditoria/IAudit';
+import { } from './../../services/paciente.service';
 import * as moment from 'moment';
 // Services
-import {
-    PacienteService
-} from './../../services/paciente.service';
-import {
-    AgendaService
-} from './../../services/turnos/agenda.service';
-import {
-    AuditoriaService
-} from '../../services/auditoria/auditoria.service';
-import {
-    SisaService
-} from '../../services/fuentesAutenticas/servicioSisa.service';
-import {
-    SintysService
-} from '../../services/fuentesAutenticas/servicioSintys.service';
-import {
-    AnsesService
-} from '../../services/fuentesAutenticas/servicioAnses.service';
+import { PacienteService } from './../../services/paciente.service';
+import { AgendaService } from './../../services/turnos/agenda.service';
+import { AuditoriaService } from '../../services/auditoria/auditoria.service';
+import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
+import { AnsesService } from '../../services/fuentesAutenticas/servicioAnses.service';
+import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'auditoria',
@@ -67,10 +40,12 @@ export class AuditoriaComponent implements OnInit {
     pacVinculados = [];
     public panelIndex = 0;
     private datosFA: any;
-
+    pacientes: any;
+    pacienteActivo: any;
+    showCandidatos = false;
+    tipoListado = 'default';
 
     constructor(
-        private formBuilder: FormBuilder,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
         private servicioSisa: SisaService,
@@ -78,7 +53,7 @@ export class AuditoriaComponent implements OnInit {
         private servicioAnses: AnsesService,
         private agendaService: AgendaService,
         private plex: Plex
-    ) {}
+    ) { }
 
     // Cargamos todos los pacientes temporales y activos
     ngOnInit() {
@@ -109,9 +84,13 @@ export class AuditoriaComponent implements OnInit {
     }
 
     onSelect(paciente: any): void {
+        this.pacienteActivo = this.patient = paciente;
+        this.showCandidatos = false;
+        this.tipoListado = 'default';
+
         this.checkMpi = false;
         this.listaCandidatos = null;
-        if (paciente.id) {
+        if (paciente && paciente.id) {
             this.pacienteService.getById(paciente.id).subscribe(pac => {
                 this.pacienteSelected = pac;
                 if (!this.pacienteSelected.foto) {
@@ -157,9 +136,10 @@ export class AuditoriaComponent implements OnInit {
 
     verDuplicados() {
         this.showAuditoria2 = true;
+
     }
     ocultarAuditoria() {
-      this.showAuditoria = false;
+        this.showAuditoria = false;
     }
 
     async validar() {
@@ -185,10 +165,10 @@ export class AuditoriaComponent implements OnInit {
 
 
     operationLink(pacienteToFix, paciente) {
-      this.patientToFix = pacienteToFix;
-      this.patient = paciente;
-      this.verDuplicados();
-      this.ocultarAuditoria();
+        this.patientToFix = pacienteToFix;
+        this.patient = paciente;
+        this.verDuplicados();
+        this.ocultarAuditoria();
     }
 
     viewLinkedPatients(paciente) {
@@ -198,7 +178,7 @@ export class AuditoriaComponent implements OnInit {
         this.patientToFix = null;
     }
 
-    async validarMpi(pacienteSeleccionado) {
+    validarMpi(pacienteSeleccionado) {
         this.pacienteService.getPacientesValidados({
             tipoBusqueda: 'claveBlocking', // Usamos un texto para identificar el blocking
             claveBlocking: pacienteSeleccionado.claveBlocking,
@@ -213,11 +193,15 @@ export class AuditoriaComponent implements OnInit {
                 let data: any = resultado.filter(paciente => paciente.id !== pacienteSeleccionado.id);
                 let datos = [];
                 data.forEach(elem => {
-                  if (elem.paciente.activo) {
-                    datos.push(elem);
-                  };
+                    if (elem.paciente.activo) {
+                        datos.push(elem);
+                    };
                 });
                 this.listaCandidatos = datos;
+                if (this.listaCandidatos && this.listaCandidatos.length && this.listaCandidatos.length > 0) {
+                    this.showCandidatos = true;
+                    this.tipoListado = 'sm';
+                }
             }
         });
 
@@ -309,5 +293,22 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = true;
         this.onLoadData();
     }
+
+    searchStart() {
+        this.pacientes = null;
+    }
+
+    searchEnd(resultado: PacienteBuscarResultado) {
+        if (resultado.err) {
+            this.plex.info('danger', resultado.err);
+        } else {
+            this.pacientes = resultado.pacientes;
+        }
+    }
+
+    searchClear() {
+        this.pacientes = null;
+    }
+
 
 }
