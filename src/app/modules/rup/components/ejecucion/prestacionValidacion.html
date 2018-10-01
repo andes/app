@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row no-gutters menu-ordenamiento">
+            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="row no-gutters menu-ordenamiento">
                 <div class="col-1 mr-0 pr-0">
                     <small>Organizar</small>
                     <br>
@@ -218,7 +218,7 @@
                 </ng-container>
             </div>
 
-            <div class="relaciones col-3">
+            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
                     <header>

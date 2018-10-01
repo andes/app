@@ -1,5 +1,5 @@
 <ng-container *ngIf="!soloValores && elementoRUP.requeridos && elementoRUP.requeridos.length">
-    <div class="row align-items-center">
+    <div class="row align-items-center m-0 p-0">
         <div class="col-6">
             <form #form="ngForm">
                 <plex-select [(ngModel)]="registro.valor.unidadOrganizativa" name="servicio2" [data]="unidadesOrganizativas"
@@ -16,27 +16,24 @@
             <plex-panel [ngClass]="{'alerta-campo' : !cristinaVolve.isValid}" icon="arrow-down-drop-circle-outline"
                 (click)="accordionSeleccionado(i, item.concepto)" [active]="accordionActive === i || desplegarTodo"
                 class="hover">
-
-                <div plex-accordion-title>
+                <div plex-accordion-title class="d-flex justify-content-between">
                     <span class="contenedor-icono">
                         <i class="icon {{ item.params.icon }}"></i>
                     </span>
-
-                    <span class="titulo">
+                    <span class="titulo align-self-center mr-auto ml-2 text-bold">
                         {{ item.concepto.term }}
                     </span>
 
-                    <plex-button icon="mdi mdi-chevron-left" type="primary btn-sm float-right"></plex-button>
-
-                    <span *ngIf="!cristinaVolve.isValid" class="badge badge-danger float-right mr-4">
+                    <span *ngIf="!cristinaVolve.isValid" class="badge badge-danger mr-4 align-self-center">
                         Hay registros incompletos
                     </span>
-                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && cristinaVolve.isValid" class="badge badge-warning float-right mr-4">
+                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && cristinaVolve.isValid" class="badge badge-warning mr-4 align-self-center">
                         No hay conceptos registrados
                     </span>
-                    <span *ngIf="registro.registros[i].registros.length && cristinaVolve.isValid" class="badge badge-info float-right mr-4">
+                    <span *ngIf="registro.registros[i].registros.length && cristinaVolve.isValid" class="badge badge-info mr-4 align-self-center">
                         {{ registro.registros[i].registros.length }} Conceptos registrados
                     </span>
+                    <plex-button icon="chevron-left" type="primary btn-sm btn-collapse"></plex-button>
                 </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
                     [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()"
@@ -48,16 +45,24 @@
 </ng-container>
 
 <ng-container *ngIf="soloValores">
-    <strong> Unidad Organizativa de la epicrisis: </strong> <br> {{ registro.valor.unidadOrganizativa.term }}
+    <strong> Unidad Organizativa de la epicrisis: </strong> <br>
+    <span class="text-capitalize">
+        {{ registro.valor.unidadOrganizativa.term }}
+    </span>
     <br>
     <hr>
     <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-        <span class="titulo">
-            <strong> {{ item.params.titulo }}</strong>
-        </span>
-        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
-        </rup>
+
+        <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+            <span class="titulo">
+                <i class="icon {{ item.params.icon }}"></i>
+                <strong> {{ item.params.titulo }}</strong>
+            </span>
+
+            <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+            </rup>
+        </div>
         <hr>
     </ng-container>
 </ng-container>

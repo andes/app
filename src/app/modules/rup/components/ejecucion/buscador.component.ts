@@ -523,6 +523,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         let copiaConcepto = JSON.parse(JSON.stringify(concepto));
         let filtro;
         if (copiaConcepto.plan) {
+            this.servicioPrestacion.setEsSolicitud(true);
             delete copiaConcepto.plan;
             filtro = ['planes'];
         } else {
@@ -548,6 +549,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         // entonces sobreescribmos el filtro a emitir como ['planes']
         if (this.filtroActual === 'planes' || this.opcionDesplegada === 'planes') {
             filtro = ['planes'];
+            // Seteamos si el filtro es solicitud.
             this.servicioPrestacion.setEsSolicitud(true);
         }
         return filtro;
