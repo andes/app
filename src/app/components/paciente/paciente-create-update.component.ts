@@ -263,6 +263,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
             nombre: 'Neuquén'
         }).subscribe(Prov => {
             this.provinciaNeuquen = Prov[0];
+            // cargamos las localidades de la prov de neuquen.
+            this.loadLocalidades(Prov[0]);
         });
 
         this.localidadService.get({
@@ -487,17 +489,17 @@ export class PacienteCreateUpdateComponent implements OnInit {
      * Busca la localidad ingresada por parametro para setear el select. (Solo para neuquen)
      * @param {string} event : provincia obtenida de WS Renaper.
      */
-    async changeLocalidad(event) {
+    changeLocalidad(event) {
         let loc = null;
         this.viveEnNeuquen = (event === 'NEUQUEN');
 
         if (event.length) {
-            let localidadesNqn: any = await this.loadLocalidades(this.provinciaNeuquen); // localidades de la prov de neuquen
+            //  let localidadesNqn: any = this.loadLocalidades(this.provinciaNeuquen); // localidades de la prov de neuquen
 
             // Regex para matchear 'event' (nombre de localidad: string) con alguna localidad de la coleccion.
             let busqueda = new RegExp(event, 'ig');
             // Match entre 'event' y cada localidad de la coleccion (Una vez quitadas las tildes a los nombres).
-            loc = localidadesNqn.find(l => this.removerTilde(l.nombre).match(busqueda));
+            loc = this.localidadesNeuquen.find(l => this.removerTilde(l.nombre).match(busqueda));
         }
         this.pacienteModel.direccion[0].ubicacion.localidad = loc;
     }
