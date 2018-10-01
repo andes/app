@@ -7,6 +7,7 @@ import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'paciente-detalle',
@@ -36,10 +37,15 @@ export class PacienteDetalleComponent implements OnInit {
     deshabilitarValidar = false;
     inconsistenciaDatos = false;
     backUpDatos = [];
+    permisosRenaper = 'fa:get:renaper';
+    autorizadoRenaper = false;  // check si posee permisos
 
-    constructor(private renaperService: RenaperService, private plex: Plex) { }
+    constructor(public auth: Auth, private renaperService: RenaperService, private plex: Plex) { }
 
     ngOnInit() {
+        // Se chequea si el usuario posee permisos para validación por renaper
+        this.autorizadoRenaper = this.auth.check(this.permisosRenaper);
+
         this.backUpDatos['nombre'] = this.paciente.nombre;
         this.backUpDatos['apellido'] = this.paciente.apellido;
         this.backUpDatos['estado'] = this.paciente.estado;
