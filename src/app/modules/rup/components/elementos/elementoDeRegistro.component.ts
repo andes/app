@@ -68,7 +68,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
                         if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
                             this.suscriptionConcepto.unsubscribe();
                         } else {
-                            this.suscriptionConcepto.unsubscribe();
+                            delete this.suscriptionConcepto;
                         }
                     });
                     this.suscriptionBuscador.unsubscribe();
