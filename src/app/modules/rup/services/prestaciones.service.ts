@@ -697,7 +697,6 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-
         let planesCrear = undefined;
 
         if (planes.length) {
@@ -718,7 +717,7 @@ export class PrestacionesService {
 
                     // Controlemos que se trata de una prestación turneable.
                     // Solo creamos prestaciones pendiente para conceptos turneables (solicitudes)
-                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
+                    let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
                     if (existeConcepto) {
                         // creamos objeto de prestacion
                         let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
