@@ -17,7 +17,7 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
     public practicas: IPracticaMatch[] | IPractica[];
     public practicasActivas = [];
     public darTurnoEmit = new EventEmitter<any>();
-    @Output() busquedaFInal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
+    @Output() busquedaFinal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
 
     ngOnInit() {
         // Buscamos los tipos de prestación que sean turneables para los que el tenga permisos
@@ -95,9 +95,6 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
             this.servicioPractica.getMatch(query).subscribe(resultado => {
                 event.callback(resultado);
             });
-            // resultado => this.busquedaFInal.emit({ practicas: resultado, err: null }),
-            // (err) => this.busquedaFInal.emit({ practicas: [], err: err })
-            // );
         }
     }
 }

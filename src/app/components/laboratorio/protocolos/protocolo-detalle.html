@@ -149,7 +149,7 @@
                     <div class="row" *ngIf="(modo.id === 'recepcion') || modo.id === 'control'">
                         <div class="col-12">
                             <label>Practicas</label>
-                            <practica-buscar (busquedaInicial)="busquedaInicial()" (busquedaFInal)="busquedaFInal($event)" (searchClear)="searchClear()">
+                            <practica-buscar (busquedaInicial)="busquedaInicial()" (busquedaFinal)="busquedaFinal($event)" (searchClear)="searchClear()">
                             </practica-buscar>
                         </div>
                         <practica-listado *ngIf="practicas && practicas.length" [practicas]="practicas" [autoselect]="false" (selected)="seleccionarPractica($event)"></practica-listado>
@@ -209,10 +209,10 @@
                                                 </span>
                                             </td>
                                             <td>
-                                                {{practica.unidadMedida.term}}
+                                                {{practica.unidadMedida.nombre}}
                                             </td>
                                             <td>
-                                                {{practica.reactivos[0].valoresReferencia[0].valorMinimo}} - {{practica.reactivos[0].valoresReferencia[0].valorMaximo}}
+                                                {{practica.metodo.valoresReferencia.valorMinimo}} - {{practica.metodo.valoresReferencia.valorMaximo}}
                                             </td>
                                         </ng-container>
                                         <ng-container *ngIf='modo.id ==="validacion"'>

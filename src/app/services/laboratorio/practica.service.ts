@@ -7,7 +7,7 @@ import { IPracticaMatch } from '../../components/laboratorio/interfaces/IPractic
 
 @Injectable()
 export class PracticaService {
-    private practicaUrl = '/modules/laboratorio/practicas'; // URL API
+    private practicaUrl = '/modules/rup/laboratorio/practicas'; // URL API
     constructor(private server: Server) { }
 
 

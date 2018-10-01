@@ -4,7 +4,7 @@ import { Server } from '@andes/shared';
 
 @Injectable()
 export class ProtocoloService {
-    private laboratorioUrl = '/modules/laboratorio/'; // URL API
+    private laboratorioUrl = '/modules/rup/laboratorio/'; // URL API
     constructor(private server: Server) { }
 
     getNumeroProtocolo(idOrganizacion) {

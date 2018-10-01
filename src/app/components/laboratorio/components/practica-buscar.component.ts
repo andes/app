@@ -17,7 +17,7 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
 
     // Eventos
     @Output() busquedaInicial: EventEmitter<any> = new EventEmitter<any>();
-    @Output() busquedaFInal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
+    @Output() busquedaFinal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
     @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
 
@@ -57,8 +57,8 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
                 this.PracticaService.getMatch({
                     cadenaInput: textoLibre
                 }).subscribe(
-                    resultado => this.busquedaFInal.emit({ practicas: resultado, err: null }),
-                    (err) => this.busquedaFInal.emit({ practicas: [], err: err })
+                    resultado => this.busquedaFinal.emit({ practicas: resultado, err: null }),
+                    (err) => this.busquedaFinal.emit({ practicas: [], err: err })
                 );
             }, 200);
         } else {

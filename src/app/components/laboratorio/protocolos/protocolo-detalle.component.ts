@@ -5,7 +5,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { ProfesionalService } from '../../../services/profesional.service';
-import { TipoPrestacionService } from '../../../services/tipoPrestacion.service';
 import { ProtocoloService } from '../../../services/laboratorio/protocolo.service';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import * as enumerados from './../../../utils/enumerados';
@@ -14,7 +13,6 @@ import { IPracticaMatch } from '../interfaces/IPracticaMatch.inteface';
 import { PracticaBuscarResultado } from '../interfaces/PracticaBuscarResultado.inteface';
 import { IPractica } from '../../../interfaces/laboratorio/IPractica';
 import { Constantes } from '../consts';
-import { SnomedService } from '../../../services/term/snomed.service';
 
 @Component({
     selector: 'protocolo-detalle',
@@ -29,8 +27,6 @@ export class ProtocoloDetalleComponent
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
-    // estado: any;
-
     fecha: any;
     fechaTomaMuestra = new Date();
     prestacionOrigen: any;
@@ -45,6 +41,12 @@ export class ProtocoloDetalleComponent
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi = false;
+    public busqueda = {
+        dniPaciente: null,
+        nombrePaciente: null,
+        apellidoPaciente: null,
+    };
+
     showObservaciones = false;
 
     @Input() seleccionPaciente: any;
@@ -58,10 +60,7 @@ export class ProtocoloDetalleComponent
     set cargarProtocolo(value: any) {
         if (value) {
             this.modelo = value;
-            // this.modelo.solicitud.ambitoOrigen = {
-            //     nombre: this.modelo.solicitud.ambitoOrigen,
-            //     id: this.modelo.solicitud.ambitoOrigen,
-            // };
+            ;
             if (this.modo.id === 'recepcion') {
                 this.carparPracticasAEjecucion();
             }
@@ -83,7 +82,6 @@ export class ProtocoloDetalleComponent
         private servicioPrestacion: PrestacionesService,
         private servicioProtocolo: ProtocoloService,
         private servicioProfesional: ProfesionalService,
-        private servicioSnomed: SnomedService
     ) { }
 
     ngOnInit() {
@@ -94,7 +92,11 @@ export class ProtocoloDetalleComponent
             this.cargarResultadosAnteriores();
         }
     }
-
+    /**
+     * Setea al resultado de cada práctica un array con la lista de resultados anteriores registrados para el paciente de la práctica
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     cargarResultadosAnteriores() {
         this.modelo.ejecucion.registros[0].valor.forEach((practica) => {
             this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
@@ -103,6 +105,11 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    /**
+     * Actualiza las prácticas en ejecución con las prácticas registradas en la solicitud
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     carparPracticasAEjecucion() {
         if (this.modelo.ejecucion.registros.length === 0) {
             this.modelo.ejecucion.registros.push({
@@ -116,30 +123,47 @@ export class ProtocoloDetalleComponent
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
 
         let practicasCargar = practicasSolicitud.filter((practicaSolicitud) => {
-            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId === practicaSolicitud.conceptId) === -1;
+            return practicasEjecucion.findIndex(practicaEjecucion => practicaEjecucion.concepto.conceptId === practicaSolicitud.concepto.conceptId) === -1;
         });
 
         Array.prototype.push.apply(this.modelo.ejecucion.registros[0].valor, practicasCargar);
     }
 
+    /**
+     * Incluye una nueva práctica seleccionada tanto a la solicitud como a la ejecución
+     *
+     * @param {IPractica} practica
+     * @memberof ProtocoloDetalleComponent
+     */
     seleccionarPractica(practica: IPractica) {
-        let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.conceptId === practica.concepto.conceptId);
+        let existe = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
 
         if (existe === -1) {
-            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica.concepto);
+            // this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica.concepto);
+            this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas.push(practica);
             this.modelo.ejecucion.registros[0].valor.push(practica);
         } else {
             this.plex.alert('', 'Práctica ya ingresada');
         }
     }
 
-    eliminarPractica(practica: IPractica) {
+   /**
+ * Elimina una práctica seleccionada tanto de la solicitud como de la ejecución
+ *
+ * @param {IPractica} practica
+ * @memberof ProtocoloDetalleComponent
+ */ eliminarPractica(practica: IPractica) {
         let practicasSolicitud = this.modelo.solicitud.registros[0].valor.solicitudPrestacion.practicas;
         practicasSolicitud.splice(practicasSolicitud.findIndex(x => x.id === practica.id), 1);
         let practicasEjecucion = this.modelo.ejecucion.registros[0].valor;
         practicasEjecucion.splice(practicasEjecucion.findIndex(x => x.id === practica.id), 1);
     }
-
+    /**
+     * Asigna paciente al modelo, oculta componente de búsqueda de paciente y exhibe panel de datos de paciente
+     *
+     * @param {*} paciente
+     * @memberof ProtocoloDetalleComponent
+     */
     seleccionarPaciente(paciente: any): void {
         this.modelo.paciente = paciente;
         this.seleccionPaciente = false;
@@ -158,6 +182,12 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    /**
+     * Busca y carga lista de profesionales
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
     loadProfesionales($event) {
         let query = {
             nombreCompleto: $event.query
@@ -168,38 +198,58 @@ export class ProtocoloDetalleComponent
     }
 
 
-
+    /**
+     * Busca unidades organizativas de la organización
+     *
+     * @param {any} $event
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     loadServicios($event) {
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             $event.callback(organizacion.unidadesOrganizativas);
         });
     }
-
+    /**
+     * Busca prioridades
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
     loadPrioridad($event) {
         $event.callback(enumerados.getPrioridadesLab());
     }
-
+    /**
+     * Busca ambito de origen
+     *
+     * @param {any} $event
+     * @memberof ProtocoloDetalleComponent
+     */
     loadOrigen($event) {
         $event.callback(enumerados.getOrigenFiltroLab());
     }
-
+    /**
+     * Busca areas (laboratorios internos)
+     *
+     * @param {any} event
+     * @memberof ProtocoloDetalleComponent
+     */
     loadArea(event) {
         event.callback(enumerados.getLaboratorioInterno());
     }
 
 
-    public busqueda = {
-        dniPaciente: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
-    };
-
     estaSeleccionado(protocolo) {
         return false;
     }
-
+    /**
+     * Redirecciona a la pagina provista por parametro
+     *
+     * @param {string} pagina
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
     redirect(pagina: string) {
-        this.router.navigate(['./' + pagina]);
+        this.router.navigate(['./"${pagina}"']);
         return false;
     }
 
@@ -232,7 +282,7 @@ export class ProtocoloDetalleComponent
         this.practicas = null;
     }
 
-    busquedaFInal(resultado: PracticaBuscarResultado) {
+    busquedaFinal(resultado: PracticaBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
@@ -244,6 +294,11 @@ export class ProtocoloDetalleComponent
         this.pacienteActivo = paciente;
     }
 
+    /**
+     * Navega al próximo protocolo de la lista de trabajo
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     siguiente() {
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
             this.indexProtocolo++;
@@ -252,6 +307,11 @@ export class ProtocoloDetalleComponent
 
     }
 
+    /**
+  * Navega al protocolo anterior de la lista de trabajo
+  *
+  * @memberof ProtocoloDetalleComponent
+  */
     anterior() {
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
@@ -259,7 +319,11 @@ export class ProtocoloDetalleComponent
         }
 
     }
-
+    /**
+     * Muestra el componente de selección de paciente.
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     cambiarPaciente() {
         this.seleccionPaciente = true;
     }
@@ -285,11 +349,20 @@ export class ProtocoloDetalleComponent
             this.cargarResultadosAnteriores();
         }
     }
-
+    /**
+     * Retorna true si el último estado registrado es de validada, false si no.
+     *
+     * @returns
+     * @memberof ProtocoloDetalleComponent
+     */
     isProtocoloValidado() {
         return this.modelo.estados[this.modelo.estados.length - 1].tipo === 'validada';
     }
-
+    /**
+     * Agrega estado validado al protocolo en caso que todos los resultados del mismo se encuentren marcados como validados.
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     actualizarEstadoValidacion() {
         let protocoloValidado = this.modelo.ejecucion.registros[0].valor.every((practica) => {
             return practica.resultado.validado;
@@ -299,29 +372,52 @@ export class ProtocoloDetalleComponent
             this.modelo.estados.push(Constantes.estadoValidada);
         }
     }
-
+    /**
+     * Marca los resultados de todas las prácticas como validados
+     *
+     * @param {any} event
+     * @memberof ProtocoloDetalleComponent
+     */
     validarTodas(event) {
         this.modelo.ejecucion.registros[0].valor.forEach(practica => {
             practica.resultado.validado = event.value;
         });
     }
 
+    /**
+     * Destilda de checkbox 'marcar todas', cuando alguna práctica es desmarcada de la lista
+     *
+     * @param {any} event
+     * @memberof ProtocoloDetalleComponent
+     */
     clickValidar(event) {
         if (!event.value) {
             this.flagMarcarTodas = false;
         }
     }
+    /**
+     * Muestra panel de observación
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     verObservaciones() {
         this.showObservaciones = true;
     }
-
+    /**
+     * Oculta panel de observación
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     cerrarObservacion() {
         this.showObservaciones = false;
 
     }
-
+    /**
+     * Para solicitudes no ejecutas. Agrega estado en ejecución y asigna número de protocolo
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     iniciarProtocolo() {
-        this.modelo.estados = [{ tipo: 'ejecucion' }];
         let organizacionSolicitud = this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             this.modelo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
@@ -329,6 +425,11 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    /**
+     * Guarda la prestación en la base de datos
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     guardarProtocolo() {
         if (this.modelo.id) {
             let registros = JSON.parse(JSON.stringify(this.modelo.ejecucion.registros));
@@ -338,7 +439,11 @@ export class ProtocoloDetalleComponent
                 registros: registros
             };
 
-            if (this.modo.id === 'validacion' && this.isProtocoloValidado()) {
+            if (this.modelo.estados[this.modelo.estados.length - 1].tipo === 'pendiente') {
+                params.op = 'nuevoProtocoloLaboratorio';
+                params.estado = { tipo: 'ejecucion' };
+                params.solicitud = solicitud;
+            } else if (this.modo.id === 'validacion' && this.isProtocoloValidado()) {
                 params.op = 'estadoPush';
                 params.estado = Constantes.estadoValidada;
             } else {

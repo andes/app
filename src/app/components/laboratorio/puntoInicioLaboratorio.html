@@ -54,7 +54,7 @@
                 </plex-datetime>
             </div>
             <div class="col-2 labs-contenedor-secundario" *ngIf='modo && modo.id ==="recepcion"'>
-                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="pacienteSinTurno(activeTab)"></plex-button>
+                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="mostrarFomularioPacienteSinTurno(activeTab)"></plex-button>
             </div>
             <div class="col-2 labs-contenedor-secundario" *ngIf='modo && modo.id !=="recepcion"'>
                 <div class="contenedor-bloque-texto line-height mr-2">
@@ -89,7 +89,7 @@
             </div>
             <div *ngIf='modo && modo.id !=="recepcion"' class="col-3">
                 <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')" name="organizacion" label="Efector Solicitante"
-                    (getData)="loadOrganizacion($event)"></plex-select>
+                    (getData)="loadOrganizaciones($event)"></plex-select>
             </div>
             <div *ngIf='modo && modo.id ==="listado"' class="col-3">
                 <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado" [data]="estadosFiltroEnum"></plex-select>
@@ -100,7 +100,7 @@
         <!--SECCION PACIENTE-->
         <div class=" col-12">
             <label for="">Paciente</label>
-            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear($event)"></paciente-buscar>
+            <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)" (searchClear)="searchClearPaciente($event)"></paciente-buscar>
             <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
                 <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
                     (hover)="hoverPaciente($event)"></paciente-listado>

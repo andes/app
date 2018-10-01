@@ -1,7 +1,6 @@
 import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 import { Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
-// import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as enumerados from './../../utils/enumerados';
@@ -21,27 +20,20 @@ import { forEach } from '@angular/router/src/utils/collection';
 export class PuntoInicioLaboratorioComponent
 
     implements OnInit {
-    public prestaciones = [];
-    public prestacionesEntrada: any;
-    prestacionSeleccionada: any;
 
     public seleccionPaciente = false;
     public showListarProtocolos = true;
     public showProtocoloDetalle = false;
     public showCargarSolicitud = false;
-    public esPacienteSinTurno = false;
 
     public protocolos: any = [];
     public protocolo: any = {};
 
-    public fechaDesde: any = new Date();
-    public fechaHasta: any = new Date();
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
 
     public laboratorioInternoEnum: any;
-    public dniPaciente: any;
     public pacientes;
     public pacienteActivo;
     public cargaLaboratorioEnum;
@@ -54,11 +46,6 @@ export class PuntoInicioLaboratorioComponent
         id: 'control',
         nombre: 'Control'
     };
-    // public formaCarga = {
-    //     listProtocolo: false,
-    //     hTrabajo: false,
-    //     pAnalisis: false
-    // };
     public formaCarga = {
         id: 'Por lista de protocolos',
         nombre: 'Por lista de protocolos'
@@ -98,7 +85,6 @@ export class PuntoInicioLaboratorioComponent
 
     ngOnInit() {
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
-
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
@@ -108,7 +94,11 @@ export class PuntoInicioLaboratorioComponent
         this.refreshSelection();
 
     }
-
+    /**
+     * resetearProtocolo resetea el atributo protoloco con un esquema de prestación vacio
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     resetearProtocolo() {
         this.protocolo = {
             paciente: {},
@@ -136,7 +126,13 @@ export class PuntoInicioLaboratorioComponent
             }
         };
     }
-
+    /**
+     * Realiza la búsqueda de prestaciones según selección de filtros
+     *
+     * @param {any} [value]
+     * @param {any} [tipo]
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     refreshSelection(value?, tipo?) {
         this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
         this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
@@ -161,22 +157,6 @@ export class PuntoInicioLaboratorioComponent
         }
     };
 
-
-
-    getPrioridad(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.nombre === 'prioridad';
-        });
-        return registro ? registro.valor.solicitudPrestacion.prioridad : null;
-    }
-
-    getNumeroProtocolo(registros) {
-        let registro: any = registros.find((reg) => {
-            return reg.nombre === 'numeroProtocolo';
-        });
-        return registro ? registro.valor.numeroCompleto : null;
-    }
-
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
             this.protocolos = protocolos;
@@ -188,10 +168,17 @@ export class PuntoInicioLaboratorioComponent
         });
     }
 
-    estaSeleccionado(protocolo) {
-        return false;
-    }
+    // estaSeleccionado(protocolo) {
+    //     return false;
+    // }
 
+    /**
+     * verProtocolo oculta lista de protocolos y muestra el panel de detalle de protocolo, al ser cliqueado un protocolo de la lista
+     *
+     * @param {any} protocolo
+     * @param {any} index
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     verProtocolo(protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (protocolo) {
@@ -203,23 +190,37 @@ export class PuntoInicioLaboratorioComponent
             this.showCargarSolicitud = true;
         }
     }
-
+    /**
+     * volverLista oculta panel de detalle de protolo y muestra en su lugar panel de lista de protocolos
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     volverLista() {
         this.refreshSelection();
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
     }
-
+    /**
+     * Busca unidades organizativas de la organización
+     *
+     * @param {any} $event
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     loadServicios($event) {
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
             $event.callback(servicioEnum);
         });
-
     }
 
-    loadOrganizacion(event) {
+    /**
+     * Recupera lista de organizaciones
+     *
+     * @param {any} event
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    loadOrganizaciones(event) {
         if (event.query) {
             let query = {
                 nombre: event.query
@@ -230,26 +231,49 @@ export class PuntoInicioLaboratorioComponent
         }
     }
 
+    /**
+     * Devuelve lista de prioridades predefinidas para prestaciones de laboratorio
+     * @param {any} event
+     * @returns
+     * @memberof PuntoInicioLaboratorioComponent
+     */
 
     loadPrioridad(event) {
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();
     }
 
-    searchStart() {
+    /**
+     * Inicia la busqueda de pacientes
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+
+    searchStartPaciente() {
         this.pacientes = null;
         this.pacienteActivo = null;
         this.refreshSelection(null, '');
-
     }
-    searchClear() {
+
+    /**
+     * Limpia búsqueda de pacientes
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    searchClearPaciente() {
         this.pacientes = null;
         this.pacienteActivo = null;
 
         this.refreshSelection(null, '');
     }
 
-    searchEnd(resultado: any) {
+    /**
+     * Finaliza búsqueda de pacientes
+     *
+     * @param {*} resultado
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    searchEndPaciente(resultado: any) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
@@ -263,7 +287,12 @@ export class PuntoInicioLaboratorioComponent
         this.refreshSelection(null, '');
     }
 
-
+    /**
+     * Seleccionar paciente
+     *
+     * @param {*} paciente
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     seleccionarPaciente(paciente: any) {
         this.pacienteActivo = paciente;
         if (this.pacienteActivo) {
@@ -271,10 +300,14 @@ export class PuntoInicioLaboratorioComponent
         }
 
     }
-
+    /**
+     * Asigna paciente activo
+     *
+     * @param {*} paciente
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     hoverPaciente(paciente: any) {
         this.pacienteActivo = paciente;
-
     }
 
     changeCarga(tipo) {
@@ -311,42 +344,41 @@ export class PuntoInicioLaboratorioComponent
 
     }
 
-    turnosLaboratorio() {
-        let busqueda = {
-            fechaDesde: this.busqueda.solicitudDesde,
-            fechaHasta: this.busqueda.solicitudHasta,
-            pacienteDni: null,
-            protocoloIniciado: false
-        };
-        if (this.pacienteActivo) {
-            busqueda.pacienteDni = this.pacienteActivo.documento;
-        }
-        // this.turnoService.getTurnosLabo(busqueda).subscribe(c => { this.turnosRecepcion = c; });
-        this.servicioPrestaciones.getPrestacionesLaboratorio(busqueda).subscribe(turnos => {
-            this.turnosRecepcion = turnos;
-        });
-    }
-
-    formularioSolicitud() {
-        this.seleccionPaciente = false;
-        this.showListarProtocolos = false;
-        this.showProtocoloDetalle = true;
-        this.showCargarSolicitud = true;
-    }
-
-    pacienteSinTurno() {
+    /**
+     * Cambia configuración de paneles para modo recepción paciente sin turno
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    mostrarFomularioPacienteSinTurno() {
         this.resetearProtocolo();
         this.seleccionPaciente = true;
         this.showProtocoloDetalle = false;
         this.showListarProtocolos = false;
         this.showCargarSolicitud = true;
     }
-
+    /**
+     * Guarda en el local storage del browser la selección de filtros de búsqueda para futuras búsquedas
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     recordarFiltros() {
         let filtrosPorDefecto = {
             busqueda: this.busqueda,
             profesional: this.auth.profesional._id
         };
+
+        //     let filtros = JSON.parse(localStorage.getItem('filtros'));
+        //     console.log(filtros);
+        //     if (!filtros) {
+        //         filtros = [filtrosPorDefecto];
+        //     } else {
+        //         let existe = filtros.findIndex(x => x.profesional === filtrosPorDefecto.profesional);
+        //         console.log(existe);
+        //         if (existe === -1) {
+        //             filtros.push(filtrosPorDefecto);
+        //         }
+        //     }
+
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
     }
@@ -373,30 +405,6 @@ export class PuntoInicioLaboratorioComponent
     // }
 
 
-
-
-
-    // recordarFiltros() {
-    //     let filtrosPorDefecto = {
-    //         busqueda: this.busqueda,
-    //         profesional: this.auth.profesional._id
-    //     };
-    //     let filtros = JSON.parse(localStorage.getItem('filtros'));
-    //     console.log(filtros);
-    //     if (!filtros) {
-    //         filtros = [filtrosPorDefecto];
-    //     } else {
-    //         let existe = filtros.findIndex(x => x.profesional === filtrosPorDefecto.profesional);
-    //         console.log(existe);
-    //         if (existe === -1) {
-    //             filtros.push(filtrosPorDefecto);
-    //         }
-
-    //     }
-
-
-    //     localStorage.setItem('filtros', JSON.stringify(filtros));
-    // }
 }
 
 
