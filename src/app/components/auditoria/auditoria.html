@@ -87,29 +87,33 @@
                             </tr>
                         </tbody>
                     </table>
-                    <plex-button label="Cancelar" type="danger" (click)="cancelarValidacionPadron()"></plex-button>
                 </plex-box>
             </div>
             <div class="col-3" *ngIf="showDetallePaciente">
                 <plex-box>
                     <paciente-panel [paciente]="pacienteSelected"> </paciente-panel>
-                    <br>
-                    <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
-                        icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
-                    <plex-button *ngIf="enableFA" label="Validar fuentes auténticas" icon="account-convert" type="primary"
-                        (click)="validar()"></plex-button>
-                    <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
-                        (click)="verDuplicados()"></plex-button>
-                    <plex-button *ngIf="enableVinculados" label="Pacientes vincualdos" icon="account-multiple-plus"
-                        type="primary" (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
-                    <br>
 
-                    <div *ngIf="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi">
-                        <i class="mdi mdi-account-alert"></i> No se han encontrado pacientes candidatos en MPI
-                    </div>
                 </plex-box>
             </div>
         </div>
     </section>
+    <footer *ngIf="showAuditoria">
+        <div class="row">
+            <div class="col text-left">
+                <plex-button *ngIf="showCandidatos" label="Cancelar" type="danger" (click)="cancelarValidacionPadron()"></plex-button>
+            </div>
+            <div class="col text-right">
+                <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
+                    icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
+                <plex-button *ngIf="enableFA" label="Validar fuentes auténticas" icon="account-convert" type="primary"
+                    (click)="validar('renaper')"></plex-button>
+                <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
+                    (click)="verDuplicados()"></plex-button>
+                <plex-button *ngIf="enableVinculados" label="Pacientes vincualdos" icon="account-multiple-plus" type="primary"
+                    (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
+            </div>
+        </div>
+
+    </footer>
     <auditoria2 *ngIf="showAuditoria2" [origin]=patientToFix [destiny]=patient (data)='afterAuditoria($event)'></auditoria2>
 </form>

@@ -8,6 +8,7 @@ import { PacienteService } from './../../services/paciente.service';
 import { AgendaService } from './../../services/turnos/agenda.service';
 import { AuditoriaService } from '../../services/auditoria/auditoria.service';
 import { SisaService } from '../../services/fuentesAutenticas/servicioSisa.service';
+import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
 import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.service';
 import { AnsesService } from '../../services/fuentesAutenticas/servicioAnses.service';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
@@ -27,7 +28,7 @@ export class AuditoriaComponent implements OnInit {
 
     enableDuplicados: boolean;
     enableValidar: boolean;
-    enableFA = true;
+    enableFA = false;
     enableValidarMpi: boolean;
     pacienteSelected: any;
     listaCandidatos: any[];
@@ -50,6 +51,7 @@ export class AuditoriaComponent implements OnInit {
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
         private servicioSisa: SisaService,
+        private servicioRenaper: RenaperService,
         private servicioSintys: SintysService,
         private servicioAnses: AnsesService,
         private agendaService: AgendaService,
@@ -103,7 +105,9 @@ export class AuditoriaComponent implements OnInit {
                     this.enableValidarMpi = true;
                     this.enableValidar = false;
                     this.enableDuplicados = false;
+                    this.enableFA = false;
                 } else {
+                    this.enableFA = true;
                     this.enableValidarMpi = false;
                     this.enableValidar = false;
                     this.enableDuplicados = true;
@@ -143,28 +147,26 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = false;
     }
 
-    async validar() {
+    async validar(fuenteAutentica) {
         this.plex.showLoader();
-        // if (this.pacienteSelected.entidadesValidadoras.indexOf('sisa') < 0 && this.pacienteSelected.estado !== 'validado') {
-        //     await this.checkSisa();
-        // }
-        // if (this.pacienteSelected.entidadesValidadoras.indexOf('sisa') < 0 && this.pacienteSelected.estado !== 'validado') {
-        //     await this.checkSisa();
-        // }
-        // if (this.pacienteSelected.entidadesValidadoras.indexOf('anses') < 0 && this.pacienteSelected.estado !== 'validado') {
-        //     await this.checkAnses();
-        // }
-        // if (this.pacienteSelected.entidadesValidadoras.indexOf('sintys') < 0 && this.pacienteSelected.estado !== 'validado') {
-        //     await this.checkSintys();
-        // }
-        await this.checkSintys();
+        if (this.pacienteSelected.entidadesValidadoras.indexOf('sisa') < 0 && fuenteAutentica === 'sisa') {
+            this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
+                this.verificarDatosFA(res, 'sisa');
+                this.plex.hideLoader();
+            });
+        }
+        if (this.pacienteSelected.entidadesValidadoras.indexOf('renaper') < 0 && fuenteAutentica === 'renaper') {
+            this.servicioRenaper.get(this.pacienteSelected).subscribe(res => {
+                this.verificarDatosFA(res, 'renaper');
+                this.plex.hideLoader();
+            });
+        }
         if (this.pacienteSelected.estado !== 'validado') {
             if (this.datosFA && this.datosFA.matcheos && this.datosFA.matcheos.matcheo < 90) {
                 this.checkPrestaciones();
             } else {
                 this.rechazarValidacion();
             }
-            this.plex.hideLoader();
         }
     }
 
@@ -205,8 +207,9 @@ export class AuditoriaComponent implements OnInit {
                     this.showCandidatos = true;
                 } else {
                     this.showCandidatos = false;
-                    this.enableFA = true;
+                    this.plex.alert('No se han encontrado pacientes candidatos en MPI', 'Información');
                 }
+                this.enableFA = true;
             }
         });
 
@@ -216,29 +219,7 @@ export class AuditoriaComponent implements OnInit {
         this.showCandidatos = false;
         this.tipoListado = 'default';
     }
-    checkSisa() {
-        return new Promise((resolve) => {
-            this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
-                resolve(this.verificarDatosFA(res, 'sisa'));
-            });
-        });
-    }
 
-    checkAnses() {
-        return new Promise((resolve) => {
-            this.servicioAnses.get(this.pacienteSelected).subscribe(res => {
-                resolve(this.verificarDatosFA(res, 'anses'));
-            });
-        });
-    }
-
-    checkSintys() {
-        return new Promise((resolve) => {
-            this.servicioSintys.get(this.pacienteSelected).subscribe(res => {
-                resolve(this.verificarDatosFA(res, 'sintys'));
-            });
-        });
-    }
 
     checkPrestaciones() {
         this.agendaService.find(this.pacienteSelected.id).subscribe(data => {
@@ -286,6 +267,10 @@ export class AuditoriaComponent implements OnInit {
     validarPaciente(fa) {
         // No corregir el nombre con sintys ni anses porque
         // no tiene separado el nombre y el apellido
+        if (fa === 'renaper') {
+            this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
+            this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
+        }
         if (fa === 'sisa') {
             this.pacienteSelected.nombre = this.datosFA.matcheos.datosPaciente.nombre;
             this.pacienteSelected.apellido = this.datosFA.matcheos.datosPaciente.apellido;
