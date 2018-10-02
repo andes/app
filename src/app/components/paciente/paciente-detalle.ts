@@ -4,7 +4,7 @@ import { PacienteService } from './../../services/paciente.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 
 @Component({
     selector: 'paciente-detalle',
