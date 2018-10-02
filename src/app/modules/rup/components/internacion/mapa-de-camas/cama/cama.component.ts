@@ -9,6 +9,7 @@ import { OrganizacionService } from '../../../../../../services/organizacion.ser
 import { PrestacionesService } from '../../../../services/prestaciones.service';
 import { ICamaEstado } from '../../../../interfaces/ICamaEstado';
 import { InternacionService } from '../../../../services/internacion.service';
+import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
 
 @Component({
     selector: 'app-cama',
@@ -19,10 +20,12 @@ import { InternacionService } from '../../../../services/internacion.service';
 export class CamaComponent implements OnInit {
 
     @Input() cama: any;
+
     @Input() prestacion: any;
     // Lo usamos para pasar el id de la organizacion y la fecha del mapa de camas que tenemos en la vista.
     @Input() params: any;
     @Input() readOnly: boolean;
+    @Input() showEstados: boolean;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
     @Output() buscarPaciente: EventEmitter<any> = new EventEmitter<any>();
     @Output() camaSelected: EventEmitter<any> = new EventEmitter<any>();
@@ -47,8 +50,6 @@ export class CamaComponent implements OnInit {
     public opcionDesocupar = null;
     public listadoCamas = [];
     public listaUnidadesOrganizativas = [];
-
-
 
     // Al desocupar la cama mostrar los radio para que seleccionen la subOperacion al desocupar
     // 1) Movimiento de cama
@@ -364,4 +365,6 @@ export class CamaComponent implements OnInit {
     comprobarWorkflow() {
         return this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id);
     }
+
+
 }

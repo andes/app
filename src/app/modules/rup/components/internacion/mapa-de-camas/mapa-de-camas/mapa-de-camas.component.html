@@ -106,8 +106,9 @@
                     <div id="mapaCamas" class="row" *ngIf="!loader && camas">
                         <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                             *ngFor="let cama of camas; let i = index">
-                            <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
-                                (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
+                            <app-cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode" [readOnly]="historicoMode"
+                                [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}" (evtCama)="updateCama($event)"
+                                (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
                                 (verInternacionEmit)="verInternacion($event)"></app-cama>
                         </div>
                     </div>

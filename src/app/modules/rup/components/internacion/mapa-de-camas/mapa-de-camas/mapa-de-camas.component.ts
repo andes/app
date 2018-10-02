@@ -37,13 +37,14 @@ export class MapaDeCamasComponent implements OnInit {
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
-
+    public hoy = new Date;
     public fechaDesde = new Date;
 
     public fechaHasta = new Date;
     public loader = true;
     public showMenu = true;
     public historicoMode = false;
+    public estadosMode = true;
     public filtroActive;
     public cantidadXEstado;
     public inactive = false;
@@ -65,6 +66,8 @@ export class MapaDeCamasComponent implements OnInit {
     public camaInternacion;
     public loadCountFiltros = false;
     public editarIngreso;
+
+    public showEstados = true;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -330,6 +333,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.historicoMode = false;
             this.fecha = new Date();
         }
+        this.showEstadosMet();
         this.refresh();
     }
 
@@ -551,5 +555,11 @@ export class MapaDeCamasComponent implements OnInit {
         this.historial = [];
     }
 
-
-}
+    showEstadosMet() {
+        if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
+            this.estadosMode = false;
+        }
+        else {
+            this.estadosMode = true;
+        }
+    }
