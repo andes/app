@@ -4,6 +4,8 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
+// import { RxSocket } from 'rx-socket.io-client';
+
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -82,7 +84,7 @@ export class AppComponent {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
-        // Inicializa el menu
+        // Inicializa el menú
         this.checkPermissions();
 
         // Inicializa la vista
