@@ -558,8 +558,7 @@ export class MapaDeCamasComponent implements OnInit {
     showEstadosMet() {
         if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
             this.estadosMode = false;
-        }
-        else {
+        } else {
             this.estadosMode = true;
         }
     }

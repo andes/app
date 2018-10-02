@@ -39,7 +39,6 @@ export class CamasService {
             fechaHasta: fechaHasta,
             idCama: idCama
         };
-        console.log(params);
         return this.server.get(this.camasUrl + '/historial', { params: params });
     }
 
