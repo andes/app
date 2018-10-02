@@ -17,31 +17,33 @@
                     <div class="row ">
                         <div class="col">
                             <plex-select (change)="selecOrganizacionDestino() " label="Tipo de egreso" [(ngModel)]="registro.valor.InformeEgreso.tipoEgreso"
-                                name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... " [required]="true">
+                                name="InformeEgreso.tipoEgreso " [data]="listaTipoEgreso" placeholder="Seleccione... "
+                                [required]="true">
                             </plex-select>
                         </div>
                     </div>
                     <div class="row ">
                         <div class="col ">
-                            <plex-select *ngIf="listaUnidadesOrganizativas?.length> 0" label="Unidad organizativa de destino" [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino"
-                                name="InformeEgreso.UnidadOrganizativaDestino" [data]="listaUnidadesOrganizativas" placeholder="Seleccione..."
-                                required>
+                            <plex-select *ngIf="listaUnidadesOrganizativas?.length> 0" label="Unidad organizativa de destino"
+                                [(ngModel)]="registro.valor.InformeEgreso.UnidadOrganizativaDestino" name="InformeEgreso.UnidadOrganizativaDestino"
+                                [data]="listaUnidadesOrganizativas" placeholder="Seleccione..." required>
                             </plex-select>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col">
-                            <plex-select (change)="showProcedimientos_causas()" label="Diagnostico Principal al egreso" [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal"
-                                name="diagnosticoPrincipal" (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre"
-                                required>
+                            <plex-select (change)="showProcedimientos_causas()" label="Diagnostico Principal al egreso"
+                                [(ngModel)]="registro.valor.InformeEgreso.diagnosticoPrincipal" name="diagnosticoPrincipal"
+                                (getData)="codigoCIE10($event)" placeholder="buscar..." labelField="nombre" required>
                             </plex-select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col">
-                            <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos" name="otrosDiagnosticos"
-                                (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..." labelField="nombre">
+                            <plex-select label="Otros Diagnósticos" [(ngModel)]="registro.valor.InformeEgreso.otrosDiagnosticos"
+                                name="otrosDiagnosticos" (getData)="codigoCIE10($event)" [multiple]="true" placeholder="buscar..."
+                                labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
@@ -49,12 +51,14 @@
                         <div class="row" *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
 
                             <div class="col-6">
-                                <plex-select label="Procedimientos Quirúrgicos y Obstetricos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
-                                    [data]="listaProcedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
+                                <plex-select label="Procedimientos Quirúrgicos y Obstetricos" [(ngModel)]="procedimiento.procedimientosQuirurgicos"
+                                    name="InformeEgreso.procedimientoQuirurgico" [data]="listaProcedimientosQuirurgicos"
+                                    placeholder="Seleccione..." labelField="nombre">
                                 </plex-select>
                             </div>
                             <div class="col-5">
-                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha del procedimiento" type="date" [(ngModel)]="procedimiento.fecha">
+                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha del procedimiento"
+                                    type="date" [(ngModel)]="procedimiento.fecha">
                                 </plex-datetime>
                             </div>
                             <div class="col-1 pt-1">
@@ -72,34 +76,36 @@
                     </div>
                     <div class="row">
                         <div class="col-6">
-                            <plex-int name="diasDeEstada" label="Días de estada por otras circunstancias" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias"
-                                placeholder=""></plex-int>
+                            <plex-int name="diasDeEstada" label="Días de estada por otras circunstancias" suffix="Días"
+                                [(ngModel)]="registro.valor.InformeEgreso.diasEstadaOtrasCircunstancias" placeholder=""></plex-int>
                         </div>
                         <div class="col-6">
                             <label></label>
-                            <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días" [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida"
-                                placeholder=""></plex-int>
+                            <plex-int name="diasDePermisoDeSalida" label="Días de permiso de salida" suffix="Días"
+                                [(ngModel)]="registro.valor.InformeEgreso.diasDePermisoDeSalida" placeholder=""></plex-int>
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
                     <div *ngIf="ExisteCausaExterna" class="row">
                         <div class="col">
-                            <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
-                                [data]="causaExterna.producidaPor" placeholder="Seleccione..." labelField="nombre">
+                            <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor"
+                                name="producidaPor" [data]="causaExterna.producidaPor" placeholder="Seleccione..."
+                                labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
                     <div *ngIf="ExisteCausaExterna" class="row">
                         <div class="col">
-                            <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar" name="lugar" [data]="causaExterna.lugar"
-                                placeholder="Seleccione..." labelField="nombre">
+                            <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar"
+                                name="lugar" [data]="causaExterna.lugar" placeholder="Seleccione..." labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
                     <div *ngIf="ExisteCausaExterna" class="row">
                         <div class="col">
-                            <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
-                                (getData)="searchComoSeProdujo($event)" placeholder="Buscar..." labelField="nombre">
+                            <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo"
+                                name="comoSeProdujo" (getData)="searchComoSeProdujo($event)" placeholder="Buscar..."
+                                labelField="nombre">
                             </plex-select>
                         </div>
                     </div>
@@ -108,16 +114,17 @@
                     <div *ngIf="procedimientosObstetricos">
                         <div class="row">
                             <div class="col-4">
-                                <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date" [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo"
-                                    required>
+                                <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date"
+                                    [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo" required>
                                 </plex-datetime>
                             </div>
                             <div class="col-4">
-                                <plex-int name="edadGestacional" label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional" placeholder=""
-                                    required></plex-int>
+                                <plex-int name="edadGestacional" label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional"
+                                    placeholder="" required></plex-int>
                             </div>
                             <div class="col-4">
-                                <plex-int name="paridad" label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad" placeholder="" required></plex-int>
+                                <plex-int name="paridad" label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad"
+                                    placeholder="" required></plex-int>
                             </div>
                         </div>
                         <div class="row">
@@ -141,20 +148,21 @@
                         <ng-container *ngFor=" let nacimiento of registro.valor.InformeEgreso.nacimientos; let i = index ">
                             <div class="row">
                                 <div class="col-6">
-                                    <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer" [(ngModel)]="nacimiento.pesoAlNacer" placeholder="" required></plex-int>
+                                    <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer" [(ngModel)]="nacimiento.pesoAlNacer"
+                                        placeholder="" required></plex-int>
                                 </div>
 
                                 <div class="col-6">
                                     <label>Condición al nacer</label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="NacVivo" [(ngModel)]="nacimiento.condicionAlNacer"
-                                            type="radio">
+                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="NacVivo"
+                                            [(ngModel)]="nacimiento.condicionAlNacer" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Nac. vivo</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="defFetal" [(ngModel)]="nacimiento.condicionAlNacer"
-                                            type="radio">
+                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="defFetal"
+                                            [(ngModel)]="nacimiento.condicionAlNacer" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Def. fetal</span>
                                     </label>
@@ -165,12 +173,14 @@
                                 <div class="col-6">
                                     <label>Terminación</label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Simple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Simple"
+                                            [(ngModel)]="nacimiento.terminacion" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Vaginal</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Multiple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Multiple"
+                                            [(ngModel)]="nacimiento.terminacion" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Cesária</span>
                                     </label>
@@ -178,17 +188,20 @@
                                 <div class="col-5">
                                     <label>Sexo</label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Masculino" [(ngModel)]="nacimiento.sexo" type="radio">
+                                        <input class="custom-control-input" name="sexo-{{i}}" value="Masculino"
+                                            [(ngModel)]="nacimiento.sexo" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Masculino</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Femenino" [(ngModel)]="nacimiento.sexo" type="radio">
+                                        <input class="custom-control-input" name="sexo-{{i}}" value="Femenino"
+                                            [(ngModel)]="nacimiento.sexo" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Femenino</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Indeterminado" [(ngModel)]="nacimiento.sexo" type="radio">
+                                        <input class="custom-control-input" name="sexo-{{i}}" value="Indeterminado"
+                                            [(ngModel)]="nacimiento.sexo" type="radio">
                                         <span class="custom-control-indicator"></span>
                                         <span class="custom-control-description"> Indeterminado</span>
                                     </label>
@@ -198,14 +211,16 @@
                                 </div>
                             </div>
                         </ng-container>
-                        <plex-button *ngIf="registro.valor.InformeEgreso.tipoParto == 'Multiple'" label="Agregar" type="primary btn-sm" icon="" (click)="addNacimiento()"></plex-button>
+                        <plex-button *ngIf="registro.valor.InformeEgreso.tipoParto == 'Multiple'" label="Agregar" type="primary btn-sm"
+                            icon="" (click)="addNacimiento()"></plex-button>
                     </div>
                 </ng-container>
                 <!-- Footer -->
                 <footer class="andes-contenedor-botones horizontal between">
                     <plex-button *ngIf="botonera?.cerrar" class="float-left " type="danger " label="Cerrar" (click)="cancelar() "></plex-button>
-                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) "
-                        type="success " validateForm="true " class="float-right "></plex-button>
+                    <plex-button *ngIf="prestacion && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' "
+                        label="Guardar" (click)="guardarPrestacion(formEgreso.form.valid) " type="success "
+                        validateForm="true " class="float-right "></plex-button>
                     <!-- <plex-button *ngIf="prestacion  && prestacion.estados[prestacion.estados.length - 1].tipo !='validada' " label="Validar Internación "
                         (click)="validar() " type="success " class="float-right "></plex-button> -->
 
@@ -235,7 +250,8 @@
     <div class="andes-contenedor-secundario horizontal between" *ngIf="registro.valor.InformeEgreso.diagnosticoPrincipal">
         <div class="andes-contenedor-secundario vertical">
             <b>Diagnostico Principal al egreso</b>
-            <p>{{registro.valor.InformeEgreso.diagnosticoPrincipal.codigo}} - {{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}</p>
+            <p>{{registro.valor.InformeEgreso.diagnosticoPrincipal.codigo}} -
+                {{registro.valor.InformeEgreso.diagnosticoPrincipal.nombre}}</p>
         </div>
     </div>
     <!-- Causa externa -->
@@ -271,7 +287,7 @@
             <ul class="list-unstyled">
                 <li class="" *ngFor="let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos">
                     <p *ngIf="procedimiento.procedimiento">{{ procedimiento.procedimiento.nombre}}</p>
-                    <p *ngIf="procedimiento.fecha"> | {{procedimiento.fecha | date}}</p>
+                    <p *ngIf="procedimiento.fecha"> | {{procedimiento.fecha | fecha}}</p>
                 </li>
             </ul>
         </div>
@@ -281,7 +297,7 @@
     <div class="andes-contenedor-secundario horizontal between">
         <div class="andes-contenedor-secundario vertical" *ngIf="registro.valor.InformeEgreso.terminacionEmbarazo">
             <b>Fecha terminación</b>
-            <p>{{registro.valor.InformeEgreso.terminacionEmbarazo | date}}</p>
+            <p>{{registro.valor.InformeEgreso.terminacionEmbarazo | fecha}}</p>
         </div>
         <div class="andes-contenedor-secundario vertical" *ngIf="registro.valor.InformeEgreso.edadGestacional">
             <b>Edad gestacional</b>
