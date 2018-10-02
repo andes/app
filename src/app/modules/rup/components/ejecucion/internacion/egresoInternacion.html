@@ -48,24 +48,7 @@
                             </plex-select>
                         </div>
                     </div>
-                    <ng-container *ngIf="listaProcedimientosQuirurgicos && listaProcedimientosQuirurgicos.length > 0">
-                        <div class="row" *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
 
-                            <div class="col-6">
-                                <plex-select label="Procedimientos Quirúrgicos y Obstetricos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
-                                    [data]="listaProcedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
-                                </plex-select>
-                            </div>
-                            <div class="col-5">
-                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha del procedimiento" type="date" [(ngModel)]="procedimiento.fecha">
-                                </plex-datetime>
-                            </div>
-                            <div class="col-1 pt-1">
-                                <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeProcedimiento(i)"></plex-button>
-                            </div>
-                        </div>
-                        <plex-button label="Agregar" type="primary btn-sm" icon="" (click)="addProcedimientoQuirurgico()"></plex-button>
-                    </ng-container>
                     <div class="row">
                         <div class="col-12">
                             <plex-select label="Otras circunstancias" [(ngModel)]="registro.valor.InformeEgreso.otrasCircunstancias" name="otrasCircunstancias"
@@ -85,124 +68,149 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <div *ngIf="ExisteCausaExterna" class="row">
-                        <div class="col">
-                            <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
-                                [data]="causaExterna.producidaPor" placeholder="Seleccione..." labelField="nombre">
-                            </plex-select>
-                        </div>
-                    </div>
-                    <div *ngIf="ExisteCausaExterna" class="row">
-                        <div class="col">
-                            <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar" name="lugar" [data]="causaExterna.lugar"
-                                placeholder="Seleccione..." labelField="nombre">
-                            </plex-select>
-                        </div>
-                    </div>
-                    <div *ngIf="ExisteCausaExterna" class="row">
-                        <div class="col">
-                            <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
-                                (getData)="searchComoSeProdujo($event)" placeholder="Buscar..." labelField="nombre">
-                            </plex-select>
-                        </div>
-                    </div>
 
+                    <fieldset *ngIf="ExisteCausaExterna">
+                        <legend>Causa Externa</legend>
+                        <div *ngIf="ExisteCausaExterna" class="row">
+                            <div class="col">
+                                <plex-select label="Producido por:" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.producidaPor" name="producidaPor"
+                                    [data]="causaExterna.producidaPor" placeholder="Seleccione..." labelField="nombre" [required]="ExisteCausaExterna">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div *ngIf="ExisteCausaExterna" class="row">
+                            <div class="col">
+                                <plex-select label="Lugar donde ocurrio" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.lugar" name="lugar" [data]="causaExterna.lugar"
+                                    placeholder="Seleccione..." [required]="ExisteCausaExterna" labelField="nombre">
+                                </plex-select>
+                            </div>
+                        </div>
+                        <div *ngIf="ExisteCausaExterna" class="row">
+                            <div class="col">
+                                <plex-select label="Como se produjo" [(ngModel)]="registro.valor.InformeEgreso.causaExterna.comoSeProdujo" name="comoSeProdujo"
+                                    (getData)="searchComoSeProdujo($event)" [required]="ExisteCausaExterna" placeholder="Buscar..."
+                                    labelField="nombre">
+                                </plex-select>
+                            </div>
+                        </div>
+                    </fieldset>
                     <div class="row">&nbsp;</div>
-                    <div *ngIf="procedimientosObstetricos">
-                        <div class="row">
-                            <div class="col-4">
-                                <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date" [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo"
-                                    required>
+                    <ng-container *ngIf="listaProcedimientosQuirurgicos && listaProcedimientosQuirurgicos.length > 0">
+                        <div class="row" *ngFor=" let procedimiento of registro.valor.InformeEgreso.procedimientosQuirurgicos; let i = index ">
+                            <div class="col-6">
+                                <plex-select label="Procedimientos Quirúrgicos y Obstetricos" [(ngModel)]="procedimiento.procedimientosQuirurgicos" name="InformeEgreso.procedimientoQuirurgico"
+                                    [data]="listaProcedimientosQuirurgicos" placeholder="Seleccione..." labelField="nombre">
+                                </plex-select>
+                            </div>
+                            <div class="col-5">
+                                <plex-datetime name="fecha-procedimientoQuirurgico" label="Fecha del procedimiento" type="date" [(ngModel)]="procedimiento.fecha">
                                 </plex-datetime>
                             </div>
-                            <div class="col-4">
-                                <plex-int name="edadGestacional" label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional" placeholder=""
-                                    required></plex-int>
-                            </div>
-                            <div class="col-4">
-                                <plex-int name="paridad" label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad" placeholder="" required></plex-int>
+                            <div class="col-1 pt-1">
+                                <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeProcedimiento(i)"></plex-button>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <label>Tipo de parto</label>
-                                <label class="custom-control custom-radio">
-                                    <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                                        type="radio">
-                                    <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description"> Simple</span>
-                                </label>
-                                <label class="custom-control custom-radio">
-                                    <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
-                                        type="radio">
-                                    <span class="custom-control-indicator"></span>
-                                    <span class="custom-control-description"> Multiple</span>
-                                </label>
-                            </div>
-                        </div>
-
-                        <ng-container *ngFor=" let nacimiento of registro.valor.InformeEgreso.nacimientos; let i = index ">
+                        <plex-button label="Agregar" type="primary btn-sm" icon="" (click)="addProcedimientoQuirurgico()"></plex-button>
+                    </ng-container>
+                    <div class="row">&nbsp;</div>
+                    <fieldset *ngIf="procedimientosObstetricos">
+                        <legend>Procedimientos Obstétricos</legend>
+                        <div *ngIf="procedimientosObstetricos">
                             <div class="row">
-                                <div class="col-6">
-                                    <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer" [(ngModel)]="nacimiento.pesoAlNacer" placeholder="" required></plex-int>
+                                <div class="col-4">
+                                    <plex-datetime name="fechaTerminacion" label="Fecha terminación" type="date" [(ngModel)]="registro.valor.InformeEgreso.terminacionEmbarazo"
+                                        required>
+                                    </plex-datetime>
                                 </div>
-
-                                <div class="col-6">
-                                    <label>Condición al nacer</label>
-                                    <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="NacVivo" [(ngModel)]="nacimiento.condicionAlNacer"
-                                            type="radio">
-                                        <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Nac. vivo</span>
-                                    </label>
-                                    <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="defFetal" [(ngModel)]="nacimiento.condicionAlNacer"
-                                            type="radio">
-                                        <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Def. fetal</span>
-                                    </label>
+                                <div class="col-4">
+                                    <plex-int name="edadGestacional" label="Edad gestacional" [(ngModel)]="registro.valor.InformeEgreso.edadGestacional" placeholder=""
+                                        required></plex-int>
+                                </div>
+                                <div class="col-2">
+                                    <plex-int name="paridad" label="Paridad" [(ngModel)]="registro.valor.InformeEgreso.paridad" placeholder="" required></plex-int>
                                 </div>
                             </div>
                             <div class="row">
-
-                                <div class="col-6">
-                                    <label>Terminación</label>
+                                <div class="col-12">
+                                    <label>Tipo de parto</label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Simple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                        <input class="custom-control-input" name="tipoParto" value="Simple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
+                                            type="radio">
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Vaginal</span>
+                                        <span class="custom-control-description"> Simple</span>
                                     </label>
                                     <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="Terminacion-{{i}}" value="Multiple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                        <input class="custom-control-input" name="tipoParto" value="Multiple" [(ngModel)]="registro.valor.InformeEgreso.tipoParto"
+                                            type="radio">
                                         <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Cesária</span>
+                                        <span class="custom-control-description"> Multiple</span>
                                     </label>
-                                </div>
-                                <div class="col-5">
-                                    <label>Sexo</label>
-                                    <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Masculino" [(ngModel)]="nacimiento.sexo" type="radio">
-                                        <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Masculino</span>
-                                    </label>
-                                    <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Femenino" [(ngModel)]="nacimiento.sexo" type="radio">
-                                        <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Femenino</span>
-                                    </label>
-                                    <label class="custom-control custom-radio">
-                                        <input class="custom-control-input" name="sexo-{{i}}" value="Indeterminado" [(ngModel)]="nacimiento.sexo" type="radio">
-                                        <span class="custom-control-indicator"></span>
-                                        <span class="custom-control-description"> Indeterminado</span>
-                                    </label>
-                                </div>
-                                <div class="col-1">
-                                    <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeNacimiento(i)"></plex-button>
                                 </div>
                             </div>
-                        </ng-container>
-                        <plex-button *ngIf="registro.valor.InformeEgreso.tipoParto == 'Multiple'" label="Agregar" type="primary btn-sm" icon="" (click)="addNacimiento()"></plex-button>
-                    </div>
+
+                            <ng-container *ngFor=" let nacimiento of registro.valor.InformeEgreso.nacimientos; let i = index ">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <plex-int suffix="g" name="peso-{{i}}" label="Peso al nacer" [(ngModel)]="nacimiento.pesoAlNacer" placeholder="" required></plex-int>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label>Condición al nacer</label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="NacVivo" [(ngModel)]="nacimiento.condicionAlNacer"
+                                                type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Nac. vivo</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="condicionAlNacer-{{i}}" value="defFetal" [(ngModel)]="nacimiento.condicionAlNacer"
+                                                type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Def. fetal</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-6">
+                                        <label>Terminación</label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="Terminacion-{{i}}" value="Simple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Vaginal</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="Terminacion-{{i}}" value="Multiple" [(ngModel)]="nacimiento.terminacion" type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Cesária</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-5">
+                                        <label>Sexo</label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="sexo-{{i}}" value="Masculino" [(ngModel)]="nacimiento.sexo" type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Masculino</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="sexo-{{i}}" value="Femenino" [(ngModel)]="nacimiento.sexo" type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Femenino</span>
+                                        </label>
+                                        <label class="custom-control custom-radio">
+                                            <input class="custom-control-input" name="sexo-{{i}}" value="Indeterminado" [(ngModel)]="nacimiento.sexo" type="radio">
+                                            <span class="custom-control-indicator"></span>
+                                            <span class="custom-control-description"> Indeterminado</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-1">
+                                        <plex-button *ngIf="i > 0" label="" type="danger btn-sm" icon="close" (click)="removeNacimiento(i)"></plex-button>
+                                    </div>
+                                </div>
+                            </ng-container>
+                            <plex-button *ngIf="registro.valor.InformeEgreso.tipoParto == 'Multiple'" label="Agregar" type="primary btn-sm" icon="" (click)="addNacimiento()"></plex-button>
+                        </div>
+                    </fieldset>
                 </ng-container>
                 <!-- Footer -->
                 <footer class="andes-contenedor-botones horizontal between">

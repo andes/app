@@ -350,25 +350,6 @@ export class MapaDeCamasComponent implements OnInit {
 
     }
 
-    // selecionarCama(cama) {
-    //     if (cama.ultimoEstado.paciente) {
-    //         this.showLoaderSidebar = true;
-    //         this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
-    //             this.prestacionPorInternacion = prestacion;
-    //             this.showLoaderSidebar = false;
-    //         });
-    //     }
-    //     if (this.camaSeleccionada === cama) {
-    //         this.camaSeleccionada = null;
-    //     } else {
-    //         this.showMenu = true;
-    //         this.showIngreso = false;
-    //         this.showResumen = false;
-    //         this.camaSeleccionada = cama;
-    //         this.prestacionPorInternacion = null;
-    //     }
-    // }
-
     /**
      * Captura el evento que emite el componente y cierra/oculta los mismos
      * @param event
