@@ -1,82 +1,64 @@
-<section *ngIf="showAuditoria &&!showAuditoria2">
-    <div class="row">
-        <div class="col">
-            <plex-box>
-                <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)">
-                    <plex-tab label="Búsqueda de Pacientes" (click)="panelIndex = 0" icon="account">
-                        <plex-loader *ngIf="loading"></plex-loader>
-                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
-                            [type]="tipoListado" (selected)="onSelect($event)"></paciente-listado>
-                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
-                            ¡No se encontró ningún paciente!
-                        </div>
-                    </plex-tab>
-                    <plex-tab label="Pacientes con vinculaciones" (click)="panelIndex = 1" icon="account">
-                        <plex-loader *ngIf="loading"></plex-loader>
-                        <table *ngIf="pacVinculados" class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Estado</th>
-                                    <th>Documento</th>
-                                    <th>Apellido y Nombre</th>
-                                    <th>Fecha de Nacimiento</th>
-                                    <th>Sexo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="hover" *ngFor="let paciente of pacVinculados" (click)="onSelectVinculados(paciente)">
-                                    <td>
-                                        <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
-                                        <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
-                                    </td>
-                                    <td>
-                                        <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
-                                        <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
-                                    </td>
-                                    <td>{{paciente | paciente}}</td>
-                                    <td>
-                                        <span *ngIf="paciente.fechaNacimiento !== null">
-                                            {{paciente.fechaNacimiento | fecha}}
-                                            <br> {{paciente | edad}}
-                                        </span>
-                                        <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
-                                            Sin fecha de nacimiento
-                                        </span>
-                                    </td>
-                                    <td>{{paciente | sexo}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </plex-tab>
-                </plex-tabs>
-            </plex-box>
-        </div>
-        <div class="col-3" *ngIf="mostrarPaciente && !showAuditoria2 && !showCandidatos">
-            <plex-box>
-                <paciente-panel [paciente]="pacienteSelected"> </paciente-panel>
-                <br>
-                <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
-                    icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
-                <plex-button *ngIf="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi" label="Validar fuentes auténticas"
-                    icon="account-convert" type="primary" (click)="validar()"></plex-button>
-                <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
-                    (click)="verDuplicados()"></plex-button>
-                <plex-button *ngIf="enableVinculados" label="Pacientes vincualdos" icon="account-multiple-plus" type="primary"
-                    (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
-                <br>
-
-                <div *ngIf="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi">
-                    <i class="mdi mdi-account-alert"></i> No se han encontrado pacientes candidatos en MPI
-                </div>
-            </plex-box>
-        </div>
-        <div class="col-6" *ngIf="showCandidatos && !showAuditoria2">
-            <plex-box>
-                <!--Tabla de resultados por SimpleQuery -->
-                <div *ngIf="listaCandidatos && listaCandidatos.length && panelIndex === 0">
+<form class="plex-layout" #form="ngForm">
+    <section *ngIf="showAuditoria">
+        <div class="row">
+            <div class="col" *ngIf="!showCandidatos">
+                <plex-box>
+                    <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)">
+                        <plex-tab label="Búsqueda de Pacientes" (click)="panelIndex = 0" icon="account">
+                            <plex-loader *ngIf="loading"></plex-loader>
+                            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                (searchClear)="searchClear()"></paciente-buscar>
+                            <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                [autoselect]="false" [type]="tipoListado" (selected)="onSelect($event)"></paciente-listado>
+                            <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                                ¡No se encontró ningún paciente!
+                            </div>
+                        </plex-tab>
+                        <plex-tab label="Pacientes con vinculaciones" (click)="panelIndex = 1" icon="account">
+                            <plex-loader *ngIf="loading"></plex-loader>
+                            <table *ngIf="pacVinculados" class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Estado</th>
+                                        <th>Documento</th>
+                                        <th>Apellido y Nombre</th>
+                                        <th>Fecha de Nacimiento</th>
+                                        <th>Sexo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="hover" *ngFor="let paciente of pacVinculados" (click)="onSelectVinculados(paciente)">
+                                        <td>
+                                            <span *ngIf="paciente.estado == 'validado'" class="badge badge-success">Validado</span>
+                                            <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
+                                        </td>
+                                        <td>
+                                            <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
+                                            <span *ngIf="paciente?.documento === ''" class="text-danger">Sin documento</span>
+                                        </td>
+                                        <td>{{paciente | paciente}}</td>
+                                        <td>
+                                            <span *ngIf="paciente.fechaNacimiento !== null">
+                                                {{paciente.fechaNacimiento | fecha}}
+                                                <br> {{paciente | edad}}
+                                            </span>
+                                            <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
+                                                Sin fecha de nacimiento
+                                            </span>
+                                        </td>
+                                        <td>{{paciente | sexo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </plex-tab>
+                    </plex-tabs>
+                </plex-box>
+            </div>
+            <div class="col" *ngIf="showCandidatos">
+                <plex-box>
+                    <!--Tabla de resultados por SimpleQuery -->
                     <legend>Listado de pacientes candidatos</legend>
-                    <table class="table">
+                    <table class="table" *ngIf="listaCandidatos && listaCandidatos.length > 0">
                         <tbody>
                             <tr class="hover" *ngFor="let pac of listaCandidatos">
                                 <td>
@@ -84,10 +66,8 @@
                                     <span *ngIf="pac.paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
                                     {{ pac.paciente | paciente }}
                                     <b>Documento: </b>
-                                    <span *ngIf="pac.paciente.documento !== ''">{{ pac.paciente.documento |
-                                        number}}</span>
-                                    <span *ngIf="pac.paciente.documento === ''" class="text-danger">Sin
-                                        documento</span>
+                                    <span *ngIf="pac.paciente.documento !== ''">{{ pac.paciente.documento | number}}</span>
+                                    <span *ngIf="pac.paciente.documento === ''" class="text-danger">Sin documento</span>
                                     <br>
                                     <b>Fecha de Nacimiento</b>
                                     <span *ngIf="pac.paciente.fechaNacimiento !== null">{{pac.paciente.fechaNacimiento
@@ -107,9 +87,29 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-            </plex-box>
+                    <plex-button label="Cancelar" type="danger" (click)="cancelarValidacionPadron()"></plex-button>
+                </plex-box>
+            </div>
+            <div class="col-3" *ngIf="showDetallePaciente">
+                <plex-box>
+                    <paciente-panel [paciente]="pacienteSelected"> </paciente-panel>
+                    <br>
+                    <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
+                        icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
+                    <plex-button *ngIf="enableFA" label="Validar fuentes auténticas" icon="account-convert" type="primary"
+                        (click)="validar()"></plex-button>
+                    <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
+                        (click)="verDuplicados()"></plex-button>
+                    <plex-button *ngIf="enableVinculados" label="Pacientes vincualdos" icon="account-multiple-plus"
+                        type="primary" (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
+                    <br>
+
+                    <div *ngIf="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi">
+                        <i class="mdi mdi-account-alert"></i> No se han encontrado pacientes candidatos en MPI
+                    </div>
+                </plex-box>
+            </div>
         </div>
-    </div>
-</section>
-<auditoria2 *ngIf="showAuditoria2" [origin]=patientToFix [destiny]=patient (data)='afterAuditoria($event)'></auditoria2>
+    </section>
+    <auditoria2 *ngIf="showAuditoria2" [origin]=patientToFix [destiny]=patient (data)='afterAuditoria($event)'></auditoria2>
+</form>
