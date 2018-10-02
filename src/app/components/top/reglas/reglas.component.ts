@@ -70,7 +70,6 @@ export class ReglasComponent {
     if (this.prestacionDestino && this.prestacionDestino.conceptId) {
       query.prestacionDestino = this.prestacionDestino.conceptId;
       this.servicioReglas.get(query).subscribe((reglas: any) => {
-        console.log('reglas ', reglas);
         this.reglas = reglas;
       });
     }
@@ -106,8 +105,6 @@ export class ReglasComponent {
   }
 
   addPrestacion() {
-    console.log('origen ', this.regla.origen);
-    console.log('prestacionOrigen ', this.prestacionOrigen);
     this.prestaciones = [];
     if (this.regla.origen.prestaciones) {
       this.prestaciones = this.regla.origen.prestaciones;
