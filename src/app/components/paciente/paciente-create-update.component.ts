@@ -469,37 +469,40 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
 
     /**
-     * Busca la provincia ingresada por parametro para setear el select.
+     * Busca en la DB la provincia ingresada por parametro y completa el select.
      * @param {string} event : provincia obtenida de WS Renaper.
      */
     changeProvincia(event) {
         let prov = null;
-        this.viveProvNeuquen = (event === 'NEUQUEN');
 
         if (event.length) {
-            // Regex para matchear 'event' (nombre de provincia: string) con alguna provincia de la coleccion.
-            let busqueda = new RegExp(event, 'ig');
+            // Se quitan las tildes y se crea un regex de 'event' que ignora mayusculas y minusculas
+            let busqueda = new RegExp(this.removerTilde(event), 'ig');
+            this.viveProvNeuquen = ('NEUQUEN'.match(busqueda) !== null);  // true si matchea
             // Match entre 'event' y cada provincia de la coleccion (Una vez quitadas las tildes a los nombres).
             prov = this.provincias.find(p => this.removerTilde(p.nombre).match(busqueda));
+        } else {
+            this.viveProvNeuquen = false;
         }
         this.pacienteModel.direccion[0].ubicacion.provincia = prov;
     }
 
     /**
-     * Busca la localidad ingresada por parametro para setear el select. (Solo para neuquen)
+     * Busca en la DB la localidad ingresada por parametro y completa el select.
      * @param {string} event : provincia obtenida de WS Renaper.
      */
     changeLocalidad(event) {
         let loc = null;
-        this.viveEnNeuquen = (event === 'NEUQUEN');
 
         if (event.length) {
-            //  let localidadesNqn: any = this.loadLocalidades(this.provinciaNeuquen); // localidades de la prov de neuquen
+            // Se quitan las tildes y se crea un regex de 'event' que ignora mayusculas y minusculas
+            let busqueda = new RegExp(this.removerTilde(event), 'ig');
+            this.viveEnNeuquen = ('NEUQUEN'.match(busqueda) !== null);  // true si matchea
 
-            // Regex para matchear 'event' (nombre de localidad: string) con alguna localidad de la coleccion.
-            let busqueda = new RegExp(event, 'ig');
             // Match entre 'event' y cada localidad de la coleccion (Una vez quitadas las tildes a los nombres).
             loc = this.localidadesNeuquen.find(l => this.removerTilde(l.nombre).match(busqueda));
+        } else {
+            this.viveEnNeuquen = false;
         }
         this.pacienteModel.direccion[0].ubicacion.localidad = loc;
     }
