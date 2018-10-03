@@ -99,7 +99,7 @@
                     <div *ngIf="!loader && !camas">
                         No se encontraron resultados
                     </div>
-                    <div id="mapaCamas" class="row" *ngIf="!loader">
+                    <div id="mapaCamas" class="row" *ngIf="!loader && camas">
                         <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
                             *ngFor="let cama of camas; let i = index">
                             <app-cama [prestacion]="prestacion" [cama]="cama" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
@@ -139,8 +139,7 @@
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs>
-
+                    <plex-tabs [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
                         <plex-tab label="Datos de cama">
@@ -215,30 +214,13 @@
                         </plex-tab>
                         <!-- Resumen -->
                         <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
-                            <internacion-resumen (data)="editar($event)" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion"
+                            <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion"
                                 [camaSeleccionada]="camaSeleccionada" (refreshCamas)="updateCama($event)"></internacion-resumen>
-                            <!-- <ng-container *ngIf="!prestacionPorInternacion">
-                        <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay
-                            paciente internado
-                        </h2>
-                    </ng-container> -->
                         </plex-tab>
 
                         <!-- Historial de cama -->
                         <plex-tab class="andes-tab" label="Historial de la cama">
-
-
                         </plex-tab>
-
-                        <!-- Egreso -->
-                        <!-- <plex-tab class="andes-tab" label="datos de egreso">
-                            <rup-egresoInternacion *ngIf="prestacionPorInternacion" [botonera]="{cerrar: false, validar: true, guardar: true}" (data)="cerrar($event, 'egreso')"
-                                [prestacion]="prestacionPorInternacion"></rup-egresoInternacion>
-                            <ng-container *ngIf="!prestacionPorInternacion">
-                                <h2 class="text-center" style="color:#8cc63f !important; margin-top: 15px">No hay paciente internado
-                                </h2>
-                            </ng-container>
-                        </plex-tab> -->
                     </plex-tabs>
                 </ng-container>
 

@@ -17,6 +17,7 @@ import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
     selector: 'rup-iniciarInternacion',
@@ -84,13 +85,7 @@ export class IniciarInternacionComponent implements OnInit {
     };
 
     // armamos el registro para los datos del formulario de ingreso hospitalario
-    public snomedIngreso: any = {
-        fsn: 'documento de solicitud de admisión (elemento de registro)',
-        semanticTag: 'elemento de registro',
-        refsetIds: ['900000000000497000'],
-        conceptId: '721915006',
-        term: 'documento de solicitud de admisión'
-    };
+    public snomedIngreso: any = this.servicioInternacion.conceptosInternacion.ingreso;
 
     // Paciente sleccionado
     // public paciente: IPaciente;
@@ -123,6 +118,7 @@ export class IniciarInternacionComponent implements OnInit {
         public snomedService: SnomedService,
         private location: Location,
         public servicioProfesional: ProfesionalService,
+        public servicioInternacion: InternacionService,
         public pacienteService: PacienteService
     ) { }
 
@@ -145,7 +141,7 @@ export class IniciarInternacionComponent implements OnInit {
             }
         } else if (this.paciente && this.paciente.id) {
             this.btnIniciarGuardar = 'INICIAR';
-            this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion').subscribe(resultado => {
+            this.servicioPrestacion.internacionesXPaciente(this.paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
@@ -171,7 +167,7 @@ export class IniciarInternacionComponent implements OnInit {
                     }
                 } else {
                     // Chequeamos si el paciente tiene una internacion validad anterios para copiar los datos
-                    this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada').subscribe(datosInternacion => {
+                    this.servicioPrestacion.internacionesXPaciente(this.paciente, 'validada', null).subscribe(datosInternacion => {
                         if (datosInternacion) {
                             this.informeIngreso = this.buscarRegistroInforme(datosInternacion.ultimaInternacion);
                         }
@@ -334,7 +330,8 @@ export class IniciarInternacionComponent implements OnInit {
                             esCensable: this.cama.ultimoEstado.esCensable,
                             genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
                             paciente: this.paciente,
-                            idInternacion: this.prestacion.id
+                            idInternacion: this.prestacion.id,
+                            esMovimiento: true
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
@@ -380,7 +377,8 @@ export class IniciarInternacionComponent implements OnInit {
                             esCensable: this.cama.ultimoEstado.esCensable,
                             genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
                             paciente: this.paciente,
-                            idInternacion: prestacion.id
+                            idInternacion: prestacion.id,
+                            esMovimiento: true
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
