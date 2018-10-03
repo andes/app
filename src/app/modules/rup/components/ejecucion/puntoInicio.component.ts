@@ -107,11 +107,22 @@ export class PuntoInicioComponent implements OnInit {
                 sinEstado: 'modificada'
                 // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
                 // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
+            }),
+            // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
+            this.servicioPrestacion.get({
+                organizacion: this.auth.organizacion.id,
+                estado: 'pendiente',
+                tieneTurno: 'si',
+                // TODO: filtrar por las prestaciones permitidas
+                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
-
+            // Sumamos las prestaciones pendientes si hubiera
+            if (data[2]) {
+                this.prestaciones = [...this.prestaciones, ...data[2]];
+            }
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -343,11 +354,10 @@ export class PuntoInicioComponent implements OnInit {
     tienePermisos(tipoPrestacion, prestacion) {
         let permisos = this.auth.getPermissions('rup:tipoPrestacion:?');
         let existe = permisos.find(permiso => (permiso === tipoPrestacion._id));
-
         // vamos a comprobar si el turno tiene una prestacion asociada y si ya esta en ejecucion
         // por otro profesional. En ese caso no debería poder entrar a ejecutar o validar la prestacion
         if (prestacion) {
-            if (prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
+            if (prestacion.estados[prestacion.estados.length - 1].tipo !== 'pendiente' && prestacion.estados[prestacion.estados.length - 1].createdBy.username !== this.auth.usuario.username) {
                 return null;
             }
         }
@@ -469,6 +479,31 @@ export class PuntoInicioComponent implements OnInit {
         }
     }
 
+    /**
+       * Ejecutar una prestacion que esta en estado pendiente
+       */
+    ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
+        let params: any = {
+            op: 'estadoPush',
+            ejecucion: {
+                fecha: new Date(),
+                registros: [],
+                // organizacion desde la que se solicita la prestacion
+                organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre }
+            },
+            estado: { tipo: 'ejecucion' }
+        };
+
+        this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Iniciar Prestación?').then(confirmacion => {
+            if (confirmacion) {
+                this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
+                    this.router.navigate(['/rup/ejecucion', idPrestacion]);
+                }, (err) => {
+                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
+                });
+            } else {
+                return false;
+            }
+        });
+    }
 }
-
-
