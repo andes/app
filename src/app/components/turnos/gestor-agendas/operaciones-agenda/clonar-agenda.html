@@ -15,7 +15,7 @@
                                 'outline-primary'     : (day.estado == 'seleccionado') && (day.original == false),
                                 'outline-success'     : day.original == true,
                                 'outline-danger'     : day.estado == 'conflicto',
-                                'hover'               : day.fecha.getTime() >= today.getTime()
+                                'hover'               : day.estado !== 'vacio' && day.fecha.getTime() >= today.getTime()
                             }">
                                 <div>{{ day.fecha | date:"d" }}</div>
                                 <div>{{ day.fecha | date:"EEE" | uppercase }}</div>

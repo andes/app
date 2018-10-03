@@ -86,6 +86,7 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
@@ -148,6 +149,9 @@ import { HeaderPacienteComponent } from './components/paciente/headerPaciente.co
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { PacienteDetalleComponent } from './components/paciente/paciente-detalle';
 import { PacienteDetalleActualizarComponent } from './components/paciente/paciente-detalle-actualizar.component';
+import { PacienteBuscarComponent } from './modules/mpi/components/paciente-buscar.component';
+import { PacienteListadoComponent } from './modules/mpi/components/paciente-listado.component';
+import { PacientePanelComponent } from './modules/mpi/components/paciente-panel.component';
 
 // PUCO/ObraSocial
 import { PucoComponent } from './components/puco/puco.component';
@@ -246,6 +250,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
@@ -255,6 +260,8 @@ import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
+import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
+
 import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
@@ -273,7 +280,7 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-
+import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -366,9 +373,11 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
+    'InformeActividadNoNominalizadaComponent': InformeActividadNoNominalizadaComponent,
     'PesoComponent': PesoComponent,
     'PercentiloPesoComponent': PercentiloPesoComponent,
     'PerimetroCefalicoComponent': PerimetroCefalicoComponent,
@@ -386,6 +395,7 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
 };
 
 let RUPComponentsArray = [
@@ -419,6 +429,7 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
@@ -427,6 +438,7 @@ let RUPComponentsArray = [
     InformeEpicrisisComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
+    InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
     PercentiloDeMasaCorporalComponent,
@@ -438,7 +450,8 @@ let RUPComponentsArray = [
     DesarrolloPsicomotorComponent,
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent
+    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
+    ProcedimientoDeEnfermeriaComponent
 ];
 
 // import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
@@ -446,6 +459,11 @@ let RUPComponentsArray = [
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeutico.service';
+import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
+import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
+import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 
 registerLocaleData(localeEs, 'es');
 
@@ -536,6 +554,18 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+        PucoComponent,
+        // MPI
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+        PacientePanelComponent,
+
+        // form Terapeutico
+        FormTerapeuticoComponent,
+        ArbolItemComponent,
+        FormTerapeuticoDetallePageComponent,
+        AddformTerapeuticoComponent,
         // Configuracion prestacion
         ConfiguracionPrestacionVisualizarComponent,
         ConfiguracionPrestacionCrearComponent,
@@ -603,11 +633,12 @@ registerLocaleData(localeEs, 'es');
         CamasService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
+        FormTerapeuticoService,
         CDAService,
+        FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService
-
     ]
 })
 

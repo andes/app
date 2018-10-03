@@ -196,8 +196,8 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
             // buscamos las que estan fuera de agenda para poder listarlas:
             // son prestaciones sin turno creadas en la fecha seleccionada en el filtro
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
-                (p.ejecucion.fecha >= moment(this.fecha).startOf('day').toDate() &&
-                    p.ejecucion.fecha <= moment(this.fecha).endOf('day').toDate())
+                (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
+                    p.createdAt <= moment(this.fecha).endOf('day').toDate())
                 && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
 
             // agregamos el original de las prestaciones que estan fuera
@@ -352,6 +352,20 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         });
     }
 
+    iniciarPrestacionNoNominalizada(snomedConcept, turno) {
+        this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
+            if (confirmacion) {
+                this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+                    this.routeTo('ejecucion', prestacion.id);
+                }, (err) => {
+                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                });
+            } else {
+                return false;
+            }
+        });
+    }
+
     /**
      * Recorremos los bloques y los turnos de una agenda
      * y verifica si hay algun paciente agregado
@@ -403,7 +417,6 @@ export class PuntoInicioComponent implements OnInit, OnDestroy {
         }
         this.router.navigate(['rup/' + action + '/', id]);
     }
-
 
     // dada una prestación busca las prestaciones generadas (por planes) que esten pendientes y sin turno asignado.
     comprobarPrestacionesPendientes(unaPrestacion) {

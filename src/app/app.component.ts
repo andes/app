@@ -5,6 +5,8 @@ import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 import { WebSocketService } from './services/websocket.service';
 
+// import { RxSocket } from 'rx-socket.io-client';
+
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -62,6 +64,10 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
 
+        // faltan permisos
+        if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
+        accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
+        }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
         accessList.forEach((permiso) => {
@@ -79,7 +85,7 @@ export class AppComponent {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
-        // Inicializa el menu
+        // Inicializa el menú
         this.checkPermissions();
 
         // Inicializa la vista

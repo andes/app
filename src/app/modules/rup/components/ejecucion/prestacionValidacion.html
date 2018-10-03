@@ -1,7 +1,7 @@
 <header *ngIf="prestacion">
     <header-paciente *ngIf="paciente" [paciente]="paciente"></header-paciente>
 </header>
-<section *ngIf="prestacion && paciente && !showDarTurnos">
+<section *ngIf="prestacion && !showDarTurnos">
     <plex-box>
         <header>
             <div class="row">
@@ -14,13 +14,10 @@
                             <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
                                 (click)="mostrarDatosSolicitud(true)"></plex-button>
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
-                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada'">
+                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !prestacion.solicitud.tipoPrestacion.noNominalizada">
                                 <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
                                     (click)="descargarResumen()"></plex-button>
                             </ng-container>
-                            <!-- <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !puedeDescargarPDF">
-                                <plex-button type="disabled" icon="download mdi-14px" class="float-right ml-1" title="Sin permiso para descargar" titlePosition="top"></plex-button>
-                            </ng-container> -->
                         </div>
                     </div>
                 </div>
@@ -49,9 +46,9 @@
                         <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-procedimiento text-uppercase mr-1"
                             (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
                         <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-plan text-uppercase mr-1"
-                            (click)="ordenarPorTipo(['planes'])" [ngClass]="{'active': ordenSeleccionado === 'planes'}">Planes</button>
+                            (click)="ordenarPorTipo(['planes'])" [ngClass]="{'active': ordenSeleccionado === 'planes'}">Solicitudes</button>
                         <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-producto text-uppercase mr-1" (click)="ordenarPorTipo(['producto'])"
-                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Productos</button>
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Insumos</button>
                         <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-adjunto text-uppercase mr-1" (click)="ordenarPorTipo(['elemento de registro'])"
                             [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
                         <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
@@ -61,14 +58,12 @@
                 </div>
             </div>
         </header>
-        <div class="row no-gutters">
+        <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
             <div class="col titulos">
-                <!-- <object data="/assets/logo-andes.svg"></object> -->
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
                         <div class="col">
-                            <!-- <b>Solicitada por el profesional:</b> {{prestacion.solicitud.profesional | profesional }} -->
                             <br>
                             <b>Organización:</b> {{prestacion.solicitud.organizacion.nombre}}
                             <br>
@@ -93,27 +88,25 @@
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['trastorno'])">
                         <div class="text-capitalize mt-4 titulo-trastornos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Trastornos</h5>
-                            <!-- {{ reemplazar(['trastorno'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['procedimiento', 'entidad observable', 'régimen/tratamiento'])">
                         <div class="text-capitalize mt-4 titulo-procedimientos">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Procedimientos</h5>
-                            <!-- {{ reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
                         <div class="text-capitalize mt-4 titulo-planes">
-                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Planes</h5>
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Solicitudes</h5>
                             <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['producto'])">
                         <div class="text-capitalize mt-4 titulo-productos">
-                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Productos</h5>
+                            <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Insumos</h5>
                             <!-- {{ reemplazar(['producto'], ', ') }} -->
                         </div>
                     </ng-container>
@@ -125,26 +118,40 @@
                     </ng-container>
 
                     <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                        <a name="{{ elemento.concepto.conceptId }}"></a>
+
                         <div class="rup-header">
                             <div class="icon-rup">
                                 <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
-                                    {{elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1)}}
+                                    {{ elemento.nombre[0].toUpperCase() + elemento.nombre.slice(1) }}
                                 </ng-container>
 
                                 <div *ngIf="elemento?.valor?.solicitudPrestacion?.prestacionSolicitada" class="small text-secondary text-truncate">
-                                    <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)'}}</b>
+                                    <b>{{ elemento.valor.solicitudPrestacion.prestacionSolicitada.term || '(ninguna)' }}
+                                    </b>
                                 </div>
+                                <div class="float-left" *ngIf="elemento?.relacionadoCon">
+                                    <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
+                                    </b>
+                                    <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
+                                        class="badge badge-info text-uppercase">
+                                        {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                    </small>
+                                    <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
+                                        <ng-container *ngFor="let relacion of elemento.relacionadoCon">
 
+                                            <span class="badge badge-info">
+                                                {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion.cara + ')' : relacion.concepto.term }}
+                                            </span>
+                                        </ng-container>
+                                    </ng-container>
+                                </div>
                             </div>
                             <div class="actions">
-                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
-                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() + elemento.relacionadoCon[0].concepto.term.slice(1)}}
-                                </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
@@ -167,7 +174,7 @@
                         <div class="rup-body">
                             <div class="legend">
                                 <span>
-                                    {{elemento.concepto.semanticTag}}
+                                    {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}
                                 </span>
                             </div>
                             <div class="content">
@@ -181,25 +188,24 @@
                                     </div>
                                 </ng-container>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" *ngIf="paciente || prestacion.solicitud.tipoPrestacion?.noNominalizada">
                                         <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="prestacion"
-                                            [registro]="elemento" [soloValores]="true"></rup>
+                                            [registro]="elemento" [soloValores]="true" [params]="elementosRUPService.selectPorRefsetId(elemento.concepto, elemento.esSolicitud)"></rup>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-12">
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
-                                                title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal">
-                                                Procedimiento/Diagnóstico principal? &nbsp;
-                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
+                                                title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal d-flex align-items-end">
+                                                ¿Procedimiento/Diagnóstico principal? &nbsp;
+                                                <plex-radio [data]="opcionDiagnosticoPrincipal" label="¿Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
                                                     [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal"></plex-radio>
 
                                             </label>&nbsp;&nbsp;&nbsp;
                                             <label *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
-                                                class="diagnostico-principal" title="Indicar si es primera vez">
-                                                Es primera vez? &nbsp;
+                                                class="diagnostico-principal d-flex align-items-end" title="Indicar si es primera vez">
+                                                ¿Es primera vez? &nbsp;
                                                 <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?" [(ngModel)]="elemento.esPrimeraVez" type="horizontal"></plex-radio>
                                             </label>
                                         </ng-container>

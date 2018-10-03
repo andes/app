@@ -15,7 +15,6 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Global
 import { RoutingGuard } from './app.routings-guard.class';
-import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
 
@@ -83,6 +82,9 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
+// Home de Estadisticas
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
@@ -96,8 +98,8 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
-  // { path: 'mpi/auditoriaPorBloque', component: AuditoriaPorBloqueComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
+  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
 
@@ -138,6 +140,9 @@ const appRoutes: Routes = [
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
+
+  // formulario terapeutico
+  { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingGuard] },
 
   // Reportes
   { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },
