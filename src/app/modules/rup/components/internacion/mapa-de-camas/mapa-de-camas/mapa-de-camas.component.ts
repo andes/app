@@ -562,3 +562,4 @@ export class MapaDeCamasComponent implements OnInit {
             this.estadosMode = true;
         }
     }
+}
