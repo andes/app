@@ -103,10 +103,8 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         } else {
             this.btnIniciarEditarEmit.emit('Editar');
         }
-
-        let params;
         // // Cargamos todos los procedimientos.
-        this.procedimientosQuirurgicosService.get(params).subscribe(rta => {
+        this.procedimientosQuirurgicosService.get(null).subscribe(rta => {
             this.listaProcedimientosQuirurgicos = rta.map(elem => {
                 return { id: elem._id, nombre: elem.nombre };
             });
@@ -268,7 +266,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
 
 
     showProcedimientos_causas() {
-        debugger;
         let regexCIECausasExternas = new RegExp('^S|^T');
         // let regexCIEProcedimientosQuirurgicos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2');
         let regexCIEProcedimientosObstetricos = new RegExp('^O8[0-4].[0-9]|O60.1|O60.2|O0[0-9].[0-9]');
@@ -285,8 +282,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         //     'O04.6', 'O04.8', 'O05.0', 'O05.2', 'O05.1', 'O04.9', 'O05.3', 'O05.4', 'O05.6',
         //     'O05.9', 'O05.8', 'O04.7', 'O05.5', 'O06.2', 'O06.4', 'O06.1', 'O06.3', 'O06.5',
         //     'O06.6', 'O06.8', 'O06.0', 'O06.9', 'O06.7', 'O05.7', 'O02.8'];
-
-
 
         if (this.registro.valor.InformeEgreso.diagnosticoPrincipal) {
             this.ExisteCausaExterna = regexCIECausasExternas.test(this.registro.valor.InformeEgreso.diagnosticoPrincipal.codigo);
