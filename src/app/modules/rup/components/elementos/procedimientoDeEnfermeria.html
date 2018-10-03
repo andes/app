@@ -1,0 +1,188 @@
+<!-- 
+- Fecha y hora de inicio
+- Hora de fin
+- Tipo de actividad: reference set relacionado con el tipo de prestación (ver #308)
+- Temática: listado estático. En el caso de seleccionar 'Otra' mostrar el siguiente campo ...
+- Otra temática (ver campo anterior)
+- Profesionales intervinientes
+- Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
+-->
+<form #form="ngForm">
+    <ng-container>
+        <div class="row">
+            <div class="col-6" *ngIf="registro.valor?.prestacionesRealizadas">
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.banioAntitermico" name="banioAntitermico"
+                    label="Baño Antitérmico">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.sondaNasogastrica" name="sondaNasogastrica"
+                    label="Colocación de sonda nasogástrica">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.viaPeriferica" name="viaPeriferica" label="Colocación de vía periferica">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.aspiracionSecreciones" name="aspiracionSecreciones"
+                    label="Aspiración de Secreciones">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.basiloscopia" name="basiloscopia" label="Toma de muestra para basiloscopía">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.confeccionCarnet" name="confeccionCarnet"
+                    label="Confección de carnet de vacunas">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.saludEscolar" name="saludEscolar" label="Cuidado de enfermería en salud escolar">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.CLCF" name="CLCF" label="Control de latidos Cardio fetales">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.tomaMuesra" name="tomaMuesra" label="Toma de muestra">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.dinamicaUterina" name="dinamicaUterina"
+                    label="Control de la Dinámica Uterina">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.electrocardiograma" name="electrocardiograma"
+                    label="Electrocardiograma">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.entregaLeche" name="entregaLeche" label="Entrega de leche">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.enemaEvacuante" name="enemaEvacuante"
+                    label="Enema Evacuante">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.extraccionSuturas" name="extraccionSuturas"
+                    label="Extracción de suturas">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.gestionInsumos" name="gestionInsumos"
+                    label="Gestión de Insumos">
+                </plex-bool>
+            </div>
+            <div class="col-6">
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.impregnacion" name="impregnacion" label="Impregnación">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.instilacionOcular" name="instilacionOcular"
+                    label="Instilación Ocular">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.lavajeGastrico" name="lavajeGastrico"
+                    label="Lavaje Gástrico">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.monitoreoCardiaco" name="monitoreoCardiaco"
+                    label="Monitoreo Cardíaco">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.nebulizaciones" name="nebulizaciones"
+                    label="Nebulizaciones">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.rcp" name="rcp" label="Reanimación Cardio Pulmonar">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.recap" name="recap" label="RECAP">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.rehidratacion" name="rehidratacion" label="Rehidratación Oral">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.vendaje" name="vendaje" label="Vendaje">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.virologo" name="virologo" label="Toma de muestra para virológico">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.sondaVesical" name="sondaVesical" label="Colocación de Sonda Vesical">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.curacionSimple" name="curacionSimple"
+                    label="Curación Simple">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.curacionCompleja" name="curacionCompleja"
+                    label="Curación Compleja">
+                </plex-bool>
+                <br>
+                <plex-bool [(ngModel)]="registro.valor.prestacionesRealizadas.curacionQuemadura" name="curacionQuemadura"
+                    label="Curación Quemadura">
+                </plex-bool>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        Asistencia a prácticas médicas
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.asistenciaPracticas" name="asistenciaPracticas"
+                            suffix=" minutos " min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        Atención Domiciliaria
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.atencionDomiciliaria" name="atencionDomiciliaria"
+                            suffix=" minutos " min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        Charla Educativa
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.charlaEducativa" name="charlaEducativa"
+                            suffix=" minutos " min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-6">
+                        Derivaciones
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.derivaciones" name="derivaciones" suffix=" minutos "
+                            min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        Atención pre Hospitalaria
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.atencionPrehospitalaria" name="atencionPrehospitalaria"
+                            suffix=" minutos " min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        Contención Emocional
+                    </div>
+                    <div class="col-4">
+                        <plex-int [(ngModel)]="registro.valor.tiemposEmpleados.contencionEmocional" name="contencionEmocional"
+                            suffix=" minutos " min="0" max="60">
+                        </plex-int>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</form>
+<!-- Lista de pacientes y buscador  -->
