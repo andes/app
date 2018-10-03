@@ -619,7 +619,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
             let operacionPac: Observable<IPaciente>;
             // generamos pacientes temporales a partir de las nuevas relaciones
             if (pacienteGuardar.documento) {
-                pacienteGuardar.documento = pacienteGuardar.documento.replace(/^0+/, '');   // eliminamos los posibles ceros iniciales
+                let dniAux = pacienteGuardar.documento.toString().replace(/^0+/, '');
+                pacienteGuardar.documento = dniAux;   // eliminamos los posibles ceros iniciales
                 await this.crearTemporales(pacienteGuardar);
             }
             operacionPac = this.pacienteService.save(pacienteGuardar);
@@ -882,14 +883,25 @@ export class PacienteCreateUpdateComponent implements OnInit {
     }
 
     addContacto(key, valor) {
-        let nuevoContacto = Object.assign({}, {
-            tipo: key,
-            valor: valor,
-            ranking: 0,
-            activo: true,
-            ultimaActualizacion: new Date()
+        let contactoVacio = false;
+        this.pacienteModel.contacto.forEach(unContacto => {
+            if (unContacto.valor === '') {
+                contactoVacio = true;
+            }
         });
-        this.pacienteModel.contacto.push(nuevoContacto);
+
+        if (contactoVacio) {
+            this.plex.toast('info', 'Debe completar los contactos actuales antes de agregar uno nuevo.', 'Información', 5000);
+        } else {
+            let nuevoContacto = Object.assign({}, {
+                tipo: key,
+                valor: valor,
+                ranking: 0,
+                activo: true,
+                ultimaActualizacion: new Date()
+            });
+            this.pacienteModel.contacto.push(nuevoContacto);
+        }
     }
 
     removeContacto(i) {

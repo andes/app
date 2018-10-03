@@ -99,7 +99,8 @@
                                             <plex-bool [(ngModel)]="noPoseeContacto" label="No posee ningún tipo de contacto" name="noPoseeContacto" (change)="limpiarContacto()"></plex-bool>
                                         </div>
                                         <div class="col-4">
-                                            <plex-button title="Agregar contacto" titlePosition="left" type="primary btn-sm" icon="phone-plus" (click)="addContacto('celular', '')"></plex-button>
+                                            <plex-button title="Agregar contacto" titlePosition="left" [disabled]="noPoseeContacto" type="primary btn-sm" icon="phone-plus"
+                                                (click)="addContacto('celular', '')"></plex-button>
                                         </div>
                                     </div>
                                     <div class="row" *ngFor="let _unContacto of pacienteModel.contacto; let i = index">
@@ -113,14 +114,14 @@
                                                 <plex-text *ngIf="_unContacto.tipo.id !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                                 </plex-text>
                                                 <plex-phone label="Numero:" *ngIf="_unContacto.tipo.id === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                                    [readonly]="noPoseeContacto" [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
                                                 </plex-phone>
                                             </span>
                                             <span *ngIf="_unContacto.tipo && !_unContacto.tipo.id">
                                                 <plex-text *ngIf="_unContacto.tipo !== 'celular'" label="Dato:" [(ngModel)]="_unContacto.valor" name="valor-{{i}}" [required]="!noPoseeContacto && (i <= 0)">
                                                 </plex-text>
                                                 <plex-phone label="Numero:" *ngIf="_unContacto.tipo === 'celular'" [(ngModel)]="_unContacto.valor" placeholder="Ej: 2990000000"
-                                                    [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
+                                                    [readonly]="noPoseeContacto" [required]="!noPoseeContacto && (i <= 0)" name="valor-{{i}}">
                                                 </plex-phone>
                                             </span>
                                         </div>
