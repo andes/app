@@ -125,12 +125,13 @@
                             </h5>
                         </div>
                     </div>
+                    <br>
                     <div class="row">
-                        <div class="col-9">
+                        <div class="col-8">
                             <!-- Buscador adaptable de MPI -->
                             <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (data)="onPacienteCancel()"></paciente-buscar>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <plex-button type="danger" label="Cancelar" (click)="cancelarInternacion()"></plex-button>
                         </div>
                     </div>
@@ -139,9 +140,9 @@
                 </ng-container>
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
-                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" [paciente]="pacienteSelected"
-                        [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion" [soloValores]="editarIngreso"
-                        (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
+                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (otroPaciente)="ingresarPaciente()"
+                        [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion"
+                        [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->

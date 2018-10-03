@@ -528,5 +528,4 @@ export class MapaDeCamasComponent implements OnInit {
         this.showEgreso = true;
     }
 
-
 }
