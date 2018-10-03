@@ -45,24 +45,31 @@
 </ng-container>
 
 <ng-container *ngIf="soloValores">
-    <strong> Unidad Organizativa de la epicrisis: </strong> <br>
-    <span class="text-capitalize">
-        {{ registro.valor.unidadOrganizativa.term }}
-    </span>
-    <br>
-    <hr>
-    <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-
-        <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
-            <span class="titulo">
-                <i class="icon {{ item.params.icon }}"></i>
-                <strong> {{ item.params.titulo }}</strong>
-            </span>
-
-            <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
-                [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
-            </rup>
+    <div class="grid-container">
+        <div class="grid-item-0">
+            <div class="titulo d-flex align-items-center">
+                <i class="adi adi-hospital mr-2"></i>
+                <strong>Unidad Organizativa de la epicrisis:</strong>
+            </div>
+            <div class="contenido text-capitalize">
+                {{ registro.valor.unidadOrganizativa.term }}
+            </div>
         </div>
-        <hr>
-    </ng-container>
+        <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
+            <div class="grid-item-{{i+1}}">
+                <div class="rup-card rup-clear {{ (item.esSolicitud) ? 'solicitud' : prestacionesService.getCssClass(item.concepto) }}">
+                    <div class="titulo d-flex align-items-start">
+                        <i class="icon {{ item.params.icon }} mr-2"></i>
+                        <strong> {{ item.params.titulo }}</strong>
+                    </div>
+                    <div class="contenedor-conceptos ml-3 pl-3">
+                        <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                            [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
+                        </rup>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+        </ng-container>
+    </div>
 </ng-container>

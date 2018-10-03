@@ -33,6 +33,7 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
     accordionSeleccionado(i, concepto: any) {
         this.accordionActive = i;
         this.prestacionesService.setRefSetData(concepto);
+        this.prestacionesService.clearData();
     }
 
     desplegarAccordions() {

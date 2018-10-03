@@ -39,8 +39,8 @@ export class PrestacionesService {
         this.notifySelection.emit(true);
     }
 
-    getData(): Observable<any> {
-        return this.concepto.asObservable();
+    getData(): any {
+        return this.concepto.getValue();
     }
 
     clearData() {
@@ -906,7 +906,7 @@ export class PrestacionesService {
         let clase = conceptoSNOMED.semanticTag;
 
         if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
-            clase = 'plan';
+            clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {

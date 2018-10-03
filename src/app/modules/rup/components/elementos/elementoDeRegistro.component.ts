@@ -58,17 +58,12 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
                 // Estamos en la sección que tiene el foco actual?
                 if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
-                    this.suscriptionConcepto = this.prestacionesService.getData().subscribe(data => {
-                        if (data && data.concepto) {
-                            if (this.conceptoSeleccionado !== data.concepto) {
-                                this.conceptoSeleccionado = data.concepto;
-                                this.ejecutarConceptoInside(data.concepto);
-                            }
+                    let data = this.prestacionesService.getData();
+                    if (data && data.concepto) {
+                        if (this.conceptoSeleccionado !== data.concepto) {
+                            this.conceptoSeleccionado = data.concepto;
+                            this.ejecutarConceptoInside(data.concepto);
                         }
-                    });
-                    // Se limpia el concepto agregado (viene desde el buscador)
-                    if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
-                        this.suscriptionConcepto.unsubscribe();
                     }
                     // Se limpia el notificador..
                     this.suscriptionBuscador.unsubscribe();
@@ -156,10 +151,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         if (existeRegistro) {
             this.registro.registros.push(nuevoRegistro);
         }
-        // console.log(this.suscriptionConcepto);
-        // if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
-        //     this.suscriptionConcepto.unsubscribe();
-        // }
+        this.prestacionesService.clearData();
     }
 
 

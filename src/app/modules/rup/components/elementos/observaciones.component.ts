@@ -31,27 +31,22 @@ export class ObservacionesComponent extends RUPComponent implements OnInit {
             this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
 
                 this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
+
                     this.seleccionado = seleccionado;
 
-
+                    let data = this.prestacionesService.getData();
                     // Estamos en la sección que tiene el foco actual?
                     if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
-                        this.plex.toast('danger', 'No se pueden agregar conceptos a esta sección', 'Acción no permitida');
-                        this.suscriptionBuscador.unsubscribe();
-                        return false;
-
-
-                        // if (data && data.concepto) {
-                        //     // Se limpia el notificador desde buscador (avisa que un concepto se quiere agregar)
-                        // }
-                        // // Se limpia el concepto agregado (viene desde el buscador)
-                        // if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
-                        //     this.suscriptionConcepto.unsubscribe();
-                        // } else {
-                        //     this.suscriptionConcepto.unsubscribe();
-                        // }
+                        console.log('data', data);
+                        if (data && data.concepto && data.concepto !== null) {
+                            this.plex.toast('danger', 'No se pueden agregar conceptos a esta sección', 'Acción no permitida');
+                            this.suscriptionBuscador.unsubscribe();
+                            this.prestacionesService.clearData();
+                            data.concepto = null;
+                            // this.suscriptionSeccion.unsubscribe();
+                            return false;
+                        }
                     }
-                    this.suscriptionSeccion.unsubscribe();
                 });
             });
 

@@ -6,7 +6,7 @@ $rotate: -90deg;
 
 .rup-card {
     &:not(.mini) {
-        border: 2px solid #ccc;
+        // border: 2px solid #ccc;
     }
 
     width: 100%;
@@ -182,7 +182,7 @@ $rotate: -90deg;
         .legend {
             padding: 5px;
             font-size: 1.2rem;
-            width: 35px;
+            width: 55px;
             display: flex;
             justify-content: center;
             align-items: flex-end;
@@ -195,9 +195,10 @@ $rotate: -90deg;
                 -webkit-transform: rotate($rotate);
                 transform: rotate($rotate);
                 font-size: 0.9rem;
-                margin-bottom: 50px;
+                margin-bottom: 45px;
                 color: white;
                 min-width: 120px;
+                width: 180px;
             }
         }
 
@@ -247,6 +248,7 @@ $rotate: -90deg;
             .rup-body .legend,
             .rup-footer .type {
                 background: transparent !important;
+                color: white;
             }
 
             >.rup-header .icon-rup {
@@ -272,12 +274,15 @@ $rotate: -90deg;
 
         .btn-icon-rup {
             line-height: 1.3em;
+
         }
 
         .icon-rup {
             font-size: 1.2rem;
             width: 55px;
             text-align: center;
+            display: none;
+
 
             i {
                 color: $brand-primary;
@@ -453,8 +458,12 @@ $color in $rup_colors {
     }
 }
 
-.form-group>label {
-    margin-bottom: 0 !important;
+.form-group {
+    margin-left: 10px;
+
+    &>label {
+        margin-bottom: 0 !important;
+    }
 }
 
 .indicacion-default {

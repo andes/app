@@ -86,7 +86,7 @@
                                     <!-- Contenedor del registro RUP -->
                                     <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)"
                                         [dragOverClass]="'drag-target-border'" [ngClass]="{'relacionado': registro?.relacionadoCon}">
-                                        <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                        <div class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                             <div class="rup-header">
                                                 <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
                                                     [dragOverClass]="'drag-target-border'" [dragData]="registro"
@@ -113,7 +113,7 @@
 
                                                 <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-                                                    <!--span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                                    <!--span class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
                                                     </span-->
 
@@ -287,7 +287,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
                                                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
@@ -299,7 +299,7 @@
                                                             </ng-container>
                                                         </div>
                                                         <div class="actions">
-                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
 
                                                             <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0"
                                                                 class="badge badge-info">

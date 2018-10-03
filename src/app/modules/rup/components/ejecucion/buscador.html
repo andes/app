@@ -82,7 +82,7 @@
                         <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
+                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud" [ngClass]="{'active': filtroActual === 'planes'}"
                             [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4"
                             [title]="tooltips.planes">
                             <i class="icon icon-rup-semantic-plan"></i>
