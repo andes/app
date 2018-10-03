@@ -239,7 +239,7 @@
     <div class="andes-contenedor-secundario horizontal between" *ngIf="registro.valor.InformeEgreso.fechaEgreso">
         <div class="andes-contenedor-secundario vertical">
             <b>Fecha de egreso</b>
-            <p>{{registro.valor.InformeEgreso.fechaEgreso | date }}</p>
+            <p>{{registro.valor.InformeEgreso.fechaEgreso | fecha }}</p>
         </div>
         <div class="andes-contenedor-secundario vertical" *ngIf="registro.valor.InformeEgreso.tipoEgreso">
             <b>Tipo de egreso</b>
