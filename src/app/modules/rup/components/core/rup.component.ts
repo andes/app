@@ -2,7 +2,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, ViewChild, ElementRef, Renderer } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, ViewChild, ElementRef, Renderer, AfterViewInit } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
@@ -30,7 +30,7 @@ import { ActivatedRoute } from '@angular/router';
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
-export class RUPComponent implements OnInit {
+export class RUPComponent implements OnInit, AfterViewInit {
 
     // Propiedades
     @Input() elementoRUP: IElementoRUP;
@@ -100,7 +100,6 @@ export class RUPComponent implements OnInit {
         this.loadComponent();
     }
 
-    // tslint:disable-next-line:use-life-cycle-interface
     ngAfterViewInit() {
         this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
     }
