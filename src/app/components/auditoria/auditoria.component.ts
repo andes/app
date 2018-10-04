@@ -184,21 +184,32 @@ export class AuditoriaComponent implements OnInit {
     }
 
     validarMpi(pacienteSeleccionado) {
-        this.pacienteService.getPacientesValidados({
-            tipoBusqueda: 'claveBlocking', // Usamos un texto para identificar el blocking
-            claveBlocking: pacienteSeleccionado.claveBlocking,
-            documento: pacienteSeleccionado.documento ? pacienteSeleccionado.documento : null,
-            nombre: pacienteSeleccionado.nombre,
-            apellido: pacienteSeleccionado.apellido,
-            fechaNacimiento: pacienteSeleccionado.fechaNacimiento,
-            sexo: pacienteSeleccionado.sexo
-        }).subscribe(resultado => {
+        // this.pacienteService.getPacientesValidados({
+        //     tipoBusqueda: 'claveBlocking', // Usamos un texto para identificar el blocking
+        //     claveBlocking: pacienteSeleccionado.claveBlocking,
+        //     documento: pacienteSeleccionado.documento ? pacienteSeleccionado.documento : null,
+        //     nombre: pacienteSeleccionado.nombre,
+        //     apellido: pacienteSeleccionado.apellido,
+        //     fechaNacimiento: pacienteSeleccionado.fechaNacimiento,
+        //     sexo: pacienteSeleccionado.sexo
+        // }).subscribe(resultado => {
+        let dto: any = {
+            type: 'suggest',
+            claveBlocking: 'documento',
+            percentage: true,
+            apellido: pacienteSeleccionado.apellido.toString(),
+            nombre: pacienteSeleccionado.nombre.toString(),
+            documento: pacienteSeleccionado.documento.toString(),
+            sexo: ((typeof pacienteSeleccionado.sexo === 'string')) ? pacienteSeleccionado.sexo : (Object(pacienteSeleccionado.sexo).id),
+            fechaNacimiento: pacienteSeleccionado.fechaNacimiento
+        };
+        this.pacienteService.get(dto).subscribe(resultado => {
             this.checkMpi = true;
             if (resultado) {
                 let data: any = resultado.filter(paciente => paciente.id !== pacienteSeleccionado.id);
                 let datos = [];
                 data.forEach(elem => {
-                    if (elem.paciente.activo) {
+                    if (elem.paciente.activo !== false) {
                         datos.push(elem);
                     };
                 });
@@ -286,6 +297,8 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria2 = false;
         this.showAuditoria = true;
         this.showCandidatos = false;
+        this.pacienteSelected = null;
+
         this.onLoadData();
     }
 
