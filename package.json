@@ -27,7 +27,7 @@
         "@andes/auth": "^2.0.0",
         "@andes/icons": "^0.6.1",
         "@andes/match": "^0.1.9",
-        "@andes/plex": "git://github.com/andes/plex.git#plex-text-borde-opcional",
+        "@andes/plex": "^3.6.2",
         "@andes/shared": "^2.0.0",
         "@angular/animations": "^5.0.0",
         "@angular/cdk": "^5.2.4",
