@@ -10,6 +10,7 @@ import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.int
 import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../../../../../interfaces/IPaciente';
 import { ElementosRUPService } from '../../../../services/elementosRUP.service';
+import { InternacionService } from '../../../../services/internacion.service';
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',
@@ -29,9 +30,14 @@ export class MapaDeCamasComponent implements OnInit {
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
+    public hoy = new Date;
+    public fechaDesde = new Date;
+
+    public fechaHasta = new Date;
     public loader = true;
     public showMenu = true;
     public historicoMode = false;
+    public estadosMode = true;
     public filtroActive;
     public cantidadXEstado;
     public inactive = false;
@@ -54,6 +60,9 @@ export class MapaDeCamasComponent implements OnInit {
     public loadCountFiltros = false;
     public editarIngreso;
     public conceptosInternacion;
+
+    public showEstados = true;
+
     // filtros para el mapa de cama
     public filtros: any = {
         camas: null,
@@ -74,10 +83,11 @@ export class MapaDeCamasComponent implements OnInit {
         }
     };
 
-    public activo = 0;
+    public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-
+    public historial: any[] = [];
+    public inicioBusqueda = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -85,6 +95,7 @@ export class MapaDeCamasComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         public camasService: CamasService,
+        private internaiconService: InternacionService,
         private elementoRupService: ElementosRUPService) { }
 
     ngOnInit() {
@@ -223,24 +234,52 @@ export class MapaDeCamasComponent implements OnInit {
     public updateCama(e: any) {
         if (e) {
             this.countFiltros();
-            // se busca el indice porque ya no se corresponde el cambio de estado con el indice del componente.
-            let i = this.camas.findIndex(c => c.id === e.cama.id);
-            if (e.cama) {
-                this.camas[i] = e.cama;
-                this.camaSeleccionada = e.cama;
-                this.prestacionDelPaciente(e.cama);
-            } else {
-                this.refresh();
-            }
+
             if (e.iniciarInternacion) {
                 this.cambiaTap(1);
+                if (e.cama) {
+                    let i = this.camas.findIndex(c => c.id === e.cama.id);
+                    this.camas[i] = e.cama;
+                    this.camaSeleccionada = e.cama;
+                    this.prestacionDelPaciente(e.cama);
+                }
                 // Muestro el resumen de la internacion si viene de iniciarInternacion
             }
             if (e.desocupaCama) {
+                // vamos a liberar la cama
+                let dto = {
+                    fecha: new Date(),
+                    estado: this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                    unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
+                    especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
+                    esCensable: e.cama.ultimoEstado.esCensable,
+                    genero: e.cama.ultimoEstado.genero ? e.cama.ultimoEstado.genero : null,
+                    paciente: null,
+                    idInternacion: null
+                };
+
+                this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
+                    e.cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    this.onCamaSelected(e.cama);
+                }, (err1) => {
+                    this.plex.info('danger', 'Error al intentar desocupar la cama');
+                });
+
                 this.showIngreso = false;
                 this.showEgreso = false;
             }
 
+            if (e.movimientoCama) {
+                if (e.camaDesocupada && e.camaOcupada) {
+                    //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
+                    let i = this.camas.findIndex(c => c.id === e.camaDesocupada.id);
+                    let indexCambio = this.camas.findIndex(c => c.id === e.camaOcupada.id);
+                    this.camas[i] = JSON.parse(JSON.stringify(e.camaDesocupada));
+                    this.camas[indexCambio] = JSON.parse(JSON.stringify(e.camaOcupada));
+                    this.camaSeleccionada = null;
+                    this.camas = [...this.camas];
+                }
+            }
         }
     }
 
@@ -295,6 +334,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.historicoMode = false;
             this.fecha = new Date();
         }
+        this.showEstadosMet();
         this.refresh();
     }
 
@@ -408,6 +448,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.camaSeleccionada = cama;
             this.prestacionPorInternacion = null;
         }
+        this.reseteaBusqueda();
     }
 
     prestacionDelPaciente(cama) {
@@ -427,7 +468,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.editarIngreso = true;
                 break;
             case 'egreso':
-                // this.showEgreso = event;
+                this.showEgreso = true;
                 break;
             default:
                 break;
@@ -439,7 +480,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @param value
      */
     public cambiaTap(value) {
-        this.activo = value;
+        this.panelIndex = value;
     }
 
 
@@ -473,7 +514,32 @@ export class MapaDeCamasComponent implements OnInit {
 
     verInternacion(event) {
         this.onCamaSelected(event);
-        this.cambiaTap(1);
+        this.panelIndex = 1;
+        this.showEgreso = true;
     }
 
+    buscarHistorial() {
+        this.camasService.getHistorialCama(this.auth.organizacion._id, this.fechaDesde, this.fechaHasta, this.camaSeleccionada.id).subscribe(historial => {
+            this.inicioBusqueda = true;
+            if (historial.length > 0) {
+                this.historial = historial;
+            } else {
+                this.historial = [];
+            }
+        });
+
+
+    }
+
+    reseteaBusqueda() {
+        this.historial = [];
+    }
+
+    showEstadosMet() {
+        if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
+            this.estadosMode = false;
+        } else {
+            this.estadosMode = true;
+        }
+    }
 }

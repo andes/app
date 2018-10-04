@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ICama } from '../interfaces/ICama';
 import { ICamaEstado } from '../interfaces/ICamaEstado';
+import { IPaciente } from '../../../interfaces/IPaciente';
 
 @Injectable()
 export class CamasService {
@@ -31,6 +32,16 @@ export class CamasService {
         };
         return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
+    getHistorialCama(idOrganizacion, fechaDesde, fechaHasta, idCama): Observable<any[]> {
+        let params = {
+            idOrganizacion: idOrganizacion,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
+            idCama: idCama
+        };
+        return this.server.get(this.camasUrl + '/historial', { params: params });
+    }
+
 
 
     /**
@@ -138,5 +149,29 @@ export class CamasService {
             sectorId: idSector
         };
         return this.server.get(this.camasUrl, { params: params, showError: true });
+    }
+
+
+    cambioEstadoMovimiento(cama: ICama, estado: String, fecha: Date, paciente: IPaciente, internacion: String, sugierePase) {
+
+        if (paciente) {
+            paciente.id = paciente['_id'];
+        }
+
+        let dto = {
+            fecha: fecha,
+            estado: estado,
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: paciente ? paciente : null,
+            idInternacion: internacion ? internacion : null,
+            esMovimiento: true,
+            sugierePase: sugierePase ? sugierePase : null
+        };
+
+        return this.cambiaEstado(cama.id, dto);
+
     }
 }

@@ -7,6 +7,9 @@ import { PacienteService } from '../../../../../../services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
+import { ICamaEstado } from '../../../../interfaces/ICamaEstado';
+import { InternacionService } from '../../../../services/internacion.service';
+import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
 
 @Component({
     selector: 'app-cama',
@@ -17,25 +20,45 @@ import { PrestacionesService } from '../../../../services/prestaciones.service';
 export class CamaComponent implements OnInit {
 
     @Input() cama: any;
+
     @Input() prestacion: any;
     // Lo usamos para pasar el id de la organizacion y la fecha del mapa de camas que tenemos en la vista.
     @Input() params: any;
     @Input() readOnly: boolean;
+    @Input() showEstados: boolean;
     @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
     @Output() buscarPaciente: EventEmitter<any> = new EventEmitter<any>();
     @Output() camaSelected: EventEmitter<any> = new EventEmitter<any>();
     @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
+    @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion: any;
     public PaseAunidadOrganizativa: any;
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
-    public estadoDesbloqueo: String = 'desocupada';
+    public estadoDesbloqueo: String = 'disponible';
     public fecha = new Date();
+    public hora = new Date();
     public disabledButton = false;
     public camaSeleccionPase;
     // lista de los motivos del bloque, luego los va a traer desde snomed
     public listaMotivosBloqueo = [{ id: 'Bolqueo', name: 'Bloqueo' }, { id: 'Se envia a reparar', name: 'Se envia a reparar' }];
+    public opcionesDesbloqueo = [
+        { id: 'desocupada', label: 'Para desinfectar' },
+        { id: 'disponible', label: 'Disponible' }
+    ];
+    public opcionDesocupar = null;
+    public listadoCamas = [];
+    public listaUnidadesOrganizativas = [];
+
+    // Al desocupar la cama mostrar los radio para que seleccionen la subOperacion al desocupar
+    // 1) Movimiento de cama
+    // 2) Pase a otra UO
+    // 3) Egreso del paciente
+    public elegirDesocupar = true;
+    public opcionesDesocupar = [
+        { id: 'movimiento', label: 'Cambiar de cama' },
+        { id: 'egreso', label: 'Egresar al paciente' }];
 
     public listaCamasDisponibles;
 
@@ -45,13 +68,18 @@ export class CamaComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private pacienteService: PacienteService,
-        private PrestacionesService: PrestacionesService) { }
+        private PrestacionesService: PrestacionesService,
+        private internaiconService: InternacionService) { }
 
     ngOnInit() {
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
-            this.organizacion.unidadesOrganizativas = this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId);
+            this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId) : [];
+            if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
+                this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad' });
+            }
         });
+
         this.opcionesDropdown = [
             {
                 label: 'Valoración inicial enfermería',
@@ -90,6 +118,7 @@ export class CamaComponent implements OnInit {
         return '';
     }
 
+
     /**
      * Buscar un paciente para internar.
      *
@@ -105,7 +134,6 @@ export class CamaComponent implements OnInit {
             } else {
                 this.buscarPaciente.emit(true);
                 this.camaSelected.emit(cama);
-                // this.router.navigate(['rup/internacion/crear', cama.id]);
             }
         }
     }
@@ -135,7 +163,7 @@ export class CamaComponent implements OnInit {
 
     public devolverCama(cama) {
         let dto = {
-            fecha: this.fecha,
+            fecha: this.combinarFechas(),
             estado: cama.ultimoEstado.estado,
             unidadOrganizativa: cama.unidadOrganizativaOriginal,
             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
@@ -151,16 +179,16 @@ export class CamaComponent implements OnInit {
 
     public cambiarEstado(cama, estado) {
         let dto = {
-            fecha: this.fecha,
+            fecha: this.combinarFechas(),
             estado: estado,
             unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
             especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
             esCensable: cama.ultimoEstado.esCensable,
             genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
             paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
-            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null,
+            esMovimiento: false
         };
-
         this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
             cama.ultimoEstado = camaActualizada.ultimoEstado;
             let msg = '';
@@ -199,40 +227,38 @@ export class CamaComponent implements OnInit {
         });
     }
 
-    public desocuparCama(cama) {
-        let paciente = cama.ultimoEstado.paciente;
-        let idInternacion = cama.ultimoEstado.idInternacion;
-        let dto = {
-            fecha: this.fecha,
-            estado: 'desocupada',
-            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
-            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
-            esCensable: cama.ultimoEstado.esCensable,
-            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
-            paciente: null,
-            idInternacion: null,
-            sugierePase: this.PaseAunidadOrganizativa
-        };
+    public desocuparCama(event, cama, estado) {
+        if (event.formValid) {
+            let paciente = cama.ultimoEstado.paciente;
+            let idInternacion = cama.ultimoEstado.idInternacion;
+            if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
+                let nuevoEstado = this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
+                // Primero desocupamos la cama donde esta el paciente actualmente
+                this.camasService.cambioEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
+                    cama.ultimoEstado = camaActualizada.ultimoEstado;
+                    // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
+                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
+                        this.PaseAunidadOrganizativa).subscribe(camaCambio => {
+                            this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
+                            this.rotarDesocuparCama();
+                            // emitimos las camas modificadas
+                            this.evtCama.emit({ camaDesocupada: cama, movimientoCama: true, camaOcupada: this.camaSeleccionPase });
 
-        this.camasService.cambiaEstado(cama.id, dto).subscribe(camaActualizada => {
-            cama.ultimoEstado = camaActualizada.ultimoEstado;
-            if (this.camaSeleccionPase) {
-                this.darCama(paciente, idInternacion, this.camaSeleccionPase);
+                        }, (err1) => {
+                            this.plex.info('danger', err1, 'Error');
+                        });
+
+                }, (err) => {
+                    this.plex.info('danger', err, 'Error');
+                });
             } else {
-                this.plex.toast('success', 'Cama desocupada', 'Cambio estado');
+                if (this.opcionDesocupar === 'egreso') {
+                    this.verInternacionEmit.emit(cama);
+                }
             }
-            // rotamos card
-            setTimeout(() => {
-                // rotamos cama
-                cama.$rotar = false;
-                // limpiar motivo por el cual se cambio el estado
-                cama.$motivo = '';
-                // emitimos la cama modificada
-                this.evtCama.emit({ cama: cama });
-            }, 100);
-        }, (err) => {
-            this.plex.info('danger', err, 'Error');
-        });
+
+        }
+
     }
 
     SetFecha() {
@@ -240,7 +266,7 @@ export class CamaComponent implements OnInit {
     }
 
     /**
-     * Función que sirve para asignarle una cama a un paciente
+     * Función que sirve para asignarle una cama a un paciente: DESDE LA LISTA DE ESPERA
      *
      * @param paciente paciente que será asignado a una cama
      * @param idInternacion internación que está siendo ejecutada
@@ -273,20 +299,72 @@ export class CamaComponent implements OnInit {
     }
 
     /**
-     * Carga el combo de las camas disponibles
+     * Carga el combo de las camas disponibles por unidad organizativa
      */
-    selectCamasDisponibles(event) {
-        if (event) {
-            this.params.fecha = moment().endOf('day').toDate();
-            this.camasService.getCamasXFecha(this.params.idOrganizacion, this.params.fecha).subscribe(resultado => {
-                this.listaCamasDisponibles = resultado.filter(cama => cama.ultimoEstado.estado === 'disponible');
-                event.callback(this.listaCamasDisponibles);
-            });
+    selectCamasDisponibles(idUnidadOrganizativa) {
+        let fecha = moment().endOf('day').toDate();
+        this.camasService.getCamasXFecha(this.auth.organizacion.id, fecha).subscribe(resultado => {
+            if (resultado) {
+                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.id === idUnidadOrganizativa);
+                this.listadoCamas = [...lista];
+            }
+
+        });
+    }
+
+    /**
+     * Elegir al desocupar la cama que operacion se desea realizar:
+     * Movimiento dentro de la misma UO / Pase de UO / Egreso Paciente
+     * @param opcionElegida
+     */
+    operacionDesocuparCama() {
+        if (this.opcionDesocupar === 'movimiento') {
+            this.elegirDesocupar = false;
+            this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.id);
+        } else {
+            if (this.opcionDesocupar === 'pase') {
+                this.elegirDesocupar = false;
+
+            } else {
+                if (this.opcionDesocupar === 'egreso') {
+                    this.rotarDesocuparCama();
+                    this.verInternacionEmit.emit(this.cama);
+                }
+            }
         }
     }
 
     camaSeleccionada() {
         this.camaSelected.emit(this.cama);
     }
+
+
+
+    combinarFechas() {
+        if (this.fecha && this.hora) {
+            let horas: number;
+            let minutes: number;
+            let auxiliar: Date;
+            auxiliar = new Date(this.fecha);
+            horas = this.hora.getHours();
+            minutes = this.hora.getMinutes();
+            auxiliar.setHours(horas, minutes, 0, 0);
+            return auxiliar;
+        } else {
+            return null;
+        }
+    }
+
+    rotarDesocuparCama() {
+        this.cama.$rotar = !this.cama.$rotar;
+        this.elegirDesocupar = true;
+        this.opcionDesocupar = null;
+        this.listadoCamas = [];
+    }
+
+    comprobarWorkflow() {
+        return this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id);
+    }
+
 
 }

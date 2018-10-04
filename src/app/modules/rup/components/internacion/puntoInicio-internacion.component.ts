@@ -4,6 +4,7 @@ import { Plex } from '@andes/plex';
 import { Router } from '@angular/router';
 import { PrestacionesService } from '../../services/prestaciones.service';
 import { ElementosRUPService } from '../../services/elementosRUP.service';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'app-punto-inicio-internacion',
@@ -25,7 +26,8 @@ export class PuntoInicioInternacionComponent implements OnInit {
         public servicioPrestacion: PrestacionesService,
         private plex: Plex,
         private router: Router,
-        private elementoRupService: ElementosRUPService
+        private elementoRupService: ElementosRUPService,
+        private auth: Auth
     ) { }
 
     ngOnInit() {
@@ -57,7 +59,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
-        this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion').subscribe(resultado => {
+        this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion).subscribe(resultado => {
             // Si el paciente ya tiene una internacion en ejecucion
             if (resultado) {
                 this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
