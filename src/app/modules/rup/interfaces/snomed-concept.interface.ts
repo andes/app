@@ -5,5 +5,6 @@ export interface ISnomedConcept {
     fsn: string;
     semanticTag: string;
     refsetIds?: string[];
-    noNominalizada: boolean;
+    esSolicitud?: boolean;
+    noNominalizada?: boolean;
 };

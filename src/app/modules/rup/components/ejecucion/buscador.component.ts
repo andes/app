@@ -135,7 +135,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
 
     async ngOnInit() {
-
         this.servicioPrestacion.getRefSetData().subscribe(async refset => {
             this.busquedaRefSet = refset;
             // inicializamos variable resultsAux con la misma estructura que results
@@ -164,7 +163,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     inicializarBuscadorBasico() {
         this.servicioTipoPrestacion.get({}).subscribe(async conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
-
             if (this.frecuentesTipoPrestacion.length > 0) {
                 this.results.sugeridos['todos'] = [];
                 this.frecuentesTipoPrestacion.forEach(element => {
@@ -186,6 +184,8 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 const frecuentesProfesional = fp.map((res: any) => {
                     let concepto = res.concepto;
                     (concepto as any).frecuencia = res.frecuencia;
+                    (concepto as any).esSolicitud = res.concepto.esSolicitud;
+
                     return concepto;
                 });
 
@@ -199,6 +199,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             this.results['frecuentesTP']['todos'] = frecuentesTP.map(res => {
                 let concepto = res.concepto;
                 concepto.frecuencia = res.frecuencia;
+                concepto.esSolicitud = res.concepto.esSolicitud;
                 return concepto;
             });
             // this.filtrarResultados('frecuentesTP');
@@ -218,6 +219,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         };
         return this.frecuentesProfesionalService.get(queryFP).toPromise();
     }
+
 
     private inicializarFrecuentesTP() {
         let queryFTP = {
@@ -452,11 +454,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     public filtrarResultados(busquedaActual = 'busquedaActual') {
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual][this.filtroActual];
-
         if (this.conceptos && resultados) {
             Object.keys(this.conceptos).forEach(concepto => {
                 this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
-
 
                 if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
                     this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
@@ -467,10 +467,15 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         }
 
         if (this.results && this.results[busquedaActual]) {
+
             // quitamos de this.filtroActual aquellos que son turneables, no es correcto que aparezcan
             this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'].filter(x => !this.esTurneable(x));
             // quitamos de los 'procedimientos' aquellos que son turneables, no es correcto que aparezcan
             this.results[busquedaActual]['procedimientos'] = this.results[busquedaActual]['procedimientos'] ? this.results[busquedaActual]['procedimientos'].filter(x => !this.esTurneable(x)) : [];
+            if (busquedaActual !== 'buscadorBasico') {
+                // quitamos de los 'planes' aquellos que son no son solicitudes, no es correcto que aparezcan
+                this.results[busquedaActual]['planes'] = this.results[busquedaActual]['planes'] ? this.results[busquedaActual]['planes'].filter(x => this.esSolicitud(x)) : [];
+            }
             if (this.results[busquedaActual]['planes']) {
                 let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
                 let planes = [];
@@ -656,6 +661,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         return this.conceptosTurneables.find(x => {
             return x.conceptId === concepto.conceptId;
         });
+    }
+
+    public esSolicitud(concepto: any) {
+        return concepto.esSolicitud;
     }
 
     /**
