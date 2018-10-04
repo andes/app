@@ -37,9 +37,14 @@ export class MapaDeCamasComponent implements OnInit {
     public organizacion: IOrganizacion;
     public prestacion: any;
     public fecha = new Date;
+    public hoy = new Date;
+    public fechaDesde = new Date;
+
+    public fechaHasta = new Date;
     public loader = true;
     public showMenu = true;
     public historicoMode = false;
+    public estadosMode = true;
     public filtroActive;
     public cantidadXEstado;
     public inactive = false;
@@ -61,6 +66,8 @@ export class MapaDeCamasComponent implements OnInit {
     public camaInternacion;
     public loadCountFiltros = false;
     public editarIngreso;
+
+    public showEstados = true;
 
     // filtros para el mapa de cama
     public filtros: any = {
@@ -85,7 +92,8 @@ export class MapaDeCamasComponent implements OnInit {
     public panelIndex = 0;
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-
+    public historial: any[] = [];
+    public inicioBusqueda = false;
     constructor(
         public servicioPrestacion: PrestacionesService,
         private auth: Auth,
@@ -325,6 +333,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.historicoMode = false;
             this.fecha = new Date();
         }
+        this.showEstadosMet();
         this.refresh();
     }
 
@@ -457,6 +466,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.camaSeleccionada = cama;
             this.prestacionPorInternacion = null;
         }
+        this.reseteaBusqueda();
     }
 
     prestacionDelPaciente(cama) {
@@ -528,5 +538,28 @@ export class MapaDeCamasComponent implements OnInit {
         this.showEgreso = true;
     }
 
+    buscarHistorial() {
+        this.camasService.getHistorialCama(this.auth.organizacion._id, this.fechaDesde, this.fechaHasta, this.camaSeleccionada.id).subscribe(historial => {
+            this.inicioBusqueda = true;
+            if (historial.length > 0) {
+                this.historial = historial;
+            } else {
+                this.historial = [];
+            }
+        });
 
+
+    }
+
+    reseteaBusqueda() {
+        this.historial = [];
+    }
+
+    showEstadosMet() {
+        if (moment(this.fecha).format('DD/MM/YYYY') !== moment(this.hoy).format('DD/MM/YYYY')) {
+            this.estadosMode = false;
+        } else {
+            this.estadosMode = true;
+        }
+    }
 }

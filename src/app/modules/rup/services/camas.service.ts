@@ -32,6 +32,16 @@ export class CamasService {
         };
         return this.server.get(this.camasUrl + '/porfecha', { params: params, showError: true });
     }
+    getHistorialCama(idOrganizacion, fechaDesde, fechaHasta, idCama): Observable<any[]> {
+        let params = {
+            idOrganizacion: idOrganizacion,
+            fechaDesde: fechaDesde,
+            fechaHasta: fechaHasta,
+            idCama: idCama
+        };
+        return this.server.get(this.camasUrl + '/historial', { params: params });
+    }
+
 
 
     /**
