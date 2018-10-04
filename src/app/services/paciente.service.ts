@@ -49,15 +49,15 @@ export class PacienteService {
     }
 
     getAuditoria(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/auditoria/', {params: params, showError: true});
+        return this.server.get(this.pacienteUrl + '/auditoria/', { params: params, showError: true });
     }
 
     getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/auditoria/vinculados/', {params: params, showError: true});
+        return this.server.get(this.pacienteUrl + '/auditoria/vinculados/', { params: params, showError: true });
     }
 
     getPacientesValidados(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/auditoria/pacientesValidados/', {params: params, showError: true});
+        return this.server.get(this.pacienteUrl + '/auditoria/pacientesValidados/', { params: params, showError: true });
     }
 
     getDashboard(): Observable<IPaciente[]> {
@@ -99,6 +99,23 @@ export class PacienteService {
     patch(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
         return this.server.patch(this.pacienteUrl + '/' + id, cambios);
     }
+
+    /**
+    * Metodo post. Modifica la propiedad "activo" del paciente.
+    * @param {any} cambios Recibe any
+    */
+    postActivo(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
+        return this.server.post(this.pacienteUrl + '/' + id + '/activo', cambios);
+    }
+    /**
+    * Metodo post. Modifica el array de identificadores del paciente.
+    * @param {any} cambios Recibe any
+    */
+    postIdentificadores(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
+        return this.server.post(this.pacienteUrl + '/' + id + '/identificadores', cambios);
+    }
+
+
 
     /**
      * Metodo disable. deshabilita un objeto paciente.
