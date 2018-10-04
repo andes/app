@@ -38,6 +38,13 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         { id: 'lugarDetrabajo', nombre: 'Lugar de trabajo' }, { id: 'otro', nombre: 'otro' }, { id: 'seIgnora', nombre: 'Se ignora' }
         ]
     };
+    public opcionesTipoParto = [{ id: 'Simple', label: 'Simple' }, { id: 'Multiple', label: 'Multiple' }];
+    public opcionesCondicionAlNacer = [{ id: 'Nac. Vivo', label: 'Nac. Vivo' }, { id: 'Def. fetal', label: 'Def. fetal' }];
+    public opcionesTerminacion = [{ id: 'Vaginal', label: 'Vaginal' }, { id: 'Cesária', label: 'Cesária' }];
+    public opcionesSexo = [{ id: 'Femenino', label: 'Femenino' }, { id: 'Masculino', label: 'Masculino' }, { id: 'Indeterminado', label: 'Indeterminado' }];
+
+
+
     public procedimientosObstetricos = false;
     public ExisteCausaExterna = false;
     public mostrarValidacion = false;
@@ -48,12 +55,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
         esPrimeraVez: false,
         relacionadoCon: [],
         nombre: 'alta del paciente',
-        concepto: {
-            conceptId: '58000006',
-            term: 'alta del paciente',
-            fsn: 'alta del paciente (procedimiento)',
-            semanticTag: 'procedimiento'
-        },
+        concepto: this.internacionService.conceptosInternacion.egreso,
         valor: null
     };
 
@@ -101,6 +103,12 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             };
             this.showProcedimientos_causas();
         } else {
+            let fechaRegistrada = this.registro.valor.InformeEgreso.fechaEgreso ? new Date(this.registro.valor.InformeEgreso.fechaEgreso) : null;
+            if (fechaRegistrada) {
+                this.fechaEgreso = fechaRegistrada;
+                this.horaEgreso = fechaRegistrada;
+            }
+            this.showProcedimientos_causas();
             this.btnIniciarEditarEmit.emit('Editar');
         }
         // // Cargamos todos los procedimientos.

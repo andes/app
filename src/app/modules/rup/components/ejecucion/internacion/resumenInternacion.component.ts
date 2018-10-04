@@ -20,7 +20,6 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
     public pases;
     public editarIngreso = false;
-    // public editarEgreso = false;
     public btnIniciarEditar;
     public mostrarValidacion = false;
 
