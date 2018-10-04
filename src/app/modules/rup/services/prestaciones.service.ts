@@ -51,8 +51,8 @@ export class PrestacionesService {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
     }
 
-    getRefSetData(): Observable<any> {
-        return this.datosRefSet.asObservable();
+    getRefSetData(): any {
+        return this.datosRefSet.getValue();
     }
 
     clearRefSetData() {

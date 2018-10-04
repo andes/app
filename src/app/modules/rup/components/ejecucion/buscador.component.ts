@@ -248,9 +248,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 }
             });
         }
-        this.servicioPrestacion.getRefSetData().subscribe(concepto => {
-            this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
-        });
+        // this.servicioPrestacion.getRefSetData().subscribe(concepto => {
+        let concepto: any = this.servicioPrestacion.getRefSetData();
+        this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
+        // });
 
     }
 
