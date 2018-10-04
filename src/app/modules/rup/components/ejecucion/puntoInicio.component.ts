@@ -336,6 +336,10 @@ export class PuntoInicioComponent implements OnInit {
                 total += (t.paciente && t.paciente.id) ? 1 : 0;
             });
         }
+        if (agenda.sobreturnos && agenda.sobreturnos.length > 0) {
+            total = total + agenda.sobreturnos.length;
+        }
+
 
         return total;
     }
