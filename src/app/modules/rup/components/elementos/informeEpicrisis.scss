@@ -40,20 +40,18 @@
     }
 }
 
-.icon-rup {
-    &:not(.relacionado) {
-        width: 35px !important;
-    }
+// .icon-rup {
+//     &:not(.relacionado) {
+//         width: 35px !important;
+//     }
 
-    i {
-        position: relative;
-        left: -8px;
-        top: 3px;
-        width: 35px;
-    }
-}
-
-
+//     i {
+//         position: relative;
+//         left: -8px;
+//         top: 3px;
+//         width: 35px;
+//     }
+// }
 
 .alerta-campo {
     .card {
@@ -71,15 +69,15 @@
 
 }
 
-.rup-card {
-    .legend {
-        width: 35px !important;
+// .rup-card {
+//     .legend {
+//         width: 35px !important;
 
-        span {
-            margin-bottom: 90px;
-        }
-    }
-}
+//         span {
+//             margin-bottom: 90px;
+//         }
+//     }
+// }
 
 .grid-container {
     display: grid;
