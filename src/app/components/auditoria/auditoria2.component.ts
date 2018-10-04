@@ -130,7 +130,7 @@ export class Auditoria2Component implements OnInit {
     /**
      * Vincula el paciente seleccionado tanto por Drag&Drop como por el clic en el clip
      *
-     * @param {*} paciente : El paciente a vincualar
+     * @param {*} paciente : El paciente a vincular
      * @memberof Auditoria2Component
      */
     vincular(pac: any) {
@@ -139,26 +139,17 @@ export class Auditoria2Component implements OnInit {
             entidad: 'ANDES',
             valor: pac.id
         };
-        this.pacienteService.patch(this.pacienteSelected.id, {
-            'op': 'linkIdentificadores',
+        this.pacienteService.postIdentificadores(this.pacienteSelected.id, {
+            'op': 'link',
             'dto': dataLink
         }).subscribe(resultado => {
-            if (resultado) {
-                let activo = false;
-                this.pacienteService.patch(pac.id, {
-                    'op': 'updateActivo',
-                    'dto': activo
-                }).subscribe(resultado2 => {
-                    if (resultado2) {
-                        this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
-                    }
-                });
-            }
+
+            this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
         });
     }
 
     /**
-     * Implica activa al paciente y quitar el objectId asociado al paciente
+     * Implica activar al paciente y quitar el objectId asociado al paciente
      *
      * @param {*} pac
      * @memberof Auditoria2Component
@@ -169,22 +160,16 @@ export class Auditoria2Component implements OnInit {
             if (rta) {
                 this.pacientesVinculados.splice(this.pacientesVinculados.indexOf(pac), 1);
                 this.pacientesDesvinculados.push(pac);
-                this.pacienteService.patch(this.pacienteSelected.id, {
-                    'op': 'unlinkIdentificadores',
-                    'dto': pac.id
+                let dataLink = {
+                    entidad: 'ANDES',
+                    valor: pac.id
+                };
+                this.pacienteService.postIdentificadores(this.pacienteSelected.id, {
+                    'op': 'unlink',
+                    'dto': dataLink
                 }).subscribe(resultado1 => {
-                    if (resultado1) {
-                        // Activa el paciente
-                        let activo = true;
-                        this.pacienteService.patch(pac.id, {
-                            'op': 'updateActivo',
-                            'dto': activo
-                        }).subscribe(resultado2 => {
-                            if (resultado2) {
-                                this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
-                            }
-                        });
-                    }
+
+                    this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
                 });
             }
         });
