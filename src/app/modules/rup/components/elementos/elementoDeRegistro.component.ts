@@ -32,8 +32,6 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     public collapse = true;
 
     public conceptosTurneables: any[];
-    suscriptionConcepto: Subscription;
-    suscriptionSeccion: Subscription;
     suscriptionBuscador: any;
     seleccionado: any;
     conceptoSeleccionado: any;
@@ -53,27 +51,19 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             this.conceptosTurneables = conceptosTurneables;
         });
 
-        this.suscriptionSeccion = this.prestacionesService.getRefSetData().subscribe(seleccionado => {
-            this.seleccionado = seleccionado;
-            this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
-                // Estamos en la sección que tiene el foco actual?
-                if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
-                    this.suscriptionConcepto = this.prestacionesService.getData().subscribe(data => {
-                        if (data && data.concepto) {
-                            if (this.conceptoSeleccionado !== data.concepto) {
-                                this.conceptoSeleccionado = data.concepto;
-                                this.ejecutarConceptoInside(data.concepto);
-                            }
-                        }
-                    });
-                    // Se limpia el concepto agregado (viene desde el buscador)
-                    if (this.suscriptionConcepto && !this.suscriptionConcepto.closed) {
-                        this.suscriptionConcepto.unsubscribe();
+
+        this.suscriptionBuscador = this.prestacionesService.notifySelection.subscribe(() => {
+            this.seleccionado = this.prestacionesService.getRefSetData();
+            // Estamos en la sección que tiene el foco actual?
+            if (this.seleccionado && this.registro.concepto.conceptId === this.seleccionado.conceptos.conceptId) {
+                let data: any = this.prestacionesService.getData();
+                if (data && data.concepto) {
+                    if (this.conceptoSeleccionado !== data.concepto) {
+                        this.conceptoSeleccionado = data.concepto;
+                        this.ejecutarConceptoInside(data.concepto);
                     }
-                    // Se limpia el notificador..
-                    this.suscriptionBuscador.unsubscribe();
                 }
-            });
+            }
         });
     }
 

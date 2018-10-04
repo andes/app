@@ -40,7 +40,7 @@ export class PrestacionesService {
     }
 
     getData(): Observable<any> {
-        return this.concepto.asObservable();
+        return this.concepto.getValue();
     }
 
     clearData() {
@@ -52,7 +52,7 @@ export class PrestacionesService {
     }
 
     getRefSetData(): Observable<any> {
-        return this.datosRefSet.asObservable();
+        return this.datosRefSet.getValue();
     }
 
     clearRefSetData() {
