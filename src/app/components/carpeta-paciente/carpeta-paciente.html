@@ -1,10 +1,9 @@
 <fieldset>
-    <br>
     <div class="col-12" *ngIf="showList">
-
         <h5 *ngIf="carpetaEfectores?.length > 0">Organización | Número de carpeta</h5>
         <ul class="list-group">
-            <li *ngFor="let carpeta of carpetaEfectores" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }" class="list-group-item">
+            <li *ngFor="let carpeta of carpetaEfectores" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }"
+                class="list-group-item">
                 <div class="row" *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta!=''">
                     <div class="col-11">
                         {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
@@ -30,7 +29,6 @@
                 </div>
             </li>
         </ul>
-        <hr>
         <div class="row" *ngIf="showNuevaCarpeta">
             <div class="col-12">
                 <h6>

@@ -33,6 +33,7 @@ export class IniciarInternacionComponent implements OnInit {
     @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
+    @Output() otroPaciente: EventEmitter<any> = new EventEmitter<any>();
     nroCarpetaOriginal: string;
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
@@ -438,6 +439,12 @@ export class IniciarInternacionComponent implements OnInit {
             this.paciente.carpetaEfectores = carpetas;
         }
         this.showEditarCarpetaPaciente = false;
+    }
+
+    // permite elegir otro paciente para internar
+    buscarOtroPaciente() {
+        this.buscandoPaciente = true;
+        this.otroPaciente.emit(false);
     }
 
 }
