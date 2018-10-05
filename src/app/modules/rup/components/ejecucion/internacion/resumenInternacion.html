@@ -18,21 +18,21 @@
             <ng-container>
                 <section class="andes-contenedor-secundario vertical">
                     <!-- <h4 class="text-info">Pases</h4> -->
-                    <table class="table table-dark">
+                    <table class="table table-dark table-sm"> -->
                         <thead>
                             <tr>
-                                <th class="txt-responsive">Fecha</th>
-                                <th class="txt-responsive">Cama</th>
-                                <th class="txt-responsive">Unidad organizativa</th>
-                                <th class="txt-responsive">Especialidad</th>
+                                <th>Fecha</th>
+                                <th>Cama</th>
+                                <th>Unidad organizativa</th>
+                                <th>Especialidad</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let pase of pases; let i=index">
-                                <td class="txt-responsive">{{ pase.estados.fecha | date:'dd-MM-yyyy HH:mm' }}</td>
-                                <td class="txt-responsive">{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
-                                <td class="txt-responsive">{{ pase.estados.unidadOrganizativa.term }}</td>
-                                <td class="txt-responsive">{{ pase.estados.especialidades[0]?.term }}</td>
+                                <td>{{ pase.estados.fecha |date:'dd-MM-yyyy HH:mm' }}</td>
+                                <td>{{ getHabitacionName(pase) + '/' + pase.nombre }}</td>
+                                <td>{{ pase.estados.unidadOrganizativa.term }}</td>
+                                <td>{{ pase.estados.especialidades[0]?.term }}</td>
                             </tr>
                         </tbody>
                     </table>

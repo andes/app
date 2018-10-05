@@ -81,28 +81,32 @@
             </div>
             <div class="card-contenedor-lateral" *ngIf="!readOnly">
                 <!-- Liberar la cama -->
-                <button class="rounded left btn-success" title="Desocupar Cama" title="Desocupar Cama" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha();"
-                    *ngIf="cama.ultimoEstado?.idInternacion">
+                <button class="rounded left btn-success" title="Desocupar" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; SetFecha();"
+                    *ngIf="showEstados && cama.ultimoEstado?.idInternacion">
                     <i class="mdi mdi-close-box"></i>
                 </button>
                 <!-- Editar datos de la cama -->
-                <button class="rounded left btn-primary" (click)="editarCama(cama)">
+                <button *ngIf="showEstados" class="rounded left btn-primary" title="Editar" (click)="editarCama(cama)">
                     <i class="mdi mdi-mdi mdi-pencil"></i>
                 </button>
                 <!-- bloquear cama -->
-                <button class="rounded left btn-danger" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()" *ngIf="!cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
+                <button class="rounded left btn-danger" title="Bloquear" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                    *ngIf="showEstados && !cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
                     <i class="mdi mdi-lock"></i>
                 </button>
                 <!-- Internar paciente -->
-                <button class="rounded left btn-success" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'" *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly">
+                <button class="rounded left btn-success" title="Internar" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'"
+                    *ngIf="showEstados && !cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly">
                     <i class="mdi mdi-account-plus"></i>
                 </button>
                 <!-- Prearar cama -->
-                <button class="rounded left btn-warning" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'" *ngIf="cama.ultimoEstado.estado == 'desocupada' && !readOnly"
-                    title="Preparar cama">
+                <button class="rounded left btn-warning" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'preparar'" *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly"
+                    title="Preparar">
                     <i class="mdi mdi-spray"></i>
                 </button>
-                <button class="rounded left btn-success" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()" *ngIf="!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly">
+                <!-- Desbloquear cama -->
+                <button class="rounded left btn-success" title="Desbloquear" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; SetFecha()"
+                    *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly">
                     <i class="mdi mdi-lock-open"></i>
                 </button>
             </div>

@@ -8,7 +8,7 @@
                         <h6>
                             <b>Paciente:</b>
                         </h6>
-                        <h6>{{ paciente.apellido }}, {{ paciente.nombre }}</h6>
+                        <h6>{{ paciente | paciente}}</h6>
                         <div class="row">
                             <div class="col" *ngIf="!soloValores">
                                 <carpeta-paciente [pacienteSeleccionado]="paciente" (guardarCarpetaEmit)="afterComponenteCarpeta($event)"
@@ -97,7 +97,7 @@
         <div class="row">
             <div class="col-4">
                 <b>Paciente:</b>
-                <p>{{ paciente.apellido }}, {{ paciente.nombre }}</p>
+                <p>{{ paciente | paciente }}</p>
             </div>
             <div class="col-3" *ngIf="informeIngreso.nroCarpeta">
                 <b>Nro Carpeta:</b>
@@ -135,7 +135,7 @@
         <div class="row">
             <div *ngIf="informeIngreso.profesional" class="col-6">
                 <b>Profesional:</b>
-                <p>{{informeIngreso.profesional.nombreCompleto}}</p>
+                <p>{{informeIngreso.profesional | profesional}}</p>
             </div>
             <div *ngIf="informeIngreso.motivo" class="col-6">
                 <b>Motivo:</b>
