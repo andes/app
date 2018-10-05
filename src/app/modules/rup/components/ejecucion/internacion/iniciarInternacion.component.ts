@@ -32,6 +32,7 @@ export class IniciarInternacionComponent implements OnInit {
     @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
     @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
+    @Output() otroPaciente: EventEmitter<any> = new EventEmitter<any>();
     nroCarpetaOriginal: string;
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
@@ -364,6 +365,7 @@ export class IniciarInternacionComponent implements OnInit {
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
                 if (this.obraSocial) {
                     nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoPuco, nombre: this.obraSocial.nombre };
+                    this.informeIngreso.obraSocial = this.obraSocial;
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
@@ -435,6 +437,12 @@ export class IniciarInternacionComponent implements OnInit {
             this.paciente.carpetaEfectores = carpetas;
         }
         this.showEditarCarpetaPaciente = false;
+    }
+
+    // permite elegir otro paciente para internar
+    buscarOtroPaciente() {
+        this.buscandoPaciente = true;
+        this.otroPaciente.emit(false);
     }
 
 }

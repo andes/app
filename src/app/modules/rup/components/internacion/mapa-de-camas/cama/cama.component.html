@@ -118,7 +118,7 @@
             <div class="header">
                 <fieldset>
                     <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">Desbloquear</legend>
-                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'desocupada'">Bloquear</legend>
+                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'disponible'">Bloquear</legend>
                     <legend *ngIf="cama.$action && cama.$action !== 'bloquear'">{{cama.$action.toString()}}</legend>
                 </fieldset>
                 <!-- {{cama.$action | json}} -->
