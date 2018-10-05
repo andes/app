@@ -59,7 +59,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
     onPacienteSelected(paciente) {
         this.showLoader = true;
         this.pacienteSeleccionado = paciente;
-        this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion).subscribe(resultado => {
+        this.servicioPrestacion.internacionesXPaciente(paciente, 'ejecucion', this.auth.organizacion.id).subscribe(resultado => {
             // Si el paciente ya tiene una internacion en ejecucion
             if (resultado) {
                 this.servicioPrestacion.get({ idPrestacionOrigen: resultado.ultimaInternacion.id }).subscribe(prestacionExiste => {
