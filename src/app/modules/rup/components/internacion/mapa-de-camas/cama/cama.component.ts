@@ -7,20 +7,15 @@ import { PacienteService } from '../../../../../../services/paciente.service';
 import { CamasService } from '../../../../services/camas.service';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
 import { PrestacionesService } from '../../../../services/prestaciones.service';
-import { ICamaEstado } from '../../../../interfaces/ICamaEstado';
 import { InternacionService } from '../../../../services/internacion.service';
-import { dateValidator } from '@andes/plex/src/lib/core/validator.functions';
 
 @Component({
-    selector: 'app-cama',
+    selector: 'cama',
     templateUrl: './cama.component.html',
-    styleUrls: ['./cama.component.css'],
-    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
+    styleUrls: ['./cama.component.scss'],
 })
 export class CamaComponent implements OnInit {
-
     @Input() cama: any;
-
     @Input() prestacion: any;
     // Lo usamos para pasar el id de la organizacion y la fecha del mapa de camas que tenemos en la vista.
     @Input() params: any;
@@ -33,7 +28,7 @@ export class CamaComponent implements OnInit {
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
 
     public organizacion: any;
-    public PaseAunidadOrganizativa: any;
+    public paseAunidadOrganizativa: any;
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
     public estadoDesbloqueo: String = 'disponible';
@@ -234,11 +229,11 @@ export class CamaComponent implements OnInit {
             if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                 let nuevoEstado = this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                 // Primero desocupamos la cama donde esta el paciente actualmente
-                this.camasService.cambioEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.PaseAunidadOrganizativa).subscribe(camaActualizada => {
+                this.camasService.cambioEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
                     cama.ultimoEstado = camaActualizada.ultimoEstado;
                     // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
                     this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
-                        this.PaseAunidadOrganizativa).subscribe(camaCambio => {
+                        this.paseAunidadOrganizativa).subscribe(camaCambio => {
                             this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
                             this.rotarDesocuparCama();
                             // emitimos las camas modificadas
@@ -256,12 +251,10 @@ export class CamaComponent implements OnInit {
                     this.verInternacionEmit.emit(cama);
                 }
             }
-
         }
-
     }
 
-    SetFecha() {
+    setFecha() {
         this.fecha = new Date();
     }
 
@@ -334,11 +327,9 @@ export class CamaComponent implements OnInit {
         }
     }
 
-    camaSeleccionada() {
+    seleccionarCama() {
         this.camaSelected.emit(this.cama);
     }
-
-
 
     combinarFechas() {
         if (this.fecha && this.hora) {
