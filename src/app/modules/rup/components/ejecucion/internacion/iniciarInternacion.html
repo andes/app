@@ -57,8 +57,12 @@
                         <legend>Datos de la Internación</legend>
                         <div class="row">
                             <div class="col">
-                                <plex-datetime *ngIf="!soloValores" type="datetime" [(ngModel)]="informeIngreso.fechaIngreso" [required]="true" [autoFocus]="autoFocus "
-                                    name="fechaIngreso " label="Fecha Ingreso">
+                                <plex-datetime *ngIf="!soloValores" type="date" [(ngModel)]="fecha" [required]="true" [autoFocus]="autoFocus " name="fechaIngreso "
+                                    label="Fecha Ingreso">
+                                </plex-datetime>
+                            </div>
+                            <div class="col">
+                                <plex-datetime *ngIf="!soloValores" type="time" [(ngModel)]="hora" [required]="true" name="horaIngreso " label="Fecha Ingreso">
                                 </plex-datetime>
                             </div>
                         </div>

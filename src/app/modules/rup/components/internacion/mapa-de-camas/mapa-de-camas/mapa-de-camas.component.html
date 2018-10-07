@@ -141,7 +141,7 @@
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs [activeIndex]="panelIndex">
+                    <plex-tabs *ngIf="panelIndex >= 0" [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
                         <plex-tab label="Datos de cama">

@@ -59,7 +59,6 @@ export class InternacionService {
             auxiliar = new Date(fecha1);
             horas = fecha2.getHours();
             minutes = fecha2.getMinutes();
-            // Date.setHours(hour, min, sec, millisec)
             auxiliar.setHours(horas, minutes, 0, 0);
             return auxiliar;
         } else {
