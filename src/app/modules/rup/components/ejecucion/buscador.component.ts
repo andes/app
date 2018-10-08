@@ -202,7 +202,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 concepto.esSolicitud = res.concepto.esSolicitud;
                 return concepto;
             });
-            // this.filtrarResultados('frecuentesTP');
+            this.filtrarResultados('frecuentesTP');
 
             this.resultsAux.frecuentesTP = Object.assign({}, this.results.frecuentesTP);
 
@@ -444,6 +444,8 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         if (resultadosSnomed.items.length === 0) {
             this.results['sugeridos'] = this.resultsAux.sugeridos;
             this.results['misFrecuentes'] = this.resultsAux.misFrecuentes;
+            this.results['frecuentesTP'] = this.resultsAux.frecuentesTP;
+
             this.results['buscadorBasico'] = [];
 
             // Llamamos a la función de la búsqueda guiada para que limpie los campos.
@@ -475,6 +477,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             if (busquedaActual !== 'buscadorBasico') {
                 // quitamos de los 'planes' aquellos que son no son solicitudes, no es correcto que aparezcan
                 this.results[busquedaActual]['planes'] = this.results[busquedaActual]['planes'] ? this.results[busquedaActual]['planes'].filter(x => this.esSolicitud(x)) : [];
+            }
+            if (busquedaActual === 'misFrecuentes' || busquedaActual === 'frecuentesTP') {
+                // quitamos aquellos que son no son elementos de registros, no es correcto que aparezcan
+                this.results[busquedaActual]['todos'] = this.results[busquedaActual]['todos'] ? this.results[busquedaActual]['todos'].filter(x => !this.esElementoRegistro(x)) : [];
             }
             if (this.results[busquedaActual]['planes']) {
                 let planesCopia = JSON.parse(JSON.stringify(this.results[busquedaActual]['planes']));
@@ -665,6 +671,10 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
     public esSolicitud(concepto: any) {
         return concepto.esSolicitud;
+    }
+
+    public esElementoRegistro(concepto: any) {
+        return concepto.semanticTag === 'elemento de registro';
     }
 
     /**
