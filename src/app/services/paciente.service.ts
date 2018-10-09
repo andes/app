@@ -9,7 +9,6 @@ import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.intefac
 
 @Injectable()
 export class PacienteService {
-
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
     private carpetaUrl = '/modules/carpetas';
 
@@ -47,6 +46,18 @@ export class PacienteService {
 
     get(params: PacienteSearch): Observable<IPaciente[]> {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
+    }
+
+    getAuditoria(params: any): Observable<IPaciente[]> {
+        return this.server.get(this.pacienteUrl + '/auditoria/', {params: params, showError: true});
+    }
+
+    getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
+        return this.server.get(this.pacienteUrl + '/auditoria/vinculados/', {params: params, showError: true});
+    }
+
+    getPacientesValidados(params: any): Observable<IPaciente[]> {
+        return this.server.get(this.pacienteUrl + '/auditoria/pacientesValidados/', {params: params, showError: true});
     }
 
     getDashboard(): Observable<IPaciente[]> {
