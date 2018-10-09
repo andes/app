@@ -17,14 +17,14 @@
                                     </plex-int>
                                 </div>
                                 <div class="col-4">
-                                    <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
-                                    </plex-text>
+                                    <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;"
+                                        placeholder="Seleccione..." [required]="true" label="Sexo">
+                                    </plex-select>
                                 </div>
                                 <div class="col-4">
-                                    <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
-                                    </plex-text>
+                                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                        [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
+                                    </plex-datetime>
                                 </div>
                             </div>
                             <div class="row" *ngIf="!validado">
@@ -34,23 +34,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <plex-datetime label="Fecha de Nacimiento" [max]="hoy" type="date" [readonly]="validado" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
-                                        [(ngModel)]="pacienteModel.fechaNacimiento" name="fechaNacimiento" [required]="!noPoseeDNI">
-                                    </plex-datetime>
+                                    <plex-text label="Nombre" [(ngModel)]="pacienteModel.nombre" name="nombre" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                        [required]="true" [readonly]="validado" placeholder="Ingrese nombre...">
+                                    </plex-text>
                                 </div>
                                 <div class="col-4">
-                                    <plex-select [(ngModel)]="pacienteModel.sexo" name="sexo" [readonly]="validado" [data]="sexos" (change)="completarGenero();disableGuardar = false; enableIgnorarGuardar = false;"
-                                        placeholder="Seleccione..." [required]="true" label="Sexo">
-                                    </plex-select>
-                                </div>
-                                <div class="col-4" title="Genero autopercibido">
-                                    <plex-select [(ngModel)]="pacienteModel.genero" name="genero" [data]="generos" [required]="true" placeholder="Seleccione..."
-                                        label="Género"></plex-select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-4" title="Nombre autopercibido">
-                                    <plex-text label="Nombre autopercibido" [(ngModel)]="pacienteModel.alias" name="alias" placeholder="Ingrese nombre autopercibido..."></plex-text>
+                                    <plex-text label="Apellido" [(ngModel)]="pacienteModel.apellido" name="apellido" (change)="disableGuardar = false; enableIgnorarGuardar = false;"
+                                        [required]="true" [readonly]="validado" placeholder="Ingrese apellido...">
+                                    </plex-text>
                                 </div>
                                 <div class="col-4">
                                     <plex-select [(ngModel)]="pacienteModel.estadoCivil" name="estadoCivil" [data]="estadosCiviles" placeholder="Seleccione..."
@@ -66,6 +57,20 @@
                                     <plex-text placeholder="Ingrese una descripción del error" [(ngModel)]="pacienteModel.notaError" name="notaError"> </plex-text>
                                 </div>
                             </div>
+                            <div class="row">&nbsp;</div>
+                            <!-- DATOS AUTOPERCIBIDOS -->
+                            <fieldset>
+                                <legend>Datos autopercibidos</legend>
+                                <div class="row">
+                                    <div class="col-4" title="Genero autopercibido">
+                                        <plex-select [(ngModel)]="pacienteModel.genero" name="genero" [data]="generos" [required]="true" placeholder="Seleccione..."
+                                            label="Género"></plex-select>
+                                    </div>
+                                    <div class="col-4" title="Nombre autopercibido">
+                                        <plex-text label="Nombre autopercibido" [(ngModel)]="pacienteModel.alias" name="alias" placeholder="Ingrese nombre autopercibido..."></plex-text>
+                                    </div>
+                                </div>
+                            </fieldset>
                             <div class="row">&nbsp;</div>
                             <!-- DATOS PARA APP MOBILE DE ANDES -->
                             <fieldset *ngIf="validado && activarApp">
@@ -377,10 +382,12 @@
                                     <div class="hover" *ngIf="!pacientesSearch">
                                         <ul class="list-group">
                                             <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
+                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre|
+                                                    uppercase}}
                                                     <br>
                                                     <small>Documento: {{elem.paciente.documento}}
-                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha
+                                                        }}
                                                         <br> Sexo: {{elem.paciente.sexo}}
                                                     </small>
 
