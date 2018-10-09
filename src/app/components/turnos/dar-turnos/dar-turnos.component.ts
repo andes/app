@@ -55,7 +55,7 @@ export class DarTurnosComponent implements OnInit {
                 this.paciente = pacienteMPI;
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
-                this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
                     this.obraSocialPaciente = resultado;
                 });
                 this.mostrarCalendario = false;
@@ -74,7 +74,7 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });
@@ -86,7 +86,7 @@ export class DarTurnosComponent implements OnInit {
 
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
-    @Output() cancelarDarTurno: EventEmitter<any> = new EventEmitter<any>();
+    @Output() afterDarTurno: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAlGestor = new EventEmitter<any>();
     // usamos este output para volver al componente de validacion de rup
     @Output() volverValidacion = new EventEmitter<any>();
@@ -741,8 +741,8 @@ export class DarTurnosComponent implements OnInit {
                     this.actualizar('');
                     return false;
                 } else {
-                    this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
-                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+                    if (this.changeCarpeta && this.carpetaEfector.nroCarpeta && this.carpetaEfector.nroCarpeta !== '' && this.carpetaEfector.nroCarpeta !== this.nroCarpetaOriginal) {
+                        this.carpetaEfector.nroCarpeta = this.carpetaEfector.nroCarpeta.trim(); // quitamos los espacios
                         let indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => (x.organizacion as any)._id === this.auth.organizacion.id);
                         if (indiceCarpeta > -1) {
                             this.paciente.carpetaEfectores[indiceCarpeta] = this.carpetaEfector;
@@ -754,7 +754,6 @@ export class DarTurnosComponent implements OnInit {
                                 this.guardarTurno(agd);
                             }, error => {
                                 this.plex.toast('danger', 'El número de carpeta ya existe');
-                                console.log(error);
                                 this.hideDarTurno = false;
                             }
                         );
@@ -810,8 +809,7 @@ export class DarTurnosComponent implements OnInit {
             if (environment.production === true) {
                 let dia = moment(this.turno.horaInicio).format('DD/MM/YYYY');
                 let horario = moment(this.turno.horaInicio).format('HH:mm');
-                // let mensaje = 'Usted tiene un turno el dia ' + dia + ' a las ' + horario + ' hs. para ' + datosTurno.tipoPrestacion.nombre;
-                let mensaje = this.paciente.apellido + ' el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.nombre +
+                let mensaje = this.paciente.apellido + ' ' + this.paciente.nombre + ', el ' + agendaReturn.organizacion.nombre + ' le recuerda su turno de ' + datosTurno.tipoPrestacion.term +
                     ' el dia ' + dia + ' a las ' + horario + ' hs. ';
                 if (agendaReturn.espacioFisico) {
                     mensaje = mensaje + 'en ' + agendaReturn.espacioFisico.nombre + '.';
@@ -844,13 +842,12 @@ export class DarTurnosComponent implements OnInit {
                     });
                 }
             } else {
-                // Esto parece estar al pedo, pero si no está dentro del else no se refrescan los cambios del turno doble.
-                this.volverAlGestor.emit(agendaReturn); // devuelve la agenda al gestor, para que éste la refresque
+                this.volverAlGestor.emit(agendaReturn); // <--- devuelve la agenda al gestor, para que éste la refresque
             }
             this.actualizarPaciente();
             if (this.paciente && this._pacienteSeleccionado) {
-                this.cancelarDarTurno.emit(true);
-                return false;
+                this.afterDarTurno.emit(this.paciente);
+                // return false;
             } else {
                 this.buscarPaciente();
             }
@@ -865,7 +862,7 @@ export class DarTurnosComponent implements OnInit {
                     if (this.agenda.bloques[this.indiceBloque].turnos[this.indiceTurno].horaInicio.getTime() === this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice].horaInicio.getTime()) {
                         this.indiceTurno = nuevoIndice;
                         this.turno = this.agenda.bloques[this.indiceBloque].turnos[nuevoIndice];
-                        this.cancelarDarTurno.emit(true);
+                        this.afterDarTurno.emit(true);
                         this.darTurno();
                     } else {
                         this.plex.confirm('No se emitió el turno, por favor verifique los turnos disponibles', 'Turno no asignado');
@@ -938,7 +935,7 @@ export class DarTurnosComponent implements OnInit {
                     this.paciente = pacienteMPI;
                     this.verificarTelefono(pacienteMPI);
                     this.obtenerCarpetaPaciente();
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });
@@ -963,7 +960,7 @@ export class DarTurnosComponent implements OnInit {
                     if (!this.paciente.scan) {
                         this.servicePaciente.patch(paciente.id, { op: 'updateScan', scan: paciente.scan }).subscribe();
                     }
-                    this.servicioOS.get(this.paciente.documento).subscribe(resultado => {
+                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
                         this.obraSocialPaciente = resultado;
                     });
                 });
@@ -1023,7 +1020,7 @@ export class DarTurnosComponent implements OnInit {
 
         if (this._pacienteSeleccionado) {
             // this.router.navigate(['./' + 'puntoInicioTurnos']);
-            this.cancelarDarTurno.emit(true);
+            this.afterDarTurno.emit(true);
         } else {
             this.buscarPaciente();
         }
@@ -1054,7 +1051,7 @@ export class DarTurnosComponent implements OnInit {
         this.turnoTipoPrestacion = undefined; // blanquea el select de tipoprestacion en panel de confirma turno
         this.opciones.tipoPrestacion = undefined; // blanquea el filtro de tipo de prestacion en el calendario
         this.opciones.profesional = undefined; // blanquea el filtro de profesionales en el calendario
-        this.cancelarDarTurno.emit(true);
+        this.afterDarTurno.emit(true);
         this.buscarPaciente();
     }
 

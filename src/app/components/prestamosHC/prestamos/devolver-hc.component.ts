@@ -16,7 +16,7 @@ export class DevolverHcComponent implements OnInit {
 
     devolverHC: any = {
         estado: '',
-        observacionesDevolucion: ''
+        observaciones: ''
     };
     prestamo: any;
 
@@ -40,22 +40,15 @@ export class DevolverHcComponent implements OnInit {
         return;
     }
 
-    save(event) {
-        if (this.prestamo.datosDevolucion.estado !== '') {
-            event.datosPrestamo = this.prestamo.datosPrestamo;
-            event.datosDevolucion = {
-                estado: this.prestamo.datosDevolucion.estado.nombre,
-                observaciones: this.prestamo.datosDevolucion.observaciones,
-            };
-
-            event.organizacion = this.auth.organizacion;
-
-            this.prestamosService.devolverCarpeta(event).subscribe(carpeta => {
-                this.plex.toast('success', 'La Carpeta se devolvió correctamente', 'Información', 1000);
-                this.cancelDevolverEmit.emit(true);
-                this.carpetaDevueltaEmit.emit();
-            });
-        }
+    save() {
+        this.prestamo.datosPrestamo = this.prestamo.datosPrestamo;
+        this.prestamo.organizacion = this.auth.organizacion;
+        this.prestamo.datosDevolucion = { estado: this.devolverHC.estado.nombre, observaciones: this.devolverHC.observaciones };
+        this.prestamosService.devolverCarpeta(this.prestamo).subscribe(carpeta => {
+            this.plex.toast('success', 'La Carpeta se devolvió correctamente', 'Información', 1000);
+            this.cancelDevolverEmit.emit(true);
+            this.carpetaDevueltaEmit.emit();
+        });
     }
 
     cancel() {

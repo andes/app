@@ -28,7 +28,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
     @ViewChild('panel') accordions: PlexPanelComponent;
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
-    ngAfterViewInit () {
+    ngAfterViewInit() {
     }
 
     constructor(
@@ -41,7 +41,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
         if ($event) {
             if (this.allModule) {
                 this.accordions.active = false;
-            }else {
+            } else {
                 let index = this.userPermissions.findIndex(s => s === this.makePermission() + ':*');
                 if (index >= 0) {
                     this.userPermissions.splice(index, 1);
@@ -67,17 +67,16 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
             } else {
                 let permisos = this.makePermission();
                 let items: String[] = this.shiro.permissions(permisos + ':?');
-
                 if (items.length > 0) {
                     if (items.indexOf('*') >= 0) {
                         this.all = true;
                     } else {
-
+                        this.all = false;
                         // [TODO] Buscar según el tipo
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
-                                    this.seleccionados = data;
+                                    this.seleccionados = [...data];
                                 });
                                 break;
                             case 'organizacion':

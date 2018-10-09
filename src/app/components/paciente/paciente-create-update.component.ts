@@ -503,7 +503,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {
@@ -1148,6 +1147,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     gestionMobile(band) {
         this.showMobile = band;
+    }
+
+    renaperNotification(event) {
+        this.validado = event;
     }
 
 }

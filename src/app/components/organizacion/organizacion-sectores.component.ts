@@ -121,20 +121,27 @@ export class OrganizacionSectoresComponent implements OnInit {
      */
 
     removeItem($event) {
-        this.CamaService.camaXsector($event.id).subscribe(camas => {
-            if (camas.length <= 0) {
-                this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
-                    let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
-                    if (confirmar && index >= 0) {
-                        this.organizacion.mapaSectores.splice(index, 1);
-                    }
-                });
-            } else {
-                this.plex.alert('El sector contiene camas', 'No se puede borrar');
-            }
-        });
-
-
+        if ($event.id) {
+            this.CamaService.camaXsector($event.id).subscribe(camas => {
+                if (camas.length <= 0) {
+                    this.plex.confirm('¿Desea eliminarlo?', 'Eliminar Sector').then((confirmar) => {
+                        let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                        if (confirmar && index >= 0) {
+                            this.organizacion.mapaSectores.splice(index, 1);
+                        }
+                    });
+                } else {
+                    this.plex.alert('El sector contiene camas', 'No se puede borrar');
+                }
+            });
+        } else {
+            this.plex.confirm('¿Está seguro que desea eliminar el sector?', 'Eliminar Sector').then((confirmar) => {
+                let index = this.organizacion.mapaSectores.findIndex((item) => item === $event);
+                if (confirmar && index >= 0) {
+                    this.organizacion.mapaSectores.splice(index, 1);
+                }
+            });
+        }
     }
 
     /**

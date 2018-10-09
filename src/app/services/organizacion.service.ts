@@ -75,7 +75,7 @@ export class OrganizacionService {
         if (sector.hijos && sector.hijos.length > 0) {
             let res = onlyLeaft ? [] : [this.clone(sector)];
             for (let sec of sector.hijos) {
-                res = [ ...res, ...this.traverseTree(sec, onlyLeaft)];
+                res = [...res, ...this.traverseTree(sec, onlyLeaft)];
             }
             return res;
         } else {
@@ -86,7 +86,7 @@ export class OrganizacionService {
     getFlatTree(organizacion, onlyLeaft = true) {
         let items = organizacion.mapaSectores.reduce((_items, actual) => {
             return [..._items, ...this.traverseTree(actual, onlyLeaft)];
-        } , []);
+        }, []);
         return items;
     }
 

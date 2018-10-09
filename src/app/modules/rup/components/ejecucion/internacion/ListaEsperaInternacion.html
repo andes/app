@@ -11,12 +11,13 @@
                             <div class="col-3">
                                 <div class="form-group">
                                     <label for="filtros-nombre">Paciente</label>
-                                    <input type="text" class="form-control" name="nombre" [(ngModel)]="select.nombre" id="filtros-nombre" label="Nombre paciente / N. de documento"
-                                        (keyup)="filtrar()" />
+                                    <input type="text" class="form-control" name="nombre" [(ngModel)]="select.nombre"
+                                        id="filtros-nombre" label="Nombre paciente / N. de documento" (keyup)="filtrar()" />
                                 </div>
                             </div>
                             <div class="col-3">
-                                <plex-select [(ngModel)]="select.estados" name="estado" [data]="filtros.estados" label="Estado" (change)="filtrar()"></plex-select>
+                                <plex-select [(ngModel)]="select.estados" name="estado" [data]="filtros.estados" label="Estado"
+                                    (change)="filtrar()"></plex-select>
                             </div>
                             <div class="col-3">
 
@@ -44,7 +45,7 @@
                             </thead>
                             <tbody>
                                 <tr *ngFor="let prestacion of prestacionesPendientes">
-                                    <td> {{prestacion.prestacion.paciente.nombre}} {{prestacion.prestacion.paciente.apellido}}</td>
+                                    <td> {{prestacion.prestacion.paciente | paciente}}</td>
                                     <td>{{prestacion.prestacion.paciente.documento }}</td>
                                     <td>{{prestacion.prestacion.paciente.fechaNacimiento | fecha }}</td>
                                     <td>{{prestacion.prestacion.paciente.sexo }}</td>
@@ -65,12 +66,13 @@
                                         </ng-container>
                                     </td>
                                     <td>
-                                        <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación" (click)="verInternacion(prestacion.prestacion.id)"
-                                            *ngIf="prestacion?.prestacion.id">
+                                        <plex-button class="btn btn-default  tips" icon="eye" title="Ver internación"
+                                            (click)="verInternacion(prestacion.prestacion.id)" *ngIf="prestacion?.prestacion.id">
                                         </plex-button>
                                     </td>
                                     <td>
-                                        <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion.prestacion)" *ngIf="prestacion?.prestacion.id">
+                                        <plex-button type="primary" label="Dar cama" (click)="darCama(prestacion.prestacion)"
+                                            *ngIf="prestacion?.prestacion.id">
                                             Dar cama
                                         </plex-button>
                                     </td>

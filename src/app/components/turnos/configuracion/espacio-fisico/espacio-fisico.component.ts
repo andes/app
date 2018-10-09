@@ -84,21 +84,19 @@ export class EspacioFisicoComponent implements OnInit {
     onDisable(espacioFisico: IEspacioFisico) {
         this.espacioFisicoService.disable(espacioFisico)
             .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+                err => {
+                    if (err) {
+                    }
+                });
     }
 
     onEnable(espacioFisico: IEspacioFisico) {
         this.espacioFisicoService.enable(espacioFisico)
             .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-            err => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+                err => {
+                    if (err) {
+                    }
+                });
     }
 
     activate(objEspacioFisico: IEspacioFisico) {

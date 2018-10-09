@@ -27,7 +27,6 @@ export class DocumentosService {
 
         let opcionesImprimir: any = { html: Buffer.from(html).toString('base64'), options: { format: 'A4' }, horizontal: horizontal };
         if (scssFile) {
-            console.log('pepeppee');
             opcionesImprimir = { ...opcionesImprimir, scssFile: scssFile };
         }
         return this.http.post(this.pdfURL + '/pdf', opcionesImprimir, options)
@@ -38,7 +37,6 @@ export class DocumentosService {
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
         return Observable.throw(errMsg);
     }
     protected extractData(res: Response) {

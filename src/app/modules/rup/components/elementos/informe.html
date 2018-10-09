@@ -2,21 +2,20 @@
     <div class="row">
         <div class="col-12">
             <span *ngFor="let rf of referentSet" class="badge badge-danger">
-                   {{rf}}
-                </span>
+                {{rf}}
+            </span>
         </div>
     </div>
 </ng-container>
 <ng-container *ngIf="!soloValores">
-    <label for="informes">
-        Informes
-    </label>
-    <textarea class="form-control" [(ngModel)]="registro.valor" rows="4" id="informes" name="informes" placeholder="Ingrese un informe" (change)="emitChange()"></textarea>
+    <plex-text label="Informes" [(ngModel)]="registro.valor" id="informes" name="informes" [html]="true" [readonly]="false" placeholder="Ingrese un informe"
+        (change)="emitChange()">
+    </plex-text>
 </ng-container>
 
 <p *ngIf="soloValores" class="readonly">
     <span>Informes</span>
     <ng-container>
-        {{registro.valor}}
+        <span [innerHTML]="registro.valor"></span>
     </ng-container>
 </p>
