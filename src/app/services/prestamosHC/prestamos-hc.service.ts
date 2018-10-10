@@ -16,7 +16,7 @@ export class PrestamosService {
         return this.server.get(this.turnoUrl + '/prestamosHC/prestamos', { params: filtros });
     }
 
-    getHistorialCarpetas(filtros): Observable<any[]> {
+    getHistorialCarpetas(filtros): Observable<any> {
         return this.server.get(this.turnoUrl + '/prestamosHC/historial', { params: filtros });
     }
 
