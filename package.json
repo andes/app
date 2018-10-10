@@ -24,10 +24,10 @@
   },
   "dependencies": {
     "@agm/core": "^1.0.0-beta.2",
-    "@andes/auth": "git+https://github.com/andes/auth.git#ng6-update",
+    "@andes/auth": "^3.0.0",
     "@andes/match": "^0.1.9",
-    "@andes/plex": "git+https://github.com/andes/plex.git#ng6-update",
-    "@andes/shared": "git+https://github.com/andes/shared.git#ng6-update",
+    "@andes/plex": "^4.0.0",
+    "@andes/shared": "^3.0.0",
     "@angular/animations": "6.0.6",
     "@angular/cdk": "^5.2.5",
     "@angular/common": "6.0.6",
