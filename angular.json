@@ -96,7 +96,9 @@
           "options": {
             "main": "src/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "scripts": [],
+            "scripts": [
+              "./node_modules/intro.js/intro.js"
+            ],
             "styles": [
               "src/styles.scss"
             ],

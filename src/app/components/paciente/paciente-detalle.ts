@@ -20,7 +20,7 @@ export class PacienteDetalleComponent implements OnInit {
      * @type {IPaciente}
      * @memberof PacienteDetalleComponent
      */
-    @Input('mostrarRenaper') mostrarRenaper: Boolean;
+    @Input() mostrarRenaper: Boolean;
     @Input('paciente')
     set paciente(value: IPaciente) {
         this._paciente = value;
