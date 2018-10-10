@@ -21,17 +21,17 @@
                             </div>
 
                             <div class="row">
-                                <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
+                                <div class="col-3">
                                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="getCarpetas($event, 'fechaDesde')"
                                         name="fechaDesde" label="Desde" class="fechas">
                                     </plex-datetime>
                                 </div>
-                                <div class="{{verPrestar ? 'col-4' : 'col-3'}}">
+                                <div class="col-3">
                                     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="getCarpetas($event, 'fechaHasta')"
                                         name="fechaHasta" label="Hasta" class="fechas">
                                     </plex-datetime>
                                 </div>
-                                <div class="col-4" (click)="toogleSort()" style="margin-top: 45px;">
+                                <div class="col-6" (click)="toogleSort()" style="margin-top: 45px;">
                                     <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">
                                         Order Nro. Carpeta Descendente</i>
                                     <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">
@@ -40,13 +40,13 @@
                             </div>
 
                             <div class="row">
-                                <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
+                                <div class="col-6">
                                     <plex-select [(ngModel)]="tipoPrestacion" (change)="getCarpetas($event, 'prestaciones')"
                                         (getData)="loadPrestaciones($event)" name="prestaciones" label="Prestación"
-                                        ngModelOptions="{standalone: true}">
+                                        placeholder="Buscar una prestación" ngModelOptions="{standalone: true}">
                                     </plex-select>
                                 </div>
-                                <div class="{{verPrestar ? 'col-6' : 'col-4'}}">
+                                <div class="col-6">
                                     <plex-select [(ngModel)]="profesional" name="profesional" (change)="getCarpetas($event, 'profesionales')"
                                         (getData)="loadProfesionales($event)" label="Profesional" placeholder="Escriba el apellido del Profesional"
                                         labelField="apellido + ' ' + nombre">
@@ -140,8 +140,9 @@
                                         <td>
                                             <input type="file" (change)="changeListener($event, i, carpeta) " style="display:none;"
                                                 #upload>
-                                            <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS Digital"
-                                                (click)="upload.click()">
+                                            <!-- TODO: DESCOMENTAR EL BOTON CON LA FUNCION PARA ADJUNTAR HUDS -->
+                                            <!-- <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS Digital" (click)="upload.click()"> -->
+                                            <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS">
                                             </plex-button>
                                             <br><br>
                                             <span *ngIf="errorExt===i">
