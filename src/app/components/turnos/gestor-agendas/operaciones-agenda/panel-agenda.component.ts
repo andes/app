@@ -71,32 +71,32 @@ export class PanelAgendaComponent implements OnInit {
 
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
-            if (this.agenda.profesionales) {
-                profesional = this.agenda.profesionales.map((prof) => {
-                    delete prof.$order;
-                    return prof;
+            if (this.agenda.profesionales && this.agenda.profesionales.length > 10) {
+                this.plex.alert('Seleccione un profesional de la lista');
+            } else {
+                if (this.agenda.profesionales) {
+                    profesional = this.agenda.profesionales;
+                }
+                let espacioFisico = this.agenda.espacioFisico;
+                if (this.agenda.espacioFisico) {
+                    delete espacioFisico.$order;
+                } else {
+                    espacioFisico = null;
+                }
+
+                let patch = {
+                    'op': 'editarAgenda',
+                    'profesional': profesional,
+                    'espacioFisico': espacioFisico
+                };
+
+                this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
+                    this.agenda = resultado;
+                    // this.showEditarAgenda = false;
+                    this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
+                    this.actualizarEstadoEmit.emit(true);
                 });
             }
-
-            let espacioFisico = this.agenda.espacioFisico;
-            if (this.agenda.espacioFisico) {
-                delete espacioFisico.$order;
-            } else {
-                espacioFisico = null;
-            }
-
-            let patch = {
-                'op': 'editarAgenda',
-                'profesional': profesional,
-                'espacioFisico': espacioFisico
-            };
-
-            this.serviceAgenda.patch(agenda.id, patch).subscribe(resultado => {
-                this.agenda = resultado;
-                // this.showEditarAgenda = false;
-                this.plex.toast('success', 'Información', 'La agenda se guardó correctamente ');
-                this.actualizarEstadoEmit.emit(true);
-            });
         }
     }
 
@@ -115,12 +115,12 @@ export class PanelAgendaComponent implements OnInit {
                 nombreCompleto: event.query
             };
             this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.agenda.profesionales) {
-                    listaProfesionales = (resultado) ? this.agenda.profesionales.concat(resultado) : this.agenda.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
+                // if (this.agenda.profesionales) {
+                //     listaProfesionales = (resultado) ? [...resultado] : [...this.agenda.profesionales];
+                // } else {
+                //     listaProfesionales = [...resultado];
+                // }
+                event.callback(resultado);
             });
         } else {
             event.callback(this.agenda.profesionales || []);
@@ -169,10 +169,10 @@ export class PanelAgendaComponent implements OnInit {
 
     espaciosChange(agenda) {
 
-        // TODO: ver límite
         let query: any = {
             limit: 20,
-            activo: true
+            activo: true,
+            organizacion: this.auth.organizacion._id
         };
 
         if (agenda.espacioFisico) {

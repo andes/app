@@ -14,6 +14,8 @@ type Estado = 'noSeleccionado' | 'seleccionado';
 })
 
 export class ClonarAgendaComponent implements OnInit {
+    primerDiaMes: moment.Moment;
+    ultimoDiaMes: moment.Moment;
     @Input('agenda')
     set agenda(value: any) {
         this._agenda = value;
@@ -63,6 +65,8 @@ export class ClonarAgendaComponent implements OnInit {
         if (this.seleccionados.indexOf(this.inicioAgenda.getTime()) < 0) {
             this.seleccionados.push(this.inicioAgenda.getTime());
         }
+        this.ultimoDiaMes = moment(this.fecha).endOf('month');
+        this.primerDiaMes = moment(this.fecha).startOf('month');
         this.inicioMesMoment = moment(this.fecha).startOf('month').startOf('week');
         this.inicioMesDate = this.inicioMesMoment.toDate();
         this.finMesDate = (moment(this.fecha).endOf('month').endOf('week')).toDate();
@@ -114,7 +118,12 @@ export class ClonarAgendaComponent implements OnInit {
                     };
                 }
                 dia.weekend = this.inicioMesMoment.isoWeekday() === 6 || this.inicioMesMoment.isoWeekday() === 7 ? true : false;
-                week.push(dia);
+                let isThisMonth = this.inicioMesMoment.isSameOrBefore(this.ultimoDiaMes) && this.inicioMesMoment.isSameOrAfter(this.primerDiaMes);
+                if (isThisMonth) {
+                    week.push(dia);
+                } else {
+                    week.push({ estado: 'vacio' });
+                }
             }
         }
     }
@@ -136,7 +145,7 @@ export class ClonarAgendaComponent implements OnInit {
      */
     public seleccionar(dia: any) {
         let mismoDia = (moment(dia.fecha).isSame(moment(this.agenda.horaInicio), 'day'));
-        if (dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
+        if (dia.estado !== 'vacio' && dia.fecha.getTime() >= this.today.getTime() && !mismoDia) {
             let original = this.agenda;
             if (dia.original) {
                 this.original = true;

@@ -61,6 +61,9 @@ export class IPrestacion {
     // Historia de estado de la prestación
     estados: IPrestacionEstado[];
 
+    createdAt: Date;
+    updatedAt: Date;
+
     /**
      * Recorre la estructura de los elementosRUP asociados y completa el array de registros
      *
