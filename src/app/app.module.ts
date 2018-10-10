@@ -279,6 +279,7 @@ import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
+import { ColonoscopiaComponent } from './modules/rup/components/elementos/colonoscopia.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -401,7 +402,8 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    'CalculoDeBostonComponent': CalculoDeBostonComponent
+    'CalculoDeBostonComponent': CalculoDeBostonComponent,
+    'ColonoscopiaComponent': ColonoscopiaComponent
 };
 
 let RUPComponentsArray = [
@@ -457,7 +459,9 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    CalculoDeBostonComponent
+    CalculoDeBostonComponent,
+    ColonoscopiaComponent
+
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -468,6 +472,7 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+
 
 
 
