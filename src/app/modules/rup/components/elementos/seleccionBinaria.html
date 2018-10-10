@@ -1,0 +1,18 @@
+<form #form="ngForm">
+    kasjhdkjasdkjhsakd
+    <plex-radio [(ngModel)]="check" type="params.plexRadioType" label="params.label" name="seleccion" readonly="params.readonly"></plex-radio>
+
+    <p *ngIf="soloValores && registro.valor" class="readonly">
+        {{ registro.valor }}
+    </p>
+
+    <p *ngIf="soloValores && !registro.valor" class="readonly">
+        sin valor
+    </p>
+
+    <!-- <p *ngIf="mensaje && mensaje.texto">
+        <span class="badge-{{mensaje.class}}">
+            {{mensaje.texto}}
+        </span>
+    </p> -->
+</form>
