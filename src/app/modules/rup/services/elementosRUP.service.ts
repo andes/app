@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
@@ -14,7 +15,7 @@ const url = '/modules/rup/elementosRUP';
 @Injectable()
 export class ElementosRUPService {
     // Mantiene un caché de la base de datos de elementos
-    private cache: IElementosRUPCache = {};
+    public cache: IElementosRUPCache = {};
     // Mantiene un caché de la base de datos de elementos
     private cacheParaSolicitud: IElementosRUPCache = {};
     // Precalcula los elementos default
@@ -129,8 +130,14 @@ export class ElementosRUPService {
      * @memberof ElementosRUPService
      */
     buscarElemento(concepto: ISnomedConcept, esSolicitud: boolean): IElementoRUP {
-        // Busca el elemento RUP que implemente el concepto
 
+        // Busca el elemento RUP que implemente el concepto
+        if (typeof concepto.conceptId === 'undefined') {
+            concepto = concepto[1];
+        }
+
+        // TODO: ver cómo resolver esto mejor...
+        concepto.semanticTag = concepto.semanticTag === 'plan' ? 'procedimiento' : concepto.semanticTag;
         if (esSolicitud) {
             let elemento = this.cacheParaSolicitud[concepto.conceptId];
             if (elemento) {
@@ -163,15 +170,11 @@ export class ElementosRUPService {
         }
     }
 
-    selectPorRefsetId(concepto) {
-        // console.log(this.coleccionRetsetId[concepto.conceptId]);
-        if (this.coleccionRetsetId[concepto.conceptId]) {
-            return this.coleccionRetsetId[concepto.conceptId];
+    selectPorRefsetId(concepto, esSolicitud) {
+        let elementoRup = this.buscarElemento(concepto, esSolicitud);
+        if (elementoRup) {
+            return elementoRup.params;
         }
         return null;
     }
-
-
-
-
 }

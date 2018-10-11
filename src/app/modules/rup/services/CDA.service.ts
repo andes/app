@@ -27,6 +27,20 @@ export class CDAService {
         return this.server.get(this.CDAUrl + 'tojson/' + id);
     }
 
+    /**
+     *
+     */
+    post(file, metadata) {
+        return this.server.post(this.CDAUrl + 'create/', metadata);
+    }
+
+    /**
+     * @param idPaciente
+     */
+    getCDAList(idPaciente) {
+        return this.server.get(this.CDAUrl + 'paciente/' + idPaciente);
+    }
+
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';

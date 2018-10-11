@@ -1,0 +1,27 @@
+<ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
+    <ng-container *ngIf="!soloValores && params">
+        <label for="desarrolloPsicomotor">
+            {{ params.titulo }}
+        </label>
+        <ng-container *ngFor="let concepto of conceptos; let i = index">
+            <ng-container>
+                <plex-bool *ngIf="!soloValores" [(ngModel)]="registro.valor[i].checked" (getData)="loadConceptos($event)" (change)="selectCheckBox(i)"
+                    label="{{concepto.term}}" name="concepto-{{concepto.conceptId}}"></plex-bool>
+            </ng-container>
+        </ng-container>
+
+    </ng-container>
+    <p *ngIf="soloValores && !tieneValor()" class="readonly">
+        <span class="text-capitalize">{{ registro.nombre }} </span>sin valor
+    </p>
+
+    <p *ngIf="soloValores && tieneValor()" class="readonly">
+        <span class="text-capitalize">{{ registro.nombre }}</span>
+        <ng-container *ngFor="let reg of registro.valor">
+            <ng-container *ngIf="reg.checked">
+                {{ reg.concepto.term }}
+                <br>
+            </ng-container>
+        </ng-container>
+    </p>
+</ng-container>

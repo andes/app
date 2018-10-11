@@ -32,7 +32,9 @@
                                 </div>
                                 <div class="col-4" (click)="toogleSort()" style="margin-top: 45px;">
                                     <i *ngIf="sortDescending" class="mdi mdi-checkbox-marked">Order Nro. Carpeta Descendente</i>
-                                    <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta Descendente</i>
+                                    <i *ngIf="!sortDescending" class="mdi mdi-checkbox-blank-outline">Order Nro. Carpeta
+                                        Descendente
+                                    </i>
                                 </div>
                             </div>
 
@@ -63,11 +65,13 @@
                                         <th>Prestación</th>
                                         <th>Responsables</th>
                                         <th>Observaciones</th>
+                                        <th>Actualización de HUDS</th>
+                                        <th></th>
                                         <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let carpeta of carpetas" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
+                                    <tr *ngFor="let carpeta of carpetas; let i=index" [ngClass]="{'bg-inverse text-white': estaSeleccionada(carpeta)}">
                                         <td (click)="switchSeleccionCarpeta(carpeta)">
                                             <i *ngIf="estaSeleccionada(carpeta) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'" class="mdi mdi-checkbox-marked"></i>
                                             <i *ngIf="!(estaSeleccionada(carpeta)) && carpeta.estado == 'En archivo' && carpeta.tipo === 'Automatica'" class="mdi mdi-checkbox-blank-outline"></i>
@@ -111,6 +115,28 @@
                                         <td *ngIf="carpeta.datosSolicitudManual">
                                             {{carpeta.datosSolicitudManual.observaciones}}
                                         </td>
+                                        <!-- Fecha de Actualización de la HUDS digitalizada -->
+                                        <td>
+                                            <span *ngIf="carpeta.ultimoCDA[0]">
+                                                Fecha: <b>{{carpeta.ultimoCDA[0].fecha | fecha}}</b>
+                                                <br> Responsable: <b>{{carpeta.ultimoCDA[0].profesional.apellido}} {{carpeta.ultimoCDA[0].profesional.nombre}}</b>
+                                                <br>
+                                                <a href="javascript:void(0)" (click)="descargar(carpeta.ultimoCDA[0].adjuntos)">
+                                                    Descargar documento adjunto
+                                                    <!-- <i class="mdi mdi-36px mdi-file-pdf"></i> -->
+                                                </a>
+                                            </span>
+                                        </td>
+                                        <!-- Boton para subir HUDS digitalizada -->
+                                        <td>
+                                            <input type="file" (change)="changeListener($event, i, carpeta) " style="display:none;" #upload>
+                                            <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS Digital" (click)="upload.click()">
+                                            </plex-button>
+                                            <br><br>
+                                            <span *ngIf="errorExt===i">
+                                                <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
+                                            </span>
+                                        </td>
                                         <!-- Estado -->
                                         <td *ngIf="carpeta.estado == 'En archivo'">
                                             <plex-button type="primary" label="Prestar" (click)="prestar(carpeta)" [disabled]="carpetasSeleccionadas.length > 0">
@@ -140,7 +166,9 @@
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0">
         <button type="primary" class="btn btn-primary" label="Prestar Carpetas" (click)="prestarCarpetas()">Prestar Carpetas</button>
-        <span class="badge-warning float-right" *ngIf="mostrarMsjMultiCarpeta">Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma fecha.</span>
+        <span class="badge-warning float-right" *ngIf="mostrarMsjMultiCarpeta">
+            Hay solicitudes de carpetas sin seleccionar. No se puede prestar carpetas para el mismo paciente y la misma fecha.
+        </span>
     </footer>
     <pacientesSearch *ngIf="pacientesSearch" (selected)="afterSearch($event)" [mostrarCancelar]="true" (cancel)="cancelarPacienteSearch()"></pacientesSearch>
 </form>

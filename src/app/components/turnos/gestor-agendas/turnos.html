@@ -53,6 +53,13 @@
                             <span *ngIf="!agenda.espacioFisico?.nombre" class="text-danger">Espacio físico no asignado</span>
                         </div>
                     </div>
+                    <div *ngIf="mostrarHeaderCompleto && agenda.dinamica" class="row">
+                        <div class="col-12">
+                            <label>Cupos disponibles</label>
+                            <span *ngIf="agenda.cupo > -1">{{agenda.cupo}}</span>
+                            <span *ngIf="agenda.cupo == -1">Sin límite</span>
+                        </div>
+                    </div>
                 </div>
                 <!--Nota-->
                 <div *ngIf="agenda.nota" class="alert alert-default mb-0">
@@ -68,7 +75,7 @@
         <!--Botones / Acciones-->
         <table class="table table-botones-fixed mb-0" *ngIf="agenda.nominalizada">
             <tr>
-                <td class="seleccionar-todos">
+                <td class="seleccionar-todos" *ngIf="showSeleccionarTodos">
                     <i *ngIf="this.todos" class="mdi mdi-checkbox-marked hover" (click)="seleccionarTodos()" title="Seleccionar todos" titlePosition="right"></i>
                     <i *ngIf="!this.todos" class="mdi mdi-checkbox-blank-outline hover" (click)="seleccionarTodos()" title="Seleccionar todos"
                         titlePosition="right"></i>
@@ -98,7 +105,7 @@
         <h5 *ngIf="!agenda.nominalizada">Actividad No Nominalizada, no se dan turnos</h5>
         <!--Turnos-->
         <ng-container *ngFor="let bloque of agenda.bloques | sortBloques let k = index">
-            <table *ngIf="agenda.nominalizada" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
+            <table *ngIf="agenda.nominalizada && !agenda.dinamica" class="table table-condensed table-turnos text-center small" title="Turnos disponibles para este bloque">
                 <thead>
                     <tr>
                         <td>Del día</td>
@@ -131,14 +138,14 @@
                     </tr>
                 </thead>
             </table>
-            <table class="table table-striped">
+            <table *ngIf="agenda.nominalizada" class="table table-striped">
                 <tbody>
                     <tr *ngFor="let turno of bloque.turnos; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionado(bloque.turnos[i])}">
                         <td (click)="seleccionarTurno(turno, true, false)">
                             <i *ngIf="estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-marked"></i>
                             <i *ngIf="!estaSeleccionado(bloque.turnos[i])" class="mdi mdi-checkbox-blank-outline"></i>
                         </td>
-                        <td (click)="seleccionarTurno(bloque.turnos[i],false, false)">
+                        <td *ngIf="!agenda.dinamica" (click)="seleccionarTurno(bloque.turnos[i],false, false)">
                             <strong *ngIf="turno">{{ turno.horaInicio | date: 'HH:mm' }}</strong>
                         </td>
                         <td (click)="seleccionarTurno(bloque.turnos[i], false, false)">

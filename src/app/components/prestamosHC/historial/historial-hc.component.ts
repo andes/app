@@ -27,7 +27,7 @@ export class HistorialCarpetasComponent implements OnInit {
 
     buscarHistorial() {
         if (this.numeroCarpeta != null) {
-            this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion })
+            this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion.id })
                 .subscribe(historial => {
                     this.inicioBusqueda = true;
                     if (historial.length > 0) {

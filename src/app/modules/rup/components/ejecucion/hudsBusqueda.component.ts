@@ -1,5 +1,5 @@
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, DebugElement } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import * as moment from 'moment';
@@ -33,17 +33,19 @@ export class HudsBusquedaComponent implements OnInit {
     @Input() paciente: any;
     @Input() prestacionActual: any;
 
-    // TODO: Agregar metodos faltantes, dragEnd() , dragStart() y poder vincularlos
     @Input() _draggable: Boolean = false;
     @Input() _dragScope: String;
     @Input() _dragOverClass: String = 'drag-over-border';
+
     /**
-    * Variable por parametro para mostrar o no todo lo relacionado a emitir conceptos
+    * Variable por parámetro para mostrar o no todo lo relacionado a emitir conceptos
     */
     @Input() emitirConceptos = true;
+
     // Outputs de los eventos drag start y drag end
     @Output() _onDragStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() _onDragEnd: EventEmitter<any> = new EventEmitter<any>();
+
     /**
      * Listado de todos los registros de la HUDS seleccionados
      */
@@ -76,7 +78,7 @@ export class HudsBusquedaComponent implements OnInit {
     public hallazgos: any = [];
 
     /**
-     * Listado de todos los hallazgos
+     * Listado de todos los trastornos
      */
     public hallazgosCronicos: any = [];
 
@@ -177,6 +179,7 @@ export class HudsBusquedaComponent implements OnInit {
         let index;
         switch (tipo) {
             case 'hallazgo':
+            case 'trastorno':
             case 'producto':
                 registro.class = registro.concepto.semanticTag;
                 if (registro.esSolicitud) {
@@ -201,7 +204,7 @@ export class HudsBusquedaComponent implements OnInit {
                             if (reg.relacionadoCon && reg.relacionadoCon.length > 0) {
                                 if (typeof reg.relacionadoCon[0] === 'string') {
                                     reg.relacionadoCon = reg.relacionadoCon.map((idRegistroRel) => {
-                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                        return registro.ejecucion.registros.find(r => r.id === idRegistroRel || r.concepto.conceptId === idRegistroRel);
                                     });
                                 }
                             }
@@ -284,11 +287,11 @@ export class HudsBusquedaComponent implements OnInit {
 
             // console.log('registro, _registro', registro, _registro);
 
-            if (_registro.concepto && registro.concepto) {
+            if (_registro && _registro.concepto && registro.concepto) {
                 if (_registro.concepto.conceptId === registro.concepto.conceptId && _registro.createdAt === registro.createdAt) {
                     return true;
                 }
-            } else if (_registro.createdAt && _registro.createdAt === registro.createdAt) {
+            } else if (_registro && _registro.createdAt && _registro.createdAt === registro.createdAt) {
                 return true;
             }
         }
