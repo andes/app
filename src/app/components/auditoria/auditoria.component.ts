@@ -110,7 +110,12 @@ export class AuditoriaComponent implements OnInit {
                     this.enableFA = true;
                     this.enableValidarMpi = false;
                     this.enableValidar = false;
-                    this.enableDuplicados = true;
+                    if (paciente.identificadores) {
+                        let identificadoresAndes = paciente.identificadores.filter(identificador => {
+                            return identificador.entidad === 'ANDES';
+                        });
+                        this.enableDuplicados = (identificadoresAndes.length > 0);
+                    }
                 }
             });
         }
@@ -119,6 +124,7 @@ export class AuditoriaComponent implements OnInit {
     checkPanel(panelIndex) {
         this.showDetallePaciente = false;
         this.enableDuplicados = false;
+        this.enableFA = false;
         this.enableValidarMpi = false;
         this.enableVinculados = false;
         this.enableValidar = false;
@@ -298,7 +304,7 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = true;
         this.showCandidatos = false;
         this.pacienteSelected = null;
-
+        this.searchClear();
         this.onLoadData();
     }
 
