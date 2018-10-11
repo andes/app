@@ -1,7 +1,7 @@
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
