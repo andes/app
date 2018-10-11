@@ -177,7 +177,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                         return z === diente.concepto.conceptId;
                     }) : {});
                     diente.relacion = diente.relacion.map(y => y.concepto);
-                };
+                }
             }
 
         }
