@@ -29,7 +29,8 @@
               }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "src/app/shared/assets/wizard/styles.scss"
             ],
             "scripts": [
                 "node_modules/intro.js/intro.js"
