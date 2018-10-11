@@ -15,6 +15,7 @@ export interface IElementoRUP {
     esSolicitud: Boolean;
     // Indica los parámetros para instanciar el componente
     params: { [key: string]: any };
+    reglas: { [key: string]: any };
     // Indica el estilo para aplicar al componente
     style: {
         columns: number,
