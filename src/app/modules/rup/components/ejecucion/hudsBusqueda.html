@@ -135,7 +135,7 @@
 
                                 <ng-container *ngIf="emitirConceptos">
                                     <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
-                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
+                                        [dragClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': hallazgo, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(hallazgo.concepto, filtroActual)}}"></i>
                                     </div>
@@ -210,7 +210,7 @@
 
                                 <ng-container *ngIf="emitirConceptos">
                                     <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
-                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                        [dragClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
                                     </div>
@@ -285,7 +285,7 @@
 
                                 <ng-container *ngIf="emitirConceptos">
                                     <div class="icon-rup drag-handle" draggable [dragScope]="_dragScope"
-                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
+                                        [dragClass]="_dragOverClass" [dragData]="{'tipo': 'hallazgo','data': problema, 'huds': true}"
                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                         <!-- <i *ngIf="emitirConceptos" #dragHandle class="drag-bar drag-handle mdi mdi-drag-vertical"></i> -->
                                         <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(problema.concepto, filtroActual)}}"></i>
@@ -500,7 +500,7 @@
 
                                                 <ng-container *ngIf="emitirConceptos">
                                                     <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                        [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': producto, 'huds': true}"
+                                                        [dragClass]="_dragOverClass" [dragData]="{'tipo': 'producto','data': producto, 'huds': true}"
                                                         (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                         <i class="icon icon-rup-semantic-producto"></i>
                                                     </div>
@@ -582,7 +582,7 @@
 
                                                     <ng-container *ngIf="emitirConceptos">
                                                         <div class="icon-rup " draggable [dragScope]="_dragScope"
-                                                            [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
+                                                            [dragClass]="_dragOverClass" [dragData]="{'tipo': 'elementoderegistro','data': elementoRegistro, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
                                                         </div>
@@ -666,7 +666,7 @@
 
                                                     <ng-container *ngIf="emitirConceptos">
                                                         <div class="icon-rup" draggable [dragScope]="_dragScope"
-                                                            [dragOverClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
+                                                            [dragClass]="_dragOverClass" [dragData]="{'tipo': 'laboratorio','data': laboratorio, 'huds': true}"
                                                             (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                                                             <i class="icon mdi mdi-flask-empty-outline"></i>
                                                         </div>

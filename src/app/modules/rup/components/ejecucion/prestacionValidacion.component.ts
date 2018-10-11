@@ -580,7 +580,7 @@ export class PrestacionValidacionComponent implements OnInit {
             content += header;
             content += `
                 <div class="paciente">
-                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} - 
+                    <b>Paciente:</b> ${this.paciente.apellido}, ${this.paciente.nombre} -
                     ${this.paciente.documento} - ${moment(this.paciente.fechaNacimiento).fromNow(true)}
                 </div>
                 `;

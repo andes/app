@@ -31,7 +31,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-import { Ng2DragDropModule } from 'ng2-drag-drop';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
@@ -470,7 +470,7 @@ registerLocaleData(localeEs, 'es');
         HttpModule,
         PlexModule,
         AuthModule,
-        Ng2DragDropModule,
+        NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
         AgmCoreModule.forRoot({

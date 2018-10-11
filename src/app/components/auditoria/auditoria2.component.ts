@@ -15,9 +15,6 @@ import {
     FormsModule,
     ReactiveFormsModule
 } from '@angular/forms';
-import {
-    Ng2DragDropModule
-} from 'ng2-drag-drop';
 import * as moment from 'moment';
 import {
     IPaciente
