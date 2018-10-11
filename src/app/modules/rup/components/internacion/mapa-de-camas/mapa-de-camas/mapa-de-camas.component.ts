@@ -436,15 +436,17 @@ export class MapaDeCamasComponent implements OnInit {
 
     onCamaSelected(event) {
         this.camaSelected = event;
-        let cama = event;
-        this.prestacionDelPaciente(cama);
-        if (this.camaSeleccionada === cama) {
+        this.prestacionDelPaciente(this.camaSelected);
+        if (this.camaSeleccionada === this.camaSelected) {
             this.camaSeleccionada = null;
+            this.showMenu = true;
+            this.showEgreso = false;
         } else {
             this.showMenu = true;
             this.showIngreso = false;
+            this.showEgreso = false;
             this.showResumen = false;
-            this.camaSeleccionada = cama;
+            this.camaSeleccionada = this.camaSelected;
             this.prestacionPorInternacion = null;
         }
         this.reseteaBusqueda();
@@ -514,9 +516,12 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     verInternacion(event) {
-        this.onCamaSelected(event);
+        this.camaSelected = event;
+        this.prestacionDelPaciente(this.camaSelected);
         this.panelIndex = 1;
+        this.showMenu = true;
         this.showEgreso = true;
+        this.camaSeleccionada = this.camaSelected;
     }
 
     buscarHistorial() {

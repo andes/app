@@ -41,7 +41,8 @@ export class CamaCreateUpdateComponent implements OnInit {
         esCensable: true,
         genero: null,
         paciente: null,
-        idInternacion: null
+        idInternacion: null,
+        esMovimiento: false
     };
 
     constructor(
@@ -85,6 +86,7 @@ export class CamaCreateUpdateComponent implements OnInit {
             if (this.cama.estados && (this.cama.estados.length > 0)) {
                 if (JSON.stringify(this.cama.ultimoEstado) !== JSON.stringify(this.estado)) {
                     this.cama.ultimoEstado = JSON.stringify(this.estado);
+                    this.estado.esMovimiento = false;
                     this.cama.estados.push(this.estado);
                 }
             } else {
