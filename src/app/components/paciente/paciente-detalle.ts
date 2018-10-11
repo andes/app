@@ -7,6 +7,7 @@ import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { Plex } from '@andes/plex';
+import { PacienteCreateUpdateComponent } from './paciente-create-update.component';
 
 @Component({
     selector: 'paciente-detalle',
@@ -37,7 +38,8 @@ export class PacienteDetalleComponent implements OnInit {
     inconsistenciaDatos = false;
     backUpDatos = [];
 
-    constructor(private renaperService: RenaperService, private plex: Plex) { }
+    constructor(private renaperService: RenaperService,
+        private parent: PacienteCreateUpdateComponent, private plex: Plex) { }
 
     ngOnInit() {
         this.backUpDatos['nombre'] = this.paciente.nombre;
@@ -53,8 +55,7 @@ export class PacienteDetalleComponent implements OnInit {
         }
     }
 
-    renaperVerification(patient) {
-
+    async renaperVerification(patient) {
         // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
         // Cancela la búsqueda anterior
@@ -68,7 +69,7 @@ export class PacienteDetalleComponent implements OnInit {
         sexoRena = patient.sexo === 'masculino' ? 'M' : 'F';
         documentoRena = patient.documento;
 
-        this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
+        this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(async resultado => {
             // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
             this.deshabilitarValidar = true;
             this.loading = false;
@@ -78,10 +79,18 @@ export class PacienteDetalleComponent implements OnInit {
                     patient.nombre = datos.nombres;
                     patient.apellido = datos.apellido;
                     patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
-                    patient.estado = 'validado';
-                    this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
-                    this.paciente.direccion[0].codigoPostal = datos.cpostal;
-                    patient.cuil = datos.cuil;
+
+                    await this.parent.verificaPacienteRepetido().then(validadoExistente => {
+                        if (validadoExistente) {
+                            patient = this.parent.pacienteModel;
+                            this.plex.alert('El paciente que está intentando cargar ya se encuentra validado por otra fuente auténtica.');
+                        } else {
+                            patient.estado = 'validado';
+                            this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
+                            this.paciente.direccion[0].codigoPostal = datos.cpostal;
+                            patient.cuil = datos.cuil;
+                        }
+                    });
                 } else {
                     if (!this.paciente.direccion[0].valor) {
                         this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;

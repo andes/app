@@ -23,7 +23,7 @@
             <span class="text-danger">Sin documento</span>
         </div>
         <div class="col" *ngIf="_paciente.estado">
-            <span class="block">Estado</span>
+            <label class="block">Estado</label>
             <span *ngIf="_paciente.estado === 'validado'" class="badge badge-success">
                 {{ _paciente.estado | uppercase }}
             </span>

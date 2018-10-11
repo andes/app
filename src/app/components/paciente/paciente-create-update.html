@@ -369,6 +369,7 @@
 
                         <!-- Pacientes candidatos -->
                         <div type="inverted" *ngIf="pacientesSimilares && pacientesSimilares.length > 0" title="Pacientes Candidatos">
+                            <hr>
                             <header>
                                 <h4>Pacientes Candidatos</h4>
                             </header>
@@ -377,24 +378,39 @@
                                     <div class="hover" *ngIf="!pacientesSearch">
                                         <ul class="list-group">
                                             <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
-                                                    <br>
-                                                    <small>Documento: {{elem.paciente.documento}}
-                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
-                                                        <br> Sexo: {{elem.paciente.sexo}}
-                                                    </small>
-
-                                                </h4>
-                                                <h4>Similitud: {{elem.match * 100}} %
-                                                    <span>
+                                                <h5 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre
+                                                    | uppercase}}</h5>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <span>Documento: {{elem.paciente.documento}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <span>Fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <span>Sexo: {{elem.paciente.sexo}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <span><strong>Similitud: {{elem.match * 100}} %</strong></span>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
                                                         <plex-button type="primary btn-sm" icon="account" label="Seleccionar" (click)="onSelect(elem.paciente)"></plex-button>
-                                                    </span>
-                                                </h4>
+                                                    </div>
+                                                </div>
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                     <activar-app *ngIf='showMobile' [paciente]="pacienteModel"></activar-app>
