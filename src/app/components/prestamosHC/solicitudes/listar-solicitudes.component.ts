@@ -116,12 +116,20 @@ export class ListarSolicitudesComponent implements OnInit {
     getCarpetas(value, filter) {
         if (filter === 'fechaDesde') {
             let fechaDesde = moment(this.fechaDesde).startOf('day');
+            let _fechaHasta = moment(this.fechaHasta).endOf('day');
+            if (fechaDesde > _fechaHasta) {
+                this.filters['fechaHasta'] = this.fechaHasta = moment(this.fechaDesde).endOf('day');
+            }
             if (fechaDesde.isValid()) {
                 this.filters['fechaDesde'] = fechaDesde;
             }
         }
         if (filter === 'fechaHasta') {
             let fechaHasta = moment(this.fechaHasta).endOf('day');
+            let _fechaDesde = moment(this.fechaDesde).startOf('day');
+            if (fechaHasta < _fechaDesde) {
+                this.filters['fechaDesde'] = this.fechaDesde = moment(this.fechaHasta).startOf('day');
+            }
             if (fechaHasta.isValid()) {
                 this.filters['fechaHasta'] = fechaHasta;
             }
