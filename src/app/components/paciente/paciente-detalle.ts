@@ -83,6 +83,7 @@ export class PacienteDetalleComponent implements OnInit {
                         this.renaperNotification.emit(true);
                         this.loading = false;
                     } else {
+                        this.plex.info('danger', '', 'Intento de validación fallida. Se volverá a intentar.', 5000);
                         let dto = {
                             documento: documentoRena,
                             nombre: datos.nombres,
