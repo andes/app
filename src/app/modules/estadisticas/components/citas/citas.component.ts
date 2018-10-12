@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, AfterViewInit, HostBinding } from '@angular/core';
 
 import { Plex } from '@andes/plex';

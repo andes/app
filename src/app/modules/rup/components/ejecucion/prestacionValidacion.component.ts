@@ -264,9 +264,16 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            });
+                        }
+                    });
+
                     this.motivoReadOnly = true;
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         // actualizamos las prestaciones de la HUDS
