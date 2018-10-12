@@ -65,17 +65,6 @@ export class ListarSolicitudesComponent implements OnInit {
         return this._listarCarpetas;
     }
 
-    @Input('recargar')
-    set recargar(value: any) {
-        if (value) {
-            this.getCarpetas({}, null);
-        }
-    }
-
-    get recargar(): any {
-        return;
-    }
-
     // @Output() showPrestarEmit: EventEmitter<boolean> = new EventEmitter<boolean>();
     @Output() carpetaPrestadaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarPrestamosEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();

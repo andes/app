@@ -40,17 +40,6 @@ export class ListarPrestamosComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    @Input('recargar')
-    set recargar(value: any) {
-        if (value) {
-            this.getCarpetas({}, null);
-        }
-    }
-
-    get recargar(): any {
-        return;
-    }
-
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 
