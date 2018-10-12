@@ -1,0 +1,48 @@
+<header>
+    <!--Busqueda de Pacientes-->
+    <div class="row">
+        <div class="clearfix col-12">
+            <div class="page-title"> Detalle Medicamento</div>
+        </div>
+    </div>
+</header>
+<div class="badgeContainer">
+    <span class="badge badge-info" *ngIf="medicamento?.concepto?.term.split(', ').length >= 2">{{ medicamento?.concepto?.term.split(', ')[1] }}</span>
+    <span class="badge badge-success" *ngIf="medicamento?.concepto?.term.split(', ').length >= 3">{{ medicamento?.concepto?.term.split(', ')[2] }}</span>
+</div>
+<div>
+    <div class="titulo-prefix">Medicamento</div>
+    <div class="titulo-principal md" *ngIf="medicamento?.concepto?.term.split(', ').length >= 1">{{ medicamento?.concepto?.term.split(', ')[0] }}</div>
+    <div class="titulo-secundario" *ngIf="medicamento?.especialidades.length >= 0">{{medicamento?.especialidades}}</div>
+</div>
+<div>
+    <div *ngIf="medicamento?.indicaciones !== ''">
+        <div class="titulo-prefix">Indicaciones</div>
+        <div class="andes-texto">{{medicamento?.indicaciones}}</div>
+    </div>
+</div>
+<div>
+    <div *ngIf="medicamento.comentario && medicamento?.comentario !== ''">
+        <div class="titulo-prefix">Comentario</div>
+        <div class="andes-texto">{{medicamento?.comentario}}</div>
+    </div>
+</div>
+<div class="andes-container-secundario">
+    <div class="andes-container-bloque">
+        <div class="titulo-prefix">Carro de Emergencia</div>
+        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia">Si</div>
+        <div class="andes-texto" *ngIf="medicamento?.carroEmergencia === ''">No</div>
+    </div>
+    <div class="andes-container-bloque">
+        <div *ngIf="medicamento?.nivelComplejidad !== ''">
+            <div class="titulo-prefix">Complejidad</div>
+            <div class="andes-texto">{{medicamento?.nivelComplejidad}}</div>
+        </div>
+    </div>
+</div>
+<div class="">
+    <div *ngIf="medicamento.requisitos  && medicamento?.requisitos !== ''">
+        <div class="titulo-prefix">Requisitos</div>
+        <div class="andes-texto"> {{medicamento?.requisitos}}</div>
+    </div>
+</div>

@@ -12,8 +12,8 @@
     </div>
     <div class="row mb-1">
         <div class="col">
-            <span *ngIf="paciente.documento">{{ paciente.documento | number }}</span>
-            <span class="badge ml-1" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}"> {{ paciente.estado | uppercase }} </span>
+            <span *ngIf="paciente.documento" class="mr-1">{{ paciente.documento | number }}</span>
+            <span class="badge" [ngClass]="{'badge-success': paciente.estado === 'validado', 'badge-warning': paciente.estado !== 'validado'}"> {{ paciente.estado | uppercase }} </span>
         </div>
     </div>
     <div class="row mb-1" *ngIf="paciente.fechaNacimiento">
@@ -34,13 +34,33 @@
             <span>{{ paciente.cuil }}</span>
         </div>
     </div>
-    <div class="row mb-1">
+    <!-- <div class="row mb-1">
         <div class="col">
             <label>Cobertura social</label>
-            <plex-loader *ngIf="coberturaSocialLoading" type="linear"></plex-loader>
-            <div *ngIf="!coberturaSocialLoading">
-                <span *ngIf="!coberturaSocialError">{{ coberturaSocial }}</span>
-                <span *ngIf="coberturaSocialError" class="text-warning">No disponible en este momento</span>
+            <plex-loader *ngIf="coberturaSocial.loading" type="linear"></plex-loader>
+            <div *ngIf="!coberturaSocial.loading">
+                <span *ngIf="!coberturaSocial.error">{{ coberturaSocial.data }}</span>
+                <span *ngIf="coberturaSocial.error" class="text-warning">No disponible en este momento</span>
+            </div>
+        </div>
+    </div> -->
+    <div class="row mb-1">
+        <div class="col">
+            <label>Relaciones</label>
+            <plex-loader *ngIf="relaciones.loading" type="linear"></plex-loader>
+            <div *ngIf="!relaciones.loading">
+                <span *ngIf="relaciones.error" class="text-warning">No disponibles en este momento</span>
+                <span *ngIf="relaciones.data && !relaciones.data.length">No hay ninguna relación registrada</span>
+                <table *ngIf="relaciones.data && relaciones.data.length" class="table table-sm" [ngClass]="{'table-hover': permitirseleccionarRelacion}">
+                    <tbody>
+                        <tr [ngClass]="{'hover': permitirseleccionarRelacion}" *ngFor="let relacion of relaciones.data" (click)="permitirseleccionarRelacion && seleccionarRelacionado(relacion)">
+                            <td>
+                                <span class="mr-1">{{relacion.apellido}}, {{relacion.nombre}} <em>({{relacion.relacion.nombre}})</em></span>
+                                <span *ngIf="relacion?.documento" class="d-block"><em>{{relacion.documento}}</em></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

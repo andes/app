@@ -49,21 +49,21 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
             if (e.dragData.tipo) {
                 switch (e.dragData.tipo) {
                     case 'prestacion':
-                        this.ejecutarConcepto(e.dragData.data.solicitud.tipoPrestacion);
+                        this.ejecutarConceptoInside(e.dragData.data.solicitud.tipoPrestacion);
                         break;
                     case 'hallazgo':
                     case 'trastorno':
                     case 'situación':
-                        this.ejecutarConcepto(e.dragData.data.concepto);
+                        this.ejecutarConceptoInside(e.dragData.data.concepto);
                         break;
                     default:
-                        this.ejecutarConcepto(e.dragData);
+                        this.ejecutarConceptoInside(e.dragData);
                         break;
                 }
 
             } else {
                 window.setTimeout(() => {
-                    this.ejecutarConcepto(e.dragData);
+                    this.ejecutarConceptoInside(e.dragData);
                 });
             }
 
@@ -72,7 +72,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
     }
 
 
-    ejecutarConcepto(snomedConcept, registroDestino = null) {
+    ejecutarConceptoInside(snomedConcept, registroDestino = null) {
         let valor;
         this.isDraggingConcepto = false;
         let registros = this.prestacion.ejecucion.registros;
@@ -129,7 +129,7 @@ export class ElementoDeRegistroComponent extends RUPComponent implements OnInit 
         }
         // Controlar si lo que llega como parámetro es un registro o es un concepto
         if (!registroOrigen.concepto) {
-            this.ejecutarConcepto(registroOrigen, registroDestino);
+            this.ejecutarConceptoInside(registroOrigen, registroDestino);
         } else {
             if (registroOrigen) {
                 registroOrigen.relacionadoCon = [registroDestino];

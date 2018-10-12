@@ -25,11 +25,12 @@
             "tsconfig": "tsconfig.json",
             "prefix": "app",
             "mobile": false,
+            "styles": [
+                "styles.scss",
+                "app/shared/assets/wizard/styles.scss"
+            ],
             "scripts": [
                 "../node_modules/intro.js/intro.js"
-            ],
-            "styles": [
-                "styles.scss"
             ],
             "environmentSource": "environments/environment.ts",
             "environments": {

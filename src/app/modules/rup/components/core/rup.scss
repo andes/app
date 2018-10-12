@@ -197,6 +197,19 @@ $rotate: -90deg;
     }
 }
 
+// TEMP
+.metadato.fundacional {
+    .legend {
+        background: repeating-linear-gradient( 45deg, #606dbc, #606dbc 10px, #465298 10px, #465298 20px) !important;
+    }
+}
+
+.calificador {
+    .legend {
+        background: repeating-linear-gradient( 45deg, #C70039, #C70039 10px, #36131b 10px, #36131b 20px) !important;
+    }
+}
+
 .text-secondary {
     color: #818182 !important;
 }
@@ -298,6 +311,7 @@ $color in $rup_colors {
     .open .dropdown-toggle.btn-#{$tag} {
         // color: white;
         // border-color: $hallazgos;
+        color: initial;
     }
     .btn-#{$tag}:active,
     .btn-#{$tag}.active,

@@ -1,0 +1,162 @@
+<!-- 
+- Fecha y hora de inicio
+- Hora de fin
+- Tipo de actividad: reference set relacionado con el tipo de prestación (ver #308)
+- Temática: listado estático. En el caso de seleccionar 'Otra' mostrar el siguiente campo ...
+- Otra temática (ver campo anterior)
+- Profesionales intervinientes
+- Un campo de observación que se llama 'Resumen de la actividad' (obligatorio) 
+-->
+<form #form="ngForm">
+    <ng-container *ngIf="!soloValores && registro.valor">
+        <div class="row">
+            <div class="col-4 ">
+                <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true" [autoFocus]="autoFocus "
+                    name="fecha" label="Fecha" [disabled]="turno">
+                </plex-datetime>
+            </div>
+            <div class="col-4 ">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio"
+                    label="Hora inicio " [disabled]="turno">
+                </plex-datetime>
+            </div>
+            <div class="col-4 ">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin"
+                    label="Hora fin" [disabled]="turno">
+                </plex-datetime>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6" *ngIf="listaActividades && listaActividades.length">
+                <plex-select [required]="true" label="Tipo actividad " [(ngModel)]="registro.valor.informe.tipoActividad"
+                    name="tipoActividad" [data]="listaActividades" idField="conceptId" labelField="term" placeholder="Seleccione... ">
+                </plex-select>
+            </div>
+            <div class="col-6 ">
+                <plex-select [required]="true" label="Tématica " [(ngModel)]="registro.valor.informe.tematica" name="tematica"
+                    [data]="tematicas" placeholder="Seleccione... " labelField="nombre" (change)="mostrarOtraTematica()">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row" *ngIf="elegirOtraActividad">
+            <div class="col-12">
+                <plex-text label="Otra tématica" name="otraTematica" [(ngModel)]="registro.valor.informe.otraTematica">
+                </plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <plex-select [(ngModel)]="registro.valor.informe.profesionales" (getData)="loadProfesionales($event)"
+                    placeholder="Profesionales" labelField="apellido + ' ' + nombre" name="profesionales" [readonly]="turno" [required]="true"
+                    [multiple]="true" label="Profesional(es) intervinientes">
+                </plex-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!--  [height]="100" -->
+                <plex-text label="Resumen de la actividad" name="resumen" [required]="true" [html]="true" [(ngModel)]="registro.valor.informe.resumen">
+                </plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <table class="table table-striped table-sm">
+                    <thead>
+                        <th class="col-10">Pacientes</th>
+                        <th class="col-2">&nbsp;</th>
+                    </thead>
+                    <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
+                        <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
+                            <td>{{paciente | paciente}}</td>
+                            <td>
+                                <plex-button icon="delete" class="btn btn-sm" type="info" (click)="deletePaciente(i)">
+                                </plex-button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
+                                    (searchClear)="searchClear()"></paciente-buscar>
+                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                    [autoselect]="false" [type]="'sm'" (selected)="seleccionarPaciente($event)"></paciente-listado>
+                                <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                                    ¡No se encontró ningún paciente!
+                                </div>
+                            </td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </ng-container>
+</form>
+
+<ng-container *ngIf="soloValores && registro.valor && registro.valor.informe ">
+    <div class="row">
+        <div class="col-3 ">
+            <label>Fecha</label>
+            {{registro.valor.informe?.fecha | date}}
+        </div>
+        <div class="col-3 ">
+            <label>Hora inicio</label>
+            {{registro.valor.informe?.horaIngreso | date: 'HH:mm'}}
+        </div>
+        <div class="col-3 ">
+            <label>Hora fin</label>
+            {{registro.valor.informe?.horaFin | date: 'HH:mm'}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <label>Tipo actividad</label>
+            {{registro.valor.informe?.tipoActividad?.term}}
+        </div>
+        <div class="col-6" *ngIf="registro.valor.informe?.tematica !== 'Otra'">
+            <label>Tématica</label>
+            {{registro.valor.informe?.tematica}}
+        </div>
+        <div class="col-6" *ngIf="registro.valor.informe?.tematica === 'Otra'">
+            <label>Tématica</label>
+            {{registro.valor.informe?.otraTematica}}
+        </div>
+    </div>
+    <div class="row" *ngIf="registro.valor.informe?.profesionales">
+        <div class="col-12">
+            <label>Profesional/es</label>
+            <ng-container *ngIf="registro.valor.informe?.profesionales && registro.valor.informe.profesionales.length">
+                <ng-container *ngFor="let profesional of registro.valor.informe?.profesionales">
+                    {{ profesional.apellido }}, {{ profesional.nombre }} -
+                </ng-container>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <label>Resumen de la actividad</label>
+            <ng-container>
+                <span [innerHTML]="registro.valor.informe.resumen"></span>
+            </ng-container>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-striped table-sm">
+                <thead>
+                    <th>Pacientes</th>
+                    <th>&nbsp;</th>
+                </thead>
+                <tbody *ngIf="registro.valor.informe?.pacientes && registro.valor.informe.pacientes.length > 0">
+                    <tr *ngFor="let paciente of registro.valor.informe.pacientes; let i=index;">
+                        <td>{{paciente | paciente}}</td>
+                        <td>&nbsp;</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</ng-container>
+<!-- Lista de pacientes y buscador  -->
