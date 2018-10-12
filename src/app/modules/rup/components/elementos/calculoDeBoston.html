@@ -1,0 +1,30 @@
+<form #form="ngForm">
+    <ng-container *ngIf="!soloValores">
+        <div class="row">
+            <div class="col">
+                <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                <div class="form-group row">
+                    <label class="">CI</label>
+                    <plex-radio [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()">
+                    </plex-radio>
+                </div>
+                <div class="form-group row">
+                    <label class="">CT</label>
+                    <plex-radio [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal" (change)="changeNumber()">
+                    </plex-radio>
+                </div>
+                <div class="form-group row">
+                    <label class="">CD</label>
+                    <plex-radio [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal" (change)="changeNumber()">
+                    </plex-radio>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
+                </plex-text>
+            </div>
+        </div>
+    </ng-container>
+</form>

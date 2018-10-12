@@ -278,7 +278,12 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
+import { ColonoscopiaComponent } from './modules/rup/components/elementos/colonoscopia.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
+import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { LapsoDeTiempoComponent } from './modules/rup/components/elementos/lapsoDeTiempo.component';
 
 
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -402,7 +407,12 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'CalculoDeBostonComponent': CalculoDeBostonComponent,
+    'ColonoscopiaComponent': ColonoscopiaComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
+    'AnestesiaComponent': AnestesiaComponent,
+    'ValorNumericoComponent': ValorNumericoComponent,
+    'LapsoDeTiempoComponent': LapsoDeTiempoComponent,
 };
 
 let RUPComponentsArray = [
@@ -458,7 +468,12 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    SeleccionBinariaComponent
+    CalculoDeBostonComponent,
+    ColonoscopiaComponent,
+    SeleccionBinariaComponent,
+    AnestesiaComponent,
+    ValorNumericoComponent,
+    LapsoDeTiempoComponent,
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -658,7 +673,8 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        SeleccionBinariaComponent
+        SeleccionBinariaComponent,
+        AnestesiaComponent
     ]
 })
 

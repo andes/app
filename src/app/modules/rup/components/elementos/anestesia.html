@@ -1,0 +1,13 @@
+<form #form="ngForm">
+    <div class="row" *ngIf="!soloValores">
+        <div class="col">
+            <label>{{ params.titulo }}</label>
+            <plex-radio [(ngModel)]="registro.valor" [data]="options" name="anestesia" [type]="vertical" [required]="params.required"></plex-radio>
+        </div>
+    </div>
+    <div class="row" *ngIf="soloValores">
+        <div class="col">
+            {{ registro.valor }}
+        </div>
+    </div>
+</form>

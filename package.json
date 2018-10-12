@@ -57,6 +57,7 @@
     "devDependencies": {
         "@angular/cli": "^1.7.4",
         "@angular/compiler-cli": "^5.0.0",
+        "@compodoc/compodoc": "^1.1.5",
         "@types/jasmine": "^2.2.30",
         "@types/node": "^9.4.7",
         "codelyzer": "~2.0.0-beta.4",

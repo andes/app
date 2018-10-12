@@ -2,11 +2,12 @@
 
 <!-- Moléculas -->
 <ng-container *ngIf="elementoRUP.requeridos && elementoRUP.requeridos.length">
-    <div class="row" [ngClass]="{'d-flex justify-content-start': soloValores}">
+    <div class="d-flex align-items-center justify-content-start" [ngClass]="{'d-flex justify-content-start': soloValores}">
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
             <div *ngIf="item.elementoRUP" class="col-{{ item.style.columns }} mr-{{ item.style?.offset ? item.style.offset : '0' }}">
-                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion" [registro]="registro.registros[i]"
-                    [soloValores]="soloValores" (change)="emitChange()">
+                <!-- {{ registro | json }} -->
+                <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
+                    [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()">
                 </rup>
             </div>
         </ng-container>
