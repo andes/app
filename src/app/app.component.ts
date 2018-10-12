@@ -4,6 +4,8 @@ import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
 import { Auth } from '@andes/auth';
 
+// import { RxSocket } from 'rx-socket.io-client';
+
 @Component({
     selector: 'app',
     templateUrl: './app.component.html',
@@ -43,7 +45,7 @@ export class AppComponent {
             accessList.push({ label: 'CITAS: Gestor de Agendas y Turnos', icon: 'calendar', route: '/citas/gestor_agendas' });
         }
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
-            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/puntoInicioTurnos' });
+            accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
@@ -61,6 +63,10 @@ export class AppComponent {
             accessList.push({ label: 'Solicitudes', icon: 'mdi mdi-open-in-app', route: '/solicitudes' });
         }
 
+        // faltan permisos
+        if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
+        accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
+        }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
         accessList.forEach((permiso) => {
@@ -78,7 +84,7 @@ export class AppComponent {
         // Configura server. Debería hacerse desde un provider (http://stackoverflow.com/questions/39033835/angularjs2-preload-server-configuration-before-the-application-starts)
         server.setBaseURL(environment.API);
 
-        // Inicializa el menu
+        // Inicializa el menú
         this.checkPermissions();
 
         // Inicializa la vista

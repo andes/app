@@ -28,14 +28,12 @@
                 <div class="col-6" *ngIf="_paciente?.documento !== ''">
                     {{_paciente.documento | number}}
                 </div>
-                <div class="col-6" *ngIf="_paciente?.fechaNacimiento !== null">
+                <div class="col-6" *ngIf="_paciente && _paciente.fechaNacimiento !== null">
                     {{_paciente.fechaNacimiento | date:'dd-MM-yyyy'}} ({{_paciente | edad}})
                 </div>
             </div>
             <div class="row">
-
-                <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
-
+                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     <i class="mdi mdi-map-marker"></i>
                     <span style="color: #00A8E0">Dirección</span>
                 </div>
@@ -46,7 +44,8 @@
             </div>
             <div class="row">
 
-                <div class="col-6" *ngIf="_paciente && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+
+                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
                 <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
@@ -122,9 +121,18 @@
             <ul class="list-group">
                 <li *ngFor="let turno of ultimosTurnos let i=index" class="list-group-item" [appHover]="'active'">
                     <div class="list-group-item-text">
-                        <div>{{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}} |
-                            <span>{{turno.estado}}</span>
+                        <div>
+                            <span *ngIf="turno.estado === 'asignado' || turno.estado === 'turnoDoble'" class="badge badge-success">
+                                ASIGNADO</span>
+                            <span *ngIf="turno.estado === 'liberado' || turno.estado === 'suspendido' " class="badge badge-danger">
+                                {{turno.estado | uppercase}}</span>
+
+                            | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
+
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                            | date: 'dd/MM/yyyy'}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
+
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
                         <div *ngFor="let profesional of turno.profesionales">
                             {{profesional | profesional}}

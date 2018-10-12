@@ -18,6 +18,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
+
 // ... Tablas Maestras
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { EspecialidadComponent } from './components/especialidad/especialidad.component';
@@ -43,7 +44,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
 import { Auditoria2Component } from './components/auditoria/auditoria2.component';
-import { PacienteDemoComponent } from './modules/mpi/components/demo.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -68,6 +68,8 @@ import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiag
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
 
+// CONFIGURACION PRESTACION
+import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -86,6 +88,9 @@ import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.comp
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
+import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+
+// import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -102,7 +107,6 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/demo', component: PacienteDemoComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
@@ -116,7 +120,7 @@ const appRoutes: Routes = [
   { path: 'citas/agenda', component: PlanificarAgendaComponent, canActivate: [RoutingGuard] },
   { path: 'citas/turnos', component: DarTurnosComponent, canActivate: [RoutingGuard] },
   { path: 'citas/listaEspera', component: ListaEsperaComponent, canActivate: [RoutingGuard] },
-  { path: 'puntoInicioTurnos', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
+  { path: 'citas/puntoInicio', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
 
   // RUP
   { path: 'rup', component: PuntoInicioComponent, canActivate: [RoutingGuard] },
@@ -135,6 +139,9 @@ const appRoutes: Routes = [
   { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
 
+  // configuracion prestacion
+  { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingGuard] },
+
   // Mapa de camas
   { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
   // internacion
@@ -144,6 +151,9 @@ const appRoutes: Routes = [
 
   // Gestion de usuarios
   { path: 'gestionUsuarios', component: BusquedaUsuarioComponent, canActivate: [RoutingGuard] },
+
+  // formulario terapeutico
+  { path: 'formularioTerapeutico', component: FormTerapeuticoComponent, canActivate: [RoutingGuard] },
 
   // Reportes
   { path: 'reportes', component: EncabezadoReportesComponent, canActivate: [RoutingGuard] },

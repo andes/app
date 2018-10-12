@@ -77,7 +77,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDashboard = true;
     }
     onPacienteSelected(paciente: IPaciente): void {
-        // debugger
         this.paciente = paciente;
 
         if (paciente.id) {
@@ -204,8 +203,9 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.showDashboard = true;
         if (this.paciente && this.paciente.id) {
+            // this.onPacienteSelected(this.paciente);
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
-                this.paciente = pac;
+                this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
             this.selected.emit(this.paciente);
             this.resultadoCreate = [this.paciente];

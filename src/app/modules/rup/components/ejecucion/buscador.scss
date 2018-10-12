@@ -17,10 +17,10 @@
 
 .menu-buscador {
     .container-filtros {
-        width: 103%;
-        overflow: scroll;
-        position: relative;
-        height: auto;
+        // width: 103%;
+        // overflow: scroll;
+        // position: relative;
+        // height: auto;
         padding: 5px 0;
         margin: 10px 0;
     }
@@ -34,11 +34,11 @@
         padding: 0;
         display: flex;
         li {
-            min-width: 54px;
+            width: 16.5%;
             height: 60px;
-            position: relative; // margin-right: 2px;
+            position: relative;
             button {
-                text-overflow: ellipsis;
+                // text-overflow: ellipsis;
                 white-space: normal;
                 /* width: 99%; */
                 /* height: 1.5rem; */

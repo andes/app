@@ -4,25 +4,15 @@
     <div class="alert alert-default small">
         <div class="row">
             <div class="col-12">
-                <p>Haga click en el área verde para asignar el espacio físico.</p>
+                <h4>
+                    <p>Haga click en el área verde para asignar el espacio físico.</p>
+                </h4>
             </div>
         </div>
     </div>
 
     <div class="row">
-        <!-- <div class="col-3">
-        <plex-datetime type="date" name="fechaDesde" label="Desde" class="fechas">
-        </plex-datetime>
-    </div>
-    <div class="col-3">
-        <plex-datetime type="date" name="fechaHasta" label="Hasta">
-        </plex-datetime>
-    </div> -->
-
         <div class="col-4">
-            <!-- <plex-select [(ngModel)]="agenda.espacioFisico" name="agenda.espacioFisico" label="Espacio Físico" (getData)="loadEspacios($event)"
-            (change)="validarTodo()">
-        </plex-select> -->
             <plex-text label="Espacio físico" [(ngModel)]="agenda.espacioFisico" (change)="nombreChange($event)"></plex-text>
         </div>
 
