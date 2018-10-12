@@ -1,4 +1,5 @@
 export interface IObraSocial {
+  id: string;
   tipoDocumento: String;
   dni: Number;
   transmite: String;

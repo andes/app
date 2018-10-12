@@ -1,6 +1,5 @@
 import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
-import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -83,6 +82,9 @@ export class DarTurnosComponent implements OnInit {
 
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
+    desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
+    obrasSociales = [];
+    numeroAfiliado;
     telefono: String = '';
     countBloques: any[];
     countTurnos: any = {};
@@ -173,6 +175,7 @@ export class DarTurnosComponent implements OnInit {
                 return busqueda.usuario && busqueda.usuario.documento === this.auth.usuario.documento;
             });
         }
+        this.desplegarOS = this.desplegarObraSocial();
         this.actualizar('');
     }
 
@@ -248,6 +251,34 @@ export class DarTurnosComponent implements OnInit {
             event.callback(this.opciones.profesional || []);
         }
         this.eventoProfesional = event;
+    }
+
+    loadObrasSociales(event) {
+        if (this.obrasSociales && this.obrasSociales.length > 0) {
+            event.callback(this.obrasSociales);
+        }
+        if (event.query) {
+            let query = { nombre: event.query };
+            this.servicioOS.getListado(query).subscribe(
+                resultado => {
+                    resultado = resultado.map(os => {
+                        os.id = os._id;
+                        return os;
+                    });
+                    event.callback(resultado);
+                }
+            );
+        } else {
+            this.servicioOS.getListado({}).subscribe(
+                resultado => {
+                    resultado = resultado.map(os => {
+                        os.id = os._id;
+                        return os;
+                    });
+                    event.callback(resultado);
+                }
+            );
+        }
     }
 
     filtrar() {
@@ -396,18 +427,14 @@ export class DarTurnosComponent implements OnInit {
         let turnoAnterior = null;
         this.turnoDoble = false;
         // Ver si cambió el estado de la agenda en otro lado
-        this.serviceAgenda.getById(this.agenda.id).subscribe(a => {
-
+        this.serviceAgenda.getById(this.agenda.id).subscribe(agendaSeleccionada => {
             // Si cambió el estado y ya no está disponible ni publicada, mostrar un alerta y cancelar cualquier operación
-            if (a.estado !== 'disponible' && a.estado !== 'publicada') {
-
+            if (agendaSeleccionada.estado !== 'disponible' && agendaSeleccionada.estado !== 'publicada') {
                 this.plex.info('warning', 'Esta agenda ya no está disponible.');
                 return false;
-
             } else {
 
                 this.alternativas = [];
-
                 // Tipo de Prestación, para poder filtrar las agendas
                 let tipoPrestacion: String = this.opciones.tipoPrestacion ? this.opciones.tipoPrestacion.id : '';
                 // Se filtran los bloques segun el filtro tipoPrestacion
@@ -451,9 +478,8 @@ export class DarTurnosComponent implements OnInit {
                         if (this.agenda.dinamica) {
                             this.estadoT = 'dinamica';
                         } else {
-                            // Tiene solicitud "papelito"?
+                            // Tiene solicitud
                             if (this._solicitudPrestacion) {
-
                                 // Es autocitado?
                                 if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
                                     this.tiposTurnosSelect = 'profesional';
@@ -534,15 +560,16 @@ export class DarTurnosComponent implements OnInit {
                         } else {
                             this.reqfiltros = true;
                         }
-
                     }
                 }
             }
         });
     }
 
+    /**
+    * Se selecciona un turno del listado
+    */
     seleccionarTurno(bloque: any, indice: number) {
-
         this.turnoDoble = false;
         if (this.paciente) {
             this.bloque = bloque;
@@ -579,10 +606,6 @@ export class DarTurnosComponent implements OnInit {
         this.opciones.tipoPrestacion = turno.tipoPrestacion;
         let actualizarProfesional = (this.opciones.profesional === turno.profesionales);
         this.opciones.profesional = turno.profesionales[0];
-        // TODO revisar carga de profesional, idem solicitudes
-        // if (!actualizarProfesional && this.eventoProfesional) {
-        //     this.eventoProfesional.callback(this.opciones.profesional);
-        // }
         this.actualizar('');
     }
 
@@ -1143,4 +1166,7 @@ export class DarTurnosComponent implements OnInit {
         return false;
     }
 
+    desplegarObraSocial() {
+        return this.auth.organizacion._id === '5a5e3f7e0bd5677324737244';
+    }
 }

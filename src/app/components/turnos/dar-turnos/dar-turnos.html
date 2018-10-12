@@ -297,10 +297,21 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <span *ngIf="obraSocialPaciente">
+                                <span *ngIf="!desplegarOS && obraSocialPaciente">
                                     <label>Obra Social </label>
                                     <div>{{obraSocialPaciente.financiador}}</div>
                                 </span>
+                                <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obrasSociales" name="obrasSociales"
+                                    (getData)="loadObrasSociales($event)"></plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="desplegarOS">
+                            <div class="col">
+                                <plex-text label="Número de Afiliado" name="numeroAfiliado" [(ngModel)]="numeroAfiliado"></plex-text>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [(ngModel)]="motivoConsulta"></plex-text>
                             </div>
                         </div>
