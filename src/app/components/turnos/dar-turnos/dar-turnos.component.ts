@@ -48,20 +48,7 @@ export class DarTurnosComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this._pacienteSeleccionado = value;
-        this.servicePaciente.getById(this._pacienteSeleccionado.id).subscribe(
-            pacienteMPI => {
-                this.paciente = pacienteMPI;
-                this.verificarTelefono(pacienteMPI);
-                this.obtenerCarpetaPaciente();
-                if (this.paciente.documento) {
-                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                        if (resultado) {
-                            this.obraSocialPaciente = resultado[0];
-                        }
-                    });
-                }
-                this.mostrarCalendario = false;
-            });
+        this.actualizarDatosPaciente(this._pacienteSeleccionado.id);
     }
     get pacienteSeleccionado() {
         return this._pacienteSeleccionado;
@@ -72,19 +59,7 @@ export class DarTurnosComponent implements OnInit {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
-            this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.verificarTelefono(pacienteMPI);
-                    this.obtenerCarpetaPaciente();
-                    if (this.paciente.documento) {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado) {
-                                this.obraSocialPaciente = resultado[0];
-                            }
-                        });
-                    }
-                });
+            this.actualizarDatosPaciente(this._solicitudPrestacion.paciente.id);
         }
     }
     get solicitudPrestacion() {
@@ -199,6 +174,22 @@ export class DarTurnosComponent implements OnInit {
             });
         }
         this.actualizar('');
+    }
+
+    actualizarDatosPaciente(idPaciente) {
+        this.servicePaciente.getById(idPaciente).subscribe(
+            pacienteMPI => {
+                this.paciente = pacienteMPI;
+                this.verificarTelefono(pacienteMPI);
+                this.obtenerCarpetaPaciente();
+                if (this.paciente.documento) {
+                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                        if (resultado) {
+                            this.obraSocialPaciente = resultado[0];
+                        }
+                    });
+                }
+            });
     }
 
     loadTipoPrestaciones(event) {
@@ -1023,19 +1014,7 @@ export class DarTurnosComponent implements OnInit {
         this.showCreateUpdate = false;
         this.showDarTurnos = true;
         if (paciente) {
-            this.servicePaciente.getById(paciente.id).subscribe(
-                pacienteMPI => {
-                    this.paciente = pacienteMPI;
-                    this.verificarTelefono(pacienteMPI);
-                    this.obtenerCarpetaPaciente();
-                    if (this.paciente.documento) {
-                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            if (resultado) {
-                                this.obraSocialPaciente = resultado[0];
-                            }
-                        });
-                    }
-                });
+            this.actualizarDatosPaciente(paciente.id);
         } else {
             this.buscarPaciente();
         }
