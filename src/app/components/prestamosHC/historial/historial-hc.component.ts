@@ -27,10 +27,12 @@ export class HistorialCarpetasComponent implements OnInit {
     }
 
     buscarHistorial() {
+        this.paciente = null;
+        this.historial = [];
+        this.inicioBusqueda = true;
         if (this.numeroCarpeta != null) {
             this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion.id })
                 .subscribe(resultado => {
-                    this.inicioBusqueda = true;
                     if (resultado.historial.length > 0) {
                         this.historial = resultado.historial;
                     } else {

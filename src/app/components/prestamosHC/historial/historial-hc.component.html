@@ -92,8 +92,13 @@
                             </table>
                             <div class="row" *ngIf="inicioBusqueda && !historial.length">
                                 <div class="col-12 text-center" style="margin: 3rem">
-                                    <h3>
-                                        <i class="mdi mdi-folder-remove"></i> No se encuentra la carpeta</h3>
+                                    <h3 *ngIf="paciente">
+                                        <i class="mdi mdi-folder-remove"></i> No se encuentra historial de la carpeta
+                                    </h3>
+                                    <h3 *ngIf="!paciente">
+                                        <i class="mdi mdi-folder-remove"></i> No existe este número de carpeta en esta
+                                        organización
+                                    </h3>
                                 </div>
                             </div>
                         </header>
