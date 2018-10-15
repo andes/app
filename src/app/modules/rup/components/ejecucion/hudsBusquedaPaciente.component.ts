@@ -20,6 +20,14 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     constructor(public plex: Plex, public auth: Auth, private router: Router) { }
 
     ngOnInit() {
+        if (!this.auth.profesional && this.auth.getPermissions('HUDS:visualizacionHuds').length <= 0) {
+            this.redirect('inicio');
+        }
+    }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
     }
 
     onPacienteSelected(event) {
