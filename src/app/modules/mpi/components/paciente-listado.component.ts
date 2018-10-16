@@ -45,7 +45,12 @@ export class PacienteListadoComponent {
      * Indica si selecciona automáticamente el primer paciente de la lista
      *
      */
-    @Input() autoselect = true;
+    @Input() autoselect = false;
+    /**
+    * Indica como se muestra la tabla de resultados
+    *
+    */
+    @Input() type: 'default' | 'sm' = 'default';
     /**
      * Evento que se emite cuando se selecciona un paciente
      *
@@ -65,8 +70,13 @@ export class PacienteListadoComponent {
     }
 
     public seleccionar(paciente: IPaciente) {
-        this.seleccionado = paciente;
-        this.selected.emit(paciente);
+        if (this.seleccionado !== paciente) {
+            this.seleccionado = paciente;
+            this.selected.emit(this.seleccionado);
+        } else {
+            this.seleccionado = null;
+            this.selected.emit(null);
+        }
     }
 
     public hoverPaciente(paciente: IPaciente) {

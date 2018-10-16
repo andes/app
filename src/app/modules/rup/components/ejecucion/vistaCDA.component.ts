@@ -36,7 +36,6 @@ export class VistaCDAComponent implements OnInit {
                 this.autorCDA = cda.ClinicalDocument.author.assignedAuthor.assignedPerson ? cda.ClinicalDocument.author.assignedAuthor.assignedPerson.name : null;
                 this.organizacionCDA = cda.ClinicalDocument.author.assignedAuthor.representedOrganization ? cda.ClinicalDocument.author.assignedAuthor.representedOrganization : null;
                 this.codificacionCDA = cda.ClinicalDocument.component.structuredBody ? cda.ClinicalDocument.component.structuredBody.component.section : null;
-
             });
     }
 

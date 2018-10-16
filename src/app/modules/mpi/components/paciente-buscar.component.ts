@@ -23,15 +23,13 @@ interface PacienteEscaneado {
 })
 export class PacienteBuscarComponent implements OnInit, OnDestroy {
     private timeoutHandle: number;
-
-    // Propiedades públicas
     public textoLibre: string = null;
     public autoFocus = 0;
 
     // Eventos
     @Output() searchStart: EventEmitter<any> = new EventEmitter<any>();
     @Output() searchEnd: EventEmitter<PacienteBuscarResultado> = new EventEmitter<PacienteBuscarResultado>();
-    @Output() data: EventEmitter<any> = new EventEmitter<any>();
+    @Output() searchClear: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private pacienteService: PacienteService, private logService: LogService) {
     }
@@ -128,10 +126,6 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
         }
 
         let textoLibre = this.textoLibre && this.textoLibre.trim();
-        if (!textoLibre) {
-            return;
-        }
-
         // Inicia búsqueda
         if (textoLibre) {
             this.timeoutHandle = window.setTimeout(() => {
@@ -211,6 +205,8 @@ export class PacienteBuscarComponent implements OnInit, OnDestroy {
                     );
                 }
             }, 200);
+        } else {
+            this.searchClear.emit();
         }
     }
 }
