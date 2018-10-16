@@ -94,38 +94,6 @@
                     <legend *ngIf="cama.$action && cama.$action !== 'bloquear'">{{cama.$action.toString()}}</legend>
                 </fieldset>
             </div>
-            <!-- Acción: Evolucionar -->
-            <!-- @jfgabriel | Deshabilitamos algunas funciones hasta que estén más desarrolladas -->
-            <!-- <div *ngIf="cama.$action && cama.$action == 'evolucion'">
-                <div class="contenido" [ngClass]="{'evolucion': cama.$action == 'evolucion' }">
-                    <div class="main ">
-                        <p *ngIf="!cama?.ultimaEvolucion?.createdBy" class="text-center">
-                            Aún no se ha cargado ninguna evolución.
-                            <br />
-                            <br />
-                        </p>
-                    </div>
-                </div>
-                <div class="footer row">
-                    <div class="col-12 text-right">
-                        <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
-                            <i class="mdi mdi-close"></i>
-                        </button>
-                        <button class="btn btn-default " title="Ver indicaciones" (click)="verInternacion(cama.idInternacion, 5)" *ngIf="cama.idInternacion">
-                            <i class="mdi mdi-book-open"></i>
-                        </button>
-                        <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(cama.idInternacion)" *ngIf="cama.idInternacion">
-                            <i class="mdi mdi-eye"></i>
-                        </button>
-                        <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion')">
-                            <i class="mdi mdi-wrench"></i>
-                        </button>
-                        <button class="btn btn-default " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'reparacion')">
-                            <i class="mdi mdi-wrench"></i>
-                        </button>
-                    </div>
-                </div>
-            </div> -->
 
             <!-- Acción: Ver cama enviada a reparacion -->
             <div *ngIf="cama.$action == 'enviada_reparacion' && cama.ultimoEstado.estado == 'reparacion'">
