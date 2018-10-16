@@ -87,6 +87,7 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 import { OcuparCamaComponent } from './apps/rup/internacion/components/ocuparCama.component';
+import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
 import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
