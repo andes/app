@@ -28,10 +28,14 @@ export class DesocuparCamaComponent implements OnInit {
     public listadoCamas = [];
     public paseAunidadOrganizativa: any;
     public camaSeleccionPase;
+
     // Eventos
+    // cama sobre la que estamos trabajando
     @Input() cama: any;
-    @Output() evtCama: EventEmitter<any> = new EventEmitter<any>();
-    @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
+
+    // resultado de la accion realizada sobre la cama
+    @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
+    // @Output() verInternacionEmit: EventEmitter<any> = new EventEmitter<any>();
 
     // Constructor
     constructor(private plex: Plex,
@@ -62,22 +66,21 @@ export class DesocuparCamaComponent implements OnInit {
      * @memberof TemplateFormComponent
      */
 
-    public desocuparCama(event, cama, estado) {
+    public desocuparCama(event) {
         if (event.formValid) {
-            let paciente = cama.ultimoEstado.paciente;
-            let idInternacion = cama.ultimoEstado.idInternacion;
+            let paciente = this.cama.ultimoEstado.paciente;
+            let idInternacion = this.cama.ultimoEstado.idInternacion;
             if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
                 let nuevoEstado = this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                 // Primero desocupamos la cama donde esta el paciente actualmente
-                this.camasService.cambioEstadoMovimiento(cama, nuevoEstado, this.combinarFechas(), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
-                    cama.ultimoEstado = camaActualizada.ultimoEstado;
+                this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.combinarFechas(), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
+                    this.cama = camaActualizada;
                     // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
                     this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
                         this.paseAunidadOrganizativa).subscribe(camaCambio => {
                             this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
-                            this.rotarDesocuparCama();
                             // emitimos las camas modificadas
-                            this.evtCama.emit({ camaDesocupada: cama, movimientoCama: true, camaOcupada: this.camaSeleccionPase });
+                            this.accionCama.emit({ cama: this.cama, accion: 'movimientoCama', camaOcupada: this.camaSeleccionPase });
 
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error');
@@ -88,7 +91,8 @@ export class DesocuparCamaComponent implements OnInit {
                 });
             } else {
                 if (this.opcionDesocupar === 'egreso') {
-                    this.verInternacionEmit.emit(cama);
+                    this.accionCama.emit({ cama: this.cama, accion: 'egresarPaciente' });
+                    // this.verInternacionEmit.emit(cama);
                 }
             }
         }
@@ -107,6 +111,7 @@ export class DesocuparCamaComponent implements OnInit {
             return null;
         }
     }
+
     operacionDesocuparCama() {
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
@@ -117,8 +122,7 @@ export class DesocuparCamaComponent implements OnInit {
 
             } else {
                 if (this.opcionDesocupar === 'egreso') {
-                    this.rotarDesocuparCama();
-                    this.verInternacionEmit.emit(this.cama);
+                    this.accionCama.emit({ cama: this.cama, accion: 'egresarPaciente' });
                 }
             }
         }
@@ -133,11 +137,13 @@ export class DesocuparCamaComponent implements OnInit {
 
         });
     }
-    rotarDesocuparCama() {
-        this.cama.$rotar = !this.cama.$rotar;
-        this.elegirDesocupar = true;
-        this.opcionDesocupar = null;
-        this.listadoCamas = [];
+
+    cancelar() {
+        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+        // this.cama.$rotar = !this.cama.$rotar;
+        // this.elegirDesocupar = true;
+        // this.opcionDesocupar = null;
+        // this.listadoCamas = [];
     }
 
 }
