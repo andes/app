@@ -83,7 +83,6 @@ export class DarTurnosComponent implements OnInit {
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
     desplegarOS = false; // Indica si es se requiere seleccionar OS y numero de Afiliado
-    obrasSociales = [];
     numeroAfiliado;
     telefono: String = '';
     countBloques: any[];
@@ -189,6 +188,8 @@ export class DarTurnosComponent implements OnInit {
                     this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
                         if (resultado) {
                             this.obraSocialPaciente = resultado[0];
+                            console.log(this.obraSocialPaciente);
+                            this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
                         }
                     });
                 }
@@ -254,9 +255,6 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadObrasSociales(event) {
-        if (this.obrasSociales && this.obrasSociales.length > 0) {
-            event.callback(this.obrasSociales);
-        }
         if (event.query) {
             let query = { nombre: event.query };
             this.servicioOS.getListado(query).subscribe(
@@ -271,10 +269,6 @@ export class DarTurnosComponent implements OnInit {
         } else {
             this.servicioOS.getListado({}).subscribe(
                 resultado => {
-                    resultado = resultado.map(os => {
-                        os.id = os._id;
-                        return os;
-                    });
                     event.callback(resultado);
                 }
             );
@@ -1046,7 +1040,6 @@ export class DarTurnosComponent implements OnInit {
     afterSearch(paciente: IPaciente): void {
         this.paciente = paciente;
         this.showDarTurnos = true;
-
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
@@ -1166,6 +1159,10 @@ export class DarTurnosComponent implements OnInit {
         return false;
     }
 
+    /*
+    * Determina si se permite seleccionar obra social e ingresar número de afiliado
+    * por el momento esto solo es posible desde el efector: Centro médico integral (colegio médico)
+    */
     desplegarObraSocial() {
         return this.auth.organizacion._id === '5a5e3f7e0bd5677324737244';
     }
