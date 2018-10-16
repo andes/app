@@ -1,23 +1,18 @@
-import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding, DebugElement } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { SnomedService } from '../../../../../services/term/snomed.service';
-import { take } from 'rxjs/operator/take';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { CamasService } from '../../../services/camas.service';
-import { ProfesionalService } from '../../../../../services/profesional.service';
-import { ObraSocialService } from '../../../../../services/obraSocial.service';
-import { PacienteService } from '../../../../../services/paciente.service';
-import { InternacionService } from '../../../services/internacion.service';
+import { CamasService } from '../services/camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { ObraSocialService } from '../../../../services/obraSocial.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { ProfesionalService } from '../../../../services/profesional.service';
+import { InternacionService } from '../services/internacion.service';
+import { PacienteService } from '../../../../services/paciente.service';
+import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 
 @Component({
     selector: 'rup-iniciarInternacion',

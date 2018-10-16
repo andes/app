@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Observable } from 'rxjs/Observable';
-import { ICama } from '../interfaces/ICama';
-import { IPaciente } from '../../../interfaces/IPaciente';
-
 
 @Injectable()
 export class InternacionService {
@@ -73,6 +70,4 @@ export class InternacionService {
             return false;
         }
     }
-
-
 }

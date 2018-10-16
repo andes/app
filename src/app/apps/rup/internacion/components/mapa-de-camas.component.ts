@@ -1,15 +1,16 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import { Plex, SelectEvent } from '@andes/plex';
-import { IOrganizacion } from '../../../../../../interfaces/IOrganizacion';
-import { OrganizacionService } from '../../../../../../services/organizacion.service';
-import { CamasService } from '../../../../services/camas.service';
-import { PrestacionesService } from '../../../../services/prestaciones.service';
-import { IPacienteMatch } from '../../../../../mpi/interfaces/IPacienteMatch.inteface';
-import { PacienteBuscarResultado } from '../../../../../mpi/interfaces/PacienteBuscarResultado.inteface';
-import { IPaciente } from '../../../../../../interfaces/IPaciente';
-import { InternacionService } from '../../../../services/internacion.service';
+import { Plex } from '@andes/plex';
+import { InternacionService } from '../services/internacion.service';
+import { IOrganizacion } from '../../../../interfaces/IOrganizacion';
+import { IPacienteMatch } from '../../../../modules/mpi/interfaces/IPacienteMatch.inteface';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { CamasService } from '../services/camas.service';
+import { PacienteBuscarResultado } from '../../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+// ../../../../services/internacion.service
 @Component({
     selector: 'app-mapa-de-camas',
     templateUrl: './mapa-de-camas.component.html',

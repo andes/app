@@ -72,23 +72,22 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
-import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
+import { MapaDeCamasComponent } from './apps/rup/internacion/components/mapa-de-camas.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
-import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
-import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
-import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
-import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
+import { CensoDiarioComponent } from './apps/rup/internacion/components/censoDiario.component';
+import { CensoMensualComponent } from './apps/rup/internacion/components/censoMensual.component';
+import { CamaCreateUpdateComponent } from './apps/rup/internacion/components/cama-create-update.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
+import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
+import { OcuparCamaComponent } from './apps/rup/internacion/components/ocuparCama.component';
+import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 

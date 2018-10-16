@@ -2,7 +2,7 @@ import { SnomedService } from '../../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { ISectores } from '../../../interfaces/IOrganizacion';
-import { CamasService } from '../../../modules/rup/services/camas.service';
+import { CamasService } from '../../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'sectores-item',

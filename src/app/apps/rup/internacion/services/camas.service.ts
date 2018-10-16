@@ -2,8 +2,7 @@ import { Server } from '@andes/shared';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { ICama } from '../interfaces/ICama';
-import { ICamaEstado } from '../interfaces/ICamaEstado';
-import { IPaciente } from '../../../interfaces/IPaciente';
+import { IPaciente } from '../../../../interfaces/IPaciente';
 
 @Injectable()
 export class CamasService {

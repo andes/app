@@ -3,11 +3,11 @@ import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
-import { PacienteService } from '../../../../../../services/paciente.service';
-import { CamasService } from '../../../../services/camas.service';
-import { OrganizacionService } from '../../../../../../services/organizacion.service';
-import { PrestacionesService } from '../../../../services/prestaciones.service';
-import { InternacionService } from '../../../../services/internacion.service';
+import { InternacionService } from '../services/internacion.service';
+import { CamasService } from '../services/camas.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { PacienteService } from '../../../../services/paciente.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'cama',

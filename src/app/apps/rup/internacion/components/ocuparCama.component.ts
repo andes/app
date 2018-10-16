@@ -1,21 +1,18 @@
-import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { FinanciadorService } from '../../../../../services/financiador.service';
-import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { SnomedService } from '../../../../../services/term/snomed.service';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { ElementosRUPService } from '../../../services/elementosRUP.service';
-import { PacienteService } from '../../../../../services/paciente.service';
-import { CamasService } from '../../../services/camas.service';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { CamasService } from '../services/camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
+import { PacienteService } from '../../../../services/paciente.service';
 
 @Component({
     templateUrl: 'ocuparCama.html'
@@ -40,8 +37,7 @@ export class OcuparCamaComponent implements OnInit {
         public ocupacionService: OcupacionService,
         public snomedService: SnomedService,
         public elementosRUPService: ElementosRUPService,
-        private servicioPaciente: PacienteService,
-        private location: Location) { }
+        private servicioPaciente: PacienteService) { }
 
     ngOnInit() {
         this.route.params.subscribe(params => {

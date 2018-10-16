@@ -2,15 +2,14 @@ import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@an
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
-import { InternacionService } from '../../../services/internacion.service';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
 import * as moment from 'moment';
-import { forEach } from '@angular/router/src/utils/collection';
-import { DocumentosService } from '../../../../../services/documentos.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
-import { CamasService } from '../../../services/camas.service';
+import { CamasService } from '../services/camas.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { InternacionService } from '../services/internacion.service';
+import { DocumentosService } from '../../../../services/documentos.service';
 
 @Component({
     selector: 'censo-diario',

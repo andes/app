@@ -5,7 +5,7 @@ import { OrganizacionService } from './../../services/organizacion.service';
 import { IOrganizacion, ISectores } from './../../interfaces/IOrganizacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ISnomedConcept } from '../../modules/rup/interfaces/snomed-concept.interface';
-import { CamasService } from '../../modules/rup/services/camas.service';
+import { CamasService } from '../../apps/rup/internacion/services/camas.service';
 
 @Component({
     selector: 'organizacion-sectores',

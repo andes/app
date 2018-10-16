@@ -3,11 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-
-import { SnomedService } from '../../../../../../services/term/snomed.service';
-import { OrganizacionService } from '../../../../../../services/organizacion.service';
-import { CamasService } from '../../../../services/camas.service';
-import { InternacionService } from '../../../../services/internacion.service';
+import { InternacionService } from '../services/internacion.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { CamasService } from '../services/camas.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
 
 @Component({
     selector: 'cama-create-update',

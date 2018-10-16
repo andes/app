@@ -1,7 +1,7 @@
 import { Component, Output, Input, EventEmitter, OnInit, ViewEncapsulation, OnChanges } from '@angular/core';
-import { PrestacionesService } from '../../../services/prestaciones.service';
 import { Plex } from '@andes/plex';
-import { InternacionService } from '../../../services/internacion.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { InternacionService } from '../services/internacion.service';
 
 @Component({
     selector: 'internacion-resumen',

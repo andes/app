@@ -1,12 +1,12 @@
 import { Component, Output, Input, EventEmitter, OnInit, HostBinding, OnChanges } from '@angular/core';
-import { ProcedimientosQuirurgicosService } from '../../../../../services/procedimientosQuirurgicos.service';
-import { Cie10Service } from '../../../../../services/term/cie10.service';
 import { Plex } from '@andes/plex';
-import { PrestacionesService } from '../../../services/prestaciones.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { InternacionService } from '../../../services/internacion.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { ProcedimientosQuirurgicosService } from '../../../../services/procedimientosQuirurgicos.service';
+import { Cie10Service } from '../../../../services/term/cie10.service';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { InternacionService } from '../services/internacion.service';
 
 @Component({
     selector: 'rup-egresoInternacion',

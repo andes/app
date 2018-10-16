@@ -2,14 +2,13 @@ import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/c
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PrestacionesService } from '../../../services/prestaciones.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'listaEsperaInternacion',
-    templateUrl: 'ListaEsperaInternacion.html'
+    templateUrl: 'listaEsperaInternacion.html'
 
 })
-
 export class ListaEsperaInternacionComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;
@@ -86,3 +85,4 @@ export class ListaEsperaInternacionComponent implements OnInit {
         // }
     }
 }
+

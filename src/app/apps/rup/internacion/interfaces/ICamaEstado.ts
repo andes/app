@@ -1,5 +1,5 @@
-import { IPaciente } from '../../../interfaces/IPaciente';
-import { ISnomedConcept } from './snomed-concept.interface';
+import { ISnomedConcept } from './../../../../modules/rup/interfaces/snomed-concept.interface';
+import { IPaciente } from './../../../../interfaces/IPaciente';
 
 export interface ICamaEstado {
     fechas: Date;

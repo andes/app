@@ -1,28 +1,24 @@
-import { PrestacionesService } from './../../../services/prestaciones.service';
-import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
-import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { FinanciadorService } from '../../../../../services/financiador.service';
-import { OcupacionService } from '../../../../../services/ocupacion/ocupacion.service';
-import { IPrestacionRegistro } from '../../../interfaces/prestacion.registro.interface';
-import { SnomedService } from '../../../../../services/term/snomed.service';
-import { take } from 'rxjs/operator/take';
-import { PacienteService } from '../../../../../services/paciente.service';
-import { ElementosRUPService } from '../../../services/elementosRUP.service';
-import { CamasService } from '../../../services/camas.service';
-import { InternacionService } from '../../../services/internacion.service';
+import { IPaciente } from '../../../../interfaces/IPaciente';
+import { CamasService } from '../services/camas.service';
+import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
+import { FinanciadorService } from '../../../../services/financiador.service';
+import { OcupacionService } from '../../../../services/ocupacion/ocupacion.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+import { PacienteService } from '../../../../services/paciente.service';
+import { ElementosRUPService } from '../../../../modules/rup/services/elementosRUP.service';
+import { InternacionService } from '../services/internacion.service';
+import { IPrestacionRegistro } from '../../../../modules/rup/interfaces/prestacion.registro.interface';
 
 @Component({
     templateUrl: 'ejecucionInternacion.html',
     styleUrls: [
-        './../prestacionValidacion.scss',
-        './../buscador.scss'
+        './../../../../modules/rup/components/ejecucion/prestacionValidacion.scss',
+        './../../../../modules/rup/components/ejecucion/buscador.scss'
     ],
     // Use to disable CSS Encapsulation for this component
     encapsulation: ViewEncapsulation.None
@@ -171,13 +167,12 @@ export class EjecucionInternacionComponent implements OnInit {
         if (egresoExiste && this.prestacion.estados[this.prestacion.estados.length - 1].tipo !== 'validada' &&
             egresoExiste.valor.InformeEgreso.fechaEgreso && egresoExiste.valor.InformeEgreso.tipoEgreso) {
 
-            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(cama => { });
+            this.servicioInternacion.liberarCama(this.prestacion.id, egresoExiste.valor.InformeEgreso.fechaEgreso).subscribe(() => { });
 
         }
     }
 
     ejecutarConcepto(snomedConcept) {
-        let resultado;
         let registros = this.prestacion.ejecucion.registros;
         // nos fijamos si el concepto ya aparece en los registros
         let registoExiste = registros.find(registro => registro.concepto.conceptId === snomedConcept.conceptId);
@@ -186,7 +181,6 @@ export class EjecucionInternacionComponent implements OnInit {
             this.plex.toast('warning', 'El elemento seleccionado ya se encuentra registrado.');
             return false;
         }
-        resultado = this.cargarNuevoRegistro(snomedConcept);
 
     }
 
@@ -213,11 +207,10 @@ export class EjecucionInternacionComponent implements OnInit {
             registros: registros
         };
 
-        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(prestacionEjecutada => {
+        this.servicioPrestacion.patch(this.prestacion.id, params).subscribe(() => {
             this.plex.toast('success', 'Prestacion guardada correctamente', 'Prestacion guardada', 100);
             this.comprobarEgresoParaValidar();
             this.desocuparCama();
-            // this.router.navigate(['/internacion/camas']);
         });
     }
 
@@ -231,9 +224,9 @@ export class EjecucionInternacionComponent implements OnInit {
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
-                }, (err) => {
-                    this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
-                });
+                }, () => {
+                        this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+                    });
             }
         });
 
@@ -261,9 +254,9 @@ export class EjecucionInternacionComponent implements OnInit {
                         this.prestacion = prestacion;
 
                         // this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
-                    });
+                    }, () => {
+                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                        });
                 });
             }
         });

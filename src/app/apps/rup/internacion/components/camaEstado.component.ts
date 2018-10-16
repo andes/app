@@ -1,10 +1,8 @@
 import { HostBinding, EventEmitter, Component, OnInit, Input, Output } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SnomedService } from '../../../../../../services/term/snomed.service';
-import { query } from '@angular/core/src/animation/dsl';
-import { estados } from '../../../../../../utils/enumerados';
-import { CamasService } from '../../../../services/camas.service';
+import { CamasService } from '../services/camas.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
 
 @Component({
     selector: 'cama-estado',
