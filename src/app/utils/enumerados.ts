@@ -72,9 +72,9 @@ export enum CargaLaboratorio {
 }
 
 export enum ModoCargaLaboratorio {
-    'Por lista de protocolos',
-    'Por hoja de trabajo',
-    'Por análisis'
+    'Lista de protocolos',
+    'Hoja de trabajo',
+    'Análisis'
 }
 
 export enum PrioridadesLaboratorio {
@@ -117,6 +117,7 @@ export enum EstadosEspacios {
     'clausurado',
     'baja permanente'
 }
+
 export enum EstadosLabo {
     'pendiente',
     'ejecucion',

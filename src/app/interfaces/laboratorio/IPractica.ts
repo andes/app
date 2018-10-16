@@ -1,6 +1,7 @@
 
 export interface IPractica {
     id: string;
+    _id: any;
     codigo: string;
     codigoNomenclador: string;
     nombre: string;

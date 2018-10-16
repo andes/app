@@ -32,6 +32,7 @@ export class PuntoInicioLaboratorioComponent
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
+    public estadosValFiltroEnum;
 
     public laboratorioInternoEnum: any;
     public pacientes;
@@ -43,12 +44,12 @@ export class PuntoInicioLaboratorioComponent
     // public accion;
     public turnosRecepcion;
     public modo = {
-        id: 'control',
-        nombre: 'Control'
+        id: 'carga',
+        nombre: 'Carga'
     };
     public formaCarga = {
-        id: 'Por lista de protocolos',
-        nombre: 'Por lista de protocolos'
+        id: 'Lista de protocolos',
+        nombre: 'Lista de protocolos'
     };
     public origen = null;
     public area = null;
@@ -73,7 +74,7 @@ export class PuntoInicioLaboratorioComponent
         laboratorioInterno: null,
         tipoPrestacionSolicititud: '15220000',
         organizacion: null,
-        estado: ''
+        estado: []
     };
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
@@ -86,6 +87,7 @@ export class PuntoInicioLaboratorioComponent
     ngOnInit() {
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
+        this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1,4);
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
@@ -144,16 +146,17 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
         this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
         this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
+
         if (this.modo.nombre === 'Recepcion') {
-            this.busqueda.estado = 'pendiente';
+            this.busqueda.estado.push('pendiente');
             this.getProtocolos(this.busqueda);
         } else {
-            if (this.modo.nombre === 'Listado') {
+            if (this.modo.nombre === 'Listado' || this.modo.nombre === 'Validacion') {
                 this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
 
                 this.getProtocolos(this.busqueda);
             } else {
-                this.busqueda.estado = 'ejecucion';
+                this.busqueda.estado = ['ejecucion','validada'];
                 this.getProtocolos(this.busqueda);
             }
         }
@@ -165,14 +168,13 @@ export class PuntoInicioLaboratorioComponent
         }, err => {
             if (err) {
                 this.plex.info('danger', err);
-
             }
         });
     }
 
     // estaSeleccionado(protocolo) {
     //     return false;
-    // }
+    // }a
 
     /**
      * verProtocolo oculta lista de protocolos y muestra el panel de detalle de protocolo, al ser cliqueado un protocolo de la lista
@@ -317,36 +319,6 @@ export class PuntoInicioLaboratorioComponent
     changeCarga(tipo) {
 
     }
-
-    // changeServicio() {
-    //     this.busqueda.servicio = null;
-    //     this.accion = this.modo.nombre;
-
-    //     switch (this.modo.nombre) {
-    //         case 'Carga':
-    //             this.accion = 'Cargar';
-    //             this.refreshSelection();
-    //             break;
-    //         case 'Control':
-    //             this.accion = 'Control';
-    //             this.refreshSelection();
-    //             break;
-    //         case 'Validacion':
-    //             this.accion = 'Validar';
-    //             this.refreshSelection();
-    //             break;
-    //         case 'Recepcion':
-    //             this.accion = 'Recepcionar';
-
-    //             this.refreshSelection();
-    //             break;
-    //         case 'Listado':
-    //             this.accion = 'Listar';
-    //             this.refreshSelection();
-    //             break;
-    //     }
-
-    // }
 
     /**
      * Cambia configuración de paneles para modo recepción paciente sin turno

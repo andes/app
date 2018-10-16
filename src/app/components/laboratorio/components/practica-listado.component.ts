@@ -28,7 +28,6 @@ export class PracticaListadoComponent {
             } else {
                 this.listado = value as IPractica[];
             }
-            console.log('LISTADO', this.listado);
         } else {
             this.listado = [];
         }

@@ -346,6 +346,7 @@ import { ProtocoloDetalleComponent } from './components/laboratorio/protocolos/p
 import { PracticaBuscarComponent } from './components/laboratorio/components/practica-buscar.component';
 import { PracticaDemoComponent } from './components/laboratorio/components/demoPractica.component';
 import { PracticaListadoComponent } from './components/laboratorio/components/practica-listado.component';
+import { TablaDatalleProtocolo } from './components/laboratorio/components/tabla-datalle-protocolo.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -557,7 +558,7 @@ registerLocaleData(localeEs, 'es');
         PracticaBuscarComponent,
         PracticaDemoComponent,
         PracticaListadoComponent,
-
+        TablaDatalleProtocolo,
 
         // MPI
         PacienteBuscarComponent,

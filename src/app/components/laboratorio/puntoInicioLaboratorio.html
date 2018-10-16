@@ -8,7 +8,7 @@
                     <plex-tab label="Laboratorio general"></plex-tab>
                     <plex-tab label="Microbiologia"></plex-tab>
                     <plex-tab label="Screening neonatal"></plex-tab>
-                    <plex-tab label="Bromatologia"></plex-tab>
+                    <!-- <plex-tab label="Bromatologia"></plex-tab> -->
                 </plex-tabs>
                 <div class="dropdown-secundario">
                     <i class="mdi mdi-dots-horizontal"></i>
@@ -24,17 +24,19 @@
         </div>
         <div class="row">
             <div class="col-2">
-                <plex-select [(ngModel)]="modo" name="area" label="Modo" [data]='cargaLaboratorioEnum' [required]="false"></plex-select>
+                <plex-select [(ngModel)]="modo" name="area" label="Modo" [data]='cargaLaboratorioEnum' [required]="true"></plex-select>
             </div>
             <div class="col-3" *ngIf='modo && (modo.id ==="carga" || modo.id ==="validacion")'>
                 <plex-select [(ngModel)]="formaCarga" name="formaCarga" label="Forma de carga" (change)="refreshSelection($event,'area')"
                     [data]='modoCargaLaboratorioEnum' [required]="true"></plex-select>
             </div>
+            <div class="col-3" *ngIf='modo && (modo.id ==="carga" || modo.id ==="validacion")'>
+                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado" [data]="estadosValFiltroEnum"></plex-select>
+            </div>
         </div>
 
         <div class="row contenedor-filtros">
-
-            <div *ngIf='modo && modo.id !=="recepcion" ' class="col-2">
+            <div class="col-2">
                 <plex-select [(ngModel)]="area" (change)="refreshSelection($event,'area')" name="area" label="Area" [data]='laboratorioInternoEnum'></plex-select>
             </div>
             <div *ngIf='modo && modo.id !=="recepcion"' class="col-2">
@@ -148,10 +150,13 @@
                     </td>
 
                     <td class="badge-container">
-                        <plex-badge type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        <plex-badge type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1 ].tipo}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
 
-                        <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">Ver protocolo</plex-button>
+                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+
+                        <plex-button type="primary" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">Ver protocolo</plex-button>
 
                     </td>
                 </tr>
