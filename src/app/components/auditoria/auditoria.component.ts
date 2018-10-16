@@ -13,6 +13,7 @@ import { SintysService } from '../../services/fuentesAutenticas/servicioSintys.s
 import { AnsesService } from '../../services/fuentesAutenticas/servicioAnses.service';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { IPaciente } from '../../interfaces/IPaciente';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'auditoria',
@@ -46,8 +47,10 @@ export class AuditoriaComponent implements OnInit {
     pacienteActivo: any;
     showCandidatos = false;
     tipoListado = 'default';
-
+    private permisosRenaper = 'fa:get:renaper';
+    private autorizadoRenaper = false;
     constructor(
+        public auth: Auth,
         private auditoriaService: AuditoriaService,
         private pacienteService: PacienteService,
         private servicioSisa: SisaService,
@@ -61,6 +64,7 @@ export class AuditoriaComponent implements OnInit {
     // Cargamos todos los pacientes temporales y activos
     ngOnInit() {
         this.onLoadData();
+        this.autorizadoRenaper = this.auth.check(this.permisosRenaper);
     }
 
     onLoadData() {
@@ -153,7 +157,7 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = false;
     }
 
-    async validar(fuenteAutentica) {
+    validar(fuenteAutentica) {
         this.plex.showLoader();
         if (this.pacienteSelected.entidadesValidadoras.indexOf('sisa') < 0 && fuenteAutentica === 'sisa') {
             this.servicioSisa.get(this.pacienteSelected).subscribe(res => {
@@ -190,15 +194,6 @@ export class AuditoriaComponent implements OnInit {
     }
 
     validarMpi(pacienteSeleccionado) {
-        // this.pacienteService.getPacientesValidados({
-        //     tipoBusqueda: 'claveBlocking', // Usamos un texto para identificar el blocking
-        //     claveBlocking: pacienteSeleccionado.claveBlocking,
-        //     documento: pacienteSeleccionado.documento ? pacienteSeleccionado.documento : null,
-        //     nombre: pacienteSeleccionado.nombre,
-        //     apellido: pacienteSeleccionado.apellido,
-        //     fechaNacimiento: pacienteSeleccionado.fechaNacimiento,
-        //     sexo: pacienteSeleccionado.sexo
-        // }).subscribe(resultado => {
         let dto: any = {
             type: 'suggest',
             claveBlocking: 'documento',
@@ -227,6 +222,8 @@ export class AuditoriaComponent implements OnInit {
                     this.plex.alert('No se han encontrado pacientes candidatos en MPI', 'Información');
                 }
                 this.enableFA = true;
+                this.enableValidarMpi = false;
+
             }
         });
 
