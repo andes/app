@@ -167,7 +167,8 @@ export class PuntoInicioComponent implements OnInit {
             this.fueraDeAgenda = this.prestaciones.filter(p => (!p.solicitud.turno &&
                 (p.createdAt >= moment(this.fecha).startOf('day').toDate() &&
                     p.createdAt <= moment(this.fecha).endOf('day').toDate())
-                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username));
+                && p.estados[p.estados.length - 1].createdBy.username === this.auth.usuario.username
+                && (p.estados[p.estados.length - 1].tipo === 'ejecucion' || p.estados[p.estados.length - 1].tipo === 'validada')));
 
             // agregamos el original de las prestaciones que estan fuera
             // de agenda para poder reestablecer los filtros
