@@ -107,7 +107,7 @@
             </div>
 
             <!-- Sidebar -->
-            <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu">
+            <plex-box id="panel-lateral" class="col-4">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
 
                 <ng-container *ngIf="buscandoPaciente">
@@ -142,7 +142,15 @@
                     <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (otroPaciente)="ingresarPaciente()" [paciente]="pacienteSelected"
                         [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion" [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
-                <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
+
+                <!-- Desocupar Cama -->
+                <ng-container *ngIf="accion ==='desocupar'">
+                    <cama-desocupar [cama]="camaSelected">
+
+                    </cama-desocupar>
+                </ng-container>
+
+                <ng-container *ngIf="camaSeleccionada && !accion && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
                     <plex-tabs *ngIf="panelIndex >= 0" [activeIndex]="panelIndex">
 
@@ -284,8 +292,8 @@
                     </plex-tabs>
                 </ng-container>
 
-                <ng-container *ngIf="loadCountFiltros && !camaSeleccionada && !showEgreso && !showLoaderSidebar && !showIngreso && !buscandoPaciente">
-                    <!-- <header>
+                <ng-container *ngIf="loadCountFiltros && !camaSeleccionada">
+                    <!-- <header> && !showEgreso && !showLoaderSidebar && !showIngreso && !buscandoPaciente"
                         <h5 class="text-info">Acciones</h5>
                     </header>
                     <ng-container *ngIf="!prestacion && !historicoMode">

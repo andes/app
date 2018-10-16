@@ -1,0 +1,56 @@
+<div *ngIf="cama.ultimoEstado.estado == 'ocupada'">
+    <form #formReparada="ngForm">
+        <fieldset>
+            <legend>Desocupar</legend>
+            <div class="contenido" [ngClass]="{'reparacion': cama.$action == 'desocupar' }">
+                <div class="row">
+                    <div class="col-md">
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                    </div>
+                    <div class="col-md">
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
+                    </div>
+                </div>
+                <div class="row" *ngIf="elegirDesocupar">
+                    <div class="col-md">
+
+                        <plex-radio [(ngModel)]="opcionDesocupar" [data]="opcionesDesocupar" name="desocupar" (change)="operacionDesocuparCama()">
+                        </plex-radio>
+                    </div>
+                </div>
+                <div class="row" *ngIf="!elegirDesocupar">
+                    <div class="col-md">
+
+                        <plex-select *ngIf="opcionDesocupar && opcionDesocupar === 'pase'" name="unidadOrganizativa"
+                            [data]="listaUnidadesOrganizativas" idField="term" labelField="term" [(ngModel)]="PaseAunidadOrganizativa"
+                            label="Unidad organizativa" (change)="selectCamasDisponibles(PaseAunidadOrganizativa?.id)">
+                        </plex-select>
+                    </div>
+                    <div class="col-md">
+                        <plex-select name="camasDisponibles" [required]="true" [data]="listadoCamas" idField="nombre"
+                            labelField="nombre" [(ngModel)]="camaSeleccionPase" label="Camas">
+                        </plex-select>
+                    </div>
+
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="row">
+            <!-- Botonera-->
+            <div class="col-md text-left">
+                <plex-button type="danger" label="Cancelar" (click)="rotarDesocuparCama()">
+                </plex-button>
+            </div>
+            <div class="col-md text-right">
+                <plex-button label="Guardar" type="success" icon="check" [validateForm]="formReparada" (click)="desocuparCama($event, cama, 'desocupada')"
+                    [disabled]="elegirDesocupar">
+                </plex-button>
+
+            </div>
+        </div>
+
+    </form>
+</div>

@@ -351,6 +351,7 @@ import { InternacionService } from './apps/rup/internacion/services/internacion.
 import { IniciarInternacionComponent } from './apps/rup/internacion/components/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './apps/rup/internacion/components/ejecucionInternacion.component';
 import { OcuparCamaComponent } from './apps/rup/internacion/components/ocuparCama.component';
+import { DesocuparCamaComponent } from './apps/rup/internacion/components/cama-desocupar.component';
 import { ListaEsperaInternacionComponent } from './apps/rup/internacion/components/listaEsperaInternacion.component';
 import { EgresoInternacionComponent } from './apps/rup/internacion/components/egresoInternacion.component';
 import { ResumenInternacionComponent } from './apps/rup/internacion/components/resumenInternacion.component';
@@ -561,6 +562,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+        DesocuparCamaComponent,
         OrganizacionSectoresComponent,
         SectoresItemComponent,
         ListaEsperaInternacionComponent,

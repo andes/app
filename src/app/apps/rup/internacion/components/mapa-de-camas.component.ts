@@ -67,6 +67,7 @@ export class MapaDeCamasComponent implements OnInit {
     public camaInternacion;
     public loadCountFiltros = false;
     public editarIngreso;
+    public accion;
 
     public showEstados = true;
 
@@ -260,7 +261,7 @@ export class MapaDeCamasComponent implements OnInit {
 
                 this.camasService.cambiaEstado(e.cama.id, dto).subscribe(camaActualizada => {
                     e.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                    this.onCamaSelected(e.cama);
+                    this.onCamaSelected(e);
                 }, (err1) => {
                     this.plex.info('danger', 'Error al intentar desocupar la cama');
                 });
@@ -436,21 +437,25 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        this.camaSelected = event;
-        this.prestacionDelPaciente(this.camaSelected);
-        if (this.camaSeleccionada === this.camaSelected) {
-            this.camaSeleccionada = null;
-            this.showMenu = true;
-            this.showEgreso = false;
-        } else {
-            this.showMenu = true;
-            this.showIngreso = false;
-            this.showEgreso = false;
-            this.showResumen = false;
-            this.camaSeleccionada = this.camaSelected;
-            this.prestacionPorInternacion = null;
-        }
-        this.reseteaBusqueda();
+        debugger;
+        this.camaSelected = event.cama;
+        this.accion = event.accion;
+        this.camaSeleccionada = this.camaSelected;
+        console.log(this.showMenu);
+        // this.prestacionDelPaciente(this.camaSelected);
+        // if (this.camaSeleccionada === this.camaSelected) {
+        //     this.camaSeleccionada = null;
+        //     this.showMenu = true;
+        //     this.showEgreso = false;
+        // } else {
+        //     this.showMenu = true;
+        //     this.showIngreso = false;
+        //     this.showEgreso = false;
+        //     this.showResumen = false;
+        //     this.camaSeleccionada = this.camaSelected;
+        //     this.prestacionPorInternacion = null;
+        // }
+        // this.reseteaBusqueda();
     }
 
     prestacionDelPaciente(cama) {

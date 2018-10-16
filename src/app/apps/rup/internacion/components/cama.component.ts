@@ -327,8 +327,13 @@ export class CamaComponent implements OnInit {
         }
     }
 
-    seleccionarCama() {
-        this.camaSelected.emit(this.cama);
+    seleccionarCama(accion) {
+        let salida = {
+            accion,
+            cama: this.cama
+        }
+        this.camaSelected.emit(salida);
+
     }
 
     combinarFechas() {
