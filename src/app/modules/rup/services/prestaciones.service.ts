@@ -42,6 +42,9 @@ export class PrestacionesService {
         situacionLaboral: '200000000',
         nivelEstudios: '3'
     };
+    public elementosRegistros = {
+        odontograma: '3561000013109'
+    };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
