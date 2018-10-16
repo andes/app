@@ -17,11 +17,17 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
     public showHuds = false;
 
+    public esProfesional = false;
+
     constructor(public plex: Plex, public auth: Auth, private router: Router) { }
 
     ngOnInit() {
-        if (!this.auth.profesional && this.auth.getPermissions('HUDS:visualizacionHuds').length <= 0) {
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
             this.redirect('inicio');
+        }
+
+        if (this.auth.profesional) {
+            this.esProfesional = true;
         }
     }
 
@@ -34,8 +40,13 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.paciente = event;
         this.showHuds = true;
     }
+
     onPacienteCancel() {
         this.router.navigate(['rup']);
+    }
+
+    evtCambiaPaciente() {
+        this.showHuds = false;
     }
 
 }
