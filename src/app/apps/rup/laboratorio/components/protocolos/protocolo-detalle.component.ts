@@ -3,22 +3,22 @@ import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../../services/organizacion.service';
-import { ProfesionalService } from '../../../services/profesional.service';
-import { ProtocoloService } from '../../../services/laboratorio/protocolo.service';
-import { PracticaBuscarResultado } from '../interfaces/PracticaBuscarResultado.inteface';
-import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
-import * as enumerados from './../../../utils/enumerados';
-import { IPrestacion } from '../../../modules/rup/interfaces/prestacion.interface';
-import { IPracticaMatch } from '../interfaces/IPracticaMatch.inteface';
-import { IPractica } from '../../../interfaces/laboratorio/IPractica';
-import { Constantes } from '../consts';
-import { PracticaService } from '../../../services/laboratorio/practica.service';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { ProfesionalService } from '../../../../../services/profesional.service';
+import { ProtocoloService } from '../../../../../services/laboratorio/protocolo.service';
+import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import * as enumerados from './../../../../../utils/enumerados';
+import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
+import { IPracticaMatch } from '../../interfaces/IPracticaMatch.inteface';
+import { IPractica } from '../../../../../interfaces/laboratorio/IPractica';
+import { Constantes } from '../../controllers/constants';
+import { PracticaService } from '../../../../../services/laboratorio/practica.service';
 
 @Component({
     selector: 'protocolo-detalle',
     templateUrl: 'protocolo-detalle.html',
-    styleUrls: ['./../laboratorio.scss']
+    styleUrls: ['../../assets/laboratorio.scss']
 })
 
 export class ProtocoloDetalleComponent
@@ -229,7 +229,7 @@ export class ProtocoloDetalleComponent
                                             validado: false
                                     }    
                                 };
-                                
+
                                 resultado.registros = await this.getPracticasRequeridas(resultado);
                                 // resultado.registros.map( (registro) => {
                                 //     registro.valor = {
@@ -477,16 +477,15 @@ export class ProtocoloDetalleComponent
     }
 
     async guardarSolicitud($event) {
-        // this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
-        // this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
+        this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
+        this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
 
 
         if (this.modo.id === 'control' || this.modo.id === 'recepcion') {
-            // this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
-            // this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
+            this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
+            this.solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra = this.fechaTomaMuestra;
 
             // await this.cargarPracticasAEjecucion();
-            console.log('fafafafa')
         } else if (this.modo.id === 'validacion' && !this.isProtocoloValidado()) {
             // this.actualizarEstadoValidacion();
         }

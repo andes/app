@@ -1,9 +1,9 @@
+import { IPracticaMatch } from './../../apps/rup/laboratorio/interfaces/IPracticaMatch.inteface';
 import { IPractica } from './../../interfaces/laboratorio/IPractica';
 import { Observable } from 'rxjs/Rx';
 import { PracticaSearch } from './practicaSearch.interface';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { IPracticaMatch } from '../../components/laboratorio/interfaces/IPracticaMatch.inteface';
 
 @Injectable()
 export class PracticaService {

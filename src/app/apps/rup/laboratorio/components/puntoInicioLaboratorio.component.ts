@@ -1,20 +1,20 @@
-import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
+import { PrestacionesService } from './../../../../modules/rup/services/prestaciones.service';
 import { Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as enumerados from './../../utils/enumerados';
-import { OrganizacionService } from '../../services/organizacion.service';
-import { AgendaService } from '../../services/turnos/agenda.service';
-import { TurnoService } from '../../services/turnos/turno.service';
-import { Constantes } from './consts';
+import * as enumerados from './../../../../utils/enumerados';
+import { OrganizacionService } from '../../../../services/organizacion.service';
+import { AgendaService } from '../../../../services/turnos/agenda.service';
+import { TurnoService } from '../../../../services/turnos/turno.service';
+import { Constantes } from '../controllers/constants';
 import { ObjectID } from 'bson';
 import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'gestor-protocolos',
     templateUrl: 'puntoInicioLaboratorio.html',
-    styleUrls: ['./laboratorio.scss']
+    styleUrls: ['../assets/laboratorio.scss']
 })
 
 export class PuntoInicioLaboratorioComponent

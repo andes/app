@@ -1,14 +1,15 @@
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
-import { PracticaService } from '../../../services/laboratorio/practica.service';
-import { IPractica } from '../../../interfaces/laboratorio/IPractica';
-import { ProtocoloService } from '../../../services/laboratorio/protocolo.service';
+import { PracticaService } from '../../../../services/laboratorio/practica.service';
+import { IPractica } from '../../../../interfaces/laboratorio/IPractica';
+import { ProtocoloService } from '../../../../services/laboratorio/protocolo.service';
 import { Plex } from '@andes/plex';
-import { Constantes } from '../consts';
+import { Constantes } from '../controllers/constants';
+
 
 @Component({
     selector: 'tabla-datalle-protocolo',
     templateUrl: 'tabla-datalle-protocolo.html',
-    styleUrls: ['./../laboratorio.scss']
+    styleUrls: ['tabla-datalle-protocolo.scss']
 })
 
 export class TablaDatalleProtocolo implements OnInit {
@@ -45,7 +46,6 @@ export class TablaDatalleProtocolo implements OnInit {
     cargarListaPracticaCarga() {
         console.log('cargarListaPracticaCarga')
         let recorrerSubpracticas = async (reg, nivelTab) => {
-            console.log('reg', reg)
             let margen = [];
             for (let i = 0; i < nivelTab; i++) {
                 margen.push({});

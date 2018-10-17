@@ -1,3 +1,9 @@
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
+import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
+import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
+import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -341,12 +347,6 @@ import { ConfiguracionPrestacionVisualizarComponent } from './components/configu
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
 // Laboratorio
-import { PuntoInicioLaboratorioComponent } from './components/laboratorio/puntoInicioLaboratorio.component';
-import { ProtocoloDetalleComponent } from './components/laboratorio/protocolos/protocolo-detalle.component';
-import { PracticaBuscarComponent } from './components/laboratorio/components/practica-buscar.component';
-import { PracticaDemoComponent } from './components/laboratorio/components/demoPractica.component';
-import { PracticaListadoComponent } from './components/laboratorio/components/practica-listado.component';
-import { TablaDatalleProtocolo } from './components/laboratorio/components/tabla-datalle-protocolo.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,

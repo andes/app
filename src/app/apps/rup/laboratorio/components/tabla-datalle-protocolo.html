@@ -27,9 +27,9 @@
                 <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
                     <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
                 </ng-container>
-
                 <td></td>
-                <ng-container *ngIf='modo.id ==="control"'>
+                <td></td>
+                <ng-container *ngIf='modo.id === "control" || modo.id === "recepcion"'>
                     <td>
                         <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
                     </td>
@@ -52,7 +52,7 @@
                 <ng-container *ngIf="!reg.esCompuesta">
                     <td class="text-left align-middle estado">
                         <p>
-                            <ng-container *ngIf='reg.practica.valor &&   !reg.practica.valor.resultado.sinMuestra'>
+                            <ng-container *ngIf='reg.practica.valor && !reg.practica.valor.resultado.sinMuestra'>
                                 <plex-float *ngIf="reg.formatoResultado.tipo === 'Numérico'" [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
                                 <b *ngIf="reg.practica.valor.resultado.sinMuestra"> Sin muestra</b>
                             </ng-container>
@@ -69,29 +69,28 @@
                         </span>
                     </td>
                     <td>
-                        {{reg.formatoResultado?.unidadMedida.nombre}}
+                    {{reg.formatoResultado?.unidadMedida.nombre}}
+                    <td>
+                        {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado.valoresReferencia.valorMaximo}}
+                    </td>
+                    <ng-container *ngIf='modo.id ==="validacion"'>
                         <td>
-                            {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado.valoresReferencia.valorMaximo}}
+                            <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
+                                name="clickValidar"></plex-bool>
                         </td>
-                        <ng-container *ngIf='modo.id ==="validacion"'>
-                            <td>
-                                <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
-                                    name="clickValidar"></plex-bool>
-                            </td>
-                        </ng-container>
-                        <td></td>
-                        <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
-                            <td>
-                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
-                            </td>
-                        </ng-container>
-                        <ng-container *ngIf='(modo.id ==="carga" || modo.id ==="validacion") && !showObservaciones'>
-                            <td>
-                                <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
-                                </plex-button>
-                            </td>
-
-                        </ng-container>
+                    </ng-container>
+                    <td></td>
+                    <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
+                        <td>
+                            <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                        </td>
+                    </ng-container>
+                    <ng-container *ngIf='(modo.id ==="carga" || modo.id ==="validacion") && !showObservaciones'>
+                        <td>
+                            <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
+                            </plex-button>
+                        </td>
+                    </ng-container>
                 </ng-container>
                 <div class="row">
                     <div class="col-12">

@@ -45,11 +45,11 @@
                         </div>
                         <div class="row">
                             <div class="col-2">
-                                <strong>Fecha de solicitud: </strong>
+                                <strong>F. de solicitud: </strong>
                                 <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
                             </div>
                             <div class="col-2">
-                                <strong>Fecha de toma de muestra: </strong>
+                                <strong>F. toma muestra: </strong>
                                 <p>{{solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra | date: 'dd/MM/yyyy'}}
                                 </p>
                             </div>
@@ -66,18 +66,18 @@
                                 <p>{{ modelo.createdBy.nombreCompleto }}</p>
                             </div>
                             <div class="col-2">
-                                <strong>Fecha de Ejecucion:&nbsp;</strong>
+                                <strong>F. de Ejecucion:&nbsp;</strong>
                                 <p>{{ modelo.ejecucion.fecha | date: 'dd/MM/yyyy' }}</p>
                             </div>
-                            <div class="col-2">
-                                <strong>Profesional Solicitante: </strong>
+                            <div class="col-3">
+                                <strong>Solicitante: </strong>
                                 <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
                             </div>
-                            <div class="col-4">
+                            <div class="col-7">
                                 <strong>Efector Solicitante: </strong>
                                 <p>{{ modelo.solicitud.organizacion.nombre }}</p>
                             </div>
-                            <div class="col-2">
+                            <div class="col-12">
                                 <strong>Diagnostico: </strong>
                                 <p>{{ modelo.solicitud.registros[0]?.valor?.solicitudPrestacion.diagnostico }}</p>
                             </div>
@@ -131,10 +131,10 @@
                         </div>
                     </article>
                 </div>
-                <div *ngIf='modo.id !=="recepcion" && modo.id !=="control"' class="badge-container">
+                <!-- <div *ngIf='modo.id !=="recepcion" && modo.id !=="control"' class="badge-container">
                     <plex-badge type="danger" class="ml-2"> {{solicitudProtocolo.solicitudPrestacion.prioridad.nombre}} </plex-badge>
                     <plex-badge type="warning" class="ml-2"> {{modelo.estados[0].tipo}} </plex-badge>
-                </div>
+                </div> -->
                 <plex-button *ngIf='modo.id !=="recepcion"' type="info" icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
             </section>
 
@@ -199,9 +199,6 @@
             <plex-button class="right ml-2" type="warning" icon='chevron-up' label="boton clave 3"></plex-button>
         </div>
         <hr>    -->
-
-
-
 
     </plex-layout-main>
     <plex-layout-sidebar *ngIf='modo.id !=="recepcion"'>

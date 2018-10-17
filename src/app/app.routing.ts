@@ -1,3 +1,7 @@
+import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
+import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
 /*
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
@@ -84,10 +88,6 @@ import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 // Laboratorio
-import { PuntoInicioLaboratorioComponent } from './components/laboratorio/puntoInicioLaboratorio.component';
-import { ProtocoloDetalleComponent } from './components/laboratorio/protocolos/protocolo-detalle.component';
-import { PracticaDemoComponent } from './components/laboratorio/components/demoPractica.component';
-import { TablaDatalleProtocolo } from './components/laboratorio/components/tabla-datalle-protocolo.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';

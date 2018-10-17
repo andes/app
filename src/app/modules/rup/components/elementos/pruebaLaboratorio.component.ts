@@ -1,9 +1,9 @@
+import { IPracticaMatch } from './../../../../apps/rup/laboratorio/interfaces/IPracticaMatch.inteface';
+import { PracticaBuscarResultado } from './../../../../apps/rup/laboratorio/interfaces/PracticaBuscarResultado.inteface';
 import { PracticaService } from './../../../../services/laboratorio/practica.service';
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as enumerados from './../../../../utils/enumerados';
-import { IPracticaMatch } from './../../../../components/laboratorio/interfaces/IPracticaMatch.inteface';
-import { PracticaBuscarResultado } from './../../../../components/laboratorio/interfaces/PracticaBuscarResultado.inteface';
 import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 
 @Component({

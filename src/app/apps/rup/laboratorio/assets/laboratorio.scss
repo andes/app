@@ -156,7 +156,7 @@ section.contenedor-tabs {
 
     &:hover{ 
         background-color: $dark-grey;
-        border: solid 2px $blue;   
+        border: solid 1px $blue;   
     }
     
 
@@ -281,3 +281,11 @@ i[class^="mdi mdi-"] {
 .labs-listado-item h2 {
     display: inline;
 }
+
+.table.table-striped.table-sm p {
+    margin-bottom: 0px;
+}
+.listado-contenedor-secundario p {
+    margin-bottom: 0px;
+}
+

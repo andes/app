@@ -1,5 +1,4 @@
-
-import { IPractica } from '../../../interfaces/laboratorio/IPractica';
+import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 
 export interface IPracticaMatch {
     id: String;
