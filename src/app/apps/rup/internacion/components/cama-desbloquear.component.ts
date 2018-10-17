@@ -21,6 +21,8 @@ export class CamaDesbloquearComponent implements OnInit {
     public fecha = new Date();
     public hora = new Date();
 
+    public estadoDesbloqueo: String = 'disponible';
+
 
     // Eventos
     @Input() cama: any;
@@ -49,7 +51,7 @@ export class CamaDesbloquearComponent implements OnInit {
         if (event.formValid) {
             let dto = {
                 fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
-                estado: 'disponible',
+                estado: this.estadoDesbloqueo,
                 unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                 especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
                 esCensable: this.cama.ultimoEstado.esCensable,
@@ -65,6 +67,7 @@ export class CamaDesbloquearComponent implements OnInit {
                 this.plex.info('danger', err, 'Error');
             });
         }
+
 
     }
 }
