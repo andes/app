@@ -234,32 +234,6 @@
                     </div>
                 </form>
             </div>
-            <!-- Acción: Confirmar desbloqueo de una cama
-            <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
-                <form #formDesbloqueo="ngForm">
-                    <div class="contenido" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
-                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
-                        </plex-datetime>
-                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
-                        </plex-datetime>
-                        <div *ngIf="comprobarWorkflow()">
-                            Estado luego del desbloqueo:
-                            <plex-radio [(ngModel)]="estadoDesbloqueo" [data]="opcionesDesbloqueo" name="estados">
-                            </plex-radio>
-                        </div>
-                    </div>
-                    <div class="footer row">
-                        <div class="col-6">
-                            <plex-button type="danger btn-block" icon="close" (click)="cama.$rotar = !cama.$rotar">
-                            </plex-button>
-                        </div>
-                        <div class="col-6">
-                            <plex-button type="success btn-block" icon="check" (click)="cambiarEstado(cama, estadoDesbloqueo)">
-                            </plex-button>
-                        </div>
-                    </div>
-                </form>
-            </div> -->
             <!-- Ver cama bloqueadea -->
             <div *ngIf="cama.$action == 'estado_bloqueada' && cama.ultimoEstado.estado == 'bloqueada'">
                 <div class="contenido">

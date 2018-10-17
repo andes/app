@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 import { CamasService } from '../services/camas.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
 
 @Component({
@@ -34,8 +33,6 @@ export class CamaDesbloquearComponent implements OnInit {
         private internacionService: InternacionService) {
 
     }
-
-    // Métodos (privados y públicos)
 
     ngOnInit() {
     }
