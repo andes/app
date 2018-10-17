@@ -55,7 +55,7 @@
                 <header>
                     <div class="page-title">Buscar un paciente</div>
                 </header>
-                <div *ngIf="buscandoPaciente" class="row">
+                <div class="row">
                     <div class="col">
                         <paciente-buscar (searchStart)="loader = true" (searchEnd)="resultadoBusqueda = $event.pacientes; loader = false;" (searchClear)="resultadoBusqueda = null"></paciente-buscar>
                     </div>

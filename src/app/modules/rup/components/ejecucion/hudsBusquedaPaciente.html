@@ -1,4 +1,34 @@
 <!-- Búsqueda de pacientes -->
-<pacientesSearch  *ngIf="!showHuds" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<!--pacientesSearch  *ngIf="!showHuds" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
 <!-- Vista de la Huds del peciente seleccionado -->
+<section *ngIf="!showHuds" class="plex-layout">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="page-title">Buscar un paciente</div>
+                </header>
+                <div class="row">
+                    <div class="col">
+                        <paciente-buscar (searchStart)="loader = true" (searchEnd)="resultadoBusqueda = $event.pacientes; loader = false;" (searchClear)="resultadoBusqueda = null"></paciente-buscar>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <paciente-listado [pacientes]="resultadoBusqueda" (selected)="onPacienteSelected($event)"></paciente-listado>
+                    </div>
+                </div>
+                <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+            </plex-box>
+        </div>
+    </div>
+</section>
+<footer *ngIf="!showHuds">
+    <div class="row">
+        <div class="col">
+            <plex-button label="CANCELAR" type="danger" (click)="onPacienteCancel()"></plex-button>
+        </div>
+    </div>
+</footer>
 <rup-vistaHuds *ngIf="showHuds" [paciente]="paciente"></rup-vistaHuds>
