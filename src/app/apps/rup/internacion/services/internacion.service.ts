@@ -51,12 +51,14 @@ export class InternacionService {
         if (fecha1 && fecha2) {
             let horas: number;
             let minutes: number;
+            let segundos: number;
             let auxiliar: Date;
 
             auxiliar = new Date(fecha1);
             horas = fecha2.getHours();
             minutes = fecha2.getMinutes();
-            auxiliar.setHours(horas, minutes, 0, 0);
+            segundos = fecha2.getSeconds();
+            auxiliar.setHours(horas, minutes, segundos, 0);
             return auxiliar;
         } else {
             return null;

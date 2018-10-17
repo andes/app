@@ -285,6 +285,43 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     /**
+     * Actualizar cama del array a mostrar en el mapa de camas
+     * Metodo que se ejecuta luego que el EventEmitter de CamasComponent
+     * devuelve la cama modificada
+     * @param {any} dtoAccion EventEmmiter result
+     * @memberof MapaDeCamasComponent
+     */
+    actualizarMapaDeCamas(dtoAccion) {
+        switch (dtoAccion.accion) {
+            case 'movimientoCama':
+                if (dtoAccion.cama && dtoAccion.camaOcupada) {
+                    //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
+                    let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
+                    let indexCambio = this.camas.findIndex(c => c.id === dtoAccion.camaOcupada.id);
+                    this.camas[i] = JSON.parse(JSON.stringify(dtoAccion.cama));
+                    this.camas[indexCambio] = JSON.parse(JSON.stringify(dtoAccion.camaOcupada));
+                    this.camaSeleccionada = dtoAccion.camaOcupada;
+                    this.camas = [...this.camas];
+                }
+                break;
+            case 'egresarPaciente':
+                // this.camaSeleccionada = dtoAccion.cama;
+                this.camaSeleccionada = dtoAccion.cama;
+                // Busca una prestacion (internacion) asociada a la cama
+                this.prestacionDelPaciente(dtoAccion.cama);
+                this.accion = null;
+                this.showEgreso = true;
+                this.showIngreso = false;
+                this.buscandoPaciente = false;
+                break;
+            case 'cancelaAccion':
+                this.camaSeleccionada = null;
+                this.accion = null;
+                break;
+        }
+    }
+
+    /**
      * Ir al ABM de camas
      */
     onGestionCamaClick() {
@@ -437,11 +474,9 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        debugger;
         this.camaSelected = event.cama;
         this.accion = event.accion;
         this.camaSeleccionada = this.camaSelected;
-        console.log(this.showMenu);
         // this.prestacionDelPaciente(this.camaSelected);
         // if (this.camaSeleccionada === this.camaSelected) {
         //     this.camaSeleccionada = null;
@@ -457,6 +492,24 @@ export class MapaDeCamasComponent implements OnInit {
         // }
         // this.reseteaBusqueda();
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     prestacionDelPaciente(cama) {
 

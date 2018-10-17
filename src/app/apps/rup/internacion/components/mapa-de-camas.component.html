@@ -110,9 +110,7 @@
             <plex-box id="panel-lateral" class="col-4">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
 
-                <ng-container *ngIf="buscandoPaciente">
-                    <cama-bloquear [cama]="camaSeleccionada"></cama-bloquear>
-                </ng-container>
+
 
 
 
@@ -145,14 +143,16 @@
 
                 <!-- Desocupar Cama -->
                 <ng-container *ngIf="accion ==='desocupar'">
-                    <cama-desocupar [cama]="camaSelected">
-
-                    </cama-desocupar>
+                    <cama-desocupar [cama]="camaSelected" (accionCama)="actualizarMapaDeCamas($event)"></cama-desocupar>
                 </ng-container>
 
-                <ng-container *ngIf="camaSeleccionada && !accion && !showIngreso && !buscandoPaciente">
+                <ng-container *ngIf="accion ==='bloquear'">
+                    <cama-bloquear [cama]="camaSeleccionada" (accionCama)="actualizarMapaDeCamas($event)"></cama-bloquear>
+                </ng-container>
+
+                <ng-container *ngIf="camaSeleccionada && !accion">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs *ngIf="panelIndex >= 0" [activeIndex]="panelIndex">
+                    <plex-tabs *ngIf=" panelIndex>= 0" [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
                         <plex-tab label="Datos de cama">

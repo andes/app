@@ -1,7 +1,7 @@
 <div *ngIf="cama.ultimoEstado.estado == 'ocupada'">
     <form #formReparada="ngForm">
         <fieldset>
-            <legend>Desocupar cama</legend>
+            <legend>Desocupar cama: {{cama.nombre}}</legend>
             <div class="row">
                 <div class="col-md">
                     <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">

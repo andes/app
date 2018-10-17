@@ -42,13 +42,15 @@ export class DesocuparCamaComponent implements OnInit {
         private auth: Auth,
         private camasService: CamasService,
         public organizacionService: OrganizacionService,
-        private internaiconService: InternacionService) {
+        private internacionService: InternacionService) {
 
     }
 
     // Métodos (privados y públicos)
 
     ngOnInit() {
+        this.opcionDesocupar = null;
+        this.elegirDesocupar = true;
         this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
             this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId) : [];
@@ -60,7 +62,7 @@ export class DesocuparCamaComponent implements OnInit {
     }
 
     /**
-     * Guardar los datos del formulario y emitir el dato guardado
+     * Realizar los cambios de estado usando los datos del formulario y emitir el dato guardado
      *
      * @param {any} $event formulario a validar
      * @memberof TemplateFormComponent
@@ -71,14 +73,16 @@ export class DesocuparCamaComponent implements OnInit {
             let paciente = this.cama.ultimoEstado.paciente;
             let idInternacion = this.cama.ultimoEstado.idInternacion;
             if (this.opcionDesocupar === 'movimiento' || this.opcionDesocupar === 'pase') {
-                let nuevoEstado = this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
+                let nuevoEstado = this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible';
                 // Primero desocupamos la cama donde esta el paciente actualmente
-                this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.combinarFechas(), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
+                this.camasService.cambioEstadoMovimiento(this.cama, nuevoEstado, this.internacionService.combinarFechas(this.fecha, this.hora), null, null, this.paseAunidadOrganizativa).subscribe(camaActualizada => {
                     this.cama = camaActualizada;
                     // Si hay que hacer un movimiento o pase de cama cambiamos el estado de la cama seleccionada a ocupada
-                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.combinarFechas(), paciente, idInternacion,
+                    this.camasService.cambioEstadoMovimiento(this.camaSeleccionPase, 'ocupada', this.internacionService.combinarFechas(this.fecha, this.hora), paciente, idInternacion,
                         this.paseAunidadOrganizativa).subscribe(camaCambio => {
                             this.camaSeleccionPase.ultimoEstado = camaCambio.ultimoEstado;
+                            this.opcionDesocupar = null;
+                            this.elegirDesocupar = true;
                             // emitimos las camas modificadas
                             this.accionCama.emit({ cama: this.cama, accion: 'movimientoCama', camaOcupada: this.camaSeleccionPase });
 
@@ -89,26 +93,7 @@ export class DesocuparCamaComponent implements OnInit {
                 }, (err) => {
                     this.plex.info('danger', err, 'Error');
                 });
-            } else {
-                if (this.opcionDesocupar === 'egreso') {
-                    this.accionCama.emit({ cama: this.cama, accion: 'egresarPaciente' });
-                    // this.verInternacionEmit.emit(cama);
-                }
             }
-        }
-    }
-    combinarFechas() {
-        if (this.fecha && this.hora) {
-            let horas: number;
-            let minutes: number;
-            let auxiliar: Date;
-            auxiliar = new Date(this.fecha);
-            horas = this.hora.getHours();
-            minutes = this.hora.getMinutes();
-            auxiliar.setHours(horas, minutes, 0, 0);
-            return auxiliar;
-        } else {
-            return null;
         }
     }
 
@@ -140,10 +125,6 @@ export class DesocuparCamaComponent implements OnInit {
 
     cancelar() {
         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
-        // this.cama.$rotar = !this.cama.$rotar;
-        // this.elegirDesocupar = true;
-        // this.opcionDesocupar = null;
-        // this.listadoCamas = [];
     }
 
 }
