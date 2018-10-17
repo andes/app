@@ -81,13 +81,17 @@ export class AuditoriaComponent implements OnInit {
             }
         });
         // Trae solo los pacientes que tienen vinculaciones
-        this.pacienteService.getAuditoriaVinculados({
-            activo: true
-        }).subscribe(resultado => {
-            if (resultado) {
-                this.pacVinculados = resultado;
-            }
-        });
+        this.getVinculados();
+    }
+
+    getVinculados() {
+        this.pacienteService.getAuditoriaVinculados(
+            // { activo: true }
+            {}).subscribe(resultado => {
+                if (resultado) {
+                    this.pacVinculados = resultado;
+                }
+            });
     }
 
     onSelect(paciente: any): void {
