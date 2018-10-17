@@ -6,7 +6,7 @@
             <div class="card-contenedor-central">
                 <!-- <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div> -->
                 <div class="contenedor-cama">
-                    <div class="contenedor-texto hover">
+                    <div class="contenedor-texto hover" (click)="seleccionarCama('mostrarResumen');">
                         <div>{{ getHabitacionName()}}</div>
                         <h3 class="card-titulo">{{cama.nombre}}</h3>
                     </div>
@@ -70,7 +70,7 @@
                     type="danger btn-sm" icon="lock" (click)="seleccionarCama('bloquear');">
                 </plex-button>
                 <!-- Desbloquear cama -->
-                <plex-button *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly" icon="lock-open"
+                <plex-button *ngIf="showEstados && !cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly" icon="lock-open"
                     type="success btn-sm" (click)="seleccionarCama('desbloquear');">
                 </plex-button>
                 <!-- Editar datos de la cama -->

@@ -28,18 +28,7 @@ export class CamaBloquearComponent implements OnInit {
 
     public bloquearCama(event) {
         if (event.formValid) {
-            let dto = {
-                fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
-                estado: 'bloqueada',
-                unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
-                especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
-                esCensable: this.cama.ultimoEstado.esCensable,
-                genero: this.cama.ultimoEstado.genero ? this.cama.ultimoEstado.genero : null,
-                paciente: this.cama.ultimoEstado.paciente ? this.cama.ultimoEstado.paciente : null,
-                idInternacion: this.cama.ultimoEstado.idInternacion ? this.cama.ultimoEstado.idInternacion : null,
-                esMovimiento: false
-            };
-            this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
+            this.camasService.nuevoEstadoCama(this.cama, 'bloqueada', this.internacionService.combinarFechas(this.fecha, this.hora)).subscribe(camaActualizada => {
                 this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                 this.accionCama.emit({ cama: this.cama, accion: 'bloquearCama' });
             }, (err) => {

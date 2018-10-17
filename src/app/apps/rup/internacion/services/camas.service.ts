@@ -173,4 +173,22 @@ export class CamasService {
         return this.cambiaEstado(cama.id, dto);
 
     }
+
+
+    nuevoEstadoCama(cama: ICama, estado: String, fecha: Date) {
+
+        let dto = {
+            fecha: fecha,
+            estado: estado,
+            unidadOrganizativa: cama.ultimoEstado.unidadOrganizativa ? cama.ultimoEstado.unidadOrganizativa : null,
+            especialidades: cama.ultimoEstado.especialidades ? cama.ultimoEstado.especialidades : null,
+            esCensable: cama.ultimoEstado.esCensable,
+            genero: cama.ultimoEstado.genero ? cama.ultimoEstado.genero : null,
+            paciente: cama.ultimoEstado.paciente ? cama.ultimoEstado.paciente : null,
+            idInternacion: cama.ultimoEstado.idInternacion ? cama.ultimoEstado.idInternacion : null,
+            esMovimiento: false
+        };
+        return this.cambiaEstado(cama.id, dto);
+
+    }
 }

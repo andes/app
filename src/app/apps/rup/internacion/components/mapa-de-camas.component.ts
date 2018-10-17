@@ -292,6 +292,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
+        console.log(dtoAccion);
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -335,6 +336,17 @@ export class MapaDeCamasComponent implements OnInit {
             case 'desbloqueoCama':
                 this.camaSeleccionada = dtoAccion.cama;
                 this.accion = null;
+                break;
+
+            case 'mostrarResumen':
+
+                this.camaSeleccionada = dtoAccion.cama;
+                this.showEgreso = false;
+                this.accion = null;
+                this.showIngreso = false;
+                this.buscandoPaciente = false;
+                this.prestacionDelPaciente(dtoAccion.cama);
+
                 break;
 
         }
