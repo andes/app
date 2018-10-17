@@ -161,6 +161,10 @@
                     <cama-bloquear [cama]="camaSeleccionada" (accionCama)="actualizarMapaDeCamas($event)"></cama-bloquear>
                 </ng-container>
 
+                <ng-container *ngIf="accion ==='preparar'">
+                    <cama-preparar [cama]="camaSeleccionada" (accionCama)="actualizarMapaDeCamas($event)"></cama-preparar>
+                </ng-container>
+
                 <ng-container *ngIf="camaSeleccionada && !accion">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
                     <plex-tabs *ngIf=" panelIndex>= 0" [activeIndex]="panelIndex">

@@ -1,54 +1,29 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { ICama } from '../interfaces/ICama';
 import { Plex } from '@andes/plex';
-import { Auth } from '@andes/auth';
-import { CamasService } from '../services/camas.service';
-import { OrganizacionService } from '../../../../services/organizacion.service';
 import { InternacionService } from '../services/internacion.service';
+import { CamasService } from '../services/camas.service';
 
 @Component({
-    selector: 'cama-desbloquear',
-    templateUrl: 'cama-desbloquear.html'
+    selector: 'cama-preparar',
+    templateUrl: 'cama-preparar.html'
 })
-export class CamaDesbloquearComponent implements OnInit {
+export class CamaPrepararComponent implements OnInit {
 
-    // Propiedades privadas
-
-    // Propiedades públicas
-
-    public opcionesDesbloqueo = [
-        { id: 'desocupada', label: 'Para desinfectar' },
-        { id: 'disponible', label: 'Disponible' }
-    ];
     public fecha = new Date();
     public hora = new Date();
 
+    // cama sobre la que estamos trabajando
+    @Input() cama: ICama;
 
-    // Eventos
-    @Input() cama: any;
     // resultado de la accion realizada sobre la cama
     @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
-    // Constructor
-    constructor(private plex: Plex,
-        private auth: Auth,
-        private camasService: CamasService,
-        private internacionService: InternacionService) {
 
-    }
+    constructor(private plex: Plex, private internacionService: InternacionService, private camasService: CamasService) { }
 
-    // Métodos (privados y públicos)
+    ngOnInit() { }
 
-    ngOnInit() {
-    }
-
-    cancelar() {
-        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
-    }
-    comprobarWorkflow() {
-        return this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
-    }
-
-
-    public desbloquearCama(event) {
+    public prepararCama(event) {
         if (event.formValid) {
             let dto = {
                 fecha: this.internacionService.combinarFechas(this.fecha, this.hora),
@@ -63,11 +38,16 @@ export class CamaDesbloquearComponent implements OnInit {
             };
             this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                 this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                this.accionCama.emit({ cama: this.cama, accion: 'desbloqueoCama' });
+                this.accionCama.emit({ cama: this.cama, accion: 'PrepararCama' });
             }, (err) => {
                 this.plex.info('danger', err, 'Error');
             });
         }
-
     }
+
+
+    cancelar() {
+        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+    }
+
 }

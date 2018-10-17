@@ -68,12 +68,11 @@
                 </plex-button>
                 <!-- Preparar cama -->
                 <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray"
-                    type="warning btn-sm" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                    title="Preparar">
+                    type="warning btn-sm" (click)="seleccionarCama('preparar');">
                 </plex-button>
                 <!-- Bloquear cama -->
                 <plex-button *ngIf="showEstados && !cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')"
-                    type="danger btn-sm" icon="lock" title="Bloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
+                    type="danger btn-sm" icon="lock" title="Bloquear" (click)="seleccionarCama('bloquear');">
                 </plex-button>
                 <!-- Desbloquear cama -->
                 <plex-button *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly"

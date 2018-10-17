@@ -357,6 +357,7 @@ import { EgresoInternacionComponent } from './apps/rup/internacion/components/eg
 import { ResumenInternacionComponent } from './apps/rup/internacion/components/resumenInternacion.component';
 import { CamaBloquearComponent } from './apps/rup/internacion/components/cama-bloquear.component';
 import { CamaDesbloquearComponent } from './apps/rup/internacion/components/cama-desbloquear.component';
+import { CamaPrepararComponent } from './apps/rup/internacion/components/cama-preparar.component';
 
 
 
@@ -471,7 +472,8 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     ProcedimientoDeEnfermeriaComponent,
     CamaBloquearComponent,
-    CamaDesbloquearComponent
+    CamaDesbloquearComponent,
+    CamaPrepararComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
