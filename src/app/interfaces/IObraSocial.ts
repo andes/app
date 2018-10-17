@@ -7,4 +7,5 @@ export interface IObraSocial {
   codigoFinanciador: Number;
   financiador: String;
   version: Date;
+  nroAfiliado: String;
 }

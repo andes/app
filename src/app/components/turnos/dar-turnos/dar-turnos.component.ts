@@ -185,13 +185,18 @@ export class DarTurnosComponent implements OnInit {
                 this.verificarTelefono(pacienteMPI);
                 this.obtenerCarpetaPaciente();
                 if (this.paciente.documento) {
-                    this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                        if (resultado) {
-                            this.obraSocialPaciente = resultado[0];
-                            console.log(this.obraSocialPaciente);
-                            this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
-                        }
-                    });
+                    if (this.paciente.financiador[0]) {
+                        this.obraSocialPaciente = this.paciente.financiador[0] as any;
+                        this.numeroAfiliado = (this.paciente.financiador[0] as any).nroAfiliado;
+                    } else {
+                        this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
+                            // debugger
+                            if (resultado) {
+                                this.obraSocialPaciente = resultado[0];
+                                this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
+                            }
+                        });
+                    }
                 }
             });
     }
@@ -794,7 +799,6 @@ export class DarTurnosComponent implements OnInit {
                                 this.guardarTurno(agd);
                             }, error => {
                                 this.plex.toast('danger', 'El número de carpeta ya existe');
-                                console.log(error);
                                 this.hideDarTurno = false;
                             }
                         );
@@ -811,6 +815,9 @@ export class DarTurnosComponent implements OnInit {
     }
 
     private guardarTurno(agd: IAgenda) {
+        if (this.numeroAfiliado) {
+            this.obraSocialPaciente.nroAfiliado = this.numeroAfiliado;
+        }
         let pacienteSave = {
             id: this.paciente.id,
             documento: this.paciente.documento,
