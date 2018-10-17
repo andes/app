@@ -51,6 +51,8 @@ export class ProtocoloDetalleComponent
     };
     practicasEjecucion;
     showObservaciones = false;
+    edicionDatosCabecera = false;
+    mostrarCuerpoProtocolo = true;
     solicitudProtocolo : any;
     
     @Input() seleccionPaciente: any;
@@ -67,9 +69,10 @@ export class ProtocoloDetalleComponent
             this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
             this.practicasEjecucion = this.modelo.ejecucion.registros;
 
-            // if (this.modo.id === 'recepcion') {
-            //     this.cargarPracticasAEjecucion();
-            // }
+            if (this.modo.id === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+                this.editarDatosCabecera();
+                this.seleccionPaciente = true;             
+            }
         }
     }
 
@@ -138,6 +141,15 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    editarDatosCabecera() {
+        this.edicionDatosCabecera = true;
+        this.mostrarCuerpoProtocolo = false;
+    }
+
+    aceptarEdicionCabecera() {
+        this.edicionDatosCabecera = false;
+        this.mostrarCuerpoProtocolo = true;
+    }
 
     /**
      * Busca unidades organizativas de la organización
