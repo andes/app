@@ -102,7 +102,7 @@ export class MapaDeCamasComponent implements OnInit {
         private plex: Plex,
         private router: Router,
         public organizacionService: OrganizacionService,
-        private internaiconService: InternacionService,
+        private internacionService: InternacionService,
         public camasService: CamasService) { }
 
     ngOnInit() {
@@ -250,7 +250,7 @@ export class MapaDeCamasComponent implements OnInit {
                 // vamos a liberar la cama
                 let dto = {
                     fecha: new Date(),
-                    estado: this.internaiconService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
+                    estado: this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id) ? 'desocupada' : 'disponible',
                     unidadOrganizativa: e.cama.ultimoEstado.unidadOrganizativa ? e.cama.ultimoEstado.unidadOrganizativa : null,
                     especialidades: e.cama.ultimoEstado.especialidades ? e.cama.ultimoEstado.especialidades : null,
                     esCensable: e.cama.ultimoEstado.esCensable,
@@ -315,6 +315,10 @@ export class MapaDeCamasComponent implements OnInit {
                 this.buscandoPaciente = false;
                 break;
             case 'cancelaAccion':
+                this.camaSeleccionada = null;
+                this.accion = null;
+                break;
+            case 'desbloqueoCama':
                 this.camaSeleccionada = null;
                 this.accion = null;
                 break;
