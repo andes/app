@@ -331,7 +331,7 @@ export class CamaComponent implements OnInit {
         let salida = {
             accion,
             cama: this.cama
-        }
+        };
         this.camaSelected.emit(salida);
 
     }
