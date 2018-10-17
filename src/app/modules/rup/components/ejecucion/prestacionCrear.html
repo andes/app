@@ -18,7 +18,8 @@
                 <div *ngIf="mostrarPaciente" class="col-6">
                     <fieldset>
                         <legend>Datos del paciente</legend>
-                        <paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle>
+                        <!--paciente-detalle *ngIf="paciente" [paciente]="paciente"></paciente-detalle-->
+                        <paciente-panel [paciente]="paciente"></paciente-panel>
                         <plex-button label="SELECCIONAR PACIENTE" type="primary" (click)="buscandoPaciente = true"></plex-button>
                     </fieldset>
                 </div>
@@ -44,8 +45,39 @@
 </form>
 
 <!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<!--pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
+    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch-->
+<section *ngIf="buscandoPaciente" class="plex-layout">
+    <div class="row">
+        <!--Panel central-->
+        <div class="col">
+            <plex-box>
+                <header>
+                    <div class="page-title">Buscar un paciente</div>
+                </header>
+                <div *ngIf="buscandoPaciente" class="row">
+                    <div class="col">
+                        <paciente-buscar (searchStart)="loader = true" (searchEnd)="resultadoBusqueda = $event.pacientes; loader = false;" (searchClear)="resultadoBusqueda = null"></paciente-buscar>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <paciente-listado [pacientes]="resultadoBusqueda" (selected)="onPacienteSelected($event)"></paciente-listado>
+                    </div>
+                </div>
+                <plex-loader *ngIf="loader" type="ball-pulse"></plex-loader>
+            </plex-box>
+        </div>
+    </div>
+</section>
+<footer *ngIf="buscandoPaciente">
+    <div class="row">
+        <div class="col">
+            <plex-button label="CANCELAR" type="danger" (click)="buscandoPaciente = false"></plex-button>
+        </div>
+    </div>
+</footer>
+
 
 <!-- Lista de Agendas para dar turnos autocitados -->
 <autocitar-turno *ngIf="showAutocitar && paciente" (cancelarEmitter)="cancelarAutocitar()" [paciente]="paciente" [agendasAutocitar]="agendasAutocitar"
