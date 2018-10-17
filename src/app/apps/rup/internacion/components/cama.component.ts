@@ -31,17 +31,11 @@ export class CamaComponent implements OnInit {
     public paseAunidadOrganizativa: any;
     // opciones dropdown cama internada
     public opcionesDropdown: any = [];
-    public estadoDesbloqueo: String = 'disponible';
     public fecha = new Date();
     public hora = new Date();
     public disabledButton = false;
     public camaSeleccionPase;
     // lista de los motivos del bloque, luego los va a traer desde snomed
-    public listaMotivosBloqueo = [{ id: 'Bolqueo', name: 'Bloqueo' }, { id: 'Se envia a reparar', name: 'Se envia a reparar' }];
-    public opcionesDesbloqueo = [
-        { id: 'desocupada', label: 'Para desinfectar' },
-        { id: 'disponible', label: 'Disponible' }
-    ];
     public opcionDesocupar = null;
     public listadoCamas = [];
     public listaUnidadesOrganizativas = [];
@@ -51,10 +45,6 @@ export class CamaComponent implements OnInit {
     // 2) Pase a otra UO
     // 3) Egreso del paciente
     public elegirDesocupar = true;
-    public opcionesDesocupar = [
-        { id: 'movimiento', label: 'Cambiar de cama' },
-        { id: 'egreso', label: 'Egresar al paciente' }];
-
     public listaCamasDisponibles;
 
     constructor(private plex: Plex,
@@ -63,18 +53,9 @@ export class CamaComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private pacienteService: PacienteService,
-        private PrestacionesService: PrestacionesService,
         private internacionService: InternacionService) { }
 
     ngOnInit() {
-        this.organizacionService.getById(this.auth.organizacion.id).subscribe(organizacion => {
-            this.organizacion = organizacion;
-            this.listaUnidadesOrganizativas = this.organizacion.unidadesOrganizativas ? this.organizacion.unidadesOrganizativas.filter(o => o.conceptId !== this.cama.ultimoEstado.unidadOrganizativa.conceptId) : [];
-            if (this.listaUnidadesOrganizativas && this.listaUnidadesOrganizativas.length > 0) {
-                this.opcionesDesocupar.push({ id: 'pase', label: 'Cambiar de unidad' });
-            }
-        });
-
         this.opcionesDropdown = [
             {
                 label: 'Valoración inicial enfermería',
@@ -277,10 +258,5 @@ export class CamaComponent implements OnInit {
         this.opcionDesocupar = null;
         this.listadoCamas = [];
     }
-
-    comprobarWorkflow() {
-        return this.internacionService.usaWorkflowCompleto(this.auth.organizacion._id);
-    }
-
 
 }
