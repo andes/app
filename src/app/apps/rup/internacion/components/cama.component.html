@@ -48,8 +48,7 @@
                         </p>
                     </div>
                     <!-- devolver cama -->
-                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);"
-                        *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
+                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
                     <!-- Confirmar reparacion -->
                     <plex-button type="success" label="Confirmar reparación" title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; setFecha()"
@@ -64,21 +63,20 @@
                     type="success btn-sm" icon="account-plus" title="Internar" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'">
                 </plex-button>
                 <!-- Desocupar cama -->
-                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm"
-                    title="Desocupar" (click)="seleccionarCama('desocupar');">
+                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm" title="Desocupar"
+                    (click)="seleccionarCama('desocupar');">
                 </plex-button>
                 <!-- Preparar cama -->
-                <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray"
-                    type="warning btn-sm" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'preparar'"
-                    title="Preparar">
+                <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray" type="warning btn-sm"
+                    (click)="seleccionarCama('preparar');">
                 </plex-button>
                 <!-- Bloquear cama -->
                 <plex-button *ngIf="showEstados && !cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')"
-                    type="danger btn-sm" icon="lock" title="Bloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
+                    type="danger btn-sm" icon="lock" title="Bloquear" (click)="seleccionarCama('bloquear');">
                 </plex-button>
                 <!-- Desbloquear cama -->
-                <plex-button *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly"
-                    icon="lock-open" type="success btn-sm" title="Desbloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
+                <plex-button *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly" icon="lock-open"
+                    type="success btn-sm" title="Desbloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
                 </plex-button>
                 <!-- Editar datos de la cama -->
                 <plex-button *ngIf="showEstados" icon="pencil" type="primary btn-sm" title="Editar" (click)="editarCama(cama)">
@@ -253,8 +251,8 @@
                         </plex-datetime>
                         <div class="main">
                             <div class="form-group">
-                                <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo"
-                                    idField="name" labelField="name" [(ngModel)]="cama.$motivo" label="Motivo del bloqueo">
+                                <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo" idField="name" labelField="name" [(ngModel)]="cama.$motivo"
+                                    label="Motivo del bloqueo">
                                 </plex-select>
                             </div>
                         </div>
@@ -265,8 +263,7 @@
                             </plex-button>
                         </div>
                         <div class="col-6">
-                            <plex-button type="success btn-block" icon="check" (click)="formBloqueo.valid && cambiarEstado(cama, 'bloqueada')"
-                                [disabled]="!formBloqueo.form.valid">
+                            <plex-button type="success btn-block" icon="check" (click)="formBloqueo.valid && cambiarEstado(cama, 'bloqueada')" [disabled]="!formBloqueo.form.valid">
                             </plex-button>
                         </div>
                     </div>

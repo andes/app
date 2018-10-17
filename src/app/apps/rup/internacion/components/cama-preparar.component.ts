@@ -5,10 +5,10 @@ import { InternacionService } from '../services/internacion.service';
 import { CamasService } from '../services/camas.service';
 
 @Component({
-    selector: 'cama-bloquear',
-    templateUrl: 'cama-bloquear.html'
+    selector: 'cama-preparar',
+    templateUrl: 'cama-preparar.html'
 })
-export class CamaBloquearComponent implements OnInit {
+export class CamaPrepararComponent implements OnInit {
 
     public fecha = new Date();
     public hora = new Date();
@@ -19,18 +19,15 @@ export class CamaBloquearComponent implements OnInit {
     // resultado de la accion realizada sobre la cama
     @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
 
-    // lista de los motivos del bloque, luego los va a traer desde snomed
-    public listaMotivosBloqueo = [{ id: 'Bolqueo', name: 'Bloqueo' }, { id: 'Falta de personal', name: 'Falta de personal' }, { id: 'Se envia a reparar', name: 'Se envia a reparar' }];
-
     constructor(private plex: Plex, private internaiconService: InternacionService, private camasService: CamasService) { }
 
     ngOnInit() { }
 
-    public bloquearCama(event) {
+    public prepararCama(event) {
         if (event.formValid) {
             let dto = {
                 fecha: this.internaiconService.combinarFechas(this.fecha, this.hora),
-                estado: 'bloqueada',
+                estado: 'disponible',
                 unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                 especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
                 esCensable: this.cama.ultimoEstado.esCensable,
@@ -41,7 +38,7 @@ export class CamaBloquearComponent implements OnInit {
             };
             this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                 this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                this.accionCama.emit({ cama: this.cama, accion: 'bloquearCama' });
+                this.accionCama.emit({ cama: this.cama, accion: 'PrepararCama' });
             }, (err) => {
                 this.plex.info('danger', err, 'Error');
             });

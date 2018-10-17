@@ -314,10 +314,15 @@ export class MapaDeCamasComponent implements OnInit {
                 this.showIngreso = false;
                 this.buscandoPaciente = false;
                 break;
+            case 'bloquearCama':
+                this.camaSeleccionada = dtoAccion.cama;
+                this.accion = null;
+                break;
             case 'cancelaAccion':
                 this.camaSeleccionada = null;
                 this.accion = null;
                 break;
+
         }
     }
 
@@ -492,23 +497,6 @@ export class MapaDeCamasComponent implements OnInit {
         // }
         // this.reseteaBusqueda();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     prestacionDelPaciente(cama) {
