@@ -46,14 +46,11 @@
                             <br>{{cama.ultimoEstado.paciente.documento}}
                         </p>
                     </div>
-                    <!-- devolver cama -->
+                    <!-- devolver cama VER CHICHI-->
                     <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);"
                         *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
-                    <!-- Confirmar reparacion -->
-                    <plex-button type="success" label="Confirmar reparación" title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; setFecha()"
-                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion' && !readOnly">
-                    </plex-button>
+
                 </div>
             </div>
             <!-- Botones laterales -->
@@ -86,16 +83,9 @@
 
         <!-- Back -->
         <div class="back" *ngIf="cama.$rotar">
-            <!-- Header del back de las tarjetas -->
-            <div class="header">
-                <fieldset>
-                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">Desbloquear</legend>
-                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'disponible'">Bloquear</legend>
-                    <legend *ngIf="cama.$action && cama.$action !== 'bloquear'">{{cama.$action.toString()}}</legend>
-                </fieldset>
-            </div>
 
-            <!-- Acción: Ver cama enviada a reparacion -->
+
+            <!-- Acción: Ver cama enviada a reparacion- SE MUESTRA EN EL DETALLE DE LA CAMA. BORRAR DE ACA-->
             <div *ngIf="cama.$action == 'enviada_reparacion' && cama.ultimoEstado.estado == 'reparacion'">
                 <div class="contenido">
                     <div class="main">
@@ -115,7 +105,7 @@
                 </div>
             </div>
 
-            <!-- Ver cama bloqueadea -->
+            <!-- Ver cama bloqueadea  SE MUESTRA EN EL DETALLE DE LA CAMA. BORRAR DE ACA--->
             <div *ngIf="cama.$action == 'estado_bloqueada' && cama.ultimoEstado.estado == 'bloqueada'">
                 <div class="contenido">
                     <div class="main">

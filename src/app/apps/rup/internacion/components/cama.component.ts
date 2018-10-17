@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
@@ -7,7 +7,6 @@ import { InternacionService } from '../services/internacion.service';
 import { CamasService } from '../services/camas.service';
 import { OrganizacionService } from '../../../../services/organizacion.service';
 import { PacienteService } from '../../../../services/paciente.service';
-import { PrestacionesService } from '../../../../modules/rup/services/prestaciones.service';
 
 @Component({
     selector: 'cama',
