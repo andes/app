@@ -50,6 +50,9 @@ export class AppComponent {
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
         }
+        if (this.auth.getPermissions('mpi:?').length > 0) {
+            accessList.push({ label: 'Auditoría MPI', icon: 'account-multiple-outline', route: '/mpi/auditoria' });
+        }
 
         if (this.auth.getPermissions('rup:?').length > 0) {
             accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
@@ -65,7 +68,7 @@ export class AppComponent {
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
-        accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
+            accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
