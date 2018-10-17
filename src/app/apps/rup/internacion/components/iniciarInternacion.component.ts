@@ -26,7 +26,8 @@ export class IniciarInternacionComponent implements OnInit {
     @Input() prestacion;
     @Input() soloValores;
     @Output() data: EventEmitter<any> = new EventEmitter<any>();
-    @Output() refreshCamas: EventEmitter<any> = new EventEmitter<any>();
+    // Emite la cama con el paciente internado
+    @Output() accionCama: EventEmitter<any> = new EventEmitter<any>();
     @Output() otroPaciente: EventEmitter<any> = new EventEmitter<any>();
     nroCarpetaOriginal: string;
     btnIniciarGuardar;
@@ -316,13 +317,13 @@ export class IniciarInternacionComponent implements OnInit {
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
                             this.data.emit(false);
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                         });
                     } else {
-                        this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                         this.data.emit(false);
                     }
 
@@ -364,15 +365,14 @@ export class IniciarInternacionComponent implements OnInit {
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.refreshCamas.emit({ cama: this.cama, iniciarInternacion: true });
-                            this.data.emit(false);
+                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                         });
                     } else {
                         // this.router.navigate(['rup/internacion/ver', prestacion.id]);
-                        this.data.emit(false);
-                        this.refreshCamas.emit(this.cama);
+
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                     }
 
                 }, (err) => {

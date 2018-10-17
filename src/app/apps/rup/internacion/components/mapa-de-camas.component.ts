@@ -293,6 +293,16 @@ export class MapaDeCamasComponent implements OnInit {
      */
     actualizarMapaDeCamas(dtoAccion) {
         switch (dtoAccion.accion) {
+            case 'internarPaciente':
+                if (dtoAccion.cama) {
+                    let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
+                    this.camas[i] = dtoAccion.cama;
+                    this.camaSeleccionada = dtoAccion.cama;
+                    this.showIngreso = false;
+                    this.pacienteSelected = null;
+                    this.prestacionDelPaciente(dtoAccion.cama);
+                }
+                break;
             case 'movimientoCama':
                 if (dtoAccion.cama && dtoAccion.camaOcupada) {
                     //  let copiaCamas = JSON.parse(JSON.stringify(this.camas));
@@ -323,7 +333,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.accion = null;
                 break;
             case 'desbloqueoCama':
-                this.camaSeleccionada = dtoAccion.cama; ;
+                this.camaSeleccionada = dtoAccion.cama;
                 this.accion = null;
                 break;
 
@@ -459,14 +469,15 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onPacienteCancel() {
-        this.buscandoPaciente = false;
+        this.accion = null;
+        this.camaSeleccionada = null;
     }
 
     onPacienteSelected(event) {
+        this.accion = null;
         this.pacienteSelected = event;
-        this.buscandoPaciente = false;
         this.showIngreso = true;
-        this.showMenu = true;
+        this.editarIngreso = false;
         this.prestacionPorInternacion = null;
     }
 
