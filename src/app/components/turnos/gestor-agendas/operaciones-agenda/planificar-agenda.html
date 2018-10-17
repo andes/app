@@ -28,24 +28,24 @@
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.tipoPrestaciones" name="modelo.tipoPrestaciones" label="Tipos de prestación" (getData)="loadTipoPrestaciones($event)"
-                                [multiple]="true" [required]="true" (change)="cambioPrestaciones()">
+                                [multiple]="true" [required]="true" (change)="cambioPrestaciones()" [closeAfterSelect]="true">
                             </plex-select>
                         </div>
                     </div>
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
                         <div class="col-12">
                             <plex-select [(ngModel)]="modelo.profesionales" label="Profesionales" name="modelo.profesionales" (getData)="loadProfesionales($event)"
-                                [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()">
+                                [multiple]="true" labelField="apellido + ' ' + nombre" (change)="validarTodo()" [closeAfterSelect]="true">
                             </plex-select>
                         </div>
                     </div>
                     <!--Opcion agenda no nominalizada o dinamica-->
                     <div *ngIf="modelo.horaInicio && modelo.horaFin" class="row">
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <plex-bool [(ngModel)]="noNominalizada" name="noNominalizada" label="No nominalizada" (change)="cambiarNominalizada($event)">
                             </plex-bool>
-                        </div>
-                        <div class="col-6">
+                        </div> -->
+                        <div class="col">
                             <plex-bool [(ngModel)]="dinamica" name="dinamica" label="Dinámica" (change)="seleccionarDinamica($event)">
                             </plex-bool>
                         </div>
@@ -65,7 +65,7 @@
                             <div class="row" *ngIf="espacioFisicoPropios">
                                 <div class="col-10">
                                     <plex-select [(ngModel)]="modelo.espacioFisico" name="espacioFisico" (getData)="loadEspaciosFisicos($event)" label="Seleccione un espacio físico del efector"
-                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.dscripcion ? edificio.descripcion : '')"
+                                        placeholder="Seleccione un espacio físico" labelField="nombre + ' ' + (servicio.nombre ? servicio.nombre : '') + (edificio.descripcion ? edificio.descripcion : '')"
                                         (change)="validarTodo()">
                                     </plex-select>
                                 </div>

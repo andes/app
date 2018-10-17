@@ -8,6 +8,7 @@ import { PrestacionesService } from '../../../../modules/rup/services/prestacion
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
 import { OrganizacionService } from './../../../../services/organizacion.service';
+import { ReglaService } from '../../../../services/top/reglas.service';
 
 @Component({
     selector: 'solicitud-turno-ventanilla',
@@ -44,47 +45,59 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         return this._paciente;
     }
 
-    @Output() cancelarSolicitudVentanilla = new EventEmitter<boolean>();
-    @Output() mostrarDarTurnoSolicitud = new EventEmitter<any>();
+    @Output() cerrarSolicitudVentanilla = new EventEmitter<boolean>();
 
     public permisos = [];
     public autorizado = false;
     public puedeAutocitar = false;
-
-    public modelo: any = {
-        paciente: {},
-        profesional: {},
-        organizacion: {},
-        solicitud: {
-            fecha: null,
-            paciente: {},
-            profesional: {},
-            organizacion: {},
-            turno: null
+    prestacionDestino: any;
+    prestacionOrigen: any;
+    arrayReglasDestino = [];
+    autocitado = false;
+    motivo: '';
+    modelo: any = {
+        paciente: {
+            id: '',
+            nombre: '',
+            apellido: '',
+            documento: '',
+            sexo: '',
+            fechaNacimiento: null
         },
-        estados: [
-            { tipo: 'pendiente' }
-        ]
-    };
-    public registros: any = {
-        solicitudPrestacion: {
-            profesionales: [],
-            motivo: '',
-            autocitado: false
-        }
+        solicitud: {
+            organizacion: null,
+            organizacionOrigen: null,
+            profesional: null,
+            profesionalOrigen: null,
+            fecha: null,
+            turno: null,
+            tipoPrestacion: null,
+            tipoPrestacionOrigen: null,
+            registros: []
+        },
+        estados: [],
+        prestacionOrigen: null
     };
 
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
 
-    // VER SI HACE FALTA
-    // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
+    arrayPrestacionesOrigen: { id: any; nombre: any; }[];
+    arrayReglasOrigen: { id: any; nombre: any; }[];
+    arrayOrganizacionesOrigen: { id: any; nombre: any; }[];
+    dataOrganizacionesOrigen = [];
+    dataOrganizacionesDestino = [];
+    dataTipoPrestacionesOrigen = [];
+    dataReglasDestino = [];
+    dataReglasOrigen: { id: any; nombre: any; }[];
+
 
     constructor(
         private servicioPrestacion: PrestacionesService,
         private servicioTipoPrestacion: TipoPrestacionService,
         private servicioOrganizacion: OrganizacionService,
         private servicioProfesional: ProfesionalService,
+        private servicioReglas: ReglaService,
         private auth: Auth,
         private router: Router,
         private plex: Plex) { }
@@ -103,15 +116,119 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         }
     }
 
-    loadOrganizacion(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
+    onSelect() {
+        if (this.auth.organizacion.id && this.modelo.solicitud.tipoPrestacion && this.modelo.solicitud.tipoPrestacion.conceptId) {
+            if (this.prestacionOrigen) {
+                // let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.conceptId === this.prestacionOrigen.id; });
+                let regla: any = this.arrayReglasOrigen.find((rule: any) => { return rule.prestacion.conceptId === this.prestacionOrigen.id; });
+
+                if (regla.auditable) {
+                    this.modelo.estados.push({ tipo: 'auditoria' });
+                } else {
+                    this.modelo.estados.push({ tipo: 'pendiente' });
+                }
+                this.modelo.solicitud.tipoPrestacionOrigen = regla.prestacion;
+            }
         }
+    }
+
+    onSelectOrganizacionOrigen() {
+        let regla: any = this.arrayOrganizacionesOrigen.find((org: any) => org.origen.organizacion.id === this.modelo.solicitud.organizacionOrigen.id);
+        if (regla && regla.origen) {
+            this.arrayReglasOrigen = regla.origen.prestaciones;
+            this.dataTipoPrestacionesOrigen = regla.origen.prestaciones.map(elem => { return { id: elem.prestacion.conceptId, nombre: elem.prestacion.term }; });
+        }
+    }
+
+
+    onSelectPrestacionOrigen() {
+        if (this.modelo.solicitud && this.modelo.solicitud.tipoPrestacion) {
+            this.servicioReglas.get({ organizacionDestino: this.auth.organizacion.id, prestacionDestino: this.modelo.solicitud.tipoPrestacion.conceptId })
+                .subscribe(
+                    res => {
+                        console.log(res);
+                        this.arrayOrganizacionesOrigen = res;
+                        this.dataOrganizacionesOrigen = res.map(elem => { return { id: elem.origen.organizacion.id, nombre: elem.origen.organizacion.nombre }; });
+                    }
+                );
+        }
+    }
+
+    guardarSolicitud($event) {
+        if ($event.formValid) {
+            this.modelo.solicitud.organizacion = this.auth.organizacion;
+            if (this.autocitado) {
+                this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalOrigen;
+                this.modelo.solicitud.organizacionOrigen = this.modelo.solicitud.organizacion;
+                this.modelo.solicitud.tipoPrestacionOrigen = this.modelo.solicitud.tipoPrestacion;
+                // solicitudes autocitadas
+                this.modelo.estados.push({ tipo: 'pendiente' });
+            }
+            this.modelo.solicitud.registros.push({
+                nombre: this.modelo.solicitud.tipoPrestacion.term,
+                concepto: this.modelo.solicitud.tipoPrestacion,
+                valor: {
+                    solicitudPrestacion: {
+                        motivo: this.motivo,
+                        autocitado: this.autocitado
+                    }
+                },
+                tipo: 'solicitud'
+            });
+            this.modelo.paciente = {
+                id: this.paciente.id,
+                nombre: this.paciente.nombre,
+                apellido: this.paciente.apellido,
+                documento: this.paciente.documento,
+                sexo: this.paciente.sexo,
+                fechaNacimiento: this.paciente.fechaNacimiento
+            };
+            // Se guarda la solicitud 'pendiente' de prestación
+            this.servicioPrestacion.post(this.modelo).subscribe(
+                respuesta => {
+                    this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+                    this.cerrarSolicitudVentanilla.emit(true);
+                },
+                err => {
+                    this.plex.toast('danger', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud no generada', 4000);
+                    this.cerrarSolicitudVentanilla.emit(true);
+                }
+            );
+
+        } else {
+            this.plex.alert('Debe completar los datos requeridos');
+        }
+    }
+
+
+
+    cancelar() {
+
+        this.cerrarSolicitudVentanilla.emit(true);
+
+        // this.modelo = {
+        //     paciente: this.paciente,
+        //     profesional: {},
+        //     organizacion: {},
+        //     solicitud: {
+        //         fecha: null,
+        //         paciente: {},
+        //         profesional: {},
+        //         organizacion: {},
+        //         turno: null
+        //     },
+        //     estados: [
+        //         { tipo: 'pendiente' }
+        //     ]
+        // };
+        // this.registros = {
+        //     solicitudPrestacion: {
+        //         profesionales: [],
+        //         motivo: '',
+        //         autocitado: false
+        //     }
+        // };
+
     }
 
     loadProfesionales(event) {
@@ -123,46 +240,10 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         } else {
             event.callback([]);
         }
-
-        // let listaProfesionales = [];
-        // if (event.query) {
-        //     let query = {
-        //         nombreCompleto: event.query
-        //     };
-        //     this.servicioProfesional.get(query).subscribe(resultado => {
-        //         if (this.modelo.profesionales) {
-        //             listaProfesionales = (resultado) ? this.modelo.solicitud.profesional.concat(resultado) : this.modelo.profesionales;
-        //         } else {
-        //             listaProfesionales = resultado;
-        //         }
-        //         event.callback(listaProfesionales);
-        //     });
-        // } else {
-        //     event.callback(this.modelo.solicitud.profesional);
-        // }
-    }
-
-    loadProfesionalesMulti(event) {
-        let listaProfesionales = [];
-        if (event.query) {
-            let query = {
-                nombreCompleto: event.query
-            };
-            this.servicioProfesional.get(query).subscribe(resultado => {
-                if (this.registros.solicitudPrestacion.profesionales) {
-                    listaProfesionales = (resultado) ? this.registros.solicitudPrestacion.profesionales.concat(resultado) : this.registros.solicitudPrestacion.profesionales;
-                } else {
-                    listaProfesionales = resultado;
-                }
-                event.callback(listaProfesionales);
-            });
-        } else {
-            event.callback(this.registros.solicitudPrestacion.profesionales);
-        }
     }
 
     loadTipoPrestaciones(event) {
-        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
             let dataF;
             if (this.permisos[0] === '*') {
                 dataF = data;
@@ -173,110 +254,17 @@ export class SolicitudTurnoVentanillaComponent implements OnInit {
         });
     }
 
-    formularioSolicitud() {
-        this.showCargarSolicitud = true;
-        this.showBotonCargarSolicitud = false;
-    }
-
-    guardarSolicitud($event) {
-        if ($event.formValid && this.modelo.solicitud.organizacion._id && this.modelo.solicitud.profesional._id) {
-
-            delete this.modelo.solicitud.organizacion.$order;
-            delete this.modelo.solicitud.profesional.$order;
-            delete this.modelo.solicitud.tipoPrestacion.$order;
-            this.registros.solicitudPrestacion.profesionales = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino : [this.modelo.solicitud.profesional];
-
-            if (this.registros.solicitudPrestacion.profesionales) {
-                this.registros.solicitudPrestacion.profesionales.filter(profesional => {
-                    return delete profesional.$order;
-                });
-            }
-
-            this.modelo.solicitud.registros = {
-                nombre: this.modelo.solicitud.tipoPrestacion.term,
-                concepto: this.modelo.solicitud.tipoPrestacion,
-                valor: {
-                    solicitudPrestacion: this.registros.solicitudPrestacion
-                },
-                tipo: 'solicitud'
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
             };
-
-            this.modelo.solicitud.organizacion = this.modelo.solicitud.organizacionDestino ? this.modelo.solicitud.organizacionDestino : this.modelo.solicitud.organizacion;
-            this.modelo.solicitud.profesional = this.modelo.solicitud.profesionalesDestino ? this.modelo.solicitud.profesionalesDestino[0] : this.modelo.solicitud.profesional;
-
-            // Se guarda la solicitud 'pendiente' de prestación
-            this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-
-                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
-                this.showCargarSolicitud = false;
-                this.showBotonCargarSolicitud = true;
-
-                this.modelo = {
-                    paciente: this.paciente,
-                    profesional: {},
-                    organizacion: {},
-                    solicitud: {
-                        fecha: null,
-                        paciente: {},
-                        profesional: {},
-                        organizacion: {},
-                        turno: null
-                    },
-                    estados: [
-                        { tipo: 'pendiente' }
-                    ]
-                };
-                this.registros = {
-                    solicitudPrestacion: {
-                        profesionales: [],
-                        motivo: '',
-                        autocitado: false
-                    }
-                };
-
+            this.servicioOrganizacion.get(query).subscribe(resultado => {
+                event.callback(resultado);
             });
-
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            event.callback([]);
         }
-    }
-
-    // Emite a <puntoInicio-turnos> la solicitud/prestación completa que viene de <lista-solicitud-turno-ventanilla> para usarse en darTurno
-    solicitudPrestacionDarTurno(event) {
-        this.mostrarDarTurnoSolicitud.emit(event);
-    }
-
-    cancelar() {
-        // this.modelo.solicitud = {};
-        // this.registros = [];
-        this.showCargarSolicitud = false;
-        this.showBotonCargarSolicitud = true;
-        this.showCargarSolicitud = false;
-        // this.cancelarSolicitudVentanilla.emit(true);
-
-        this.modelo = {
-            paciente: this.paciente,
-            profesional: {},
-            organizacion: {},
-            solicitud: {
-                fecha: null,
-                paciente: {},
-                profesional: {},
-                organizacion: {},
-                turno: null
-            },
-            estados: [
-                { tipo: 'pendiente' }
-            ]
-        };
-        this.registros = {
-            solicitudPrestacion: {
-                profesionales: [],
-                motivo: '',
-                autocitado: false
-            }
-        };
-
     }
 
     redirect(pagina: string) {

@@ -1,5 +1,5 @@
 import { IAgenda } from './../../interfaces/turnos/IAgenda';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { environment } from '../../../environments/environment';
@@ -40,7 +40,6 @@ export class AgendaService {
     }
 
     patch(id: String, cambios: any): Observable<IAgenda> {
-        console.log(this.agendaUrl);
         return this.server.patch(this.agendaUrl + '/' + id, cambios);
     }
 

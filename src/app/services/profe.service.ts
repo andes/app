@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IBarrio } from './../interfaces/IBarrio';
 import { IProfe } from '../interfaces/IProfe';
 
@@ -17,7 +17,11 @@ export class ProfeService {
      * @memberof ProfeService
      */
 
-    get(opciones: any): Observable<IProfe> {
-        return this.server.get(this.url + '/profe/', { params: opciones });
+    get(opciones: any, showError = true): Observable<IProfe> {
+        return this.server.get(this.url + '/profe/', { params: opciones, showError: showError });
+    }
+
+    getPadrones(opciones: any): Observable<any[]> {
+        return this.server.get(this.url + '/profe/padrones', { params: opciones });
     }
 }
