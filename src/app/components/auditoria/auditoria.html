@@ -105,6 +105,7 @@
             <div class="col text-right">
                 <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
                     icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
+                <plex-button *ngIf="enableVincular" label="Vincular" icon="account-convert" type="warning" (click)="vincular()"></plex-button>
                 <plex-button *ngIf="enableFA" label="Validar" icon="account-convert" type="primary" (click)="validar('renaper')"></plex-button>
                 <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
                     (click)="verDuplicados()"></plex-button>

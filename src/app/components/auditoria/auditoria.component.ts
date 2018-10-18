@@ -47,6 +47,7 @@ export class AuditoriaComponent implements OnInit {
     pacienteActivo: any;
     showCandidatos = false;
     tipoListado = 'default';
+    enableVincular = false;
     private permisosRenaper = 'fa:get:renaper';
     private autorizadoRenaper = false;
     constructor(
@@ -98,7 +99,7 @@ export class AuditoriaComponent implements OnInit {
         this.pacienteActivo = this.patient = paciente;
         this.showCandidatos = false;
         this.tipoListado = 'default';
-
+        this.enableVincular = true;
         this.checkMpi = false;
         this.listaCandidatos = null;
         if (paciente && paciente.id) {
@@ -305,6 +306,8 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = true;
         this.showCandidatos = false;
         this.pacienteSelected = null;
+        this.enableValidar = false;
+        this.enableVincular = false;
         this.searchClear();
         this.onLoadData();
     }
