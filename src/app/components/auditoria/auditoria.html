@@ -57,8 +57,18 @@
             <div class="col" *ngIf="showCandidatos">
                 <plex-box>
                     <!--Tabla de resultados por SimpleQuery -->
-                    <legend>Listado de pacientes candidatos</legend>
-                    <table class="table" *ngIf="listaCandidatos && listaCandidatos.length > 0">
+                    <div class="row">
+                        <div class="col-11">
+                            <legend>Listado de pacientes candidatos</legend>
+                        </div>
+                        <div class="col-1">
+                            <plex-button *ngIf="!showBuscador" type='info' icon=" mdi-account-search" (click)='showBuscador = true'></plex-button>
+                           
+                            <plex-button *ngIf="showBuscador" type='info' icon=" mdi-link-variant" (click)='showBuscador = false'></plex-button>
+
+                        </div>
+                    </div>
+                    <table class="table" *ngIf="listaCandidatos && listaCandidatos.length > 0 && !showBuscador && !showMensaje">
                         <tbody>
                             <tr class="hover" *ngFor="let pac of listaCandidatos">
                                 <td>
@@ -87,6 +97,17 @@
                             </tr>
                         </tbody>
                     </table>
+                    <div *ngIf="showMensaje && !showBuscador" class="alert alert-danger">
+                            ¡No se encontró ningún paciente!
+                        </div>
+                    <div *ngIf='showBuscador'>
+                        <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
+                            [type]="tipoListado" (selected)="operationLink($event,pacienteSelected)"></paciente-listado>
+                        <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
+                            ¡No se encontró ningún paciente!
+                        </div>
+                    </div>
                 </plex-box>
             </div>
             <div class="col-3" *ngIf="showDetallePaciente">
@@ -105,7 +126,7 @@
             <div class="col text-right">
                 <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
                     icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
-                <plex-button *ngIf="enableVincular" label="Vincular" icon="account-convert" type="warning" (click)="vincular()"></plex-button>
+                <plex-button *ngIf="enableVincular" label="Vincular" icon="account-convert" type="warning" (click)="validarMpi(pacienteSelected);pacientes=null"></plex-button>
                 <plex-button *ngIf="enableFA" label="Validar" icon="account-convert" type="primary" (click)="validar('renaper')"></plex-button>
                 <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
                     (click)="verDuplicados()"></plex-button>

@@ -48,6 +48,8 @@ export class AuditoriaComponent implements OnInit {
     showCandidatos = false;
     tipoListado = 'default';
     enableVincular = false;
+    showBuscador = false;
+    showMensaje = false;
     private permisosRenaper = 'fa:get:renaper';
     private autorizadoRenaper = false;
     constructor(
@@ -223,8 +225,10 @@ export class AuditoriaComponent implements OnInit {
                 if (this.listaCandidatos && this.listaCandidatos.length && this.listaCandidatos.length > 0) {
                     this.showCandidatos = true;
                 } else {
-                    this.showCandidatos = false;
-                    this.plex.alert('No se han encontrado pacientes candidatos en MPI', 'Información');
+                    this.showCandidatos = true;
+                    // this.showCandidatos = false;
+                    // this.plex.alert('No se han encontrado pacientes candidatos en MPI', 'Información');
+                    this.showMensaje = true;
                 }
                 this.enableFA = true;
                 this.enableValidarMpi = false;
@@ -237,6 +241,8 @@ export class AuditoriaComponent implements OnInit {
     cancelarValidacionPadron() {
         this.showCandidatos = false;
         this.tipoListado = 'default';
+        this.showBuscador = false;
+        this.showMensaje = false;
     }
 
 
@@ -308,6 +314,8 @@ export class AuditoriaComponent implements OnInit {
         this.pacienteSelected = null;
         this.enableValidar = false;
         this.enableVincular = false;
+        this.showBuscador = false;
+        this.showMensaje = false;
         this.searchClear();
         this.onLoadData();
     }
@@ -327,6 +335,10 @@ export class AuditoriaComponent implements OnInit {
     searchClear() {
         this.pacientes = null;
     }
+
+
+
+
 
 
 }
