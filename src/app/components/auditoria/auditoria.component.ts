@@ -214,7 +214,9 @@ export class AuditoriaComponent implements OnInit {
         this.pacienteService.get(dto).subscribe(resultado => {
             this.checkMpi = true;
             if (resultado) {
-                let data: any = resultado.filter(paciente => paciente.id !== pacienteSeleccionado.id);
+                // Filtramos los pacientes que ya posean algo en el array de identificadores para eviar
+                // anidamiento de linkeos
+                let data: any = resultado.filter((paciente: any) => (paciente.id !== pacienteSeleccionado.id && (paciente.paciente.identificadores.length < 1)));
                 let datos = [];
                 data.forEach(elem => {
                     if (elem.paciente.activo !== false) {
@@ -328,7 +330,10 @@ export class AuditoriaComponent implements OnInit {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
-            this.pacientes = resultado.pacientes;
+            // Filtramos los pacientes que ya posean algo en el array de identificadores para eviar
+            // anidamiento de linkeos
+            this.pacientes = this.pacienteSelected ? resultado.pacientes.filter((pac: any) => (
+                (this.pacienteSelected.id !== pac.id) && pac.identificadores.length < 1)) : resultado.pacientes;
         }
     }
 

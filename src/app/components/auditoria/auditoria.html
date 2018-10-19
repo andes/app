@@ -63,7 +63,7 @@
                         </div>
                         <div class="col-1">
                             <plex-button *ngIf="!showBuscador" type='info' icon=" mdi-account-search" (click)='showBuscador = true'></plex-button>
-                           
+
                             <plex-button *ngIf="showBuscador" type='info' icon=" mdi-link-variant" (click)='showBuscador = false'></plex-button>
 
                         </div>
@@ -92,14 +92,14 @@
                                     <span *ngIf="pac.match">{{ pac.match * 100 | number}} %</span>
                                 </td>
                                 <td>
-                                    <plex-button *ngIf="pac" title="unificar" icon="account-multiple-plus" (click)="operationLink(pacienteSelected, pac.paciente)"></plex-button>
+                                    <plex-button *ngIf="pac" title="unificar" icon="account-multiple-plus" (click)="operationLink( pac.paciente,pacienteSelected)"></plex-button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                     <div *ngIf="showMensaje && !showBuscador" class="alert alert-danger">
-                            ¡No se encontró ningún paciente!
-                        </div>
+                        ¡No se encontró ningún paciente!
+                    </div>
                     <div *ngIf='showBuscador'>
                         <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
                         <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false"
@@ -124,14 +124,15 @@
                 <plex-button *ngIf="showCandidatos" label="Cancelar" type="danger" (click)="cancelarValidacionPadron()"></plex-button>
             </div>
             <div class="col text-right">
-                <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
-                    icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button>
-                <plex-button *ngIf="enableVincular" label="Vincular" icon="account-convert" type="warning" (click)="validarMpi(pacienteSelected);pacientes=null"></plex-button>
-                <plex-button *ngIf="enableFA" label="Validar" icon="account-convert" type="primary" (click)="validar('renaper')"></plex-button>
-                <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
-                    (click)="verDuplicados()"></plex-button>
-                <plex-button *ngIf="enableVinculados" label="Ver Vinculados" icon="account-multiple-plus" type="primary"
-                    (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
+                <!-- <plex-button *ngIf="enableValidarMpi" label="Validar en Padrón Salud" [disabled]="(!listaCandidatos || listaCandidatos.length === 0) && checkMpi"
+                    icon="account-convert" type="primary" (click)="validarMpi(pacienteSelected)"></plex-button> -->
+                <plex-button *ngIf="enableVincular && !showCandidatos" label="Vincular" icon="account-convert" type="warning"
+                    (click)="validarMpi(pacienteSelected);pacientes=null"></plex-button>
+                <!-- <plex-button *ngIf="enableFA" label="Validar" icon="account-convert" type="primary" (click)="validar('renaper')"></plex-button> -->
+                <!-- <plex-button *ngIf="enableDuplicados" label="Ver Duplicados" icon="account-switch" type="primary"
+                    (click)="verDuplicados()"></plex-button> -->
+                <plex-button *ngIf="enableVinculados || enableDuplicados" label="Ver Vinculados" icon="account-multiple-plus"
+                    type="primary" (click)="viewLinkedPatients(pacienteSelected)"></plex-button>
             </div>
         </div>
     </footer>
