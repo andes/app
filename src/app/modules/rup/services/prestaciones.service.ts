@@ -4,7 +4,7 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';
+import { Server } from '@andes/shared';  
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
@@ -44,6 +44,9 @@ export class PrestacionesService {
         situacionLaboral: '200000000',
         nivelEstudios: '3'
     };
+    public elementosRegistros = {
+        odontograma: '3561000013109'
+    };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
@@ -57,6 +60,24 @@ export class PrestacionesService {
         });
     }
 
+    /**
+     * Método get. Trae lista de objetos solicitudes.
+     *
+     * @param {*} params Opciones de búsqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<IPrestacion[]>}
+     *
+     * @memberof PrestacionesService
+     */
+    getSolicitudes(params: any, options: any = {}): Observable<IPrestacion[]> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt = { params: params, options };
+
+        return this.server.get(this.prestacionesUrl + '/solicitudes', opt);
+    }
     /**
      * Método get. Trae lista de objetos prestacion.
      *
@@ -622,10 +643,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -643,10 +664,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -670,10 +691,10 @@ export class PrestacionesService {
                 tipoPrestacion: snomedConcept,
                 // profesional logueado
                 profesional:
-                    {
-                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
-                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
-                    },
+                {
+                    id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                    apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -698,7 +719,6 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-
         let planesCrear = undefined;
 
         if (planes.length) {
@@ -722,17 +742,27 @@ export class PrestacionesService {
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
 
-                        let turneable = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
-                        if (turneable) {
+                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                        if (existeConcepto) {
                             // creamos objeto de prestacion
-                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
+                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
+                            // asignamos el tipoPrestacionOrigen a la solicitud
+                            nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
                             // asignamos la prestacion de origen
                             nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
+                            // Asignamos organizacionOrigen y profesionalOrigen de la solicitud originada
+                            nuevaPrestacion.solicitud.organizacionOrigen = prestacion.solicitud.organizacion;
+                            nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional;
+
+                            // Si se asignó una organización destino desde la prestación que origina la solicitud
                             if (plan.valor.solicitudPrestacion.organizacionDestino) {
                                 nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
                             }
-
+                            // Si se asignó un profesional destino desde la prestación que origina la solicitud
+                            if (!plan.valor.solicitudPrestacion.autocitado) {
+                                nuevaPrestacion.solicitud.profesional = {};
+                            }
                             if (plan.valor.solicitudPrestacion.profesionalesDestino) {
                                 nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
                             }

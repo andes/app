@@ -19,6 +19,8 @@ export class IPrestacion {
     solicitud: {
         // Tipo de prestación de ejecutarse
         tipoPrestacion: ISnomedConcept,
+        // Tipo de prestación de ejecutarse
+        tipoPrestacionOrigen: ISnomedConcept,
         // Fecha de solicitud
         // Nota: Este dato podría obtener del array de estados, pero está aquí para facilidar de consulta
         fecha: Date,

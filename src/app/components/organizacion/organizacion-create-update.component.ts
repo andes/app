@@ -1,7 +1,7 @@
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import * as enumerados from './../../utils/enumerados';
 // Services

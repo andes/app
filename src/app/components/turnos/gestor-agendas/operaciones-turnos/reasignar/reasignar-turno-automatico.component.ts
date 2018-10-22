@@ -3,7 +3,7 @@ import { IBloque } from './../../../../../interfaces/turnos/IBloque';
 import { Component, Input, EventEmitter, Output, OnInit } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { CalendarioComponent } from './../../../dar-turnos/calendario.component';
 import { IAgenda } from './../../../../../interfaces/turnos/IAgenda';
 import { ITurno } from './../../../../../interfaces/turnos/ITurno';

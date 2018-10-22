@@ -1,7 +1,7 @@
 
 import {throwError as observableThrowError} from 'rxjs';
 
-import {catchError, map} from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Rx';
 
 

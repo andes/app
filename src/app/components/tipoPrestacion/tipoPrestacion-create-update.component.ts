@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
-// import { Observable } from 'rxjs/Rx';
+// import { Observable } from 'rxjs/Observable';
 import { ITipoPrestacion } from './../../interfaces/ITipoPrestacion';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
 
