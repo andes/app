@@ -1,3 +1,4 @@
+import { estados } from './../../../../utils/enumerados';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
@@ -292,7 +293,7 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
-        console.log(dtoAccion);
+
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -302,6 +303,8 @@ export class MapaDeCamasComponent implements OnInit {
                     this.showIngreso = false;
                     this.pacienteSelected = null;
                     this.prestacionDelPaciente(dtoAccion.cama);
+                    this.pacienteSelected = null;
+                    this.pacientes = null;
                 }
                 break;
             case 'movimientoCama':
@@ -316,7 +319,6 @@ export class MapaDeCamasComponent implements OnInit {
                 }
                 break;
             case 'egresarPaciente':
-                // this.camaSeleccionada = dtoAccion.cama;
                 this.camaSeleccionada = dtoAccion.cama;
                 // Busca una prestacion (internacion) asociada a la cama
                 this.prestacionDelPaciente(dtoAccion.cama);
@@ -341,12 +343,13 @@ export class MapaDeCamasComponent implements OnInit {
             case 'mostrarResumen':
 
                 this.camaSeleccionada = dtoAccion.cama;
-                this.showEgreso = false;
+                this.showEgreso = true;
                 this.accion = null;
-                this.showIngreso = false;
+                this.showIngreso = true;
                 this.buscandoPaciente = false;
+                this.pacienteSelected = true;
                 this.prestacionDelPaciente(dtoAccion.cama);
-
+                debugger;
                 break;
 
         }
@@ -363,6 +366,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.buscandoPaciente = true;
         this.pacienteSelected = null;
         this.pacientes = null;
+
         // this.router.navigate(['rup/internacion/crear']);
     }
 
@@ -491,6 +495,8 @@ export class MapaDeCamasComponent implements OnInit {
         this.showIngreso = true;
         this.editarIngreso = false;
         this.prestacionPorInternacion = null;
+
+
     }
 
     searchStart() {
@@ -508,8 +514,13 @@ export class MapaDeCamasComponent implements OnInit {
     onCamaSelected(event) {
         this.camaSelected = event.cama;
         this.accion = event.accion;
+        //this.pacienteSelected = true;
         this.camaSeleccionada = this.camaSelected;
-        // this.prestacionDelPaciente(this.camaSelected);
+        this.prestacionDelPaciente(this.camaSelected);
+        this.pacientes = null;
+        this.showEgreso = false;
+        this.showIngreso = false;
+        debugger;
         // if (this.camaSeleccionada === this.camaSelected) {
         //     this.camaSeleccionada = null;
         //     this.showMenu = true;
@@ -534,6 +545,9 @@ export class MapaDeCamasComponent implements OnInit {
                 this.prestacionPorInternacion = prestacion;
                 this.showLoaderSidebar = false;
             });
+        }
+        else {
+            this.prestacionPorInternacion = null;
         }
     }
 

@@ -269,7 +269,10 @@ export class IniciarInternacionComponent implements OnInit {
      * Emite un false para ocultar el componente
      */
     cancelar() {
+
         this.data.emit(false);
+
+        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
     }
 
     /**
@@ -422,6 +425,7 @@ export class IniciarInternacionComponent implements OnInit {
     // permite elegir otro paciente para internar
     buscarOtroPaciente() {
         this.buscandoPaciente = true;
+
         this.otroPaciente.emit(false);
     }
 
