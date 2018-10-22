@@ -4,7 +4,7 @@ import { TipoPrestacionService } from './../../../services/tipoPrestacion.servic
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
-import { Server } from '@andes/shared';  
+import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';

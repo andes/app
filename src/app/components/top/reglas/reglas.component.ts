@@ -97,7 +97,7 @@ export class ReglasComponent {
       });
       this.activarRegla(longitud);
       this.organizacion = {};
-    };
+    }
   }
 
   deleteOrganizacion(indice) {
