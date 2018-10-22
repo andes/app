@@ -73,6 +73,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     ngOnInit() {
         // this.iniciaBotonera();
         // Buscamos si la prestacion ya tiene una informe del alta guardado.
+
         let existeRegistro = this.prestacion.ejecucion.registros.find(r => r.concepto.conceptId === this.registro.concepto.conceptId);
         this.registro.valor = existeRegistro ? existeRegistro.valor : null;
         if (!this.registro.valor) {

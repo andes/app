@@ -244,11 +244,12 @@
                         <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
                             <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
-                                (refreshCamas)="updateCama($event)"></internacion-resumen>
+                                (refreshCamas)="updateCama($event)" (accionCama)="actualizarMapaDeCamas($event)"></internacion-resumen>
                         </plex-tab>
 
                         <!-- Historial de cama -->
-                        <plex-tab class="andes-tab" label="Historial de la cama">
+                        <plex-tab class="
+                                andes-tab" label="Historial de la cama">
                             <div class="row">
                                 <div class="col-md">
                                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde"

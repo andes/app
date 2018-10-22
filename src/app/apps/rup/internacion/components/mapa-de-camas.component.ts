@@ -511,14 +511,16 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
+        this.reseteaBusqueda();
+        this.refresh();
         this.camaSelected = event.cama;
         this.accion = event.accion;
-        //this.pacienteSelected = true;
         this.camaSeleccionada = this.camaSelected;
         this.prestacionDelPaciente(this.camaSelected);
         this.pacientes = null;
         this.showEgreso = false;
         this.showIngreso = false;
+
         // if (this.camaSeleccionada === this.camaSelected) {
         //     this.camaSeleccionada = null;
         //     this.showMenu = true;
@@ -531,7 +533,7 @@ export class MapaDeCamasComponent implements OnInit {
         //     this.camaSeleccionada = this.camaSelected;
         //     this.prestacionPorInternacion = null;
         // }
-        // this.reseteaBusqueda();
+
     }
 
 
@@ -548,7 +550,6 @@ export class MapaDeCamasComponent implements OnInit {
         else {
             this.prestacionPorInternacion = null;
         }
-        console.log(this.prestacionPorInternacion)
     }
 
     editar(event) {

@@ -51,7 +51,7 @@
                     <ng-container *ngIf="(btnIniciarEditar === 'Iniciar') && !editarEgreso">
                         <h4>No se ha registrado ningún egreso</h4>
                     </ng-container>
-                    <plex-button type="danger" class="btn btn-block btn-danger btn-sm" label="{{btnIniciarEditar}}"
+                    <plex-button *ngIf="!editarEgreso" type="danger" class="btn btn-block btn-danger btn-sm" label="{{btnIniciarEditar}}"
                         (click)="editar('egreso')">
                     </plex-button>
                 </div>
