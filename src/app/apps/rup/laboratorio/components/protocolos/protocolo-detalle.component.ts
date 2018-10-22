@@ -1,3 +1,5 @@
+import { PracticaService } from './../../services/practica.service';
+import { ProtocoloService } from './../../services/protocolo.service';
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -5,7 +7,6 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
-import { ProtocoloService } from '../../../../../services/laboratorio/protocolo.service';
 import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import * as enumerados from './../../../../../utils/enumerados';
@@ -13,7 +14,6 @@ import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.in
 import { IPracticaMatch } from '../../interfaces/IPracticaMatch.inteface';
 import { IPractica } from '../../../../../interfaces/laboratorio/IPractica';
 import { Constantes } from '../../controllers/constants';
-import { PracticaService } from '../../../../../services/laboratorio/practica.service';
 
 @Component({
     selector: 'protocolo-detalle',

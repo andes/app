@@ -1,6 +1,5 @@
 import { IPracticaMatch } from './../../../../apps/rup/laboratorio/interfaces/IPracticaMatch.inteface';
 import { PracticaBuscarResultado } from './../../../../apps/rup/laboratorio/interfaces/PracticaBuscarResultado.inteface';
-import { PracticaService } from './../../../../services/laboratorio/practica.service';
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as enumerados from './../../../../utils/enumerados';
@@ -30,34 +29,25 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
             // this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.registro.concepto.conceptId);
 
             this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.tiposPrestacion.find(tp => tp.conceptId === this.prestacion.solicitud.tipoPrestacion.conceptId);
-
         }
 
     }
+
     busquedaInicial() {
         this.practicas = null;
     }
+
     searchClear() {
         this.practicas = null;
     }
 
-
-
-
-
     seleccionarPractica(practica: IPractica) {
         let existe = this.practicasActivas.findIndex(x => x.id === practica.id);
-
         if (existe === -1) {
-
             this.practicasActivas.push(practica);
-
         }
-
-        console.log(this.practicasActivas);
-
-
     }
+
     loadPrioridad(event) {
         event.callback(enumerados.getPrioridadesLab());
         return enumerados.getPrioridadesLab();

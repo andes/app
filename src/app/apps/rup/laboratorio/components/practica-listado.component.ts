@@ -52,8 +52,6 @@ export class PracticaListadoComponent {
     }
 
     public seleccionar(practica: IPractica) {
-
-
         if (this.seleccionada !== practica) {
             this.seleccionada = practica;
             this.selected.emit(this.seleccionada);

@@ -1,7 +1,7 @@
-import { IPracticaMatch } from './../../apps/rup/laboratorio/interfaces/IPracticaMatch.inteface';
-import { IPractica } from './../../interfaces/laboratorio/IPractica';
+import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
+import { PracticaSearch } from './../interfaces/practicaSearch.interface';
+import { IPracticaMatch } from './../interfaces/IPracticaMatch.inteface';
 import { Observable } from 'rxjs/Rx';
-import { PracticaSearch } from './practicaSearch.interface';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 

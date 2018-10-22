@@ -1,4 +1,4 @@
-import { PracticaService } from './../../../../services/laboratorio/practica.service';
+import { PracticaService } from './../services/practica.service';
 import { Component, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { LogService } from '../../../../services/log.service';
 import { Plex } from '@andes/plex';

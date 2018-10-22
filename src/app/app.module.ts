@@ -1,3 +1,5 @@
+import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
+import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
 import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
 import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
 import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
@@ -66,8 +68,6 @@ import { BarrioService } from './services/barrio.service';
 import { LocalidadService } from './services/localidad.service';
 import { PaisService } from './services/pais.service';
 import { PacienteService } from './services/paciente.service';
-import { PracticaService } from './services/laboratorio/practica.service';
-import { ProtocoloService } from './services/laboratorio/protocolo.service';
 import { TipoEstablecimientoService } from './services/tipoEstablecimiento.service';
 import { ProvinciaService } from './services/provincia.service';
 import { FinanciadorService } from './services/financiador.service';

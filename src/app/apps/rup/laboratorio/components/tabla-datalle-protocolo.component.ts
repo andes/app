@@ -1,7 +1,7 @@
+import { ProtocoloService } from './../services/protocolo.service';
+import { PracticaService } from './../services/practica.service';
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
-import { PracticaService } from '../../../../services/laboratorio/practica.service';
 import { IPractica } from '../../../../interfaces/laboratorio/IPractica';
-import { ProtocoloService } from '../../../../services/laboratorio/protocolo.service';
 import { Plex } from '@andes/plex';
 import { Constantes } from '../controllers/constants';
 
