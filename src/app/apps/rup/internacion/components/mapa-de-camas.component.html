@@ -249,21 +249,24 @@
 
                         <!-- Historial de cama -->
                         <plex-tab class="andes-tab" label="Historial de la cama">
-                            <div class="row" style="margin-bottom: 0.25rem">
-                                <div class="col-5">
+                            <div class="row">
+                                <div class="col-md">
                                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde"
                                         [required]="true" name="fechaDesde" label="Fecha Desde">
                                     </plex-datetime>
                                 </div>
-                                <div class="col-5">
+                                <div class="col-md">
                                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta"
                                         [required]="true" name="fechaHasta" label="Fecha Hasta">
                                     </plex-datetime>
                                 </div>
-                                <div class="col-4" style="margin-top: 10px;margin-bottom: 10px;">
+                            </div>
+                            <div class="row">
+                                <div class="col-md">
                                     <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
                                     </plex-button>
                                 </div>
+
                             </div>
 
                             <table *ngIf="historial && historial.length" class="table table-striped">

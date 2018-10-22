@@ -146,7 +146,6 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
      * Inicia la visualizacion de los botones por defecto en true
      */
     iniciaBotonera() {
-        // debugger;
         if (this.botonera) {
             this.botonera.cerrar = (this.botonera && this.botonera.cerrar) ? this.botonera.cerrar : true;
             this.botonera.guardar = (this.botonera && this.botonera.guardar) ? this.botonera.guardar : true;
