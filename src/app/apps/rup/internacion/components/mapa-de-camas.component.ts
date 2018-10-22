@@ -349,7 +349,6 @@ export class MapaDeCamasComponent implements OnInit {
                 this.buscandoPaciente = false;
                 this.pacienteSelected = true;
                 this.prestacionDelPaciente(dtoAccion.cama);
-                debugger;
                 break;
 
         }
@@ -520,7 +519,6 @@ export class MapaDeCamasComponent implements OnInit {
         this.pacientes = null;
         this.showEgreso = false;
         this.showIngreso = false;
-        debugger;
         // if (this.camaSeleccionada === this.camaSelected) {
         //     this.camaSeleccionada = null;
         //     this.showMenu = true;
@@ -544,11 +542,13 @@ export class MapaDeCamasComponent implements OnInit {
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
                 this.prestacionPorInternacion = prestacion;
                 this.showLoaderSidebar = false;
+
             });
         }
         else {
             this.prestacionPorInternacion = null;
         }
+        console.log(this.prestacionPorInternacion)
     }
 
     editar(event) {

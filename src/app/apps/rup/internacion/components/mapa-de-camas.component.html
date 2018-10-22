@@ -164,7 +164,7 @@
                     <cama-preparar [cama]="camaSeleccionada" (accionCama)="actualizarMapaDeCamas($event)"></cama-preparar>
                 </ng-container>
 
-                <ng-container *ngIf="accion=='mostrarResumen' || accion=='egresarPaciente'">
+                <ng-container *ngIf="accion==='mostrarResumen' || showEgreso">
                     <!--  camaSeleccionada && !accion && !showIngreso' -->
                     <plex-tabs [activeIndex]="panelIndex">
 
