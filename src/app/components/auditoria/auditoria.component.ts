@@ -318,6 +318,7 @@ export class AuditoriaComponent implements OnInit {
         this.enableVincular = false;
         this.showBuscador = false;
         this.showMensaje = false;
+        this.enableVinculados = this.enableDuplicados = false;
         this.searchClear();
         this.onLoadData();
     }
