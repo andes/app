@@ -283,7 +283,6 @@ import { ColonoscopiaComponent } from './modules/rup/components/elementos/colono
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
-import { LapsoDeTiempoComponent } from './modules/rup/components/elementos/lapsoDeTiempo.component';
 
 
 // TODO: Eliminar todo esto de las llaves: deprecated
@@ -412,7 +411,7 @@ export let RUPRegistry = {
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'AnestesiaComponent': AnestesiaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
-    'LapsoDeTiempoComponent': LapsoDeTiempoComponent,
+
 };
 
 let RUPComponentsArray = [
@@ -473,7 +472,6 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     AnestesiaComponent,
     ValorNumericoComponent,
-    LapsoDeTiempoComponent,
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */

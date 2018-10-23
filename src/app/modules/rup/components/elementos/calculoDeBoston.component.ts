@@ -18,9 +18,9 @@ export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {
-                ci: 0,
-                ct: 0,
-                cd: 0
+                ci: null,
+                ct: null,
+                cd: null
             };
         }
     }

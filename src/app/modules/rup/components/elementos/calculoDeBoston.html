@@ -1,7 +1,7 @@
 <form #form="ngForm">
     <ng-container *ngIf="!soloValores">
         <div class="row">
-            <div class="col">
+            <div class="col-5">
                 <label class="text-capitalize">{{ registro.concepto.term }}</label>
                 <div class="form-group row">
                     <label class="">CI</label>
@@ -19,8 +19,8 @@
                     </plex-radio>
                 </div>
             </div>
-        </div>
-        <div class="row">
+            <!-- </div>
+        <div class="row"> -->
             <div class="col-3">
                 <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
                 </plex-text>
