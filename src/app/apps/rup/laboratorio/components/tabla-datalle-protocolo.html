@@ -35,7 +35,29 @@
                     </td>
                 </ng-container>
             </tr>
+            <tr class="hover">
+                <td>
+                    <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" 
+                    (change)="getPracticaPorCodigo($event)" placeholder="Escriba el código" ></plex-text>
+                </td>
+                <td>
+                    <plex-select [(ngModel)]="practicaSeleccionada" name="nombrePractica" (getData)="loadPracticasPorNombre($event)" (change)="seleccionarPractica($event.value)"
+                        placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre" >
+                    </plex-select>
+                </td>
+                <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
+                    <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
+                </ng-container>
+                <td></td>
+                <td></td>
+                <ng-container *ngIf='modo.id === "control" || modo.id === "recepcion"'>
+                    <td>
+                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                    </td>
+                </ng-container>
+            </tr>
         </ng-container>
+
         <ng-container *ngIf="modo.id === 'carga' || modo.id === 'validacion'">
             <tr class="hover" *ngFor="let reg of practicasCarga">
                 <td>

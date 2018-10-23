@@ -40,6 +40,7 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
      */
     public buscar($event) {
         /* Error en Plex, ejecuta un change cuando el input pierde el foco porque detecta que cambia el valor */
+        console.log($event)
         if ($event.type) {
             return;
         }
@@ -49,6 +50,7 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
         }
 
         let textoLibre = this.textoLibre && this.textoLibre.trim();
+        console.log('textoLibre', textoLibre)
         // Inicia búsqueda
         if (textoLibre) {
             this.tiempoEspera = window.setTimeout(() => {
@@ -72,5 +74,40 @@ export class PracticaBuscarComponent implements OnInit, OnDestroy {
             this.selected.emit({});
         }
     }
+
+    loadPracticasPorCodigo($event) {
+        console.log($event)
+    }
+
+    loadPracticasPorNombre($event) {
+        console.log($event)
+        if ($event.type) {
+            return;
+        }
+        // Cancela la búsqueda anterior
+        if (this.tiempoEspera) {
+            window.clearTimeout(this.tiempoEspera);
+        }
+
+        let textoLibre = this.textoLibre && this.textoLibre.trim();
+        console.log('textoLibre', textoLibre)
+        // Inicia búsqueda
+        if (textoLibre) {
+            this.tiempoEspera = window.setTimeout(() => {
+                this.busquedaInicial.emit();
+                this.tiempoEspera = null;
+                this.PracticaService.getMatch({
+                    cadenaInput: textoLibre
+                }).subscribe(
+                    resultado => this.busquedaFinal.emit({ practicas: resultado, err: null }),
+                    (err) => this.busquedaFinal.emit({ practicas: [], err: err })
+                );
+            }, 200);
+        } else {
+            this.searchClear.emit();
+        }
+    }
+
+
 
 }

@@ -1,5 +1,5 @@
 import { IPracticaMatch } from '../interfaces/IPracticaMatch.inteface';
-import { IPractica } from '../../../../interfaces/laboratorio/IPractica';
+import { IPractica } from './../interfaces/IPractica';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
 

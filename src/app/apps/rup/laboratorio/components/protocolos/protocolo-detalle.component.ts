@@ -1,3 +1,4 @@
+import { IPractica } from './../../interfaces/IPractica';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
@@ -7,12 +8,11 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
-import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
+// import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import * as enumerados from './../../../../../utils/enumerados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { IPracticaMatch } from '../../interfaces/IPracticaMatch.inteface';
-import { IPractica } from '../../../../../interfaces/laboratorio/IPractica';
 import { Constantes } from '../../controllers/constants';
 
 @Component({
@@ -27,7 +27,7 @@ export class ProtocoloDetalleComponent
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
 
-    practicas;
+    // practicas;
 
     permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
     fecha: any;
@@ -38,6 +38,8 @@ export class ProtocoloDetalleComponent
     organizacion: any;
     modelo: any;
     flagMarcarTodas: Boolean = false;
+    nombrePractica;
+    codigoPractica;
     // public practicas: IPracticaMatch[] | IPractica[];
     public mostrarMasOpciones = false;
     public protocoloSelected: any = {};
@@ -53,8 +55,8 @@ export class ProtocoloDetalleComponent
     showObservaciones = false;
     edicionDatosCabecera = false;
     mostrarCuerpoProtocolo = true;
-    solicitudProtocolo : any;
-    
+    solicitudProtocolo: any;
+
     @Input() seleccionPaciente: any;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
@@ -71,7 +73,7 @@ export class ProtocoloDetalleComponent
 
             if (this.modo.id === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
                 this.editarDatosCabecera();
-                this.seleccionPaciente = true;             
+                this.seleccionPaciente = true;
             }
         }
     }
@@ -163,127 +165,90 @@ export class ProtocoloDetalleComponent
         });
     }
 
-    busquedaInicial() {
-        this.practicas = null;
-    }
+    // busquedaInicial() {
+    //     this.practicas = null;
+    // }
 
-    searchClear() {
-        this.practicas = null;
-    }
+    // searchClear() {
+    //     this.practicas = null;
+    // }
 
-    busquedaFinal(resultado: PracticaBuscarResultado) {
-        if (resultado.err) {
-            this.plex.info('danger', resultado.err);
-        } else {
-            this.practicas = resultado.practicas;
-        }
-    }
-    /**
-     * Incluye una nueva práctica seleccionada tanto a la solicitud como a la ejecución
-     *
-     * @param {IPractica} practica
-     * @memberof ProtocoloDetalleComponent
-     */
-    async seleccionarPractica(practica: IPractica) {
-        let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
+    // busquedaFinal(resultado: PracticaBuscarResultado) {
+    //     if (resultado.err) {
+    //         this.plex.info('danger', resultado.err);
+    //     } else {
+    //         this.practicas = resultado.practicas;
+    //     }
+    // }
 
-        if (existe === -1) {
-            this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
-            let practicaEjecucion : any = {
-                _id: practica.id,
-                    destacado: false,
-                esSolicitud: false,
-                esDiagnosticoPrincipal: false,
-                relacionadoCon: [], 
-                nombre: practica.nombre,
-                concepto: practica.concepto,
-                valor: {
-                    resultado: {
-                        valor: null,
-                        sinMuestra: false,
-                        validado: false
-                    }
-                }
-                
-                // registros: []
-            }
-            
-            practicaEjecucion.registros = await this.getPracticasRequeridas(practica);
-            console.log(practicaEjecucion.registros);
+    // /**
+    //  * Carga practicas requeridas en practica de ejecucion
+    //  *
+    //  * @memberof ProtocoloDetalleComponent
+    //  */
+    // async getPracticasRequeridas(practica) {
+    //     console.log('getPracticasRequeridas IN')
 
-            this.practicasEjecucion.push(practicaEjecucion);
-        } else {
-            this.plex.alert('', 'Práctica ya ingresada');
-        }
-    }
-    /**
-     * Carga practicas requeridas en practica de ejecucion
-     *
-     * @memberof ProtocoloDetalleComponent
-     */
-    async getPracticasRequeridas(practica) {
-        console.log('getPracticasRequeridas IN')
-                
-        return new Promise( async (resolve) => {
-            if (practica.categoria === 'compuesta') {
-                console.log('getPracticasRequeridas compuesta')
-                if(practica.requeridos) {
-                    let ids = [];
-                    practica.requeridos.map((id) => { ids.push(id._id) } );
-                    await this.servicioPractica.findByIds( { ids: ids } ).subscribe(
-                        (resultados) => {
-                            
-                            resultados.forEach( async (resultado : any) => {
-                                resultado.valor = {
-                                    resultado: {
-                                            valor: null,
-                                            sinMuestra: false,
-                                            validado: false
-                                    }    
-                                };
+    //     return new Promise( async (resolve) => {
+    //         if (practica.categoria === 'compuesta') {
+    //             console.log('getPracticasRequeridas compuesta')
+    //             if(practica.requeridos) {
+    //                 let ids = [];
+    //                 practica.requeridos.map((id) => { ids.push(id._id) } );
+    //                 await this.servicioPractica.findByIds( { ids: ids } ).subscribe(
+    //                     (resultados) => {
 
-                                resultado.registros = await this.getPracticasRequeridas(resultado);
-                                // resultado.registros.map( (registro) => {
-                                //     registro.valor = {
-                                //         valor: null,
-                                //         sinMuestra: false,
-                                //         validado: false
-                                //     };
-                                // });
-                                // console.log('resultados',resultado.registros)    
-                                
-                                
-                                   
-                                // });
-                                
-                                // requeridas.push({
-                                //     valor: {
-                                //         valor: null,
-                                //         sinMuestra: false,
-                                //         validado: false
-                                //     },
-                                //     concepto: resultado.concepto,
-                                //     nombre: resultado.nombre,
-                                //     requeridos: resultado.requeridos
-                                // });
-                                    
-                                
-                            });
+    //                         resultados.forEach( async (resultado : any) => {
+    //                             resultado.valor = {
+    //                                 resultado: {
+    //                                         valor: null,
+    //                                         sinMuestra: false,
+    //                                         validado: false
+    //                                 }
+    //                             };
 
-                            
-                            console.log('requeridas',resultados)
-                                
-                            resolve(resultados);
-                                
-                            // console.log('requeridas',requeridas)
-                            
-                        });
-                } else {
-                    resolve([]);
-                }
-            }
-        });
-    }
+    //                             resultado.registros = await this.getPracticasRequeridas(resultado);
+    //                             // resultado.registros.map( (registro) => {
+    //                             //     registro.valor = {
+    //                             //         valor: null,
+    //                             //         sinMuestra: false,
+    //                             //         validado: false
+    //                             //     };
+    //                             // });
+    //                             // console.log('resultados',resultado.registros)
+
+
+
+    //                             // });
+
+    //                             // requeridas.push({
+    //                             //     valor: {
+    //                             //         valor: null,
+    //                             //         sinMuestra: false,
+    //                             //         validado: false
+    //                             //     },
+    //                             //     concepto: resultado.concepto,
+    //                             //     nombre: resultado.nombre,
+    //                             //     requeridos: resultado.requeridos
+    //                             // });
+
+
+    //                         });
+
+
+    //                         console.log('requeridas',resultados)
+
+    //                         resolve(resultados);
+
+    //                         // console.log('requeridas',requeridas)
+
+    //                     });
+    //             } else {
+    //                 resolve([]);
+    //             }
+    //         }
+    //     });
+    // }
 
 
 
@@ -454,7 +419,7 @@ export class ProtocoloDetalleComponent
      */
     guardarProtocolo() {
         if (this.modelo.id) {
-            console.log('this.modelo.ejecucion.registros',this.modelo.ejecucion.registros)
+            console.log('this.modelo.ejecucion.registros', this.modelo.ejecucion.registros)
             let registros = this.modelo.ejecucion.registros;
             let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
 
@@ -473,14 +438,14 @@ export class ProtocoloDetalleComponent
                 params.op = 'registros';
                 params.solicitud = solicitud;
             }
-            console.log('params',params)
-            
+            console.log('params', params)
+
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
         } else {
-            this.modelo.estados = [{tipo:'ejecucion'}];
+            this.modelo.estados = [{tipo: 'ejecucion'}];
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
@@ -510,7 +475,6 @@ export class ProtocoloDetalleComponent
         }
     }
 
- 
     // getConfiguracionResultado(idPractica) {
     //     return new Promise( async (resolve) => {
     //         console.log(idPractica)

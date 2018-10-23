@@ -44,8 +44,8 @@ export class PuntoInicioLaboratorioComponent
     // public accion;
     public turnosRecepcion;
     public modo = {
-        id: 'carga',
-        nombre: 'Carga'
+        id: 'control',
+        nombre: 'Control'
     };
     public formaCarga = {
         id: 'Lista de protocolos',
@@ -87,7 +87,7 @@ export class PuntoInicioLaboratorioComponent
     ngOnInit() {
         this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
         this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
-        this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1,4);
+        this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
         this.origenEnum = enumerados.getOrigenLab();
         this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
         this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
@@ -156,7 +156,7 @@ export class PuntoInicioLaboratorioComponent
 
                 this.getProtocolos(this.busqueda);
             } else {
-                this.busqueda.estado = ['ejecucion','validada'];
+                this.busqueda.estado = ['ejecucion', 'validada'];
                 this.getProtocolos(this.busqueda);
             }
         }

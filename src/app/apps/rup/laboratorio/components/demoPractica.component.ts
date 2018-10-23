@@ -2,7 +2,7 @@ import { Plex } from '@andes/plex';
 import { Component, HostBinding } from '@angular/core';
 import { IPracticaMatch } from '../interfaces/IPracticaMatch.inteface';
 import { PracticaBuscarResultado } from '../interfaces/PracticaBuscarResultado.inteface';
-import { IPractica } from '../../../../interfaces/laboratorio/IPractica';
+import { IPractica } from './../interfaces/IPractica';
 
 @Component({
     templateUrl: 'demoPractica.html',

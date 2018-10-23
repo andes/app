@@ -138,7 +138,6 @@
                                 <plex-select [(ngModel)]="modelo.solicitud.ambitoOrigen" name="ambitoOrigen" (getData)="loadOrigen($event)" label="Origen"
                                     placeholder="Seleccione el origen" [required]="true">
                                 </plex-select>
-
                             </div>
                             <div class="col-2">
                                 <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.servicio" label="Servicio" placeholder="Seleccione el servicio"
@@ -170,7 +169,7 @@
             <plex-tabs>
                 <plex-tab label="Analisis">
 
-                    <div class="row" *ngIf="(modo.id === 'recepcion') || modo.id === 'control'">
+                    <!-- <div class="row" *ngIf="(modo.id === 'recepcion') || modo.id === 'control'">
                         <div class="col-12">
                             <label>Practicas</label>
                             <practica-buscar (busquedaInicial)="busquedaInicial()" (busquedaFinal)="busquedaFinal($event)" (searchClear)="searchClear()">
@@ -180,15 +179,16 @@
                         <div *ngIf="practicas && !practicas.length" class="alert alert-default">
                             ¡No se encontró ningúna practica!
                         </div>
-                    </div>
+                    </div> -->
                     <!-- FIN BUSCADOR DE PRACTICAS -->
 
                     <!-- TABLA VISUALIZACION DE PRACTICAS -->
+                    
                     <hr>
                     <div class="row">
                         <div class="col">
-                            <tabla-datalle-protocolo *ngIf="modelo.ejecucion?.registros.length> 0" [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
-                                [practicasEjecucion]="practicasEjecucion">
+                            <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
+                                [practicasEjecucion]="practicasEjecucion" >
                             </tabla-datalle-protocolo>
                         </div>
                     </div>

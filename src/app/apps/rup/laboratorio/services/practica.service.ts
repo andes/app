@@ -1,4 +1,4 @@
-import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
+import { IPractica } from './../interfaces/IPractica';
 import { PracticaSearch } from './../interfaces/practicaSearch.interface';
 import { IPracticaMatch } from './../interfaces/IPracticaMatch.inteface';
 import { Observable } from 'rxjs/Rx';
@@ -8,6 +8,7 @@ import { Server } from '@andes/shared';
 @Injectable()
 export class PracticaService {
     private practicaUrl = '/modules/rup/laboratorio/practicas'; // URL API
+    private practicaCodigoUrl = '/modules/rup/laboratorio/practicas/codigo/';
     constructor(private server: Server) { }
 
 
@@ -19,6 +20,12 @@ export class PracticaService {
      */
     getMatch(params: PracticaSearch): Observable<IPracticaMatch[]> {
         return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
+            return value;
+        });
+    }
+
+    getMatchCodigo(codigo: PracticaSearch): Observable<IPracticaMatch[]> {
+        return this.server.get(this.practicaCodigoUrl + codigo , null).map((value) => {
             return value;
         });
     }
