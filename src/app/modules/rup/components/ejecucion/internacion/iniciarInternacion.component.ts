@@ -75,6 +75,8 @@ export class IniciarInternacionComponent implements OnInit {
 
     // Fecha seleccionada
     public fecha: Date = new Date();
+    // Fecha seleccionada
+    public hora: Date = new Date();
     // Tipos de prestacion que el usuario tiene permiso
     public tiposPrestacion: any = [];
     // Tipos de prestacion seleccionada para la internación
@@ -275,24 +277,6 @@ export class IniciarInternacionComponent implements OnInit {
         this.data.emit(false);
     }
 
-
-    combinarFechas(fecha1, fecha2) {
-        if (fecha1 && fecha2) {
-            let horas: number;
-            let minutes: number;
-            let auxiliar: Date;
-
-            auxiliar = new Date(fecha1);
-            horas = fecha2.getHours();
-            minutes = fecha2.getMinutes();
-            // Date.setHours(hour, min, sec, millisec)
-            auxiliar.setHours(horas, minutes, 0, 0);
-            return auxiliar;
-        } else {
-            return null;
-        }
-    }
-
     /**
      * Guarda la prestación
      */
@@ -306,6 +290,7 @@ export class IniciarInternacionComponent implements OnInit {
                 this.plex.info('warning', 'Debe seleccionar una organización');
                 return;
             }
+            this.informeIngreso.fechaIngreso = this.servicioInternacion.combinarFechas(this.fecha, this.hora);
             // mapeamos los datos en los combos
             this.informeIngreso.situacionLaboral = ((typeof this.informeIngreso.situacionLaboral === 'string')) ? this.informeIngreso.situacionLaboral : (Object(this.informeIngreso.situacionLaboral).nombre);
             this.informeIngreso.nivelInstruccion = ((typeof this.informeIngreso.nivelInstruccion === 'string')) ? this.informeIngreso.nivelInstruccion : (Object(this.informeIngreso.nivelInstruccion).nombre);
@@ -325,7 +310,7 @@ export class IniciarInternacionComponent implements OnInit {
                     if (this.cama && !this.cama.ultimoEstado.idInternacion) {
                         // vamos a actualizar el estado de la cama
                         let dto = {
-                            fecha: new Date(),
+                            fecha: this.informeIngreso.fechaIngreso,
                             estado: 'ocupada',
                             unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,
@@ -374,7 +359,7 @@ export class IniciarInternacionComponent implements OnInit {
                     if (this.cama) {
                         // vamos a actualizar el estado de la cama
                         let dto = {
-                            fecha: new Date(),
+                            fecha: this.informeIngreso.fechaIngreso,
                             estado: 'ocupada',
                             unidadOrganizativa: this.cama.ultimoEstado.unidadOrganizativa ? this.cama.ultimoEstado.unidadOrganizativa : null,
                             especialidades: this.cama.ultimoEstado.especialidades ? this.cama.ultimoEstado.especialidades : null,

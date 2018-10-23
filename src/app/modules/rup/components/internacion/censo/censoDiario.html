@@ -1,24 +1,30 @@
 <section *ngIf="organizacion">
     <plex-box>
-        <div class="row">
-            <div class="col-4">
-                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
-                </plex-datetime>
+        <header>
+            <div class="page-title">Censo diario</div>
+        </header>
+        <form #formEgreso="ngForm">
+            <div class="row">
+                <div class="col-4">
+                    <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha">
+                    </plex-datetime>
+                </div>
+                <div class="col-4">
+                    <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas" idField="term"
+                        labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
+                    </plex-select>
+                </div>
+                <div class="col-2">
+                    <br>
+                    <plex-button label="Generar censo" type="primary" validateForm="true" (click)="generarCenso($event.formValid)"></plex-button>
+                </div>
+                <div class="col-2">
+                    <br>
+                    <plex-button type="warning" icon="download mdi-14px" validateForm="true" class="ml-1" title="Descargar censo diario" titlePosition="top"
+                        (click)="descargarCenso($event.formValid)"></plex-button>
+                </div>
             </div>
-            <div class="col-4">
-                <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas" idField="term"
-                    labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
-                </plex-select>
-            </div>
-            <div class="col-2">
-                <br>
-                <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
-            </div>
-            <div class="col-2">
-                <br>
-                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo diario" titlePosition="top" (click)="descargarCenso()"></plex-button>
-            </div>
-        </div>
+        </form>
         <div class="row">&nbsp;</div>
         <div class="row">
             <div class="col" id="tabla">
@@ -26,7 +32,6 @@
                     <thead>
                         <tr>
                             <th rowspan="2">Apellido y nombre</th>
-                            <th rowspan="2">Sector</th>
                             <th rowspan="2">Cama</th>
                             <th rowspan="2">Ingreso</th>
                             <th rowspan="2">Pase de</th>
@@ -41,14 +46,9 @@
                                 {{censo.dataCenso.ultimoEstado.paciente | paciente }} | {{censo.dataCenso.ultimoEstado.paciente.documento}}
                             </td>
                             <td>
-                                <span *ngIf="censo.dataCenso?.cama.sector">
-                                    {{censo.dataCenso.cama.sector }} /
-                                </span>
-                                <span *ngIf="censo.dataCenso?.cama.habitacion">
-                                    {{censo.dataCenso.cama.habitacion}}
-                                </span>
-                            </td>
-                            <td>
+                                <ng-container *ngFor="let sector of censo.dataCenso.cama.sectores">
+                                    {{sector.nombre}} /
+                                </ng-container>
                                 {{censo.dataCenso.cama.nombre}}
                             </td>
                             <td>

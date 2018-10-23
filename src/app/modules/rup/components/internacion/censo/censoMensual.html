@@ -1,19 +1,20 @@
 <section *ngIf="organizacion">
     <plex-box>
+        <header>
+            <div class="page-title">Censo mensual</div>
+        </header>
         <div class="row">
             <div class="col-2">
-                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha"
-                    label="Fecha Desde">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha Desde">
                 </plex-datetime>
             </div>
             <div class="col-2">
-                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta"
-                    label="Fecha Hasta">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Fecha Hasta">
                 </plex-datetime>
             </div>
             <div class="col-4">
-                <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas"
-                    idField="term" labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
+                <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas" idField="term"
+                    labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
                 </plex-select>
             </div>
             <div class="col-2">
@@ -22,8 +23,7 @@
             </div>
             <div class="col-2">
                 <br>
-                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo mensual"
-                    titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
+                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo mensual" titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
             </div>
         </div>
         <div class="row">&nbsp;</div>

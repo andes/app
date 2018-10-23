@@ -1,36 +1,29 @@
 <ng-container *ngIf="!camasService.showListaEspera">
-    <!-- <form class="plex-layout"> -->
     <section class="plex-layout">
         <div class="row">
-            <!-- [ngClass]="{'col-md-10': showMenu, 'col-md-12': !showMenu}" -->
+            <!-- Contenedor principal -->
             <div class="col">
                 <plex-box>
                     <header>
                         <div class="clearfix">
                             <div class="page-title">Mapa de camas</div>
                         </div>
-                        <!-- TODO: Ver estilos con julito ,@FerSastre -->
                         <div class="row" *ngIf="camas">
                             <div class="col-2">
-                                <plex-text name="paciente" (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente" [required]="true">
+                                <plex-text (keyup)="filtrar()" [(ngModel)]="filtros.nombre" label="Paciente">
                                 </plex-text>
                             </div>
                             <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.sectores.length" [required]="true"></plex-select>
-
-
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.sector" name="sector" [data]="filtros.opciones.sectores" label="Sector" (change)="filtrar()" *ngIf="filtros.opciones.sectores.length" [required]="true"></plex-select>
                             </div>
-                            <div class="col-4">
+                            <div class="col-3">
                                 <div class="form-group">
-                                    <plex-select [disabled]="true" [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Unidad Organizativa"
-                                        (change)="filtrar()" *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
+                                    <plex-select [disabled]="true" [(ngModel)]="filtros.servicio" name="servicio2" [data]="filtros.opciones.servicios" label="Unidad Organizativa" (change)="filtrar()" *ngIf="filtros.opciones.servicios.length" [required]="true"></plex-select>
                                 </div>
                             </div>
 
                             <div class="col-3">
-                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama"
-                                    (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length" [required]="true"></plex-select>
+                                <plex-select [disabled]="true" [(ngModel)]="filtros.tipoCama" name="tipoCama" [data]="filtros.opciones.tiposCamas" label="Tipo de cama" (change)="filtrar()" *ngIf="filtros.opciones.tiposCamas.length" [required]="true"></plex-select>
                             </div>
                             <!-- Filtros por estado -->
                             <!-- <div class="col-md-3">
@@ -100,17 +93,15 @@
                         No se encontraron resultados
                     </div>
                     <div id="mapaCamas" class="row" *ngIf="!loader && camas">
-                        <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}"
-                            *ngFor="let cama of camas; let i = index">
-                            <app-cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}"
-                                (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
-                                (verInternacionEmit)="verInternacion($event)"></app-cama>
+                        <div [ngClass]="{'col-xl-3 col-lg-3 col-md-4 col-sm-6 col-xs-6': showMenu, 'col-md-2': !showMenu, 'selected': cama === camaSeleccionada}" *ngFor="let cama of camas; let i = index">
+                            <cama [prestacion]="prestacion" [cama]="cama" [showEstados]="estadosMode" [readOnly]="historicoMode" [params]="{fecha: fecha, idOrganizacion: auth.organizacion.id}" (evtCama)="updateCama($event)" (buscarPaciente)="ingresarPaciente()" (camaSelected)="onCamaSelected($event)"
+                                (verInternacionEmit)="verInternacion($event)"></cama>
                         </div>
                     </div>
                 </plex-box>
             </div>
 
-            <!-- SIDEBAR -->
+            <!-- Sidebar -->
             <plex-box id="panel-lateral" class="col-4" *ngIf="showMenu">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
                 <ng-container *ngIf="buscandoPaciente">
@@ -136,12 +127,11 @@
                 </ng-container>
                 <!-- Ingreso -->
                 <ng-container *ngIf="showIngreso && !showEgreso">
-                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (otroPaciente)="ingresarPaciente()" [paciente]="pacienteSelected"
-                        [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion" [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
+                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (otroPaciente)="ingresarPaciente()" [paciente]="pacienteSelected" [camaSelected]="camaSelected" [prestacion]="prestacionPorInternacion" [soloValores]="editarIngreso" (refreshCamas)="updateCama($event)"></rup-iniciarInternacion>
                 </ng-container>
                 <ng-container *ngIf="camaSeleccionada && !showIngreso && !buscandoPaciente">
                     <!-- && !showResumen && !showEgreso && !showLoaderSidebar && !showIngreso -->
-                    <plex-tabs [activeIndex]="panelIndex">
+                    <plex-tabs *ngIf="panelIndex >= 0" [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
                         <plex-tab label="Datos de cama">
@@ -209,15 +199,13 @@
                                     <!-- Ver internacion -->
                                     <!-- <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="camaSeleccionada.ultimoEstado?.idInternacion"
                                         label="Ver internación" (click)="verIngreso(true, camaSeleccionada.ultimoEstado.idInternacion)"></plex-button> -->
-                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="this.auth.profesional && camaSeleccionada.ultimoEstado?.idInternacion"
-                                        label="Ver Epicrisis" (click)="generaEpicrisis() "></plex-button>
+                                    <plex-button class="btn btn-block btn-success btn-sm" type="success" *ngIf="this.auth.profesional && camaSeleccionada.ultimoEstado?.idInternacion" label="Ver Epicrisis" (click)="generaEpicrisis() "></plex-button>
                                 </div>
                             </footer>
                         </plex-tab>
                         <!-- Resumen -->
                         <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
-                            <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion"
-                                [camaSeleccionada]="camaSeleccionada" (refreshCamas)="updateCama($event)"></internacion-resumen>
+                            <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente" [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada" (refreshCamas)="updateCama($event)"></internacion-resumen>
                         </plex-tab>
 
                         <!-- Historial de cama -->

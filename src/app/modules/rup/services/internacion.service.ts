@@ -50,6 +50,22 @@ export class InternacionService {
         return this.server.get(this.url + '/censo/disponibilidad', { params: params });
     }
 
+    combinarFechas(fecha1, fecha2) {
+        if (fecha1 && fecha2) {
+            let horas: number;
+            let minutes: number;
+            let auxiliar: Date;
+
+            auxiliar = new Date(fecha1);
+            horas = fecha2.getHours();
+            minutes = fecha2.getMinutes();
+            auxiliar.setHours(horas, minutes, 0, 0);
+            return auxiliar;
+        } else {
+            return null;
+        }
+    }
+
     usaWorkflowCompleto(idOrganizacion: string) {
         if (this.workflowCompleto.find(o => o.id === idOrganizacion)) {
             return true;

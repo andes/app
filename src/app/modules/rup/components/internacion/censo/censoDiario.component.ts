@@ -58,21 +58,24 @@ export class CensoDiarioComponent implements OnInit {
                 this.textoVolver = 'Volver al censo mensual';
                 this.fecha = this.params.fecha;
                 this.organizacionSeleccionada = this.params.organizacion;
-                this.generarCenso();
+                this.generarCenso(true);
             }
         });
     }
 
-    generarCenso() {
-        let params = {
-            fecha: moment(this.fecha).endOf('day'),
-            unidad: this.organizacionSeleccionada.conceptId
-        };
-        this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
-            this.listadoCenso = respuesta.censoDiario.map(c => c.censo).filter(item => item);
-            this.resumenCenso = respuesta.resumen;
+    generarCenso(isValid) {
+        if (isValid) {
+            let params = {
+                fecha: moment(this.fecha).endOf('day'),
+                unidad: this.organizacionSeleccionada.conceptId
+            };
+            this.servicioInternacion.getInfoCenso(params).subscribe((respuesta: any) => {
+                this.listadoCenso = respuesta.censoDiario.map(c => c.censo).filter(item => item);
+                this.resumenCenso = respuesta.resumen;
 
-        });
+            });
+        }
+
     }
 
     reseteaBusqueda() {

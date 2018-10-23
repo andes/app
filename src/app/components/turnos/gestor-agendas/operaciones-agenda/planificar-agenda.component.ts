@@ -572,6 +572,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            if (this.dinamica) {
+                this.modelo.bloques[0].horaInicio = iniAgenda;
+                this.modelo.bloques[0].horaFin = finAgenda;
+            }
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;

@@ -17,7 +17,7 @@ export class SolicitudPrestacionDefaultComponent extends RUPComponent implements
                 solicitudPrestacion: {}
             };
             this.registro.valor.solicitudPrestacion['autocitado'] = false;
-            this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto.conceptId;
+            this.registro.valor.solicitudPrestacion['prestacionSolicitada'] = this.registro.concepto;
 
         }
     }

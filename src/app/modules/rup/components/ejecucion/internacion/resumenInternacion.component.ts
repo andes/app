@@ -20,16 +20,10 @@ export class ResumenInternacionComponent implements OnInit, OnChanges {
 
     public pases;
     public editarIngreso = false;
-    // public editarEgreso = false;
     public btnIniciarEditar;
     public mostrarValidacion = false;
 
-    public conceptoEgreso = {
-        conceptId: '58000006',
-        term: 'alta del paciente',
-        fsn: 'alta del paciente (procedimiento)',
-        semanticTag: 'procedimiento'
-    };
+    public conceptoEgreso = this.servicioInternacion.conceptosInternacion.egreso;
 
     constructor(
         public prestacionesService: PrestacionesService,
