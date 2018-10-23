@@ -15,10 +15,10 @@ export class AnestesiaComponent extends RUPComponent implements OnInit {
             this.registro.valor = null;
         }
         this.options = [
-            { id: 1, label: 'Ninguna' },
-            { id: 2, label: 'Por anestesista' },
-            { id: 3, label: 'Por endoscopista' },
-            { id: 4, label: 'Otro' },
+            { id: 'Ninguna', label: 'Ninguna' },
+            { id: 'Por anestesista', label: 'Por anestesista' },
+            { id: 'Por endoscopista', label: 'Por endoscopista' },
+            { id: 'Otro', label: 'Otro' },
         ];
     }
 
