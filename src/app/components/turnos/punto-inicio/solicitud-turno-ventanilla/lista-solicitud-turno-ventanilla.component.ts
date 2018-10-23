@@ -31,7 +31,7 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
 
     public autorizado = false;
     public solicitudesPrestaciones = [];
-
+    showCargarSolicitud = false;
     // VER SI HACE FALTA
     // public prioridadesPrestacion = enumToArray(PrioridadesPrestacion);
 
@@ -53,19 +53,31 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
     }
 
     cargarSolicitudes() {
-        // Solicitudes que no tienen prestacionOrigen ni turno
-        // Si tienen prestacionOrigen son generadas por RUP y no se listan
-        // Si tienen turno, dejan de estar pendientes de turno y no se listan
         let params = {
             idPaciente: this.paciente.id,
-            // tienePrestacionOrigen: 'no',
-            // tieneTurno: 'no',
-            estado: ['pendiente']
+            estados: [
+                'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
+                'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
+                'rechazada', // solicitudes rechazadas en el proceso de auditoría
+                'validada'   // solicitudes validadas, si tienen turno asociado veremos la información
+            ]
         };
 
-        this.servicioPrestacion.get(params).subscribe(resultado => {
-            this.solicitudesPrestaciones = resultado;
+        this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
+            this.solicitudesPrestaciones = this.sortSolicitudees(resultado);
         });
+    }
+
+    private sortSolicitudees(solicitudes) {
+        return solicitudes.sort((a, b) => {
+            let inia = a.solicitud.fecha ? new Date(a.solicitud.fecha) : null;
+            let inib = b.solicitud.fecha ? new Date(b.solicitud.fecha) : null;
+            {
+                return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
+            }
+            ;
+        });
+
     }
 
     // Emite a <solicitud-turno-ventanilla> la solicitud/prestación completa para usar en darTurno
@@ -73,7 +85,13 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
         this.solicitudPrestacionEmit.emit(prestacionSolicitud);
     }
 
+    formularioSolicitud() {
+        this.showCargarSolicitud = true;
+    }
 
+    cerrarSolicitudVentanilla(event) {
+        this.showCargarSolicitud = false;
+    }
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;

@@ -1,0 +1,112 @@
+<plex-box>
+    <header>
+        <div class="clearfix">
+            <div class="page-title float-left">SOLICITUD DE {{ tipoSolicitud.toUpperCase() }}</div>
+        </div>
+    </header>
+    <div class="row">
+        <div class="col-12 text-left" *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+            <!-- Cuando la solicitud fue rechazada muestra los datos del rechazo -->
+            <b>Motivo de Rechazo</b>
+            <br>
+            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].motivoRechazo}}</span>
+            <br>
+            <b>Usuario que rechaza</b>
+            <br>
+            <span *ngIf="prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].tipo === 'rechazada'">
+                {{prestacionSeleccionada.estados[prestacionSeleccionada.estados.length-1].createdBy | profesional}}</span>
+            <br>
+        </div>
+        <div class="col-12 text-left">
+            <b>Paciente</b>
+            <h5>
+                <span class="blue"> {{prestacionSeleccionada?.paciente?.nombre}}
+                    {{prestacionSeleccionada?.paciente?.apellido}}
+                </span>
+            </h5>
+        </div>
+        <div class="col-6 text-left">
+            <span *ngIf="turnoSeleccionado">
+                <b>Fecha Turno</b>
+                {{ turnoSeleccionado.horaInicio | fecha }} - {{ turnoSeleccionado.horaInicio | date: 'HH:mm' }}
+            </span>
+        </div>
+        <div class="col-12 text-left">
+            <span *ngIf="prestacionSeleccionada.solicitud.profesionalOrigen">
+                <b>Profesional Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.profesionalOrigen?.nombre }} {{
+                prestacionSeleccionada.solicitud.profesionalOrigen?.apellido
+                }}
+            </span>
+            <span *ngIf="prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term">
+                <br>
+                <b>Tipo de Prestación Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.tipoPrestacionOrigen?.term }}
+            </span>
+            <span *ngIf="prestacionSeleccionada.solicitud.organizacionOrigen?.nombre">
+                <br>
+                <b>Organización Origen</b>
+                <br> {{ prestacionSeleccionada.solicitud.organizacionOrigen?.nombre }}
+            </span>
+            <span *ngIf="prestacionSeleccionada.solicitud.profesional">
+                <br>
+                <b>Profesional Destino</b>
+                <br> {{ prestacionSeleccionada.solicitud.profesional?.nombre }} {{
+                prestacionSeleccionada.solicitud.profesional?.apellido}}
+            </span>
+
+            <br>
+            <b>Tipo de Prestación Destino</b>
+            <br> {{ prestacionSeleccionada.solicitud.tipoPrestacion?.term }}
+            <span *ngIf="prestacionSeleccionada.solicitud.organizacion">
+                <br>
+                <b>Organización Destino</b>
+                <br> {{ prestacionSeleccionada.solicitud.organizacion?.nombre }}
+            </span>
+            <br>
+        </div>
+    </div>
+    <div class="row" *ngIf="prestacionSeleccionada.solicitud.registros.length>0 && prestacionSeleccionada.solicitud.registros[0].valor">
+        <div class="col">
+            <hr>
+            <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion.motivo">Motivo</b>
+            <br>
+            <span *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.solicitudPrestacion">
+                {{prestacionSeleccionada.solicitud.registros[0].valor.solicitudPrestacion.motivo}}
+            </span>
+            <br>
+            <b *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos">Archivos Adjuntos</b>
+            <div *ngIf="prestacionSeleccionada.solicitud.registros[0].valor?.documentos" class="row">
+                <div class="col-12">
+                    <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                        <ng-container *ngFor="let doc of this.prestacionSeleccionada.solicitud.registros[0].valor.documentos; let i = index">
+                            <a (click)="activaLightbox(i)">
+                                <div class="image hover">
+
+                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                                        {{ doc.ext }}
+                                    </a>
+                                    <!-- <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved(doc)">
+                                        <span class="close"></span>
+                                    </div> -->
+                                </div>
+                            </a>
+
+                            <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
+                                class="hover">
+                                <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                                    {{ doc.ext }}
+                                </a>
+                                <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</plex-box>

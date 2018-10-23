@@ -58,6 +58,11 @@ export class AppComponent {
             accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
         }
 
+        let dato = this.auth.getPermissions('huds:?').length;
+        if (this.auth.getPermissions('huds:?').length > 0) {
+            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/buscaHuds' });
+        }
+
         if (this.auth.getPermissions('reportes:?').length > 0) {
             accessList.push({ label: 'Reportes', icon: 'file-chart', route: '/reportes' });
         }
