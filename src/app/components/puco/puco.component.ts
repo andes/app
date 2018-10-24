@@ -73,12 +73,12 @@ export class PucoComponent implements OnInit, OnDestroy {
                     for (let i = 0; i < padrones[0].length; i++) {
 
                         if (i === padrones[0].length - 1) {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).format('MMMM [de] YYYY');
+                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY');
                         } else {
-                            this.listaPeriodosPuco += moment(padrones[0][i].version).format('MMMM [de] YYYY') + ', ';
+                            this.listaPeriodosPuco += moment(padrones[0][i].version).utc().format('MMMM [de] YYYY') + ', ';
                         }
                     }
-                    this.ultimaActualizacionPuco = padrones[0][0].version;
+                    this.ultimaActualizacionPuco = moment(padrones[0][0].version).utc();
                 }
 
 

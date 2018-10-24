@@ -247,6 +247,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
@@ -285,6 +286,7 @@ import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 
 
+import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -385,6 +387,7 @@ export let RUPRegistry = {
     'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
@@ -411,7 +414,7 @@ export let RUPRegistry = {
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'AnestesiaComponent': AnestesiaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
-
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
 };
 
 let RUPComponentsArray = [
@@ -445,6 +448,7 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
     PasesCamaComponent,
@@ -472,6 +476,7 @@ let RUPComponentsArray = [
     SeleccionBinariaComponent,
     AnestesiaComponent,
     ValorNumericoComponent,
+    ProcedimientoDeEnfermeriaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */

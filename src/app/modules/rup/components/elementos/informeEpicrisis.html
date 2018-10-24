@@ -13,8 +13,8 @@
     </div>
     <plex-accordion>
         <ng-container *ngFor="let item of elementoRUP.requeridos; let i = index">
-            <plex-panel [ngClass]="{'alerta-campo' : !cristinaVolve.isValid}" icon="arrow-down-drop-circle-outline"
-                (click)="accordionSeleccionado(i, item.concepto)" [active]="accordionActive === i || desplegarTodo"
+            <plex-panel [ngClass]="{'alerta-campo' : !rupInstance.isValid}" icon="arrow-down-drop-circle-outline"
+                 [active]="accordionActive === i || desplegarTodo" (toggle)="accordionSeleccionado(i, item.concepto)"
                 class="hover">
                 <div plex-accordion-title class="d-flex justify-content-between">
                     <span class="contenedor-icono">
@@ -24,20 +24,23 @@
                         {{ item.concepto.term }}
                     </span>
 
-                    <span *ngIf="!cristinaVolve.isValid" class="badge badge-danger mr-4 align-self-center">
+                    <span *ngIf="!rupInstance.isValid" class="badge badge-danger mr-4 align-self-center">
                         Hay registros incompletos
                     </span>
-                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && cristinaVolve.isValid" class="badge badge-warning mr-4 align-self-center">
+                    <span *ngIf="!registro.registros[i].registros.length && i > 0 && rupInstance.isValid" class="badge badge-warning mr-4 align-self-center">
                         No hay conceptos registrados
                     </span>
-                    <span *ngIf="registro.registros[i].registros.length && cristinaVolve.isValid" class="badge badge-info mr-4 align-self-center">
+                    <span *ngIf="registro.registros[i].registros.length && rupInstance.isValid" class="badge badge-info mr-4 align-self-center">
                         {{ registro.registros[i].registros.length }} Conceptos registrados
                     </span>
-                    <plex-button icon="chevron-left" type="primary btn-sm btn-collapse"></plex-button>
+                    <plex-button 
+                        [icon]=" accordionActive === i || desplegarTodo ? 'chevron-left' : 'chevron-down' " 
+                        type="primary btn-sm btn-collapse">
+                    </plex-button>
                 </div>
                 <rup [elementoRUP]="item.elementoRUP" [paciente]="paciente" [params]="item.params" [prestacion]="prestacion"
                     [registro]="registro.registros[i]" [soloValores]="soloValores" (change)="emitChange()"
-                    #cristinaVolve>
+                    #rupInstance>
                 </rup>
             </plex-panel>
         </ng-container>

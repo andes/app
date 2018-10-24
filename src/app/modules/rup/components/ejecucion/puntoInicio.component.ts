@@ -106,8 +106,6 @@ export class PuntoInicioComponent implements OnInit {
                 organizacion: this.auth.organizacion.id,
                 sinEstado: 'modificada',
                 ambitoOrigen: 'ambulatorio'
-                // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
-                // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
             })
         ).subscribe(data => {
             this.agendas = data[0];

@@ -18,28 +18,32 @@ export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
 
 
     ngOnInit() {
-
         if (!this.registro.valor) {
             this.registro.valor = {
                 unidadOrganizativa: null
             };
         }
-
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe(organizacion => {
             this.unidadesOrganizativas = organizacion.unidadesOrganizativas;
         });
     }
 
     accordionSeleccionado(i, concepto: any) {
-        this.accordionActive = i;
-        this.prestacionesService.setRefSetData(concepto);
-        this.prestacionesService.clearData();
+        if (this.accordionActive === i) {
+            this.accordionActive = -1;
+            this.prestacionesService.clearRefSetData();
+        } else {
+            this.accordionActive = i;
+            this.prestacionesService.setRefSetData(concepto);
+            this.prestacionesService.clearData();
+        }
     }
 
     desplegarAccordions() {
         this.desplegarTodo = !this.desplegarTodo;
         this.mensajeAccionAccordion = this.desplegarTodo ? 'Colapsar' : 'Desplegar';
         this.accordionActive = -1;
+        this.prestacionesService.clearRefSetData();
     }
 
     VerArbolRelaciones() {
