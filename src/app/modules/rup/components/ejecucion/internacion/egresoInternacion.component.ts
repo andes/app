@@ -62,7 +62,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
     constructor(
         public servicioPrestacion: PrestacionesService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
-        public Cie10Service: Cie10Service,
+        public cie10Service: Cie10Service,
         private route: ActivatedRoute,
         private location: Location,
         public plex: Plex,
@@ -163,7 +163,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
             let query = {
                 nombre: event.query
             };
-            this.Cie10Service.get(query).subscribe((datos) => {
+            this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
                 datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(datos);
@@ -333,7 +333,7 @@ export class EgresoInternacionComponent implements OnInit, OnChanges {
                 codigoDesde: desde,
                 codigoHasta: hasta
             };
-            this.Cie10Service.get(query).subscribe((datos) => {
+            this.cie10Service.get(query).subscribe((datos) => {
                 // mapeamos para mostrar el codigo primero y luego la descripcion
                 datos.map(dato => { dato.nombre = '(' + dato.codigo + ') ' + dato.nombre; });
                 event.callback(datos);

@@ -62,7 +62,7 @@ export class CamaComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private pacienteService: PacienteService,
-        private PrestacionesService: PrestacionesService,
+        private prestacionesService: PrestacionesService,
         private internaiconService: InternacionService) { }
 
     ngOnInit() {
