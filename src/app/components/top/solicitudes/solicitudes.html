@@ -135,7 +135,6 @@
                                             <tbody>
                                                 <tr *ngFor="let prestacion of prestacionesSalida; let i=index" class="hover"
                                                     (click)="seleccionar(prestacionesSalida,i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
-
                                                     <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
                                                     <td>{{prestacion.paciente | paciente}}<br>DNI
                                                         {{prestacion.paciente.documento}}</td>

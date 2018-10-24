@@ -4,6 +4,7 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { debug } from 'util';
 
 @Component({
     selector: 'solicitudes',
@@ -131,7 +132,7 @@ export class SolicitudesComponent implements OnInit {
                 id: this.solicitudSeleccionada.turno
             };
             this.servicioTurnos.getTurnos(params).subscribe(turnos => {
-                this.turnoSeleccionado = turnos[0];
+                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
             });
         } else {
             this.turnoSeleccionado = null;
