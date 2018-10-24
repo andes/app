@@ -13,7 +13,7 @@
                                     (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()"
                                     name="tipoPrestacion">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.registros[0].concepto"
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.tipoPrestacion" [(ngModel)]="_solicitudPrestacion.solicitud.tipoPrestacion"
                                     (getData)="loadTipoPrestaciones($event)" placeholder="Tipos de Prestación" (change)="filtrar()"
                                     name="tipoPrestacion" [readonly]="true">
                                 </plex-select>
@@ -23,14 +23,14 @@
                                     (getData)="loadProfesionales($event)" placeholder="Profesionales" labelField="apellido + ' ' + nombre"
                                     (change)="filtrar()" name="profesional">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud.registros[0].valor.solicitudPrestacion.autocitado===true"
+                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.profesional && autocitado"
                                     [(ngModel)]="_solicitudPrestacion.solicitud.profesional" (getData)="loadProfesionales($event)"
                                     labelField="apellido + ' ' + nombre" (change)="filtrar()" name="profesional"
                                     [readonly]="true">
                                 </plex-select>
-                                <plex-select *ngIf="_solicitudPrestacion?.solicitud?.registros[0].valor.solicitudPrestacion.autocitado===false"
-                                    [(ngModel)]="opciones.profesional" (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre"
-                                    (change)="filtrar()" name="profesional">
+                                <plex-select *ngIf="(_solicitudPrestacion?.solicitud && !autocitado) " [(ngModel)]="opciones.profesional"
+                                    (getData)="loadProfesionales($event)" labelField="apellido + ' ' + nombre" (change)="filtrar()"
+                                    name="profesional">
                                 </plex-select>
                             </div>
                             <div *ngIf="mostrarCalendario" class="col">

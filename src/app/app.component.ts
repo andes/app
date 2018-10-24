@@ -55,6 +55,11 @@ export class AppComponent {
             accessList.push({ label: 'RUP: Registro Universal de Prestaciones', icon: 'contacts', route: '/rup' });
         }
 
+        let dato = this.auth.getPermissions('huds:?').length;
+        if (this.auth.getPermissions('huds:?').length > 0) {
+            accessList.push({ label: 'HUDS: Visualizar por paciente', icon: 'file-tree', route: '/rup/buscaHuds' });
+        }
+
         if (this.auth.getPermissions('reportes:?').length > 0) {
             accessList.push({ label: 'Reportes', icon: 'file-chart', route: '/reportes' });
         }
@@ -65,7 +70,7 @@ export class AppComponent {
 
         // faltan permisos
         if (this.auth.getPermissions('formularioTerapeutico:?').length > 0) {
-        accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
+            accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
 
