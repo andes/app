@@ -216,7 +216,9 @@ export class AuditoriaComponent implements OnInit {
             if (resultado) {
                 // Filtramos los pacientes que ya posean algo en el array de identificadores para eviar
                 // anidamiento de linkeos
-                let data: any = resultado.filter((paciente: any) => (paciente.id !== pacienteSeleccionado.id && (paciente.paciente.identificadores.length < 1)));
+                let data: any = resultado.filter((paciente: any) =>
+                    (paciente.id !== pacienteSeleccionado.id && (paciente.paciente.identificadores && paciente.paciente.identificadores.filter(identificador =>
+                        identificador.entidad === 'ANDES').length < 1)));
                 let datos = [];
                 data.forEach(elem => {
                     if (elem.paciente.activo !== false) {
@@ -334,7 +336,7 @@ export class AuditoriaComponent implements OnInit {
             // Filtramos los pacientes que ya posean algo en el array de identificadores para eviar
             // anidamiento de linkeos
             this.pacientes = this.pacienteSelected ? resultado.pacientes.filter((pac: any) => (
-                (this.pacienteSelected.id !== pac.id) && pac.identificadores.length < 1)) : resultado.pacientes;
+                (this.pacienteSelected.id !== pac.id) && pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length < 1)) : resultado.pacientes;
         }
     }
 
