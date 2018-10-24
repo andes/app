@@ -69,11 +69,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                            {{tipoPrestacion.nombre}}
+                                        </div>
                                         <div>
                                             <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                             <ng-container *ngIf="agenda.profesionales">
-                                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}
+                                                <div *ngFor="let profesional of agenda.profesionales">
+                                                    {{profesional | profesional}}
                                                 </div>
                                             </ng-container>
                                         </div>

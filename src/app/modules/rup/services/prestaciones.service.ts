@@ -1,36 +1,76 @@
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Injectable, Output, EventEmitter } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs/Rx';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
 import { IPrestacionGetParams } from '../interfaces/prestacionGetParams.interface';
 import { IPrestacionRegistro } from '../interfaces/prestacion.registro.interface';
 import { SnomedService } from '../../../services/term/snomed.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+
 
 
 @Injectable()
 export class PrestacionesService {
 
+    @Output() notifySelection: EventEmitter<any> = new EventEmitter<any>();
+
     private prestacionesUrl = '/modules/rup/prestaciones';  // URL to web api
     private cache: any[] = [];
     private cacheRegistros: any[] = [];
     private cacheMedicamentos: any[] = [];
+    // ---TODO----- Ver en que servicio dejar esta funcionalidad
+    public destinoRuta = new BehaviorSubject<boolean>(false);
+    public rutaVolver = this.destinoRuta.asObservable();
 
     private datosRefSet = new BehaviorSubject<any>(null);
+    private concepto = new BehaviorSubject<any>(null);
 
-    setRefSetData(datos: IPrestacion[], refsetId) {
+    public esSolicitud = new BehaviorSubject<boolean>(false);
+
+    setEsSolicitud(esSolicitud) {
+        this.esSolicitud.next(esSolicitud);
+    }
+
+    getEsSolicitud() {
+        return this.esSolicitud.asObservable();
+    }
+
+    /**
+     * [TODO] cambiar nombres
+     * Se usan para las secciones de epicrisis y otros.
+     */
+
+    setData(concepto: IPrestacion) {
+        this.concepto.next({ concepto });
+        this.notifySelection.emit(true);
+    }
+
+    getData(): any {
+        return this.concepto.getValue();
+    }
+
+    clearData() {
+        this.concepto.next(null);
+    }
+
+    /**
+     * [TODO] cambiar nombres
+     * RefSetData se usa para notificar el seccionado actual.
+     */
+
+    setRefSetData(datos: IPrestacion[], refsetId?) {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });
     }
 
-    getRefSetData(): Observable<any> {
-        return this.datosRefSet.asObservable();
+    getRefSetData(): any {
+        return this.datosRefSet.getValue();
     }
 
     clearRefSetData() {
         this.datosRefSet.next(null);
     }
+
 
     public refsetsIds = {
         cronico: '1641000013105',
@@ -54,6 +94,17 @@ export class PrestacionesService {
             this.conceptosTurneables = conceptosTurneables;
         });
     }
+    // ------ TODO----- Ver en que servicio dejar esta funcionalidad
+
+    /**
+     * Le pasamos por parametro un objeto con el nombre y la ruta
+     * De la pantalla asi seteamos el boton de volver en el ejecucion
+     * @param ruteo
+     */
+    public notificaRuta(ruteo) {
+        this.destinoRuta.next(ruteo);
+    }
+
 
     /**
      * Método get. Trae lista de objetos prestacion.
@@ -556,6 +607,27 @@ export class PrestacionesService {
         return this.server.get(this.prestacionesUrl + '/huds/' + idPaciente, opt);
     }
 
+
+    /**
+        * Método que retorna todas las epicrisis
+        * por paciente
+        * @param {String} idPaciente
+        * @param conceptId
+        */
+    getPrestacionesXtipo(idPaciente: any, conceptId: any): Observable<any[]> {
+        return this.getByPaciente(idPaciente).map(prestaciones => {
+            let prestacionesXtipo = [];
+            prestaciones.forEach(prestacion => {
+                if (prestacion.solicitud.tipoPrestacion.conceptId === conceptId) {
+                    prestacionesXtipo = [...prestacionesXtipo, ...prestacion];
+                }
+            });
+            return prestacionesXtipo;
+        });
+    }
+
+
+
     /**
      * Método post. Inserta un objeto nuevo.
      * @param {any} prestacion Recibe solicitud RUP con paciente
@@ -587,7 +659,7 @@ export class PrestacionesService {
      * @returns {*} Prestacion
      * @memberof PrestacionesService
      */
-    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional = null): any {
+    inicializarPrestacion(paciente: any, snomedConcept: any, momento: String = 'solicitud', ambitoOrigen = 'ambulatorio', fecha: Date = new Date(), turno: any = null, _profesional: any = null): any {
         let pacientePrestacion;
         if (!paciente) {
             pacientePrestacion = undefined;
@@ -603,14 +675,6 @@ export class PrestacionesService {
         }
         let prestacion = {
             paciente: pacientePrestacion
-            // paciente: {
-            //     id: paciente.id,
-            //     nombre: paciente.nombre,
-            //     apellido: paciente.apellido,
-            //     documento: paciente.documento,
-            //     sexo: paciente.sexo,
-            //     fechaNacimiento: paciente.fechaNacimiento
-            // }
         };
 
         if (momento === 'solicitud') {
@@ -654,7 +718,12 @@ export class PrestacionesService {
                 fecha: fecha,
                 turno: turno,
                 tipoPrestacion: snomedConcept,
-                profesional: profesional,
+                // profesional logueado
+                profesional:
+                    {
+                        id: this.auth.profesional.id, nombre: this.auth.usuario.nombre,
+                        apellido: this.auth.usuario.apellido, documento: this.auth.usuario.documento
+                    },
                 // organizacion desde la que se solicita la prestacion
                 organizacion: { id: this.auth.organizacion.id, nombre: this.auth.organizacion.nombre },
                 registros: []
@@ -853,7 +922,7 @@ export class PrestacionesService {
         let clase = conceptoSNOMED.semanticTag;
 
         if (conceptoSNOMED.plan || this.esTurneable(conceptoSNOMED) || (typeof filtroActual !== 'undefined' && filtroActual === 'planes')) {
-            clase = 'plan';
+            clase = 'solicitud';
         } else if (conceptoSNOMED.semanticTag === 'régimen/tratamiento') {
             clase = 'regimen';
         } else if (conceptoSNOMED.semanticTag === 'elemento de registro') {

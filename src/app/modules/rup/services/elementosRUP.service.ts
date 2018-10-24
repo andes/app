@@ -177,4 +177,16 @@ export class ElementosRUPService {
         }
         return null;
     }
+
+
+    getConceptosInternacion() {
+        let conceptosInternacion = {
+            epicrisis: this.cache['2341000013106'] ? this.cache['2341000013106'].conceptos[0] : null,
+            ingreso: this.cache['721915006'] ? this.cache['721915006'].conceptos[0] : null,
+            egreso: this.cache['58000006'] ? this.cache['58000006'].conceptos[0] : null
+        };
+        return conceptosInternacion;
+    }
+
+
 }

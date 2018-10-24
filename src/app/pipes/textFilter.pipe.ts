@@ -12,7 +12,7 @@ export class TextFilterPipe implements PipeTransform {
         }
         // value = value.trim();
         // PARCHE HASTA CONTAR CON INTERFAZ DE PERMISOS
-        items.forEach((item: any) => item.usuario = item.usuario.toString());
+        items.forEach((item: any) => item.usuario = item.usuario ? item.usuario.toString() : '');
         return items.filter((item: any) =>
 
             ((item.usuario) ? (item.usuario.trim().toUpperCase().search(value.toUpperCase()) > -1) : '') ||

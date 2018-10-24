@@ -101,5 +101,4 @@ export class ConsultaDeNinoSanoM2AComponent extends RUPComponent implements OnIn
             }
         }
     }
-
 }

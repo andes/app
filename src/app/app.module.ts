@@ -49,6 +49,7 @@ import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { IconoCamaPipe } from './pipes/iconoCama.pipe';
+import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -249,7 +250,6 @@ import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/compon
 import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
@@ -319,6 +319,7 @@ import { ChartsModule } from 'ng2-charts';
 // INTERNACION
 import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
 import { ResumenInternacionComponent } from './modules/rup/components/ejecucion/internacion/resumenInternacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 
 // Mapa de camas
 import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
@@ -438,7 +439,6 @@ let RUPComponentsArray = [
     OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
-    EjecucionInternacionComponent,
     PasesCamaComponent,
     CensoDiarioComponent,
     CensoMensualComponent,
@@ -471,6 +471,7 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 
+
 registerLocaleData(localeEs, 'es');
 
 // Main module
@@ -500,6 +501,7 @@ registerLocaleData(localeEs, 'es');
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
+        Html2TextPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -540,13 +542,24 @@ registerLocaleData(localeEs, 'es');
         VistaHudsComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        PuntoInicioInternacionComponent,
         LaboratoriosComponent,
+
+        OrganizacionSectoresComponent,
+        EgresoInternacionComponent,
+        ResumenInternacionComponent,
+        ListaEsperaInternacionComponent,
+
         // Solicitudes
         SolicitudesComponent,
         PrestamosHcComponent,
@@ -559,12 +572,8 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        OrganizacionSectoresComponent,
+
         SectoresItemComponent,
-        ListaEsperaInternacionComponent,
-        EgresoInternacionComponent,
-        PucoComponent,
-        ResumenInternacionComponent,
         PucoComponent,
         // MPI
         PacienteBuscarComponent,

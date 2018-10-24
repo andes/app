@@ -17,6 +17,7 @@ import { CamasService } from '../../../services/camas.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
 import { ObraSocialService } from '../../../../../services/obraSocial.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { IObraSocial } from '../../../../../interfaces/IObraSocial';
 import { InternacionService } from '../../../services/internacion.service';
 
 @Component({
@@ -37,7 +38,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial = { nombre: '', codigoPuco: '' };
+    public obraSocial: IObraSocial[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
@@ -179,7 +180,7 @@ export class IniciarInternacionComponent implements OnInit {
                     // Se busca la obra social del paciente y se le asigna
                     this.obraSocialService.get({ dni: this.paciente.documento }).subscribe((os: any) => {
                         if (os && os.length > 0) {
-                            this.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
+                            this.obraSocial = [{ nombre: os[0].financiador, codigoFinanciador: os[0].codigoFinanciador }];
                             this.informeIngreso.obraSocial = { nombre: os[0].financiador, codigoPuco: os[0].codigoFinanciador };
                         }
                     });
@@ -348,9 +349,10 @@ export class IniciarInternacionComponent implements OnInit {
                 let nuevaPrestacion = this.servicioPrestacion.inicializarPrestacion(this.paciente, this.tipoPrestacionSeleccionada, 'ejecucion', 'internacion', this.informeIngreso.fechaIngreso, null, this.informeIngreso.profesional);
                 nuevaPrestacion.ejecucion.registros = [nuevoRegistro];
                 nuevaPrestacion.paciente['_id'] = this.paciente.id;
+
                 if (this.obraSocial) {
-                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial.codigoPuco, nombre: this.obraSocial.nombre };
-                    this.informeIngreso.obraSocial = this.obraSocial;
+                    // TODO: Sub-zero wins
+                    nuevaPrestacion.solicitud.obraSocial = { codigoPuco: this.obraSocial[0].codigoFinanciador, nombre: this.obraSocial[0].nombre };
                 }
 
                 this.servicioPrestacion.post(nuevaPrestacion).subscribe(prestacion => {
