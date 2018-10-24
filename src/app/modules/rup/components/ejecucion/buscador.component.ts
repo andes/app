@@ -280,7 +280,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 }
             });
         }
-        debugger;
         let concepto: any = this.servicioPrestacion.getRefSetData();
         this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
 
@@ -313,7 +312,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         }
         // reiniciamos los resultados desde la copia auxiliar que tenemos
         this.results = JSON.parse(JSON.stringify(this.resultsAux));
-        debugger;
         if (this.results[this.busquedaActual][this.filtroActual] && this.results[this.busquedaActual][this.filtroActual].length > 0 && this.search) {
 
             let search = this.search.toLowerCase();
