@@ -15,8 +15,8 @@ import { InternacionService } from '../../../../services/internacion.service';
     styleUrls: ['cama-create-update.scss']
 })
 export class CamaCreateUpdateComponent implements OnInit {
-    @Input('idOrganizacion') idOrganizacion;
-    @Input('camaSeleccion') camaSeleccion;
+    @Input() idOrganizacion;
+    @Input() camaSeleccion;
     @Output() showCama: EventEmitter<any> = new EventEmitter<any>();
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
 

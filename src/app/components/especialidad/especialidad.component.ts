@@ -1,7 +1,9 @@
+
+import {debounceTime} from 'rxjs/operators';
 import { EspecialidadCreateUpdateComponent } from './especialidad-create-update.component';
 import { IEspecialidad } from './../../interfaces/IEspecialidad';
 import { EspecialidadService } from './../../services/especialidad.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Plex } from '@andes/plex';
@@ -35,7 +37,7 @@ export class EspecialidadComponent implements OnInit {
             activo: ['']
         });
         // Genera la busqueda con el evento change.
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
@@ -101,4 +103,4 @@ export class EspecialidadComponent implements OnInit {
         }
     }
 
-};
+}

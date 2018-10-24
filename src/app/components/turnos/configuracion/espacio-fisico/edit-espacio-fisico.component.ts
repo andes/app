@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
 
@@ -33,7 +33,7 @@ export class EditEspacioFisicoComponent implements OnInit {
     public modelo: any = {};
     public edif: any = {};
     public autorizado: boolean;
-    constructor(public plex: Plex, public EspacioFisicoService: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public espacioFisicoService: EspacioFisicoService, public organizacionService: OrganizacionService,
         public auth: Auth) { }
 
     ngOnInit() {
@@ -58,14 +58,14 @@ export class EditEspacioFisicoComponent implements OnInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
 
     loadSectores(event) {
         // let sectores = [];
-        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             let sectores = respuesta.map((ef) => {
                 return (typeof ef.sector !== 'undefined' && ef.sector.nombre !== '-' ? ef.sector : []);
             }).filter((elem, index, self) => {
@@ -78,7 +78,7 @@ export class EditEspacioFisicoComponent implements OnInit {
 
     loadServicios(event) {
         let servicios = [];
-        this.EspacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
+        this.espacioFisicoService.get({ organizacion: this.auth.organizacion._id }).subscribe(respuesta => {
             servicios = respuesta.map((ef) => {
                 return (typeof ef.servicio !== 'undefined' ? ef.servicio : []);
             });
@@ -98,9 +98,9 @@ export class EditEspacioFisicoComponent implements OnInit {
 
         if (this.espacioFisicoHijo) {
             modelo.id = this.espacioFisicoHijo.id;
-            estOperation = this.EspacioFisicoService.put(modelo);
+            estOperation = this.espacioFisicoService.put(modelo);
         } else {
-            estOperation = this.EspacioFisicoService.post(modelo);
+            estOperation = this.espacioFisicoService.post(modelo);
         }
         estOperation.subscribe(resultado => this.data.emit(resultado));
     }

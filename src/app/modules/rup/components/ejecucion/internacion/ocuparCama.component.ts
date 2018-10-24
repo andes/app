@@ -1,6 +1,6 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';

@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, AfterViewInit, HostBinding, EventEmitter, Output, Input, SimpleChanges, SimpleChange, OnChanges } from '@angular/core';
 
 import { Plex } from '@andes/plex';
@@ -11,10 +11,10 @@ import { Plex } from '@andes/plex';
     <div class="row">
         <div class="col-3">
             <plex-datetime label="Desde" [max]="hoy" type="date" [(ngModel)]="desde" name="desde" (change)="onChange()"></plex-datetime>
-        </div> 
+        </div>
         <div class="col-3">
             <plex-datetime label="Hasta" [max]="hoy" type="date" [(ngModel)]="hasta" name="hasta" (change)="onChange()"></plex-datetime>
-        </div> 
+        </div>
         <div class="col-2">
             <plex-button type="success" label="Filtrar" (click)="onChange()" class="vertical-center" ></plex-button>
         </div>

@@ -13,4 +13,4 @@ export interface IFrecuentesProfesional {
         concepto: ISnomedConcept,
         frecuencia: Number
     }];
-};
+}
