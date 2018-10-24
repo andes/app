@@ -187,11 +187,10 @@ export class DarTurnosComponent implements OnInit {
                 if (this.paciente.documento) {
                     if (this.paciente.financiador[0]) {
                         this.obraSocialPaciente = this.paciente.financiador[0] as any;
-                        this.numeroAfiliado = (this.paciente.financiador[0] as any).nroAfiliado;
+                        this.numeroAfiliado = (this.paciente.financiador[0] as any).numeroAfiliado;
                     } else {
                         this.servicioOS.get({ dni: this.paciente.documento }).subscribe(resultado => {
-                            // debugger
-                            if (resultado) {
+                            if (resultado && resultado.length > 0) {
                                 this.obraSocialPaciente = resultado[0];
                                 this.obraSocialPaciente.id = (resultado[0] as any).idFinanciador;
                             }
@@ -816,7 +815,7 @@ export class DarTurnosComponent implements OnInit {
 
     private guardarTurno(agd: IAgenda) {
         if (this.numeroAfiliado) {
-            this.obraSocialPaciente.nroAfiliado = this.numeroAfiliado;
+            this.obraSocialPaciente.numeroAfiliado = this.numeroAfiliado;
         }
         let pacienteSave = {
             id: this.paciente.id,
