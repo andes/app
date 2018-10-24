@@ -36,6 +36,11 @@ export class PrestacionesService {
         return this.esSolicitud.asObservable();
     }
 
+    /**
+     * [TODO] cambiar nombres
+     * Se usan para las secciones de epicrisis y otros.
+     */
+
     setData(concepto: IPrestacion) {
         this.concepto.next({ concepto });
         this.notifySelection.emit(true);
@@ -48,6 +53,11 @@ export class PrestacionesService {
     clearData() {
         this.concepto.next(null);
     }
+
+    /**
+     * [TODO] cambiar nombres
+     * RefSetData se usa para notificar el seccionado actual.
+     */
 
     setRefSetData(datos: IPrestacion[], refsetId?) {
         this.datosRefSet.next({ conceptos: datos, refsetId: refsetId });

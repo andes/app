@@ -117,6 +117,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
     ngOnInit() {
         // consultamos desde que pagina se ingreso para poder volver a la misma
+        this.btnVolver = 'Volver';
+        this.rutaVolver =
         this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
             if (resp) {
                 this.btnVolver = resp.nombre;

@@ -138,6 +138,7 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
 
+        this.servicioPrestacion.clearRefSetData();
         this.refSet = this.servicioPrestacion.getRefSetData();
         this.filtroRefset = this.refSet;
 
