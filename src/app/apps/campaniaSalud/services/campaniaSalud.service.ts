@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Server } from '@andes/shared';
-import { CampaniaSalud } from '../components/campaniaSalud.component';
+import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class CampaniaSaludService{
-    campaniaSeleccionada: CampaniaSalud;
-    campanias: CampaniaSalud;
+    campaniaSeleccionada: ICampaniaSalud;
+    campanias: ICampaniaSalud;
+    readonly campaniaUrl="core/tm/campanias";
 
     constructor(private server: Server){
-        this.campaniaSeleccionada= new CampaniaSalud();
     } 
 
-    getAsunto(){
-        this.campanias = new CampaniaSalud();
-        this.campanias.asunto="Probando";
-        return this.campanias;
+    getCampanias():Observable<ICampaniaSalud[]>{
+        return this.server.get(this.campaniaUrl);
+    }
+    putCampanias(_id){
+        return this.server.put(this.campaniaUrl + '._id', this.campaniaSeleccionada);
+    }
+    postCampanias(campania:ICampaniaSalud){
+        return this.server.post(this.campaniaUrl, campania);
     }
 
 }

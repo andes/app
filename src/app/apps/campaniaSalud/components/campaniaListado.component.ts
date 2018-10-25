@@ -1,7 +1,7 @@
 import { CampaniaSaludService } from "./../services/campaniaSalud.service";
 import { Component, OnInit, EventEmitter, HostBinding } from "@angular/core";
 import { Plex } from '@andes/plex';
-import { CampaniaSalud } from './campaniaSalud.component';
+import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
 
 @Component({
     selector: 'campanias',
@@ -10,12 +10,16 @@ import { CampaniaSalud } from './campaniaSalud.component';
 })
 export class CampaniaListadoComponent implements OnInit{
     public asunto:any;
+    public prueba:boolean=false;
+    campanias:any;
 
     constructor(public campaniaSaludService: CampaniaSaludService){
-        
     }
 
     ngOnInit(){
-        this.asunto=this.campaniaSaludService.getAsunto().asunto;
+        this.campaniaSaludService.getCampanias().subscribe(res=>{
+            this.campanias=res;
+        });
     }
+
 }

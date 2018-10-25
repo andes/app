@@ -1,3 +1,4 @@
+import { CampaniaSaludService } from "./apps/campaniaSalud/services/campaniaSalud.service";
 /*
 @jgabriel | 04-03-2017
 
@@ -645,7 +646,8 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        CampaniaSaludService
     ]
 })
 
