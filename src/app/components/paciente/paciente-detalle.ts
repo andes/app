@@ -39,7 +39,7 @@ export class PacienteDetalleComponent implements OnInit {
         private sisaService: SisaService,
         private pacienteService: PacienteService,
         private plex: Plex) {
-        this.nombrePattern = new RegExp(pacienteService.nombreRegEx.source);
+        this.nombrePattern = pacienteService.nombreRegEx;
     }
 
     ngOnInit() {

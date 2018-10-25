@@ -12,12 +12,12 @@
 
             <label class="custom-control custom-radio">
                 <ng-container *ngIf="registro.valor && registro.valor.concepto.conceptId === concepto.conceptId">
-                    <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
-                        type="radio" checked>
+                    <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)"
+                        value="{{concepto.conceptId}}" type="radio" checked>
                 </ng-container>
                 <ng-container *ngIf="registro.valor?.concepto.conceptId !== concepto.conceptId">
-                    <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)" value="{{concepto.conceptId}}"
-                        type="radio">
+                    <input class="custom-control-input" name="radioConceptos-{{unique}}" (change)="selectRadio(concepto)"
+                        value="{{concepto.conceptId}}" type="radio">
                 </ng-container>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description"> {{concepto.term}}</span>

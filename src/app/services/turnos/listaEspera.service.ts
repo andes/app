@@ -1,7 +1,7 @@
 import { IListaEspera } from './../../interfaces/turnos/IListaEspera';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { environment } from '../../../environments/environment';
 
 @Injectable()
