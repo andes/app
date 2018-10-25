@@ -426,9 +426,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // Hay más frecuentes? Frecuentes de este profesional
 
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
-                    return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                });
+                // this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
+                //     return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                // });
             }
 
             // asignamos a una variable auxiliar para luego restaurar los valores
@@ -459,9 +459,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
 
 
                 if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
-                        return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                    }));
+                    // this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
+                    //     return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                    // }));
                 }
             });
         }
@@ -533,9 +533,9 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         if (this.results && this.busquedaActual && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
 
             if (this.busquedaRefSet && this.busquedaRefSet.conceptos && this.results.buscadorBasico[this.filtroActual]) {
-                this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
-                    return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                });
+                // this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
+                //     return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                // });
             }
 
             return this.results[this.busquedaActual][semanticTag].length;
