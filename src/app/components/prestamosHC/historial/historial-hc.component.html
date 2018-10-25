@@ -11,13 +11,17 @@
                             <!-- Filtros -->
                             <div class="row" style="margin-bottom: 0.25rem">
                                 <div class="col-4">
-                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta" placeholder="Escriba el número de carpeta"
-                                        labelField="numero" [required]="true">
+                                    <plex-text [(ngModel)]="numeroCarpeta" name="numeroCarpeta" label="Número de carpeta"
+                                        placeholder="Escriba el número de carpeta" labelField="numero" [required]="true">
                                     </plex-text>
                                 </div>
-                                <div class="col-4" style="margin-top:36px;">
+                                <div class="col-2" style="margin-top:36px;">
                                     <plex-button label="Buscar" type="primary" (click)="buscarHistorial()">
                                     </plex-button>
+                                </div>
+                                <div class="col-6 text-right" *ngIf="paciente">
+                                    <h5>Paciente: <strong>{{ paciente.apellido }}, {{ paciente.nombre }}</strong> |
+                                        Documento: <strong>{{ paciente.documento }}</strong></h5>
                                 </div>
                             </div>
 
@@ -38,7 +42,8 @@
                                             {{movimiento.createdAt | date:'dd-MM-yyyy'}}
                                         </td>
                                         <td *ngIf="!movimiento.datosSolicitudManual">
-                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}} {{movimiento.datosPrestamo.turno.profesionales |
+                                            {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
+                                            {{movimiento.datosPrestamo.turno.profesionales |
                                             enumerar:['apellido','nombre'] }}
                                             <br>
                                             <span class="badge-success float-left">Solicitud Automática</span>
@@ -46,20 +51,24 @@
                                         <td *ngIf="movimiento.datosSolicitudManual">
                                             {{movimiento.estado == 'En archivo' ? 'Devuelta por:' : 'Prestada a:'}}
                                             <span *ngIf="movimiento.datosSolicitudManual.profesional">
-                                                {{movimiento.datosSolicitudManual.profesional.apellido}}, {{movimiento.datosSolicitudManual.profesional.nombre}}
+                                                {{movimiento.datosSolicitudManual.profesional.apellido}},
+                                                {{movimiento.datosSolicitudManual.profesional.nombre}}
                                             </span>
                                             <span *ngIf="!movimiento.datosSolicitudManual.profesional">
-                                                {{movimiento.datosSolicitudManual.responsable.apellido}}, {{movimiento.datosSolicitudManual.responsable.nombre}}
+                                                {{movimiento.datosSolicitudManual.responsable.apellido}},
+                                                {{movimiento.datosSolicitudManual.responsable.nombre}}
                                             </span>
                                             <br>
                                             <span class="badge-warning float-left">Solicitud Manual</span>
                                         </td>
                                         <td>
                                             <span *ngIf="movimiento.datosSolicitudManual">
-                                                {{movimiento.datosSolicitudManual.espacioFisico.nombre}}
+                                                {{movimiento.datosSolicitudManual.espacioFisico?.nombre}}
                                             </span>
                                             <span *ngIf="!movimiento.datosSolicitudManual">
-                                                {{movimiento.datosPrestamo.turno.espacioFisico?.nombre}} {{movimiento.datosPrestamo.turno.espacioFisico ? ' - ' : ''}} {{movimiento.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
+                                                {{movimiento.datosPrestamo.turno.espacioFisico?.nombre}}
+                                                {{movimiento.datosPrestamo.turno.espacioFisico ? ' - ' : ''}}
+                                                {{movimiento.datosPrestamo.turno.espacioFisico?.servicio?.nombre}}
                                             </span>
                                         </td>
                                         <td>
@@ -83,8 +92,13 @@
                             </table>
                             <div class="row" *ngIf="inicioBusqueda && !historial.length">
                                 <div class="col-12 text-center" style="margin: 3rem">
-                                    <h3>
-                                        <i class="mdi mdi-folder-remove"></i> No se encuentra la carpeta</h3>
+                                    <h3 *ngIf="paciente">
+                                        <i class="mdi mdi-folder-remove"></i> No se encuentra historial de la carpeta
+                                    </h3>
+                                    <h3 *ngIf="!paciente">
+                                        <i class="mdi mdi-folder-remove"></i> No existe este número de carpeta en esta
+                                        organización
+                                    </h3>
                                 </div>
                             </div>
                         </header>

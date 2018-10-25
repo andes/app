@@ -37,10 +37,14 @@ export class PacienteDetalleComponent implements OnInit {
     deshabilitarValidar = false;
     inconsistenciaDatos = false;
     backUpDatos = [];
+    nombrePattern;
+
     permisosRenaper = 'fa:get:renaper';
     autorizadoRenaper = false;  // check si posee permisos
 
-    constructor(public auth: Auth, private renaperService: RenaperService, private plex: Plex) { }
+    constructor(public auth: Auth, private renaperService: RenaperService, private plex: Plex, private pacienteService: PacienteService) {
+        this.nombrePattern = pacienteService.nombreRegEx;
+    }
 
     ngOnInit() {
         // Se chequea si el usuario posee permisos para validación por renaper
@@ -60,7 +64,6 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     renaperVerification(patient) {
-
         // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
         // Cancela la búsqueda anterior
@@ -84,7 +87,12 @@ export class PacienteDetalleComponent implements OnInit {
                     patient.nombre = datos.nombres;
                     patient.apellido = datos.apellido;
                     patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
-                    patient.estado = 'validado';
+                    // si nombre y apellido contienen solo caracteres válidos ..
+                    if (this.nombrePattern.test(datos.nombres) && this.nombrePattern.test(datos.apellido)) {
+                        patient.estado = 'validado';
+                    } else {
+                        this.plex.toast('danger', 'Algunos campos contienen caracteres ilegibles.', 'Información', 5000);
+                    }
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;
                     patient.cuil = datos.cuil;
@@ -97,7 +105,7 @@ export class PacienteDetalleComponent implements OnInit {
                     }
                 }
                 patient.foto = resultado.datos.foto;
-                this.renaperNotification.emit(true);
+                this.renaperNotification.emit(patient.estado === 'validado');
             } else {
                 // TODO ver el tema de mostrar algún error si no trae nada
                 this.plex.toast('danger', resultado.datos.descripcionError + ', REVISAR LOS DATOS INGRESADOS');
