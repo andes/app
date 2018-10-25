@@ -54,6 +54,12 @@
                             <i *ngIf='modelo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-36px  azul"></i>
                             <h2>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo.numeroCompleto}}</h2>
                         </span>
+
+                        <!-- <fieldset>
+                                <label>Paciente: </label>
+                                {{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}} F. Nac.: {{modelo.paciente.fechaNacimiento
+                                | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
+                        </fieldset> -->
                         <div class="row">
                             <div class="col-10">
                                 <strong>Paciente: </strong>
@@ -183,12 +189,12 @@
                     <!-- FIN BUSCADOR DE PRACTICAS -->
 
                     <!-- TABLA VISUALIZACION DE PRACTICAS -->
-                    
+
                     <hr>
                     <div class="row">
                         <div class="col">
-                            <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo"
-                                [practicasEjecucion]="practicasEjecucion" >
+                            <tabla-datalle-protocolo [modo]="modo" [modelo]="modelo" [solicitudProtocolo]="solicitudProtocolo" [practicasEjecucion]="practicasEjecucion"
+                                [practicasCarga]="practicasCarga">
                             </tabla-datalle-protocolo>
                         </div>
                     </div>
@@ -248,8 +254,11 @@
 
     <plex-layout-footer>
         <plex-button position="left" type="warning" (click)="volverProtocolos()">Volver</plex-button>
+        <plex-button position="right" class="float-right mr-1" type="success" label="jfjlfsfjsl" (click)="validarResultados()" ></plex-button>
         <plex-button *ngIf='modo.id !=="validacion" && !seleccionPaciente' position="right" class="float-right mr-1" type="success"
             label="Guardar" (click)="guardarSolicitud($event)"></plex-button>
+            <plex-button *ngIf='modo.id !=="validacion" && !seleccionPaciente' position="right" class="float-right mr-1" type="success"
+            label="Guardar + CB" (click)="guardarSolicitud($event)"></plex-button>
         <plex-button *ngIf='modo.id ==="validacion"' position="right" class="float-right mr-1" type="success" label="Validar todos"
             (click)="guardarSolicitud($event)"></plex-button>
         <plex-button *ngIf='modo.id ==="validacion"' position="right" class="float-right mr-1" type="success" label="Validar pendientes"

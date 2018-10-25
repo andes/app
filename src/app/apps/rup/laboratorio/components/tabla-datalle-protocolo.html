@@ -12,7 +12,7 @@
         <ng-container *ngIf='modo.id ==="validacion"'>
             <th class="float-center">
                 <div>
-                    <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event)" name="validarTodos"></plex-bool>
+                    <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)" name="validarTodos"></plex-bool>
                 </div>Validar </th>
         </ng-container>
         <th></th>
@@ -50,11 +50,7 @@
                 </ng-container>
                 <td></td>
                 <td></td>
-                <ng-container *ngIf='modo.id === "control" || modo.id === "recepcion"'>
-                    <td>
-                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
-                    </td>
-                </ng-container>
+                <td></td>
             </tr>
         </ng-container>
 
@@ -69,13 +65,19 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <td *ngIf='modo.id ==="validacion"'></td>
+                    <ng-container *ngIf="modo.id ==='validacion'">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </ng-container>
+                    
                 </ng-container>
                 <ng-container *ngIf="!reg.esCompuesta">
                     <td class="text-left align-middle estado">
                         <p>
+                            <!-- {{reg.formatoResultado | json}} -->
                             <ng-container *ngIf='reg.practica.valor && !reg.practica.valor.resultado.sinMuestra'>
-                                <plex-float *ngIf="reg.formatoResultado.tipo === 'Numérico'" [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
+                                <plex-float *ngIf="reg.formatoResultado && reg.formatoResultado.tipo === 'Numérico'" [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
                                 <b *ngIf="reg.practica.valor.resultado.sinMuestra"> Sin muestra</b>
                             </ng-container>
 
@@ -93,11 +95,11 @@
                     <td>
                     {{reg.formatoResultado?.unidadMedida.nombre}}
                     <td>
-                        {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado.valoresReferencia.valorMaximo}}
+                        {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado?.valoresReferencia.valorMaximo}}
                     </td>
                     <ng-container *ngIf='modo.id ==="validacion"'>
                         <td>
-                            <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
+                            <plex-bool type="checkbox" [(ngModel)]="reg.practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
                                 name="clickValidar"></plex-bool>
                         </td>
                     </ng-container>

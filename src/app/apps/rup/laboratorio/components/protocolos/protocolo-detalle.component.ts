@@ -57,6 +57,8 @@ export class ProtocoloDetalleComponent
     mostrarCuerpoProtocolo = true;
     solicitudProtocolo: any;
 
+    practicasCarga = [];
+
     @Input() seleccionPaciente: any;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
@@ -74,8 +76,26 @@ export class ProtocoloDetalleComponent
             if (this.modo.id === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
                 this.editarDatosCabecera();
                 this.seleccionPaciente = true;
+            } else if (this.modo.id === 'validacion' || this.modo.id === 'carga') {
+                this.cargarListaPracticaCarga();
+                if (this.modo.id === 'validacion') {
+                    this.cargarResultadosAnteriores();
+                }
             }
         }
+    }
+
+    /**
+     * Setea al resultado de cada práctica un array con la lista de resultados anteriores registrados para el paciente de la práctica
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    cargarResultadosAnteriores() {
+        this.practicasEjecucion.forEach((practica) => {
+            this.servicioProtocolo.getResultadosAnteriores(this.modelo.paciente.id, practica.concepto.conceptId).subscribe(resultadosAnteriores => {
+                practica.resultado.resultadosAnteriores = resultadosAnteriores;
+            });
+        });
     }
 
     setProtocoloSelected(protocolo: IPrestacion) {
@@ -164,93 +184,6 @@ export class ProtocoloDetalleComponent
             $event.callback(organizacion.unidadesOrganizativas);
         });
     }
-
-    // busquedaInicial() {
-    //     this.practicas = null;
-    // }
-
-    // searchClear() {
-    //     this.practicas = null;
-    // }
-
-    // busquedaFinal(resultado: PracticaBuscarResultado) {
-    //     if (resultado.err) {
-    //         this.plex.info('danger', resultado.err);
-    //     } else {
-    //         this.practicas = resultado.practicas;
-    //     }
-    // }
-
-    // /**
-    //  * Carga practicas requeridas en practica de ejecucion
-    //  *
-    //  * @memberof ProtocoloDetalleComponent
-    //  */
-    // async getPracticasRequeridas(practica) {
-    //     console.log('getPracticasRequeridas IN')
-
-    //     return new Promise( async (resolve) => {
-    //         if (practica.categoria === 'compuesta') {
-    //             console.log('getPracticasRequeridas compuesta')
-    //             if(practica.requeridos) {
-    //                 let ids = [];
-    //                 practica.requeridos.map((id) => { ids.push(id._id) } );
-    //                 await this.servicioPractica.findByIds( { ids: ids } ).subscribe(
-    //                     (resultados) => {
-
-    //                         resultados.forEach( async (resultado : any) => {
-    //                             resultado.valor = {
-    //                                 resultado: {
-    //                                         valor: null,
-    //                                         sinMuestra: false,
-    //                                         validado: false
-    //                                 }
-    //                             };
-
-    //                             resultado.registros = await this.getPracticasRequeridas(resultado);
-    //                             // resultado.registros.map( (registro) => {
-    //                             //     registro.valor = {
-    //                             //         valor: null,
-    //                             //         sinMuestra: false,
-    //                             //         validado: false
-    //                             //     };
-    //                             // });
-    //                             // console.log('resultados',resultado.registros)
-
-
-
-    //                             // });
-
-    //                             // requeridas.push({
-    //                             //     valor: {
-    //                             //         valor: null,
-    //                             //         sinMuestra: false,
-    //                             //         validado: false
-    //                             //     },
-    //                             //     concepto: resultado.concepto,
-    //                             //     nombre: resultado.nombre,
-    //                             //     requeridos: resultado.requeridos
-    //                             // });
-
-
-    //                         });
-
-
-    //                         console.log('requeridas',resultados)
-
-    //                         resolve(resultados);
-
-    //                         // console.log('requeridas',requeridas)
-
-    //                     });
-    //             } else {
-    //                 resolve([]);
-    //             }
-    //         }
-    //     });
-    // }
-
-
 
     /**
      * Busca prioridades
@@ -420,6 +353,12 @@ export class ProtocoloDetalleComponent
     guardarProtocolo() {
         if (this.modelo.id) {
             console.log('this.modelo.ejecucion.registros', this.modelo.ejecucion.registros)
+
+            if (this.modo.id === 'carga' || this.modo.id === 'validacion') {
+                // this.validarResultados();
+            }
+
+
             let registros = this.modelo.ejecucion.registros;
             let solicitud = JSON.parse(JSON.stringify(this.modelo.solicitud));
 
@@ -445,7 +384,7 @@ export class ProtocoloDetalleComponent
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
         } else {
-            this.modelo.estados = [{tipo: 'ejecucion'}];
+            this.modelo.estados = [{ tipo: 'ejecucion' }];
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.volverAListaControEmit.emit();
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
@@ -474,6 +413,85 @@ export class ProtocoloDetalleComponent
             // this.cargarResultadosAnteriores();
         }
     }
+
+    cargarListaPracticaCarga() {
+        console.log('cargarListaPracticaCarga')
+        let recorrerSubpracticas = async (reg, nivelTab) => {
+            let margen = [];
+            for (let i = 0; i < nivelTab; i++) {
+                margen.push({});
+            };
+            let esCompuesta = reg.registros.length > 0;
+
+            this.practicasCarga.push({
+                practica: reg,
+                esCompuesta: esCompuesta,
+                margen: margen,
+            });
+
+            reg.registros.forEach(r => {
+                recorrerSubpracticas(r, nivelTab + 1);
+            });
+        };
+
+        this.practicasEjecucion.forEach(p => {
+            recorrerSubpracticas(p, 0)
+        });
+        this.cargarConfiguracionesResultado();
+
+    }
+
+    async cargarConfiguracionesResultado() {
+        // return new Promise( async (resolve) => {
+        let ids = [];
+        this.practicasCarga.map((reg) => { ids.push(reg.practica._id) });
+        await this.servicioPractica.findByIds({ ids: ids }).subscribe(
+            (resultados) => {
+                this.practicasCarga.map((reg) => {
+                    for (let resultado of resultados) {
+                        let practica: any = resultado;
+                        if (resultado.id === reg.practica._id) {
+                            reg.formatoResultado = practica.resultado.formato;
+                            reg.formatoResultado.unidadMedida = practica.unidadMedida;
+                            reg.formatoResultado.valoresReferencia = practica.presentaciones[0].valoresReferencia[0];
+                            reg.valoresCriticos = practica.valoresCriticos;
+                            break;
+                        }
+                    }
+                });
+                // resolve(resultado);
+            });
+
+        // });
+    }
+
+    validarResultados() {
+        this.practicasCarga.forEach((objetoPractica) => {
+        let resultado = objetoPractica.practica.valor.resultado;
+        let alertasValReferencia = [];
+        let alertasValCriticos = [];
+        if (resultado && !objetoPractica.esCompuesta) {
+            let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;                
+            if (objetoPractica.valoresCriticos.minimo > resultado.valor || objetoPractica.valoresCriticos < resultado.valor) {
+                alertasValCriticos.push({
+                    nombre: objetoPractica.practica.nombre, 
+                    resultado: resultado
+                });
+                console.log('alerta Critica!', objetoPractica.practica.nombre, resultado);
+            } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
+                alertasValCriticos.push({
+                    nombre: objetoPractica.practica.nombre, 
+                    resultado: resultado
+                });
+                console.log(objetoPractica);
+                console.log('alerta Referencia!', objetoPractica.practica.nombre, resultado);
+            }
+        }
+        });
+    }
+    // validarResultados() {
+    //     // this.practicasEjecucion
+    // }
 
     // getConfiguracionResultado(idPractica) {
     //     return new Promise( async (resolve) => {
