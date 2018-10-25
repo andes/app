@@ -1,155 +1,51 @@
 <plex-layout>
     <plex-layout-main>
         <header>
-                <div class="row">
-                        <div class="col-md-4">
-                            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection()" name="fechaDesde"
-                                label="Desde" [required]="true">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-md-4">
-                            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection()" name="fechaHasta"
-                                label="Hasta" [required]="true">
-                            </plex-datetime>
-                        </div>
-                        <div class="col-md-4">
-                                <plex-text [(ngModel)]="asunto" (change)="refreshSelection()" name="asunto" label="Asunto"
-                                    [required]="true">
-                                </plex-text>
-                            </div>
-                    </div>
-                    <div class="row" *ngIf="mostrarMasOpciones">
-                        
-                        <div class="col-md-4">
-                            <plex-select [(ngModel)]="sexo" (change)="refreshSelection()" name="sexo" label="Sexo" [data]="sexoArray"
-                                [required]="true">
-                            </plex-select>
-                        </div>
-                        <div class="col-md-4">
-                            <plex-select [(ngModel)]="paises" name="paises" (getData)="cargarPaises($event)" label="Paises"
-                                [required]="true">
-                            </plex-select>
-                        </div>
-                    </div>
-                </header>
-            <plex-box>
-            <h4 class="text-center">LISTADO DE CAMPAÑAS</h4>
-            <ng-container *ngIf="campanias && campanias.length > 0; then conCampanias; else sinCampanias"></ng-container>
-                <ng-template #conCampanias>
-                    <div class="container">
-                        <table  class="table table-striped">
-                            <thead>
-                                <tr class="row"> 
-                                    <th class="col-5">Asunto</th>
-                                    <th class="col-2">Fecha desde</th>
-                                    <th class="col-2">Fecha hasta</th>
-                                    <th class="col-2">Estado</th>
-                                    <th class="col-1">&nbsp;</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="row" *ngFor="let campania of campanias">
-                                    <td>{{campania.asunto}}</td>
-                                    <td>{{campania.fechaDesde}}</td>
-                                    <td>{{campania.fechaHasta}}</td>
-                                    <td>{{campania.estado}}</td>
-                                    <td>Botón</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </ng-template>
-                <ng-template #sinCampanias>
-                    <h5 class="text-center">No hay campañas cargadas</h5>
-                </ng-template>
-        </plex-box>
-</plex-layout-main>
-</plex-layout>
-
-
-
-
-
-
-
-
-
-
-
-
-<plex-layout>
-        <plex-layout-main>
-            <header>
-                <!-- Row sólo puede tener hijos de tipo col-*/col-*-* -->
-                <!-- Todos los col deben sumar 12 o usar 'col' para un ancho automático -->
-                <div class="row">
-                    <div class="col-md-4">
-                        <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection()" name="fechaDesde"
-                            label="Desde" [required]="true">
-                        </plex-datetime>
-                    </div>
-                    <div class="col-md-4">
-                        <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection()" name="fechaHasta"
-                            label="Hasta" [required]="true">
-                        </plex-datetime>
-                    </div>
-                    <div class="col-md-4 text-right">
-                        <label>&nbsp;</label>
-                        <plex-button type="default" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
-                    </div>
-                </div>
-                <div class="row" *ngIf="mostrarMasOpciones">
-                    <div class="col-md-4">
-                        <plex-text [(ngModel)]="apellido" (change)="refreshSelection()" name="apellido" label="Apellido"
-                            [required]="true">
-                        </plex-text>
-                    </div>
-                    <div class="col-md-4">
-                        <plex-select [(ngModel)]="sexo" (change)="refreshSelection()" name="sexo" label="Sexo" [data]="sexoArray"
-                            [required]="true">
-                        </plex-select>
-                    </div>
-                    <div class="col-md-4">
-                        <plex-select [(ngModel)]="paises" name="paises" (getData)="cargarPaises($event)" label="Paises"
-                            [required]="true">
-                        </plex-select>
-                    </div>
-                </div>
-            </header>
             <div class="row">
-                <div class="col">
-                    <!--Resultados-->
-                    <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
-                    <div *ngIf="!seleccion?.length && !loader" class="alert alert-default">
-                        <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
-                    </div>
-                    <table *ngIf="seleccion?.length" class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Apellido</th>
-                                <th>Fecha</th>
-                                <th>Sexo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="hover" *ngFor="let item of seleccion">
-                                <td>
-                                    {{ item.nombre }}
-                                </td>
-                                <td>
-                                    {{ item.apellido }}
-                                </td>
-                                <td>
-                                    {{ item.fecha| fecha}}
-                                </td>
-                                <td>
-                                    {{ item.sexo }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="col-md-4">
+                    <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection()" name="fechaDesde"
+                        label="Desde" [required]="true">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-4">
+                    <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection()" name="fechaHasta"
+                        label="Hasta" [required]="true">
+                    </plex-datetime>
+                </div>
+                <div class="col-md-4">
+                    <plex-text [(ngModel)]="asunto" (change)="refreshSelection()" name="asunto" label="Asunto"
+                        [required]="true">
+                    </plex-text>
                 </div>
             </div>
-        </plex-layout-main>
-    </plex-layout>
+        </header>
+        <div class="row">
+            <div class="col">
+                <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
+                <div *ngIf="!seleccion?.length && !loader" class="alert alert-default">
+                    <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
+                </div>
+                <table *ngIf="seleccion?.length" class="table table-striped">
+                    <thead>
+                        <tr class="row"> 
+                            <th class="col-5">Asunto</th>
+                            <th class="col-2">Fecha desde</th>
+                            <th class="col-2">Fecha hasta</th>
+                            <th class="col-2">Estado</th>
+                            <th class="col-1">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="hover" *ngFor="let value of seleccion">
+                            <td class="col-5">{{value.asunto}}</td>
+                            <td class="col-2">{{value.fechaDesde | fecha}}</td>
+                            <td class="col-2">{{value.fechaHasta | fecha}}</td>
+                            <td class="col-2">{{value.estado}}</td>
+                            <td class="col-1">Botón</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </plex-layout-main>
+</plex-layout>

@@ -6,14 +6,14 @@ import { Observable } from 'rxjs';
 @Injectable()
 export class CampaniaSaludService{
     campaniaSeleccionada: ICampaniaSalud;
-    campanias: ICampaniaSalud;
+    campanias: ICampaniaSalud[];
     readonly campaniaUrl="core/tm/campanias";
 
     constructor(private server: Server){
     } 
 
-    getCampanias():Observable<ICampaniaSalud[]>{
-        return this.server.get(this.campaniaUrl);
+    getCampanias(params):Observable<ICampaniaSalud[]>{
+        return this.server.get(this.campaniaUrl, { params: params, showError: true });
     }
     putCampanias(_id){
         return this.server.put(this.campaniaUrl + '._id', this.campaniaSeleccionada);
