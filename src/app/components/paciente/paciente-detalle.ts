@@ -4,6 +4,7 @@ import { PacienteService } from './../../services/paciente.service';
 import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
 import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
+import { Auth } from '@andes/auth';
 
 @Component({
     selector: 'paciente-detalle',
@@ -35,14 +36,18 @@ export class PacienteDetalleComponent implements OnInit {
     backUpDatos = [];
     nombrePattern;
 
-    constructor(private renaperService: RenaperService,
-        private sisaService: SisaService,
-        private pacienteService: PacienteService,
-        private plex: Plex) {
+    permisosRenaper = 'fa:get:renaper';
+    autorizadoRenaper = false;  // check si posee permisos
+
+    constructor(public auth: Auth, private sisaService: SisaService, private renaperService: RenaperService, private plex: Plex, private pacienteService: PacienteService) {
+
         this.nombrePattern = pacienteService.nombreRegEx;
     }
 
     ngOnInit() {
+        // Se chequea si el usuario posee permisos para validación por renaper
+        this.autorizadoRenaper = this.auth.check(this.permisosRenaper);
+
         this.backUpDatos['nombre'] = this.paciente.nombre;
         this.backUpDatos['apellido'] = this.paciente.apellido;
         this.backUpDatos['estado'] = this.paciente.estado;
