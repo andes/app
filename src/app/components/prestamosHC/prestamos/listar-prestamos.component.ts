@@ -40,6 +40,10 @@ export class ListarPrestamosComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
+    get cssLayout () {
+        return { 'col-8': this.verDevolver, 'col': !this.verDevolver };
+    }
+
     @Output() carpetaDevueltaEmit: EventEmitter<any> = new EventEmitter<any>();
     @Output() recargarSolicitudesEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
 

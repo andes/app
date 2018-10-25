@@ -61,6 +61,10 @@ export class ListarSolicitudesComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
+    get cssLayout () {
+        return { 'col-9': this.verPrestar || this.verSolicitudManual, 'col': !this.verSolicitudManual && !this.verPrestar };
+    }
+
     get listaCarpetasInput(): any {
         return this._listarCarpetas;
     }

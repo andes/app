@@ -1,7 +1,7 @@
 <form *ngIf="!verImprimirSolicitudes" class="plex-layout ng-untouched ng-pristine ng-valid" novalidate="">
     <section>
         <div class="row">
-            <div class="col">
+            <div [ngClass]="cssLayout">
                 <plex-box>
                     <div class="plex-box">
                         <header>
