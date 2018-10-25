@@ -1,11 +1,8 @@
 import { Component, Input, OnInit, EventEmitter, Output } from '@angular/core';
 import { IPaciente } from './../../interfaces/IPaciente';
-import {
-    PacienteService
-} from './../../services/paciente.service';
-import {
-    RenaperService
-} from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { PacienteService } from './../../services/paciente.service';
+import { RenaperService } from './../../services/fuentesAutenticas/servicioRenaper.service';
+import { SisaService } from './../../services/fuentesAutenticas/servicioSisa.service';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -39,6 +36,7 @@ export class PacienteDetalleComponent implements OnInit {
     nombrePattern;
 
     constructor(private renaperService: RenaperService,
+        private sisaService: SisaService,
         private pacienteService: PacienteService,
         private plex: Plex) {
         this.nombrePattern = pacienteService.nombreRegEx;
@@ -61,9 +59,7 @@ export class PacienteDetalleComponent implements OnInit {
     renaperVerification(patient) {
         // TODO llamar al servicio de renaper y actualizar: Datos básicos y Foto
         // En caso que el paciente ya esté validado sólo traer la foto!
-        // Cancela la búsqueda anterior
 
-        window.document.getElementById('detalleContenedor').classList.add('loadMode');
         this.loading = true;
         let sexoRena = null;
         let documentoRena = null;
@@ -75,18 +71,40 @@ export class PacienteDetalleComponent implements OnInit {
         this.renaperService.get({ documento: documentoRena, sexo: sexoRena }).subscribe(resultado => {
             // Queda pendiente actualizar la localidad y provincia de renaper en caso que no la carguen
             this.deshabilitarValidar = true;
-            this.loading = false;
             let datos = resultado.datos;
             if (resultado.datos.nroError === 0) {
                 if (patient.estado === 'temporal') {
-                    patient.nombre = datos.nombres;
-                    patient.apellido = datos.apellido;
                     patient.fechaNacimiento = moment(datos.fechaNacimiento, 'YYYY-MM-DD');
                     // si nombre y apellido contienen solo caracteres válidos ..
                     if (this.nombrePattern.test(datos.nombres) && this.nombrePattern.test(datos.apellido)) {
+                        patient.nombre = datos.nombres;
+                        patient.apellido = datos.apellido;
                         patient.estado = 'validado';
+                        this.renaperNotification.emit(true);
+                        this.loading = false;
                     } else {
-                        this.plex.toast('danger', 'Algunos campos contienen caracteres ilegibles.', 'Información', 5000);
+                        this.plex.info('danger', '', 'Intento de validación fallida. Se volverá a intentar.', 5000);
+                        let dto = {
+                            documento: documentoRena,
+                            nombre: datos.nombres,
+                            apellido: datos.apellido,
+                            sexo: patient.sexo,
+                            genero: datos.genero,
+                        };
+                        this.sisaService.get(dto).subscribe(resp => {
+                            let pacienteSisa = resp.matcheos.datosPaciente;
+                            if (this.nombrePattern.test(pacienteSisa.nombre) && this.nombrePattern.test(pacienteSisa.apellido)) {
+                                patient.nombre = pacienteSisa.nombre;
+                                patient.apellido = pacienteSisa.apellido;
+                                patient.estado = 'validado';
+                                this.renaperNotification.emit(true);
+                                this.loading = false;
+                            } else {
+                                this.renaperNotification.emit(false);
+                                this.loading = false;
+                                this.plex.toast('danger', 'Algunos campos contienen caracteres ilegibles.', 'Información', 5000);
+                            }
+                        });
                     }
                     this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
                     this.paciente.direccion[0].codigoPostal = datos.cpostal;
@@ -98,16 +116,14 @@ export class PacienteDetalleComponent implements OnInit {
                     if (!this.paciente.cuil) {
                         this.paciente.cuil = datos.cuil;
                     }
+                    this.loading = false;
                 }
                 patient.foto = resultado.datos.foto;
-                this.renaperNotification.emit(patient.estado === 'validado');
             } else {
                 // TODO ver el tema de mostrar algún error si no trae nada
                 this.plex.toast('danger', resultado.datos.descripcionError + ', REVISAR LOS DATOS INGRESADOS');
                 this.deshabilitarValidar = false;
             }
-
-            window.document.getElementById('detalleContenedor').classList.remove('loadMode');
         });
     }
 

@@ -1,6 +1,6 @@
 <!-- Loader -->
 <plex-loader *ngIf="loading" class="loading" type="ball-pulse"></plex-loader>
-<div id="detalleContenedor">
+<div id="detalleContenedor" [ngClass]="{'loadMode': loading}">
     <div class="row mb-1">
         <div class="col text-center">
             <img *ngIf="_paciente.foto" class="img-thumbnail" src="{{ _paciente.foto }}">
