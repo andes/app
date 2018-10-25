@@ -4,7 +4,6 @@ import { Component, OnInit, HostBinding } from '@angular/core';
 import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
-import { debug } from 'util';
 
 @Component({
     selector: 'solicitudes',
