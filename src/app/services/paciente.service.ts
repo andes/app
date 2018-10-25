@@ -9,7 +9,6 @@ import { IPacienteMatch } from '../modules/mpi/interfaces/IPacienteMatch.intefac
 
 @Injectable()
 export class PacienteService {
-
     private pacienteUrl = '/core/mpi/pacientes';  // URL to web api
     private carpetaUrl = '/modules/carpetas';
     /**
