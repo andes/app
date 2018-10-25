@@ -1,5 +1,5 @@
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IPais } from './../interfaces/IPais';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
