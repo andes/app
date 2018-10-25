@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ObjectID } from 'bson';
 import { Plex } from '@andes/plex';
@@ -22,9 +22,12 @@ export class VistaHudsComponent implements OnInit {
 
 
     @Input() paciente: IPaciente;
+    @Output() cambiarPaciente = new EventEmitter<boolean>();
 
     // Defaults de Tabs panel derecho
     public panelIndex = 0;
+    public mostrarPI = false;
+    public mostrarCambiaPaciente = false;
 
     // Array de registros de la HUDS a agregar en tabs
     public registrosHuds: any[] = [];
@@ -47,6 +50,19 @@ export class VistaHudsComponent implements OnInit {
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
+
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
+            this.redirect('inicio');
+        }
+
+        if (this.auth.profesional) {
+            this.mostrarPI = true;
+        }
+
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
+            this.mostrarCambiaPaciente = true;
+        }
+
 
         if (!this.paciente) {
             this.route.params.subscribe(params => {
@@ -72,6 +88,12 @@ export class VistaHudsComponent implements OnInit {
         }
     }
 
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
+    }
+
+
     agregarListadoHuds(elemento) {
         if (elemento.tipo === 'prestacion') {
             // Limpiar los valores observados al iniciar la ejecución
@@ -92,12 +114,17 @@ export class VistaHudsComponent implements OnInit {
         }
         // this.registrosHuds = registrosHuds;
     }
+
     volver() {
         this.router.navigate(['rup']);
     }
     // recibe el tab que se clikeo y lo saca del array..
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
+    }
+
+    evtCambiaPaciente() {
+        this.cambiarPaciente.emit(true);
     }
 
 }

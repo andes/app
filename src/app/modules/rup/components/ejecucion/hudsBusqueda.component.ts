@@ -576,8 +576,11 @@ export class HudsBusquedaComponent implements OnInit {
 
     // Trae los medicamentos registrados para el paciente
     listarElementosDeRegistro() {
+        // filtramos los odontogramas
+
         this.servicioPrestacion.getByPacienteElementosRegistro(this.paciente.id, true).subscribe(elementosRegistro => {
-            this.elementosRegistro = elementosRegistro;
+
+            this.elementosRegistro = elementosRegistro.filter(e => e.concepto.conceptId !== this.servicioPrestacion.elementosRegistros.odontograma);
         });
     }
 
