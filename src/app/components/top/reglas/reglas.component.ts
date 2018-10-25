@@ -152,7 +152,7 @@ export class ReglasComponent {
     if (this.reglas && this.reglas.length > 0) {
       condiciones = this.reglas.filter(regla => {
         return (!regla.destino || !regla.destino.organizacion || !regla.destino.prestacion
-          || !regla.destino || !regla.origen.organizacion || !regla.origen.prestaciones || regla.origen.prestaciones.length === 0)
+          || !regla.destino || !regla.origen.organizacion || !regla.origen.prestaciones || regla.origen.prestaciones.length === 0);
       }).length <= 0;
     }
     if (condiciones) {
