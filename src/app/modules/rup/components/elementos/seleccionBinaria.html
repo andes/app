@@ -1,14 +1,19 @@
 <form #form="ngForm">
-    <div class="row" *ngIf="!soloValores">
+    <div class="row">
         <div class="col">
-            <label class="text-capitalize">{{ params.titulo }}</label>
-            <plex-radio [(ngModel)]="registro.valor" [data]="options" name="binario" [type]="params.plexRadioType"
-                [required]="params.required" [label]="params.titulo"></plex-radio>
-        </div>
-    </div>
-    <div class="row" *ngIf="soloValores">
-        <div class="col">
-            {{ registro.valor }}
+            <div *ngIf="params?.title; else showTerm">
+                <label class="text-capitalize">{{ params.title }}</label>
+            </div>
+            <ng-template #showTerm>
+                <label class="text-capitalize">{{ registro.concepto.term }}</label>
+            </ng-template>
+            <ng-container *ngIf="!soloValores; else showSoloValores">
+                <plex-radio [(ngModel)]="registro.valor" [data]="options" name="binario" [type]="params.plexRadioType"
+                    [required]="params.required" [label]="params.titulo"></plex-radio>
+            </ng-container>
+            <ng-template #showSoloValores>
+                {{ registro.valor }}
+            </ng-template>
         </div>
     </div>
 </form>

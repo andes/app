@@ -1,7 +1,12 @@
 <form #form="ngForm">
-    <div class="row" *ngIf="!soloValores">
-        <div class="col-6">
-            <label>{{ params.titulo }}</label>
+    <div class="row" *ngIf="!soloValores; else showSoloValores">
+        <div class=" col-6">
+            <div *ngIf="params?.title; else showTerm">
+                <label class="text-capitalize">{{ params.title }}</label>
+            </div>
+            <ng-template #showTerm>
+                <label class="text-capitalize">{{ registro.concepto.term }}</label>
+            </ng-template>
             <plex-radio [(ngModel)]="registro.valor" [data]="options" name="anestesia" [type]="vertical" [required]="params.required"></plex-radio>
         </div>
         <div class="col" *ngIf="registro.valor && registro.valor === 'Otro'">
@@ -9,11 +14,17 @@
             </plex-text>
         </div>
     </div>
-
-
-    <div class="row" *ngIf="soloValores">
-        <div class="col">
-            {{ registro.valor }}
+    <ng-template #showSoloValores>
+        <div class="row">
+            <div class="col">
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
+                {{ registro.valor }}
+            </div>
         </div>
-    </div>
+    </ng-template>
 </form>

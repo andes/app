@@ -1,8 +1,13 @@
 <form #form="ngForm">
-    <ng-container *ngIf="!soloValores">
+    <ng-container *ngIf="!soloValores; else showSoloValores">
         <div class="row">
             <div class="col-5">
-                <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                <div *ngIf="params?.title; else showTerm">
+                    <label class="text-capitalize">{{ params.title }}</label>
+                </div>
+                <ng-template #showTerm>
+                    <label class="text-capitalize">{{ registro.concepto.term }}</label>
+                </ng-template>
                 <div class="form-group row">
                     <label class="">CI</label>
                     <plex-radio [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()">
@@ -19,8 +24,6 @@
                     </plex-radio>
                 </div>
             </div>
-            <!-- </div>
-        <div class="row"> -->
             <div class="col-3">
                 <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
                 </plex-text>
@@ -28,3 +31,27 @@
         </div>
     </ng-container>
 </form>
+
+<ng-template #showSoloValores>
+    <div class="row">
+        <label>Calculo de Boston</label>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label>CI</label>
+            {{registro.valor.ci}}
+        </div>
+        <div class="col">
+            <label>CT</label>
+            {{registro.valor.ct}}
+        </div>
+        <div class="col">
+            <label>CD</label>
+            {{registro.valor.cd}}
+        </div>
+        <div class="col">
+            <label>Total</label>
+            {{registro.valor.total}}
+        </div>
+    </div>
+</ng-template>
