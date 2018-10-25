@@ -40,9 +40,7 @@ export class ProtocoloDetalleComponent
     flagMarcarTodas: Boolean = false;
     nombrePractica;
     codigoPractica;
-    // public practicas: IPracticaMatch[] | IPractica[];
     public mostrarMasOpciones = false;
-    public protocoloSelected: any = {};
     public pacientes;
     public pacienteActivo;
     public mostrarListaMpi = false;
@@ -66,23 +64,29 @@ export class ProtocoloDetalleComponent
     @Input() modo: any;
     @Input() showProtocoloDetalle: any;
     @Input() indexProtocolo: any;
-    @Input('cargarProtocolo')
-    set cargarProtocolo(value: any) {
+    @Input('protocolo')
+    set protocolo(value: any) {
         if (value) {
-            this.modelo = value;
-            this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
-            this.practicasEjecucion = this.modelo.ejecucion.registros;
+            this.cargarProtocolo(value);
+        }
+    }
 
-            if (this.modo.id === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
-                this.editarDatosCabecera();
-                this.seleccionPaciente = true;
-            } else if (this.modo.id === 'validacion' || this.modo.id === 'carga') {
-                this.cargarListaPracticaCarga();
-                if (this.modo.id === 'validacion') {
-                    this.cargarResultadosAnteriores();
-                }
+    cargarProtocolo(value: any) {
+
+        this.modelo = value;
+        this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
+        this.practicasEjecucion = this.modelo.ejecucion.registros;
+
+        if (this.modo.id === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+            this.editarDatosCabecera();
+            this.seleccionPaciente = true;
+        } else if (this.modo.id === 'validacion' || this.modo.id === 'carga') {
+            this.cargarListaPracticaCarga();
+            if (this.modo.id === 'validacion') {
+                this.cargarResultadosAnteriores();
             }
         }
+
     }
 
     /**
@@ -352,7 +356,7 @@ export class ProtocoloDetalleComponent
      */
     guardarProtocolo() {
         if (this.modelo.id) {
-            console.log('this.modelo.ejecucion.registros', this.modelo.ejecucion.registros)
+            console.log('this.modelo.ejecucion.registros', this.modelo.ejecucion.registros);
 
             if (this.modo.id === 'carga' || this.modo.id === 'validacion') {
                 // this.validarResultados();
@@ -377,11 +381,19 @@ export class ProtocoloDetalleComponent
                 params.op = 'registros';
                 params.solicitud = solicitud;
             }
-            console.log('params', params)
+            console.log('params', params);
 
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
-                this.volverAListaControEmit.emit();
-                this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+                this.protocolos.splice(this.indexProtocolo, 1);
+                if (this.protocolos.length === 0) {
+                    this.volverAListaControEmit.emit();
+                } else {
+                    if (!this.protocolos[this.indexProtocolo]) {
+                        this.indexProtocolo = this.protocolos.length - 1;
+                    }
+                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+                }
+                this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
             });
         } else {
             this.modelo.estados = [{ tipo: 'ejecucion' }];
@@ -415,7 +427,7 @@ export class ProtocoloDetalleComponent
     }
 
     cargarListaPracticaCarga() {
-        console.log('cargarListaPracticaCarga')
+        console.log('cargarListaPracticaCarga');
         let recorrerSubpracticas = async (reg, nivelTab) => {
             let margen = [];
             for (let i = 0; i < nivelTab; i++) {
@@ -435,7 +447,7 @@ export class ProtocoloDetalleComponent
         };
 
         this.practicasEjecucion.forEach(p => {
-            recorrerSubpracticas(p, 0)
+            recorrerSubpracticas(p, 0);
         });
         this.cargarConfiguracionesResultado();
 
@@ -444,7 +456,7 @@ export class ProtocoloDetalleComponent
     async cargarConfiguracionesResultado() {
         // return new Promise( async (resolve) => {
         let ids = [];
-        this.practicasCarga.map((reg) => { ids.push(reg.practica._id) });
+        this.practicasCarga.map((reg) => { ids.push(reg.practica._id); });
         await this.servicioPractica.findByIds({ ids: ids }).subscribe(
             (resultados) => {
                 this.practicasCarga.map((reg) => {
@@ -467,26 +479,26 @@ export class ProtocoloDetalleComponent
 
     validarResultados() {
         this.practicasCarga.forEach((objetoPractica) => {
-        let resultado = objetoPractica.practica.valor.resultado;
-        let alertasValReferencia = [];
-        let alertasValCriticos = [];
-        if (resultado && !objetoPractica.esCompuesta) {
-            let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;                
-            if (objetoPractica.valoresCriticos.minimo > resultado.valor || objetoPractica.valoresCriticos < resultado.valor) {
-                alertasValCriticos.push({
-                    nombre: objetoPractica.practica.nombre, 
-                    resultado: resultado
-                });
-                console.log('alerta Critica!', objetoPractica.practica.nombre, resultado);
-            } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
-                alertasValCriticos.push({
-                    nombre: objetoPractica.practica.nombre, 
-                    resultado: resultado
-                });
-                console.log(objetoPractica);
-                console.log('alerta Referencia!', objetoPractica.practica.nombre, resultado);
+            let resultado = objetoPractica.practica.valor.resultado;
+            let alertasValReferencia = [];
+            let alertasValCriticos = [];
+            if (resultado && !objetoPractica.esCompuesta) {
+                let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
+                if (objetoPractica.valoresCriticos.minimo > resultado.valor || objetoPractica.valoresCriticos < resultado.valor) {
+                    alertasValCriticos.push({
+                        nombre: objetoPractica.practica.nombre,
+                        resultado: resultado
+                    });
+                    console.log('alerta Critica!', objetoPractica.practica.nombre, resultado);
+                } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
+                    alertasValCriticos.push({
+                        nombre: objetoPractica.practica.nombre,
+                        resultado: resultado
+                    });
+                    console.log(objetoPractica);
+                    console.log('alerta Referencia!', objetoPractica.practica.nombre, resultado);
+                }
             }
-        }
         });
     }
     // validarResultados() {

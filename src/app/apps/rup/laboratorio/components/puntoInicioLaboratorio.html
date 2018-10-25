@@ -236,5 +236,5 @@
 </plex-layout>
 
 <!-- Switchea a listado practicas -->
-<protocolo-detalle *ngIf="!showListarProtocolos" [cargarProtocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
+<protocolo-detalle *ngIf="!showListarProtocolos" [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
     [indexProtocolo]='indexProtocolo' [protocolos]="protocolos" [modo]='modo' [seleccionPaciente]='seleccionPaciente' (volverAListaControEmit)='volverLista()'></protocolo-detalle>

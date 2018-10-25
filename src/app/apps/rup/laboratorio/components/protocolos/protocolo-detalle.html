@@ -225,7 +225,7 @@
         </ng-container>
         <!--FIN SECCION PRTOCOLO -->
 
-        <!-- Botonera 
+        <!-- Botonera
         <div class="botonera-container" *ngIf='modo.id !=="recepcion"'>
             <plex-button class="left ml-2" type="info" icon='chevron-up' label="boton clave 1"></plex-button>
             <plex-button class="center ml-2" type="success" icon='chevron-up' label="boton clave 2"></plex-button>
@@ -242,7 +242,7 @@
             </div>
             <div class="col-5">
                 <label class="control-label text-info">N° Protocolo</label>
-                <span>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</span>
+                <span>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</span>
             </div>
             <div class="col-5">
                 <label class="control-label text-info">Fecha</label>
