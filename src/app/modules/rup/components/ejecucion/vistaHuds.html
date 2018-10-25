@@ -18,16 +18,16 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
-                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
+                                        [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
-                                    <h4>{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
+                                    <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
-                                            <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
+                                            <b>Fecha: </b> {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyyHH:MM' }}
                                         </div>
                                         <div class="col-12">
                                             <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
@@ -59,7 +59,7 @@
                                                                 + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                             </small>
                                                             <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                                                Procedimiento / diagnostico principal
+                                                                Procedimiento / diagnóstico principal
                                                             </small>
                                                         </div>
                                                     </div>
@@ -73,8 +73,9 @@
                                                             <div class="row">
 
                                                                 <div class="col-12">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="registro.data"
-                                                                        [registro]="elemento" [soloValores]="true"></rup>
+                                                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
+                                                                        [prestacion]="registro.data" [registro]="elemento" [paciente]="paciente"
+                                                                        [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -117,9 +118,8 @@
 
         <div class="row">
             <div class="col">
-                <plex-button label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
-                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
-                <!-- class="float-right"></plex-button> -->
+                <plex-button *ngIf="mostrarPI" label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
+                <plex-button *ngIf="mostrarCambiaPaciente" label="Cambiar paciente" (click)="evtCambiaPaciente()" type="info"></plex-button>
             </div>
         </div>
 

@@ -1,0 +1,278 @@
+@import '../variables';
+
+@mixin ultimo-odontograma-container {
+    background: rgba(133, 133, 133, 0.4);
+    border-radius: 5px;
+}
+
+.odontograma {
+    width: 100%;
+    text-align: center;
+}
+
+.cargando-odontograma {
+    @include ultimo-odontograma-container();
+}
+
+.último-odontograma {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 285px;
+    padding: 15px 0;
+    @include ultimo-odontograma-container();
+
+    .title {
+        height: 35px;
+
+        h6 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+    }
+
+    .toggle-último {
+        display: inline-block;
+        position: relative;
+        right: 7px;
+    }
+
+    &.hidden {
+        height: 43px;
+        transition: height ease 600ms;
+    }
+
+    &.visible {
+        height: 285px;
+        transition: height ease 600ms;
+    }
+}
+
+.col-6.hidden {
+    opacity: 0;
+    transition: opacity ease 200ms;
+}
+
+.visible {
+    opacity: 1;
+    transition: opacity ease 1200ms;
+}
+
+.cuadranteSuperiorDerecho,
+.cuadranteSuperiorDerechoTemporal,
+.cuadranteInferiorDerecho,
+.cuadranteInferiorDerechoTemporal {
+    text-align: right;
+}
+
+.cuadranteSuperiorIzquierdo,
+.cuadranteSuperiorIzquierdoTemporal,
+.cuadranteInferiorIzquierdo,
+.cuadranteInferiorIzquierdoTemporal {
+    text-align: left;
+}
+
+svg {
+    overflow: visible;
+}
+
+svg#cuadrante-sup-der {
+    display: inline-block;
+}
+
+.diente {
+    fill: white;
+    stroke: #000000;
+    stroke-width: 3px solid #4776d3;
+    stroke-miterlimit: 10;
+    cursor: pointer;
+
+    &:hover {
+        fill: #4776d3;
+    }
+}
+
+.diente-procedimiento,
+.diente-entidad.observable,
+.diente-procedimiento,
+.diente-situación {
+    fill: $procedimiento !important;
+}
+
+.diente-plan {
+    fill: $plan !important;
+}
+
+.diente-trastorno {
+    fill: $trastorno !important; // fill: #ff4a1a;
+}
+
+.diente-hallazgo {
+    fill: $hallazgo !important;
+}
+
+.diente-null-outline {
+    fill: none !important;
+    stroke: #36877f !important;
+    stroke-width: 2;
+}
+
+.diente-procedimiento-outline {
+    fill: none !important;
+    stroke: $procedimiento !important;
+    stroke-width: 2;
+}
+
+.diente-plan-outline {
+    fill: none !important;
+    stroke: $plan !important;
+    stroke-width: 2;
+}
+
+.diente-trastorno-outline {
+    fill: none !important;
+    stroke: $trastorno !important;
+    stroke-width: 2;
+}
+
+.diente-hallazgo-outline {
+    fill: none !important;
+    stroke: $hallazgo !important;
+    stroke-width: 2;
+}
+
+.evolucionada-stroke {
+    stroke: rgb(133, 133, 133);
+    fill: none;
+    stroke-width: 2;
+    stroke-miterlimit: 10;
+}
+
+.st0 {
+    fill: none; // stroke: #5074B9;
+    stroke: rgb(133, 133, 133);
+    stroke-width: 1;
+    stroke-miterlimit: 10;
+
+    &.seleccionada {
+        stroke: #36877f !important;
+    }
+}
+
+.st1 {
+    fill: white;
+}
+
+.st1:hover {
+    fill: #4776d3;
+}
+
+.seleccionada {
+    fill: #36877f !important;
+}
+
+.seleccionada-outline {
+    fill: none !important;
+    stroke: #36877f !important;
+    stroke-width: 2;
+}
+
+.registrada {
+    fill: rgb(133, 133, 133);
+
+    &.pieza-hallazgo {
+        fill: $hallazgo
+    }
+
+    &.pieza-trastorno {
+        fill: $trastorno
+    }
+
+    &.pieza-procedimiento {
+        fill: $procedimiento
+    }
+
+    &.pieza-plan {
+        fill: $plan
+    }
+}
+
+circle {
+    fill: none;
+}
+
+$angles: (13deg: 10px, 26deg: 17px, 39deg: 20px, 51deg: 23px, 56deg: 26px);
+$i: 1;
+
+@each $rotation,
+$translation in $angles {
+    .rotate-#{$i} {
+        transform: scale(1.025, 1.025) translateX(-#{$i}px) rotateZ($rotation) translateX($translation);
+    }
+
+    .diente-offset-#{$i} {
+        &.vestibular {
+            transform: scale(1, 1) translateY(-#{$i * 8}px);
+        }
+
+        &.mesial {
+            transform: scale(1, 1) translate(#{$i * 8}px);
+        }
+
+        &.distal {
+            transform: scale(-1, 1) translate(-#{$i * 45}px);
+        }
+
+        &.palatina {
+            transform: scale(1, 1) translateY(#{$i * 8}px);
+        }
+
+        &.oclusal {
+            transform: scale(1, 1) translateX(#{$i * 6}px) translateY(#{$i * 6}px);
+        }
+
+        z-index: #{$i * 10};
+    }
+
+    $i: ($i+1);
+}
+
+.pieza {
+    cursor: pointer;
+
+    &:hover {
+        fill: #4776d3;
+    }
+}
+
+.diente-container {
+    display: inline-block;
+    width: 40px;
+    font-size: 12px;
+
+    .text-diente {
+        font-size: 16px;
+    }
+}
+
+.ngx-pop {
+    width: auto; // background: #5bc0de;
+    color: black;
+    padding: 10px;
+    text-align: center;
+
+    .readonly,
+    span {
+        display: inline-block !important;
+    }
+}
+
+.pieza-anulada {
+    fill: gray !important;
+}
+
+.margin-fix {
+    bottom: 3px;
+}

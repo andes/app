@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
-import { IFrecuentesProfesional } from './../interfaces/frecuentesProfesional.interface';
+import { IFrecuentesProfesional } from '../interfaces/frecuentesProfesional.interface';
 
 const url = '/modules/rup/frecuentesProfesional';
 const urlPrestacion = '/modules/rup/frecuentesPrestacion';

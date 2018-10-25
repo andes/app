@@ -68,8 +68,8 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
     private setChartOptions(data): void {
         this.barChartOptions = {
             scaleShowVerticalLines: false,
-            responsive: true,
-            maintainAspectRatio: false,
+            responsive: false,
+            maintainAspectRatio: true,
             title: {
                 display: true,
                 text: 'Curva de peso'
