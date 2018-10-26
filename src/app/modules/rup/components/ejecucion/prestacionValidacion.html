@@ -65,7 +65,7 @@
             </div>
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
-            <div class="col titulos">
+            <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
@@ -231,7 +231,7 @@
                 </ng-container>
             </div>
 
-            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="relaciones col-3">
+            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
                     <header>
