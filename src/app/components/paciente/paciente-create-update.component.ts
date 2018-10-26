@@ -128,7 +128,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
-    localidadesNeuquen: any[] = [];
+    localidades: any[] = [];
 
     paisArgentina = null;
     provinciaNeuquen = null;
@@ -423,7 +423,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     loadLocalidades(provincia) {
         if (provincia && provincia.id) {
             this.localidadService.getXProvincia(provincia.id).subscribe(result => {
-                this.localidadesNeuquen = result;
+                this.localidades = result;
             });
         }
     }
@@ -449,7 +449,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
             this.loadLocalidades(this.provinciaNeuquen);
         } else {
             this.viveEnNeuquen = false;
-            this.localidadesNeuquen = [];
+            this.localidades = [];
         }
 
     }
