@@ -268,9 +268,11 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.prestacion = prestacion;
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
-                            });
+                            if (registro.relacionadoCon[0] && !registro.relacionadoCon[0].id) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                });
+                            }
                         }
                     });
 
