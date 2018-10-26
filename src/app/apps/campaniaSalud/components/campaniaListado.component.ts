@@ -16,7 +16,7 @@ export class CampaniaListadoComponent implements OnInit{
     public campanias:any=[];
     public fechaDesde:Date;
     public fechaHasta:Date;
-
+    
     constructor(public campaniaSaludService: CampaniaSaludService){
         // this.listado = [
         //     {
@@ -42,9 +42,28 @@ export class CampaniaListadoComponent implements OnInit{
     }
 
     ngOnInit(){
-        this.campaniaSaludService.getCampanias({}).subscribe(res=>{
-            this.campanias=res;
-        });
+        // this.campaniaSaludService.getCampanias({}).subscribe(res=>{
+        //     this.campanias=res;
+        // });
+        this.campanias = [
+            {
+                id: 1,
+                fechaDesde: 'Mon Feb 14 2018 11:15:52 GMT-0300 (ART)',
+                fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
+                asunto: 'Cáncer',
+                cuerpo: 'Si sos mujer de ...',
+                estado: "Oculto"
+            },
+            {
+                id: 2,
+                fechaDesde: 'Mon Feb 16 2018 11:15:52 GMT-0300 (ART)',
+                fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
+                asunto: 'Fumador',
+                cuerpo: 'Si fumas ...',
+                estado: "Publicado"
+            }
+        ];
+
     }
 
     refreshSelection() {
