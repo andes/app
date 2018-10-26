@@ -74,8 +74,7 @@ export class CampaniaListadoComponent implements OnInit{
     cargarCampanias() {
         this.campaniaSaludService.getCampanias({
             "fechaDesde": this.fechaDesde,
-            "fechaHasta": this.fechaHasta,
-            "asunto": this.asunto
+            "fechaHasta": this.fechaHasta
         }).subscribe(res=>{
                 this.campaniaSaludService.campanias = res;
         });

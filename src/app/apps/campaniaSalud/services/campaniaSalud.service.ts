@@ -13,7 +13,8 @@ export class CampaniaSaludService{
     } 
 
     getCampanias(params):Observable<ICampaniaSalud[]>{
-        return this.server.get(this.campaniaUrl, { params: params, showError: true });
+        // return this.server.get(this.campaniaUrl, { params: params, showError: true });
+        return this.server.get(this.campaniaUrl);
     }
     putCampanias(_id){
         return this.server.put(this.campaniaUrl + '._id', this.campaniaSeleccionada);

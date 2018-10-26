@@ -2,20 +2,15 @@
     <plex-layout-main>
         <header>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="refreshSelection()" name="fechaDesde"
                         label="Desde" [required]="true">
                     </plex-datetime>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="refreshSelection()" name="fechaHasta"
                         label="Hasta" [required]="true">
                     </plex-datetime>
-                </div>
-                <div class="col-md-4">
-                    <plex-text [(ngModel)]="asunto" (change)="refreshSelection()" name="asunto" label="Asunto"
-                        [required]="true">
-                    </plex-text>
                 </div>
             </div>
         </header>
@@ -25,23 +20,22 @@
                 <div *ngIf="!seleccion?.length && !loader" class="alert alert-default">
                     <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <table class="table table-striped">
+                <table *ngIf="seleccion?.length" class="table table-striped">
                     <thead>
-                        <tr class="row"> 
-                            <th class="col-5">Asunto</th>
-                            <th class="col-2">Fecha desde</th>
-                            <th class="col-2">Fecha hasta</th>
-                            <th class="col-2">Estado</th>
-                            <th class="col-1">&nbsp;</th>
+                        <tr>
+                            <th class="w-50">Asunto</th>
+                            <th>Fecha desde</th>
+                            <th>Fecha hasta</th>
+                            <th>Estado</th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let value of seleccion">
-                            <td class="col-5">{{value.asunto}}</td>
-                            <td class="col-2">{{value.fechaDesde | fecha}}</td>
-                            <td class="col-2">{{value.fechaHasta | fecha}}</td>
-                            <td class="col-2">{{value.estado}}</td>
-                            <td class="col-1">Botón</td>
+                        <tr class="hover" *ngFor="let item of seleccion">
+                            <td>{{item.asunto}}</td>
+                            <td>{{item.fechaDesde | fecha}}</td>
+                            <td>{{item.fechaHasta | fecha}}</td>
+                            <td>{{item.estado}}</td>
                         </tr>
                     </tbody>
                 </table>
