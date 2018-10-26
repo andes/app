@@ -147,11 +147,13 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
         this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
 
+        // if (this.modo === 'recepcion') {
         if (this.modo.nombre === 'Recepcion') {
             this.busqueda.estado.push('pendiente');
             this.getProtocolos(this.busqueda);
         } else {
-            if (this.modo.nombre === 'Listado' || this.modo.nombre === 'Validacion') {
+            // if (this.modo === 'listado' || this.modo === 'validacion') {
+                if (this.modo.nombre === 'Listado' || this.modo.nombre === 'Validacion') {
                 this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
 
                 this.getProtocolos(this.busqueda);
@@ -161,6 +163,11 @@ export class PuntoInicioLaboratorioComponent
             }
         }
     };
+
+    setModo(value) {
+        console.log(value)
+        this.modo = value;
+    }
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
@@ -185,6 +192,7 @@ export class PuntoInicioLaboratorioComponent
      */
     verProtocolo(protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
+        console.log('fcfbxzxc',protocolo,index)
         if (protocolo) {
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
@@ -376,7 +384,7 @@ export class PuntoInicioLaboratorioComponent
     //         // this.busqueda.solicitudDesde = new Date(ls.busqueda.solicitudDesde);
     //     }
 
-    //     if (this.modo.nombre === 'Recepcion') {
+    //     if (this.modo === 'Recepcion') {
     //         this.turnosLaboratorio();
     //     }
     // }
