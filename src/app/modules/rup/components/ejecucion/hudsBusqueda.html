@@ -53,10 +53,10 @@
                         </button>
                     </li>
                     <li class="">
-                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right"
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right"
                             [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
-                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-plan" [ngClass]="{'active': filtroActual === 'planes'}">
+                        <button (click)="filtroBuscador('planes')" class="btn btn-block p-0 btn-solicitud" [ngClass]="{'active': filtroActual === 'planes'}">
                             <i class="icon icon-rup-semantic-plan"></i>
                             PRESTACIONES
                         </button>
@@ -80,7 +80,7 @@
                         <button (click)="filtroBuscador('otros')" [ngClass]="{'active': filtroActual === 'otros'}"
                             class="btn btn-block p-0 btn-otro">
                             <i class="icon icon-rup-semantic-elementoderegistro"></i>
-                            ELEM. REG.
+                            ELEM.REG.
                         </button>
                     </li>
                     <li class="">
@@ -421,10 +421,10 @@
             <ul *ngIf="prestaciones && colapsado" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let prestacion of prestaciones; let iPrestacion = index">
                     <li>
-                        <div class="rup-card mini plan" [ngClass]="{'active': estaEnTabs(prestacion, 'plan')}" (click)="devolverRegistrosHuds(prestacion, 'prestacion')">
+                        <div class="rup-card mini solicitud" [ngClass]="{'active': estaEnTabs(prestacion, 'plan')}" (click)="devolverRegistrosHuds(prestacion, 'prestacion')">
                             <div class="rup-header">
 
-                                <div class="rup-border rup-border-plan">
+                                <div class="rup-border rup-border-solicitud">
                                     <div class="row p-0 m-0 border-secondary border-left-0">
                                         <div class="col-10 p-0 m-0">
 
