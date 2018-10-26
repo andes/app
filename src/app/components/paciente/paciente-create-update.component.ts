@@ -37,7 +37,7 @@ import {
     IFinanciador
 } from './../../interfaces/IFinanciador';
 import {
-    Observable
+    Observable, Observer, Subscriber
 } from 'rxjs/Rx';
 import {
     LogService
@@ -102,6 +102,8 @@ import {
     EventEmitter,
     HostBinding
 } from '@angular/core';
+import { Subscribable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 
 
 @Component({
@@ -123,6 +125,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     tipoComunicacion: any[];
     parentescoModel: any[];
     relacionesBorradas: any[];
+    relacionesIniciales: any[] = [];
 
     provincias: IProvincia[] = [];
     obrasSociales: IFinanciador[] = [];
@@ -300,6 +303,10 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         }
                         this.actualizarDatosPaciente();
 
+                        // Se guarda estado de las relaciones al comenzar la edición
+                        if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
+                            this.relacionesIniciales = this.pacienteModel.relaciones.slice(0, this.pacienteModel.relaciones.length);
+                        }
                     });
             }
             if (this.seleccion.notas && this.seleccion.notas.length) {
@@ -503,7 +510,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     verificarContactosRepetidos() {
         let valores = [];
-        console.log(this.pacienteModel.contacto);
+        // console.log(this.pacienteModel.contacto);
         for (let elem of this.pacienteModel.contacto) {
             const item = valores.find(s => s === elem.valor);
             if (item) {
@@ -515,7 +522,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         return true;
     }
 
-    async save(valid) {
+    save(valid) {
         const repetidos = this.verificarContactosRepetidos();
         if (valid.formValid && repetidos) {
 
@@ -529,6 +536,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
                 return elem;
             });
+
             if (pacienteGuardar.financiador) {
                 pacienteGuardar.financiador.map((elem: any) => {
                     delete elem.entidad.$order;
@@ -542,169 +550,199 @@ export class PacienteCreateUpdateComponent implements OnInit {
             if (this.viveProvNeuquen) {
                 pacienteGuardar.direccion[0].ubicacion.provincia = this.provinciaNeuquen;
             }
-
             if (this.viveEnNeuquen) {
                 pacienteGuardar.direccion[0].ubicacion.localidad = this.localidadNeuquen;
             }
-
             if (this.altoMacheo) {
                 this.logService.post('mpi', 'macheoAlto', {
                     paciente: this.pacienteModel
                 }).subscribe(() => { });
-
             }
-
             if (this.posibleDuplicado) {
                 this.logService.post('mpi', 'posibleDuplicado', {
                     paciente: this.pacienteModel
                 }).subscribe(() => { });
-
             }
-
-            let operacionPac: Observable<IPaciente>;
             // generamos pacientes temporales a partir de las nuevas relaciones
             if (pacienteGuardar.documento) {
-                await this.crearTemporales(pacienteGuardar);
-            }
-            operacionPac = this.pacienteService.save(pacienteGuardar);
-            operacionPac.subscribe(result => {
-                if (result) {
-                    // Borramos relaciones
-                    if (this.relacionesBorradas.length > 0) {
-                        this.relacionesBorradas.forEach(rel => {
-                            let relacionOpuesta = this.parentescoModel.find((elem) => {
-                                if (elem.nombre === rel.relacion.opuesto) {
-                                    return elem;
-                                }
-                            });
-                            let dto = {
-                                relacion: relacionOpuesta,
-                                referencia: pacienteGuardar.id,
-                            };
-                            if (rel.referencia) {
-                                this.pacienteService.patch(rel.referencia, {
-                                    'op': 'deleteRelacion',
-                                    'dto': dto
-                                }).subscribe(result2 => { });
-                            }
-                        });
-                    }
-                    // agregamos las relaciones opuestas
-                    if (pacienteGuardar.relaciones && pacienteGuardar.relaciones.length > 0) {
-                        pacienteGuardar.relaciones.forEach(rel => {
-                            let relacionOpuesta = this.parentescoModel.find((elem) => {
-                                if (elem.nombre === rel.relacion.opuesto) {
-                                    return elem;
-                                }
-                            });
-                            let dto = {
-                                relacion: relacionOpuesta,
-                                referencia: pacienteGuardar.id,
-                                nombre: pacienteGuardar.nombre,
-                                apellido: pacienteGuardar.apellido,
-                                documento: pacienteGuardar.documento ? pacienteGuardar.documento : ''
-                            };
-                            if (rel.referencia) {
-                                this.pacienteService.patch(rel.referencia, {
-                                    'op': 'updateRelacion',
-                                    'dto': dto
-                                }).subscribe(result2 => { });
-                            }
-                        });
-                    }
-
-                    // Cuilifico el paciente si aún no pose cuil.
-                    // if (!pacienteGuardar.cuil) {
-                    //      this.ansesService.get(pacienteGuardar).subscribe(rta => {
-                    //         if (rta && rta.cuil) {
-                    //             this.pacienteService.patch(pacienteGuardar.id, {
-                    //                 'op': 'updateCuil',
-                    //                 'cuil': rta.cuil
-                    //             }).subscribe(result2 => {});
-                    //         }
-                    //     });
-                    // }
-                    this.plex.alert('Los datos se actualizaron correctamente');
-                    this.data.emit(result);
-                    // Activa la app mobile
-                    if (this.activarApp && this.emailAndes && this.celularAndes) {
-                        this.appMobile.create(result.id, {
-                            email: this.emailAndes,
-                            telefono: this.celularAndes
-                        }).subscribe((datos) => {
-                            if (datos.error) {
-                                if (datos.error === 'email_not_found') {
-                                    this.plex.alert('El paciente no tiene asignado un email.');
-                                }
-                                if (datos.error === 'email_exists') {
-                                    this.plex.alert('El mail ingresado ya existe, ingrese otro email');
-                                }
-                            } else {
-                                this.plex.alert('Se ha enviado el código de activación al paciente');
-                            }
-                        });
-                    }
-
+                if (this.hayNuevasRelaciones()) {
+                    this.agregarPacientesRelacionados(pacienteGuardar);
                 } else {
-                    this.plex.alert('ERROR: Ocurrió un problema al actualizar los datos');
+                    // Chequea si se borró alguna relación ya existente
+                    this.actualizarRelaciones(pacienteGuardar);
                 }
-            });
+            }
         } else {
             this.plex.alert('Debe completar los datos obligatorios. Verificar los contactos');
         }
     }
 
-    crearTemporales(pacienteOrigen) {
-        // generamos pacientes temporales a partir de las nuevas relaciones
-        // y guardamos el id generado como referencia en el paciente de origen
-        return new Promise(async (resolve) => {
-            if (pacienteOrigen.relaciones && pacienteOrigen.relaciones.length > 0) {
-                for (let i = 0; i < pacienteOrigen.relaciones.length; i++) {
-                    if (!pacienteOrigen.relaciones[i].referencia) {
-                        let nuevoTemporal: any = {
-                            activo: true,
-                            apellido: pacienteOrigen.relaciones[i].apellido.toString(),
-                            nombre: pacienteOrigen.relaciones[i].nombre.toString(),
-                            documento: pacienteOrigen.relaciones[i].documento.toString(),
-                            cuil: null,
-                            sexo: 'otro',
-                            fechaNacimiento: '',
-                            genero: 'otro',
-                            estado: 'temporal',
-                            contacto: null,
-                            estadoCivil: null,
-                            entidadesValidadoras: [],
-                            scan: null,
-                            financiador: null,
-                            identificadores: null,
-                            direccion: null,
-                            reportarError: false,
-                            notaError: '',
-                            nombreCompleto: '',
-                            alias: '',
-                            edad: null,
-                            edadReal: null,
-                            fechaFallecimiento: null,
-                            foto: '',
-                            relaciones: [],
-                            claveBlocking: null,
-                            isScan: this.esEscaneado
-                        };
-                        let idNuevoTemporal = await this.saveNuevoTemporal(nuevoTemporal);
-                        pacienteOrigen.relaciones[i].referencia = idNuevoTemporal;
+    hayNuevasRelaciones() {
+        let resp = false;
+
+        if (this.pacienteModel.relaciones && this.relacionesIniciales) {
+            if (this.relacionesIniciales.length < this.pacienteModel.relaciones.length) {
+                resp = true;
+            } else {
+                if (this.relacionesIniciales.length > 0 && this.pacienteModel.relaciones.length > 0) {
+                    let i = 0;
+                    let aux;
+                    while (!resp && i < this.relacionesIniciales.length) {
+                        aux = this.pacienteModel.relaciones.find(rel => rel.referencia === this.relacionesIniciales[i].referencia);
+                        if (!aux) {
+                            resp = true;
+                        }
+                        i++;
                     }
                 }
             }
-            resolve(pacienteOrigen);
+        }
+        return resp;
+    }
+
+    agregarPacientesRelacionados(pacienteOrigen) {
+        /* Se crean pacientes temporales a partir de las nuevas relaciones
+        *  y se asocia su id como referencia en el paciente de origen
+        */
+        let nuevosTemporales = [];
+        let pacientesExistentes = [];
+        if (pacienteOrigen.relaciones && pacienteOrigen.relaciones.length > 0) {
+            for (let i = 0; i < pacienteOrigen.relaciones.length; i++) {
+                // Si no existe referencia significa que el relacionado es un paciente inexistente. Debe crearse.
+                if (!pacienteOrigen.relaciones[i].referencia) {
+                    let nuevoTemporal: any = {
+                        activo: true,
+                        apellido: pacienteOrigen.relaciones[i].apellido.toString(),
+                        nombre: pacienteOrigen.relaciones[i].nombre.toString(),
+                        documento: pacienteOrigen.relaciones[i].documento.toString(),
+                        cuil: null,
+                        sexo: 'otro',
+                        fechaNacimiento: '',
+                        genero: 'otro',
+                        estado: 'temporal',
+                        contacto: null,
+                        estadoCivil: null,
+                        entidadesValidadoras: [],
+                        scan: null,
+                        financiador: null,
+                        identificadores: null,
+                        direccion: null,
+                        reportarError: false,
+                        notaError: '',
+                        nombreCompleto: '',
+                        alias: '',
+                        edad: null,
+                        edadReal: null,
+                        fechaFallecimiento: null,
+                        foto: '',
+                        relaciones: [],
+                        claveBlocking: null,
+                        isScan: this.esEscaneado
+                    };
+                    nuevosTemporales.push(nuevoTemporal);
+                } else {
+                    // Si existe referencia significa que el paciente a relacionar ya existe.
+                    pacientesExistentes.push(pacienteOrigen.relaciones[i]);
+                }
+            }
+            if (nuevosTemporales) {
+                this.pacienteService.saveAllRelaciones(nuevosTemporales).subscribe(arrayPacientes => {
+                    arrayPacientes = arrayPacientes.concat(pacientesExistentes);
+                    if (arrayPacientes.length) {
+                        let i = pacienteOrigen.relaciones.length - arrayPacientes.length;   // indice de pacientes sin referencia en el arreglo de relaciones.
+
+                        arrayPacientes.forEach(paciente => {
+                            if (!pacienteOrigen.relaciones[i].referencia) {
+                                pacienteOrigen.relaciones[i].referencia = paciente.id;
+                            }
+                            i++;
+                        });
+
+                        this.actualizarRelaciones(pacienteOrigen);
+                        this.activarAppMobile(pacienteOrigen);
+                    }
+                });
+            } else {
+                this.actualizarRelaciones(pacienteOrigen);
+                this.activarAppMobile(pacienteOrigen);
+            }
+        }
+    }
+
+    // Borra/agrega relaciones segun corresponda.
+    actualizarRelaciones(unPaciente) {
+        // Borramos relaciones
+        this.pacienteService.save(unPaciente).subscribe(unPacienteSave => {
+            if (unPacienteSave) {
+                if (this.relacionesBorradas.length > 0) {
+                    this.relacionesBorradas.forEach(rel => {
+                        let relacionOpuesta = this.parentescoModel.find((elem) => {
+                            if (elem.nombre === rel.relacion.opuesto) {
+                                return elem;
+                            }
+                        });
+                        let dto = {
+                            relacion: relacionOpuesta,
+                            referencia: unPacienteSave.id,
+                        };
+                        if (rel.referencia) {
+                            this.pacienteService.patch(rel.referencia, {
+                                'op': 'deleteRelacion',
+                                'dto': dto
+                            }).subscribe();
+                        }
+                    });
+                }
+                // agregamos las relaciones opuestas
+                if (unPacienteSave.relaciones && unPacienteSave.relaciones.length > 0) {
+                    unPacienteSave.relaciones.forEach(rel => {
+                        let relacionOpuesta = this.parentescoModel.find((elem) => {
+                            if (elem.nombre === rel.relacion.opuesto) {
+                                return elem;
+                            }
+                        });
+                        let dto = {
+                            relacion: relacionOpuesta,
+                            referencia: unPacienteSave.id,
+                            nombre: unPacienteSave.nombre,
+                            apellido: unPacienteSave.apellido,
+                            documento: unPacienteSave.documento ? unPacienteSave.documento : ''
+                        };
+                        if (rel.referencia) {
+                            this.pacienteService.patch(rel.referencia, {
+                                'op': 'updateRelacion',
+                                'dto': dto
+                            }).subscribe();
+                        }
+                    });
+                }
+                this.data.emit(unPacienteSave);
+                this.plex.alert('Los datos se actualizaron correctamente');
+            } else {
+                this.plex.alert('ERROR: Ocurrió un problema al actualizar los datos');
+            }
         });
     }
 
-    saveNuevoTemporal(nuevoTemporal): any {
-        return new Promise((resolve) => {
-            this.pacienteService.save(nuevoTemporal).subscribe(res => {
-                resolve(res.id);
+    activarAppMobile(unPaciente) {
+        // Activa la app mobile
+        if (this.activarApp && this.emailAndes && this.celularAndes) {
+            this.appMobile.create(unPaciente.id, {
+                email: this.emailAndes,
+                telefono: this.celularAndes
+            }).subscribe((datos) => {
+                if (datos.error) {
+                    if (datos.error === 'email_not_found') {
+                        this.plex.alert('El paciente no tiene asignado un email.');
+                    }
+                    if (datos.error === 'email_exists') {
+                        this.plex.alert('El mail ingresado ya existe, ingrese otro email');
+                    }
+                } else {
+                    this.plex.alert('Se ha enviado el código de activación al paciente');
+                }
             });
-        });
+        }
     }
 
     onCancel() {
