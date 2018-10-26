@@ -343,10 +343,4 @@ export class AuditoriaComponent implements OnInit {
     searchClear() {
         this.pacientes = null;
     }
-
-
-
-
-
-
 }
