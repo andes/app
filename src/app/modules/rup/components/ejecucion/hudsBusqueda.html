@@ -354,7 +354,7 @@
             <ul *ngIf="procedimientos && colapsado" class="hover conceptos list-unstyled">
                 <ng-container *ngFor="let procedimiento of procedimientos; let iPrestacion = index">
                     <li>
-                        <div class="rup-card mini procedimiento" [ngClass]="{'active': estaEnTabs(procedimiento, 'hallazgo'), 'plan': procedimiento.esSolicitud}"
+                        <div class="rup-card mini procedimiento" [ngClass]="{'active': estaEnTabs(procedimiento, 'hallazgo'), 'solicitud': procedimiento.esSolicitud}"
                             (click)="devolverRegistrosHuds(procedimiento, 'hallazgo')">
                             <div class="rup-header">
 

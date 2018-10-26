@@ -999,20 +999,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargaItems(registroActual, indice) {
-
         // Paso el concepto desde el que se clickeo y filtro para no mostrar su autovinculación.
         let registros = this.prestacion.ejecucion.registros;
         this.itemsRegistros[registroActual.id].items = [];
-        let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
-            // let control = this.tieneVinculacion(registroActual, registro);
-            // if (control) {
-            //     this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
-            //     return false;
-            // }
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
-                    // if (registro.id !== registroActual.relacionadoCon[0].id) {
                     if (registroActual.relacionadoCon.findIndex(x => x.id !== registro.id) > -1) {
                         return registro;
                     }

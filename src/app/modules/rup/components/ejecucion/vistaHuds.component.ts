@@ -32,7 +32,7 @@ export class VistaHudsComponent implements OnInit {
 
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
-    public btnVolver = 'Mapa de camas';
+    public btnVolver = 'VOLVER';
     public rutaVolver;
 
     constructor(public elementosRUPService: ElementosRUPService,
