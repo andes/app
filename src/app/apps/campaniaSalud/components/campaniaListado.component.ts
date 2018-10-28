@@ -10,64 +10,25 @@ import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
     
 })
 export class CampaniaListadoComponent implements OnInit{
-    public asunto:string;
     public prueba:boolean=false;
-    public seleccion:any=[];
     public campanias:any=[];
     public fechaDesde:Date;
     public fechaHasta:Date;
     
     constructor(public campaniaSaludService: CampaniaSaludService){
-        // this.listado = [
-        //     {
-        //         id: 1,
-        //         fechaDesde: 'Mon Feb 14 2018 11:15:52 GMT-0300 (ART)',
-        //         fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
-        //         asunto: 'Cáncer',
-        //         cuerpo: 'Si sos mujer de ...',
-        //         estado: "Oculto"
-        //     },
-        //     {
-        //         id: 2,
-        //         fechaDesde: 'Mon Feb 16 2018 11:15:52 GMT-0300 (ART)',
-        //         fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
-        //         asunto: 'Fumador',
-        //         cuerpo: 'Si fumas ...',
-        //         estado: "Publicado"
-        //     }
-        // ];
-        this.asunto="";
-        this.fechaDesde=null;
-        this.fechaHasta=null;
+
     }
 
     ngOnInit(){
-        // this.campaniaSaludService.getCampanias({}).subscribe(res=>{
-        //     this.campanias=res;
-        // });
-        this.campanias = [
-            {
-                id: 1,
-                fechaDesde: 'Mon Feb 14 2018 11:15:52 GMT-0300 (ART)',
-                fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
-                asunto: 'Cáncer',
-                cuerpo: 'Si sos mujer de ...',
-                estado: "Oculto"
-            },
-            {
-                id: 2,
-                fechaDesde: 'Mon Feb 16 2018 11:15:52 GMT-0300 (ART)',
-                fechaHasta: 'Mon Feb 20 2018 11:15:52 GMT-0300 (ART)',
-                asunto: 'Fumador',
-                cuerpo: 'Si fumas ...',
-                estado: "Publicado"
-            }
-        ];
-
+        this.fechaDesde = moment().startOf('day');
+        this.fechaHasta = moment().endOf('day');
+        this.campaniaSaludService.getCampanias().subscribe(res=>{
+            this.campanias=res;
+        });
     }
 
     refreshSelection() {
-        this.seleccion = [];
+        this.campanias = [];
         this.cargarCampanias();
     }
 
@@ -77,7 +38,14 @@ export class CampaniaListadoComponent implements OnInit{
             "fechaHasta": this.fechaHasta
         }).subscribe(res=>{
                 this.campaniaSaludService.campanias = res;
+                this.campanias = res;
+                console.log("res:" + res.toString);
+                console.log(res);
         });
+        console.log("campañas del listado");
+        console.log(this.campanias);
+        console.log("campañas del servicio");
+        console.log(this.campaniaSaludService.campanias);
     }
 
 }

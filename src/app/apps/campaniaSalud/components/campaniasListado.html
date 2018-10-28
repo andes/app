@@ -17,25 +17,25 @@
         <div class="row">
             <div class="col">
                 <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
-                <div *ngIf="!seleccion?.length && !loader" class="alert alert-default">
+                <div *ngIf="!campanias?.length" class="alert alert-default">
                     <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
                 </div>
-                <table *ngIf="seleccion?.length" class="table table-striped">
+                <div class="text-right">
+                    <plex-button label="Crear" type="success">Crear</plex-button>
+                </div>
+                <table *ngIf="campanias?.length" class="table table-striped">
                     <thead>
                         <tr>
                             <th class="w-50">Asunto</th>
                             <th>Fecha desde</th>
                             <th>Fecha hasta</th>
-                            <th>Estado</th>
-                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="hover" *ngFor="let item of seleccion">
-                            <td>{{item.asunto}}</td>
-                            <td>{{item.fechaDesde | fecha}}</td>
-                            <td>{{item.fechaHasta | fecha}}</td>
-                            <td>{{item.estado}}</td>
+                        <tr class="hover" *ngFor="let campania of campanias">
+                            <td>{{campania.asunto}}</td>
+                            <td>{{campania.vigencia.desde | fecha}}</td>
+                            <td>{{campania.vigencia.hasta | fecha}}</td>
                         </tr>
                     </tbody>
                 </table>

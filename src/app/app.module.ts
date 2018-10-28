@@ -1,4 +1,3 @@
-import { CampaniaSaludService } from "./apps/campaniaSalud/services/campaniaSalud.service";
 /*
 @jgabriel | 04-03-2017
 
@@ -348,6 +347,8 @@ import { ConfiguracionPrestacionCrearComponent } from './components/configuracio
 
 // Campañas Salud
 import { CampaniaListadoComponent } from './apps/campaniaSalud/components/campaniaListado.component';
+import { CampaniaPublicacionComponent } from './apps/campaniaSalud/components/campaniaPublicacion.component';
+import { CampaniaSaludService } from "./apps/campaniaSalud/services/campaniaSalud.service";
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -578,7 +579,8 @@ registerLocaleData(localeEs, 'es');
         PucoComponent,
 
         //Campañas Salud
-        CampaniaListadoComponent
+        CampaniaListadoComponent,
+        CampaniaPublicacionComponent
     ],
     entryComponents: RUPComponentsArray,
     bootstrap: [AppComponent],

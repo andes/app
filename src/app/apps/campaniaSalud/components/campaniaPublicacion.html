@@ -1,0 +1,61 @@
+<plex-layout>
+    <plex-layout-main>
+      <fieldset>
+        <legend>{{asunto}}</legend>
+        <div class="row">
+          <div class="col-md">
+            <label>Cuerpo</label>
+            <span>{{cuerpo}}</span>
+          </div>
+          <div class="col-md">
+            <label>Link</label>
+            <span>{{link}}</span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md">
+            <label>Sexo</label>
+            <span>{{modelo.sexo}}</span>
+          </div>
+          <div class="col-md">
+            <label>¿Tiene Hijos?</label>
+            <span *ngIf="modelo.tieneHijos">Si</span>
+            <span *ngIf="!modelo.tieneHijos">No</span>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Grupo EtarioMayus?</legend>
+        <div class="row">
+          <div class="col-md-4">
+            <label>Sexo</label>
+            <span>{{sexo}}</span>
+          </div>
+          <div class="col-md">
+            <label>Edad desde</label>
+            <span>{{edadDesde}}</span>
+          </div>
+          <div class="col-md">
+            <label>Edad hasta</label>
+            <span>{{edadHasta}}</span>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Vigencia</legend>
+        <div class="row">
+          <div class="col-md-4">
+            <label>Fecha Desde</label>
+            <span>{{fechaDesde}}</span>
+          </div>
+          <div class="col-md">
+            <label>Fecha Hasta</label>
+            <span>{{fechaHasta}}</span>
+          </div>
+        </div>
+      </fieldset>
+    </plex-layout-main>
+    <plex-layout-footer>
+      <plex-button label="Volver" type="danger" position="left"></plex-button>
+    </plex-layout-footer>
+  </plex-layout>
