@@ -74,6 +74,9 @@ export class DarTurnosComponent implements OnInit {
             this.autocitado = this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.registros &&
                 this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
                 this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado;
+            this.motivoConsulta = this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.registros &&
+                this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
+                this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo ? this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.motivo : this.motivoConsulta;
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
                 pacienteMPI => {
