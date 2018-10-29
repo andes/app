@@ -68,9 +68,6 @@ import {
     IProvincia
 } from './../../interfaces/IProvincia';
 import {
-    FechaPipe
-} from './../../pipes/fecha.pipe';
-import {
     Plex
 } from '@andes/plex';
 import {
