@@ -99,7 +99,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                 nombre: this.organizacion.nombre
             };
 
-            this.cama.sectores = this.sectores;
+            // this.cama.sectores = this.sectores;
             let operacion = this.CamaService.addCama(this.cama);
             operacion.subscribe(result => {
                 if (result) {

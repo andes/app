@@ -299,7 +299,6 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
-        console.log(dtoAccion);
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -565,7 +564,7 @@ export class MapaDeCamasComponent implements OnInit {
             //  this.showLoaderSidebar = true;
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
                 this.prestacionPorInternacion = prestacion;
-                //this.showLoaderSidebar = false;
+                // this.showLoaderSidebar = false;
 
             });
         } else {

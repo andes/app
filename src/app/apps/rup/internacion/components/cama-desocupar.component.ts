@@ -100,11 +100,11 @@ export class DesocuparCamaComponent implements OnInit {
     operacionDesocuparCama() {
         if (this.opcionDesocupar === 'movimiento') {
             this.elegirDesocupar = false;
-            this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.id);
+            debugger;
+            this.selectCamasDisponibles(this.cama.ultimoEstado.unidadOrganizativa.conceptId);
         } else {
             if (this.opcionDesocupar === 'pase') {
                 this.elegirDesocupar = false;
-
             } else {
                 if (this.opcionDesocupar === 'egreso') {
                     this.accionCama.emit({ cama: this.cama, accion: 'egresarPaciente' });
@@ -112,11 +112,14 @@ export class DesocuparCamaComponent implements OnInit {
             }
         }
     }
-    selectCamasDisponibles(idUnidadOrganizativa) {
+
+    selectCamasDisponibles(unidadOrganizativa) {
+        debugger;
         let fecha = moment().endOf('day').toDate();
         this.camasService.getCamasXFecha(this.auth.organizacion.id, fecha).subscribe(resultado => {
+            debugger;
             if (resultado) {
-                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.id === idUnidadOrganizativa);
+                let lista = resultado.filter(c => c.ultimoEstado.estado === 'disponible' && c.ultimoEstado.unidadOrganizativa.conceptId === unidadOrganizativa);
                 this.listadoCamas = [...lista];
             }
 
