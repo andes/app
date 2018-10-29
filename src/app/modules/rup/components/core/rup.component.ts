@@ -4,7 +4,7 @@ import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild } from '@angular/core';
+import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, Renderer, AfterViewInit } from '@angular/core';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { IElementoRUP } from './../../interfaces/elementoRUP.interface';
@@ -32,7 +32,7 @@ import { ActivatedRoute } from '@angular/router';
     encapsulation: ViewEncapsulation.None,
     template: '' // Debe quedar vacío, y cada atómo indicar que usa 'rup.html' o su propio template
 })
-export class RUPComponent implements OnInit {
+export class RUPComponent implements OnInit, AfterViewInit {
     @ViewChildren(RUPComponent) rupElements: QueryList<RUPComponent>;
     @ViewChild('form') formulario: any;
     public rupInstance: any;
@@ -91,6 +91,8 @@ export class RUPComponent implements OnInit {
 
     // Constructor
     constructor(
+        private elemento: ElementRef,
+        private renderer: Renderer,
         private componentFactoryResolver: ComponentFactoryResolver,
         private viewContainerRef: ViewContainerRef, // Referencia al padre del componente que queremos cargar
         protected conceptObserverService: ConceptObserverService,
@@ -114,6 +116,16 @@ export class RUPComponent implements OnInit {
         this.loadComponent();
     }
 
+    ngAfterViewInit() {
+        this.renderer.invokeElementMethod(this.elemento.nativeElement, 'scrollIntoView');
+    }
+
+    /**
+     * Emite el evento change con los nuevos datos de registro
+     *
+     * @protected
+     * @memberof RUPComponent
+     */
     prepareEmit(notifyObservers = true) {
         /**
         llamas a la funcion getMensajes y setea el objeto mensaje
