@@ -113,7 +113,8 @@
             <!-- Sidebar -->
             <plex-box id="panel-lateral" class="col-4">
                 <plex-loader *ngIf="showLoaderSidebar" type="ball-pulse-sync"></plex-loader>
-
+                sasdad
+                {{accion |json}}
 
                 <!-- Ingresar un paciente -->
                 <ng-container *ngIf="accion ==='internarPaciente'">
@@ -137,10 +138,11 @@
                     <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                 </ng-container>
                 <!-- Se incia la internacion con el paciente seleccionado -->
-                <ng-container *ngIf="!accion && showIngreso && pacienteSelected">
-                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (otroPaciente)="accion ='internarPaciente'; pacientes = null;"
+                <!-- <ng-container *ngIf="!accion && showIngreso && pacienteSelected"> -->
+                <ng-container *ngIf="showIngreso && pacienteSelected">
+                    <rup-iniciarInternacion (data)="cerrar($event, 'ingreso')" (accionCama)="actualizarMapaDeCamas($event)"
                         [paciente]="pacienteSelected" [camaSelected]="camaSeleccionada" [prestacion]="prestacionPorInternacion"
-                        [soloValores]="editarIngreso" (accionCama)="actualizarMapaDeCamas($event)"></rup-iniciarInternacion>
+                        [soloValores]="editarIngreso"></rup-iniciarInternacion>
                 </ng-container>
 
                 <!-- // Ingresar un paciente -->

@@ -104,7 +104,13 @@ export class MapaDeCamasComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private internacionService: InternacionService,
-        public camasService: CamasService) { }
+        public camasService: CamasService) {
+        // this.plex.updateTitle([{
+        //     route: '/',
+        //     name: 'MAPA DE CAMAS'
+        // }
+        // ]);
+    }
 
     ngOnInit() {
         this.refresh();
@@ -121,6 +127,7 @@ export class MapaDeCamasComponent implements OnInit {
             this.countFiltros();
             this.loader = false;
             if (camas) {
+                console.log("camas", camas)
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
                     this.estadoServicio = estado;
                 });
@@ -135,6 +142,9 @@ export class MapaDeCamasComponent implements OnInit {
                 this.router.navigate(['/']);
             }
         });
+        console.log("loader", this.loader)
+        console.log("thiscamas", this.camas)
+        debugger;
     }
 
     /**
@@ -293,7 +303,6 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
-
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -301,10 +310,13 @@ export class MapaDeCamasComponent implements OnInit {
                     this.camas[i] = dtoAccion.cama;
                     this.camaSeleccionada = dtoAccion.cama;
                     this.showIngreso = false;
+                    this.showEgreso = false;
                     this.pacienteSelected = null;
-                    this.prestacionDelPaciente(dtoAccion.cama);
-                    this.pacienteSelected = null;
+                    this.prestacionDelPaciente(this.camaSeleccionada);
                     this.pacientes = null;
+                    if (this.buscandoPaciente) { this.accion = dtoAccion.accion; }
+
+
                 }
                 break;
             case 'movimientoCama':
@@ -352,6 +364,7 @@ export class MapaDeCamasComponent implements OnInit {
                 break;
 
         }
+
     }
 
     /**
@@ -493,7 +506,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.pacienteSelected = event;
         this.showIngreso = true;
         this.editarIngreso = false;
-        this.prestacionPorInternacion = null;
+        this.prestacionPorInternacion = null; //BORRAR
 
 
     }
@@ -511,12 +524,10 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        this.reseteaBusqueda();
-        this.refresh();
-        this.camaSelected = event.cama;
+        this.camaSelected = event.cama; //BORRAR
         this.accion = event.accion;
         this.camaSeleccionada = this.camaSelected;
-        this.prestacionDelPaciente(this.camaSelected);
+        this.prestacionDelPaciente(this.camaSeleccionada);
         this.pacientes = null;
         this.showEgreso = false;
         this.showIngreso = false;

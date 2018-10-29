@@ -1,4 +1,4 @@
-<section class="cama-container manual-flip animate-repeat" [ngClass]="{'hover': cama.$rotar}">
+<section class="cama-container manual-flip animate-repeat">
     <div class="cama">
         <div class="card-container front {{cama.ultimoEstado.estado}}">
             <!-- Botonera lateral -->
@@ -47,7 +47,8 @@
                         </p>
                     </div>
                     <!-- devolver cama VER CHICHI-->
-                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
+                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);"
+                        *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
                     </plex-button>
 
                 </div>
@@ -59,19 +60,20 @@
                     type="success btn-sm" icon="account-plus" (click)="seleccionarCama('internarPaciente');">
                 </plex-button>
                 <!-- Desocupar cama -->
-                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm" (click)="seleccionarCama('desocupar');">
+                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm"
+                    (click)="seleccionarCama('desocupar');">
                 </plex-button>
                 <!-- Preparar cama -->
-                <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray" type="warning btn-sm"
-                    (click)="seleccionarCama('preparar');">
+                <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray"
+                    type="warning btn-sm" (click)="seleccionarCama('preparar');">
                 </plex-button>
                 <!-- Bloquear cama -->
                 <plex-button *ngIf="showEstados && !cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')"
                     type="danger btn-sm" icon="lock" (click)="seleccionarCama('bloquear');">
                 </plex-button>
                 <!-- Desbloquear cama -->
-                <plex-button *ngIf="showEstados && !cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly" icon="lock-open"
-                    type="success btn-sm" (click)="seleccionarCama('desbloquear');">
+                <plex-button *ngIf="showEstados && !cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly"
+                    icon="lock-open" type="success btn-sm" (click)="seleccionarCama('desbloquear');">
                 </plex-button>
                 <!-- Editar datos de la cama -->
                 <plex-button *ngIf="showEstados" icon="pencil" type="primary btn-sm" (click)="editarCama(cama)">
