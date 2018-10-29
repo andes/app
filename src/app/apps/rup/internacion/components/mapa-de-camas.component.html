@@ -241,7 +241,7 @@
                             </footer>
                         </plex-tab>
                         <!-- Resumen -->
-                        <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
+                        <plex-tab *ngIf="prestacionPorInternacion" label=" datos de internacion">
                             <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
                                 (refreshCamas)="updateCama($event)" (accionCama)="actualizarMapaDeCamas($event)"></internacion-resumen>
@@ -311,7 +311,7 @@
                     </plex-tabs>
                 </ng-container>
 
-                <ng-container *ngIf="loadCountFiltros && !camaSeleccionada">
+                <ng-container *ngIf="loadCountFiltros && (!accion && !pacienteSelected)">
 
                     <ng-container>
                         <plex-datetime type="datetime" [(ngModel)]="fecha" name="fecha" label="Fecha" (change)="mapaDeCamaXFecha(false)"></plex-datetime>
