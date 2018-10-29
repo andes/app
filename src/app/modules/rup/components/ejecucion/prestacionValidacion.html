@@ -137,14 +137,12 @@
                                     <b class="clearfix" *ngIf="elemento?.relacionadoCon?.length > 0">Relacionado con:
                                     </b>
                                     <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
-                                        class="badge badge-info text-uppercase">
-                                        {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() + elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
+                                        class="badge badge-info text-uppercase"> datos {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() + elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
                                     </small>
                                     <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
                                         <ng-container *ngFor="let relacion of elemento.relacionadoCon">
-                                            {{relacion | json}}
-                                            <span class="badge badge-info">
-                                                {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion?.cara + ')' : relacion?.concepto?.term }}
+                                            <span class="badge badge-info"> bbbb {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion?.cara
+                                                + ')' : relacion?.concepto?.term }}
                                             </span>
                                         </ng-container>
                                     </ng-container>
