@@ -57,7 +57,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
     public confirmarEliminar: Boolean = false;
     public indexEliminar: any;
-    public scopeEliminar: String;
+    public scopeEliminar: any;
 
     // Mustro mpi para cambiar de paciente.
     public showCambioPaciente = false;
@@ -108,7 +108,7 @@ export class PrestacionEjecucionComponent implements OnInit {
     public flagValid = true;
 
     constructor(
-        private servicioPrestacion: PrestacionesService,
+        public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         public plex: Plex, public auth: Auth,
         private router: Router, private route: ActivatedRoute,
