@@ -280,6 +280,7 @@ export class IniciarInternacionComponent implements OnInit {
      * Guarda la prestación
      */
     guardar(valid) {
+        debugger;
         if (valid.formValid) {
             if (!this.paciente) {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
@@ -369,14 +370,17 @@ export class IniciarInternacionComponent implements OnInit {
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.accionCama.emit({ cama: this.cama, accion: 'mostrarResumen' });
+                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                            //this.data.emit(false);
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
+
                         });
                     } else {
                         // this.router.navigate(['rup/internacion/ver', prestacion.id]);
-
+                        this.data.emit(false);
                         this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
+
                     }
 
                 }, (err) => {

@@ -299,20 +299,27 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
+        console.log(dtoAccion);
+        debugger;
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
-                    let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
-                    this.camas[i] = dtoAccion.cama;
-                    this.camaSeleccionada = dtoAccion.cama;
-                    this.showIngreso = false;
-                    this.showEgreso = false;
-                    this.pacienteSelected = null;
-                    this.prestacionDelPaciente(this.camaSeleccionada);
                     if (dtoAccion.otroPaciente) {
                         this.accion = dtoAccion.accion;
                         this.pacientes = null;
+                        this.showIngreso = false;
+                    } else {
+                        let i = this.camas.findIndex(c => c.id === dtoAccion.cama.id);
+                        this.camas[i] = dtoAccion.cama;
+                        this.camaSeleccionada = null;
+                        this.showIngreso = false;
+                        this.showEgreso = false;
+                        this.pacienteSelected = null;
+                        this.prestacionDelPaciente(dtoAccion.cama);
+                        this.accion = null;
                     }
+
+
                 }
                 break;
             case 'movimientoCama':
@@ -552,10 +559,10 @@ export class MapaDeCamasComponent implements OnInit {
     prestacionDelPaciente(cama) {
 
         if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
-            this.showLoaderSidebar = true;
+            //  this.showLoaderSidebar = true;
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
                 this.prestacionPorInternacion = prestacion;
-                this.showLoaderSidebar = false;
+                //this.showLoaderSidebar = false;
 
             });
         }
