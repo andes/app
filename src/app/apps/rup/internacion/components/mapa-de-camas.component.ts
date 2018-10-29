@@ -309,10 +309,10 @@ export class MapaDeCamasComponent implements OnInit {
                     this.showEgreso = false;
                     this.pacienteSelected = null;
                     this.prestacionDelPaciente(this.camaSeleccionada);
-                    this.pacientes = null;
-                    if (this.buscandoPaciente) { this.accion = dtoAccion.accion; }
-
-
+                    if (dtoAccion.otroPaciente) {
+                        this.accion = dtoAccion.accion;
+                        this.pacientes = null;
+                    }
                 }
                 break;
             case 'movimientoCama':
