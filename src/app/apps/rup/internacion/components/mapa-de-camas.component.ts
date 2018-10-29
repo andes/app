@@ -452,7 +452,7 @@ export class MapaDeCamasComponent implements OnInit {
                 desocupada: this.camas.filter(c => c.ultimoEstado.estado === 'desocupada'),
                 reparacion: this.camas.filter(c => c.ultimoEstado.estado === 'reparacion'),
                 bloqueada: this.camas.filter(c => c.ultimoEstado.estado === 'bloqueada'),
-                oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
+                oxigeno: this.camas.filter(c => c.equipamiento && c.equipamiento.find(e => e.conceptId === '261746005')),
                 disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
             };
         } else {
@@ -502,7 +502,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.pacienteSelected = event;
         this.showIngreso = true;
         this.editarIngreso = false;
-        this.prestacionPorInternacion = null; //BORRAR
+        this.prestacionPorInternacion = null; // BORRAR
 
 
     }
@@ -521,7 +521,7 @@ export class MapaDeCamasComponent implements OnInit {
 
     onCamaSelected(event) {
         if (this.camaSeleccionada !== event.cama) {
-            this.camaSelected = event.cama; //BORRAR
+            this.camaSelected = event.cama; // BORRAR
             this.accion = event.accion;
             this.camaSeleccionada = this.camaSelected;
             this.prestacionDelPaciente(this.camaSeleccionada);
@@ -558,8 +558,7 @@ export class MapaDeCamasComponent implements OnInit {
                 this.showLoaderSidebar = false;
 
             });
-        }
-        else {
+        } else {
             this.prestacionPorInternacion = null;
         }
     }

@@ -58,6 +58,7 @@ export class CamaCreateUpdateComponent implements OnInit {
     ngOnInit() {
         this.organizacionService.getById(this.authService.organizacion.id).subscribe(organizacion => {
             this.organizacion = organizacion;
+            this.sectores = this.organizacionService.getFlatTree(this.organizacion);
         });
 
         this.route.params.subscribe(params => {
@@ -65,11 +66,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                 let idCama = params['idCama'];
                 this.CamaService.getCama(idCama).subscribe(cama => {
                     this.cama = cama;
-                    this.sectores = this.cama.sectores;
                     this.estado = Object.assign({}, this.cama.ultimoEstado);
-                    this.organizacionService.getById(this.cama.organizacion.id).subscribe(organizacion => {
-                        this.organizacion = organizacion;
-                    });
                 });
             }
         });
@@ -128,9 +125,18 @@ export class CamaCreateUpdateComponent implements OnInit {
     }
 
     loadSectores($event) {
-        let query = $event.query;
-        let items = this.organizacionService.getFlatTree(this.organizacion);
-        $event.callback(items);
+        if ($event.query) {
+            let query = $event.query;
+            let items = this.organizacionService.getFlatTree(this.organizacion);
+            $event.callback(items);
+        } else {
+            if (this.cama.sectores && this.cama.sectores.length > 0) {
+                $event.callback(this.cama.sectores);
+            } else {
+                $event.callback([]);
+            }
+        }
+
     }
 
     loadServicios($event) {
