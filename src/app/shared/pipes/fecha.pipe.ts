@@ -2,7 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * Implementa un pipe de fecha u hora utilizando moment.js
- *
+ * Ejemplos:
+ *            {{ modelo.fechaNacimiento | fecha }}
+ *            {{ modelo.horaNacimiento  | fecha: true }}
  * @export
  * @class FechaPipe
  * @implements {PipeTransform}
