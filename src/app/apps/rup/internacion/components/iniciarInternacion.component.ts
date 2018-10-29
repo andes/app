@@ -147,6 +147,7 @@ export class IniciarInternacionComponent implements OnInit {
                         this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
                         // Salimos del iniciar internacion
                         this.data.emit(false);
+                        this.accionCama.emit({ cama: this.cama, accion: 'cancelaAccion' });
                         this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
@@ -368,7 +369,7 @@ export class IniciarInternacionComponent implements OnInit {
                         };
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-                            this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
+                            this.accionCama.emit({ cama: this.cama, accion: 'mostrarResumen' });
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
                         });
@@ -424,9 +425,13 @@ export class IniciarInternacionComponent implements OnInit {
 
     // permite elegir otro paciente para internar
     buscarOtroPaciente() {
-        this.buscandoPaciente = true;
 
+        this.buscandoPaciente = true;
+        this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
         this.otroPaciente.emit(false);
+
+
+
     }
 
 }
