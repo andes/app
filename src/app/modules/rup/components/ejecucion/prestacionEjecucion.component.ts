@@ -1236,10 +1236,6 @@ export class PrestacionEjecucionComponent implements OnInit {
         return results;
     }
 
-    goBottom() {
-        // document.getElementById('bottom').scrollIntoView();
-    }
-
     // eliminaTodosLosRegistros() {
     //     this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
     //         if (confirm) {
