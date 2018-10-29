@@ -127,7 +127,6 @@ export class MapaDeCamasComponent implements OnInit {
             this.countFiltros();
             this.loader = false;
             if (camas) {
-                console.log("camas", camas)
                 this.camasService.getEstadoServicio(camas).subscribe(estado => {
                     this.estadoServicio = estado;
                 });
@@ -142,9 +141,6 @@ export class MapaDeCamasComponent implements OnInit {
                 this.router.navigate(['/']);
             }
         });
-        console.log("loader", this.loader)
-        console.log("thiscamas", this.camas)
-        debugger;
     }
 
     /**
@@ -524,13 +520,18 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        this.camaSelected = event.cama; //BORRAR
-        this.accion = event.accion;
-        this.camaSeleccionada = this.camaSelected;
-        this.prestacionDelPaciente(this.camaSeleccionada);
-        this.pacientes = null;
-        this.showEgreso = false;
-        this.showIngreso = false;
+        if (this.camaSeleccionada !== event.cama) {
+            this.camaSelected = event.cama; //BORRAR
+            this.accion = event.accion;
+            this.camaSeleccionada = this.camaSelected;
+            this.prestacionDelPaciente(this.camaSeleccionada);
+            this.pacientes = null;
+            this.showEgreso = false;
+            this.showIngreso = false;
+        } else {
+            this.camaSeleccionada = null;
+            this.accion = null;
+        }
 
         // if (this.camaSeleccionada === this.camaSelected) {
         //     this.camaSeleccionada = null;
