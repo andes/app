@@ -21,7 +21,7 @@
             <div class="row" *ngIf="!elegirDesocupar">
                 <div class="col-md">
                     <plex-select *ngIf="opcionDesocupar && opcionDesocupar === 'pase'" name="unidadOrganizativa" [data]="listaUnidadesOrganizativas"
-                        idField="term" labelField="term" [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa" (change)="selectCamasDisponibles(PaseAunidadOrganizativa?.id)">
+                        idField="term" labelField="term" [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa" (change)="selectCamasDisponibles(PaseAunidadOrganizativa?.conceptId)">
                     </plex-select>
                 </div>
             </div>

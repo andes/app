@@ -464,7 +464,7 @@ export class MapaDeCamasComponent implements OnInit {
                 desocupada: this.camas.filter(c => c.ultimoEstado.estado === 'desocupada'),
                 reparacion: this.camas.filter(c => c.ultimoEstado.estado === 'reparacion'),
                 bloqueada: this.camas.filter(c => c.ultimoEstado.estado === 'bloqueada'),
-                oxigeno: this.camas.filter(c => c.equipamiento.find(e => e.conceptId === '261746005')),
+                oxigeno: this.camas.filter(c => c.equipamiento && c.equipamiento.find(e => e.conceptId === '261746005')),
                 disponible: this.camas.filter(c => c.ultimoEstado.estado === 'disponible')
             };
         } else {
