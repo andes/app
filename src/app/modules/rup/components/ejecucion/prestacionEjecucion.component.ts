@@ -139,8 +139,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
         this.servicioPrestacion.clearRefSetData();
-        this.refSet = this.servicioPrestacion.getRefSetData();
-        this.filtroRefset = this.refSet;
+
 
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
@@ -529,6 +528,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             snomedConcept.semanticTag = 'plan';
         }
 
+        this.refSet = this.servicioPrestacion.getRefSetData();
+        this.filtroRefset = this.refSet;
         this.tipoBusqueda = this.refSet;
 
         if (registroDestino && registroDestino.concepto) {

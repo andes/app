@@ -400,6 +400,21 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
      * @memberof BuscadorComponent
      */
     recibeResultados(resultadosSnomed: any) {
+        this.busquedaRefSet = this.servicioPrestacion.getRefSetData();
+        setTimeout(() => {
+            if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
+                this.ultimoTipoBusqueda = 'porRefset';
+                this.autofocus = false;
+                this.setTipoBusqueda(this.busquedaActual);
+                this.busquedaPorConcepto = true;
+            } else {
+                this.setTipoBusqueda(this.busquedaActual);
+                this.busquedaPorConcepto = false;
+            }
+        }, 100);
+
+
+
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
@@ -414,12 +429,12 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // evitando tener que volver a buscar
             // this.filtrarResultados(this.busquedaActual);
             this.filtrarResultados('buscadorBasico');
-            // Búsqueda por refset 🤔
 
             // filtramos los resultados para la busqueda guiada y que quede armado
             // con el formato para los desplegables
             //  this.filtrarResultadosBusquedaGuiada();
-            // Hay más frecuentes? Frecuentes de este profesional
+
+            // Filtra los resultado por referentSet
 
             // if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
             //     this.results.buscadorBasico['todos'] = this.results.buscadorBasico['todos'].filter(x => {
@@ -430,7 +445,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             // asignamos a una variable auxiliar para luego restaurar los valores
             // en caso de buscar o filtrar
             this.resultsAux['buscadorBasico'] = this.results['buscadorBasico'];
-            this.resultsAux['busquedaGuiada'] = this.results['busquedaGuiada'];
+            // this.resultsAux['busquedaGuiada'] = this.results['busquedaGuiada'];
 
         }
 
@@ -454,11 +469,11 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
                 this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => y === x.semanticTag));
 
 
-                if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
-                    this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
-                        return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                    }));
-                }
+                // if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
+                //     this.results[busquedaActual][concepto] = resultados.filter(x => this.conceptos[concepto].find(y => {
+                //         return y === x.semanticTag && x.refsetIds.includes(this.busquedaRefSet.refsetId);
+                //     }));
+                // }
             });
         }
 
@@ -528,11 +543,11 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     public getCantidadResultados(semanticTag) {
         if (this.results && this.busquedaActual && this.results[this.busquedaActual] && this.results[this.busquedaActual][semanticTag]) {
 
-            if (this.busquedaRefSet && this.busquedaRefSet.conceptos && this.results.buscadorBasico[this.filtroActual]) {
-                this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
-                    return x.refsetIds.includes(this.busquedaRefSet.refsetId);
-                });
-            }
+            // if (this.busquedaRefSet && this.busquedaRefSet.conceptos && this.results.buscadorBasico[this.filtroActual]) {
+            //     this.results.buscadorBasico[this.filtroActual] = this.results.buscadorBasico[this.filtroActual].filter(x => {
+            //         return x.refsetIds.includes(this.busquedaRefSet.refsetId);
+            //     });
+            // }
 
             return this.results[this.busquedaActual][semanticTag].length;
         }

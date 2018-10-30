@@ -133,7 +133,7 @@
 </div>
 
 <!-- RESULTADOS PRINCIPALES -->
-<div *ngIf="filtroActual && results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length">
+<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0">
 
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
