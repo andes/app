@@ -10,11 +10,8 @@
             <textarea *ngIf="!soloValores" class="form-control" [ngClass]="{'svgTextarea': !registro?.valor }"
                 [(ngModel)]="registro.valor" rows="6" id="descripcion" name="descripcion" [required]="params.required"></textarea>
             <p *ngIf="soloValores" class="readonly mb-5">
-                Descripción:
-                <br>
-                <ng-container>
-                    {{registro.valor}}
-                </ng-container>
+                {{registro.valor}}
+
             </p>
         </div>
         <!-- Area droppable del elemento -->
