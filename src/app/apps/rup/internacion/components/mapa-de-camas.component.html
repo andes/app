@@ -146,7 +146,7 @@
                 <!-- // Ingresar un paciente -->
 
                 <!-- Desocupar Cama -->
-                <ng-container *ngIf="accion ==='desocupar'">
+                <ng-container *ngIf="accion ==='desocupar' && !showEgreso">
                     <cama-desocupar [cama]="camaSelected" (accionCama)="actualizarMapaDeCamas($event)"></cama-desocupar>
                 </ng-container>
 
@@ -164,12 +164,12 @@
                     <cama-preparar [cama]="camaSeleccionada" (accionCama)="actualizarMapaDeCamas($event)"></cama-preparar>
                 </ng-container>
 
-                <ng-container *ngIf="accion==='mostrarResumen' || showEgreso">
+                <ng-container *ngIf="camaSeleccionada &&(accion==='mostrarResumen' || showEgreso) ">
                     <!--  camaSeleccionada && !accion && !showIngreso' -->
                     <plex-tabs [activeIndex]="panelIndex">
 
                         <!-- Tab cama -->
-                        <plex-tab label="Datos de cama">
+                        <plex-tab *ngIf="!showEgreso" label="Datos de cama">
                             <div class="sidebar-contenedor-texto">
                                 <div class="text-center info-cama-menu">
                                     <h2 class="andes-sidebar-numero {{camaSeleccionada.ultimoEstado.estado}}">{{camaSeleccionada.nombre}}</h2>
@@ -241,15 +241,14 @@
                             </footer>
                         </plex-tab>
                         <!-- Resumen -->
-                        <plex-tab *ngIf="prestacionPorInternacion" label=" datos de internacion">
+                        <plex-tab *ngIf="prestacionPorInternacion" label="datos de internacion">
                             <internacion-resumen (data)="editar($event)" [editarEgreso]="showEgreso" [paciente]="prestacionPorInternacion.paciente"
                                 [prestacion]="prestacionPorInternacion" [camaSeleccionada]="camaSeleccionada"
                                 (refreshCamas)="updateCama($event)" (accionCama)="actualizarMapaDeCamas($event)"></internacion-resumen>
                         </plex-tab>
 
                         <!-- Historial de cama -->
-                        <plex-tab class="
-                                andes-tab" label="Historial de la cama">
+                        <plex-tab *ngIf="!showEgreso" label="Historial de la cama">
                             <div class="row">
                                 <div class="col-md">
                                     <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaDesde"
@@ -268,6 +267,11 @@
                                     </plex-button>
                                 </div>
 
+                            </div>
+                            <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
+                            <div *ngIf="inicioBusqueda && !historial?.length && !loader" class="alert alert-default">
+                                <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de
+                                búsqueda
                             </div>
 
                             <table *ngIf="historial && historial.length" class="table table-striped">
@@ -302,11 +306,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            <div class="row" *ngIf="inicioBusqueda && !historial.length">
-                                <div class="col-12 text-center" style="margin: 2px">
-                                    <h5>No hay historial en ese rango de fechas</h5>
-                                </div>
-                            </div>
+
                         </plex-tab>
                     </plex-tabs>
                 </ng-container>

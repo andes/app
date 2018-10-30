@@ -36,13 +36,12 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-6">
-                                <plex-select *ngIf="!soloValores" [(ngModel)]="informeIngreso.asociado" name="asociado"
-                                    [data]="pacienteAsociado" placeholder="Seleccione... " label="Asociado a" idField="nombre"
-                                    labelField="nombre" [readonly]="true">
+                            <div class="col-md">
+
+                                <plex-select *ngIf="!soloValores && !informeIngreso.obraSocial" [(ngModel)]="informeIngreso.asociado"
+                                    name="asociado" [data]="pacienteAsociado" placeholder="Seleccione... " label="Asociado a"
+                                    idField="nombre" labelField="nombre">
                                 </plex-select>
-                            </div>
-                            <div class="col-6">
                                 <plex-text *ngIf="!soloValores && informeIngreso.obraSocial" [(ngModel)]="informeIngreso.obraSocial.nombre"
                                     label="Obra Social" name="obraSocial" [readonly]="true"></plex-text>
                             </div>

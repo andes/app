@@ -299,7 +299,6 @@ export class MapaDeCamasComponent implements OnInit {
      * @memberof MapaDeCamasComponent
      */
     actualizarMapaDeCamas(dtoAccion) {
-        console.log(dtoAccion);
         switch (dtoAccion.accion) {
             case 'internarPaciente':
                 if (dtoAccion.cama) {
@@ -331,6 +330,7 @@ export class MapaDeCamasComponent implements OnInit {
                     this.camaSeleccionada = dtoAccion.camaOcupada;
                     this.camas = [...this.camas];
                     this.accion = null;
+                    this.pacienteSelected = null;
 
                 }
                 break;
@@ -338,7 +338,8 @@ export class MapaDeCamasComponent implements OnInit {
                 this.camaSeleccionada = dtoAccion.cama;
                 // Busca una prestacion (internacion) asociada a la cama
                 this.prestacionDelPaciente(dtoAccion.cama);
-                this.accion = null;
+                // this.accion = null;
+                //  this.pacienteSelected = null;
                 this.showEgreso = true;
                 this.showIngreso = false;
                 this.buscandoPaciente = false;
@@ -346,6 +347,7 @@ export class MapaDeCamasComponent implements OnInit {
             case 'bloquearCama':
                 this.camaSeleccionada = dtoAccion.cama;
                 this.accion = null;
+                this.pacienteSelected = null;
                 break;
             case 'cancelaAccion':
                 this.camaSeleccionada = null;
@@ -355,6 +357,7 @@ export class MapaDeCamasComponent implements OnInit {
             case 'desbloqueoCama':
                 this.camaSeleccionada = dtoAccion.cama;
                 this.accion = null;
+                this.pacienteSelected = null;
                 break;
 
             case 'mostrarResumen':
@@ -504,6 +507,8 @@ export class MapaDeCamasComponent implements OnInit {
     onPacienteCancel() {
         this.accion = null;
         this.camaSeleccionada = null;
+
+        this.pacienteSelected = false;
     }
 
     onPacienteSelected(event) {
@@ -511,7 +516,7 @@ export class MapaDeCamasComponent implements OnInit {
         this.pacienteSelected = event;
         this.showIngreso = true;
         this.editarIngreso = false;
-        this.prestacionPorInternacion = null; //BORRAR
+        this.prestacionPorInternacion = null; // BORRAR
 
 
     }
@@ -529,32 +534,33 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
-        if (this.camaSeleccionada !== event.cama) {
-            this.camaSelected = event.cama; //BORRAR
-            this.accion = event.accion;
-            this.camaSeleccionada = this.camaSelected;
-            this.prestacionDelPaciente(this.camaSeleccionada);
-            this.pacientes = null;
+
+        if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;
-            this.reseteaBusqueda();
-        } else {
+            this.accion = event.accion;
+            this.camaSelected = event.cama;
+            this.camaSeleccionada = this.camaSelected;
+            this.prestacionPorInternacion = null;
+            this.prestacionDelPaciente(this.camaSeleccionada);
+            this.pacientes = null;
+            this.buscandoPaciente = false;
+            this.pacienteSelected = true;
+
+        } else { // Ya hay camas seleccionadas
             this.camaSeleccionada = null;
             this.accion = null;
+            this.pacienteSelected = false;
+            this.pacientes = null;
+            this.showIngreso = false;
+            this.showEgreso = false;
+            if (event.accion !== 'mostrarResumen') {
+                this.camaSelected = event.cama;
+                this.camaSeleccionada = this.camaSelected;
+                this.accion = event.accion;
+            }
         }
-
-        // if (this.camaSeleccionada === this.camaSelected) {
-        //     this.camaSeleccionada = null;
-        //     this.showMenu = true;
-        //     this.showEgreso = false;
-        // } else {
-        //     this.showMenu = true;
-        //     this.showIngreso = false;
-        //     this.showEgreso = false;
-        //     this.showResumen = false;
-        //     this.camaSeleccionada = this.camaSelected;
-        //     this.prestacionPorInternacion = null;
-        // }
+        this.reseteaBusqueda();
 
     }
 
@@ -562,14 +568,11 @@ export class MapaDeCamasComponent implements OnInit {
     prestacionDelPaciente(cama) {
 
         if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
-            //  this.showLoaderSidebar = true;
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
                 this.prestacionPorInternacion = prestacion;
-                //this.showLoaderSidebar = false;
 
             });
-        }
-        else {
+        } else {
             this.prestacionPorInternacion = null;
         }
     }
@@ -649,6 +652,7 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     reseteaBusqueda() {
+        this.inicioBusqueda = false;
         this.historial = [];
     }
 

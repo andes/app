@@ -61,7 +61,6 @@ export class IniciarInternacionComponent implements OnInit {
         { id: 'No trabaja y no busca trabajo', nombre: 'No trabaja y no busca trabajo' }
     ];
     public pacienteAsociado = [
-        { id: 'Obra Social', nombre: 'Obra Social' },
         { id: 'Plan de salud privado o Mutual', nombre: 'Plan de salud privado o Mutual' },
         { id: 'Plan o Seguro público', nombre: 'Plan o Seguro público' },
         { id: 'Mas de uno', nombre: 'Mas de uno' },
@@ -370,7 +369,7 @@ export class IniciarInternacionComponent implements OnInit {
                         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
                             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
                             this.accionCama.emit({ cama: this.cama, accion: 'internarPaciente' });
-                            //this.data.emit(false);
+                            // this.data.emit(false);
                         }, (err1) => {
                             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
 
