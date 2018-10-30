@@ -534,10 +534,15 @@ export class MapaDeCamasComponent implements OnInit {
     }
 
     onCamaSelected(event) {
+<<<<<<< HEAD
 
         if (!this.camaSeleccionada || this.camaSeleccionada !== event.cama) { // Es la primera vez o selecciono una cama diferente a la que estaba
             this.showEgreso = false;
             this.showIngreso = false;
+=======
+        if (this.camaSeleccionada !== event.cama) {
+            this.camaSelected = event.cama; // BORRAR
+>>>>>>> 1622e5772a720044e1824a465a48508bfd171fc3
             this.accion = event.accion;
             this.camaSelected = event.cama;
             this.camaSeleccionada = this.camaSelected;
@@ -570,6 +575,10 @@ export class MapaDeCamasComponent implements OnInit {
         if (cama.ultimoEstado && cama.ultimoEstado.paciente) {
             this.servicioPrestacion.getById(cama.ultimoEstado.idInternacion).subscribe(prestacion => {
                 this.prestacionPorInternacion = prestacion;
+<<<<<<< HEAD
+=======
+                // this.showLoaderSidebar = false;
+>>>>>>> 1622e5772a720044e1824a465a48508bfd171fc3
 
             });
         } else {
