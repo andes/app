@@ -679,11 +679,11 @@ export class PrestacionValidacionComponent implements OnInit {
      */
 
     showMotivo(elemento) {
-        if (this.elementoRUPprestacion.motivoConsoltaOpcional) {
+        if (this.elementoRUPprestacion.motivoConsultaOpcional) {
             return false;
         }
         let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor.estado !== 'transformado';
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
     }
 
