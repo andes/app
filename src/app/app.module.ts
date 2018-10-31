@@ -83,11 +83,14 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
 
+// TOP
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
@@ -113,6 +116,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+
 
 
 // Componentes
@@ -243,6 +247,7 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
@@ -272,7 +277,7 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-
+import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -316,7 +321,10 @@ import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.
 import { CamasService } from './services/camas.service';
 
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
+import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
+import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
+import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -367,6 +375,7 @@ export let RUPRegistry = {
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
@@ -388,6 +397,7 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
 };
 
 let RUPComponentsArray = [
@@ -421,6 +431,7 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
     EjecucionInternacionComponent,
@@ -441,7 +452,8 @@ let RUPComponentsArray = [
     DesarrolloPsicomotorComponent,
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent
+    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
+    ProcedimientoDeEnfermeriaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -531,6 +543,9 @@ registerLocaleData(localeEs, 'es');
         LaboratoriosComponent,
         // Solicitudes
         SolicitudesComponent,
+        DetalleSolicitudComponent,
+        AuditarSolicitudComponent,
+        NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
@@ -542,6 +557,7 @@ registerLocaleData(localeEs, 'es');
         CamaEstadoComponent,
         OcuparCamaComponent,
         PucoComponent,
+        ReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -620,6 +636,7 @@ registerLocaleData(localeEs, 'es');
         ProcedimientosQuirurgicosService,
         FormTerapeuticoService,
         CDAService,
+        ReglaService,
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
