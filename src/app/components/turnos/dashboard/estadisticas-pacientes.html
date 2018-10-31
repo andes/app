@@ -43,13 +43,29 @@
                 </div>
             </div>
             <div class="row">
-
-
                 <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
                 <div class="col-6" *ngIf="_paciente?.id && _paciente.contacto && _paciente.contacto.length > 0">
                     {{_paciente.contacto[0].valor}}
+                </div>
+            </div>
+            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+                <div class="col-6">
+                    <i class="mdi mdi-account-card-details"></i>
+                    <span style="color: #00A8E0">Obra Social</span>
+                </div>
+                <div class="col-6">
+                    <i class="mdi mdi-card-text-outline"></i>
+                    <span style="color: #00A8E0">Número de Afiliado</span>
+                </div>
+            </div>
+            <div class="row" *ngIf="_paciente?.financiador && _paciente.financiador[0]?.nombre">
+                <div class="col-6">
+                    {{_paciente.financiador[0].nombre}}
+                </div>
+                <div class="col-6">
+                    {{_paciente.financiador[0].numeroAfiliado}}
                 </div>
             </div>
             <br>
@@ -114,7 +130,8 @@
 
     </plex-tab>
     <plex-tab icon="clock" label="Turnos">
-        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()" (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
+        <turnos-paciente [turnos]="turnosPaciente" [operacion]="'operacionTurnos'" (turnosPacienteChanged)="getPaciente()"
+            (showArancelamientoForm)="arancelamiento($event)"></turnos-paciente>
     </plex-tab>
     <plex-tab icon="history" label="Historial">
         <fieldset>
@@ -130,7 +147,8 @@
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
+                            {{turno.updatedAt
                             | date: 'dd/MM/yyyy'}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
 
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
