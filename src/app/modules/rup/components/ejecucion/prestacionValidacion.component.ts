@@ -119,12 +119,12 @@ export class PrestacionValidacionComponent implements OnInit {
         // consultamos desde que pagina se ingreso para poder volver a la misma
         this.btnVolver = 'Volver';
         this.rutaVolver =
-        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
-            if (resp) {
-                this.btnVolver = resp.nombre;
-                this.rutaVolver = resp.ruta;
-            }
-        });
+            this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+                if (resp) {
+                    this.btnVolver = resp.nombre;
+                    this.rutaVolver = resp.ruta;
+                }
+            });
         // Verificamos permisos globales para rup, si no posee realiza redirect al home
         if (this.auth.getPermissions('rup:?').length <= 0) {
             this.redirect('inicio');
@@ -278,9 +278,11 @@ export class PrestacionValidacionComponent implements OnInit {
                     this.prestacion = prestacion;
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
-                            });
+                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                });
+                            }
                         }
                     });
 
