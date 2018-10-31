@@ -1,0 +1,134 @@
+<form class="plex-layout" #form="ngForm">
+    <section>
+        <div class="row">
+            <!--Panel de Agendas-->
+            <div class="col-6">
+                <plex-box>
+                    <header>
+                        <div class="page-title">Configuración de Reglas</div>
+                    </header>
+                    <div class="row">
+                        <div class="col">
+                            <label>Organización Destino</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span>{{organizacionDestino.nombre}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <plex-select [(ngModel)]="prestacionDestino" name="tipoPrestacion" (getData)="loadTipoPrestaciones($event)"
+                                label="Prestación Destino" placeholder="Tipos de Prestación Destino" [required]="true"
+                                (change)="cargarReglas()">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <fieldset>
+                                <legend>organizaciones Origen
+                                </legend>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <plex-select [(ngModel)]="organizacion" name="organizacion" (getData)="loadOrganizaciones($event)"
+                                placeholder="OrganizacionOrigen">
+                            </plex-select>
+                        </div>
+                        <div class="col-2">
+                            <plex-button icon="plus" type="success btn-sm" title="Agregar Organizacion" (click)="addOrganizacion()">
+                            </plex-button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <div class="list-group">
+                                <div *ngFor="let regla of reglas; let i=index" class="list-group-item justify-content-between hover"
+                                    [ngClass]="{active: i==reglaActiva}" (click)="activarRegla(i)">
+                                    <div>
+                                        <span *ngIf="regla.origen && regla.origen.organizacion">{{regla.origen.organizacion.nombre}}</span>
+                                    </div>
+                                    <plex-button icon="delete" type="primary" (click)="deleteOrganizacion(i)">
+                                    </plex-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </plex-box>
+            </div>
+            <div class="col-6" *ngIf="reglaActiva>-1">
+                <plex-box>
+                    <header>
+                        <div class="page-title">Configuración de Prestaciones</div>
+                    </header>
+                    <div class="row">
+                        <div class="col">
+                            <label>Organización Origen</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <span>{{regla.origen.organizacion.nombre}}</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <fieldset>
+                                <legend>Prestaciones Origen
+                                </legend>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-10">
+                            <plex-select [(ngModel)]="prestacionOrigen" name="prestacionOrigen" (getData)="loadTipoPrestaciones($event)"
+                                placeholder="prestacionOrigen">
+                            </plex-select>
+                        </div>
+                        <div class="col-2">
+                            <plex-button icon="plus" type="success btn-sm" title="Agregar Prestación" (click)="addPrestacion()">
+                            </plex-button>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col">
+                            <div class="list-group">
+                                <div *ngFor="let prestacion of regla.origen.prestaciones; let i=index" class="list-group-item justify-content-between hover"
+                                    [ngClass]="{active: i==prestacionActiva}" (click)="activarPrestacion(i)">
+                                    <div class="col">
+                                        <span *ngIf="prestacion.prestacion?.term">{{prestacion.prestacion.term}}</span>
+                                    </div>
+                                    <div class="col">
+                                        <plex-bool [(ngModel)]="prestacion.auditable" name="prestacionAuditable{{i}}"
+                                            label="Auditable"></plex-bool>
+                                    </div>
+
+                                    <plex-button icon="delete" type="primary" (click)="deletePrestacion(i)">
+                                    </plex-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </plex-box>
+            </div>
+        </div>
+    </section>
+    <footer>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button type="danger" label="Cancelar" (click)="cancelar()">
+                </plex-button>
+            </div>
+            <div class="col text-right">
+                <plex-button type="success" label="Guardar" (click)="onSave($event)" title="Guardar">
+                </plex-button>
+            </div>
+        </div>
+    </footer>
+</form>

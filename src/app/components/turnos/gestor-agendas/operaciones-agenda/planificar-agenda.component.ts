@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -572,6 +572,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            if (this.dinamica) {
+                this.modelo.bloques[0].horaInicio = iniAgenda;
+                this.modelo.bloques[0].horaFin = finAgenda;
+            }
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;

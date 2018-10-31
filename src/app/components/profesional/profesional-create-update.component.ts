@@ -1,5 +1,5 @@
 import { IDireccion } from './../../interfaces/IDireccion';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 // import { FORM_DIRECTIVES } from '@angular/common';
