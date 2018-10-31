@@ -8,19 +8,18 @@ export class CampaniaSaludService{
     campaniaSeleccionada: ICampaniaSalud;
     campanias: ICampaniaSalud[];
     readonly campaniaUrl="/core/tm/campanias";
-
+    
     constructor(private server: Server){
     } 
 
     getCampanias(params?):Observable<ICampaniaSalud[]>{
-        return (params)? this.server.get(this.campaniaUrl + 'Filtros', { params: params, showError: true })
-                       : this.server.get(this.campaniaUrl);
+        return this.server.get(this.campaniaUrl,{params: params});
     }
-    putCampanias(_id){
-        return this.server.put(this.campaniaUrl + '/_id', this.campaniaSeleccionada);
+    putCampanias(campania:ICampaniaSalud){
+        return this.server.put(this.campaniaUrl + '/' + campania.id, campania);
     }
     postCampanias(campania:ICampaniaSalud){
+        console.log('log this', campania);
         return this.server.post(this.campaniaUrl, campania);
     }
-
 }

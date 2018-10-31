@@ -1,0 +1,61 @@
+<ng-container *ngIf="!campania">
+    <h4 class="text-center">
+        Seleccione una campaña de salud para visualizarla
+    </h4>
+</ng-container>
+<ng-container *ngIf="campania">
+    <fieldset>
+        <legend>{{campania.asunto}}</legend>
+        <div class="row">
+            <div class="col-md">
+                <span>{{campania.cuerpo}}</span>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Grupo Etario</legend>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Sexo</label>
+                <span *ngIf="campania.target.sexo">{{campania.target.sexo.nombre | titlecase }}</span>
+                <span *ngIf="!campania.target.sexo">{{campaniaSaludService.campaniaSexoSinEspecificar}}</span>
+            </div>
+            <div class="col-md">
+                <label>Edad Desde</label>
+                <span>{{campania.target.grupoEtareo.desde}}</span>
+            </div>
+            <div class="col-md">
+                <label>Edad Hasta</label>
+                <span>{{campania.target.grupoEtareo.hasta}}</span>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Vigencia</legend>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Fecha Desde</label>
+                <span>{{campania.vigencia?.desde | fecha}}</span>
+            </div>
+            <div class="col-md">
+                <label>Fecha Hasta</label>
+                <span>{{campania.vigencia.hasta | fecha}}</span>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-md-4">
+                <label>Texto Acción</label>
+                <span>{{campania.textoAccion | uppercase}}</span>
+            </div>
+            <div class="col-md-8">
+                <label>Link</label>
+                <a href="{{campania.link}}">{{campania.link}}</a>
+            </div>
+        </div>
+    </fieldset>
+    <div class="col text-right">
+        <plex-button label="Modificar" type="success" (click)="modificar()"></plex-button>
+    </div>
+</ng-container>

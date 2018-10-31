@@ -1,0 +1,79 @@
+<form #campaniaForm="ngForm">
+    <fieldset>
+        <legend>Datos principales</legend>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Asunto" [(ngModel)]="campania.asunto" name="asunto" [required]="true"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Cuerpo" [(ngModel)]="campania.cuerpo" name="cuerpo" [multiline]="true" [required]="true"></plex-text>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <plex-text label="Link" [(ngModel)]="campania.link" name="link" [required]="true"></plex-text>
+            </div>
+            <div class="col-md-6">
+                <plex-text label="Imagen" [(ngModel)]="campania.imagen" name="imagen" [required]="true"></plex-text>
+            </div>
+            <div class="col-md-6">
+                <plex-datetime type="date" [(ngModel)]="campania.fechaPublicacion" name="fechaPublicacion" label="Fecha de Publicación"
+                    [required]="true">
+                </plex-datetime>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Grupo etario</legend>
+        <div class="row">
+            <div class="col-md-4">
+                <plex-select label="Sexo" [(ngModel)]="campania.target.sexo" name="sexo" [data]="sexos"></plex-select>
+            </div>
+            <div class="col-md-4">
+                <plex-int label="Edad desde" [(ngModel)]="campania.target.grupoEtareo.desde" name="desde"
+                    [max]="campania.target.grupoEtareo.hasta"></plex-int>
+            </div>
+            <div class="col-md-4">
+                <plex-int label="Edad hasta" [(ngModel)]="campania.target.grupoEtareo.hasta" name="hasta"
+                    [min]="campania.target.grupoEtareo.desde"></plex-int>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>Vigencia</legend>
+        <div class="row">
+            <div class="col-md">
+                <plex-datetime type="date" [(ngModel)]="campania.vigencia.desde" name="fechaDesde" label="Desde"
+                    [required]="true" [max]="campania.vigencia.hasta">
+                </plex-datetime>
+            </div>
+            <div class="col-md">
+                <plex-datetime type="date" [(ngModel)]="campania.vigencia.hasta" name="fechaHasta" label="Hasta"
+                    [required]="true" [min]="campania.vigencia.desde">
+                </plex-datetime>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-md">
+                <plex-text label="Texto Acción" [(ngModel)]="campania.textoAccion" name="textoAccion"></plex-text>
+            </div>
+            <div class="col-md-4">
+                <plex-bool label="¿Está activo?" [(ngModel)]="campania.activo" name="activo" type="slide" [required]="true"></plex-bool>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col text-left">
+                <plex-button label="Cancelar" type="danger" (click)="onCancel()"></plex-button>
+            </div>
+            <div class="col text-right">
+                <plex-button label="Guardar" type="success" [validateForm]="campaniaForm" (click)="save($event)"></plex-button>
+            </div>
+        </div>
+    </fieldset>
+</form>
