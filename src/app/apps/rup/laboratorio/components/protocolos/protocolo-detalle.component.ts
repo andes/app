@@ -394,6 +394,7 @@ export class ProtocoloDetalleComponent
                 this.protocolos.splice(this.indexProtocolo, 1);
                 if (this.modo === 'recepcion' || this.protocolos.length === 0) {
                     this.volverAListaControEmit.emit();
+                    this.mostrarCuerpoProtocolo = true;
                 } else {
                     if (!this.protocolos[this.indexProtocolo]) {
                         this.indexProtocolo = this.protocolos.length - 1;
@@ -406,6 +407,7 @@ export class ProtocoloDetalleComponent
             this.modelo.estados = [{ tipo: 'ejecucion' }];
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
                 this.volverAListaControEmit.emit();
+                this.mostrarCuerpoProtocolo = true;
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
             });
         }

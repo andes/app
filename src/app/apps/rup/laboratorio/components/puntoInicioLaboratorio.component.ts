@@ -109,6 +109,7 @@ export class PuntoInicioLaboratorioComponent
         } else if ($event === 4) {
             this.modo = 'listado';
         }
+        this.refreshSelection();
     }
 
     /**
@@ -219,6 +220,7 @@ export class PuntoInicioLaboratorioComponent
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
         this.recepcionarTurno = false;
+        this.seleccionPaciente = false; 
     }
 
     /**
@@ -348,7 +350,6 @@ export class PuntoInicioLaboratorioComponent
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
-            this.showCargarSolicitud = true;
         }
     }
 
