@@ -1,35 +1,35 @@
 <table class="table table-striped table-sm">
     <thead>
-        <th *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>Cod.</th>
+        <th *ngIf='modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
         <th>Descripcion</th>
-        <th *ngIf='modo.id ==="recepcion" || modo.id ==="control"' class="float-center">S/Muestra</th>
-        <ng-container *ngIf='modo.id !=="control" && modo.id !=="recepcion"'>
+        <th *ngIf='modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
+        <ng-container *ngIf='modo !=="control" && modo !=="recepcion"'>
             <th class="float-center">Valor</th>
-            <th *ngIf='modo.id ==="validacion"' class="float-center">R. Anterior</th>
+            <th *ngIf='modo ==="validacion"' class="float-center">R. Anterior</th>
             <th class="float-center">UM</th>
             <th class="float-center">VR</th>
         </ng-container>
-        <ng-container *ngIf='modo.id ==="validacion"'>
+        <ng-container *ngIf='modo ==="validacion"'>
             <th class="float-center">
                 <div>
                     <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)" name="validarTodos"></plex-bool>
                 </div>Validar </th>
         </ng-container>
         <th></th>
-        <th *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>Acciones</th>
-        <th *ngIf='modo.id ==="carga" || modo.id ==="validacion"'>Observaciones</th>
+        <th *ngIf='modo ==="recepcion" || modo ==="control"'>Acciones</th>
+        <th *ngIf='modo ==="carga" || modo ==="validacion"'>Observs.</th>
     </thead>
     <tbody>
-        <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
+        <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
             <tr class="hover" *ngFor="let practica of practicasEjecucion">
                 <td>{{practica.codigo}}</td>
                 <td>{{practica.nombre}}</td>
-                <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
-                    <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
+                <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
+                    <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
                 </ng-container>
                 <td></td>
                 <td></td>
-                <ng-container *ngIf='modo.id === "control" || modo.id === "recepcion"'>
+                <ng-container *ngIf='modo === "control" || modo === "recepcion"'>
                     <td>
                         <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
                     </td>
@@ -37,15 +37,14 @@
             </tr>
             <tr class="hover">
                 <td>
-                    <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" 
-                    (change)="getPracticaPorCodigo($event)" placeholder="Escriba el código" ></plex-text>
+                    <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()" (focusout)="getPracticaPorCodigo()" placeholder="Escriba el código"></plex-text>
                 </td>
                 <td>
-                    <plex-select [(ngModel)]="practicaSeleccionada" name="nombrePractica" (getData)="loadPracticasPorNombre($event)" (change)="seleccionarPractica($event.value)"
-                        placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre" >
+                    <plex-select [(ngModel)]="practicaSeleccionada" name="nombrePractica" (getData)="loadPracticasPorNombre($event);" (change)="seleccionarPractica($event.value)"
+                        placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre">
                     </plex-select>
                 </td>
-                <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
+                <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
                     <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
                 </ng-container>
                 <td></td>
@@ -54,7 +53,7 @@
             </tr>
         </ng-container>
 
-        <ng-container *ngIf="modo.id === 'carga' || modo.id === 'validacion'">
+        <ng-container *ngIf="modo === 'carga' || modo === 'validacion'">
             <tr class="hover" *ngFor="let reg of practicasCarga">
                 <td>
                     <ng-container *ngFor="let m of reg.margen">&nbsp;&nbsp;&nbsp;</ng-container>
@@ -65,12 +64,12 @@
                     <td></td>
                     <td></td>
                     <td></td>
-                    <ng-container *ngIf="modo.id ==='validacion'">
+                    <ng-container *ngIf="modo ==='validacion'">
                         <td></td>
                         <td></td>
                         <td></td>
                     </ng-container>
-                    
+
                 </ng-container>
                 <ng-container *ngIf="!reg.esCompuesta">
                     <td class="text-left align-middle estado">
@@ -83,7 +82,7 @@
 
                         </p>
                     </td>
-                    <td *ngIf='modo.id ==="validacion"'>
+                    <td *ngIf='modo ==="validacion"'>
                         <span style='color:green'>
                             <!-- {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length) - 1]?.valor}}
                                 <br> {{practica.resultado?.resultadosAnteriores[(practica.resultado.resultadosAnteriores.length)
@@ -93,28 +92,28 @@
                         </span>
                     </td>
                     <td>
-                    {{reg.formatoResultado?.unidadMedida.nombre}}
-                    <td>
-                        {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado?.valoresReferencia.valorMaximo}}
-                    </td>
-                    <ng-container *ngIf='modo.id ==="validacion"'>
+                        {{reg.formatoResultado?.unidadMedida.nombre}}
                         <td>
-                            <plex-bool type="checkbox" [(ngModel)]="reg.practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
-                                name="clickValidar"></plex-bool>
+                            {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado?.valoresReferencia.valorMaximo}}
                         </td>
-                    </ng-container>
-                    <td></td>
-                    <ng-container *ngIf='modo.id ==="recepcion" || modo.id ==="control"'>
-                        <td>
-                            <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
-                        </td>
-                    </ng-container>
-                    <ng-container *ngIf='(modo.id ==="carga" || modo.id ==="validacion") && !showObservaciones'>
-                        <td>
-                            <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
-                            </plex-button>
-                        </td>
-                    </ng-container>
+                        <ng-container *ngIf='modo ==="validacion"'>
+                            <td>
+                                <plex-bool type="checkbox" [(ngModel)]="reg.practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
+                                    name="clickValidar"></plex-bool>
+                            </td>
+                        </ng-container>
+                        <td></td>
+                        <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
+                            <td>
+                                <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                            </td>
+                        </ng-container>
+                        <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
+                            <td>
+                                <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
+                                </plex-button>
+                            </td>
+                        </ng-container>
                 </ng-container>
                 <div class="row">
                     <div class="col-12">

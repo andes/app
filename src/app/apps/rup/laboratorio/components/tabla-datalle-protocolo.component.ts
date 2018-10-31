@@ -21,7 +21,7 @@ export class TablaDatalleProtocolo implements OnInit {
 
     // practicasCarga = [];
     practicas;
-    practicaSeleccionada;
+    practicaSeleccionada = null;
 
     @Input() modo: any;
     @Input() modelo: any;
@@ -75,7 +75,6 @@ export class TablaDatalleProtocolo implements OnInit {
      * @memberof ProtocoloDetalleComponent
      */
     validarTodas($event, practicas) {
-        console.log('validarTodas', practicas)
         practicas.forEach(practica => {
             if (practica.valor) {
                 practica.valor.resultado.validado = $event.value;
@@ -118,12 +117,12 @@ export class TablaDatalleProtocolo implements OnInit {
     }
 
     loadPracticasPorNombre($event) {
-        console.log($event.query)
+        console.log($event.query);
         if ($event.query) {
             this.servicioPractica.getMatch({
                 cadenaInput: $event.query
             }).subscribe((resultado: any) => {
-                console.log(resultado)
+                console.log(resultado);
                 $event.callback(resultado);
             });
         } else {
@@ -131,20 +130,13 @@ export class TablaDatalleProtocolo implements OnInit {
         }
     }
 
-    getPracticaPorCodigo($event) {
-        console.log('getPracticaPorCodigo', $event);
-        if ($event.value) {
-            this.servicioPractica.getMatchCodigo($event.value).subscribe((resultado: any) => {
-                console.log(resultado)
+    getPracticaPorCodigo(value) {
+        if (this.practicaSeleccionada !== '') {
+            this.servicioPractica.getMatchCodigo(this.practicaSeleccionada).subscribe((resultado: any) => {
                 if (resultado) {
                     this.seleccionarPractica(resultado);
                 }
-
-                // $event.callback(resultado);
-                // $event.callback(resultado);
             });
-        } else {
-            $event.callback([]);
         }
     }
 
@@ -155,41 +147,42 @@ export class TablaDatalleProtocolo implements OnInit {
     * @memberof ProtocoloDetalleComponent
     */
     async seleccionarPractica(practica: IPractica) {
-        console.log('asd', practica.concepto.conceptId)
-        let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
+        console.log('seleccionarPractica');
+        if (practica) {
+            let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
 
-        if (existe === -1) {
-            this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
-            let practicaEjecucion: any = {
-                _id: practica.id,
-                codigo: practica.codigo,
-                destacado: false,
-                esSolicitud: false,
-                esDiagnosticoPrincipal: false,
-                relacionadoCon: [],
-                nombre: practica.nombre,
-                concepto: practica.concepto,
-                // registros: []
-            };
+            if (existe === -1) {
+                this.solicitudProtocolo.solicitudPrestacion.practicas.push(practica);
+                let practicaEjecucion: any = {
+                    _id: practica.id,
+                    codigo: practica.codigo,
+                    destacado: false,
+                    esSolicitud: false,
+                    esDiagnosticoPrincipal: false,
+                    relacionadoCon: [],
+                    nombre: practica.nombre,
+                    concepto: practica.concepto,
+                    // registros: []
+                };
 
-            if (practica.categoria !== 'compuesta') {
+                // if (practica.categoria !== 'compuesta') {
                 practicaEjecucion.valor = {
                     resultado: {
                         valor: null,
                         sinMuestra: false,
                         validado: false
                     }
-                }
+                };
+                // }
+                console.log('gonna this.getPracticasRequeridas....');
+                practicaEjecucion.registros = await this.getPracticasRequeridas(practica);
+                this.practicasEjecucion.push(practicaEjecucion);
+            } else {
+                this.plex.alert('', 'Práctica ya ingresada');
             }
-
-            practicaEjecucion.registros = await this.getPracticasRequeridas(practica);
-            console.log('asdasdasd', practicaEjecucion.registros);
-
-            this.practicasEjecucion.push(practicaEjecucion);
-        } else {
-            this.plex.alert('', 'Práctica ya ingresada');
         }
         this.practicaSeleccionada = null;
+        console.log('this.practicaSeleccionada', this.practicaSeleccionada);
     }
 
     /**
@@ -198,12 +191,10 @@ export class TablaDatalleProtocolo implements OnInit {
     * @memberof ProtocoloDetalleComponent
     */
     async getPracticasRequeridas(practica) {
-        console.log('getPracticasRequeridas');
         return new Promise(async (resolve) => {
             if (practica.categoria === 'compuesta' && practica.requeridos) {
-                console.log('getPracticasRequeridas compuesta requeridos');
                 let ids = [];
-                practica.requeridos.map((id) => { ids.push(id._id) });
+                practica.requeridos.map((id) => { ids.push(id._id); });
                 await this.servicioPractica.findByIds({ ids: ids }).subscribe((resultados) => {
                     resultados.forEach(async (resultado: any) => {
                         resultado.valor = {
@@ -236,6 +227,7 @@ export class TablaDatalleProtocolo implements OnInit {
                         // });
                         resultado.registros = await this.getPracticasRequeridas(resultado);
                     });
+                    console.log('getPracticasRequeridas');
                     resolve(resultados);
                 });
             } else {

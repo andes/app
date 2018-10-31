@@ -1,3 +1,4 @@
+import { ProtocoloDetalleComponent } from './protocolos/protocolo-detalle.component';
 import { PrestacionesService } from './../../../../modules/rup/services/prestaciones.service';
 import { Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
@@ -25,7 +26,8 @@ export class PuntoInicioLaboratorioComponent
     public showListarProtocolos = true;
     public showProtocoloDetalle = false;
     public showCargarSolicitud = false;
-
+    public edicionDatosCabecera = false;
+    recepcionarTurno = false;
     public protocolos: any = [];
     public protocolo: any = {};
 
@@ -41,16 +43,8 @@ export class PuntoInicioLaboratorioComponent
     public modoCargaLaboratorioEnum;
     public mostrarListaMpi = false;
     public indexProtocolo;
-    // public accion;
     public turnosRecepcion;
-    public modo = {
-        id: 'control',
-        nombre: 'Control'
-    };
-    public formaCarga = {
-        id: 'Lista de protocolos',
-        nombre: 'Lista de protocolos'
-    };
+    public modo = 'recepcion';
     public origen = null;
     public area = null;
     public prioridad = null;
@@ -76,6 +70,11 @@ export class PuntoInicioLaboratorioComponent
         organizacion: null,
         estado: []
     };
+    public mostrarSidebar = true;
+    public accionIndex = 1;
+
+    @ViewChild(ProtocoloDetalleComponent)
+    private protocoloDetalleComponent: ProtocoloDetalleComponent;
 
     constructor(public plex: Plex, private formBuilder: FormBuilder,
         public servicioPrestaciones: PrestacionesService,
@@ -94,7 +93,20 @@ export class PuntoInicioLaboratorioComponent
         this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
         this.resetearProtocolo();
         this.refreshSelection();
+    }
 
+    cambio($event) {
+        if ($event === 0) {
+            this.modo = 'recepcion';
+        } else if ($event === 1) {
+            this.modo = 'control';
+        } else if ($event === 2) {
+            this.modo = 'carga';
+        } else if ($event === 3) {
+            this.modo = 'validacion';
+        } else if ($event === 4) {
+            this.modo = 'listado';
+        }
     }
 
     /**
@@ -103,6 +115,7 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     resetearProtocolo() {
+        console.log('resetearProtocolo');
         this.protocolo = {
             paciente: {},
             solicitud: {
@@ -144,30 +157,18 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
         this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
-        this.busqueda.numProtocoloDesde = (!this.numProtocoloDesde) ? null : this.numProtocoloDesde;
-        this.busqueda.numProtocoloHasta = (!this.numProtocoloHasta) ? null : this.numProtocoloHasta;
 
-        // if (this.modo === 'recepcion') {
-        if (this.modo.nombre === 'Recepcion') {
+        if (this.modo === 'recepcion') {
             this.busqueda.estado.push('pendiente');
-            this.getProtocolos(this.busqueda);
         } else {
-            // if (this.modo === 'listado' || this.modo === 'validacion') {
-                if (this.modo.nombre === 'Listado' || this.modo.nombre === 'Validacion') {
+            if (this.modo === 'listado' || this.modo === 'validacion') {
                 this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
-
-                this.getProtocolos(this.busqueda);
             } else {
                 this.busqueda.estado = ['ejecucion', 'validada'];
-                this.getProtocolos(this.busqueda);
             }
         }
+        this.getProtocolos(this.busqueda);
     };
-
-    setModo(value) {
-        console.log(value)
-        this.modo = value;
-    }
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
@@ -192,7 +193,7 @@ export class PuntoInicioLaboratorioComponent
      */
     verProtocolo(protocolo, index) {
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
-        console.log('fcfbxzxc',protocolo,index)
+        console.log('verProtocolo', protocolo, index);
         if (protocolo) {
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
@@ -200,6 +201,7 @@ export class PuntoInicioLaboratorioComponent
             this.indexProtocolo = index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
+            this.recepcionarTurno = (this.modo === 'recepcion');
         }
     }
 
@@ -209,10 +211,12 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     volverLista() {
+        console.log('volverLista');
         this.refreshSelection();
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
+        this.recepcionarTurno = false;
     }
 
     /**
@@ -334,11 +338,16 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        this.resetearProtocolo();
-        this.seleccionPaciente = true;
-        this.showProtocoloDetalle = false;
-        this.showListarProtocolos = false;
-        this.showCargarSolicitud = true;
+        {
+            this.resetearProtocolo();
+            this.edicionDatosCabecera = true;
+            this.recepcionarTurno = true;
+            this.showListarProtocolos = false;
+            this.showProtocoloDetalle = true;
+            this.indexProtocolo = 0;
+            this.seleccionPaciente = true;
+            this.showCargarSolicitud = true;
+        }
     }
 
     /**

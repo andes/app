@@ -1,281 +1,234 @@
-<plex-layout main="12" *ngIf="showListarProtocolos">
-    <plex-layout-main>
+<plex-layout main="{{showProtocoloDetalle ? (recepcionarTurno ? 0 : 2)  : 12}}">
+    <plex-layout-main *ngIf='!recepcionarTurno'>
         <!-- ENCABEZADO -->
         <header>
-            <h4>Punto de inicio | Laboratorio</h4>
-            <section class="contenedor-tabs">
-                <plex-tabs>
-                    <plex-tab label="Laboratorio general"></plex-tab>
-                    <plex-tab label="Microbiologia"></plex-tab>
-                    <plex-tab label="Screening neonatal"></plex-tab>
-                </plex-tabs>
-                <!-- <plex-tabs [activeIndex]="modo">
-                    <plex-tab label="Control" (click)="console.log('control') "><a href="javascript:console.log('x')"></a></plex-tab>
-                    <plex-tab label="Carga" (click)="modo.id = 'carga'"></plex-tab>
-                    <plex-tab label="Validación" (click)="modo.id = 'validacion'"></plex-tab>
-                </plex-tabs> -->
-                <div class="dropdown-secundario">
-                    <i class="mdi mdi-dots-horizontal"></i>
+            <div class="clearfix">
+                <div class="page-title float-left">
+                    <ng-container *ngIf="!showProtocoloDetalle">
+                        Laboratorio |
+                        <ng-container *ngIf="modo === 'recepcion'">Recepcionar Paciente</ng-container>
+                        <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
+                        <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
+                        <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
+                    </ng-container>
+                    <ng-container *ngIf="showProtocoloDetalle">
+                        Listado
+                    </ng-container>
                 </div>
-            </section>
+                <plex-tabs [activeIndex]="accionIndex" class='float-right' (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
+                    <plex-tab label="Recepción"></plex-tab>
+                    <plex-tab label="Auditoria"></plex-tab>
+                    <plex-tab label="Carga"></plex-tab>
+                    <plex-tab label="Validación"></plex-tab>
+                </plex-tabs>
+            </div>
+
         </header>
         <!-- FIN ENCABEZADO -->
-        <!-- 
-        <div class="row">
-            <div class="col">
-                <plex-button type="success" size="sm" name="especialidad.activo" label='Recordar filtros' position="right" style="float: right"
-                    (click)='recordarFiltros()'></plex-button>
-            </div>
-        </div>
-     -->
-        <div class="row">
-            <div class="col-2">
-                <plex-select [(ngModel)]="modo" name="area" label="Modo" [data]='cargaLaboratorioEnum' [required]="true"></plex-select>
-            </div>
-            <div class="col-3" *ngIf='(modo.id === "carga" || modo.id === "validacion")'>
-                <plex-select [(ngModel)]="formaCarga" name="formaCarga" label="Forma de carga" (change)="refreshSelection($event,'area')"
-                    [data]='modoCargaLaboratorioEnum' [required]="true"></plex-select>
-            </div>
-            <div class="col-3" *ngIf='(modo.id ==="carga" || modo.id ==="validacion")'>
-                <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado" [data]="estadosValFiltroEnum"></plex-select>
-            </div>
-        </div>
 
-        <div class="row contenedor-filtros">
-            <div class="col-2">
-                <plex-select [(ngModel)]="area" (change)="refreshSelection($event,'area')" name="area" label="Area" [data]='laboratorioInternoEnum'></plex-select>
-            </div>
-            <div *ngIf='modo.id !== "recepcion"' class="col-2">
-                <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="prioridad" label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
-            </div>
-            <div *ngIf='modo.id !== "recepcion"' class="col-2">
-                <plex-select [(ngModel)]="origen" (change)="refreshSelection($event,'origen')" name="origen" label="Origen" [data]="origenEnum"></plex-select>
-            </div>
-            <div class="col-2">
-                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="refreshSelection($event,'fechaDesde')" name="solicitudDesde"
-                    label="Fecha desde" class="fechas" [required]="true">
-                </plex-datetime>
-            </div>
-            <div class="col-2">
-                <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="refreshSelection($event,'fechaHasta')" name="solicitudHasta"
-                    label="Fecha hasta" class="fechas" [required]="true">
-                </plex-datetime>
-            </div>
-            <div class="col-2 labs-contenedor-secundario" *ngIf='modo.id ==="recepcion"'>
-                <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="mostrarFomularioPacienteSinTurno(activeTab)"></plex-button>
-            </div>
-            <div class="col-2 labs-contenedor-secundario" *ngIf='modo.id !== "recepcion"'>
-                <div class="contenedor-bloque-texto line-height mr-2">
-                    <small class="text-primary"></small>
+        <ng-container *ngIf="!showProtocoloDetalle">
+            <div class="row contenedor-filtros">
+                <div class="col-12" *ngIf='modo === "carga" || modo === "validacion"'>
+                    <plex-radio [data]="modoCargaLaboratorioEnum" label="nombre" (change)="diagnosticoPrestacion($event, elemento)" [(ngModel)]="modoCargaLaboratorio"
+                        type="horizontal"></plex-radio>
                 </div>
-                <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                <div class="col-2" *ngIf='modo !== "recepcion"'>
+                    <plex-select [(ngModel)]="this.busqueda.area " (change)="refreshSelection($event,'area')" name="area" label="Area" [data]='laboratorioInternoEnum'></plex-select>
+                </div>
+                <div class="col-2">
+                    <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="prioridad" label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
+                </div>
+                <div class="col-2">
+                    <plex-select [(ngModel)]="origen" (change)="refreshSelection($event,'origen')" name="origen" label="Origen" [data]="origenEnum"></plex-select>
+                </div>
+                <div class="col-2">
+                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="refreshSelection($event,'fechaDesde')" name="solicitudDesde"
+                        label="Fecha desde" class="fechas" [required]="true">
+                    </plex-datetime>
+                </div>
+                <div class="col-2">
+                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="refreshSelection($event,'fechaHasta')" name="solicitudHasta"
+                        label="Fecha hasta" class="fechas" [required]="true">
+                    </plex-datetime>
+                </div>
+                <!-- <div class="col-2 labs-contenedor-secundario" *ngIf='modo ==="recepcion"'>
+                    <plex-button title="Iniciar Protocolo" icon="plus" class="align-self-end" type="success" (click)="mostrarFomularioPacienteSinTurno()"></plex-button>
+                </div> -->
+                <div class="col-2 labs-contenedor-secundario" *ngIf='modo !== "recepcion"'>
+                    <div class="contenedor-bloque-texto line-height mr-2">
+                        <small class="text-primary"></small>
+                    </div>
+                    <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                </div>
             </div>
-        </div>
-        <!-- FIN FILTROS BASICOS  -->
+            <!-- FIN FILTROS BASICOS  -->
 
-        <!-- FILTROS AVANZADOS-->
-        <ng-container *ngIf="mostrarMasOpciones">
-            <div class="row">
-                <div *ngIf='modo.id ==="carga"' class="col">
-                    <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
-                        label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
-                        idField="term">
-                    </plex-select>
+            <!-- FILTROS AVANZADOS-->
+            <ng-container *ngIf="mostrarMasOpciones">
+                <div class="row">
+                    <div *ngIf='modo ==="carga"' class="col">
+                        <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
+                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
+                            idField="term">
+                        </plex-select>
+                    </div>
+                    <div *ngIf='modo !== "carga" && modo !== "recepcion"' class="col-3">
+                        <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
+                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term">
+                        </plex-select>
+                    </div>
+                    <ng-container *ngIf='modo !== "recepcion"'>
+                        <div class="col-3">
+                            <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numProtocoloDesde"
+                                label="N° protocolo desde"></plex-float>
+                        </div>
+                        <div class="col-3">
+                            <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numProtocoloHasta"
+                                label="N° protocolo hasta"></plex-float>
+                        </div>
+                        <div class="col-3">
+                            <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')" name="organizacion" label="Efector Solicitante"
+                                (getData)="loadOrganizaciones($event)"></plex-select>
+                        </div>
+                    </ng-container>
                 </div>
-                <div *ngIf='modo.id !== "carga" && modo.id !== "recepcion"' class="col-3">
-                    <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
-                        label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term">
-                    </plex-select>
-                </div>
-                <div *ngIf='modo.id !== "recepcion"' class="col-3">
-                    <plex-float [(ngModel)]="numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numProtocoloDesde"
-                        label="N° protocolo desde"></plex-float>
-                </div>
-                <div *ngIf='modo.id !== "recepcion"' class="col-3">
-                    <plex-float [(ngModel)]="numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numProtocoloHasta"
-                        label="N° protocolo hasta"></plex-float>
-                </div>
-                <div *ngIf='modo.id !== "recepcion"' class="col-3">
-                    <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')" name="organizacion" label="Efector Solicitante"
-                        (getData)="loadOrganizaciones($event)"></plex-select>
-                </div>
-                <div *ngIf='modo.id ==="listado"' class="col-3">
+                <div *ngIf='modo ==="listado"' class="col-3">
                     <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado" [data]="estadosFiltroEnum"></plex-select>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <label>Paciente</label>
-                    <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)" (searchClear)="searchClearPaciente($event)"></paciente-buscar>
-                    <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
-                            (hover)="hoverPaciente($event)"></paciente-listado>
+                <div class="row">
+                    <div class="col">
+                        <label>Paciente</label>
+                        <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)" (searchClear)="searchClearPaciente($event)"></paciente-buscar>
+                        <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
+                            <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
+                                (hover)="hoverPaciente($event)"></paciente-listado>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </ng-container>
+            <!-- FIN FILTROS AVANZADOS-->
         </ng-container>
-        <!-- FIN FILTROS AVANZADOS-->
 
-
-        <br>
-        <hr>
+        <br *ngIf="!showProtocoloDetalle">
+        <hr *ngIf="!showProtocoloDetalle">
 
         <!--VISUALIZACIÓN DE PROTOCOLOS CONTROL -->
         <div *ngIf="!protocolos?.length" class="alert alert-default">
             <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
         </div>
 
-        <!-- <table class="table table-striped table-sm" *ngIf='modo.id !== "recepcion"'>
-            <tbody>
-                <tr class="labs-listado-item listado-contenedor-secundario" *ngFor="let protocolo of protocolos; let i=index">
-                    <td *ngIf='modo.id !== "recepcion"' class="labs-item-numero">
-
-                        <i *ngIf='protocolo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45
-                    rosa"></i>
-                        <i *ngIf='protocolo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-36px azul"></i>
-                        <h2>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
-
-                        <br>
-                    </td>
-                    <td class="contenedor-bloque-texto">
-                        <div class="labs-item-texto">
-                            <label>|&nbsp;Fecha de toma muestra&nbsp;</label>
-                            {{protocolo.ejecucion.fecha |fecha}}
-                            <label>&nbsp;|&nbsp;Origen&nbsp;</label>
-                            {{protocolo.solicitud.ambitoOrigen}}
-                        </div>
-                        <div class="labs-item-texto">
-                            <label>|&nbsp;Dni Paciente:&nbsp;</label>
-                            {{protocolo.paciente.documento}}
-                            <label>&nbsp;|&nbsp;Nombre y Apellido:&nbsp;</label>
-                            {{protocolo.paciente.nombre}} {{protocolo.paciente.apellido}} 
-                            <label>&nbsp;|&nbsp;Fecha de Nacimiento:&nbsp;</label>
-                            {{protocolo.paciente.fechaNacimiento |fecha}}
-                            <label>&nbsp;|&nbsp;Sexo:&nbsp;</label>
-                            {{protocolo.paciente.sexo}}
-                        </div>
-                    </td>
-
-                    <td class="badge-container">
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-
-                        <plex-button type="primary" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">Ver protocolo</plex-button>
-
-                    </td>
-                </tr>
-            </tbody>
-        </table> -->
         <ng-container *ngIf="protocolos.length > 0">
-            <table class="table table-striped table-sm" *ngIf='modo.id !== "recepcion"'>
+            <table class="table table-striped table-sm">
                 <thead>
-                    <th>Nro.</th>
+                    <th *ngIf='modo !== "recepcion"'>Nro.</th>
                     <th>Fecha</th>
-                    <th>Entrega</th>
-                    <th>DNI</th>
-                    <th>Apellidos y Nombres</th>
-                    <th>F. Nacimiento</th>
-                    <th>Sexo</th>
-                    <th>Origen</th>
-                    <th>Prioridad</th>
-                    <!-- <th>Usuario</th>
-                    <th>Fecha Act.</th> -->
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <ng-container *ngIf="!showProtocoloDetalle">
+                        <th>Entrega</th>
+                        <th>DNI</th>
+                        <th>Apellidos y Nombres</th>
+                        <th>F. Nacimiento</th>
+                        <th>Sexo</th>
+                        <th>Origen</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th></th>
+                        <th></th>
+                    </ng-container>
                 </thead>
                 <tbody>
                     <tr *ngFor="let protocolo of protocolos; let i=index">
-                        <td>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
+                        <td *ngIf='modo !== "recepcion"'>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
                         <td>{{protocolo.solicitud.fecha | fecha}}</td>
-                        <td>{{protocolo.ejecucion.fecha | fecha}}</td>
-                        <td>{{protocolo.paciente.documento}}</td>
-                        <td>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</td>
-                        <td>{{protocolo.paciente.fechaNacimiento | fecha}}</td>
-                        <td *ngIf='protocolo.paciente.sexo ==="femenino"'>F</td>
-                        <td *ngIf='protocolo.paciente.sexo ==="masculino"'>M</td>
-                        <!-- <i *ngIf='protocolo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-36px mdi-rotate-45
-                        rosa"></i>
-                            <i *ngIf='protocolo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-36px azul"></i> -->
-                        <td>{{protocolo.solicitud.ambitoOrigen}}</td>
-                        <td>
-                            <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger"
-                                class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                            <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success"
-                                class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        </td>
-                        <td>
-                            <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                            <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                        </td>
-                        <!-- <td>Usuario</td>
-                    <td>Fecha Act.</td> -->
-                        <!-- <td></td> -->
-                        <td>
-                            <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">
-                                <ng-container *ngIf='modo.id === "recepcion"'>Recepcionar
-                                </ng-container>
-                                <ng-container *ngIf='modo.id === "control"'>Auditar
-                                </ng-container>
-                                <ng-container *ngIf='modo.id === "carga"'>Cargar
-                                </ng-container>
-                                <ng-container *ngIf='modo.id ==="validacion"'>Validar
-                                </ng-container>
-                                <ng-container *ngIf='modo.id === "listado"'>Ver Protocolo
-                                </ng-container>
-                            </plex-button>
-                            <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">
-                                <i class="mdi mdi-file-document"></i>
-                            </plex-button>
-                        </td>
-
+                        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"  
+                         > -->
+                        <!-- </plex-button> -->
+                        <ng-container *ngIf="!showProtocoloDetalle">
+                            <td>{{protocolo.ejecucion.fecha | fecha}}</td>
+                            <td>{{protocolo.paciente.documento}}</td>
+                            <td>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</td>
+                            <td>{{protocolo.paciente.fechaNacimiento | fecha}}</td>
+                            <td *ngIf='protocolo.paciente.sexo ==="femenino"'>F</td>
+                            <td *ngIf='protocolo.paciente.sexo ==="masculino"'>M</td>
+                            <td>{{protocolo.solicitud.ambitoOrigen}}</td>
+                            <td>
+                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger"
+                                    class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success"
+                                    class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                            </td>
+                            <td>
+                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                            </td>
+                            <td>
+                                <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">
+                                    <ng-container *ngIf='modo === "recepcion"'>Recepcionar
+                                    </ng-container>
+                                    <ng-container *ngIf='modo === "control"'>Auditar
+                                    </ng-container>
+                                    <ng-container *ngIf='modo === "carga"'>Cargar
+                                    </ng-container>
+                                    <ng-container *ngIf='modo ==="validacion"'>Validar
+                                    </ng-container>
+                                    <ng-container *ngIf='modo === "listado"'>Ver Protocolo
+                                    </ng-container>
+                                </plex-button>
+                                <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">
+                                    <i class="mdi mdi-file-document"></i>
+                                </plex-button>
+                            </td>
+                        </ng-container>
                     </tr>
                 </tbody>
             </table>
         </ng-container>
-        <!-- TABLA VISUALIZACION DE RECEPCION -->
-        <table *ngIf='protocolos && modo.id ==="recepcion"' class="table table-striped table-sm">
-            <thead>
-                <th>Fecha de solicitud</th>
-                <th>Dni del Paciente</th>
-                <th>Nombre y apellido del Paciente</th>
-                <th>Operaciones</th>
-                <th></th>
-                <th></th>
-            </thead>
-            <tbody>
-                <tr *ngFor="let prestacion of protocolos; let i=i ndex">
-                    <td>{{prestacion.solicitud.fecha | fecha}}</td>
-                    <td>{{prestacion.paciente.documento}}</td>
-                    <td>{{prestacion.paciente | paciente}}</td>
-                    <td>
-                        <plex-button type="success" size="sm" (click)="verProtocolo(prestacion, i)" class="ml-2">Iniciar protocolo</plex-button>
-                        <!-- <plex-button type="success" size="sm" (click)="editProtocolo($event)" class="ml-2">
-                                <i class="mdi mdi-file-document"></i>
-                            </plex-button> -->
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
     </plex-layout-main>
 
     <plex-layout-sidebar *ngIf="!showListarProtocolos">
-        <protocolo-detalle *ngIf="!showListarProtocolos" [cargarProtocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
-        [indexProtocolo]='indexProtocolo' [protocolos]="protocolos" [modo]='modo' [seleccionPaciente]='seleccionPaciente' (volverAListaControEmit)='volverLista()'></protocolo-detalle>
+        <header>
+            <div class="clearfix">
+                <div class="page-title float-left">
+                    <ng-container *ngIf="showProtocoloDetalle">
+                        Laboratorio |
+                        <ng-container *ngIf="modo === 'recepcion'">Recepcionar Paciente</ng-container>
+                        <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
+                        <ng-container *ngIf="modo === 'carga'">Carga de Resultados</ng-container>
+                        <ng-container *ngIf="modo === 'validacion'">Validación de Resultados</ng-container>
+                    </ng-container>
+                </div>
+            </div>
+        </header>
+        <protocolo-detalle [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle" [indexProtocolo]='indexProtocolo'
+            [protocolos]="protocolos" [edicionDatosCabecera]='edicionDatosCabecera' [modo]='modo' [seleccionPaciente]='seleccionPaciente'
+            (volverAListaControEmit)='volverLista()'></protocolo-detalle>
     </plex-layout-sidebar>
-    <!-- Panel lateral -->
 
-    <!-- footer -->
-    <plex-layout-footer>
-        <plex-button label="accion clave" type="primary" position="left" label="Crear un nuevo protocolo" (click)="pacienteSinTurno(activeTab)"></plex-button>
-        <!-- <plex-button label="Cancelar" type="Cancelar" position="left" (click)="guardarAgendaPanel.cancelar()"></plex-button>
-            <plex-button label="Otra accion clave" type="Guardar" position="right" (click)="guardarAgendaPanel.guardarAgenda(agendasSeleccionadas[0])"></plex-button> -->
+    <plex-layout-footer *ngIf="!showProtocoloDetalle">
+        <plex-button label="accion clave" type="primary" position="left" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno(activeTab)"></plex-button>
     </plex-layout-footer>
+
+    <plex-layout-footer *ngIf="showProtocoloDetalle">
+        <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
+
+        <!-- <ng-container *ngIf=""> -->
+
+            <ng-container *ngIf='modo !=="validacion" && protocoloDetalleComponent && !(protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'>
+                <plex-button position="right" class="float-right mr-1" type="success" label="Guardar" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+                <plex-button position="right" class="float-right mr-1" type="success" label="Guardar + CB" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
+            </ng-container>
+
+            <ng-container *ngIf='modo === "validacion"'>
+                <plex-button position="right" class="float-right mr-1" type="success" label="Validar todos" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
+                <plex-button position="right" class="float-right mr-1" type="success" label="Validar pendientes" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
+            </ng-container>
+
+            <plex-button *ngIf='protocoloDetalleComponent && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)' position="right"
+                type="success" label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
+        <!-- </ng-container> -->
+    </plex-layout-footer>
+
 </plex-layout>
 
 <!-- Switchea a listado practicas -->
-<!-- <protocolo-detalle *ngIf="!showListarProtocolos" [cargarProtocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle"
-    [indexProtocolo]='indexProtocolo' [protocolos]="protocolos" [modo]='modo' [seleccionPaciente]='seleccionPaciente' (volverAListaControEmit)='volverLista()'></protocolo-detalle> -->
+<!--     -->

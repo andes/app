@@ -288,7 +288,7 @@ export function getModoCargaLaboratorio() {
     let salida = arrLab.map(elem => {
         return {
             'id': elem,
-            'nombre': titleCase(elem)
+            'label': titleCase(elem)
         };
     });
     return salida;
