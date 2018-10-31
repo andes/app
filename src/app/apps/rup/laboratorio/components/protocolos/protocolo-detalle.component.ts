@@ -61,6 +61,7 @@ export class ProtocoloDetalleComponent
     @Input() showProtocoloDetalle: Boolean;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
+    @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
     @Input() protocolos: any;
     @Input() modo: String;
     @Input() indexProtocolo: any;
@@ -174,12 +175,14 @@ export class ProtocoloDetalleComponent
     editarDatosCabecera() {
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
+        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
 
     aceptarEdicionCabecera() {
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
+        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo)
     }
 
     /**

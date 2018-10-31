@@ -22,11 +22,14 @@ export class PuntoInicioLaboratorioComponent
 
     implements OnInit {
 
-    public seleccionPaciente = false;
-    public showListarProtocolos = true;
-    public showProtocoloDetalle = false;
-    public showCargarSolicitud = false;
-    public edicionDatosCabecera = false;
+    public seleccionPaciente: Boolean = false;
+    public showListarProtocolos: Boolean = true;
+    public showProtocoloDetalle: Boolean = false;
+    public showCargarSolicitud: Boolean = false;
+    public edicionDatosCabecera: Boolean = false;
+    public showBotonesGuardar: Boolean = false;
+    public mostrarListaMpi: Boolean = false;
+
     recepcionarTurno = false;
     public protocolos: any = [];
     public protocolo: any = {};
@@ -41,7 +44,6 @@ export class PuntoInicioLaboratorioComponent
     public pacienteActivo;
     public cargaLaboratorioEnum;
     public modoCargaLaboratorioEnum;
-    public mostrarListaMpi = false;
     public indexProtocolo;
     public turnosRecepcion;
     public modo = 'recepcion';
@@ -348,6 +350,11 @@ export class PuntoInicioLaboratorioComponent
             this.seleccionPaciente = true;
             this.showCargarSolicitud = true;
         }
+    }
+
+    mostrarBotonesGuardarProtocoloFooter($event) {
+        console.log('mostrarBotonesGuardarProtocoloFooter', $event);
+        this.showBotonesGuardar = $event;
     }
 
     /**
