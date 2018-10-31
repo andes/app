@@ -111,8 +111,8 @@ export class PacienteService {
      * Recibe array de pacientes para insertar como nuevos.
      * @param {any[]} pacientes
      */
-    saveAllRelaciones(pacientes: any[]): Observable<any> {
-        return this.server.post(this.pacienteUrl + 'All', { pacientesArray: pacientes, showError: true });
+    saveAllRelaciones(pacientes: any[]): Observable<any[]> {
+        return this.server.post(this.pacienteUrl + 'All', pacientes);
     }
 
     save(paciente: IPaciente): Observable<IPaciente> {
