@@ -97,21 +97,12 @@ export class PacienteService {
     }
 
     /**
-    * Metodo post. Modifica la propiedad "activo" del paciente.
-    * @param {any} cambios Recibe any
-    */
-    postActivo(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
-        return this.server.post(this.pacienteUrl + '/' + id + '/activo', cambios);
-    }
-    /**
     * Metodo post. Modifica el array de identificadores del paciente.
     * @param {any} cambios Recibe any
     */
     postIdentificadores(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
         return this.server.post(this.pacienteUrl + '/' + id + '/identificadores', cambios);
     }
-
-
 
     /**
      * Metodo disable. deshabilita un objeto paciente.
@@ -123,7 +114,7 @@ export class PacienteService {
     }
 
     /**
-     * Metodo enable. habilita un objeto paciente..
+     * Metodo enable. habilita un objeto paciente.
      * @param {IPaciente} paciente Recibe IPaciente
      */
     enable(paciente: IPaciente): Observable<IPaciente> {
