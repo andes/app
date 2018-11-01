@@ -7,7 +7,7 @@ export interface IPaciente {
     id: string;
     documento: string;
     cuil: string;
-    activo: Boolean;
+    activo: boolean;
     estado: string;
     nombre: string;
     apellido: string;
