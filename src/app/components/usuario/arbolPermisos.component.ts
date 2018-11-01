@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
+import { OrganizacionService } from '../../services/organizacion.service';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -32,7 +33,8 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     constructor(
         private plex: Plex,
-        private servicioTipoPrestacion: TipoPrestacionService
+        private servicioTipoPrestacion: TipoPrestacionService,
+        private organizacionService: OrganizacionService
     ) { }
 
     expand($event) {
@@ -77,6 +79,11 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                                     this.seleccionados = [...data];
                                 });
                                 break;
+                            case 'organizacion':
+                                this.organizacionService.get({ ids: items }).subscribe((data) => {
+                                    this.seleccionados = data;
+                                });
+                                break;
                         }
                     }
                 }
@@ -94,19 +101,31 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
-        // [TODO] Filtrar otras tipos de datos
-        switch (type) {
-            case 'prestacion':
-                let query: any = {};
-                if (event.query) {
-                    query.term = event.query;
-                }
-
-                this.servicioTipoPrestacion.get(query).subscribe((data) => {
-                    data = [...data, ...this.seleccionados || []];
-                    event.callback(data);
-                });
-                break;
+        if (event.query) {
+            // [TODO] Filtrar otras tipos de datos
+            let query;
+            switch (type) {
+                case 'prestacion':
+                    query = {
+                        term: event.query
+                    };
+                    this.servicioTipoPrestacion.get(query).subscribe((data) => {
+                        data = [...data, ...this.seleccionados || []];
+                        event.callback(data);
+                    });
+                    break;
+                case 'organizacion':
+                    query = {
+                        nombre: event.query
+                    };
+                    this.organizacionService.get(query).subscribe((data) => {
+                        data = [...data, ...this.seleccionados || []];
+                        event.callback(data);
+                    });
+                    break;
+            }
+        } else {
+            event.callback(this.seleccionados || []);
         }
     }
 

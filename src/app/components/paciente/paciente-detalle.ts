@@ -6,10 +6,7 @@ import {
 import {
     RenaperService
 } from './../../services/fuentesAutenticas/servicioRenaper.service';
-import { MAT_DATEPICKER_SCROLL_STRATEGY_PROVIDER_FACTORY } from '@angular/material';
 import { Plex } from '@andes/plex';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-
 
 @Component({
     selector: 'paciente-detalle',
@@ -23,7 +20,7 @@ export class PacienteDetalleComponent implements OnInit {
      * @type {IPaciente}
      * @memberof PacienteDetalleComponent
      */
-    @Input('mostrarRenaper') mostrarRenaper: Boolean;
+    @Input() mostrarRenaper: Boolean;
     @Input('paciente')
     set paciente(value: IPaciente) {
         this._paciente = value;

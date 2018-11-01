@@ -45,7 +45,7 @@ export class PacienteListadoComponent {
      * Indica si selecciona automáticamente el primer paciente de la lista
      *
      */
-    @Input() autoselect = true;
+    @Input() autoselect = false;
     /**
     * Indica como se muestra la tabla de resultados
     *
@@ -70,16 +70,6 @@ export class PacienteListadoComponent {
     }
 
     public seleccionar(paciente: IPaciente) {
-        if (this.seleccionado && this.seleccionado.id === paciente.id) {
-            this.seleccionado = null;
-
-            this.selected.emit(null);
-        } else {
-            this.seleccionado = paciente;
-
-            this.selected.emit(paciente);
-        }
-
         if (this.seleccionado !== paciente) {
             this.seleccionado = paciente;
             this.selected.emit(this.seleccionado);

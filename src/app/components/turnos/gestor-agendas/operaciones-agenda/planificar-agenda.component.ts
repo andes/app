@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -10,7 +10,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
 import { ProfesionalService } from './../../../../services/profesional.service';
-import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { ISubscription } from 'rxjs/Subscription';
 
 @Component({
@@ -57,7 +56,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: ISubscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -139,18 +138,8 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     }
 
-
-    // loadServicios(event) {
-    //     this.servicioEspacioFisico.get({}).subscribe(respuesta => {
-    //         let servicios = respuesta.map((ef) => {
-    //             return (typeof ef.servicio !== 'undefined' && ef.servicio.nombre !== '-' ? { nombre: ef.servicio.nombre, id: ef.servicio.id } : []);
-    //         });
-    //         event.callback(servicios);
-    //     });
-    // }
-
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
@@ -162,10 +151,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             event.callback(sectores);
         });
     }
-    // loadEspacios(event) {
-    //     // this.servicioEspacioFisico.get({ organizacion: this.auth.organizacion._id }).subscribe(event.callback);
-    //     this.servicioEspacioFisico.get({}).subscribe(event.callback);
-    // }
 
     /**
      * filtro espacios fisicos
@@ -236,16 +221,23 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    cambiarNominalizada(cambio) {
-        this.modelo.nominalizada = !this.noNominalizada;
-        if (this.noNominalizada) {
-            this.dinamica = false;
-        }
-    }
+    // cambiarNominalizada(cambio) {
+    //     this.modelo.nominalizada = !this.noNominalizada;
+    //     if (this.noNominalizada) {
+    //         this.dinamica = false;
+    //     }
+    // }
+
     seleccionarDinamica() {
         if (this.dinamica) {
-            this.noNominalizada = false;
-            this.modelo.nominalizada = true;
+            if (this.noNominalizada) {
+                this.plex.alert('No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
+                    this.dinamica = false;
+                });
+            } else {
+                this.noNominalizada = false;
+                this.modelo.nominalizada = true;
+            }
         }
     }
 
@@ -290,23 +282,26 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
 
     addBloque() {
         const longitud = this.modelo.bloques.length;
-        this.modelo.bloques.push({
-            indice: longitud,
-            // 'descripcion': `Bloque {longitud + 1}°`,
-            'cantidadTurnos': 0,
-            'horaInicio': null,
-            'horaFin': null,
-            'duracionTurno': 0,
-            'cantidadSimultaneos': null,
-            'cantidadBloque': null,
-            'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
-            'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
-            'reservadoGestion': 0, 'reservadoGestionPorc': 0,
-            'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
-            'tipoPrestaciones': []
-        });
-        this.activarBloque(longitud);
-        this.inicializarPrestacionesBloques(this.elementoActivo);
+
+        if (longitud === 0 || (this.modelo.bloques[longitud - 1].horaInicio && this.modelo.bloques[longitud - 1].horaFin)) {
+            this.modelo.bloques.push({
+                indice: longitud,
+                // 'descripcion': `Bloque {longitud + 1}°`,
+                'cantidadTurnos': 0,
+                'horaInicio': null,
+                'horaFin': null,
+                'duracionTurno': 0,
+                'cantidadSimultaneos': null,
+                'cantidadBloque': null,
+                'accesoDirectoDelDia': 0, 'accesoDirectoDelDiaPorc': 0,
+                'accesoDirectoProgramado': 0, 'accesoDirectoProgramadoPorc': 0,
+                'reservadoGestion': 0, 'reservadoGestionPorc': 0,
+                'reservadoProfesional': 0, 'reservadoProfesionalPorc': 0,
+                'tipoPrestaciones': []
+            });
+            this.activarBloque(longitud);
+            this.inicializarPrestacionesBloques(this.elementoActivo);
+        }
     }
 
     deleteBloque(indice: number) {
@@ -315,6 +310,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.modelo.bloques.splice(indice, 1);
                 this.bloqueActivo = -1;
                 this.validarTodo();
+
+                for (let i = 0; i < this.modelo.bloques.length; i++) {
+                    this.modelo.bloques[i].indice = i;
+                }
             }
         }
         ).catch(() => {
@@ -344,6 +343,13 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambioPrestaciones() {
+        if (this.modelo.tipoPrestaciones && this.modelo.tipoPrestaciones.length === 1) {
+            if (this.modelo.tipoPrestaciones[0].noNominalizada) {
+                this.noNominalizada = true;
+                this.dinamica = false;
+                this.modelo.nominalizada = false;
+            }
+        }
         if (this.modelo.bloques.length === 0) {
             this.addBloque();
             this.bloqueActivo = 0;
@@ -432,7 +438,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     cambiaCantTipo(cual: String) {
-        // if ($event.key === '-')
         if (this.elementoActivo.cantidadTurnos) {
             switch (cual) {
                 case 'accesoDirectoDelDia':
@@ -567,6 +572,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            if (this.dinamica) {
+                this.modelo.bloques[0].horaInicio = iniAgenda;
+                this.modelo.bloques[0].horaFin = finAgenda;
+            }
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
@@ -623,9 +632,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 this.alertas.push('La hora de inicio no puede igual a la de fin');
             }
         }
+
         // Verificaciones en cada bloque
         if (bloques) {
             bloques.forEach((bloque, index) => {
+
                 let inicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 let fin = this.combinarFechas(this.fecha, bloque.horaFin);
 
@@ -643,12 +654,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                     this.alertas.push(alerta);
                 }
 
-                // let add = bloque.accesoDirectoDelDia > 0 ? bloque.accesoDirectoDelDia : 0;
-                // let adp = bloque.accesoDirectoProgramado > 0 ? bloque.accesoDirectoProgramado : 0;
-                // let rg = bloque.reservadoGestion > 0 ? bloque.reservadoGestion : 0;
-                // let rp = bloque.reservadoProfesional > 0 ? bloque.reservadoProfesional : 0;
-
-                // if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                 if ((bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional) < bloque.cantidadTurnos) {
                     const cant = bloque.cantidadTurnos - (bloque.accesoDirectoDelDia + bloque.accesoDirectoProgramado + bloque.reservadoGestion + bloque.reservadoProfesional);
                     alerta = 'Bloque ' + (bloque.indice + 1) + ': Falta clasificar ' + cant + (cant === 1 ? ' turno' : ' turnos');
@@ -713,7 +718,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     espaciosChange(agenda) {
-
         // TODO: ver límite
         let query: any = {
             limit: 20,
@@ -725,12 +729,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
             query.organizacion = efector.id;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
@@ -750,7 +754,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.validarTodo();
         if (this.modelo.id === '0') {
             delete this.modelo.id;
-        };
+        }
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
     }
@@ -773,7 +777,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 }
             }
         }
-        if ($event.formValid) {
+        if ($event.formValid && this.verificarNoNominalizada()) {
             let espOperation: Observable<IAgenda>;
             this.fecha = new Date(this.modelo.fecha);
             this.modelo.horaInicio = this.combinarFechas(this.fecha, this.modelo.horaInicio);
@@ -791,7 +795,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 bloque.horaInicio = this.combinarFechas(this.fecha, bloque.horaInicio);
                 bloque.horaFin = this.combinarFechas(this.fecha, bloque.horaFin);
                 bloque.turnos = [];
-
                 if (!this.dinamica) {
                     if (bloque.pacienteSimultaneos) {
                         bloque.restantesDelDia = bloque.accesoDirectoDelDia * bloque.cantidadSimultaneos;
@@ -806,6 +809,15 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         bloque.restantesProfesional = bloque.reservadoProfesional;
                     }
 
+                    if (this.noNominalizada) {
+                        let turno = {
+                            estado: 'disponible',
+                            horaInicio: bloque.horaInicio,
+                            tipoPrestacion: bloque.tipoPrestaciones[0],
+                            tipoTurno: undefined
+                        };
+                        bloque.turnos.push(turno);
+                    }
                     for (let i = 0; i < bloque.cantidadTurnos; i++) {
                         let turno = {
                             estado: 'disponible',
@@ -856,7 +868,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             },
                 (err) => { this.hideGuardar = false; });
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            if (!this.verificarNoNominalizada()) {
+                this.plex.alert('Solo puede haber una prestación en las agendas no nominalizadas');
+            } else {
+                this.plex.alert('Debe completar los datos requeridos');
+            }
         }
     }
 
@@ -873,6 +889,25 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     cerrarMapaPlanificar() {
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
+    }
+    /**
+     * Verifica si es una agenda no nominalizada, en cuyo caso chequea
+     * que la agenda tenga una sola prestación
+     * @returns boolean TRUE/FALSE chequeos no nominalizada Ok
+     * @memberof PlanificarAgendaComponent
+     */
+    verificarNoNominalizada() {
+        let arrayTP = this.modelo.tipoPrestaciones;
+        let indice = arrayTP.map(
+            function (obj) {
+                return obj.noNominalizada;
+            }
+        ).indexOf(true);
+        if (indice === -1) {
+            return true;
+        } else {
+            return (arrayTP.length === 1);
+        }
     }
 }
 
