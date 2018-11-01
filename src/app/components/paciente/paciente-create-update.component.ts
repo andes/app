@@ -213,6 +213,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    public nombrePattern: string;
+
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -231,7 +233,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
 
     ngOnInit() {
         // Se cargan los combos

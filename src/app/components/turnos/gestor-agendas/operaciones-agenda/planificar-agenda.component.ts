@@ -221,13 +221,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // cambiarNominalizada(cambio) {
-    //     this.modelo.nominalizada = !this.noNominalizada;
-    //     if (this.noNominalizada) {
-    //         this.dinamica = false;
-    //     }
-    // }
-
     seleccionarDinamica() {
         if (this.dinamica) {
             if (this.noNominalizada) {
@@ -848,9 +841,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         }
                     }
                 }
-                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true && delete el.$order;
-                });
+                if (!this.dinamica) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                }
             });
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {

@@ -661,8 +661,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                             }
                         }
                     });
-
-
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
@@ -684,7 +682,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             }
-
         }
     }
 
