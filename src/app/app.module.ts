@@ -284,6 +284,7 @@ import { ColonoscopiaComponent } from './modules/rup/components/elementos/colono
 import { ColonoscopiaControlComponent } from './modules/rup/components/elementos/colonoscopiaControl.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia.component';
+import { EndoscopioComponent } from './modules/rup/components/elementos/endoscopio.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 
 
@@ -415,6 +416,7 @@ export let RUPRegistry = {
     'ColonoscopiaControlComponent': ColonoscopiaControlComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'AnestesiaComponent': AnestesiaComponent,
+    'EndoscopioComponent': EndoscopioComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
 };
@@ -478,6 +480,7 @@ let RUPComponentsArray = [
     ColonoscopiaControlComponent,
     SeleccionBinariaComponent,
     AnestesiaComponent,
+    EndoscopioComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent
 ];
@@ -680,7 +683,8 @@ registerLocaleData(localeEs, 'es');
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
         SeleccionBinariaComponent,
-        AnestesiaComponent
+        AnestesiaComponent,
+        EndoscopioComponent
     ]
 })
 
