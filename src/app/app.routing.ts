@@ -87,6 +87,7 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { VincularPacientesComponent } from './components/auditoria/vincular-pacientes.component';
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
@@ -161,11 +162,10 @@ const appRoutes: Routes = [
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
 
+  // AUDITORIA
+  { path: 'vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
+  { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
-  // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
-  // /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  // /* ELIMINAR ==> */ { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
-  // /* ELIMINAR ==> */ { path: 'auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 
   // TODO: Verificar si estas rutas todavía son válidas, y ubicarlas en los módulos correspondientes
