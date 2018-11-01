@@ -30,8 +30,8 @@ export class PuntoInicioLaboratorioComponent
     public showBotonesGuardar: Boolean = false;
     public mostrarListaMpi: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
-    
-    recepcionarTurno = false;
+
+    ocultarPanelLateral = false;
     public protocolos: any = [];
     public protocolo: any = {};
 
@@ -75,6 +75,7 @@ export class PuntoInicioLaboratorioComponent
     };
     public mostrarSidebar = true;
     public accionIndex = 1;
+    public modoAVolver = '';
 
     @ViewChild(ProtocoloDetalleComponent)
     private protocoloDetalleComponent: ProtocoloDetalleComponent;
@@ -172,7 +173,7 @@ export class PuntoInicioLaboratorioComponent
             }
         }
         this.getProtocolos(this.busqueda);
-    };
+    }
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
@@ -200,16 +201,16 @@ export class PuntoInicioLaboratorioComponent
         console.log('verProtocolo', protocolo, index);
         if (protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion');
-            console.log('this.mostrarCuerpoProtocolo',this.mostrarCuerpoProtocolo)
+            console.log('this.mostrarCuerpoProtocolo', this.mostrarCuerpoProtocolo);
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
-            this.recepcionarTurno = (this.modo === 'recepcion');
-            this.showBotonesGuardar = (this.modo !== 'recepcion'); 
-            
+            this.ocultarPanelLateral = (this.modo === 'recepcion');
+            this.showBotonesGuardar = (this.modo !== 'recepcion');
+
         }
     }
 
@@ -224,11 +225,11 @@ export class PuntoInicioLaboratorioComponent
         this.showListarProtocolos = true;
         this.showProtocoloDetalle = false;
         this.showCargarSolicitud = false;
-        this.recepcionarTurno = false;
-        this.seleccionPaciente = false; 
+        this.ocultarPanelLateral = false;
+        this.seleccionPaciente = false;
 
-        this.showBotonesGuardar = false; 
-        
+        this.showBotonesGuardar = false;
+
     }
 
     /**
@@ -353,7 +354,7 @@ export class PuntoInicioLaboratorioComponent
         {
             this.resetearProtocolo();
             this.edicionDatosCabecera = true;
-            this.recepcionarTurno = true;
+            this.ocultarPanelLateral = true;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
@@ -392,6 +393,12 @@ export class PuntoInicioLaboratorioComponent
 
         localStorage.setItem('filtros', JSON.stringify(filtrosPorDefecto));
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
+    }
+
+    volverAControl($event) {
+        console.log('mostrarBotonesGuardarProtocoloFooter', $event, this.ocultarPanelLateral, this.showProtocoloDetalle);
+        this.ocultarPanelLateral = true;
+        this.modoAVolver = $event;
     }
 
 

@@ -62,6 +62,7 @@ export class ProtocoloDetalleComponent
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
+    @Output() volverAControlEmit = new EventEmitter<any>();
     @Input() protocolos: any;
     @Input() modo: String;
     @Input() indexProtocolo: any;
@@ -194,7 +195,9 @@ export class ProtocoloDetalleComponent
 
     toggleControlAuditar() {
         console.log('toggleControlAuditar');
+        let modoAVolver = this.modo;
         this.modo = this.modo === 'control' ? 'validacion' : 'control';
+        this.volverAControlEmit.emit(modoAVolver);
     }
 
     /**
