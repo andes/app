@@ -82,9 +82,9 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
             let query = {
                 cadenaInput: event.query
             };
-            this.servicioPractica.getMatch(query).subscribe(resultado => {
-                event.callback(resultado);
-            });
+            // this.servicioPractica.getMatch(query).subscribe(resultado => {
+            //     event.callback(resultado);
+            // });
         }
     }
 }

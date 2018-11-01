@@ -29,7 +29,8 @@ export class PuntoInicioLaboratorioComponent
     public edicionDatosCabecera: Boolean = false;
     public showBotonesGuardar: Boolean = false;
     public mostrarListaMpi: Boolean = false;
-
+    public mostrarCuerpoProtocolo: Boolean = true;
+    
     recepcionarTurno = false;
     public protocolos: any = [];
     public protocolo: any = {};
@@ -198,6 +199,8 @@ export class PuntoInicioLaboratorioComponent
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         console.log('verProtocolo', protocolo, index);
         if (protocolo) {
+            this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion');
+            console.log('this.mostrarCuerpoProtocolo',this.mostrarCuerpoProtocolo)
             this.protocolo = protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
@@ -205,6 +208,8 @@ export class PuntoInicioLaboratorioComponent
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
             this.recepcionarTurno = (this.modo === 'recepcion');
+            this.showBotonesGuardar = (this.modo !== 'recepcion'); 
+            
         }
     }
 
@@ -221,6 +226,9 @@ export class PuntoInicioLaboratorioComponent
         this.showCargarSolicitud = false;
         this.recepcionarTurno = false;
         this.seleccionPaciente = false; 
+
+        this.showBotonesGuardar = false; 
+        
     }
 
     /**
@@ -350,6 +358,7 @@ export class PuntoInicioLaboratorioComponent
             this.showProtocoloDetalle = true;
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
+            this.mostrarCuerpoProtocolo = false;
         }
     }
 

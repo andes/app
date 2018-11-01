@@ -201,34 +201,29 @@
         </header>
         <protocolo-detalle [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle" [indexProtocolo]='indexProtocolo'
             [protocolos]="protocolos" [edicionDatosCabecera]='edicionDatosCabecera' [modo]='modo' [seleccionPaciente]='seleccionPaciente'
-            (volverAListaControEmit)='volverLista()' (mostrarCuerpoProtocoloEmit)='mostrarBotonesGuardarProtocoloFooter($event)'></protocolo-detalle>
+            (volverAListaControEmit)='volverLista()' (mostrarCuerpoProtocoloEmit)='mostrarBotonesGuardarProtocoloFooter($event)'
+            (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo'></protocolo-detalle>
     </plex-layout-sidebar>
 
-    <plex-layout-footer *ngIf="!showProtocoloDetalle">
+    <plex-layout-footer *ngIf="!showProtocoloDetalle && modo === 'recepcion'" >
         <plex-button label="accion clave" type="primary" position="left" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno(activeTab)"></plex-button>
     </plex-layout-footer>
 
     <plex-layout-footer *ngIf="showProtocoloDetalle">
         <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
 
-        <!-- <ng-container *ngIf=""> -->
+        <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
+            label="Guardar" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+        <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
+            label="Guardar + CB" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
 
-        <!-- <ng-container *ngIf='modo !=="validacion" && showBotonesGuardar'> -->
-        <!-- <ng-container *ngIf='true'> -->
-            <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success" label="Guardar" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
-            <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success" label="Guardar + CB" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
-        <!-- </ng-container> -->
+        <plex-button *ngIf='modo === "validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
+            label="Validar todos" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
+        <plex-button *ngIf='modo === "validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
+            label="Validar pendientes" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
 
-        <!-- <ng-container *ngIf='modo === "validacion" && showBotonesGuardar'> -->
-            <plex-button *ngIf='modo === "validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success" label="Validar todos" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
-            <plex-button *ngIf='modo === "validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success" label="Validar pendientes" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
-        <!-- </ng-container> -->
-
-        <!-- <ng-container *ngIf="protocoloDetalleComponent && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)">xxxxx: {{protocoloDetalleComponent.mostrarCuerpoProtocolo}}</ng-container> -->
-
-        <plex-button *ngIf='protocoloDetalleComponent && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'
+        <plex-button *ngIf='!showBotonesGuardar && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'
             position="right" type="success" label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
-        <!-- </ng-container> -->
     </plex-layout-footer>
 
 </plex-layout>

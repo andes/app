@@ -606,7 +606,7 @@ registerLocaleData(localeEs, 'es');
         PacienteBuscarComponent,
         PacienteListadoComponent,
         PacientePanelComponent,
-        PacienteDemoComponent,
+        // PacienteDemoComponent,
         PacientePanelComponent,
 
         SectoresItemComponent,

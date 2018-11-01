@@ -51,7 +51,6 @@ export class ProtocoloDetalleComponent
     };
     practicasEjecucion;
     showObservaciones = false;
-    mostrarCuerpoProtocolo = true;
     solicitudProtocolo: any;
     practicasCarga = [];
     mostrarMasHeader = false;
@@ -59,6 +58,7 @@ export class ProtocoloDetalleComponent
     @Input() edicionDatosCabecera: Boolean;
     @Input() seleccionPaciente: Boolean;
     @Input() showProtocoloDetalle: Boolean;
+    @Input() mostrarCuerpoProtocolo: Boolean;
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
@@ -72,26 +72,31 @@ export class ProtocoloDetalleComponent
         }
     }
     public activo = 1;
+    
     public cambio(value: number) {
         this.plex.toast('info', 'Tab seleccionado: ' + value);
         this.activo = value;
     }
-    cargarProtocolo(value: any) {
 
+    cargarProtocolo(value: any) {
+        console.log('cargarProtocolo', this.mostrarCuerpoProtocolo)
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
+        this.practicasCarga = [];
 
         if (this.modo === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
             this.seleccionPaciente = true;
-        } else if (this.modo === 'validacion' || this.modo === 'carga') {
-            this.cargarListaPracticaCarga();
-            if (this.modo === 'validacion') {
-                this.cargarResultadosAnteriores();
+        } else {
+            this.aceptarEdicionCabecera();
+            if (this.modo === 'validacion' || this.modo === 'carga') {
+                this.cargarListaPracticaCarga();
+                if (this.modo === 'validacion') {
+                    this.cargarResultadosAnteriores();
+                }
             }
         }
-
     }
 
     /**
@@ -173,12 +178,14 @@ export class ProtocoloDetalleComponent
     }
 
     editarDatosCabecera() {
+        console.log('editarDatosCabecera')
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
 
     aceptarEdicionCabecera() {
+        console.log('aceptarEdicionCabecera')
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
