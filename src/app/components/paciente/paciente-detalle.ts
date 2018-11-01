@@ -62,7 +62,6 @@ export class PacienteDetalleComponent implements OnInit {
     }
 
     renaperVerification(patient) {
-        debugger;
         if (!patient.documento || (patient.sexo.id === 'otro')) {
             this.plex.toast('danger', 'La validación por RENAPER requiere sexo MASCULINO o FEMENINO', 'Error', 3000);
         } else {
