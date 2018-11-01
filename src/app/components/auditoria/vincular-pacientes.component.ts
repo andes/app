@@ -118,6 +118,7 @@ export class VincularPacientesComponent implements OnInit {
                     'dto': dataLink
                 }).subscribe(resultado => {
                     this.listaCandidatos[index].vinculado = true;
+                    this.listaCandidatos[index].activo = false;
                     this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
                 });
             }
@@ -137,11 +138,30 @@ export class VincularPacientesComponent implements OnInit {
                     'dto': dataLink
                 }).subscribe(resultado1 => {
                     this.listaCandidatos[index].vinculado = false;
+                    this.listaCandidatos[index].activo = true;
                     this.plex.toast('success', 'La desvinculación ha sido realizada correctamente', 'Información', 3000);
                 });
             }
         });
 
+    }
+
+    activar(pac: IPaciente, index: number) {
+        this.pacienteService.enable(pac).subscribe(res => {
+            this.listaCandidatos[index].activo = true;
+        });
+    }
+    desactivar(pac: IPaciente, index: number) {
+        // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
+        if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
+            this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido').subscribe(
+                () => { return null; }
+            );
+        } else {
+            this.pacienteService.disable(pac).subscribe(res => {
+                this.listaCandidatos[index].activo = false;
+            });
+        }
     }
 
     searchStart() {
