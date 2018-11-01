@@ -2,6 +2,8 @@ import { OnInit, Input, Component, EventEmitter, Output } from '@angular/core';
 import { PacienteService } from '../../services/paciente.service';
 import { Plex } from '@andes/plex';
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { Router, ActivatedRoute } from '@angular/router';
+import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'vincular-pacientes',
@@ -9,26 +11,37 @@ import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBu
 })
 
 export class VincularPacientesComponent implements OnInit {
-    @Input() pacienteBase: any;
+    pacienteBase: IPaciente;
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
     pacientes: any;
     listaCandidatos = [];
-    showBuscador = false;
+    showBuscador = true;
     constructor(
         private pacienteService: PacienteService,
-        private plex: Plex
+        private plex: Plex,
+        private router: Router,
+        private route: ActivatedRoute,
     ) { }
 
     ngOnInit(): void {
-        this.buscarCandidatos();
+        this.route.params.subscribe(params => {
+            let id = params['idPaciente'];
+            this.pacienteService.getById(id).subscribe(
+                paciente => {
+                    this.pacienteBase = paciente;
+                    this.buscarCandidatos();
+                },
+                error => {
+                    this.plex.info('warning', 'Intente nuevamente', 'Error de conexión');
+                }
+            );
+        });
     }
 
-    /**
-    * Emite el evento 'cancel' cuando se cancela la acción de vincular.
-    */
+
     public cancelar() {
-        this.cancel.emit();
+        this.router.navigate(['auditoria']);
     }
 
     /**
@@ -77,11 +90,19 @@ export class VincularPacientesComponent implements OnInit {
                 if (identificador.entidad === 'ANDES') {
                     this.pacienteService.getById(identificador.valor).subscribe(pac => {
                         this.listaCandidatos.unshift({ paciente: pac, vinculado: true, activo: pac.activo });
+                        this.verificarListado();
                     });
+                } else {
+                    this.verificarListado();
                 }
             });
+        } else {
+            this.verificarListado();
         }
-
+    }
+    // Verifica si existen candidatos o vinculados para el paciente base
+    verificarListado() {
+        this.showBuscador = !(this.listaCandidatos.length > 0);
     }
 
     vincular(pac: any, index: number) {
@@ -131,12 +152,18 @@ export class VincularPacientesComponent implements OnInit {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {
-            // Filtramos los pacientes que ya posean algo en el array de identificadores para eviar
+            // Filtramos los pacientes que ya posean algo en el array de identificadores para evitar
             // anidamiento de linkeos
             this.pacientes = this.pacienteBase ? resultado.pacientes.filter((pac: any) => (
                 (this.pacienteBase.id !== pac.id) && (!pac.identificadores || pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length < 1))) : resultado.pacientes;
             if (this.pacienteBase.estado === 'temporal') {
                 this.pacientes = this.pacientes.filter(pac => pac.estado === 'temporal');
+            }
+            // Si el paciente ya se encuentra en la lista de candidatos, lo quitamos de los resultados de búsqueda
+            if (this.listaCandidatos.length > 0) {
+                this.pacientes = this.pacientes.filter(paciente =>
+                    this.listaCandidatos.filter(candidato => (candidato.paciente.id) === paciente.id).length < 1
+                );
             }
         }
     }
