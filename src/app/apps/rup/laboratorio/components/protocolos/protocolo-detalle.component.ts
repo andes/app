@@ -72,14 +72,14 @@ export class ProtocoloDetalleComponent
         }
     }
     public activo = 1;
-    
+
     public cambio(value: number) {
         this.plex.toast('info', 'Tab seleccionado: ' + value);
         this.activo = value;
     }
 
     cargarProtocolo(value: any) {
-        console.log('cargarProtocolo', this.mostrarCuerpoProtocolo)
+        console.log('cargarProtocolo', this.mostrarCuerpoProtocolo);
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
@@ -178,18 +178,23 @@ export class ProtocoloDetalleComponent
     }
 
     editarDatosCabecera() {
-        console.log('editarDatosCabecera')
+        console.log('editarDatosCabecera');
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
 
     aceptarEdicionCabecera() {
-        console.log('aceptarEdicionCabecera')
+        console.log('aceptarEdicionCabecera');
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
-        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo)
+        this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
+    }
+
+    toggleControlAuditar() {
+        console.log('toggleControlAuditar');
+        this.modo = this.modo === 'control' ? 'validacion' : 'control';
     }
 
     /**
@@ -448,7 +453,7 @@ export class ProtocoloDetalleComponent
             let margen = [];
             for (let i = 0; i < nivelTab; i++) {
                 margen.push({});
-            };
+            }
             let esCompuesta = reg.registros.length > 0;
 
             this.practicasCarga.push({
