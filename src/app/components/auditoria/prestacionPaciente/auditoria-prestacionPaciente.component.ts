@@ -129,7 +129,7 @@ export class AuditoriaPrestacionPacienteComponent implements OnInit {
             solicitud: null
         };
 
-        this.prestacionPacienteService.get({ paciente: this.auditoriaPP.paciente.id }).subscribe((prestacionesPaciente) => {
+        this.prestacionPacienteService.get({ idPaciente: this.auditoriaPP.paciente.id }).subscribe((prestacionesPaciente) => {
             this.prestacionesPaciente = prestacionesPaciente;
         });
     }

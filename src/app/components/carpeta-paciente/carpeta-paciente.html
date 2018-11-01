@@ -4,31 +4,34 @@
 
         <h5 *ngIf="carpetaEfectores?.length > 0">Organización | Número de carpeta</h5>
         <ul class="list-group">
-            <li *ngFor="let carpeta of carpetaEfectores" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }" class="list-group-item">
-                <div class="row" *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta!=''">
-                    <div class="col-11">
-                        {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
+            <ng-container *ngFor="let carpeta of carpetaEfectores">
+                <li *ngIf="carpeta.nroCarpeta && carpeta.nroCarpeta!=''" [ngClass]="{ 'fondoNegro' : idOrganizacion === carpeta.organizacion._id }"
+                    class="list-group-item">
+                    <div class="row">
+                        <div class="col-11">
+                            {{carpeta.organizacion.nombre}} | {{carpeta.nroCarpeta}}
+                        </div>
+                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" class="col-1">
+                            <plex-button type="info" title="Editar" icon="mdi mdi-pencil" (click)="editar()">
+                            </plex-button>
+                        </div>
                     </div>
-                    <div *ngIf="idOrganizacion === carpeta.organizacion._id && !showEdit && autorizado" class="col-1">
-                        <plex-button type="info" title="Editar" icon="mdi mdi-pencil" (click)="editar()">
-                        </plex-button>
+                    <div class="row" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
+                        <div class="col-12">
+                            <plex-text label="Nuevo Nro. carpeta" name="nroCarpeta" [(ngModel)]="carpetaPaciente.nroCarpeta">
+                            </plex-text>
+                        </div>
+                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
+                            <plex-button type="danger" icon="close-circle-outline" title="Cancelar" (click)="cerrarEdicion()">
+                            </plex-button>
+                        </div>
+                        <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
+                            <plex-button type="success" icon="mdi mdi-content-save" title="Guardar" (click)="guardarCarpetaPaciente()">
+                            </plex-button>
+                        </div>
                     </div>
-                </div>
-                <div class="row" *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit && autorizado">
-                    <div class="col-12">
-                        <plex-text label="Nuevo Nro. carpeta" name="nroCarpeta" [(ngModel)]="carpetaPaciente.nroCarpeta">
-                        </plex-text>
-                    </div>
-                    <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
-                        <plex-button type="danger" icon="close-circle-outline" title="Cancelar" (click)="cerrarEdicion()">
-                        </plex-button>
-                    </div>
-                    <div *ngIf="idOrganizacion === carpeta.organizacion._id && showEdit" class="col-1 btnEdit">
-                        <plex-button type="success" icon="mdi mdi-content-save" title="Guardar" (click)="guardarCarpetaPaciente()">
-                        </plex-button>
-                    </div>
-                </div>
-            </li>
+                </li>
+            </ng-container>
         </ul>
         <hr>
         <div class="row" *ngIf="showNuevaCarpeta">

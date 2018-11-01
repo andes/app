@@ -1,9 +1,9 @@
 <plex-tabs>
     <plex-tab label="Solicitudes de Carpetas">
-        <app-listar-solicitudes [recargar]="recargaSolicitudes" (recargarPrestamosEmit)="recargarPrestamos($event)"></app-listar-solicitudes>
+        <app-listar-solicitudes (recargarPrestamosEmit)="prestamos.getCarpetas({}, null)" #solicitudes></app-listar-solicitudes>
     </plex-tab>
     <plex-tab label="Prestamos de Carpetas">
-        <app-listar-prestamos [recargar]="recargaPrestamos" (recargarSolicitudesEmit)="recargarSolicitudes($event)"></app-listar-prestamos>
+        <app-listar-prestamos (recargarSolicitudesEmit)="solicitudes.getCarpetas({}, null)" #prestamos></app-listar-prestamos>
     </plex-tab>
     <plex-tab label="Historial de Prestamos">
         <app-historial-carpetas></app-historial-carpetas>

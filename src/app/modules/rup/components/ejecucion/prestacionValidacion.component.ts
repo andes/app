@@ -1,19 +1,14 @@
-import { DomSanitizer } from '@angular/platform-browser';
-import { SemanticTag } from './../../interfaces/semantic-tag.type';
 import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { SnomedService } from './../../../../services/term/snomed.service';
-import { PrestacionEjecucionComponent } from './prestacionEjecucion.component';
-import { Component, OnInit, Output, Input, EventEmitter, AfterViewInit, HostBinding, ViewEncapsulation, NgZone } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Component, OnInit, Output, EventEmitter, HostBinding, ViewEncapsulation } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { PacienteService } from './../../../../services/paciente.service';
 import { ElementosRUPService } from './../../services/elementosRUP.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
-import { FrecuentesProfesionalService } from './../../services/frecuentesProfesional.service';
 import { DocumentosService } from './../../../../services/documentos.service';
+import { IElementoRUP } from '../../interfaces/elementoRUP.interface';
 import { Slug } from 'ng2-slugify';
 import { saveAs } from 'file-saver';
 import * as moment from 'moment';
@@ -31,11 +26,14 @@ import 'rxjs/Rx';
 })
 export class PrestacionValidacionComponent implements OnInit {
 
+    elementoRUP: IElementoRUP;
     @HostBinding('class.plex-layout') layout = true;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
     // Tiene permisos para descargar?
     public puedeDescargarPDF = false;
+
+    public nombreArchivo = '';
 
     // Usa el keymap 'default'
     private slug = new Slug('default');
@@ -107,14 +105,13 @@ export class PrestacionValidacionComponent implements OnInit {
     ];
 
     constructor(private servicioPrestacion: PrestacionesService,
-        private frecuentesProfesionalService: FrecuentesProfesionalService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,
         public servicioAgenda: AgendaService,
-        private route: ActivatedRoute, private servicioTipoPrestacion: TipoPrestacionService,
-        private servicioDocumentos: DocumentosService,
-        private sanitizer: DomSanitizer) {
+        private route: ActivatedRoute,
+        private servicioDocumentos: DocumentosService
+    ) {
     }
 
     ngOnInit() {
@@ -167,20 +164,26 @@ export class PrestacionValidacionComponent implements OnInit {
                 }
             }
 
+            // Trae el elementoRUP que implementa esta Prestación
+            this.elementoRUP = this.elementosRUPService.buscarElemento(prestacion.solicitud.tipoPrestacion, false);
+            if (this.elementoRUP.requeridos.length > 0) {
+                for (let elementoRequerido of this.elementoRUP.requeridos) {
+                    this.elementosRUPService.coleccionRetsetId[String(elementoRequerido.concepto.conceptId)] = elementoRequerido.params;
+                }
+            }
+
             this.elementosRUPService.guiada(this.prestacion.solicitud.tipoPrestacion.conceptId).subscribe((grupos) => {
                 this.gruposGuiada = grupos;
             });
 
-            // Carga la información completa del paciente
             if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                // Carga la información completa del paciente
                 this.servicioPaciente.getById(prestacion.paciente.id).subscribe(paciente => {
                     this.paciente = paciente;
+
+
                     this.prestacion.ejecucion.registros.forEach(registro => {
-                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
-                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
-                            });
-                        }
+
                         if (registro.concepto.semanticTag === 'hallazgo' || registro.concepto.semanticTag === 'trastorno' || registro.concepto.semanticTag === 'situacion') {
                             let parametros = {
                                 conceptId: registro.concepto.conceptId,
@@ -191,12 +194,36 @@ export class PrestacionValidacionComponent implements OnInit {
                             this.SNOMED.getCie10(parametros).subscribe(codigo => {
                                 this.codigosCie10[registro.id] = codigo;
                             });
-
                         }
                     });
 
                 });
             }
+
+            if (this.prestacion) {
+                this.prestacion.ejecucion.registros.forEach(registro => {
+
+                    if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                        registro.relacionadoCon.forEach((registroRel, key) => {
+                            let esRegistro = this.prestacion.ejecucion.registros.find(r => {
+                                if (r.id) {
+                                    return r.id === registroRel;
+                                } else {
+                                    return r.concepto.conceptId === registroRel;
+                                }
+                            });
+                            // Es registro RUP o es un concepto puro?
+                            if (esRegistro) {
+                                registro.relacionadoCon[key] = esRegistro;
+                            } else {
+                                registro.relacionadoCon[key] = registroRel;
+                            }
+                        });
+                    }
+                });
+                // this.armarRelaciones(this.prestacion.ejecucion.registros);
+            }
+
             this.defualtDiagnosticoPrestacion();
             this.registrosOrdenados = this.prestacion.ejecucion.registros;
             this.armarRelaciones();
@@ -237,19 +264,19 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
-
                     this.prestacion.ejecucion.registros.forEach(registro => {
                         if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
-                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => { return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel); });
+                            registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                            });
                         }
                     });
 
                     this.motivoReadOnly = true;
-                    // actualizamos las prestaciones de la HUDS
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                        // actualizamos las prestaciones de la HUDS
                         this.servicioPrestacion.getPlanes(this.prestacion.id, this.paciente.id, true).subscribe(prestacionesSolicitadas => {
                             if (prestacionesSolicitadas) {
                                 this.cargaPlan(prestacionesSolicitadas);
@@ -264,7 +291,6 @@ export class PrestacionValidacionComponent implements OnInit {
                                 }
                             });
                     }
-
                     this.plex.toast('success', 'La prestación se validó correctamente', 'Información', 300);
                 }, (err) => {
                     this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
@@ -280,10 +306,11 @@ export class PrestacionValidacionComponent implements OnInit {
                 return false;
             } else {
                 // guardamos una copia de la prestacion antes de romper la validacion.
-                let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+                // let prestacionCopia = JSON.parse(JSON.stringify(this.prestacion));
+                const prestacionCopia = this.prestacion;
 
                 // Agregamos el estado de la prestacion copiada.
-                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia.id };
+                let estado = { tipo: 'modificada', idOrigenModifica: prestacionCopia._id };
 
                 // Guardamos la prestacion copia
                 this.servicioPrestacion.clonar(prestacionCopia, estado).subscribe(prestacionClonada => {
@@ -295,19 +322,20 @@ export class PrestacionValidacionComponent implements OnInit {
                         op: 'romperValidacion',
                         estado: { tipo: 'ejecucion', idOrigenModifica: prestacionModificada.id }
                     };
-                    // Vamos a cambiar el estado de la prestación a ejecucion
-                    this.servicioPrestacion.patch(this.prestacion.id, cambioEstado).subscribe(prestacion => {
-                        this.prestacion = prestacion;
 
-                        if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                    this.route.params.subscribe(params => {
+                        // Vamos a cambiar el estado de la prestación a ejecucion
+                        this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
+                            this.prestacion = prestacion;
+
                             // actualizamos las prestaciones de la HUDS
                             this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
                             });
-                        }
 
-                        this.router.navigate(['rup/ejecucion', this.prestacion.id]);
-                    }, (err) => {
-                        this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                            this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                        }, (err) => {
+                            this.plex.toast('danger', 'ERROR: No es posible romper la validación de la prestación');
+                        });
                     });
                 });
             }
@@ -400,19 +428,6 @@ export class PrestacionValidacionComponent implements OnInit {
         this.showDatosSolicitud = bool;
     }
 
-    relacionadoConPadreDeep(registros: any[], conceptId) {
-        if (registros) {
-            for (let i = 0; i < registros.length; i++) {
-                if (registros[i].relacionadoCon.length && registros[i].relacionadoCon[0].concepto && registros[i].relacionadoCon[0].concepto.conceptId === conceptId) {
-                    return i;
-                } else {
-                    this.relacionadoConPadreDeep(registros[i].registros, conceptId);
-                }
-            }
-            return false;
-        }
-
-    }
 
     // Indices de profundidad de las relaciones
     registrosDeep: any = {};
@@ -423,7 +438,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id);
+            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id || item.relacionadoCon[0] === registro.concepto.conceptId);
             this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
@@ -445,14 +460,14 @@ export class PrestacionValidacionComponent implements OnInit {
     reordenarRelaciones() {
         let rel: any;
         let relIdx: any;
-        this.prestacion.ejecucion.registros.forEach((item, index) => {
-            rel = this.prestacion.ejecucion.registros.find(x => x.id === item.relacionadoCon[0].id);
-            relIdx = this.prestacion.ejecucion.indexOf(rel);
+        // this.prestacion.ejecucion.registros.forEach((item, index) => {
+        //     rel = this.prestacion.ejecucion.registros.find(x => x.id === item.relacionadoCon[0].id);
+        //     relIdx = this.prestacion.ejecucion.indexOf(rel);
 
-            if (rel.length > 0 && relIdx > index) {
-                this.swapItems(rel, item);
-            }
-        });
+        //     if (rel.length > 0 && relIdx > index) {
+        //         this.swapItems(rel, item);
+        //     }
+        // });
     }
 
     swapItems(a, b) {
@@ -557,6 +572,7 @@ export class PrestacionValidacionComponent implements OnInit {
         });
         setTimeout(() => {
 
+            this.nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term);
             let content = '';
             let headerPrestacion: any = document.getElementById('pageHeader').cloneNode(true);
             let datosSolicitud: any = document.getElementById('datosSolicitud').cloneNode(true);
@@ -615,9 +631,8 @@ export class PrestacionValidacionComponent implements OnInit {
 
     private descargarArchivo(data: any, headers: any): void {
         let blob = new Blob([data], headers);
-        let nombreArchivo = this.slug.slugify(this.prestacion.solicitud.tipoPrestacion.term + '-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf';
-        saveAs(blob, nombreArchivo);
-    };
+        saveAs(blob, this.nombreArchivo + this.slug.slugify('-' + moment().format('DD-MM-YYYY-hmmss')) + '.pdf');
+    }
 
     /**
      * Busca los grupos de la búsqueda guiada a los que pertenece un concepto

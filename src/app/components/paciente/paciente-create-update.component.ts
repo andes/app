@@ -213,6 +213,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    public nombrePattern: string;
+
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -231,7 +233,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
 
     ngOnInit() {
         // Se cargan los combos
@@ -763,7 +767,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
-                                    this.plex.alert('El paciente que está cargando ya existe en el sistema, favor seleccionar');
+                                    this.plex.alert('El paciente que está cargando ya existe, debe buscarlo y seleccionarlo');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
                                 }
@@ -774,7 +778,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
                                     this.posibleDuplicado = true;
-                                    this.plex.alert('Existen pacientes con un alto procentaje de matcheo, verifique la lista');
+                                    this.plex.alert('Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
                                     this.enableIgnorarGuardar = true;
                                     this.disableGuardar = true;
                                 } else {
