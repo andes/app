@@ -1,5 +1,5 @@
-<plex-layout main="{{showProtocoloDetalle ? (recepcionarTurno ? 0 : 2)  : 12}}">
-    <plex-layout-main *ngIf='!recepcionarTurno'>
+<plex-layout main="{{showProtocoloDetalle ? (ocultarPanelLateral ? 0 : 2)  : 12}}">
+    <plex-layout-main *ngIf='!ocultarPanelLateral'>
         <!-- ENCABEZADO -->
         <header>
             <div class="clearfix">
@@ -29,26 +29,29 @@
         <ng-container *ngIf="!showProtocoloDetalle">
             <div class="row contenedor-filtros">
                 <div class="col-12" *ngIf='modo === "carga" || modo === "validacion"'>
-                    <plex-radio [data]="modoCargaLaboratorioEnum" label="nombre" (change)="diagnosticoPrestacion($event, elemento)" [(ngModel)]="modoCargaLaboratorio"
-                        type="horizontal"></plex-radio>
+                    <plex-radio [data]="modoCargaLaboratorioEnum" label="nombre" (change)="diagnosticoPrestacion($event, elemento)"
+                        [(ngModel)]="modoCargaLaboratorio" type="horizontal"></plex-radio>
                 </div>
                 <div class="col-2" *ngIf='modo !== "recepcion"'>
-                    <plex-select [(ngModel)]="this.busqueda.area " (change)="refreshSelection($event,'area')" name="area" label="Area" [data]='laboratorioInternoEnum'></plex-select>
+                    <plex-select [(ngModel)]="this.busqueda.area " (change)="refreshSelection($event,'area')" name="area"
+                        label="Area" [data]='laboratorioInternoEnum'></plex-select>
                 </div>
                 <div class="col-2">
-                    <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="prioridad" label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
+                    <plex-select [(ngModel)]="prioridad" (change)="refreshSelection($event,'prioridad')" name="prioridad"
+                        label="Prioridad" [data]="prioridadesFiltroEnum"></plex-select>
                 </div>
                 <div class="col-2">
-                    <plex-select [(ngModel)]="origen" (change)="refreshSelection($event,'origen')" name="origen" label="Origen" [data]="origenEnum"></plex-select>
+                    <plex-select [(ngModel)]="origen" (change)="refreshSelection($event,'origen')" name="origen" label="Origen"
+                        [data]="origenEnum"></plex-select>
                 </div>
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="refreshSelection($event,'fechaDesde')" name="solicitudDesde"
-                        label="Fecha desde" class="fechas" [required]="true">
+                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudDesde" (change)="refreshSelection($event,'fechaDesde')"
+                        name="solicitudDesde" label="Fecha desde" class="fechas" [required]="true">
                     </plex-datetime>
                 </div>
                 <div class="col-2">
-                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="refreshSelection($event,'fechaHasta')" name="solicitudHasta"
-                        label="Fecha hasta" class="fechas" [required]="true">
+                    <plex-datetime type="date" [(ngModel)]="busqueda.solicitudHasta" (change)="refreshSelection($event,'fechaHasta')"
+                        name="solicitudHasta" label="Fecha hasta" class="fechas" [required]="true">
                     </plex-datetime>
                 </div>
                 <!-- <div class="col-2 labs-contenedor-secundario" *ngIf='modo ==="recepcion"'>
@@ -58,7 +61,8 @@
                     <div class="contenedor-bloque-texto line-height mr-2">
                         <small class="text-primary"></small>
                     </div>
-                    <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+                    <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'"
+                        (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
                 </div>
             </div>
             <!-- FIN FILTROS BASICOS  -->
@@ -68,40 +72,43 @@
                 <div class="row">
                     <div *ngIf='modo ==="carga"' class="col">
                         <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
-                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true" [required]="false"
-                            idField="term">
+                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [multiple]="true"
+                            [required]="false" idField="term">
                         </plex-select>
                     </div>
                     <div *ngIf='modo !== "carga" && modo !== "recepcion"' class="col-3">
                         <plex-select [(ngModel)]="servicio" name="servicio" (getData)="loadServicios($event)" (change)="refreshSelection($event,'servicio')"
-                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false" idField="term">
+                            label="Servicio" placeholder="Seleccione el servicio" labelField="term" [required]="false"
+                            idField="term">
                         </plex-select>
                     </div>
                     <ng-container *ngIf='modo !== "recepcion"'>
                         <div class="col-3">
-                            <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')" name="numProtocoloDesde"
-                                label="N° protocolo desde"></plex-float>
+                            <plex-float [(ngModel)]="busqueda.numProtocoloDesde" (change)="refreshSelection($event,'numProtocoloDesde')"
+                                name="numProtocoloDesde" label="N° protocolo desde"></plex-float>
                         </div>
                         <div class="col-3">
-                            <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')" name="numProtocoloHasta"
-                                label="N° protocolo hasta"></plex-float>
+                            <plex-float [(ngModel)]="busqueda.numProtocoloHasta" (change)="refreshSelection($event,'numProtocoloHasta')"
+                                name="numProtocoloHasta" label="N° protocolo hasta"></plex-float>
                         </div>
                         <div class="col-3">
-                            <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')" name="organizacion" label="Efector Solicitante"
-                                (getData)="loadOrganizaciones($event)"></plex-select>
+                            <plex-select [(ngModel)]="organizacion" (change)="refreshSelection($event,'organizacion')"
+                                name="organizacion" label="Efector Solicitante" (getData)="loadOrganizaciones($event)"></plex-select>
                         </div>
                     </ng-container>
                 </div>
                 <div *ngIf='modo ==="listado"' class="col-3">
-                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado" [data]="estadosFiltroEnum"></plex-select>
+                    <plex-select [(ngModel)]="estado" (change)="refreshSelection($event,'estado')" name="estado" label="Estado"
+                        [data]="estadosFiltroEnum"></plex-select>
                 </div>
                 <div class="row">
                     <div class="col">
                         <label>Paciente</label>
-                        <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)" (searchClear)="searchClearPaciente($event)"></paciente-buscar>
+                        <paciente-buscar (searchStart)="searchStartPaciente()" (searchEnd)="searchEndPaciente($event)"
+                            (searchClear)="searchClearPaciente($event)"></paciente-buscar>
                         <div class="scrollPacientes" *ngIf='mostrarListaMpi'>
-                            <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)"
-                                (hover)="hoverPaciente($event)"></paciente-listado>
+                            <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
+                                [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
                         </div>
                     </div>
                 </div>
@@ -139,7 +146,7 @@
                     <tr *ngFor="let protocolo of protocolos; let i=index">
                         <td *ngIf='modo !== "recepcion"'>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
                         <td>{{protocolo.solicitud.fecha | fecha}}</td>
-                        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"  
+                        <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
                          > -->
                         <!-- </plex-button> -->
                         <ng-container *ngIf="!showProtocoloDetalle">
@@ -151,14 +158,16 @@
                             <td *ngIf='protocolo.paciente.sexo ==="masculino"'>M</td>
                             <td>{{protocolo.solicitud.ambitoOrigen}}</td>
                             <td>
-                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger"
-                                    class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success"
-                                    class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'"
+                                    type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'"
+                                    type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
                             </td>
                             <td>
-                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'"
+                                    type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                                <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'"
+                                    type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
                             </td>
                             <td>
                                 <plex-button type="success" size="sm" (click)="verProtocolo(protocolo, i)" class="ml-2">
@@ -202,14 +211,14 @@
         <protocolo-detalle [protocolo]="protocolo" [showProtocoloDetalle]="showProtocoloDetalle" [indexProtocolo]='indexProtocolo'
             [protocolos]="protocolos" [edicionDatosCabecera]='edicionDatosCabecera' [modo]='modo' [seleccionPaciente]='seleccionPaciente'
             (volverAListaControEmit)='volverLista()' (mostrarCuerpoProtocoloEmit)='mostrarBotonesGuardarProtocoloFooter($event)'
-            (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo'></protocolo-detalle>
+            (mostrarCuerpoProtocolo)='mostrarCuerpoProtocolo' (volverAControlEmit)='volverAControl($event)'></protocolo-detalle>
     </plex-layout-sidebar>
 
-    <plex-layout-footer *ngIf="!showProtocoloDetalle && modo === 'recepcion'" >
+    <plex-layout-footer *ngIf="!showProtocoloDetalle && modo === 'recepcion'">
         <plex-button label="accion clave" type="primary" position="left" label="Paciente sin Turno" (click)="mostrarFomularioPacienteSinTurno(activeTab)"></plex-button>
     </plex-layout-footer>
 
-    <plex-layout-footer *ngIf="showProtocoloDetalle">
+    <plex-layout-footer *ngIf="showProtocoloDetalle && !ocultarPanelLateral">
         <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
 
         <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
@@ -224,6 +233,16 @@
 
         <plex-button *ngIf='protocoloDetalleComponent && !showBotonesGuardar && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'
             position="right" type="success" label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
+    </plex-layout-footer>
+    <plex-layout-footer *ngIf="showProtocoloDetalle && ocultarPanelLateral">
+        <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
+
+        <plex-button *ngIf='modoAVolver === "carga"' position="right" class="float-right mr-1" type="success" label="Cargar y volver"
+            (click)="volverLista()"></plex-button>
+
+        <plex-button *ngIf='modoAVolver === "validacion"' position="right" class="float-right mr-1" type="success"
+            label="Validar y volver" (click)="volverLista()"></plex-button>
+
     </plex-layout-footer>
 
 </plex-layout>
