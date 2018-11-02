@@ -35,7 +35,7 @@
             </tr>
             <tr class="hover">
                 <td>
-                    <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()" (focusout)="getPracticaPorCodigo()"
+                    <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()" (blur)="getPracticaPorCodigo()"
                         placeholder="Escriba el código"></plex-text>
                 </td>
                 <td>

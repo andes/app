@@ -85,7 +85,7 @@ export class ProtocoloDetalleComponent
         this.practicasEjecucion = this.modelo.ejecucion.registros;
         this.practicasCarga = [];
 
-        if (this.modo === 'recepcion' || this.modo === 'control') {
+        if (this.practicasEjecucion.length >= (this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
 
@@ -491,7 +491,7 @@ export class ProtocoloDetalleComponent
         // return new Promise( async (resolve) => {
         let ids = [];
         this.practicasCarga.map((reg) => { ids.push(reg.practica._id); });
-        await this.servicioPractica.findByIds({ ids: ids }).subscribe(
+        await this.servicioPractica.findByIds(ids).subscribe(
             (resultados) => {
                 this.practicasCarga.map((reg) => {
                     for (let resultado of resultados) {

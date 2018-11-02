@@ -131,6 +131,7 @@ export class TablaDatalleProtocolo implements OnInit {
     }
 
     getPracticaPorCodigo(value) {
+        console.log('getPracticaPorCodigo')
         if (this.practicaSeleccionada !== '') {
             this.servicioPractica.getMatchCodigo(this.practicaSeleccionada).subscribe((resultado: any) => {
                 if (resultado) {
@@ -195,7 +196,8 @@ export class TablaDatalleProtocolo implements OnInit {
             if (practica.categoria === 'compuesta' && practica.requeridos) {
                 let ids = [];
                 practica.requeridos.map((id) => { ids.push(id._id); });
-                await this.servicioPractica.findByIds({ ids: ids }).subscribe((resultados) => {
+                // await this.servicioPractica.findByIds({ ids: ids }).subscribe((resultados) => {
+                    await this.servicioPractica.findByIds( ids ).subscribe((resultados) => {
                     resultados.forEach(async (resultado: any) => {
                         resultado.valor = {
                             resultado: {
