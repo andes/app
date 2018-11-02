@@ -3,9 +3,6 @@
         <!--Panel central-->
         <div class="col">
             <plex-box type="primary">
-                <!--plex-text [(ngModel)]="textoLibre" (change)="buscar($event)" [autoFocus]="autoFocus" prefix="<i class='mdi mdi-account-card-details'></i>"
-                    placeholder="Ingrese un paciente o escanee un DNI">
-                </plex-text-->
                 <paciente-buscar (searchStart)="loading = true; seleccionar(null)" (searchEnd)="resultado = $event.pacientes; loading = false;"
                     (searchClear)="resultado = null"></paciente-buscar>
                 <!--Loader-->
@@ -25,11 +22,11 @@
                                 {{ paciente | paciente }}
                                 <br> |
                                 <b>Documento: </b>
-                                <span *ngIf="paciente.documento !== ''">{{ paciente.documento | number}}</span>
-                                <span *ngIf="paciente.documento === ''" class="text-danger">Sin documento</span> |
+                                <span *ngIf="paciente.documento">{{ paciente.documento | number}}</span>
+                                <span *ngIf="!paciente.documento" class="text-danger">Sin documento</span> |
                                 <b>Fecha de Nacimiento</b>
-                                <span *ngIf="paciente.fechaNacimiento !== null">{{paciente.fechaNacimiento | date:'dd-MM-yyyy'}}</span>
-                                <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">Sin fecha de nacimiento</span>
+                                <span *ngIf="paciente.fechaNacimiento">{{paciente.fechaNacimiento | fecha}}</span>
+                                <span *ngIf="!paciente.fechaNacimiento" class="text-danger">Sin fecha de nacimiento</span>
                                 |
                                 <b>Sexo</b>
                                 <span>{{paciente.sexo}}</span>
@@ -40,9 +37,6 @@
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado && puedeCrearSolicitud" title="Solicitudes" icon="open-in-app" (click)="operacionSeleccionada('ingresarSolicitud', paciente)"></plex-button>
                             </td>
-                            <!-- <td>
-                                <plex-button *ngIf="pacienteSeleccionado" title="Operaciones de Turno" icon="calendar-multiple" (click)="operacionSeleccionada('operacionesTurno', paciente)"></plex-button>
-                            </td> -->
                             <td>
                                 <plex-button *ngIf="pacienteSeleccionado" title="Activar App" icon="cellphone-android" (click)="operacionSeleccionada('activarApp', paciente)"></plex-button>
                             </td>
