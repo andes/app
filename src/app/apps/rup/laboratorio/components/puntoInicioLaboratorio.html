@@ -222,7 +222,7 @@
         <plex-button *ngIf='modo === "validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
             label="Validar pendientes" (click)="protocoloDetalleComponent.guardarSolicitud($event)"></plex-button>
 
-        <plex-button *ngIf='!showBotonesGuardar && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'
+        <plex-button *ngIf='protocoloDetalleComponent && !showBotonesGuardar && (protocoloDetalleComponent.seleccionPaciente || protocoloDetalleComponent.edicionDatosCabecera)'
             position="right" type="success" label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
     </plex-layout-footer>
 

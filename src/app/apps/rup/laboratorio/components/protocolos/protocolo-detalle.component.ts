@@ -85,6 +85,10 @@ export class ProtocoloDetalleComponent
         this.practicasEjecucion = this.modelo.ejecucion.registros;
         this.practicasCarga = [];
 
+        if (this.modo === 'recepcion' || this.modo === 'control') {
+            this.cargarCodigosPracticas();
+        }
+
         if (this.modo === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
             this.seleccionPaciente = true;
@@ -97,6 +101,20 @@ export class ProtocoloDetalleComponent
                 }
             }
         }
+    }
+
+    cargarCodigosPracticas() {
+        console.log('cargarCodigosPracticas')
+        let ids = [];
+        this.practicasEjecucion.forEach(practica => ids.push(practica._id));
+        this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
+        console.log('idsCodigos',idsCodigos)
+            this.practicasEjecucion.forEach(practica => {
+                practica.codigo = idsCodigos.filter((idCodigo) => {
+                    return idCodigo._id === practica._id;
+                })[0].codigo;
+            });
+        });
     }
 
     /**

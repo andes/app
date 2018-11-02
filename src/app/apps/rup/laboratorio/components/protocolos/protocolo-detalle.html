@@ -15,7 +15,7 @@
             <ng-container>
                 <div class="row">
 
-                    <div class="col-10">
+                    <div class="col">
                         <h2>{{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}}</h2>
                         F. Nac.: {{modelo.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
                     </div>
@@ -50,28 +50,32 @@
                         </span>
 
                         <div class="row">
-                            <div class="col-10">
+                            <div class="col">
                                 <strong>Paciente: </strong>
                                 {{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}} F. Nac.: {{modelo.paciente.fechaNacimiento
                                 | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
                             </div>
-                            <div class="col-2">
-                                <plex-button position="left" type="warning" *ngIf='edicionDatosCabecera' (click)="cambiarPaciente()">Cambiar Paciente</plex-button>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <strong>F. de solicitud: </strong>
+                                {{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}
                             </div>
+                            <div class="col-4">
+                                <strong>F. de Ejecucion:&nbsp;</strong>
+                                {{ modelo.ejecucion.fecha | date: 'dd/MM/yyyy' }}
+                            </div>
+                            <div class="col-4">
+                                <strong>Origen: </strong>
+                                {{ modelo.solicitud.ambitoOrigen}}
+                            </div>
+
+
                         </div>
                         <div class="row" *ngIf="mostrarMasHeader">
                             <div class="col-2">
                                 <strong>F. de solicitud: </strong>
                                 <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
-                            </div>
-                            <div class="col-2">
-                                <strong>F. toma muestra: </strong>
-                                <p>{{solicitudProtocolo.solicitudPrestacion.fechaTomaMuestra | date: 'dd/MM/yyyy'}}
-                                </p>
-                            </div>
-                            <div class="col-2">
-                                <strong>Origen: </strong>
-                                <p>{{ modelo.solicitud.ambitoOrigen}}</p>
                             </div>
                             <div class="col-2">
                                 <strong>Servicio: </strong>
@@ -81,10 +85,6 @@
                                 <strong>Usuario:&nbsp;</strong>
                                 <p>{{ modelo.createdBy?.nombreCompleto }}</p>
                             </div>A
-                            <div class="col-2">
-                                <strong>F. de Ejecucion:&nbsp;</strong>
-                                <p>{{ modelo.ejecucion.fecha | date: 'dd/MM/yyyy' }}</p>
-                            </div>
                             <div class="col-3">
                                 <strong>Solicitante: </strong>
                                 <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
@@ -172,7 +172,6 @@
 
     <!-- FIN ENCABEZADO DE PROTOCOLO -->
 </ng-container>
-mostrarCuerpoProtocolo {{mostrarCuerpoProtocolo}}
 <ng-container *ngIf='mostrarCuerpoProtocolo'>
     <plex-tabs>
         <plex-tab label="Análisis">

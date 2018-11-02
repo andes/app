@@ -350,7 +350,7 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        {
+        
             this.resetearProtocolo();
             this.edicionDatosCabecera = true;
             this.recepcionarTurno = true;
@@ -359,7 +359,7 @@ export class PuntoInicioLaboratorioComponent
             this.indexProtocolo = 0;
             this.seleccionPaciente = true;
             this.mostrarCuerpoProtocolo = false;
-        }
+        
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {

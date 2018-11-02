@@ -13,7 +13,6 @@ export class PracticaService {
 
 
     /**
-     * TEMPORAL.
      * @param {PracticaSearch} params
      * @returns {Observable<IPracticaMatch[]>}
      * @memberof PracticaService
@@ -24,22 +23,26 @@ export class PracticaService {
         });
     }
 
+    getCodigosPracticas(ids) {
+        return this.server.get(this.practicaUrl + "?ids=" + ids + "&fields=codigo" , null).map((value) => {
+            return value;
+        });
+    }
+
     getMatchCodigo(codigo: PracticaSearch): Observable<IPracticaMatch[]> {
         return this.server.get(this.practicaCodigoUrl + codigo , null).map((value) => {
             return value;
         });
     }
 
-    findByIds(params): Observable<IPracticaMatch[]> {
-        return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
+    findByIds(ids): Observable<IPracticaMatch[]> {
+        // return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
+        //     return value;
+        // });
+        return this.server.get(this.practicaUrl + "?ids=" + ids, null).map((value) => {
             return value;
         });
     }
-    // (params) {
-    //     let acaca =  this.server.get(this.practicaUrl, { params: params, showError: true });
-    //     console.log('acaca', acaca.toArray());
-    //     return new Error()
-    // }
 
     disable(practica: IPractica): Observable<IPractica> {
         practica.activo = false;
