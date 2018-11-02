@@ -20,12 +20,4 @@ export class PrestamosHcComponent implements OnInit {
     ngOnInit() {
 
     }
-
-    recargarPrestamos(event) {
-        this.recargaPrestamos = true;
-    }
-
-    recargarSolicitudes(event) {
-        this.recargaSolicitudes = true;
-    }
 }
