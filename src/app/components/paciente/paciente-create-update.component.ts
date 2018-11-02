@@ -126,6 +126,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     parentescoModel: any[];
     relacionesBorradas: any[];
     relacionesIniciales: any[] = [];
+    posiblesRelaciones: any[] = [];
 
     provincias: IProvincia[] = [];
     obrasSociales: IFinanciador[] = [];
@@ -577,6 +578,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
+    // Boolean: Compara las relaciones actuales con respecto al comienzo de la edición del paciente.
     hayNuevasRelaciones() {
         let resp = false;
 
@@ -598,6 +600,24 @@ export class PacienteCreateUpdateComponent implements OnInit {
             }
         }
         return resp;
+    }
+
+    actualizarPosiblesRelaciones(listaPacientes) {
+        // Se elimina el paciente en edición
+        debugger;
+        let index = listaPacientes.findIndex(p => p.id === this.pacienteModel.id);
+        if (index >= 0) {
+            listaPacientes.splice(index, 1);
+        }
+
+        // Se eliminan de los resultados de la búsqueda los pacientes ya relacionados (Que no se hayan borrado en esta actualización)
+        for (let i = 0; i < this.pacienteModel.relaciones.length; i++) {
+            if (!this.relacionesBorradas.find(rel => rel.documento === this.pacienteModel.relaciones[i].documento)) {
+                index = listaPacientes.findIndex(p => p.documento === this.pacienteModel.relaciones[i].documento);
+                listaPacientes.splice(index, 1);
+            }
+        }
+        this.posiblesRelaciones = listaPacientes;
     }
 
     agregarPacientesRelacionados(pacienteOrigen) {
@@ -639,6 +659,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         claveBlocking: null,
                         isScan: this.esEscaneado
                     };
+                    nuevoTemporal.verificaPacienteRepetido();
                     nuevosTemporales.push(nuevoTemporal);
                 } else {
                     // Si existe referencia significa que el paciente a relacionar ya existe.
@@ -1104,30 +1125,47 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-
     seleccionarPacienteRelacionado(pacienteEncontrado, esReferencia) {
-        this.buscarPacRel = '';
-        let unaRelacion = Object.assign({}, {
-            relacion: null,
-            referencia: null,
-            nombre: '',
-            apellido: '',
-            documento: ''
-        });
-        if (pacienteEncontrado) {
-            if (esReferencia) {
-                unaRelacion.referencia = pacienteEncontrado.id;
+        let ultimaRelacion = null;
+        let permitirNuevaRelacion = true;
+        if (this.pacienteModel.relaciones.length) {
+            ultimaRelacion = this.pacienteModel.relaciones[this.pacienteModel.relaciones.length - 1];
+            permitirNuevaRelacion = Boolean(ultimaRelacion.documento && ultimaRelacion.apellido && ultimaRelacion.nombre && ultimaRelacion.relacion);
+        }
+
+        if (permitirNuevaRelacion) {
+            this.buscarPacRel = '';
+            let unaRelacion = Object.assign({}, {
+                relacion: null,
+                referencia: null,
+                nombre: '',
+                apellido: '',
+                documento: ''
+            });
+            if (pacienteEncontrado) {
+                if (esReferencia) {
+                    unaRelacion.referencia = pacienteEncontrado.id;
+                }
+                unaRelacion.documento = pacienteEncontrado.documento;
+                unaRelacion.apellido = pacienteEncontrado.apellido;
+                unaRelacion.nombre = pacienteEncontrado.nombre;
             }
-            unaRelacion.documento = pacienteEncontrado.documento;
-            unaRelacion.apellido = pacienteEncontrado.apellido;
-            unaRelacion.nombre = pacienteEncontrado.nombre;
-        }
-        if (this.pacienteModel.relaciones) {
-            this.pacienteModel.relaciones.push(unaRelacion);
+            let index = null;
+            if (this.pacienteModel.relaciones) {
+                this.pacienteModel.relaciones.push(unaRelacion);
+            } else {
+                this.pacienteModel.relaciones = [unaRelacion];
+            }
+            // Si esta relación acababa de ser borrada, se quita del arreglo 'relacionesBorradas'
+            // index = this.relacionesBorradas.findIndex(rel => rel.documento === unaRelacion.documento);
+            // if (index >= 0) {
+            //     this.relacionesBorradas.splice(index, 1);
+            // }
+            this.actualizarPosiblesRelaciones(this.posiblesRelaciones);
+            this.autoFocus = this.autoFocus + 1;
         } else {
-            this.pacienteModel.relaciones = [unaRelacion];
+            this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Informacion');
         }
-        this.autoFocus = this.autoFocus + 1;
     }
 
     removeRelacion(i) {

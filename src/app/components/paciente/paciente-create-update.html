@@ -196,7 +196,6 @@
                         <!-- / DATOS DE FINANCIADORES -->
                         <plex-tab label="Obras Sociales" icon="account-card-details">
                             <fieldset>
-                                <!--<legend>Datos de Obras Sociales</legend>-->
                                 <div class="row">&nbsp;</div>
                                 <div class="row">
                                     <div class="col-12 text-right">
@@ -225,9 +224,8 @@
                         <!-- / DATOS DE FAMILIARES -->
                         <plex-tab label="Relaciones" icon="account-multiple">
                             <fieldset>
-                                <!--<legend>Datos de Obras Sociales</legend>-->
                                 <div class="row">&nbsp;</div>
-                                <ul class="list-group">
+                                <!--ul class="list-group">
                                     <li class="list-group-item" *ngFor="let _unaRel of pacienteModel.relaciones; let k = index">
                                         <div class="row">
                                             <div class="col">
@@ -255,73 +253,53 @@
                                                 <br>
                                                 <plex-button label="" type="danger btn-sm" icon="close" (click)="removeRelacion(k)"></plex-button>
                                             </div>
+                                            
                                         </div>
                                     </li>
-                                </ul>
+                                </ul-->
 
-                                <div class="row">&nbsp;</div>
-                                <div class="row">
-                                    <div class="col">
-                                        <plex-text [(ngModel)]="buscarPacRel" name="buscarPacRel" prefix="<i class='mdi mdi-account-search'></i>" (change)="buscar()"
-                                            placeholder="Puede buscar un paciente por DNI, Apellido, Nombre o Escanear un DNI">
-                                        </plex-text>
-                                    </div>
-                                </div>
-                                <!--Loader-->
-                                <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
 
-                                <!--Alerta si no se encontró ningun paciente-->
-                                <div *ngIf="PacientesRel && !PacientesRel.length && !esEscaneado" class="alert alert-danger">
-                                    <i class="mdi mdi-account-alert"></i> No se encontró ningún paciente
-                                </div>
-                                <!--Tabla de resultados por SimpleQuery -->
-                                <table *ngIf="PacientesRel && PacientesRel.length" class="table">
+                                <table *ngIf="pacienteModel.relaciones" class="table table-striped table-hover">
                                     <thead>
                                         <tr>
-                                            <th>Documento</th>
-                                            <th>Apellido</th>
-                                            <th>Nombre</th>
-                                            <th>Fecha de Nacimiento</th>
-                                            <th>Sexo</th>
-                                            <th>&nbsp;</th>
+                                            <th class="text-center">Documento</th>
+                                            <th>Apellido y nombre</th>
+                                            <th>Relación</th>
+                                            <th class="text-center">Acción</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="hover" *ngFor="let pac of PacientesRel">
-                                            <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.documento}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.documento}}</span>
+                                        <tr *ngFor="let _unaRel of pacienteModel.relaciones; let k = index">
+                                            <td class="text-center">
+                                                <span *ngIf="_unaRel?.documento !== ''" class="d-block">{{_unaRel.documento}}</span>
+                                                <span *ngIf="_unaRel?.documento === ''" class="d-block">N/D</span>
                                             </td>
+                                            <td>{{_unaRel.apellido}} {{_unaRel.nombre}}</td>
                                             <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.apellido}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.apellido}}</span>
+                                                <plex-select [(ngModel)]="_unaRel.relacion" name="relacion-{{k}}" [data]="parentescoModel" [required]="true" placeholder="Seleccione...">
+                                                </plex-select>
                                             </td>
-                                            <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.nombre}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.nombre}}</span>
-                                            </td>
-                                            <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento | fecha}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha}}</span>
-                                            </td>
-                                            <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.sexo}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.sexo}}</span>
-                                            </td>
-                                            <td>
-                                                <plex-button *ngIf="!pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac, true)"></plex-button>
-                                                <plex-button *ngIf="pac.paciente" title="Seleccinar Paciente" icon="check-circle-outline" type="link" (click)="seleccionarPacienteRelacionado(pac.paciente, true)"></plex-button>
+                                            <td class="text-center">
+                                                <plex-button label="" type="danger btn-sm" icon="close" (click)="removeRelacion(k)"></plex-button>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-                                <div class="row">&nbsp;</div>
-                                <div class="row">
-                                    <div class="col">
-                                        <plex-button label="Nueva Relación" icon="account-plus" type="primary" (click)="seleccionarPacienteRelacionado(null, false)"></plex-button>
-                                    </div>
-                                </div>
                             </fieldset>
+                            <br>
+                            <div class="row">
+                                <div class="col">
+                                    <paciente-buscar (searchStart)="loading = true" (searchEnd)="actualizarPosiblesRelaciones($event.pacientes); loading = false"
+                                        (searchClear)="posiblesRelaciones = null"></paciente-buscar>
+                                </div>
+                            </div>
+                            <plex-loader *ngIf="loading" type="ball-pulse"></plex-loader>
+                            <div class="row">
+                                <div class="col">
+                                    <paciente-listado [pacientes]="posiblesRelaciones" (selected)="seleccionarPacienteRelacionado($event, true)"></paciente-listado>
+                                </div>
+                            </div>
+
 
                         </plex-tab>
                         <plex-tab label="Notas" icon="file-multiple">
@@ -377,10 +355,12 @@
                                     <div class="hover" *ngIf="!pacientesSearch">
                                         <ul class="list-group">
                                             <li class="list-group-item justify-content-between" *ngFor="let elem of pacientesSimilares">
-                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre| uppercase}}
+                                                <h4 class="box-title-elemento">{{elem.paciente.apellido| uppercase}} {{elem.paciente.nombre|
+                                                    uppercase}}
                                                     <br>
                                                     <small>Documento: {{elem.paciente.documento}}
-                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha }}
+                                                        <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento | fecha
+                                                        }}
                                                         <br> Sexo: {{elem.paciente.sexo}}
                                                     </small>
 
