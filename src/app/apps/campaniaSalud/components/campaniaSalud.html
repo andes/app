@@ -1,15 +1,15 @@
-<plex-layout main="6">
+<plex-layout [main]="seleccionada ? 6 : 12">
     <plex-layout-main>
         <header>
             <div class="row">
                 <div class="col-md-6">
                     <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="aplicarFiltrosBusqueda()" name="fechaDesde"
-                        label="Vigencia desde" [required]="true">
+                        label="Vigencia desde" [required]="true" [max]="fechaHasta">
                     </plex-datetime>
                 </div>
                 <div class="col-md-6">
                     <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="aplicarFiltrosBusqueda()" name="fechaHasta"
-                        label="Vigencia hasta" [required]="true">
+                        label="Vigencia hasta" [required]="true" [min]="fechaDesde">
                     </plex-datetime>
                 </div>
             </div>
@@ -26,8 +26,9 @@
                     <thead>
                         <tr>
                             <th class="w-50">Asunto</th>
-                            <th>Fecha Desde</th>
-                            <th>Fecha Hasta</th>
+                            <th>Desde</th>
+                            <th>Hasta</th>
+                            <th *ngIf="!seleccionada">Estado</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -35,6 +36,12 @@
                             <td>{{campania.asunto}}</td>
                             <td>{{campania.vigencia.desde | fecha}}</td>
                             <td>{{campania.vigencia.hasta | fecha}}</td>
+                            <td *ngIf="!seleccionada">
+                                <plex-badge *ngIf="campania.activo" type="success">
+                                    {{campaniaSaludService.getEstado(campania)}} </plex-badge>
+                                <plex-badge *ngIf="!campania.activo" type="danger">
+                                    {{campaniaSaludService.getEstado(campania)}} </plex-badge>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -45,11 +52,11 @@
         </div>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <ng-container *ngIf="mostrarVisualizacionCampania">
-            <campaniaSaludVisualizacion [campania]="seleccionada" (modificarOutput)='editarCampania()' ></campaniaSaludVisualizacion>
+        <ng-container *ngIf="seleccionada && mostrarVisualizacionCampania">
+            <campaniaSaludVisualizacion [campania]="seleccionada" (modificarOutput)='editarCampania()'></campaniaSaludVisualizacion>
         </ng-container>
-        <ng-container *ngIf="!mostrarVisualizacionCampania">
-            <campaniaForm [campania]="seleccionada" (save)='guardarCampania($event)' (cancel)='cancelarEdicionCampania()'></campaniaForm>
+        <ng-container *ngIf="seleccionada &&  !mostrarVisualizacionCampania">
+            <campaniaForm [campania]="seleccionada" (guardar)='guardarCampania($event)' (cancelar)='cancelarEdicionCampania()'></campaniaForm>
         </ng-container>
     </plex-layout-sidebar>
 </plex-layout>

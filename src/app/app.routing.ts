@@ -91,10 +91,7 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
 // Campañas salud
-import { CampaniaListadoComponent } from './apps/campaniaSalud/components/campaniaListado.component';
-import { CampaniaPublicacionComponent } from './apps/campaniaSalud/components/campaniaPublicacion.component';
 import { CampaniaSaludComponent } from './apps/campaniaSalud/components/campaniaSalud.component';
-import { CampaniaFormComponent } from './apps/campaniaSalud/components/campania-create-update.component';
 
 const appRoutes: Routes = [
   // Tablas maestras
@@ -185,12 +182,12 @@ const appRoutes: Routes = [
   { path: 'estadisticas', loadChildren: './modules/estadisticas/estadistica.module#EstadisticaModule', canActivate: [RoutingGuard] },
   //Campañas Salud
   // { path: 'campanias', component: CampaniaListadoComponent, canActivate: [RoutingGuard]},
-  
+
   // { path: 'campaniasPublicacion', component: CampaniaPublicacionComponent, canActivate: [RoutingGuard]},
-  { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingGuard]},
+  { path: 'campaniasSalud', component: CampaniaSaludComponent, canActivate: [RoutingGuard] },
   // { path: 'campaniasFormulario', component: CampaniaFormComponent, canActivate: [RoutingGuard]},
-  
-//dejar siempre al último porque no encuentra las url después de esta
+
+  //dejar siempre al último porque no encuentra las url después de esta
   { path: '**', redirectTo: 'inicio' }
 ];
 

@@ -3,41 +3,36 @@
         <legend>Datos principales</legend>
         <div class="row">
             <div class="col-md">
-                <plex-text label="Asunto" [(ngModel)]="campania.asunto" name="asunto" [required]="true"></plex-text>
+                <plex-text label="Asunto" [(ngModel)]="campaniaEdit.asunto" name="asunto" [required]="true"></plex-text>
             </div>
         </div>
         <div class="row">
             <div class="col-md">
-                <plex-text label="Cuerpo" [(ngModel)]="campania.cuerpo" name="cuerpo" [multiline]="true" [required]="true"></plex-text>
+                <plex-text label="Cuerpo" [(ngModel)]="campaniaEdit.cuerpo" name="cuerpo" [required]="true" [html]="true"></plex-text>
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12">
-                <plex-text label="Link" [(ngModel)]="campania.link" name="link" [required]="true"></plex-text>
+            <div class="col-md-6">
+                <plex-text label="Imagen" [(ngModel)]="campaniaEdit.imagen" name="imagen" [required]="true"></plex-text>
             </div>
             <div class="col-md-6">
-                <plex-text label="Imagen" [(ngModel)]="campania.imagen" name="imagen" [required]="true"></plex-text>
-            </div>
-            <div class="col-md-6">
-                <plex-datetime type="date" [(ngModel)]="campania.fechaPublicacion" name="fechaPublicacion" label="Fecha de Publicación"
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.fechaPublicacion" name="fechaPublicacion" label="Fecha de Publicación"
                     [required]="true">
                 </plex-datetime>
             </div>
         </div>
     </fieldset>
     <fieldset>
-        <legend>Grupo etario</legend>
+        <legend>Perfil Demográfico Destino</legend>
         <div class="row">
             <div class="col-md-4">
-                <plex-select label="Sexo" [(ngModel)]="campania.target.sexo" name="sexo" [data]="sexos"></plex-select>
+                <plex-select label="Sexo" [(ngModel)]="campaniaEdit.target.sexo" name="sexo" [data]="sexos"></plex-select>
             </div>
             <div class="col-md-4">
-                <plex-int label="Edad desde" [(ngModel)]="campania.target.grupoEtareo.desde" name="desde"
-                    [max]="campania.target.grupoEtareo.hasta"></plex-int>
+                <plex-int label="Edad desde" [(ngModel)]="campaniaEdit.target.grupoEtario.desde" name="desde"></plex-int>
             </div>
             <div class="col-md-4">
-                <plex-int label="Edad hasta" [(ngModel)]="campania.target.grupoEtareo.hasta" name="hasta"
-                    [min]="campania.target.grupoEtareo.desde"></plex-int>
+                <plex-int label="Edad hasta" [(ngModel)]="campaniaEdit.target.grupoEtario.hasta" name="hasta"></plex-int>
             </div>
         </div>
     </fieldset>
@@ -45,24 +40,32 @@
         <legend>Vigencia</legend>
         <div class="row">
             <div class="col-md">
-                <plex-datetime type="date" [(ngModel)]="campania.vigencia.desde" name="fechaDesde" label="Desde"
-                    [required]="true" [max]="campania.vigencia.hasta">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.desde" name="fechaDesde" label="Desde"
+                    [required]="true" [max]="campaniaEdit.vigencia.hasta">
                 </plex-datetime>
             </div>
             <div class="col-md">
-                <plex-datetime type="date" [(ngModel)]="campania.vigencia.hasta" name="fechaHasta" label="Hasta"
-                    [required]="true" [min]="campania.vigencia.desde">
+                <plex-datetime type="date" [(ngModel)]="campaniaEdit.vigencia.hasta" name="fechaHasta" label="Hasta"
+                    [required]="true" [min]="campaniaEdit.vigencia.desde">
                 </plex-datetime>
             </div>
         </div>
     </fieldset>
     <fieldset>
+        <legend>Datos del Acceso</legend>
         <div class="row">
-            <div class="col-md">
-                <plex-text label="Texto Acción" [(ngModel)]="campania.textoAccion" name="textoAccion"></plex-text>
+            <div class="col-md-6">
+                <plex-text label="Texto Acción" [(ngModel)]="campaniaEdit.textoAccion" name="textoAccion"></plex-text>
             </div>
-            <div class="col-md-4">
-                <plex-bool label="¿Está activo?" [(ngModel)]="campania.activo" name="activo" type="slide" [required]="true"></plex-bool>
+            <div class="col-md-6">
+                <plex-text label="Link" [(ngModel)]="campaniaEdit.link" name="link" [required]="true"></plex-text>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="row">
+            <div class="col-md text-right">
+                <plex-bool label="¿Está activo?" [(ngModel)]="campaniaEdit.activo" name="activo" type="slide"></plex-bool>
             </div>
         </div>
     </fieldset>
@@ -76,4 +79,53 @@
             </div>
         </div>
     </fieldset>
+    <!-- <fieldset>
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-12">
+                    <input type="file" (change)="changeListener($event)" style="display:none;" #upload>
+                    <strong>Cargar documentos</strong>
+                    <span>
+                        <plex-button type="primary" class="btn-sm" label="Desde mi PC" (click)="upload.click()"></plex-button>
+                        <span *ngIf="errorExt">
+                            <span class="badge-danger"> Archivo inválido </span>
+                        </span>
+                    </span>
+                    <span>
+                        <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
+                        <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()"></plex-button>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="image-container hr-inline-group" *ngIf="fotos && fileToken">
+                        <ng-container *ngFor="let doc of fotos; let i = index">
+                            <a (click)="activaLightbox(i)">
+                                <div class="image hover">
+
+                                    <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                    <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto">
+                                        {{ doc.ext }}
+                                    </a>
+                                    <div class="x-mark" (click)="imageRemoved(doc)">
+                                        <span class="close"></span>
+                                    </div>
+                                </div>
+                            </a>
+                            <div (click)="lightbox = false" *ngIf="i === indice && lightbox" [ngClass]="{'lightbox': i === indice && lightbox }"
+                                class="hover">
+                                <i (click)=imagenPrevia(i) class="mdi mdi-chevron-double-left previous parpadeo"></i>
+                                <img [src]="createUrl(doc)" alt="" *ngIf="esImagen(doc.ext)">
+                                <a [href]="createUrl(doc)" target="_blank" *ngIf="!esImagen(doc.ext)" class="adjunto m-1 p-2">
+                                    {{ doc.ext }}
+                                </a>
+                                <i (click)=imagenSiguiente(i) class="mdi mdi-chevron-double-right next parpadeo"></i>
+                            </div>
+                        </ng-container>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset> -->
 </form>

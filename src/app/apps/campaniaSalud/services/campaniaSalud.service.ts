@@ -1,25 +1,37 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
-export class CampaniaSaludService{
-    campaniaSeleccionada: ICampaniaSalud;
-    campanias: ICampaniaSalud[];
-    readonly campaniaUrl="/core/tm/campanias";
-    
-    constructor(private server: Server){
-    } 
+export class CampaniaSaludService {
+    // campaniaSeleccionada: ICampaniaSalud;
+    // campanias: ICampaniaSalud[];
+    readonly campaniaUrl = '/core/tm/campanias';
 
-    getCampanias(params?):Observable<ICampaniaSalud[]>{
-        return this.server.get(this.campaniaUrl,{params: params});
+    constructor(private server: Server) {
     }
-    putCampanias(campania:ICampaniaSalud){
+
+    getCampanias(params?): Observable<ICampaniaSalud[]> {
+        return this.server.get(this.campaniaUrl, { params: params });
+    }
+    putCampanias(campania: ICampaniaSalud) {
         return this.server.put(this.campaniaUrl + '/' + campania.id, campania);
     }
-    postCampanias(campania:ICampaniaSalud){
-        console.log('log this', campania);
+    postCampanias(campania: ICampaniaSalud) {
         return this.server.post(this.campaniaUrl, campania);
     }
+    /**
+     * Devuelve el nombre del estado de la campaña pasada por parámetro
+     *
+     * @param {ICampaniaSalud} campania
+     * @returns {String}
+     * @memberof CampaniaSaludService
+     */
+    getEstado(campania: ICampaniaSalud): String {
+        return campania.activo ? 'Activada' : 'Desactivada';
+    }
+
+
+
 }

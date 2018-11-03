@@ -8,42 +8,59 @@
         <legend>{{campania.asunto}}</legend>
         <div class="row">
             <div class="col-md">
-                <span>{{campania.cuerpo}}</span>
+                <div [innerHtml]="campania.cuerpo"></div>
             </div>
         </div>
     </fieldset>
     <fieldset>
-        <legend>Grupo Etario</legend>
+        <legend>Perfil Demográfico Destino</legend>
         <div class="row">
             <div class="col-md-4">
                 <label>Sexo</label>
-                <span *ngIf="campania.target.sexo">{{campania.target.sexo.nombre | titlecase }}</span>
-                <span *ngIf="!campania.target.sexo">{{campaniaSaludService.campaniaSexoSinEspecificar}}</span>
+                <span>{{(campania.target?.sexo | titlecase) || "Indistinto"}}</span>
             </div>
             <div class="col-md">
                 <label>Edad Desde</label>
-                <span>{{campania.target.grupoEtareo.desde}}</span>
+                <span>{{(campania.target?.grupoEtario?.desde) || "Indistinto"}}</span>
             </div>
             <div class="col-md">
                 <label>Edad Hasta</label>
-                <span>{{campania.target.grupoEtareo.hasta}}</span>
+                <span>{{(campania.target?.grupoEtario?.hasta)|| "Indistinto"}}</span>
             </div>
         </div>
     </fieldset>
     <fieldset>
-        <legend>Vigencia</legend>
         <div class="row">
-            <div class="col-md-4">
-                <label>Fecha Desde</label>
-                <span>{{campania.vigencia?.desde | fecha}}</span>
+            <div class="col-md-8">
+                <fieldset>
+                    <legend>Vigencia</legend>
+                    <div class="row">
+                        <div class="col-md">
+                            <label>Fecha Desde</label>
+                            <span>{{campania.vigencia?.desde | fecha}}</span>
+                        </div>
+                        <div class="col-md">
+                            <label>Fecha Hasta</label>
+                            <span>{{campania.vigencia.hasta | fecha}}</span>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
-            <div class="col-md">
-                <label>Fecha Hasta</label>
-                <span>{{campania.vigencia.hasta | fecha}}</span>
+            <div class="col-md-4">
+                <fieldset>
+                    <legend>Estado</legend>
+                    <div class="row">
+                        <div class="col-md mt-md-4">
+                            <plex-badge *ngIf="campania.activo" type="success">{{campaniaSaludService.getEstado(campania)}}</plex-badge>
+                            <plex-badge *ngIf="!campania.activo" type="danger">{{campaniaSaludService.getEstado(campania)}}</plex-badge>
+                        </div>
+                    </div>
+                </fieldset>
             </div>
         </div>
     </fieldset>
     <fieldset>
+        <legend>Datos del Acceso</legend>
         <div class="row">
             <div class="col-md-4">
                 <label>Texto Acción</label>
@@ -55,7 +72,11 @@
             </div>
         </div>
     </fieldset>
-    <div class="col text-right">
-        <plex-button label="Modificar" type="success" (click)="modificar()"></plex-button>
-    </div>
+    <fieldset>
+        <div class="row">
+            <div class="col text-right">
+                <plex-button label="Modificar" type="success" (click)="modificar()"></plex-button>
+            </div>
+        </div>
+    </fieldset>
 </ng-container>
