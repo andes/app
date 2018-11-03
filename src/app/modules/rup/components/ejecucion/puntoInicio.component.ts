@@ -437,6 +437,7 @@ export class PuntoInicioComponent implements OnInit {
         return moment(agenda.horaInicio).fromNow();
     }
 
+
     // buscar paciente para asigar en las agendas dinamicas
     buscarPaciente() {
         this.buscandoPaciente = true;
@@ -446,35 +447,9 @@ export class PuntoInicioComponent implements OnInit {
         this.buscandoPaciente = false;
     }
 
-    /* Guardar los datos del turno de la agenda dinámica (paciente y tipoprestacion)
-     */
-    guardarDatosTurno(datosTurno) {
-        this.buscandoPaciente = false;
-        let paciente = datosTurno.paciente;
-        if (this.agendaSeleccionada.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                let datosConfirma = {
-                    nota: '',
-                    motivoConsulta: '',
-                    tipoPrestacion: datosTurno.tipoPrestacion,
-                    paciente: paciente,
-                    idAgenda: this.agendaSeleccionada.id
-                };
-                this.serviceTurno.saveDinamica(datosConfirma).subscribe(
-                    resultado => {
-                        this.buscandoPaciente = false;
-                        this.actualizar();
-                    },
-                    error => {
-
-                    });
-            });
-        }
-    }
-
     /**
        * Ejecutar una prestacion que esta en estado pendiente
-       */
+    */
     ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
         let params: any = {
             op: 'estadoPush',
@@ -499,4 +474,6 @@ export class PuntoInicioComponent implements OnInit {
             }
         });
     }
+
+
 }

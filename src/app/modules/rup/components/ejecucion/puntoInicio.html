@@ -110,8 +110,7 @@
             </plex-box>
         </div>
         <div class="col">
-            <dinamica *ngIf="buscandoPaciente" [prestaciones]="agendaSeleccionada.bloques[0].tipoPrestaciones" (cancel)="cancelarDinamica()"
-                (save)="guardarDatosTurno($event)"></dinamica>
+            <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()" (save)="guardarDatosTurno($event)"></dinamica>
 
             <plex-box *ngIf="!buscandoPaciente">
                 <fieldset>

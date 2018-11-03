@@ -1,8 +1,14 @@
+import { IPrestacion } from './../../../modules/rup/interfaces/prestacion.interface';
+
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Plex } from '@andes/plex';
 import { IPacienteMatch } from '../../../modules/mpi/interfaces/IPacienteMatch.inteface';
 import { IPaciente } from '../../../interfaces/IPaciente';
+import { IAgenda } from './../../../interfaces/turnos/IAgenda';
 import { PacienteBuscarResultado } from '../../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
+import { TurnoService } from '../../../services/turnos/turno.service';
+import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'dinamica',
@@ -13,19 +19,21 @@ export class DinamicaFormComponent implements OnInit {
     public pacienteActivo: IPaciente;
     public turnoTipoPrestacion: any;
     public datosTurno: any = {};
+    public prestaciones = [];
 
     // Eventos
-    @Input() prestaciones: any[];
+    @Input() agenda: IAgenda;
     @Output() save: EventEmitter<any> = new EventEmitter<any>();
     @Output() cancel: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor(private plex: Plex) {
+    constructor(private plex: Plex,
+        private router: Router,
+        public serviceTurno: TurnoService,
+        public servicioPrestacion: PrestacionesService) {
     }
 
     ngOnInit() {
-        if (this.prestaciones.length === 1) {
-            this.turnoTipoPrestacion = this.prestaciones[0];
-        }
+        this.getPrestacionesAgendaDinamicas();
     }
 
     searchStart() {
@@ -61,7 +69,7 @@ export class DinamicaFormComponent implements OnInit {
             this.datosTurno.paciente = pacienteSave;
             // this.darTurno(pacienteSave);
         } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
     }
 
@@ -69,8 +77,25 @@ export class DinamicaFormComponent implements OnInit {
         this.cancel.emit();
     }
 
+
     /**
      * Guarda los datos del formulario y emite el dato guardado
+     *
+     * @param {any} $event formulario a validar
+     */
+    getPrestacionesAgendaDinamicas() {
+
+        let listaPrestaciones = [];
+        this.agenda.bloques.forEach(unBloque => {
+            listaPrestaciones = listaPrestaciones.concat(unBloque.tipoPrestaciones);
+        });
+        this.prestaciones = listaPrestaciones.filter((elem, pos, arr) => {
+            return arr.indexOf(elem) === pos;
+        });
+    }
+
+    /**
+     * Obtiene los datos del formulario y llama a guardar el turno
      *
      * @param {any} $event formulario a validar
      */
@@ -78,7 +103,7 @@ export class DinamicaFormComponent implements OnInit {
         if ($event.formValid) {
             if (this.pacienteActivo) {
                 this.datosTurno.tipoPrestacion = this.turnoTipoPrestacion;
-                this.save.emit(this.datosTurno);
+                this.guardarDatosTurno();
             } else {
                 this.plex.info('warning', 'Debe seleccionar un paciente');
             }
@@ -86,4 +111,44 @@ export class DinamicaFormComponent implements OnInit {
             this.plex.info('warning', 'Completar datos requeridos');
         }
     }
+
+
+    /**
+    * Guarda el turno en la agenda y crea la prestación
+    */
+    guardarDatosTurno() {
+        const paciente = this.datosTurno.paciente;
+        if (this.agenda.dinamica) {
+            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre +
+                '.</b><br>Prestación: <b>' + this.datosTurno.tipoPrestacion.term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
+                    if (confirmacion) {
+                        let datosConfirma = {
+                            nota: '',
+                            motivoConsulta: '',
+                            tipoPrestacion: this.datosTurno.tipoPrestacion,
+                            paciente: paciente,
+                            idAgenda: this.agenda.id
+                        };
+                        // guardamos el turno
+                        this.serviceTurno.saveDinamica(datosConfirma).subscribe(
+                            agendaResultado => {
+                                // TODO::revisar si podemos obtener directamente desde la api el turno agregado
+                                const turnos = agendaResultado.bloques[0].turnos;
+                                const turnoDado = turnos[turnos.length - 1];
+                                // creamos la prestación
+                                this.servicioPrestacion.crearPrestacion(paciente, this.datosTurno.tipoPrestacion, 'ejecucion', new Date(), turnoDado.id).subscribe(prestacion => {
+                                    this.router.navigate(['rup/ejecucion/', prestacion.id]);
+                                }, (err) => {
+                                    this.plex.info('danger', 'No fue posible crear la prestación');
+                                });
+                            },
+                            error => {
+
+                            });
+                    }
+
+                });
+        }
+    }
+
 }
