@@ -8,29 +8,35 @@
                 <div class="row">
                     <div class="col-md">
                         <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
-                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes"
-                            [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
+                        <paciente-listado *ngIf="pacientes && pacientes.length" [type]="'sm'" [pacientes]="pacientes" [autoselect]="false" (selected)="onPacienteSelected($event)"></paciente-listado>
                         <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                             ¡No se encontró ningún paciente!
                         </div>
                     </div>
                 </div>
-                <br>
-                <div *ngIf="pacienteActivo" class="row">
+                <div class="row" *ngIf="pacienteActivo">
                     <div class="col-md">
-                        <b>Paciente: </b>
-                        <br>
-                        {{pacienteActivo | paciente}}
+                        <label>Paciente </label>
+                        <span>{{pacienteActivo | paciente}}</span>
                     </div>
                 </div>
-                <div *ngIf="prestaciones.length > 1" class="row">
-                    <div class="col">
-                        <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones"
-                            name="turnoTipoPrestacion" [required]="true"></plex-select>
+                <div class="row" *ngIf="pacienteActivo">
+                    <div class="col-md-6">
+                        <label>Documento: </label>
+                        <span>{{pacienteActivo.documento}}</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Sexo: </label>
+                        <span>{{pacienteActivo.genero}}</span>
+                    </div>
+                </div>
+                <div class="row" *ngIf="prestaciones.length > 1">
+                    <div class="col-md">
+                        <plex-select label="Tipo de prestación" [(ngModel)]="turnoTipoPrestacion" [data]="prestaciones" name="turnoTipoPrestacion"
+                            [required]="true"></plex-select>
                     </div>
                 </div>
             </fieldset>
-            <br>
             <div class="row">
                 <!-- Botonera-->
                 <div class="col-md text-left">
