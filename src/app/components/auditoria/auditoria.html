@@ -46,17 +46,17 @@
                                                     <span *ngIf="paciente.estado != 'validado'" class="badge badge-warning">Temporal</span>
                                                 </td>
                                                 <td>
-                                                    <span *ngIf="paciente?.documento !== ''">{{paciente.documento}}</span>
-                                                    <span *ngIf="paciente?.documento === ''" class="text-danger">Sin
+                                                    <span *ngIf="paciente?.documento">{{paciente.documento}}</span>
+                                                    <span *ngIf="!paciente?.documento" class="text-danger">Sin
                                                         documento</span>
                                                 </td>
                                                 <td>{{paciente | paciente}}</td>
                                                 <td>
-                                                    <span *ngIf="paciente.fechaNacimiento !== null">
+                                                    <span *ngIf="paciente.fechaNacimiento">
                                                         {{paciente.fechaNacimiento | fecha}}
                                                         <br> {{paciente | edad}}
                                                     </span>
-                                                    <span *ngIf="paciente.fechaNacimiento === null" class="text-danger">
+                                                    <span *ngIf="paciente.fechaNacimiento" class="text-danger">
                                                         Sin fecha de nacimiento
                                                     </span>
                                                 </td>
