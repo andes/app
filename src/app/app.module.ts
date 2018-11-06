@@ -278,6 +278,10 @@ import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
+
+
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -398,6 +402,8 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'ValorNumericoComponent': ValorNumericoComponent,
+    'SeleccionBinariaComponent': SeleccionBinariaComponent
 };
 
 let RUPComponentsArray = [
@@ -453,7 +459,9 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ProcedimientoDeEnfermeriaComponent
+    ProcedimientoDeEnfermeriaComponent,
+    ValorNumericoComponent,
+    SeleccionBinariaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -464,6 +472,7 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+
 
 registerLocaleData(localeEs, 'es');
 
