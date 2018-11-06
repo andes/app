@@ -41,7 +41,7 @@ export class VincularPacientesComponent implements OnInit {
 
 
     public cancelar() {
-        this.router.navigate(['auditoria']);
+        this.router.navigate(['app/src/app/components/auditoria/auditoria']);
     }
 
     /**

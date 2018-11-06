@@ -42,7 +42,6 @@ import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/pun
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
 import { AuditoriaComponent } from './components/auditoria/auditoria.component';
-import { Auditoria2Component } from './components/auditoria/auditoria2.component';
 
 // ... Obras sociales
 import { PucoComponent } from './components/puco/puco.component';
@@ -102,9 +101,11 @@ const appRoutes: Routes = [
 
   // MPI
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+
+  // AUDITORIA
+  { path: 'app/src/app/components/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
+  { path: 'app/src/app/components/auditoria/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
@@ -162,9 +163,6 @@ const appRoutes: Routes = [
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
 
-  // AUDITORIA
-  { path: 'vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
-  { path: 'auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   /* ELIMINAR ==> */ { path: 'dashboard', component: DashboardComponent, canActivate: [RoutingGuard] },
 

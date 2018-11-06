@@ -172,7 +172,7 @@ export class AuditoriaComponent implements OnInit {
         }
         this.showVincular = true;
         this.showAuditoria = false;
-        this.router.navigate(['vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
+        this.router.navigate(['app/src/app/components/auditoria/vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
 
     }
 
