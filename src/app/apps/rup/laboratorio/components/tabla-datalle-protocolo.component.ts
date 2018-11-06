@@ -131,7 +131,6 @@ export class TablaDatalleProtocolo implements OnInit {
     }
 
     getPracticaPorCodigo(value) {
-        console.log('getPracticaPorCodigo')
         if (this.practicaSeleccionada !== '') {
             this.servicioPractica.getMatchCodigo(this.practicaSeleccionada).subscribe((resultado: any) => {
                 if (resultado) {

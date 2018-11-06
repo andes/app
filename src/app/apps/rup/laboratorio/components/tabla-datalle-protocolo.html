@@ -22,16 +22,12 @@
             <tr class="hover" *ngFor="let practica of practicasEjecucion">
                 <td>{{practica.codigo}}</td>
                 <td>{{practica.nombre}}</td>
-                <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
+                <td>
                     <plex-bool type="checkbox" [(ngModel)]="practica.valor.resultado.sinMuestra" name="sinMuestra"></plex-bool>
-                </ng-container>
-                <td></td>
-                <td></td>
-                <ng-container *ngIf='modo === "control" || modo === "recepcion"'>
-                    <td>
-                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
-                    </td>
-                </ng-container>
+                </td>
+                <td>
+                    <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                </td>
             </tr>
             <tr class="hover">
                 <td>
@@ -108,7 +104,10 @@
                             </td>
                         </ng-container>
                         <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
-                            <td class="small text-success"> Val.: Bioq. Lateulade Marcelo. MP 679 01/11/2018 12:57</td>
+                            <td class="small text-success">
+                                <ng-container *ngIf="reg.practica.valor.resultado.valor !== null && reg.practica.valor.resultado.valor !== '' && !reg.practica.valor.resultado.validado">Carga: Bioq. Lateulade Marcelo.<br/>MP 679 05/11/2018 09:38</ng-container>
+                                <ng-container *ngIf="reg.practica.valor.resultado.validado">Val.: Bioq. Lateulade Marcelo.<br/>MP 679 05/11/2018 09:38</ng-container>
+                            </td>
                             <td>
                                 <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">
                                 </plex-button>

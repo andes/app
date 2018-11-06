@@ -87,4 +87,4 @@ export class LabsComponent implements OnInit {
   loadEspacios(event) {
 
   }
-};
+}

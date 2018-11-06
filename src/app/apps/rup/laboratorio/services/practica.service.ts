@@ -24,7 +24,7 @@ export class PracticaService {
     }
 
     getCodigosPracticas(ids) {
-        return this.server.get(this.practicaUrl + "?ids=" + ids + "&fields=codigo" , null).map((value) => {
+        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo' , null).map((value) => {
             return value;
         });
     }
@@ -39,7 +39,7 @@ export class PracticaService {
         // return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
         //     return value;
         // });
-        return this.server.get(this.practicaUrl + "?ids=" + ids, null).map((value) => {
+        return this.server.get(this.practicaUrl + '?ids=' + ids, null).map((value) => {
             return value;
         });
     }

@@ -9,7 +9,7 @@
 <ng-container *ngIf="edicionDatosCabecera && !seleccionPaciente">
     <div class="row d-inline">
         <div class="col-12">
-            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px;'>
+            <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px; margin-top: 10px;'>
                 <h2>{{solicitudProtocolo.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</h2>
             </span>
             <ng-container>
@@ -41,11 +41,16 @@
             <div class="col" [ngClass]="{'centradoVerticalBtn': !edicionDatosCabecera}">
                 <div class="listado-contenedor-secundario">
                     <article *ngIf='!edicionDatosCabecera' class="labs-item-numero">
-                        <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px;'>
+                        <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success" style='float: left; margin-right: 20px;; margin-top: 10px;'>
                             <h5>
                                 <i *ngIf='modelo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-24px mdi-rotate-45 rosa"></i>
                                 <i *ngIf='modelo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-24px azul"></i>
                                 {{solicitudProtocolo.solicitudPrestacion.numeroProtocolo.numeroCompleto}}
+
+                                <!-- <plex-button *ngIf='false' icon="mdi mdi-toggle-switch" class="float-right mr-2 marginLeftBtn" (click)="toggleControlAuditar()"
+                                    title="Auditar">
+                                </plex-button> -->
+
                             </h5>
                         </span>
 
@@ -69,8 +74,6 @@
                                 <strong>Origen: </strong>
                                 {{ modelo.solicitud.ambitoOrigen}}
                             </div>
-
-
                         </div>
                         <div class="row" *ngIf="mostrarMasHeader">
                             <div class="col-2">
@@ -143,21 +146,17 @@
                                     label="Prioridad" placeholder="Seleccione la prioridad" labelField="nombre" [required]="true">
                                 </plex-select>
                             </div>
-
-                            <!-- <div class="col-3" *ngIf='modo !== "recepcion"' >
-                                                <plex-select [(ngModel)]="solicitudProtocolo.solicitudPrestacion.area" name="laboratorioInterno" label="Area"
-                                                    (getData)="loadArea($event)" [required]="true"></plex-select>
-                                            </div> -->
                         </div>
                     </article>
                 </div>
             </div>
-            <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion" && !edicionDatosCabecera'>
-                <plex-button *ngIf='!edicionDatosCabecera' icon="mdi mdi-toggle-switch" class="float-right mr-2 marginLeftBtn" (click)="toggleControlAuditar()"
-                    title="Auditar">
+
+            <!-- <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion" && !edicionDatosCabecera'>
+                <plex-button icon="mdi mdi-toggle-switch" class="float-right mr-2 marginLeftBtn" (click)="toggleControlAuditar()" title="Auditar">
                 </plex-button>
-                <plex-button *ngIf='!edicionDatosCabecera' icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()"
-                    title="Editar datos">
+            </div> -->
+            <div class="col-1 centradoVerticalBtn" *ngIf='modo === "control" && !edicionDatosCabecera'>
+                <plex-button icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()" title="Editar datos">
                 </plex-button>
             </div>
             <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion" && !edicionDatosCabecera'>
@@ -165,20 +164,10 @@
             </div>
         </div>
 
-        <!-- <div *ngIf='modo !=="recepcion" && modo !=="control"' class="badge-container">
-                    <plex-badge type="danger" class="ml-2"> {{solicitudProtocolo.solicitudPrestacion.prioridad.nombre}} </plex-badge>
-                    <plex-badge type="warning" class="ml-2"> {{modelo.estados[0].tipo}} </plex-badge>
-                </div> -->
-
-
     </section>
 
     <!-- FIN ENCABEZADO DE PROTOCOLO -->
 </ng-container>
-<<<<<<< HEAD
-=======
-
->>>>>>> 45cf7964fa23b86832304d2387f7d68de99eea52
 <ng-container *ngIf='mostrarCuerpoProtocolo'>
     <plex-tabs>
         <plex-tab label="Análisis">

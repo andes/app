@@ -62,7 +62,6 @@ export class ProtocoloDetalleComponent
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
     @Output() mostrarCuerpoProtocoloEmit = new EventEmitter<any>();
-    @Output() volverAControlEmit = new EventEmitter<any>();
     @Input() protocolos: any;
     @Input() modo: String;
     @Input() indexProtocolo: any;
@@ -86,7 +85,7 @@ export class ProtocoloDetalleComponent
         this.practicasEjecucion = this.modelo.ejecucion.registros;
         this.practicasCarga = [];
 
-        if (this.practicasEjecucion.length >= (this.modo === 'recepcion' || this.modo === 'control')) {
+        if (this.practicasEjecucion.length > 0 && (this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
 
@@ -105,11 +104,9 @@ export class ProtocoloDetalleComponent
     }
 
     cargarCodigosPracticas() {
-        console.log('cargarCodigosPracticas')
         let ids = [];
         this.practicasEjecucion.forEach(practica => ids.push(practica._id));
         this.servicioPractica.getCodigosPracticas(ids).subscribe(idsCodigos => {
-        console.log('idsCodigos',idsCodigos)
             this.practicasEjecucion.forEach(practica => {
                 practica.codigo = idsCodigos.filter((idCodigo) => {
                     return idCodigo._id === practica._id;
@@ -209,13 +206,6 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
-    }
-
-    toggleControlAuditar() {
-        console.log('toggleControlAuditar');
-        let modoAVolver = this.modo;
-        this.modo = this.modo === 'control' ? 'validacion' : 'control';
-        this.volverAControlEmit.emit(modoAVolver);
     }
 
     /**
@@ -386,7 +376,7 @@ export class ProtocoloDetalleComponent
         let organizacionSolicitud = this.auth.organizacion.id;
         this.servicioProtocolo.getNumeroProtocolo(organizacionSolicitud).subscribe(numeroProtocolo => {
             this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo = numeroProtocolo;
-            this.guardarProtocolo();
+            this.guardarProtocolo(true);
         });
     }
 
@@ -395,7 +385,7 @@ export class ProtocoloDetalleComponent
      *
      * @memberof ProtocoloDetalleComponent
      */
-    guardarProtocolo() {
+    guardarProtocolo(next) {
         if (this.modelo.id) {
             console.log('this.modelo.ejecucion.registros', this.modelo.ejecucion.registros);
 
@@ -424,17 +414,19 @@ export class ProtocoloDetalleComponent
             console.log('params', params);
 
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
-                this.protocolos.splice(this.indexProtocolo, 1);
-                if (this.modo === 'recepcion' || this.protocolos.length === 0) {
-                    this.volverAListaControEmit.emit();
-                    this.mostrarCuerpoProtocolo = true;
-                } else {
-                    if (!this.protocolos[this.indexProtocolo]) {
-                        this.indexProtocolo = this.protocolos.length - 1;
+                if (next) {
+                    this.protocolos.splice(this.indexProtocolo, 1);
+                    if (this.modo === 'recepcion' || this.protocolos.length === 0) {
+                        this.volverAListaControEmit.emit();
+                        this.mostrarCuerpoProtocolo = true;
+                    } else {
+                        if (!this.protocolos[this.indexProtocolo]) {
+                            this.indexProtocolo = this.protocolos.length - 1;
+                        }
+                        this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
                     }
-                    this.cargarProtocolo(this.protocolos[this.indexProtocolo]);
+                    this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
                 }
-                this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
             });
         } else {
             this.modelo.estados = [{ tipo: 'ejecucion' }];
@@ -446,10 +438,9 @@ export class ProtocoloDetalleComponent
         }
     }
 
-    async guardarSolicitud($event) {
+    async guardarSolicitud() {
         this.modelo.solicitud.ambitoOrigen = this.modelo.solicitud.ambitoOrigen.id;
         this.modelo.solicitud.tipoPrestacion = Constantes.conceptoPruebaLaboratorio;
-
 
         if (this.modo === 'control' || this.modo === 'recepcion') {
             this.solicitudProtocolo.solicitudPrestacion.organizacionDestino = this.auth.organizacion;
@@ -463,7 +454,7 @@ export class ProtocoloDetalleComponent
         if (this.modo === 'recepcion') {
             this.iniciarProtocolo();
         } else {
-            this.guardarProtocolo();
+            this.guardarProtocolo(true);
             // this.cargarResultadosAnteriores();
         }
     }
@@ -543,6 +534,14 @@ export class ProtocoloDetalleComponent
             }
         });
     }
+
+    guardarSolicitudYVolver(modoAVolver) {
+        console.log('guardarSolicitudYVolver - detalle', modoAVolver);
+        this.modo = modoAVolver;
+        this.cargarProtocolo(this.modelo);
+        this.guardarProtocolo(false);
+    }
+
     // validarResultados() {
     //     // this.practicasEjecucion
     // }

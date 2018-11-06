@@ -17,3 +17,4 @@ export const Constantes = {
     },
     estadoValidada: { tipo: 'validada' }
 };
+

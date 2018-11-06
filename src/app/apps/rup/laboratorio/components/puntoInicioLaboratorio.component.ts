@@ -30,8 +30,8 @@ export class PuntoInicioLaboratorioComponent
     public showBotonesGuardar: Boolean = false;
     public mostrarListaMpi: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
+    public ocultarPanelLateral = false;
 
-    ocultarPanelLateral = false;
     public protocolos: any = [];
     public protocolo: any = {};
 
@@ -73,7 +73,7 @@ export class PuntoInicioLaboratorioComponent
         organizacion: null,
         estado: []
     };
-    public mostrarSidebar = true;
+
     public accionIndex = 1;
     public modoAVolver = '';
 
@@ -214,6 +214,11 @@ export class PuntoInicioLaboratorioComponent
         }
     }
 
+    selectedIndex(i) {
+        console.log('selectedIndex', i);
+        return true;
+    }
+
     /**
      * volverLista oculta panel de detalle de protolo y muestra en su lugar panel de lista de protocolos
      *
@@ -351,16 +356,16 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        
-            this.resetearProtocolo();
-            this.edicionDatosCabecera = true;
-            this.ocultarPanelLateral = true;
-            this.showListarProtocolos = false;
-            this.showProtocoloDetalle = true;
-            this.indexProtocolo = 0;
-            this.seleccionPaciente = true;
-            this.mostrarCuerpoProtocolo = false;
-        
+
+        this.resetearProtocolo();
+        this.edicionDatosCabecera = true;
+        this.ocultarPanelLateral = true;
+        this.showListarProtocolos = false;
+        this.showProtocoloDetalle = true;
+        this.indexProtocolo = 0;
+        this.seleccionPaciente = true;
+        this.mostrarCuerpoProtocolo = false;
+
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {
@@ -395,12 +400,19 @@ export class PuntoInicioLaboratorioComponent
         this.plex.toast('success', 'Se recordará su selección de filtro en sus próximas sesiones.', 'Información', 3000);
     }
 
-    volverAControl($event) {
-        console.log('mostrarBotonesGuardarProtocoloFooter', $event, this.ocultarPanelLateral, this.showProtocoloDetalle);
+    volverAControl() {
+        this.protocoloDetalleComponent.cargarCodigosPracticas();
         this.ocultarPanelLateral = true;
-        this.modoAVolver = $event;
+        this.modoAVolver = this.modo;
+        this.modo = 'control';
     }
 
+    guardarSolicitudYVolver() {
+        this.ocultarPanelLateral = false;
+        this.modo = this.modoAVolver;
+        this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
+        this.modoAVolver = '';
+    }
 
     // getlocalStorage() {
     //     let ls = JSON.parse(localStorage.getItem('filtros'));
