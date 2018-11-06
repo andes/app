@@ -9,7 +9,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'campaniaForm',
-    templateUrl: 'campania-create-update.html'
+    templateUrl: 'campania-create-update.html',
+    styleUrls: ['../../../modules/rup/components/elementos/adjuntarDocumento.scss'],
 })
 export class CampaniaFormComponent implements OnInit {
     /**
@@ -52,25 +53,29 @@ export class CampaniaFormComponent implements OnInit {
      */
     sexos: any[];
     /*CARGA DE IMAGENES*/
-    // @ViewChildren('upload') childsComponents: QueryList<any>;
-    // errorExt = false;
+    @ViewChildren('upload') childsComponents: QueryList<any>;
 
-    // extensions = [
-    //     // Documentos
-    //     'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-    //     // Audio/Video
-    //     'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-    //     // Otros
-    //     'dat'
-    // ];
+    // Adjuntar Archivo
+    errorExt = false;
+    waiting = false;
+    fotos: any[] = [];
+    fileToken: String = null;
+    timeout = null;
+    lightbox = false;
+    indice;
+    documentos = [];
 
-    // documentos = [];
 
-    // imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    // fotos: any[] = [];
-    // lightbox = false;
-    // indice;
-    // fileToken: String = null;
+    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
+    extensions = [
+        // Documentos
+        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
+        // Audio/Video
+        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+        // Otros
+        'dat'
+    ];
+
     /*FIN CARGA DE IMAGENES*/
 
     constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitazer: DomSanitizer) {
@@ -80,10 +85,10 @@ export class CampaniaFormComponent implements OnInit {
         this.sexos = enumerados.getObjSexos();
 
         // INICIO CARGA DE IMAGENES
-        // this.extensions = this.extensions.concat(this.imagenes);
-        // this.adjuntosService.generateToken().subscribe((data: any) => {
-        //     this.fileToken = data.token;
-        // });
+        this.extensions = this.extensions.concat(this.imagenes);
+        this.adjuntosService.generateToken().subscribe((data: any) => {
+            this.fileToken = data.token;
+        });
         // FIN CARGA DE IMAGENES
     }
 
@@ -130,95 +135,106 @@ export class CampaniaFormComponent implements OnInit {
 
 
     /*INICIO CARGA DE IMAGENES*/
-    // changeListener($event): void {
-    //     this.readThis($event.target);
-    // }
+    // Adjuntar archivo
+    changeListener($event): void {
+        this.readThis($event.target);
+    }
 
-    // private readThis(inputValue: any): void {
-    //     let ext = this.fileExtension(inputValue.value);
-    //     this.errorExt = false;
-    //     if (!this.extensions.find((item) => item === ext.toLowerCase())) {
-    //         (this.childsComponents.first as any).nativeElement.value = '';
-    //         this.errorExt = true;
-    //         return;
-    //     }
-    //     let file: File = inputValue.files[0];
-    //     let myReader: FileReader = new FileReader();
+    readThis(inputValue: any): void {
+        let ext = this.fileExtension(inputValue.value);
+        this.errorExt = false;
+        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
+            (this.childsComponents.first as any).nativeElement.value = '';
+            this.errorExt = true;
+            return;
+        }
+        let file: File = inputValue.files[0];
+        let myReader: FileReader = new FileReader();
 
-    //     myReader.onloadend = (e) => {
-    //         console.log(this.childsComponents.first);
-    //         (this.childsComponents.first as any).nativeElement.value = '';
-    //         let metadata = {};
-    //         this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-    //             this.fotos.push({
-    //                 ext,
-    //                 id: data._id
-    //             });
-    //             this.documentos.push({
-    //                 ext,
-    //                 id: data._id
-    //             });
-    //         });
+        myReader.onloadend = (e) => {
+            console.log(this.childsComponents.first);
+            (this.childsComponents.first as any).nativeElement.value = '';
+            let metadata = {};
+            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
+                this.fotos.push({
+                    ext,
+                    id: data._id
+                });
+                this.documentos.push({
+                    ext,
+                    id: data._id
+                });
+            });
 
 
-    //     };
-    //     myReader.readAsDataURL(file);
-    // }
+        };
+        myReader.readAsDataURL(file);
+    }
 
-    // fileExtension(file) {
-    //     if (file.lastIndexOf('.') >= 0) {
-    //         return file.slice((file.lastIndexOf('.') + 1));
-    //     } else {
-    //         return '';
-    //     }
-    // }
+    fileExtension(file) {
+        if (file.lastIndexOf('.') >= 0) {
+            return file.slice((file.lastIndexOf('.') + 1));
+        } else {
+            return '';
+        }
+    }
 
-    // cancelarAdjunto() {
-    //     clearTimeout(null);
-    // }
+    esImagen(extension) {
+        return this.imagenes.find(x => x === extension.toLowerCase());
+    }
 
-    // activaLightbox(index) {
-    //     if (this.fotos[index].ext !== 'pdf') {
-    //         this.lightbox = true;
-    //         this.indice = index;
-    //     }
-    // }
+    imageUploaded($event) {
+        let foto = {
+            ext: this.fileExtension($event.file.name),
+            file: $event.src,
+        };
+        this.fotos.push(foto);
+    }
 
-    // imagenPrevia(i) {
-    //     let imagenPrevia = i - 1;
-    //     if (imagenPrevia >= 0) {
-    //         this.indice = imagenPrevia;
-    //     }
-    // }
+    imageRemoved($event) {
+        let index = this.fotos.indexOf($event);
+        this.fotos.splice(index, 1);
+        // this.registro.valor.documentos.splice(index, 1);
+    }
 
-    // imagenSiguiente(i) {
-    //     let imagenSiguiente = i + 1;
-    //     if (imagenSiguiente <= this.fotos.length - 1) {
-    //         this.indice = imagenSiguiente;
-    //     }
-    // }
+    activaLightbox(index) {
+        if (this.fotos[index].ext !== 'pdf') {
+            this.lightbox = true;
+            this.indice = index;
+        }
+    }
 
-    // createUrl(doc) {
-    //     /** Hack momentaneo */
-    //     // let jwt = window.sessionStorage.getItem('jwt');
-    //     if (doc.id) {
-    //         let apiUri = environment.API;
-    //         return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
-    //     } else {
-    //         // Por si hay algún documento en la vieja versión.
-    //         return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
-    //     }
-    // }
+    imagenPrevia(i) {
+        let imagenPrevia = i - 1;
+        if (imagenPrevia >= 0) {
+            this.indice = imagenPrevia;
+        }
+    }
 
-    // esImagen(extension) {
-    //     return this.imagenes.find(x => x === extension.toLowerCase());
-    // }
+    imagenSiguiente(i) {
+        let imagenSiguiente = i + 1;
+        if (imagenSiguiente <= this.fotos.length - 1) {
+            this.indice = imagenSiguiente;
+        }
+    }
 
-    // imageRemoved($event) {
-    //     let index = this.fotos.indexOf($event);
-    //     this.fotos.splice(index, 1);
-    //     // this.registro.valor.documentos.splice(index, 1);
-    // }
+    createUrl(doc) {
+        /** Hack momentaneo */
+        // let jwt = window.sessionStorage.getItem('jwt');
+        if (doc.id) {
+            let apiUri = environment.API;
+            return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
+        } else {
+            // Por si hay algún documento en la vieja versión.
+            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
+        }
+    }
+
+    cancelarAdjunto() {
+        clearTimeout(this.timeout);
+        this.waiting = false;
+    }
+
 
 
     /*FIN CARGA DE IMAGENES*/
