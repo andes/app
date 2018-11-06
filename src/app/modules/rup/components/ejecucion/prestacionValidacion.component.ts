@@ -339,10 +339,14 @@ export class PrestacionValidacionComponent implements OnInit {
                         // Vamos a cambiar el estado de la prestación a ejecucion
                         this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
                             this.prestacion = prestacion;
-
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
+                            // chequeamos si es no nominalizada si
+                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                // actualizamos las prestaciones de la HUDS
+                                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                                });
+                            } else {
+                                this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                            }
 
                             this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                         }, (err) => {
