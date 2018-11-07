@@ -28,7 +28,7 @@ export class EstadisticasPacientesComponent implements OnInit {
         this.anulaciones = 0;
         this.pacienteSeleccionado = value;
         this._paciente = value;
-
+        this.getPaciente();
     }
     get agenda(): any {
         return this._paciente;
@@ -68,7 +68,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             },
             nroCarpeta: ''
         };
-        this.getPaciente();
+        // this.getPaciente();
     }
 
     arancelamiento(turno) {

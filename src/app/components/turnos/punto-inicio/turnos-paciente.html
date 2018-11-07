@@ -1,4 +1,4 @@
-<plex-box>
+<fieldset>
     <!-- <legend>{{ tituloOperacion }}</legend> -->
     <div *ngIf="!showLiberarTurno && !showMotivoConsulta">
         <!-- El paciente no tiene turnos -->
@@ -41,8 +41,7 @@
                             </div>
                         </div>
                         <br>
-                        <div class="row" *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
-
+                        <div class="row text-center" *ngIf=" turno.horaInicio >= todaysdate && turno.estado !== 'suspendido' && turno.organizacion._id === auth.organizacion.id">
                             <div class="col-4" *ngIf="puedeLiberarTurno && turno.asistencia !== 'asistio' && turno.bloque_id">
                                 <!-- no funcionan bien los title="" -->
                                 <plex-button type="danger" label="Liberar Turno" (click)="liberarTurno(turno)"></plex-button>
@@ -55,7 +54,7 @@
                                 <plex-button type="warning" label="Quitar Asistencia" (click)="eventosTurno(turno,'sacarAsistencia')"></plex-button>
                             </div>
                             <div class="col-4">
-                                <plex-button type="info" label="Arancelamiento" (click)="showArancelamiento(turno)"></plex-button>
+                                <plex-button type="info" label="Arancelamiento" position="right" (click)="showArancelamiento(turno)"></plex-button>
                             </div>
                         </div>
                     </div>
@@ -89,4 +88,4 @@
             (cancelaLiberarTurno)="afterLiberarTurno($event) ">
         </liberar-turno>
     </div>
-</plex-box>
+</fieldset>

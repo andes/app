@@ -57,7 +57,14 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public auth: Auth,
         public appMobile: AppMobileService,
         private router: Router,
-        private plex: Plex) { }
+        private plex: Plex) {
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'PUNTO DE INICIO'
+        }, {
+            name: 'GESTIÓN DE PACIENTES'
+        }]);
+    }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
@@ -69,7 +76,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.turnoArancelamiento = turno;
         this.showDashboard = false;
         this.showArancelamiento = true;
-
     }
 
     volverAPuntoInicio() {
@@ -78,7 +84,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
     onPacienteSelected(paciente: IPaciente): void {
         this.paciente = paciente;
-
         if (paciente.id) {
             if (paciente.estado === 'temporal' && paciente.scan) {
                 this.seleccion = paciente;
@@ -86,7 +91,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                     this.esEscaneado = true;
                 }
                 this.escaneado.emit(this.esEscaneado);
-                this.selected.emit(this.seleccion);
+                //  this.selected.emit(this.seleccion);
                 this.showCreateUpdate = true;
                 this.showDarTurnos = false;
                 this.showDashboard = false;
@@ -159,7 +164,6 @@ export class PuntoInicioTurnosComponent implements OnInit {
     }
 
     verificarOperacion({ operacion, paciente }) {
-
         this.esOperacion = true;
         this.showActivarApp = false;
         this.paciente = paciente;
@@ -203,7 +207,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showDarTurnos = false;
         this.showDashboard = true;
         if (this.paciente && this.paciente.id) {
-            // this.onPacienteSelected(this.paciente);
+            this.onPacienteSelected(this.paciente);
             if (pac && pac.carpetaEfectores && pac.carpetaEfectores.length > 0) {
                 this.paciente.carpetaEfectores = pac.carpetaEfectores;
             }
