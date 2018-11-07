@@ -58,7 +58,7 @@ export class CampaniaFormComponent implements OnInit {
     // Adjuntar Archivo
     errorExt = false;
     waiting = false;
-    fotos: any[] = [];
+    imagenSvg: string;
     fileToken: String = null;
     timeout = null;
     lightbox = false;
@@ -66,15 +66,15 @@ export class CampaniaFormComponent implements OnInit {
     documentos = [];
 
 
-    imagenes = ['bmp', 'jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'raw'];
-    extensions = [
-        // Documentos
-        'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-        // Audio/Video
-        'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-        // Otros
-        'dat'
-    ];
+    imagenes = ['svg'];
+    // extensions = [
+    //     // Documentos
+    //     'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
+    //     // Audio/Video
+    //     'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
+    //     // Otros
+    //     'dat'
+    // ];
 
     /*FIN CARGA DE IMAGENES*/
 
@@ -83,9 +83,8 @@ export class CampaniaFormComponent implements OnInit {
     }
     ngOnInit(): void {
         this.sexos = enumerados.getObjSexos();
-
+        this.imagenSvg = this.campaniaEdit.imagen;
         // INICIO CARGA DE IMAGENES
-        this.extensions = this.extensions.concat(this.imagenes);
         this.adjuntosService.generateToken().subscribe((data: any) => {
             this.fileToken = data.token;
         });
@@ -117,6 +116,8 @@ export class CampaniaFormComponent implements OnInit {
                     this.campaniaEdit.target.sexo = (this.campaniaEdit.target.sexo as any).id || this.campaniaEdit.target.sexo;
                 }
 
+                this.campaniaEdit.imagen = this.imagenSvg;
+
                 (this.campaniaEdit.id ? this.campaniaSaludService.putCampanias(this.campaniaEdit)
                     : this.campaniaSaludService.postCampanias(this.campaniaEdit)).subscribe(res => {
                         this.plex.info('success', 'Los datos están correctos');
@@ -143,7 +144,7 @@ export class CampaniaFormComponent implements OnInit {
     readThis(inputValue: any): void {
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
-        if (!this.extensions.find((item) => item === ext.toLowerCase())) {
+        if (!this.imagenes.find((item) => item === ext.toLowerCase())) {
             (this.childsComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
             return;
@@ -152,21 +153,11 @@ export class CampaniaFormComponent implements OnInit {
         let myReader: FileReader = new FileReader();
 
         myReader.onloadend = (e) => {
-            console.log(this.childsComponents.first);
             (this.childsComponents.first as any).nativeElement.value = '';
             let metadata = {};
-            this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
-                this.fotos.push({
-                    ext,
-                    id: data._id
-                });
-                this.documentos.push({
-                    ext,
-                    id: data._id
-                });
-            });
-
-
+            // this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
+            this.imagenSvg = myReader.result as string;
+            // });
         };
         myReader.readAsDataURL(file);
     }
@@ -183,51 +174,53 @@ export class CampaniaFormComponent implements OnInit {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    imageUploaded($event) {
-        let foto = {
-            ext: this.fileExtension($event.file.name),
-            file: $event.src,
-        };
-        this.fotos.push(foto);
-    }
+    // imageUploaded($event) {
 
-    imageRemoved($event) {
-        let index = this.fotos.indexOf($event);
-        this.fotos.splice(index, 1);
+    //     let foto = {
+    //         ext: this.fileExtension($event.file.name),
+    //         file: $event.src,
+    //     };
+    //     this.fotos.push(foto);
+
+    // }
+
+    imageRemoved() {
+        // let index = this.fotos.indexOf($event);
+        // this.fotos.splice(index, 1);
+        this.imagenSvg = null;
         // this.registro.valor.documentos.splice(index, 1);
     }
 
-    activaLightbox(index) {
-        if (this.fotos[index].ext !== 'pdf') {
-            this.lightbox = true;
-            this.indice = index;
-        }
+    activaLightbox() {
+        this.lightbox = true;
     }
 
-    imagenPrevia(i) {
-        let imagenPrevia = i - 1;
-        if (imagenPrevia >= 0) {
-            this.indice = imagenPrevia;
-        }
-    }
+    // imagenPrevia(i) {
+    //     let imagenPrevia = i - 1;
+    //     if (imagenPrevia >= 0) {
+    //         this.indice = imagenPrevia;
+    //     }
+    // }
 
-    imagenSiguiente(i) {
-        let imagenSiguiente = i + 1;
-        if (imagenSiguiente <= this.fotos.length - 1) {
-            this.indice = imagenSiguiente;
-        }
-    }
+    // imagenSiguiente(i) {
+    //     let imagenSiguiente = i + 1;
+    //     if (imagenSiguiente <= this.fotos.length - 1) {
+    //         this.indice = imagenSiguiente;
+    //     }
+    // }
 
-    createUrl(doc) {
+    createUrl() {
         /** Hack momentaneo */
         // let jwt = window.sessionStorage.getItem('jwt');
-        if (doc.id) {
-            let apiUri = environment.API;
-            return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
-        } else {
-            // Por si hay algún documento en la vieja versión.
-            return this.sanitazer.bypassSecurityTrustResourceUrl(doc.base64);
-        }
+        // if (doc.id) {
+        //     let apiUri = environment.API;
+        //     return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
+        // } else {
+        //     // Por si hay algún documento en la vieja versión.
+        console.log('IMAGEN: ', this.imagenSvg);
+
+        return this.sanitazer.bypassSecurityTrustResourceUrl(this.imagenSvg as string);
+        // }
     }
 
     cancelarAdjunto() {

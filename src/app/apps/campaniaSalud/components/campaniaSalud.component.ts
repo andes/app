@@ -94,7 +94,6 @@ export class CampaniaSaludComponent implements OnInit {
      * @memberof CampaniaSaludComponent
      */
     seleccionCampania(campania: ICampaniaSalud) {
-        console.log('campaña seleccionada: ', campania);
         this.seleccionada = campania;
         this.mostrarVisualizacionCampania = true;
     }

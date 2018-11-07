@@ -5,6 +5,13 @@
 </ng-container>
 <ng-container *ngIf="campania">
     <fieldset>
+        <div class="row">
+            <div class="col-md text-center">
+                <img class="img-thumbnail" [src]="validarUrl()" width="200" height="200">
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
         <legend>{{campania.asunto}}</legend>
         <div class="row">
             <div class="col-md">
@@ -79,4 +86,5 @@
             </div>
         </div>
     </fieldset>
+
 </ng-container>
