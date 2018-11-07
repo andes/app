@@ -106,7 +106,7 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
-  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
+  { path: 'puco', component: PucoComponent },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },

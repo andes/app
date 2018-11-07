@@ -75,6 +75,7 @@ export class AppComponent {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
+        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
 
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);
