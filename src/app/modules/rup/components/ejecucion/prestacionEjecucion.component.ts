@@ -592,7 +592,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
-
                         if (dato) {
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
@@ -656,8 +655,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
 
-                                registroDestino.relacionadoCon = [resultado];
                             }
                         }
                     });
