@@ -11,7 +11,6 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'auditoria',
     templateUrl: 'auditoria.html',
-    styleUrls: ['auditoria.css', 'auditCommon.css']
 })
 
 export class AuditoriaComponent implements OnInit {
