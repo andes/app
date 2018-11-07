@@ -108,7 +108,7 @@ const appRoutes: Routes = [
   { path: 'app/src/app/components/auditoria/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
-  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
+  { path: 'puco', component: PucoComponent },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
