@@ -58,6 +58,12 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
+        this.plex.updateTitle([{
+            route: '/mpi',
+            name: 'MPI'
+        }, {
+            name: 'BÚSQUEDA DE PACIENTES'
+        }]);
         // this.actualizarContadores();
     }
 

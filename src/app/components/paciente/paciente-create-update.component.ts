@@ -70,9 +70,10 @@ import {
 import {
     FechaPipe
 } from './../../pipes/fecha.pipe';
-import {
-    Plex
-} from '@andes/plex';
+// import {
+//     Plex
+// } from '@andes/plex';
+import { Plex } from '@andes/plex';
 import {
     MapsComponent
 } from './../../utils/mapsComponent';
@@ -231,7 +232,14 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.plex.updateTitle([{
+            route: '/',
+            name: 'MPI'
+        }, {
+            name: 'REGISTRO DE PACIENTES'
+        }]);
+    }
 
     ngOnInit() {
         // Se cargan los combos
