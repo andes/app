@@ -25,7 +25,7 @@ export class UploadFileComponent {
     @Input() label = 'SUBIR';
 
     @Output() onProgress = new EventEmitter<IProgress>();
-    @Output() onUploaded = new EventEmitter<ICompleted>();
+    @Output() onUpload = new EventEmitter<ICompleted>();
     @ViewChild('upload') uploadElement: ElementRef;
 
     private disabled = false;
@@ -57,7 +57,7 @@ export class UploadFileComponent {
             if (event.type === HttpEventType.Response) {
                 this.disabled = false;
                 const { status, body } = event;
-                this.onUploaded.emit({ status, body: JSON.parse(body as string) });
+                this.onUpload.emit({ status, body: JSON.parse(body as string) });
                 this.uploadElement.nativeElement.value = null;
 
             }

@@ -138,12 +138,12 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <input type="file" (change)="changeListener($event, i, carpeta) " style="display:none;"
-                                                #upload>
+                                            <upload-file label="Adjuntar HUDS" (onUpload)="onUpload($event, carpeta)" ></upload-file>
+                                            <!-- <input type="file" (change)="changeListener($event, i, carpeta) " style="display:none;" #upload> -->
                                             <!-- TODO: DESCOMENTAR EL BOTON CON LA FUNCION PARA ADJUNTAR HUDS -->
                                             <!-- <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS Digital" (click)="upload.click()"> -->
-                                            <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS">
-                                            </plex-button>
+                                            <!-- <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS">
+                                            </plex-button> -->
                                             <br><br>
                                             <span *ngIf="errorExt===i">
                                                 <span class="badge-danger">Archivo inválido. Solo se admite PDF</span>
