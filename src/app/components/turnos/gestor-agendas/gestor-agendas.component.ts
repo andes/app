@@ -38,9 +38,7 @@ import {
 
 import * as enumerado from './../enums';
 import * as moment from 'moment';
-import {
-    enumToArray
-} from '../../../utils/enums';
+import { enumToArray } from '../../../utils/enums';
 import { ITurno } from '../../../interfaces/turnos/ITurno';
 import { ISubscription } from 'rxjs/Subscription';
 
@@ -133,7 +131,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
             this.redirect('inicio');
-        };
+        }
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
@@ -224,7 +222,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Completo params con la info que ya tengo
         this.getAgendas(this.parametros);
-    };
+    }
 
     getAgendas(params: any) {
         this.serviceAgenda.get(params).subscribe(agendas => {
@@ -250,7 +248,6 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         }, err => {
             if (err) {
-                console.log(err);
             }
         });
     }

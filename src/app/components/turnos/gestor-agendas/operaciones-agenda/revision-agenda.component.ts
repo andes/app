@@ -15,8 +15,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 import { PacienteService } from './../../../../services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { Cie10Service } from './../../../../services/term/cie10.service';
-
+import { Cie10Service } from '../../../../services/term/cie10.service';
 
 @Component({
     selector: 'revision-agenda',
@@ -305,7 +304,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
-        };
+        }
         let datosTurno = {};
         if (this.diagnosticos) {
             this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;
@@ -349,7 +348,7 @@ export class RevisionAgendaComponent implements OnInit {
 
         }, err => {
             if (err) {
-                console.log(err);
+
             }
         });
     }

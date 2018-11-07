@@ -42,7 +42,6 @@ export class LlavesTipoPrestacionComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
                 }
             });
     }
@@ -56,7 +55,6 @@ export class LlavesTipoPrestacionComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
                 }
             });
     }

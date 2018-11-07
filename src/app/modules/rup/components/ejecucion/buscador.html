@@ -1,22 +1,13 @@
 <!-- Tipo de búsqueda -->
-<div class="row mt-1" *ngIf="!loading">
+<div class="row mt-1">
     <div class="btn-group col botoneraPrincipal" role="group" aria-label="Botonera principal">
-
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('sugeridos')" [ngClass]="{'active': busquedaActual === 'sugeridos'}">SUGERIDOS</button>
-
-        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('misFrecuentes')" [ngClass]="{'active': busquedaActual === 'misFrecuentes'}">MIS
-            FRECUENTES
+        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('misFrecuentes')" [ngClass]="{'active': busquedaActual === 'misFrecuentes'}">MIS FRECUENTES
         </button>
-
-        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR
-            BÁSICO
+        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('buscadorBasico')" [ngClass]="{'active': busquedaActual === 'buscadorBasico'}">BUSCADOR BÁSICO
         </button>
-
-        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES
-            POR PRESTACION</button>
-
+        <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('frecuentesTP')" [ngClass]="{'active': busquedaActual === 'frecuentesTP'}">FRECUENTES POR PRESTACION</button>
     </div>
-
 </div>
 <!-- Fin Tipo de búsqueda -->
 
@@ -32,7 +23,7 @@
 <!-- {{ busquedaRefSet | json }} -->
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
-<div class="menu-buscador" *ngIf="!showRefSets">
+<div class="menu-buscador">
     <plex-loader *ngIf="loading" type="linear"></plex-loader>
 
     <!-- Botones filtros -->
@@ -41,73 +32,62 @@
             <div class="container-filtros">
                 <ul class="botones-filtros" [plexWizard]="0">
                     <li>
-                        <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
+                        <small *ngIf="getCantidadResultados('todos')" class="badge badge-todos ml-1 float-right" [ngClass]="{'active': filtroActual === 'todos'}">{{ getCantidadResultados('todos')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('todos') === 0" class="btn btn-block btn-todos">
+                        <button (click)="filtroBuscadorSnomed('todos')" [ngClass]="{'active': filtroActual === 'todos'}" [disabled]="!wizardActivo && getCantidadResultados('todos') === 0"
+                            class="btn btn-block btn-todos">
                             <i class="icon icon-rup-semantic-todos"></i>
                             TODOS
                         </button>
                     </li>
                     <li>
-                        <small *ngIf="getCantidadResultados('hallazgos')" class="badge badge-hallazgo ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'hallazgos'}">{{
-                            getCantidadResultados('hallazgos')}}</small>
+                        <small *ngIf="getCantidadResultados('hallazgos')" class="badge badge-hallazgo ml-1 float-right" [ngClass]="{'active': filtroActual === 'hallazgos'}">{{ getCantidadResultados('hallazgos')}}
+                        </small>
 
-                        <button (click)="filtroBuscadorSnomed('hallazgos')" [ngClass]="{'active': filtroActual === 'hallazgos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0" class="btn btn-block btn-hallazgo"
-                            [plexWizard]="1" [title]="tooltips.hallazgos">
+                        <button (click)="filtroBuscadorSnomed('hallazgos')" [ngClass]="{'active': filtroActual === 'hallazgos'}" [disabled]="!wizardActivo && getCantidadResultados('hallazgos') === 0"
+                            class="btn btn-block btn-hallazgo" [plexWizard]="1" [title]="tooltips.hallazgos">
                             <i class="icon icon-rup-semantic-hallazgo"></i>
                             HALLAZGOS
                         </button>
                     </li>
 
                     <li>
-                        <small *ngIf="getCantidadResultados('trastornos')" class="badge badge-trastorno ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'trastornos'}">{{
-                            getCantidadResultados('trastornos')}}</small>
+                        <small *ngIf="getCantidadResultados('trastornos')" class="badge badge-trastorno ml-1 float-right" [ngClass]="{'active': filtroActual === 'trastornos'}">{{ getCantidadResultados('trastornos')}}
+                        </small>
 
-                        <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0" class="btn btn-block btn-trastorno"
-                            [plexWizard]="2" [title]="tooltips.trastornos">
+                        <button (click)="filtroBuscadorSnomed('trastornos')" [ngClass]="{'active': filtroActual === 'trastornos'}" [disabled]="!wizardActivo && getCantidadResultados('trastornos') === 0"
+                            class="btn btn-block btn-trastorno" [plexWizard]="2" [title]="tooltips.trastornos">
                             <i class="icon icon-rup-semantic-trastorno"></i>
                             TRASTORNOS
                         </button>
                     </li>
 
                     <li>
-                        <small *ngIf="getCantidadResultados('procedimientos')" class="badge badge-procedimiento ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'procedimientos'}">{{
-                            getCantidadResultados('procedimientos')}}</small>
+                        <small *ngIf="getCantidadResultados('procedimientos')" class="badge badge-procedimiento ml-1 float-right" [ngClass]="{'active': filtroActual === 'procedimientos'}">{{ getCantidadResultados('procedimientos')}}
+                        </small>
 
-                        <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0" class="btn btn-block btn-procedimiento"
-                            [plexWizard]="3" [title]="tooltips.procedimientos">
+                        <button (click)="filtroBuscadorSnomed('procedimientos')" [ngClass]="{'active': filtroActual === 'procedimientos'}" [disabled]="!wizardActivo && getCantidadResultados('procedimientos') === 0"
+                            class="btn btn-block btn-procedimiento" [plexWizard]="3" [title]="tooltips.procedimientos">
                             <i class="icon icon-rup-semantic-procedimiento"></i>
                             PROCEDIM.
                         </button>
                     </li>
                     <li>
-                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
-                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-plan" [ngClass]="{'active': filtroActual === 'planes'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4"
-                            [title]="tooltips.planes">
+                        <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud" [ngClass]="{'active': filtroActual === 'planes'}"
+                            [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4" [title]="tooltips.planes">
                             <i class="icon icon-rup-semantic-plan"></i>
                             SOLICITUDES
                         </button>
                     </li>
 
                     <li>
-                        <small *ngIf="getCantidadResultados('productos')" class="badge badge-producto ml-1 float-right"
-                            [ngClass]="{'active': filtroActual === 'productos'}">{{
-                            getCantidadResultados('productos')}}</small>
+                        <small *ngIf="getCantidadResultados('productos')" class="badge badge-producto ml-1 float-right" [ngClass]="{'active': filtroActual === 'productos'}">{{ getCantidadResultados('productos')}}
+                        </small>
 
-                        <button (click)="filtroBuscadorSnomed('productos')" [ngClass]="{'active': filtroActual === 'productos'}"
-                            [disabled]="!wizardActivo && getCantidadResultados('productos') === 0" class="btn btn-block btn-producto"
-                            [plexWizard]="5" [title]="tooltips.productos">
+                        <button (click)="filtroBuscadorSnomed('productos')" [ngClass]="{'active': filtroActual === 'productos'}" [disabled]="!wizardActivo && getCantidadResultados('productos') === 0"
+                            class="btn btn-block btn-producto" [plexWizard]="5" [title]="tooltips.productos">
                             <i class="icon icon-rup-semantic-producto"></i>
                             INSUMOS
                         </button>
@@ -117,18 +97,28 @@
         </ng-container>
 
         <div>
-            <small class="pr-1" *ngIf="getSemanticTagFiltros()">Filtros:</small>
-            <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
-            <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">
-                (<ng-container *ngFor="let c of busquedaRefSet.conceptos; let idx=index">
-                    <ng-container *ngIf="c.concepto.term">
-                        <!-- TODO: manejar 100% desde la prestación -->
-                        <span *ngIf="c.cara">diente </span>{{ c.concepto.term }}
-                        <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}<ng-container *ngIf="idx < busquedaRefSet.conceptos.length - 1">
-                                / </ng-container></span>
-                    </ng-container>
-                </ng-container>)
-            </i>
+            <ng-container *ngIf="secciones">
+                <span class="pr-1">Sección:</span>
+                {{ secciones }}
+                <br>
+            </ng-container>
+            <ng-container *ngIf="getSemanticTagFiltros()">
+                <span class="pr-1">Filtros:</span>
+                <i *ngIf="!busquedaPorConcepto" class="text-secondary ml-1">{{ getSemanticTagFiltros() }}</i>
+                <i *ngIf="busquedaPorConcepto && busquedaRefSet?.conceptos?.length" class="text-secondary ml-1">
+                    (
+                    <ng-container *ngFor="let c of busquedaRefSet.conceptos; let idx=index">
+                        <ng-container *ngIf="c.concepto.term">
+                            <!-- TODO: manejar 100% desde la prestación -->
+                            <span *ngIf="c.cara">diente </span>{{ c.concepto.term }}
+                            <span *ngIf="c.cara && c.cara !== 'pieza'">, cara {{ c.cara }}
+                                <ng-container *ngIf="idx < busquedaRefSet.conceptos.length - 1">
+                                    / </ng-container>
+                            </span>
+                        </ng-container>
+                    </ng-container>)
+                </i>
+            </ng-container>
 
             <ng-container *ngIf="results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length === 0 && !loading">
                 <h4 class="pt-3 pb-3 text-center">No se han encontrado resultados.</h4>
@@ -142,26 +132,16 @@
     </ng-container>
 </div>
 
-<!-- <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
-    <div class="col-12">
-        <b *ngIf="showFrecuentes">Frecuentes</b>
-        <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
-    </div>
-</div> -->
-
-
 <!-- RESULTADOS PRINCIPALES -->
-<div *ngIf="filtroActual && results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length">
+<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0">
 
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">
             <li>
                 <div class="rup-card mini" [ngClass]="servicioPrestacion.getCssClass(item, filtroActual)">
                     <div class="rup-header">
-                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']"
-                            [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
-
-                            <!-- <i #dragHandle class="drag-bar mdi mdi-drag-vertical"></i> -->
+                        <div class="icon-rup drag-handle p-0 pt-1" draggable [dragScope]="['registros-rup' , 'vincular-registros-rup']" [dragData]="item"
+                            (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(item, filtroActual)}}"></i>
                         </div>
                         <div class="rup-border">
@@ -177,8 +157,7 @@
                                 <div class="col-6 p-0 m-0">
                                     <div class="p-0 pt-1 pr-1 float-right">
                                         <small class="badge badge-{{ servicioPrestacion.getCssClass(item, filtroActual) }} text-default">
-                                            {{ (item.plan || filtroActual==='planes' || esTurneable(item)) ?
-                                            'solicitud' : item.semanticTag }}
+                                            {{ (item.plan || filtroActual === 'planes' || esTurneable(item)) ? 'solicitud' : item.semanticTag }}
                                         </small>
                                         <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
                                             <i class="mdi mdi-plus"></i>
@@ -217,8 +196,7 @@
                             <b>{{ items.nombre[0].toUpperCase() + items.nombre.slice(1) }}</b>
                         </div>
                         <div class="col-2 m-0 p-0">
-                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)="desplegar(items.nombre)"
-                                [ngClass]="{'disabled': items.valor.length === 0, 'bg-inverse': opcionDesplegada === items.nombre}">
+                            <button class="btn btn btn-primary btn-icon-rup p-0 float-right" (click)="desplegar(items.nombre)" [ngClass]="{'disabled': items.valor.length === 0, 'bg-inverse': opcionDesplegada === items.nombre}">
                                 <i *ngIf="opcionDesplegada !== items.nombre" class="mdi mdi-chevron-down"></i>
                                 <i *ngIf="opcionDesplegada === items.nombre" class="mdi mdi-chevron-up"></i>
                             </button>
@@ -232,8 +210,7 @@
                 <ul class="conceptos list-unstyled" *ngIf="opcionDesplegada === items.nombre">
                     <ng-container *ngFor="let item of items.valor">
 
-                        <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)"
-                            (onDragEnd)="dragEnd($e)">
+                        <li draggable [dragScope]="'registros-rup'" [dragData]="item" (onDragStart)="dragStart($e)" (onDragEnd)="dragEnd($e)">
 
                             <div class="rup-card mini" [ngClass]="(items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual)">
                                 <div class="rup-header">
@@ -253,9 +230,8 @@
                                             <div class="col-6 p-0 m-0">
                                                 <div class="p-0 pt-1 pr-1 float-right">
 
-                                                    <small class="badge badge-{ (items.nombre === 'planes') ? 'plan' : servicioPrestacion.getCssClass(item, filtroActual) } text-default  pl-1 pr-1">
-                                                        {{ (item.plan || items.nombre === 'planes' ||
-                                                        esTurneable(item)) ? 'plan' : item.semanticTag }}
+                                                    <small class="badge badge-{{ (items.nombre === 'planes') ? 'solicitud' : servicioPrestacion.getCssClass(item, filtroActual) }} text-default  pl-1 pr-1">
+                                                        {{ (item.plan || items.nombre === 'planes' || esTurneable(item)) ? 'plan' : item.semanticTag }}
                                                     </small>
                                                     <button (click)="seleccionarConcepto(item)" class="btn btn-sm btn-primary btn-icon-rup p-0">
                                                         <i class="mdi mdi-plus"></i>

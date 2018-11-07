@@ -44,4 +44,4 @@ export class VistaCDAComponent implements OnInit {
         let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
     }
-};
+}

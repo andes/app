@@ -15,7 +15,6 @@ import { ModuleWithProviders } from '@angular/core';
 
 // Global
 import { RoutingGuard } from './app.routings-guard.class';
-import { MapsComponent } from './utils/mapsComponent';
 
 // Componentes
 
@@ -29,6 +28,7 @@ import { LoginComponent } from './components/login/login.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { EspacioFisicoComponent } from './components/turnos/configuracion/espacio-fisico/espacio-fisico.component';
 import { SelectOrganizacionComponent } from './components/login/selectOrganizacion.component';
+import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
 
 // ... CITAS
 import { PlanificarAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/planificar-agenda.component';
@@ -62,7 +62,6 @@ import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucio
 import { BusquedaUsuarioComponent } from './components/usuario/busquedaUsuario.component';
 
 // REPORTES
-import { ReporteC2Component } from './components/reportes/reporteC2.component';
 import { ConsultaDiagnosticoComponent } from './components/reportes/consultaDiagnostico.component';
 import { EncabezadoReportesComponent } from './components/reportes/encabezadoReportes.component';
 import { CantidadConsultaXPrestacionComponent } from './components/reportes/cantidadConsultaXPrestacion.component';
@@ -71,15 +70,15 @@ import { CantidadConsultaXPrestacionComponent } from './components/reportes/cant
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 
 // Internacion
-import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 // Solicitudes
 import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
-import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
-
+import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
+import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
+import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
@@ -93,8 +92,9 @@ import { FormTerapeuticoComponent } from './components/formularioTerapeutico/for
 const appRoutes: Routes = [
   // Tablas maestras
   { path: 'tm/organizacion', component: OrganizacionComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/:id/sectores', component: OrganizacionSectoresComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
-  { path: 'tm/organizacion/:id/cama', component: CamasListadoComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
@@ -124,7 +124,6 @@ const appRoutes: Routes = [
   { path: 'rup/crear/:opcion', component: PrestacionCrearComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/crear', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/crear/:id', component: IniciarInternacionComponent, canActivate: [RoutingGuard] },
-  { path: 'rup/internacion/ver/:id', component: EjecucionInternacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/internacion/ocuparCama/:idCama/:idInternacion', component: OcuparCamaComponent, canActivate: [RoutingGuard] },
   { path: 'rup/resumen/:id', component: ResumenComponent, canActivate: [RoutingGuard] },
   { path: 'rup/ejecucion/:id', component: PrestacionEjecucionComponent, canActivate: [RoutingGuard] },
@@ -133,12 +132,15 @@ const appRoutes: Routes = [
   { path: 'rup/llavesTipoPrestacion', component: LlavesTipoPrestacionComponent, canActivate: [RoutingGuard] },
   { path: 'rup/vista/:id', component: VistaHudsComponent, canActivate: [RoutingGuard] },
   { path: 'rup/buscaHuds', component: HudsBusquedaPacienteComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/censo', component: CensoDiarioComponent, canActivate: [RoutingGuard] },
+  { path: 'rup/internacion/censo/mensual', component: CensoMensualComponent, canActivate: [RoutingGuard] },
 
   // configuracion prestacion
   { path: 'configuracionPrestacion', component: ConfiguracionPrestacionVisualizarComponent, canActivate: [RoutingGuard] },
 
   // Mapa de camas
-  { path: 'mapa-de-camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
+  { path: 'internacion/camas', component: MapaDeCamasComponent, canActivate: [RoutingGuard] },
+  { path: 'internacion/inicio', component: PuntoInicioInternacionComponent, canActivate: [RoutingGuard] },
 
   // Préstamos HC
   { path: 'prestamosHC', component: PrestamosHcComponent, canActivate: [RoutingGuard] },

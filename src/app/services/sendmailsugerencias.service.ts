@@ -36,7 +36,7 @@ export class SugerenciasService {
                                     title: 'Hubo un error y el mensaje no pudo ser enviado.',
                                     html: 'Error: ' + result.mensaje
                                 });
-                            };
+                            }
                         },
                         err => {
                             if (err) {
