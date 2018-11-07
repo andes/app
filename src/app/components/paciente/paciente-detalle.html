@@ -60,7 +60,14 @@
             <span>{{ _paciente.cuil }}</span>
         </div>
     </div>
-    <div class="row mb-1" *ngIf=" autorizadoRenaper && _paciente.documento && _paciente.sexo && mostrarRenaper">
+    <div class="row mb-2">
+        <div class="col">
+            <label>Obra Social</label>
+            <span *ngIf="obraSocial">{{ obraSocial.financiador }}</span>
+            <span *ngIf="!obraSocial">Sin obra social</span>
+        </div>
+    </div>
+    <div class="row mb-1" *ngIf="_paciente.documento && _paciente.sexo && mostrarRenaper">
         <div class="col">
             <label>Servicio de fuente auténtica RENAPER</label>
         </div>

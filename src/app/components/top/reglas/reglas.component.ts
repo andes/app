@@ -16,7 +16,7 @@ export class ReglasComponent {
   organizacionDestino = this.auth.organizacion;
   prestacionDestino;
   prestacionOrigen;
-  reglas = [];
+  reglas: any = [];
   prestaciones = [];
   auditable = false;
   reglaActiva = -1;
@@ -76,7 +76,7 @@ export class ReglasComponent {
   }
 
   addOrganizacion() {
-    if (this.organizacion) {
+    if (this.organizacion && this.prestacionDestino) {
       const longitud = this.reglas.length;
       let destino = {
         organizacion: {
@@ -96,8 +96,11 @@ export class ReglasComponent {
         origen: origen
       });
       this.activarRegla(longitud);
-      this.organizacion = {};
-    };
+      this.organizacion = null;
+    } else {
+      const mensaje = this.prestacionDestino ? 'Debe seleccionar la organización de origen' : 'Debe seleccionar la prestación destino';
+      this.plex.info('info', mensaje);
+    }
   }
 
   deleteOrganizacion(indice) {
@@ -110,11 +113,13 @@ export class ReglasComponent {
       this.prestaciones = this.regla.origen.prestaciones;
     }
     this.auditable = this.regla.origen.auditable;
-    this.prestaciones.push({ prestacion: this.prestacionOrigen, auditable: this.auditable });
-    this.regla.origen.prestaciones = this.prestaciones;
-    console.log('regla.origen.prestaciones ', this.regla.origen.prestaciones);
-    this.prestacionOrigen = {};
-
+    if (this.prestacionOrigen) {
+      this.prestaciones.push({ prestacion: this.prestacionOrigen, auditable: this.auditable });
+      this.regla.origen.prestaciones = this.prestaciones;
+      this.prestacionOrigen = null;
+    } else {
+      this.plex.info('info', 'Debe seleccionar la prestación origen');
+    }
   }
 
   deletePrestacion(indice) {
@@ -143,15 +148,25 @@ export class ReglasComponent {
   }
 
   onSave($event) {
-    let data = {
-      reglas: this.reglas
-    };
-    let operation = this.servicioReglas.save(data);
-    operation.subscribe((resultado) => {
-      this.plex.toast('success', 'Las reglas se guardaron correctamente');
-      this.limpiarForm();
-      this.prestacionDestino = {};
-    });
+    let condiciones = false;
+    if (this.reglas && this.reglas.length > 0) {
+      condiciones = this.reglas.every(regla => regla.destino && regla.destino.organizacion && regla.destino.prestacion
+        && regla.destino && regla.origen.organizacion && regla.origen.prestaciones && regla.origen.prestaciones.length > 0);
+    }
+    if (condiciones) {
+      let data = {
+        reglas: this.reglas
+      };
+      let operation = this.servicioReglas.save(data);
+      operation.subscribe((resultado) => {
+        this.plex.toast('success', 'Las reglas se guardaron correctamente');
+        this.limpiarForm();
+        this.prestacionDestino = {};
+      });
+    } else {
+      this.plex.info('info', 'Debe completar los datos de las reglas');
+
+    }
   }
 
 }

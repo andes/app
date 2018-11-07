@@ -25,12 +25,18 @@ _____________________________________________
 3. 
 
 
-### UserStories llegó a completarse
+### UserStory llegó a completarse
+<!-- Marca con una X la casilla correcta-->
+- [ ] Si
+- [ ] No
+- [ ] No corresponde
+
+### Requiere actualizaciones en la base de datos
 <!-- Marca con una X la casilla correcta-->
 - [ ] Si
 - [ ] No
 
-### Requiere actualizaciones en la base de datos
+### Requiere actualizaciones en la API
 <!-- Marca con una X la casilla correcta-->
 - [ ] Si
 - [ ] No
