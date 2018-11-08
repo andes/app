@@ -265,7 +265,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { GraficoLinearComponent } from './modules/rup/components/elementos/seguimiento.component';
+import { GraficoLinealComponent } from './modules/rup/components/elementos/seguimiento.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
@@ -410,7 +410,7 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
     // GENÉRICOS
-    'GraficoLinearComponent': GraficoLinearComponent,
+    'GraficoLinealComponent': GraficoLinealComponent,
 
 };
 
@@ -433,7 +433,7 @@ let RUPComponentsArray = [
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
-    GraficoLinearComponent,
+    GraficoLinealComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,

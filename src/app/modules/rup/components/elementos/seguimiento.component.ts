@@ -8,7 +8,7 @@ import 'moment/locale/es';
     selector: 'rup-seguimiento-peso',
     templateUrl: 'seguimiento.html'
 })
-export class GraficoLinearComponent extends RUPComponent implements OnInit {
+export class GraficoLinealComponent extends RUPComponent implements OnInit {
     // variables para guardar los datosMensurables de las prestaciones
     public datosMensurables: any[] = [];
 
@@ -22,14 +22,14 @@ export class GraficoLinearComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         moment.locale('es');
 
-        this.elementoRUP.params[this.registro.concepto.conceptId].titulo
+        // this.elementoRUP.params[this.registro.concepto.conceptId].titulo
 
         // 27113001
         // 363804004
         // 307818003
         // buscamos
         // this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<307818003').subscribe(prestaciones => {
-        this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${this.registro.concepto.conceptId}`).subscribe(prestaciones => {
+        this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${this.elementoRUP.params.conceptId}`).subscribe(prestaciones => {
 
             if (prestaciones.length) {
                 this.datosMensurables = prestaciones;
@@ -44,7 +44,7 @@ export class GraficoLinearComponent extends RUPComponent implements OnInit {
 
                 // asignamos los datosMensurables al data para el chart
                 this.barChartData = [
-                    { data: this.datosMensurables.map(p => p.registro.valor), label: this.elementoRUP.configGrafico[0].unidad, fill: false }
+                    { data: this.datosMensurables.map(p => p.registro.valor), label: this.elementoRUP.params.label, fill: false }
                 ];
 
                 // agregamos las leyendas del eje x
@@ -75,13 +75,13 @@ export class GraficoLinearComponent extends RUPComponent implements OnInit {
             maintainAspectRatio: true,
             title: {
                 display: true,
-                text: `Curva de ${this.registro.nombre}`
+                text: `Curva de ${this.elementoRUP.params.label}`
             },
             scales: {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: `${this.registro.nombre} (${this.elementoRUP.configGrafico[0].unidad})`
+                        labelString: `${this.elementoRUP.params.label} (${this.elementoRUP.params.unidad})`
                     },
                     ticks: {
                         beginAtZero: true
