@@ -248,7 +248,7 @@ export class NuevaSolicitudComponent implements OnInit {
             });
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
     }
 

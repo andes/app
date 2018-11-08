@@ -72,7 +72,7 @@ export class PanelAgendaComponent implements OnInit {
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
             if (this.agenda.profesionales && this.agenda.profesionales.length > 10) {
-                this.plex.alert('Seleccione un profesional de la lista');
+                this.plex.info('warning', 'Seleccione un profesional de la lista');
             } else {
                 if (this.agenda.profesionales) {
                     profesional = this.agenda.profesionales;

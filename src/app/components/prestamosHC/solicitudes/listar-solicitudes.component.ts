@@ -374,7 +374,7 @@ export class ListarSolicitudesComponent implements OnInit {
                         this.verSolicitudManual = true;
                     } else {
                         this.verSolicitudManual = false;
-                        this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                        this.plex.info('warning', 'El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
                     }
                 });
         } else {

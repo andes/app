@@ -798,7 +798,7 @@ export class DarTurnosComponent implements OnInit {
                 }
             });
         } else {
-            this.plex.alert('', 'Seleccione un tipo de prestación');
+            this.plex.info('warning', '', 'Seleccione un tipo de prestación');
         }
 
     }

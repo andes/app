@@ -299,7 +299,7 @@ export class PuntoInicioComponent implements OnInit {
 
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -313,7 +313,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -444,7 +444,7 @@ export class PuntoInicioComponent implements OnInit {
             };
             this.darTurno(pacienteSave);
         } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
     }
 
@@ -491,7 +491,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', idPrestacion]);
                 }, (err) => {
-                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
+                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
                 });
             } else {
                 return false;

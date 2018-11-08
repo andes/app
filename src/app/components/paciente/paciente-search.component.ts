@@ -199,7 +199,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             let index = this.textoLibre.indexOf('"');
             if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
                 /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
-                this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
                 this.textoLibre = null;
                 return false;
             }
