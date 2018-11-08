@@ -1,0 +1,16 @@
+<pre>
+    {{ registro | json }}
+</pre>
+27113001
+<ng-container *ngIf="datosMensurables.length">
+    <canvas class="w-100 h-100" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+</ng-container>
+
+<p *ngIf="!datosMensurables.length">
+    <ng-container *ngFor="">
+
+        No se han registrado {{ elementoRUP.configGrafico[0].titulo }} para el paciente. No se puede armar la curva de
+        {{ registro.nombre }}.
+    </ng-container>
+</p>

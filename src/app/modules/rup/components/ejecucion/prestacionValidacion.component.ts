@@ -104,7 +104,7 @@ export class PrestacionValidacionComponent implements OnInit {
         { id: false, label: 'No' }
     ];
 
-    constructor(private servicioPrestacion: PrestacionesService,
+    constructor(public servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
         private servicioPaciente: PacienteService, private SNOMED: SnomedService,
         public plex: Plex, public auth: Auth, private router: Router,

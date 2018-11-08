@@ -1,16 +1,16 @@
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
-import { RUPComponent } from './../core/rup.component';
+import { RUPComponent } from '../core/rup.component';
 
 import * as moment from 'moment';
 import 'moment/locale/es';
 
 @Component({
-    selector: 'rup-seguimiento-del-peso',
-    templateUrl: 'seguimientoDelPeso.html'
+    selector: 'rup-seguimiento-peso',
+    templateUrl: 'seguimiento.html'
 })
-export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit {
-    // variables para guardar los pesos de las prestaciones
-    public pesos: any[] = [];
+export class GraficoLinearComponent extends RUPComponent implements OnInit {
+    // variables para guardar los datosMensurables de las prestaciones
+    public datosMensurables: any[] = [];
 
     // opciones para el grafico
     public barChartOptions: any = {};
@@ -22,40 +22,43 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
     ngOnInit() {
         moment.locale('es');
 
-        if (this.elementoRUP.conceptosBuscar && this.elementoRUP.conceptosBuscar.length > 0) {
+        this.elementoRUP.params[this.registro.concepto.conceptId].titulo
 
-            // buscamos
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<27113001').subscribe(prestaciones => {
+        // 27113001
+        // 363804004
+        // 307818003
+        // buscamos
+        // this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<307818003').subscribe(prestaciones => {
+        this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${this.registro.concepto.conceptId}`).subscribe(prestaciones => {
 
-                if (prestaciones.length) {
-                    this.pesos = prestaciones;
+            if (prestaciones.length) {
+                this.datosMensurables = prestaciones;
 
-                    // ordenamos los pesos por fecha
-                    this.pesos.sort(function (a, b) {
-                        let dateA = new Date(a.fecha).getTime();
-                        let dateB = new Date(b.fecha).getTime();
+                // ordenamos los datosMensurables por fecha
+                this.datosMensurables.sort(function (a, b) {
+                    let dateA = new Date(a.fecha).getTime();
+                    let dateB = new Date(b.fecha).getTime();
 
-                        return dateA > dateB ? 1 : -1;
-                    });
+                    return dateA > dateB ? 1 : -1;
+                });
 
-                    // asignamos los pesos al data para el chart
-                    this.barChartData = [
-                        { data: this.pesos.map(p => p.registro.valor), label: 'kgs', fill: false }
-                    ];
+                // asignamos los datosMensurables al data para el chart
+                this.barChartData = [
+                    { data: this.datosMensurables.map(p => p.registro.valor), label: this.elementoRUP.configGrafico[0].unidad, fill: false }
+                ];
 
-                    // agregamos las leyendas del eje x
-                    this.barChartLabels = this.pesos.map(p => moment(p.fecha));
+                // agregamos las leyendas del eje x
+                this.barChartLabels = this.datosMensurables.map(p => moment(p.fecha));
 
-                    // set options charts
-                    this.setChartOptions(this.pesos);
+                // set options charts
+                this.setChartOptions(this.datosMensurables);
 
-                    // nuevo titulo
-                    this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
+                // nuevo titulo
+                this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
 
-                }
-            });
+            }
+        });
 
-        }
     }
 
     /**
@@ -72,13 +75,13 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
             maintainAspectRatio: true,
             title: {
                 display: true,
-                text: 'Curva de peso'
+                text: `Curva de ${this.registro.nombre}`
             },
             scales: {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: 'Peso (kgs)'
+                        labelString: `${this.registro.nombre} (${this.elementoRUP.configGrafico[0].unidad})`
                     },
                     ticks: {
                         beginAtZero: true

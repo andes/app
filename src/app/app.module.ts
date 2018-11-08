@@ -259,7 +259,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { SeguimientoDelPesoComponent } from './modules/rup/components/elementos/seguimientoDelPeso.component';
+import { GraficoLinearComponent } from './modules/rup/components/elementos/seguimiento.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
@@ -368,7 +368,6 @@ export let RUPRegistry = {
     'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'AdjuntarDocumentoComponent': AdjuntarDocumentoComponent,
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
-    'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
     'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
@@ -398,6 +397,9 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    // GENÉRICOS
+    'GraficoLinearComponent': GraficoLinearComponent,
+
 };
 
 let RUPComponentsArray = [
@@ -419,7 +421,7 @@ let RUPComponentsArray = [
     RegistrarMedicamentoDefaultComponent,
     RiesgoCardiovascularComponent,
     SaturacionOxigenoComponent,
-    SeguimientoDelPesoComponent,
+    GraficoLinearComponent,
     SignosVitalesComponent,
     SolicitudPrestacionDefaultComponent,
     TallaComponent,
