@@ -15,15 +15,12 @@ import {
     FormsModule,
     ReactiveFormsModule
 } from '@angular/forms';
-import {
-    Ng2DragDropModule
-} from 'ng2-drag-drop';
 import * as moment from 'moment';
 import {
     IPaciente
 } from '../../interfaces/IPaciente';
 import {
-    matching
+    Matching
 } from '@andes/match';
 
 // Imports de servicios
@@ -57,14 +54,13 @@ export class Auditoria2Component implements OnInit {
     pacientesAudit: any[];
     pacientesVinculados = [];
     pacientesDesvinculados = [];
-    match = new matching();
+    match = new Matching();
     weights = {
                 identity: 0.3,
                 name: 0.3,
                 gender: 0.1,
                 birthDate: 0.3
-        };
-    tipoDeMatching = 'Levenshtein';
+    };
     // definición de parametros de I/O
     @Input() pacienteInput: any;
     @Output() data: EventEmitter < IPaciente > = new EventEmitter < IPaciente > ();
@@ -112,7 +108,7 @@ export class Auditoria2Component implements OnInit {
             idVinculados.forEach(identificador => {
                 if (identificador.entidad === 'ANDES') {
                     this.pacienteService.getById(identificador.valor).subscribe(pac => {
-                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, pac,  this.weights, this.tipoDeMatching);
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, pac,  this.weights, 'Levenshtein');
                         let patient = {
                             matching : 0,
                             paciente : null
@@ -147,7 +143,7 @@ export class Auditoria2Component implements OnInit {
                 rta.forEach(element => {
                     if (element.id !== this.pacienteSelected.id) {
                         // Aplicamos match de pacientes y filtramos por mayores al 70%
-                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, element,  this.weights, this.tipoDeMatching);
+                        let porcentajeMatching = this.match.matchPersonas(this.pacienteSelected, element,  this.weights, 'Levenshtein');
                         let patient = {
                             matching : 0,
                             paciente : null
@@ -159,7 +155,7 @@ export class Auditoria2Component implements OnInit {
                         }
                     }
                 });
-            };
+            }
         });
     }
 

@@ -1,3 +1,5 @@
+
+import {debounceTime} from 'rxjs/operators';
 import { IListaEspera } from './../../../interfaces/turnos/IListaEspera';
 import { ListaEsperaService } from '../../../services/turnos/listaEspera.service';
 import { ListaEsperaCreateUpdateComponent } from './listaEspera-create-update.component';
@@ -32,7 +34,7 @@ export class ListaEsperaComponent implements OnInit {
             documento: ['']
         });
 
-        this.searchForm.valueChanges.debounceTime(200).subscribe(
+        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe(
             (value) => {
                 this.value = value;
                 this.skip = 0;

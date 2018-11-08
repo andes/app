@@ -100,6 +100,13 @@ export class PrestacionEjecucionComponent implements OnInit {
     filtroRefset: any;
     refSet: any;
 
+    // boton de volver cuando la ejecucion tiene motivo de internacion.
+    // Por defecto vuelve al mapa de camas
+    public btnVolver = 'Mapa de camas';
+    public rutaVolver;
+
+    public flagValid = true;
+
     constructor(
         private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -123,11 +130,16 @@ export class PrestacionEjecucionComponent implements OnInit {
      * @memberof PrestacionEjecucionComponent
      */
     ngOnInit() {
-
-        this.servicioPrestacion.getRefSetData().subscribe(refset => {
-            this.refSet = refset;
-            this.filtroRefset = this.refSet;
+        // consultamos desde que pagina se ingreso para poder volver a la misma
+        this.servicioPrestacion.rutaVolver.subscribe((resp: any) => {
+            if (resp) {
+                this.btnVolver = resp.nombre;
+                this.rutaVolver = resp.ruta;
+            }
         });
+
+        this.servicioPrestacion.clearRefSetData();
+
 
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
@@ -516,6 +528,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             snomedConcept.semanticTag = 'plan';
         }
 
+        this.refSet = this.servicioPrestacion.getRefSetData();
+        this.filtroRefset = this.refSet;
         this.tipoBusqueda = this.refSet;
 
         if (registroDestino && registroDestino.concepto) {
@@ -578,7 +592,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
-
                         if (dato) {
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
@@ -642,8 +655,10 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
 
-                                registroDestino.relacionadoCon = [resultado];
                             }
                         }
                     });
@@ -777,8 +792,20 @@ export class PrestacionEjecucionComponent implements OnInit {
         if (!this.prestacion.ejecucion.registros.length || (this.prestacion.ejecucion.registros.length === 1 && this.prestacion.ejecucion.registros[0].concepto.conceptId === '721145008')) {
             this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
             return false;
+        } else {
+            this.prestacion.ejecucion.registros.forEach(r => {
+                if (!this.controlValido(r)) {
+
+                    this.prestacionValida = false;
+                    this.mostrarMensajes = true;
+                    resultado = false;
+                }
+            });
         }
-        // 76/89/03
+        if (!resultado) {
+            this.plex.toast('danger', 'Hay registros incompletos', 'Error', 3000);
+            this.colapsarPrestaciones('expand');
+        }
         return resultado;
     }
 
@@ -790,26 +817,20 @@ export class PrestacionEjecucionComponent implements OnInit {
      */
     guardarPrestacion() {
         // validamos antes de guardar
-        let flag = true;
+
+        this.flagValid = true;
         this.rupElements.forEach((item) => {
 
             let instance = item.rupInstance;
-            flag = flag && (instance.soloValores || instance.validate());
+            this.flagValid = this.flagValid && (instance.soloValores || instance.validate());
         });
         // validamos antes de guardar
-        if (!this.beforeSave() || !flag) {
+        if (!this.beforeSave() || !this.flagValid) {
             this.plex.toast('danger', 'Revise los campos cargados');
             return;
         }
 
         let registros = JSON.parse(JSON.stringify(this.prestacion.ejecucion.registros));
-        // registros.forEach(registro => {
-        //     if (registro.relacionadoCon && registro.relacionadoCon[0] && registro.relacionadoCon.length > 0) {
-        //         if (!registro.relacionadoCon.find(x => x.concepto)) {
-        //             registro.relacionadoCon = registro.relacionadoCon.map(r => r.id);
-        //         }
-        //     }
-        // });
 
         registros.forEach(registro => {
 
@@ -875,18 +896,36 @@ export class PrestacionEjecucionComponent implements OnInit {
             }
         });
     }
-
-
-    volver(ambito = 'ambulatorio') {
-        let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
+    /**
+     * Setea el boton volver, Segun la ruta que recibe y el
+     *  ambito de origen de la prestacion
+     * @param ambito
+     * @param ruta
+     */
+    volver(ambito = 'ambulatorio', ruta = null) {
+        let mensaje;
+        let ruteo;
+        switch (ambito) {
+            case 'ambulatorio':
+                mensaje = 'Punto de Inicio';
+                ruteo = 'rup';
+                break;
+            case 'internacion':
+                if (ruta) {
+                    mensaje = 'Punto de Inicio';
+                    ruteo = ruta;
+                } else {
+                    mensaje = 'Mapa de Camas';
+                    ruteo = '/internacion/camas';
+                }
+                break;
+            default:
+                break;
+        }
+        // let mensaje = ambito === 'ambulatorio' ? 'Punto de Inicio' : 'Mapa de Camas';
         this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
             if (confirmado) {
-                if (ambito === 'ambulatorio') {
-                    this.servicioPrestacion.clearRefSetData();
-                    this.router.navigate(['rup']);
-                } else {
-                    this.router.navigate(['mapa-de-camas']);
-                }
+                this.router.navigate([ruteo]);
             } else {
                 return;
             }
@@ -926,9 +965,9 @@ export class PrestacionEjecucionComponent implements OnInit {
         this.isDraggingConcepto = dragging;
         this.showDatosSolicitud = false;
         if (dragging === true) {
-            this.colapsarPrestaciones('collapse');
+            // this.colapsarPrestaciones('collapse');
         } else {
-            this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
+            // this.itemsRegistros = JSON.parse(JSON.stringify(this.copiaRegistro));
         }
     }
 
@@ -959,20 +998,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargaItems(registroActual, indice) {
-
         // Paso el concepto desde el que se clickeo y filtro para no mostrar su autovinculación.
         let registros = this.prestacion.ejecucion.registros;
         this.itemsRegistros[registroActual.id].items = [];
-        let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
-            // let control = this.tieneVinculacion(registroActual, registro);
-            // if (control) {
-            //     this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
-            //     return false;
-            // }
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
-                    // if (registro.id !== registroActual.relacionadoCon[0].id) {
                     if (registroActual.relacionadoCon.findIndex(x => x.id !== registro.id) > -1) {
                         return registro;
                     }
@@ -1235,15 +1266,5 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
         return results;
     }
-
-    // eliminaTodosLosRegistros() {
-    //     this.plex.confirm('Se eliminaran todos los registros de la consulta', '¿Eliminar todos los registros?').then(confirm => {
-    //         if (confirm) {
-    //             this.prestacion.ejecucion.registros = [];
-    //             return true;
-    //         }
-    //         return false;
-    //     });
-    // }
 
 }

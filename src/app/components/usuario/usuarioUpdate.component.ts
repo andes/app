@@ -21,7 +21,7 @@ import { ArbolPermisosComponent } from './arbolPermisos.component';
 export class UsuarioUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: any;
+    @Input() seleccion: any;
     @Output() data: EventEmitter<string> = new EventEmitter<string>();
     @ViewChildren(ArbolPermisosComponent) childsComponents: QueryList<ArbolPermisosComponent>;
 
@@ -70,7 +70,7 @@ export class UsuarioUpdateComponent implements OnInit {
                         });
                     } else {
                         this.loadUser();
-                    };
+                    }
                 }
             } else {
                 this.router.navigate(['./inicio']);
@@ -129,7 +129,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.savePermisos();
         this.organizacionSelectPrev = this.organizacionSelect;
         this.loadPermisos();
-        setImmediate(() => this.hidePermisos = false);
+        setTimeout(() => this.hidePermisos = false, 0);
     }
 
     newEfector() {

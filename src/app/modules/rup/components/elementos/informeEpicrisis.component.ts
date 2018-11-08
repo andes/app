@@ -1,36 +1,51 @@
-import { Component, OnInit } from '@angular/core';
+import { IPrestacion } from './../../interfaces/prestacion.interface';
+import { Component, OnInit, ViewEncapsulation, EventEmitter, Output } from '@angular/core';
 import { RUPComponent } from './../core/rup.component';
 
 @Component({
     selector: 'rup-InformeEpicrisisComponent',
-    templateUrl: 'informeEpicrisis.html'
+    templateUrl: 'informeEpicrisis.html',
+    styleUrls: ['informeEpicrisis.scss'],
+    encapsulation: ViewEncapsulation.None // Use to disable CSS Encapsulation for this component
 })
 
 export class InformeEpicrisisComponent extends RUPComponent implements OnInit {
-    public pautasDeAlarma: any[] = [];
-    public dietaDeAlta: any[] = [];
+
+    public accordionActive = 0;
+    public unidadesOrganizativas = [];
+    public desplegarTodo = false;
+    public mensajeAccionAccordion = 'Desplegar';
+
 
     ngOnInit() {
-        let refset = '439401001';
-
-        this.snomedService.getQuery({ expression: refset }).subscribe(resultado => {
-            this.pautasDeAlarma = resultado;
-            this.dietaDeAlta = resultado;
-        });
         if (!this.registro.valor) {
             this.registro.valor = {
-                resumen: null
+                unidadOrganizativa: null
             };
-            // Reveer todo el componente... @Fer
+        }
+        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe(organizacion => {
+            this.unidadesOrganizativas = organizacion.unidadesOrganizativas;
+        });
+    }
+
+    accordionSeleccionado(i, concepto: any) {
+        if (this.accordionActive === i) {
+            this.accordionActive = -1;
+            this.prestacionesService.clearRefSetData();
+        } else {
+            this.accordionActive = i;
+            this.prestacionesService.setRefSetData(concepto);
+            this.prestacionesService.clearData();
         }
     }
 
-    // loadConceptos($event) {
-    //     let conceptosSelect = this.conceptos.map(elem => {
-    //         return { id: elem.conceptId, nombre: elem.term, concepto: elem };
-    //     });
-    //     $event.callback(conceptosSelect);
-    // }
+    desplegarAccordions() {
+        this.desplegarTodo = !this.desplegarTodo;
+        this.mensajeAccionAccordion = this.desplegarTodo ? 'Colapsar' : 'Desplegar';
+        this.accordionActive = -1;
+        this.prestacionesService.clearRefSetData();
+    }
 
-
+    VerArbolRelaciones() {
+    }
 }

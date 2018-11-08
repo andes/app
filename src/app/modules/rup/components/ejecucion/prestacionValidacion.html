@@ -5,7 +5,8 @@
     <plex-box>
         <header>
             <div class="row">
-                <div class="col-9" *ngIf="prestacion?.solicitud">
+                <div [ngClass]="{'col-9': prestacion.solicitud.ambitoOrigen === 'ambulatorio', 'col-12': prestacion.solicitud.ambitoOrigen === 'internacion'}"
+                    *ngIf="prestacion?.solicitud">
                     <div class="page-title titulo-consulta" id="pageHeader">
                         <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
                         <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
@@ -23,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row no-gutters menu-ordenamiento">
+            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="row no-gutters menu-ordenamiento">
                 <div class="col-1 mr-0 pr-0">
                     <small>Organizar</small>
                     <br>
@@ -64,7 +65,7 @@
             </div>
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
-            <div class="col titulos">
+            <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
@@ -103,7 +104,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
-                        <div class="text-capitalize mt-4 titulo-planes">
+                        <div class="text-capitalize mt-4 titulo-solicitudes">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Solicitudes</h5>
                             <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
@@ -122,12 +123,12 @@
                         </div>
                     </ng-container>
 
-                    <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                    <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
                         <a name="{{ elemento.concepto.conceptId }}"></a>
 
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
@@ -152,14 +153,14 @@
 
                                             <span class="badge badge-info">
                                                 {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' +
-                                                relacion.cara + ')' : relacion.concepto.term }}
+                                                relacion?.cara + ')' : relacion?.concepto?.term }}
                                             </span>
                                         </ng-container>
                                     </ng-container>
                                 </div>
                             </div>
                             <div class="actions">
-                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
                                     diagnóstico principal</small>
                                 <!-- <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small> -->
@@ -237,7 +238,7 @@
                 </ng-container>
             </div>
 
-            <div class="relaciones col-3">
+            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
                     <header>
@@ -257,7 +258,7 @@
                             }"
                                 class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
                                 <div>
-                                    <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
+                                    <span class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
                                             Procedimiento / diagnóstico principal
@@ -277,9 +278,11 @@
         <div class="col">
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
                 label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
-
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
+            <!-- Inicio de RUP ambulatorio -->
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && prestacion?.solicitud.ambitoOrigen === 'ambulatorio'"
+                label="Punto de Inicio" (click)="volverInicio(prestacion?.solicitud.ambitoOrigen)" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && prestacion?.solicitud.ambitoOrigen === 'internacion'"
+                label="{{ btnVolver }}" (click)="volverInicio(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info"></plex-button>
         </div>
         <div class="col text-right ">
 

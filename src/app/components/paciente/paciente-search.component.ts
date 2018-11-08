@@ -69,7 +69,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             // Si no está autorizado redirect al home
             this.router.navigate(['./inicio']);
             return false;
-        };
+        }
         // controla el input y bloquea dashboard si no tiene permisos
         // Lo quitamos junto con el html del dashboard
         // if (this.modoCompleto) {

@@ -6,15 +6,15 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'informe.html'
 })
 export class InformesComponent extends RUPComponent implements OnInit {
-    public referentSet = [];
+    public referenceSet = [];
     ngOnInit() {
-        // buscamos si el hallazgo pertenece a algún referentSet
+        // buscamos si el hallazgo pertenece a algún referenceSet
         if (this.registro.concepto && this.registro.concepto.refsetIds) {
             this.registro.concepto.refsetIds.forEach(refSet => {
                 Object.keys(this.prestacionesService.refsetsIds).forEach(k => {
                     if (this.prestacionesService.refsetsIds[k] === refSet) {
                         let referencia = k.replace(/_/g, ' ');
-                        this.referentSet.push(referencia);
+                        this.referenceSet.push(referencia);
                     }
                 });
             });
