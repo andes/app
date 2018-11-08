@@ -21,7 +21,6 @@ export class SolicitudesComponent implements OnInit {
     labelVolver = 'Lista de Solicitudes';
     showAuditar = false;
     public permisos;
-    public autorizado = false;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
     public prestaciones = [];
@@ -45,6 +44,7 @@ export class SolicitudesComponent implements OnInit {
     public activeTab = 0;
     public showSidebar = false;
     public prestacionesPermisos = [];
+    public permisosReglas;
     prestacionSeleccionada: any;
 
 
@@ -56,15 +56,10 @@ export class SolicitudesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
         this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
         this.showCargarSolicitud = false;
-
         this.cargarSolicitudes();
-        // Está autorizado para ver esta pantalla?
-        if (!this.autorizado) {
-
-        }
     }
 
     filtrarPaciente() {
