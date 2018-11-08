@@ -150,7 +150,6 @@ export class AuditoriaComponent implements OnInit {
     // Registramos el intento de validación con cada fuente auténtica
     this.pacienteSelected.entidadesValidadoras.push(fa);
     this.datosFA = data;
-    console.log(this.datosFA);
     if (this.datosFA.matcheos && this.datosFA.matcheos.matcheo === 100) {
       this.validarPaciente(fa);
       this.enableValidar = false;

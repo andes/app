@@ -50,4 +50,4 @@ export class ISolicitud {
     // Registros de la solicitud ... para los planes o prestaciones futuras
     registros: IPrestacionRegistro[];
 
-};
+}

@@ -13,6 +13,10 @@ export interface IElementoRUP {
     tipo: string;
     // Indica si este elementoRUP aplica a una solicitud
     esSolicitud: Boolean;
+
+    // Indica si no muestra el motivo de consulta al validar
+    motivoConsoltaOpcional: Boolean;
+
     // Indica los parámetros para instanciar el componente
     params: { [key: string]: any };
     reglas: { [key: string]: any };
@@ -45,4 +49,4 @@ export interface IElementoRUP {
     // Elementos RUP más frecuentes para la ejecución.
     // Por ejemplo, en "Consulta de medicina general" se puede sugerir ejecutar "Signos vitales"
     frecuentes: ISnomedConcept[];
-};
+}

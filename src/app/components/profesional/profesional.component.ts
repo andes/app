@@ -1,3 +1,5 @@
+
+import {debounceTime} from 'rxjs/operators';
 import { ProfesionalCreateUpdateComponent } from './profesional-create-update.component';
 import { IProfesional } from './../../interfaces/IProfesional';
 import { ProfesionalService } from './../../services/profesional.service';
@@ -35,7 +37,7 @@ export class ProfesionalComponent implements OnInit {
             documento: ['']
         });
 
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);

@@ -139,14 +139,14 @@ export class SuspenderTurnoComponent implements OnInit {
                         let horario = moment(this.seleccionadosSMS[x].horaInicio).format('HH:mm');
                         let mensaje = 'Le informamos que su turno del dia ' + dia + ' a las ' + horario + ' horas fue SUSPENDIDO.   ' + this.auth.organizacion.nombre;
                         this.enviarSMS(this.seleccionadosSMS[x].paciente, mensaje);
-                    };
+                    }
                 } else {
                     this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
                 }
             },
             err => {
                 if (err) {
-                    console.log(err);
+
                 }
             }
 

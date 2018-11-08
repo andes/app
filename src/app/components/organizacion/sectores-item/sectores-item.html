@@ -1,0 +1,34 @@
+<div class="plex-card" [ngClass]="getClass()">
+    <div class="plex-header" (click)="selectItem($event)">
+        <div class="plex-icon"> 
+            <i class="mdi mdi-file-tree"></i> 
+        </div>
+        <div class="title">
+            {{root.tipoSector.term}} - {{root.nombre}}
+        </div>
+        <div class="actions" *ngIf="actions">
+            <span class="btn btn-sm btn-success collapse-card" (click)="onAddClick()">
+                <i class="mdi mdi-plus"></i>
+            </span>
+            <span class="btn btn-sm btn-danger collapse-card" (click)="onRemoveClick()">
+                <i class="mdi mdi-close"></i>
+            </span>
+            <span class="btn btn-sm btn-primary collapse-card" (click)="onEditClick()">
+                <i class="mdi mdi-pencil"></i>
+            </span>
+            <span class="btn btn-sm btn-primary collapse-card" (click)="onCollapseClick()" *ngIf="hasItems()">
+                <i class="mdi mdi-chevron-down"></i>
+            </span>
+        </div>
+    </div>
+    <div class="plex-body" *ngIf="hasItems() && !hidden">
+        <!-- <div class="legend">
+
+        </div> -->
+        <div class="content">
+            <div *ngFor="let child of root.hijos">
+                <sectores-item [root]="child" [actions]="actions" (onSelect)="onSelectItem($event)" (onAdd)="onAdd.emit($event)" (onEdit)="onEdit.emit($event)" (onRemove)="removeChild($event)" [selected]="selected"></sectores-item>
+            </div>
+        </div>
+    </div>
+</div>

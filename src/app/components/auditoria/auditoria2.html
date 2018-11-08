@@ -8,7 +8,7 @@
                     </header>
                     <div>
                         <ul class="list-group">
-                            <li draggable *ngFor="let pac of pacientesDesvinculados" [dragData]="pac" [dragOverClass]="'drag-over-border'" (onDragStart)="arrastrandoPaciente(false)"
+                            <li draggable *ngFor="let pac of pacientesDesvinculados" [dragData]="pac" [dragClass]="'drag-over-border'" (onDragStart)="arrastrandoPaciente(false)"
                                 (onDragEnd)="arrastrandoPaciente(true)">
                                 <div class="card invertHover">
                                     <h4 style="text-align: right">

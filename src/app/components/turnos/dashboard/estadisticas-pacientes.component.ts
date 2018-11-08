@@ -133,7 +133,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
-            ;
+
         });
     }
 }

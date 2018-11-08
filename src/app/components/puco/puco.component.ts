@@ -6,6 +6,7 @@ import { Plex } from '@andes/plex';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
+import { IProfe } from '../../interfaces/IProfe';
 
 @Component({
     selector: 'puco',
@@ -27,7 +28,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
     public usuarios = [];
     private resPuco = [];
-    private resProfe = [];
+    private resProfe: IProfe;
     private timeoutHandle: number;
     @Input() autofocus: Boolean = true;
 
@@ -156,16 +157,16 @@ export class PucoComponent implements OnInit, OnDestroy {
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
                             this.loading = false;
                             this.resPuco = t[0];
-                            this.resProfe = t[1];
+                            this.resProfe = (t[1] as any);
 
                             if (this.resPuco) {
-                                this.usuarios = this.resPuco;
+                                this.usuarios = <any> this.resPuco;
                             }
                             if (this.resProfe) {
                                 if (this.resPuco) {
                                     this.usuarios = this.resPuco.concat(this.resProfe);
                                 } else {
-                                    this.usuarios = this.resProfe;
+                                    this.usuarios = <any> this.resProfe;
                                 }
                             }
                         });
@@ -179,7 +180,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                 // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
             }
         }
-    };
+    }
 
     // Boton reporte de errores/sugerencias
     sugerencias() {

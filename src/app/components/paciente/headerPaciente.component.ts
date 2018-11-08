@@ -14,7 +14,7 @@ export class HeaderPacienteComponent {
     @Input() cambiarPaciente: boolean;
     @Output() evtData: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor() { };
+    constructor() { }
 
     cambioDePaciente() {
         // Oculta el popup (genera una suerte de mouseout)
