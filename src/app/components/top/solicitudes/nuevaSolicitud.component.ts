@@ -20,7 +20,9 @@ export class NuevaSolicitudComponent implements OnInit {
     @ViewChildren('upload') childsComponents: QueryList<any>;
 
     showSeleccionarPaciente = true;
-    permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+    // permisos = this.auth.getPermissions('turnos:darTurnos:prestacion:?');
+    permisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
+
     paciente: any;
     motivo: '';
     fecha: any;
