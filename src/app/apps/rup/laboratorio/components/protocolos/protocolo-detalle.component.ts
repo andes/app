@@ -167,11 +167,12 @@ export class ProtocoloDetalleComponent
         this.showProtocoloDetalle = true;
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     loadOrganizacion() {
+        this.modelo.solicitud.organizacion = this.auth.organizacion;
         this.servicioOrganizacion.get(this.modelo.solicitud.organizacion.nombre).subscribe(resultado => {
             let salida = resultado.map(elem => {
                 return {
@@ -197,22 +198,22 @@ export class ProtocoloDetalleComponent
             $event.callback(resultado);
         });
     }
-/**
- * 
- * 
- * @memberof ProtocoloDetalleComponent
- */
-editarDatosCabecera() {
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    editarDatosCabecera() {
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
-/**
- * 
- * 
- * @memberof ProtocoloDetalleComponent
- */
-aceptarEdicionCabecera() {
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
+    aceptarEdicionCabecera() {
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
@@ -275,8 +276,8 @@ aceptarEdicionCabecera() {
         return false;
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     searchStart() {
@@ -284,9 +285,9 @@ aceptarEdicionCabecera() {
     }
 
     /**
-     * 
-     * 
-     * @param {*} resultado 
+     *
+     *
+     * @param {*} resultado
      * @memberof ProtocoloDetalleComponent
      */
     searchEnd(resultado: any) {
@@ -303,9 +304,9 @@ aceptarEdicionCabecera() {
         }
     }
     /**
-     * 
-     * 
-     * @param {*} paciente 
+     *
+     *
+     * @param {*} paciente
      * @memberof ProtocoloDetalleComponent
      */
     hoverPaciente(paciente: any) {
@@ -480,8 +481,8 @@ aceptarEdicionCabecera() {
         }
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     cargarListaPracticaCarga() {
@@ -512,8 +513,8 @@ aceptarEdicionCabecera() {
 
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     async cargarConfiguracionesResultado() {
@@ -544,12 +545,12 @@ aceptarEdicionCabecera() {
         // });
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     validarResultados() {
@@ -577,9 +578,9 @@ aceptarEdicionCabecera() {
         });
     }
     /**
-     * 
-     * 
-     * @param {any} modoAVolver 
+     *
+     *
+     * @param {any} modoAVolver
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitudYVolver(modoAVolver) {

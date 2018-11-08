@@ -157,9 +157,9 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     refreshSelection(value?, tipo?) {
-        //Pasamos el area a un array, para en el futuro seleccionar varias areas para carga y validacion por analisis.
+        // Pasamos el area a un array, para en el futuro seleccionar varias areas para carga y validacion por analisis.
         this.areas = this.area ? [this.area.id] : [];
-    
+
         this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
         this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
         this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
@@ -167,8 +167,8 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
         this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
 
-        if (this.modo === 'recepcion') {    
-            console.log('this.busqueda.estado', this.busqueda.estado)
+        if (this.modo === 'recepcion') {
+            console.log('this.busqueda.estado', this.busqueda.estado);
             this.busqueda.estado.push('pendiente');
         } else {
             if (this.modo === 'listado' || this.modo === 'validacion') {
@@ -202,7 +202,7 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     seleccionarProtocolo($event) {
-        console.log('seleccionarProtocolo',$event)
+        console.log('seleccionarProtocolo', $event);
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if ($event.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion');
