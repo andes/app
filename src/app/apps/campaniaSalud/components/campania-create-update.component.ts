@@ -52,6 +52,7 @@ export class CampaniaFormComponent implements OnInit {
      * @memberof CampaniaFormComponent
      */
     sexos: any[];
+
     /*CARGA DE IMAGENES*/
     @ViewChildren('upload') childsComponents: QueryList<any>;
 
@@ -64,17 +65,9 @@ export class CampaniaFormComponent implements OnInit {
     lightbox = false;
     indice;
     documentos = [];
-
+    nombreSvg: string;
 
     imagenes = ['svg'];
-    // extensions = [
-    //     // Documentos
-    //     'pdf', 'doc', 'docx', 'xls', 'xlsx', 'csv', 'xml', 'html', 'txt',
-    //     // Audio/Video
-    //     'mp3', 'mp4', 'm4a', 'mpeg', 'mpg', 'mov', 'flv', 'avi', 'mkv',
-    //     // Otros
-    //     'dat'
-    // ];
 
     /*FIN CARGA DE IMAGENES*/
 
@@ -84,11 +77,6 @@ export class CampaniaFormComponent implements OnInit {
     ngOnInit(): void {
         this.sexos = enumerados.getObjSexos();
         this.imagenSvg = this.campaniaEdit.imagen;
-        // INICIO CARGA DE IMAGENES
-        this.adjuntosService.generateToken().subscribe((data: any) => {
-            this.fileToken = data.token;
-        });
-        // FIN CARGA DE IMAGENES
     }
 
     /**
@@ -132,9 +120,6 @@ export class CampaniaFormComponent implements OnInit {
         }
     }
 
-
-
-
     /*INICIO CARGA DE IMAGENES*/
     // Adjuntar archivo
     changeListener($event): void {
@@ -144,6 +129,7 @@ export class CampaniaFormComponent implements OnInit {
     readThis(inputValue: any): void {
         let ext = this.fileExtension(inputValue.value);
         this.errorExt = false;
+
         if (!this.imagenes.find((item) => item === ext.toLowerCase())) {
             (this.childsComponents.first as any).nativeElement.value = '';
             this.errorExt = true;
@@ -154,12 +140,12 @@ export class CampaniaFormComponent implements OnInit {
 
         myReader.onloadend = (e) => {
             (this.childsComponents.first as any).nativeElement.value = '';
-            let metadata = {};
-            // this.adjuntosService.upload(myReader.result, metadata).subscribe((data) => {
+
             this.imagenSvg = myReader.result as string;
-            // });
+            this.nombreSvg = file.name;
+
         };
-        myReader.readAsDataURL(file);
+        myReader.readAsText(file);
     }
 
     fileExtension(file) {
@@ -174,59 +160,21 @@ export class CampaniaFormComponent implements OnInit {
         return this.imagenes.find(x => x === extension.toLowerCase());
     }
 
-    // imageUploaded($event) {
-
-    //     let foto = {
-    //         ext: this.fileExtension($event.file.name),
-    //         file: $event.src,
-    //     };
-    //     this.fotos.push(foto);
-
-    // }
-
     imageRemoved() {
-        // let index = this.fotos.indexOf($event);
-        // this.fotos.splice(index, 1);
         this.imagenSvg = null;
-        // this.registro.valor.documentos.splice(index, 1);
     }
 
     activaLightbox() {
         this.lightbox = true;
     }
 
-    // imagenPrevia(i) {
-    //     let imagenPrevia = i - 1;
-    //     if (imagenPrevia >= 0) {
-    //         this.indice = imagenPrevia;
-    //     }
-    // }
-
-    // imagenSiguiente(i) {
-    //     let imagenSiguiente = i + 1;
-    //     if (imagenSiguiente <= this.fotos.length - 1) {
-    //         this.indice = imagenSiguiente;
-    //     }
-    // }
-
     createUrl() {
-        /** Hack momentaneo */
-        // let jwt = window.sessionStorage.getItem('jwt');
-        // if (doc.id) {
-        //     let apiUri = environment.API;
-        //     return apiUri + '/modules/rup/store/' + doc.id + '?token=' + this.fileToken;
-        // } else {
-        //     // Por si hay algún documento en la vieja versión.
-        console.log('IMAGEN: ', this.imagenSvg);
-
-        return this.sanitazer.bypassSecurityTrustResourceUrl(this.imagenSvg as string);
-        // }
+        return this.imagenSvg;
     }
-
-    cancelarAdjunto() {
-        clearTimeout(this.timeout);
-        this.waiting = false;
-    }
+    // cancelarAdjunto() {
+    //     clearTimeout(this.timeout);
+    //     this.waiting = false;
+    // }
 
 
 

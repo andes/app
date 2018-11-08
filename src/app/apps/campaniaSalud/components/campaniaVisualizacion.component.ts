@@ -22,9 +22,4 @@ export class CampaniaVisualizacionComponent {
         console.log('campania que llego al visualizar: ', this.campania);
         this.modificarOutput.emit();
     }
-
-    validarUrl() {
-        return this.sanitazer.bypassSecurityTrustResourceUrl(this.campania.imagen as string);
-    }
-
 }
