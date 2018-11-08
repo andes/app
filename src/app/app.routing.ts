@@ -1,7 +1,3 @@
-import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
-import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
-import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
 /*
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
@@ -87,6 +83,12 @@ import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+// SIL
+import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
+import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
+import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -169,6 +171,7 @@ const appRoutes: Routes = [
   { path: 'laboratorio', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
+  { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
 
 

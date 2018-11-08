@@ -9,13 +9,13 @@
             <th class="float-center">UM</th>
             <th class="float-center">VR</th>
         </ng-container>
-        <th class="float-center" *ngIf='modo ==="validacion"'>
+        <th class="float-center" *ngIf='modo === "validacion"'>
             <div>
                 <plex-bool type="checkbox" [(ngModel)]="flagMarcarTodas" (change)="validarTodas($event, practicasEjecucion)" name="validarTodos"></plex-bool>
             </div>Validar </th>
         <th class="float-center" *ngIf='modo !=="control" && modo !=="recepcion"'>Estado</th>
         <th *ngIf='modo ==="recepcion" || modo ==="control"'>Acciones</th>
-        <th *ngIf='modo ==="carga" || modo ==="validacion"'>Observs.</th>
+        <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
     </thead>
     <tbody>
         <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
@@ -39,9 +39,7 @@
                         placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre">
                     </plex-select>
                 </td>
-                <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
                     <!-- <plex-bool type="checkbox" [(ngModel)]="practica.resultado.sinMuestra" name="sinMuestra"></plex-bool> -->
-                </ng-container>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -71,8 +69,9 @@
                         <p>
                             <!-- {{reg.formatoResultado | json}} -->
                             <ng-container *ngIf='reg.practica.valor && !reg.practica.valor.resultado.sinMuestra'>
-                                <plex-float *ngIf="reg.formatoResultado && reg.formatoResultado.tipo === 'Numérico'" [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
-                                <b *ngIf="reg.practica.valor.resultado.sinMuestra"> Sin muestra</b>
+                                <plex-float *ngIf="reg.formatoResultado && reg.formatoResultado.tipo === 'Numérico'" [ngClass]="{'text-danger' : esValorCritico(reg)}"
+                                    [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
+                                <b *ngIf="reg.practica.valor.resultado.sinMuestra">Sin muestra</b>
                             </ng-container>
 
                         </p>
@@ -105,8 +104,10 @@
                         </ng-container>
                         <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
                             <td class="small text-success">
-                                <ng-container *ngIf="reg.practica.valor.resultado.valor !== null && reg.practica.valor.resultado.valor !== '' && !reg.practica.valor.resultado.validado">Carga: Bioq. Lateulade Marcelo.<br/>MP 679 05/11/2018 09:38</ng-container>
-                                <ng-container *ngIf="reg.practica.valor.resultado.validado">Val.: Bioq. Lateulade Marcelo.<br/>MP 679 05/11/2018 09:38</ng-container>
+                                <ng-container *ngIf="reg.practica.valor.resultado.valor !== null && reg.practica.valor.resultado.valor !== '' && !reg.practica.valor.resultado.validado">Carga: Bioq. Lateulade Marcelo.
+                                    <br/>MP 679 05/11/2018 09:38</ng-container>
+                                <ng-container *ngIf="reg.practica.valor.resultado.validado">Val.: Bioq. Lateulade Marcelo.
+                                    <br/>MP 679 05/11/2018 09:38</ng-container>
                             </td>
                             <td>
                                 <plex-button type="info" title="Observaciones" icon="mdi mdi-file-document" (click)="verObservaciones()">

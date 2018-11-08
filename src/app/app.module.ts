@@ -1,11 +1,3 @@
-import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
-import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
-import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
-import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
-import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
-import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
 /*
 @jgabriel | 04-03-2017
 
@@ -361,6 +353,17 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 
 
+//SIL
+import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
+import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
+import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
+import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
+import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
+import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
+
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
@@ -596,11 +599,13 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        // LABORATORIO
+        
+        // SIL
         PracticaBuscarComponent,
         PracticaDemoComponent,
         PracticaListadoComponent,
         TablaDatalleProtocolo,
+        ListaProtocolosComponent,
 
         // MPI
         PacienteBuscarComponent,

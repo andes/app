@@ -50,6 +50,7 @@ export class PuntoInicioLaboratorioComponent
     public modo = 'recepcion';
     public origen = null;
     public area = null;
+    public areas = [];
     public prioridad = null;
     public servicio = null;
     public estado;
@@ -156,6 +157,9 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     refreshSelection(value?, tipo?) {
+        //Pasamos el area a un array, para en el futuro seleccionar varias areas para carga y validacion por analisis.
+        this.areas = this.area ? [this.area.id] : [];
+    
         this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
         this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
         this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
@@ -163,7 +167,8 @@ export class PuntoInicioLaboratorioComponent
         this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
         this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
 
-        if (this.modo === 'recepcion') {
+        if (this.modo === 'recepcion') {    
+            console.log('this.busqueda.estado', this.busqueda.estado)
             this.busqueda.estado.push('pendiente');
         } else {
             if (this.modo === 'listado' || this.modo === 'validacion') {
@@ -187,30 +192,28 @@ export class PuntoInicioLaboratorioComponent
 
     // estaSeleccionado(protocolo) {
     //     return false;
-    // }a
+    // }
 
     /**
-     * verProtocolo oculta lista de protocolos y muestra el panel de detalle de protocolo, al ser cliqueado un protocolo de la lista
+     * seleccionarProtocolo oculta lista de protocolos y muestra el panel de detalle de protocolo, al ser cliqueado un protocolo de la lista
      *
      * @param {any} protocolo
      * @param {any} index
      * @memberof PuntoInicioLaboratorioComponent
      */
-    verProtocolo(protocolo, index) {
+    seleccionarProtocolo($event) {
+        console.log('seleccionarProtocolo',$event)
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
-        console.log('verProtocolo', protocolo, index);
-        if (protocolo) {
+        if ($event.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion');
-            console.log('this.mostrarCuerpoProtocolo', this.mostrarCuerpoProtocolo);
-            this.protocolo = protocolo;
+            this.protocolo = $event.protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = index;
+            this.indexProtocolo = $event.index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
             this.ocultarPanelLateral = (this.modo === 'recepcion');
             this.showBotonesGuardar = (this.modo !== 'recepcion');
-
         }
     }
 

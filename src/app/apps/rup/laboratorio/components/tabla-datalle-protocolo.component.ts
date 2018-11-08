@@ -28,7 +28,7 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() solicitudProtocolo: any;
     @Input() practicasCarga: any;
     @Input() practicasEjecucion: any;
-
+    @Input() areas: any;
     // @Input('practicasCarga')
     // set setPracticasEjecucion(value: any) {
 
@@ -99,15 +99,28 @@ export class TablaDatalleProtocolo implements OnInit {
             this.modelo.estados.push(Constantes.estadoValidada);
         }
     }
-
+    /**
+     * 
+     * 
+     * @memberof TablaDatalleProtocolo
+     */
     busquedaInicial() {
         this.practicas = null;
     }
-
+    /**
+     * 
+     * 
+     * @memberof TablaDatalleProtocolo
+     */
     searchClear() {
         this.practicas = null;
     }
-
+    /**
+     * 
+     * 
+     * @param {PracticaBuscarResultado} resultado 
+     * @memberof TablaDatalleProtocolo
+     */
     busquedaFinal(resultado: PracticaBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
@@ -115,7 +128,12 @@ export class TablaDatalleProtocolo implements OnInit {
             this.practicas = resultado.practicas;
         }
     }
-
+    /**
+     * 
+     * 
+     * @param {any} $event 
+     * @memberof TablaDatalleProtocolo
+     */
     loadPracticasPorNombre($event) {
         console.log($event.query);
         if ($event.query) {
@@ -130,6 +148,12 @@ export class TablaDatalleProtocolo implements OnInit {
         }
     }
 
+    /**
+     * 
+     * 
+     * @param {any} value 
+     * @memberof TablaDatalleProtocolo
+     */
     getPracticaPorCodigo(value) {
         if (this.practicaSeleccionada !== '') {
             this.servicioPractica.getMatchCodigo(this.practicaSeleccionada).subscribe((resultado: any) => {
@@ -138,6 +162,24 @@ export class TablaDatalleProtocolo implements OnInit {
                 }
             });
         }
+    }
+
+    /**
+     * 
+     * 
+     * @param {any} objetoPractica 
+     * @returns 
+     * @memberof TablaDatalleProtocolo
+     */
+    esValorCritico(objetoPractica) {
+        console.log('esValorCritico', objetoPractica)
+        let resultado = objetoPractica.practica.valor.resultado;
+        if (resultado && !objetoPractica.esCompuesta) {
+            let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
+            console.log('esValorCritico xxx', (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor))
+            return (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor);
+        }
+        return false;
     }
 
     /**
@@ -196,7 +238,7 @@ export class TablaDatalleProtocolo implements OnInit {
                 let ids = [];
                 practica.requeridos.map((id) => { ids.push(id._id); });
                 // await this.servicioPractica.findByIds({ ids: ids }).subscribe((resultados) => {
-                    await this.servicioPractica.findByIds( ids ).subscribe((resultados) => {
+                await this.servicioPractica.findByIds(ids).subscribe((resultados) => {
                     resultados.forEach(async (resultado: any) => {
                         resultado.valor = {
                             resultado: {

@@ -65,6 +65,7 @@ export class ProtocoloDetalleComponent
     @Input() protocolos: any;
     @Input() modo: String;
     @Input() indexProtocolo: any;
+    @Input() areas: any;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
@@ -165,7 +166,11 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = false;
         this.showProtocoloDetalle = true;
     }
-
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+     */
     loadOrganizacion() {
         this.servicioOrganizacion.get(this.modelo.solicitud.organizacion.nombre).subscribe(resultado => {
             let salida = resultado.map(elem => {
@@ -192,16 +197,22 @@ export class ProtocoloDetalleComponent
             $event.callback(resultado);
         });
     }
-
-    editarDatosCabecera() {
-        console.log('editarDatosCabecera');
+/**
+ * 
+ * 
+ * @memberof ProtocoloDetalleComponent
+ */
+editarDatosCabecera() {
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
-
-    aceptarEdicionCabecera() {
-        console.log('aceptarEdicionCabecera');
+/**
+ * 
+ * 
+ * @memberof ProtocoloDetalleComponent
+ */
+aceptarEdicionCabecera() {
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
@@ -263,16 +274,21 @@ export class ProtocoloDetalleComponent
         this.router.navigate(['./"${pagina}"']);
         return false;
     }
-
-    // volverProtocolos() {
-    //     this.volverAListaControEmit.emit(true);
-    // }
-
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+     */
     searchStart() {
         this.pacientes = null;
     }
 
-
+    /**
+     * 
+     * 
+     * @param {*} resultado 
+     * @memberof ProtocoloDetalleComponent
+     */
     searchEnd(resultado: any) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
@@ -286,7 +302,12 @@ export class ProtocoloDetalleComponent
 
         }
     }
-
+    /**
+     * 
+     * 
+     * @param {*} paciente 
+     * @memberof ProtocoloDetalleComponent
+     */
     hoverPaciente(paciente: any) {
         this.pacienteActivo = paciente;
     }
@@ -458,10 +479,14 @@ export class ProtocoloDetalleComponent
             // this.cargarResultadosAnteriores();
         }
     }
-
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+     */
     cargarListaPracticaCarga() {
-        console.log('cargarListaPracticaCarga');
         let recorrerSubpracticas = async (reg, nivelTab) => {
+
             let margen = [];
             for (let i = 0; i < nivelTab; i++) {
                 margen.push({});
@@ -477,6 +502,7 @@ export class ProtocoloDetalleComponent
             reg.registros.forEach(r => {
                 recorrerSubpracticas(r, nivelTab + 1);
             });
+
         };
 
         this.practicasEjecucion.forEach(p => {
@@ -485,7 +511,11 @@ export class ProtocoloDetalleComponent
         this.cargarConfiguracionesResultado();
 
     }
-
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+     */
     async cargarConfiguracionesResultado() {
         // return new Promise( async (resolve) => {
         let ids = [];
@@ -495,6 +525,10 @@ export class ProtocoloDetalleComponent
                 this.practicasCarga.map((reg) => {
                     for (let resultado of resultados) {
                         let practica: any = resultado;
+
+                        // if (nivelTab > 0 || this.areas.findIndex(area => reg === reg.area) > 0) {
+
+
                         if (resultado.id === reg.practica._id) {
                             reg.formatoResultado = practica.resultado.formato;
                             reg.formatoResultado.unidadMedida = practica.unidadMedida;
@@ -509,7 +543,15 @@ export class ProtocoloDetalleComponent
 
         // });
     }
-
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+    /**
+     * 
+     * 
+     * @memberof ProtocoloDetalleComponent
+     */
     validarResultados() {
         this.practicasCarga.forEach((objetoPractica) => {
             let resultado = objetoPractica.practica.valor.resultado;
@@ -534,7 +576,12 @@ export class ProtocoloDetalleComponent
             }
         });
     }
-
+    /**
+     * 
+     * 
+     * @param {any} modoAVolver 
+     * @memberof ProtocoloDetalleComponent
+     */
     guardarSolicitudYVolver(modoAVolver) {
         console.log('guardarSolicitudYVolver - detalle', modoAVolver);
         this.modo = modoAVolver;
