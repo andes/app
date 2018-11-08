@@ -105,7 +105,7 @@ export class PacienteDetalleComponent implements OnInit {
                                 this.renaperNotification.emit(true);
                                 this.loading = false;
                             } else {
-                                this.plex.toast('info', 'Intento de validación fallida. Se volverá a intentar', 'INFORMACION:', 3500);
+                                this.plex.toast('info', 'Reintentando validación', 'INFORMACION:', 3500);
                                 this.getSisa(patient, sexoRena);
                             }
                             this.paciente.direccion[0].valor = datos.calle + ' ' + datos.numero;
