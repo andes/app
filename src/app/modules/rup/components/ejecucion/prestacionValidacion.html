@@ -67,7 +67,7 @@
             </div>
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
-            <div class="col titulos">
+            <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
@@ -147,23 +147,30 @@
                                     </b>
                                     <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0 && !elementoRUP?.reglas?.requeridos?.relacionesMultiples"
                                         class="badge badge-info text-uppercase">
-                                        {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase() +
-                                        elemento.relacionadoCon[0].concepto.term.slice(1)}}
+                                        {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
+                                        elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
                                     </small>
                                     <ng-container *ngIf="elementoRUP?.reglas?.requeridos?.relacionesMultiples">
                                         <ng-container *ngFor="let relacion of elemento.relacionadoCon">
 
                                             <span class="badge badge-info">
                                                 {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' +
-                                                relacion.cara + ')' : relacion.concepto.term }}
+                                                relacion?.cara + ')' : relacion?.concepto?.term }}
                                             </span>
                                         </ng-container>
                                     </ng-container>
                                 </div>
                             </div>
                             <div class="actions">
+                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento /
                                     diagnóstico principal</small>
+                                <!-- <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small> -->
+                                <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
+                                    <b>Relacionado con:</b> {{
+                                    elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
+                                    elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
+                                </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
                                     <span class="small text-secondary" *ngIf="asignarTurno[elemento.id]?.solicitud && asignarTurno[elemento.id]?.solicitud.turno">
                                         <b>Ya tiene un turno asignado</b>
@@ -233,7 +240,7 @@
                 </ng-container>
             </div>
 
-            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="relaciones col-3">
+            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
                     <header>

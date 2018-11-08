@@ -1,7 +1,7 @@
 import { SnomedService } from './../../services/term/snomed.service';
 import { Plex } from '@andes/plex';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import * as enumerados from './../../utils/enumerados';
 // Services
@@ -31,7 +31,7 @@ import { Router } from '@angular/router';
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: IOrganizacion;
+    @Input() seleccion: IOrganizacion;
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     // definición de arreglos
@@ -121,9 +121,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private BarrioService: BarrioService,
         private tipoEstablecimientoService: TipoEstablecimientoService,
-        public plex: Plex, private server: Server,
+        public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
     ) { }

@@ -43,7 +43,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
                                                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>

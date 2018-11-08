@@ -1,11 +1,10 @@
 import { environment } from './../../../../environments/environment';
 import * as moment from 'moment';
-import { LoginComponent } from './../../login/login.component';
 import { Component, AfterViewInit, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, PipeTransform } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { EstadosDarTurnos } from './enums';
 import { EstadosAgenda } from './../enums';
 import { PrestacionesService } from './../../../modules/rup/services/prestaciones.service';
@@ -44,6 +43,7 @@ export class DarTurnosComponent implements OnInit {
     public changeCarpeta = false;
     hideDarTurno: boolean;
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
+    autocitado = false;
 
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
@@ -71,6 +71,9 @@ export class DarTurnosComponent implements OnInit {
     set solicitudPrestacion(value: any) {
         this._solicitudPrestacion = value;
         if (this._solicitudPrestacion) {
+            this.autocitado = this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.registros &&
+                this._solicitudPrestacion.solicitud.registros[0].valor && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion &&
+                this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado;
             this.turnoTipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
             this.servicePaciente.getById(this._solicitudPrestacion.paciente.id).subscribe(
                 pacienteMPI => {
@@ -115,7 +118,7 @@ export class DarTurnosComponent implements OnInit {
     seleccion = null;
     esEscaneado = false;
     ultimosTurnos: any[];
-    indice: number = -1;
+    indice = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     permisos = [];
     autorizado = false;
@@ -242,19 +245,20 @@ export class DarTurnosComponent implements OnInit {
     }
 
     loadProfesionales(event) {
+        if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
+            event.callback([this._solicitudPrestacion.solicitud.profesional]);
+        }
         if (event.query) {
             let query = {
                 nombreCompleto: event.query
             };
             this.serviceProfesional.get(query).subscribe(event.callback);
-        } else if (this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.profesionales) {
-            // TODO quedaria ver que se va a hacer cuando en la solicitud se tengan mas de un profesional asignado
-            let query = {
-                nombreCompleto: this._solicitudPrestacion.solicitud.registros[0].valor.profesionales[0].nombreCompleto,
-            };
-            this.serviceProfesional.get(query).subscribe(event.callback);
         } else {
-            event.callback(this.opciones.profesional || []);
+            if (this.opciones && this.opciones.profesional) {
+                event.callback([this.opciones.profesional]);
+            } else {
+                event.callback([]);
+            }
         }
         this.eventoProfesional = event;
     }
@@ -288,8 +292,8 @@ export class DarTurnosComponent implements OnInit {
     actualizar(etiqueta) {
         if (this._solicitudPrestacion) {
             this.opciones.tipoPrestacion = this._solicitudPrestacion.solicitud.tipoPrestacion;
-            if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
-                this.opciones.profesional = [this._solicitudPrestacion.solicitud.profesional];
+            if (this._solicitudPrestacion.solicitud && this._solicitudPrestacion.solicitud.profesional) {
+                this.opciones.profesional = this._solicitudPrestacion.solicitud.profesional;
             }
         }
 
@@ -309,7 +313,6 @@ export class DarTurnosComponent implements OnInit {
         // Filtro búsqueda
         if (this.opciones.tipoPrestacion || this.opciones.profesional) {
             this.mostrarCalendario = true;
-
             // Agendas a partir de hoy aplicando filtros seleccionados y permisos
             params = {
                 rango: true, desde: new Date(), hasta: fechaHasta,
@@ -317,11 +320,10 @@ export class DarTurnosComponent implements OnInit {
                 organizacion: this.auth.organizacion._id,
                 nominalizada: true
             };
-            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
-            if (this.opciones.profesional && autocitado) {
-                params['idProfesional'] = this.opciones.profesional[0].id;
+            if (this.opciones.profesional && this.autocitado) {
+                params['idProfesional'] = this.opciones.profesional.id;
             } else {
-                if (this.opciones.profesional && !autocitado) {
+                if (this.opciones.profesional && !this.autocitado) {
                     params['idProfesional'] = this.opciones.profesional.id;
                 }
             }
@@ -348,10 +350,10 @@ export class DarTurnosComponent implements OnInit {
 
                     this.agendas = this.agendas.filter(agenda => {
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
-                        let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion && (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia === true && this.hayTurnosEnHorario(agenda))
-                            || (agenda.turnosRestantesProgramados > 0 && delDia === false))) ||
-                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((autocitado && agenda.turnosRestantesProfesional > 0) ||
-                                (!autocitado && agenda.turnosRestantesGestion > 0))) ||
+                        let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion && (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia && this.hayTurnosEnHorario(agenda))
+                            || (agenda.turnosRestantesProgramados > 0 && !delDia))) ||
+                            ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && (this._solicitudPrestacion && ((this.autocitado && agenda.turnosRestantesProfesional > 0) ||
+                                (!this.autocitado && agenda.turnosRestantesGestion > 0))) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo > 0) ||
                                 ((agenda.estado === 'publicada' || agenda.estado === 'disponible') && agenda.dinamica && agenda.cupo === -1)
                             );
@@ -369,7 +371,7 @@ export class DarTurnosComponent implements OnInit {
                     let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
                     {
                         return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
-                    };
+                    }
                 });
 
             });
@@ -463,8 +465,8 @@ export class DarTurnosComponent implements OnInit {
                             // Tiene solicitud "papelito"?
                             if (this._solicitudPrestacion) {
 
-                                // Es autocitado?
-                                if (this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true) {
+
+                                if (this.autocitado) {
                                     this.tiposTurnosSelect = 'profesional';
                                 } else {
                                     this.tiposTurnosSelect = 'gestion';
@@ -793,7 +795,7 @@ export class DarTurnosComponent implements OnInit {
                     } else {
                         this.guardarTurno(agd);
                     }
-                };
+                }
             });
         } else {
             this.plex.alert('', 'Seleccione un tipo de prestación');
@@ -1000,11 +1002,11 @@ export class DarTurnosComponent implements OnInit {
     tieneTurnos(bloque: IBloque): boolean {
         let turnos = bloque.turnos;
         if (this._solicitudPrestacion) {
-            let autocitado = this._solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion && this._solicitudPrestacion.solicitud.registros[0].valor.solicitudPrestacion.autocitado === true;
-            if (autocitado && bloque.restantesProfesional > 0) {
+
+            if (this.autocitado && bloque.restantesProfesional > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
-            if (!autocitado && bloque.restantesGestion > 0) {
+            if (!this.autocitado && bloque.restantesGestion > 0) {
                 return turnos.find(turno => turno.estado === 'disponible' && turno.horaInicio >= this.hoy) != null;
             }
         } else {

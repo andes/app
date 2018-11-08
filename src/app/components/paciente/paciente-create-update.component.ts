@@ -110,9 +110,9 @@ import {
 })
 export class PacienteCreateUpdateComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: IPaciente;
-    @Input('isScan') isScan: IPaciente;
-    @Input('escaneado') escaneado: Boolean;
+    @Input() seleccion: IPaciente;
+    @Input() isScan: IPaciente;
+    @Input() escaneado: Boolean;
     @Output() data: EventEmitter<IPaciente> = new EventEmitter<IPaciente>();
 
     foto = '';
@@ -213,6 +213,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    public nombrePattern: string;
+
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -231,7 +233,9 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
 
     ngOnInit() {
         // Se cargan los combos
@@ -813,7 +817,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     if (!resultado) {
                         this.save(valid);
                         this.disableGuardar = true;
-                    };
+                    }
                 });
             } else {
                 this.save(valid);
@@ -995,7 +999,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     }
 
                                 } else {
-                                    ///Cargar como paciente validado pq está escaneado
+                                    /// Cargar como paciente validado pq está escaneado
                                     this.buscarPacRel = '';
                                     this.PacientesRel = null;
                                     let pacienteGuardar: any = {

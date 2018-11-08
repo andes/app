@@ -31,7 +31,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-import { Ng2DragDropModule } from 'ng2-drag-drop';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
@@ -84,11 +84,14 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
 
+// TOP
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
@@ -115,6 +118,7 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
 import { InternacionService } from './modules/rup/services/internacion.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+
 
 
 // Componentes
@@ -338,7 +342,10 @@ import { OrganizacionSectoresComponent } from './components/organizacion/organiz
 
 
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
+import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
+import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
+import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -507,7 +514,7 @@ registerLocaleData(localeEs, 'es');
         HttpModule,
         PlexModule,
         AuthModule,
-        Ng2DragDropModule,
+        NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
         AgmCoreModule.forRoot({
@@ -585,6 +592,9 @@ registerLocaleData(localeEs, 'es');
 
         // Solicitudes
         SolicitudesComponent,
+        DetalleSolicitudComponent,
+        AuditarSolicitudComponent,
+        NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
@@ -598,6 +608,7 @@ registerLocaleData(localeEs, 'es');
 
         SectoresItemComponent,
         PucoComponent,
+        ReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -678,6 +689,7 @@ registerLocaleData(localeEs, 'es');
         ProcedimientosQuirurgicosService,
         FormTerapeuticoService,
         CDAService,
+        ReglaService,
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,

@@ -131,7 +131,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         // Verificamos permisos globales para turnos, si no posee realiza redirect al home
         if (!this.autorizado) {
             this.redirect('inicio');
-        };
+        }
 
         // Verifica permisos para dar turnos
         this.btnDarTurnos = this.auth.getPermissions('turnos:darTurnos:prestacion:?').length > 0;
@@ -222,7 +222,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
 
         // Completo params con la info que ya tengo
         this.getAgendas(this.parametros);
-    };
+    }
 
     getAgendas(params: any) {
         this.serviceAgenda.get(params).subscribe(agendas => {

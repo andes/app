@@ -1,6 +1,8 @@
+
+import { map } from 'rxjs/operators';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs/Rx';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';
@@ -82,6 +84,9 @@ export class PrestacionesService {
         situacionLaboral: '200000000',
         nivelEstudios: '3'
     };
+    public elementosRegistros = {
+        odontograma: '3561000013109'
+    };
 
     // Ids de conceptos que refieren que un paciente no concurrió a la consulta
     // Se usan para hacer un PATCH en el turno, quedando turno.asistencia = 'noAsistio'
@@ -106,6 +111,24 @@ export class PrestacionesService {
     }
 
 
+    /**
+     * Método get. Trae lista de objetos solicitudes.
+     *
+     * @param {*} params Opciones de búsqueda
+     * @param {*} [options={}] Options a pasar a la API
+     * @returns {Observable<IPrestacion[]>}
+     *
+     * @memberof PrestacionesService
+     */
+    getSolicitudes(params: any, options: any = {}): Observable<IPrestacion[]> {
+        if (typeof options.showError === 'undefined') {
+            options.showError = true;
+        }
+
+        let opt = { params: params, options };
+
+        return this.server.get(this.prestacionesUrl + '/solicitudes', opt);
+    }
     /**
      * Método get. Trae lista de objetos prestacion.
      *
@@ -157,12 +180,12 @@ export class PrestacionesService {
                     showError: true
                 }
             };
-            return this.server.get(this.prestacionesUrl, opt).map(data => {
+            return this.server.get(this.prestacionesUrl, opt).pipe(map(data => {
                 this.cache[idPaciente] = data;
                 // Limpiamos la cache de registros por si hubo modificaciones en las prestaciones
                 this.cacheRegistros[idPaciente] = null;
                 return this.cache[idPaciente];
-            });
+            }));
         }
 
     }
@@ -228,7 +251,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getRegistroById(idPaciente: any, id: any): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
             let registros = [];
 
             prestaciones.forEach(prestacion => {
@@ -239,7 +262,7 @@ export class PrestacionesService {
             });
             return registros.find(r => r.id === id);
 
-        });
+        }));
     }
 
     /**
@@ -247,7 +270,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getByPacienteHallazgo(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -329,7 +352,7 @@ export class PrestacionesService {
             });
             this.cacheRegistros[idPaciente] = registroSalida;
             return registroSalida;
-        });
+        }));
     }
 
 
@@ -340,7 +363,7 @@ export class PrestacionesService {
      * @param soloValidados
      */
     getByPacienteProcedimiento(idPaciente: any, soloValidados?: boolean) {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -367,7 +390,7 @@ export class PrestacionesService {
 
             this.cacheRegistros[idPaciente] = registros;
             return registros;
-        });
+        }));
     }
     /**
      *
@@ -375,7 +398,7 @@ export class PrestacionesService {
      * @param soloValidados
      */
     getByPacienteElementosRegistro(idPaciente: any, soloValidados?: boolean) {
-        return this.getByPaciente(idPaciente).map(prestaciones => {
+        return this.getByPaciente(idPaciente).pipe(map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -402,7 +425,7 @@ export class PrestacionesService {
 
             this.cacheRegistros[idPaciente] = registros;
             return registros;
-        });
+        }));
     }
 
     /**
@@ -410,7 +433,7 @@ export class PrestacionesService {
      * @param {String} idPaciente
      */
     getByPacienteMedicamento(idPaciente: any, soloValidados?: boolean): Observable<any[]> {
-        return this.getByPaciente(idPaciente, false).map(prestaciones => {
+        return this.getByPaciente(idPaciente, false).pipe(map(prestaciones => {
             let registros = [];
             if (soloValidados) {
                 prestaciones = prestaciones.filter(p => p.estados[p.estados.length - 1].tipo === 'validada');
@@ -487,7 +510,7 @@ export class PrestacionesService {
             });
             this.cacheMedicamentos[idPaciente] = registroSalida;
             return registroSalida;
-        });
+        }));
     }
 
     getByPacienteLaboratorios(idPaciente, conceptId = null) {
@@ -521,13 +544,13 @@ export class PrestacionesService {
         //     registros = this.cacheRegistros[idPaciente];
         //     return new Observable(resultado => resultado.next(registros.find(registro => registro.concepto.conceptId === concepto.conceptId)));
         // } else {
-        return this.getByPacienteHallazgo(idPaciente, true).map(hallazgos =>
+        return this.getByPacienteHallazgo(idPaciente, true).pipe(map(hallazgos =>
             hallazgos.find(registro => {
                 if ((registro.concepto.conceptId === concepto.conceptId) && (registro.evoluciones[0].esCronico || registro.evoluciones[0].estado === 'activo')) {
                     return registro;
                 }
             })
-        );
+        ));
         // }
     }
 
@@ -539,13 +562,13 @@ export class PrestacionesService {
      */
     getUnHallazgoPacienteXOrigen(idPaciente: any, idRegistroOrigen: any): Observable<any> {
         let registros = [];
-        return this.getByPacienteHallazgo(idPaciente).map(hallazgos =>
+        return this.getByPacienteHallazgo(idPaciente).pipe(map(hallazgos =>
             hallazgos.find(registro => {
                 if (registro.evoluciones.find(e => e.idRegistro === idRegistroOrigen)) {
                     return registro;
                 }
             })
-        );
+        ));
     }
 
 
@@ -557,13 +580,13 @@ export class PrestacionesService {
          */
     getUnMedicamentoXOrigen(idPaciente: any, idRegistroOrigen: any): Observable<any> {
         let registros = [];
-        return this.getByPacienteMedicamento(idPaciente).map(registrosMed =>
+        return this.getByPacienteMedicamento(idPaciente).pipe(map(registrosMed =>
             registrosMed.find(registro => {
                 if (registro.evoluciones.find(e => e.idRegistro === idRegistroOrigen)) {
                     return registro;
                 }
             })
-        );
+        ));
     }
 
 
@@ -775,7 +798,6 @@ export class PrestacionesService {
     }
 
     validarPrestacion(prestacion, planes): Observable<any> {
-
         let planesCrear = undefined;
 
         if (planes.length) {
@@ -799,17 +821,27 @@ export class PrestacionesService {
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
 
-                        let turneable = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
-                        if (turneable) {
+                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
+                        if (existeConcepto) {
                             // creamos objeto de prestacion
-                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, turneable, 'validacion', 'ambulatorio');
+                            let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');
+                            // asignamos el tipoPrestacionOrigen a la solicitud
+                            nuevaPrestacion.solicitud.tipoPrestacionOrigen = prestacion.solicitud.tipoPrestacion;
                             // asignamos la prestacion de origen
                             nuevaPrestacion.solicitud.prestacionOrigen = prestacion.id;
 
+                            // Asignamos organizacionOrigen y profesionalOrigen de la solicitud originada
+                            nuevaPrestacion.solicitud.organizacionOrigen = prestacion.solicitud.organizacion;
+                            nuevaPrestacion.solicitud.profesionalOrigen = prestacion.solicitud.profesional;
+
+                            // Si se asignó una organización destino desde la prestación que origina la solicitud
                             if (plan.valor.solicitudPrestacion.organizacionDestino) {
                                 nuevaPrestacion.solicitud.organizacion = plan.valor.solicitudPrestacion.organizacionDestino;
                             }
-
+                            // Si se asignó un profesional destino desde la prestación que origina la solicitud
+                            if (!plan.valor.solicitudPrestacion.autocitado) {
+                                nuevaPrestacion.solicitud.profesional = {};
+                            }
                             if (plan.valor.solicitudPrestacion.profesionalesDestino) {
                                 nuevaPrestacion.solicitud.profesional = plan.valor.solicitudPrestacion.profesionalesDestino[0];
                             }
@@ -869,7 +901,7 @@ export class PrestacionesService {
      * @memberof BuscadorComponent
      */
     public getPlanes(idPrestacion, idPaciente, recarga = false) {
-        return this.getByPaciente(idPaciente, recarga).map(listadoPrestaciones => {
+        return this.getByPaciente(idPaciente, recarga).pipe(map(listadoPrestaciones => {
             let prestacionPlanes = [];
             if (this.cache[idPaciente]) {
                 prestacionPlanes = this.cache[idPaciente].filter(p => p.estados[p.estados.length - 1].tipo === 'pendiente' && p.solicitud.prestacionOrigen === idPrestacion);
@@ -877,7 +909,7 @@ export class PrestacionesService {
             } else {
                 return null;
             }
-        });
+        }));
     }
 
     /**

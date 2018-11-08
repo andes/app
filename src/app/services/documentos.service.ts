@@ -1,8 +1,6 @@
+
 import { Observable } from 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 import { Http, Response, ResponseContentType, RequestMethod } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';

@@ -275,9 +275,18 @@ export class PrestacionValidacionComponent implements OnInit {
 
                 // filtramos los planes que deben generar prestaciones pendientes (Planes con conceptos turneales)
                 let planes = this.prestacion.ejecucion.registros.filter(r => r.esSolicitud);
-
                 this.servicioPrestacion.validarPrestacion(this.prestacion, planes).subscribe(prestacion => {
                     this.prestacion = prestacion;
+                    this.prestacion.ejecucion.registros.forEach(registro => {
+                        if (registro.relacionadoCon && registro.relacionadoCon.length > 0) {
+                            if (registro.relacionadoCon[0] && (typeof registro.relacionadoCon[0] === 'string')) {
+                                registro.relacionadoCon = registro.relacionadoCon.map(idRegistroRel => {
+                                    return this.prestacion.ejecucion.registros.find(r => r.id === idRegistroRel);
+                                });
+                            }
+                        }
+                    });
+
                     this.motivoReadOnly = true;
                     if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
                         // actualizamos las prestaciones de la HUDS
@@ -331,10 +340,14 @@ export class PrestacionValidacionComponent implements OnInit {
                         // Vamos a cambiar el estado de la prestación a ejecucion
                         this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
                             this.prestacion = prestacion;
-
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
+                            // chequeamos si es no nominalizada si
+                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                // actualizamos las prestaciones de la HUDS
+                                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                                });
+                            } else {
+                                this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                            }
 
                             this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                         }, (err) => {

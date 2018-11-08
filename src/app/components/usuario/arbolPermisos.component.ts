@@ -81,7 +81,7 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                                 break;
                             case 'organizacion':
                                 this.organizacionService.get({ ids: items }).subscribe((data) => {
-                                    this.seleccionados = data;
+                                    this.seleccionados = [...data];
                                 });
                                 break;
                         }
@@ -101,31 +101,19 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     loadData(type, event) {
         // [TODO] Agregar parametros de busqueda en el JSON de permisos. Ej: { turneable: 1 }
-        if (event.query) {
-            // [TODO] Filtrar otras tipos de datos
-            let query;
-            switch (type) {
-                case 'prestacion':
-                    query = {
-                        term: event.query
-                    };
-                    this.servicioTipoPrestacion.get(query).subscribe((data) => {
-                        data = [...data, ...this.seleccionados || []];
-                        event.callback(data);
-                    });
-                    break;
-                case 'organizacion':
-                    query = {
-                        nombre: event.query
-                    };
-                    this.organizacionService.get(query).subscribe((data) => {
-                        data = [...data, ...this.seleccionados || []];
-                        event.callback(data);
-                    });
-                    break;
-            }
-        } else {
-            event.callback(this.seleccionados || []);
+        // [TODO] Filtrar otras tipos de datos
+        switch (type) {
+            case 'prestacion':
+                let query: any = {};
+                if (event.query) {
+                    query.term = event.query;
+                }
+
+                this.servicioTipoPrestacion.get(query).subscribe((data) => {
+                    data = [...data, ...this.seleccionados || []];
+                    event.callback(data);
+                });
+                break;
         }
     }
 

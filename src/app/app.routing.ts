@@ -74,13 +74,14 @@ import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
 import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
 import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
 import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -105,7 +106,7 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
-  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
+  { path: 'puco', component: PucoComponent },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
@@ -158,6 +159,10 @@ const appRoutes: Routes = [
 
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
+
+  // TOP
+  { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
+
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

@@ -86,11 +86,11 @@
                                     <!-- Contenedor del registro RUP -->
 
 
-                                    <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                    <div class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                         <div class="rup-header">
                                             <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                                [dragOverClass]="'drag-target-border'" [dragData]="registro"
-                                                (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
+                                                [dragClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                                (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <i class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getIcon(registro.concepto, 'planes') : servicioPrestacion.getIcon(registro.concepto)}}"></i>
                                             </div>
 
@@ -156,7 +156,7 @@
 
                                                 <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
                                                     <plex-dropdown type="primary" class="dropdown-inline" [right]="true"
-                                                        icon="link-variant" (click)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items"
+                                                        icon="link-variant" (onOpen)="cargaItems(registro, i)" [items]="itemsRegistros[registro.id]?.items"
                                                         title="Vincular registro"></plex-dropdown>
                                                 </ng-container>
 
@@ -172,8 +172,8 @@
                                             [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
                                             <!-- ... Header -->
                                             <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                                [dragOverClass]="'drag-target-border'" [dragData]="registro"
-                                                (onDragStart)="draggingRegistro(i ,registro, true)" (onDragEnd)="draggingRegistro(i, registro, false)">
+                                                [dragClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                                (onDragEnd)="draggingRegistro(i, registro, false)">
                                                 <span>
                                                     {{ (registro.esSolicitud) ? 'solicitud' :
                                                     registro.concepto.semanticTag}}
@@ -283,7 +283,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </tab>
                         <ng-container *ngIf="registrosHuds">
@@ -307,12 +306,13 @@
                                         </div>
                                         <div class="col-12">
                                             <b>Solicitada por el profesional: </b>{{
-                                            registro.data.solicitud.profesional | profesional
-                                            }}
+                                            registro.data.solicitud.profesional
+                                            | profesional }}
                                         </div>
                                         <div class="col-12">
                                             <b>Desde la Organización: </b> {{
-                                            registro.data.solicitud.organizacion.nombre }}
+                                            registro.data.solicitud.organizacion.nombre
+                                            }}
                                         </div>
                                     </div>
                                     <div class="row">
@@ -393,7 +393,6 @@
                                             </ng-container>
                                         </div>
                                     </div>
-
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.prestacion.snomed.term" [class]="registro.data.class"
@@ -409,7 +408,6 @@
                             </ng-container>
                         </ng-container>
                     </tabs>
-
                 </plex-box>
             </div>
 

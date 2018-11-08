@@ -1,11 +1,14 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ISubscription } from 'rxjs/Subscription';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { ObraSocialService } from './../../services/obraSocial.service';
 import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
+import { IProfe } from '../../interfaces/IProfe';
+
+import {forkJoin as observableForkJoin } from 'rxjs';
 
 @Component({
     selector: 'puco',
@@ -27,7 +30,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     public periodoMasAntiguo;    // la última version hacia atrás del padron a buscar
     public usuarios = [];
     private resPuco = [];
-    private resProfe = [];
+    private resProfe: IProfe;
     private timeoutHandle: number;
     @Input() autofocus: Boolean = true;
 
@@ -51,7 +54,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
 
-        Observable.forkJoin([
+        observableForkJoin([
             this.obraSocialService.getPadrones({}),
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
@@ -151,21 +154,21 @@ export class PucoComponent implements OnInit, OnDestroy {
                     let periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
                     let periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
 
-                    Observable.forkJoin([
+                    observableForkJoin([
                         this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
                             this.loading = false;
                             this.resPuco = t[0];
-                            this.resProfe = t[1];
+                            this.resProfe = (t[1] as any);
 
                             if (this.resPuco) {
-                                this.usuarios = this.resPuco;
+                                this.usuarios = <any> this.resPuco;
                             }
                             if (this.resProfe) {
                                 if (this.resPuco) {
                                     this.usuarios = this.resPuco.concat(this.resProfe);
                                 } else {
-                                    this.usuarios = this.resProfe;
+                                    this.usuarios = <any> this.resProfe;
                                 }
                             }
                         });
@@ -179,7 +182,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                 // this.searchTerm = this.searchTerm.substr(0, this.searchTerm.length - 1);
             }
         }
-    };
+    }
 
     // Boton reporte de errores/sugerencias
     sugerencias() {

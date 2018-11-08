@@ -1,4 +1,4 @@
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 
@@ -16,7 +16,7 @@ export class PrestamosService {
         return this.server.get(this.turnoUrl + '/prestamosHC/prestamos', { params: filtros });
     }
 
-    getHistorialCarpetas(filtros): Observable<any[]> {
+    getHistorialCarpetas(filtros): Observable<any> {
         return this.server.get(this.turnoUrl + '/prestamosHC/historial', { params: filtros });
     }
 

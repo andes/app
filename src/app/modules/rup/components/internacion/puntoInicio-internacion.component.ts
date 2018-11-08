@@ -66,7 +66,7 @@ export class PuntoInicioInternacionComponent implements OnInit {
                     if (prestacionExiste.length) {
                         this.internacionEjecucion = prestacionExiste[0];
                         this.showInternacionEjecucion = true;
-                    };
+                    }
                 });
             } else {
                 this.showInternacionEjecucion = false;

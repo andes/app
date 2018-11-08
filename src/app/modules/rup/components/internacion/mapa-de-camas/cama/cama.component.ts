@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ViewEncapsulation, Output, EventEmitter } from '@angular/core';
 import { Plex } from '@andes/plex';
-import { setTimeout } from 'timers';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
 import { PacienteService } from '../../../../../../services/paciente.service';
@@ -63,7 +62,7 @@ export class CamaComponent implements OnInit {
         private router: Router,
         public organizacionService: OrganizacionService,
         private pacienteService: PacienteService,
-        private PrestacionesService: PrestacionesService,
+        private prestacionesService: PrestacionesService,
         private internaiconService: InternacionService) { }
 
     ngOnInit() {

@@ -1,4 +1,5 @@
 <!-- Búsqueda de pacientes -->
-<pacientesSearch  *ngIf="!showHuds" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<pacientesSearch *ngIf="!showHuds" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="esProfesional"
+    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
 <!-- Vista de la Huds del peciente seleccionado -->
-<rup-vistaHuds *ngIf="showHuds" [paciente]="paciente"></rup-vistaHuds>
+<rup-vistaHuds *ngIf="showHuds" [paciente]="paciente" (cambiarPaciente)="evtCambiaPaciente()"></rup-vistaHuds>

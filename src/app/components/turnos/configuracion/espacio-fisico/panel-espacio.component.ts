@@ -91,7 +91,7 @@ export class PanelEspacioComponent implements OnInit {
                         bandera = true;
                         break;
                     }
-                };
+                }
                 if (bandera) {
                     let elto = {
                         agenda: this.agenda,

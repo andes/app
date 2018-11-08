@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { ISubscription } from 'rxjs/Subscription';
+import { SubscriptionLike as ISubscription } from 'rxjs';
 
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -146,7 +146,7 @@ export class SnomedBuscarComponent implements OnInit, OnChanges, OnDestroy {
             if (this.searchTerm.match(/^\s{1,}/)) {
                 this.searchTerm = '';
                 return;
-            };
+            }
 
             if (this.tipoBusqueda !== 'equipamientos') {
                 this._tengoResultado.emit(true);

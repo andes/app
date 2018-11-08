@@ -1,4 +1,4 @@
-import { Component, OnInit, HostBinding, ViewEncapsulation, Input } from '@angular/core';
+import { Component, OnInit, HostBinding, ViewEncapsulation, Input, Output, EventEmitter } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
@@ -20,16 +20,19 @@ export class VistaHudsComponent implements OnInit {
 
 
     @Input() paciente: IPaciente;
+    @Output() cambiarPaciente = new EventEmitter<boolean>();
 
     // Defaults de Tabs panel derecho
     public panelIndex = 0;
+    public mostrarPI = false;
+    public mostrarCambiaPaciente = false;
 
     // Array de registros de la HUDS a agregar en tabs
     public registrosHuds: any[] = [];
 
     // boton de volver cuando la ejecucion tiene motivo de internacion.
     // Por defecto vuelve al mapa de camas
-    public btnVolver = 'Mapa de camas';
+    public btnVolver = 'VOLVER';
     public rutaVolver;
 
     constructor(public elementosRUPService: ElementosRUPService,
@@ -57,6 +60,19 @@ export class VistaHudsComponent implements OnInit {
         // Evita que se autocompleten valores de una consulta anterior
         this.conceptObserverService.destroy();
 
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length <= 0) {
+            this.redirect('inicio');
+        }
+
+        if (this.auth.profesional) {
+            this.mostrarPI = true;
+        }
+
+        if (!this.auth.profesional && this.auth.getPermissions('huds:?').length > 0) {
+            this.mostrarCambiaPaciente = true;
+        }
+
+
         if (!this.paciente) {
             this.route.params.subscribe(params => {
                 let id = params['id'];
@@ -80,6 +96,12 @@ export class VistaHudsComponent implements OnInit {
             }).subscribe(() => { return true; });
         }
     }
+
+    redirect(pagina: string) {
+        this.router.navigate(['./' + pagina]);
+        return false;
+    }
+
 
     agregarListadoHuds(elemento) {
         if (elemento.tipo === 'prestacion') {
@@ -114,6 +136,10 @@ export class VistaHudsComponent implements OnInit {
     // recibe el tab que se clikeo y lo saca del array..
     cerrartab($event) {
         this.registrosHuds.splice($event, 1);
+    }
+
+    evtCambiaPaciente() {
+        this.cambiarPaciente.emit(true);
     }
 
 }

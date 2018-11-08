@@ -15,7 +15,7 @@ import { AgendaService } from './../../../../services/turnos/agenda.service';
 import { ConceptObserverService } from './../../services/conceptObserver.service';
 import { IPaciente } from './../../../../interfaces/IPaciente';
 import { SnomedService } from '../../../../services/term/snomed.service';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { RUPComponent } from '../core/rup.component';
 
 @Component({
@@ -139,8 +139,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         });
 
         this.servicioPrestacion.clearRefSetData();
-        this.refSet = this.servicioPrestacion.getRefSetData();
-        this.filtroRefset = this.refSet;
+
 
         // Limpiar los valores observados al iniciar la ejecución
         // Evita que se autocompleten valores de una consulta anterior
@@ -529,6 +528,8 @@ export class PrestacionEjecucionComponent implements OnInit {
             snomedConcept.semanticTag = 'plan';
         }
 
+        this.refSet = this.servicioPrestacion.getRefSetData();
+        this.filtroRefset = this.refSet;
         this.tipoBusqueda = this.refSet;
 
         if (registroDestino && registroDestino.concepto) {
@@ -591,7 +592,6 @@ export class PrestacionEjecucionComponent implements OnInit {
             if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
-
                         if (dato) {
                             // buscamos si es cronico
                             let cronico = dato.concepto.refsetIds.find(item => item === this.servicioPrestacion.refsetsIds.cronico);
@@ -655,13 +655,13 @@ export class PrestacionEjecucionComponent implements OnInit {
                                 // }
                                 resultado.relacionadoCon = (this.tipoBusqueda && this.tipoBusqueda.length && this.tipoBusqueda[0] === 'planes') ? this.tipoBusqueda[1].conceptos : this.tipoBusqueda.conceptos;
                             } else {
+                                if (registroDestino) {
+                                    registroDestino.relacionadoCon = [resultado];
+                                }
 
-                                registroDestino.relacionadoCon = [resultado];
                             }
                         }
                     });
-
-
             } else {
                 resultado = this.cargarNuevoRegistro(snomedConcept);
                 if (registroDestino && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
@@ -683,7 +683,6 @@ export class PrestacionEjecucionComponent implements OnInit {
                 }
 
             }
-
         }
     }
 
@@ -999,20 +998,12 @@ export class PrestacionEjecucionComponent implements OnInit {
     }
 
     cargaItems(registroActual, indice) {
-
         // Paso el concepto desde el que se clickeo y filtro para no mostrar su autovinculación.
         let registros = this.prestacion.ejecucion.registros;
         this.itemsRegistros[registroActual.id].items = [];
-        let objItem = {};
         this.itemsRegistros[registroActual.id].items = registros.filter(registro => {
-            // let control = this.tieneVinculacion(registroActual, registro);
-            // if (control) {
-            //     this.plex.toast('warning', 'Los elementos seleccionados ya se encuentran vinculados.');
-            //     return false;
-            // }
             if (registro.id !== registroActual.id) {
                 if (registroActual.relacionadoCon && registroActual.relacionadoCon.length > 0) {
-                    // if (registro.id !== registroActual.relacionadoCon[0].id) {
                     if (registroActual.relacionadoCon.findIndex(x => x.id !== registro.id) > -1) {
                         return registro;
                     }

@@ -107,7 +107,7 @@ export class SuspenderAgendaComponent implements OnInit {
                     this.seleccionadosSMS[x].smsEnviado = 'pendiente';
                     this.seleccionadosSMS[x].smsEnviado = this.send(this.seleccionadosSMS[x], mensaje);
                 }
-            };
+            }
         } else {
             this.plex.toast('info', 'INFO: SMS no enviado (activo sólo en Producción)');
         }

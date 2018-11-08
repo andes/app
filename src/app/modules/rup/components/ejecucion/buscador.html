@@ -1,5 +1,5 @@
 <!-- Tipo de búsqueda -->
-<div class="row mt-1" *ngIf="!loading">
+<div class="row mt-1">
     <div class="btn-group col botoneraPrincipal" role="group" aria-label="Botonera principal">
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('sugeridos')" [ngClass]="{'active': busquedaActual === 'sugeridos'}">SUGERIDOS</button>
         <button class="btn btn-primary btn-sm btn-block m-0" (click)="setTipoBusqueda('misFrecuentes')" [ngClass]="{'active': busquedaActual === 'misFrecuentes'}">MIS FRECUENTES
@@ -23,7 +23,7 @@
 <!-- {{ busquedaRefSet | json }} -->
 
 <!-- MAESTRO DE PROBLEMAS - BD:tipoProblema -->
-<div class="menu-buscador" *ngIf="!showRefSets">
+<div class="menu-buscador">
     <plex-loader *ngIf="loading" type="linear"></plex-loader>
 
     <!-- Botones filtros -->
@@ -73,7 +73,7 @@
                         </button>
                     </li>
                     <li>
-                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-plan ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
+                        <small *ngIf="getCantidadResultados('planes')" class="badge badge-solicitud ml-1 float-right" [ngClass]="{'active': filtroActual === 'planes'}">{{ getCantidadResultados('planes')}}</small>
 
                         <button (click)="filtroBuscadorSnomed('planes')" class="btn btn-block btn-solicitud" [ngClass]="{'active': filtroActual === 'planes'}"
                             [disabled]="!wizardActivo && getCantidadResultados('planes') === 0" [plexWizard]="4" [title]="tooltips.planes">
@@ -132,16 +132,8 @@
     </ng-container>
 </div>
 
-<!-- <div class="row" *ngIf="resultados && resultados.length > 0 && !loading">
-    <div class="col-12">
-        <b *ngIf="showFrecuentes">Frecuentes</b>
-        <b *ngIf="showRefSets && !showGuiada">Búsqueda guiada</b>
-    </div>
-</div> -->
-
-
 <!-- RESULTADOS PRINCIPALES -->
-<div *ngIf="filtroActual && results && results[busquedaActual] && results[busquedaActual][filtroActual] && results[busquedaActual][filtroActual]?.length">
+<div *ngIf="filtroActual && results && results[busquedaActual][filtroActual]  && results[busquedaActual][filtroActual].length > 0">
 
     <ul class="conceptos list-unstyled">
         <ng-container *ngFor="let item of results[busquedaActual][filtroActual]">

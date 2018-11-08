@@ -54,11 +54,11 @@
                 <ng-container *ngIf="!showLoader">
                     <div class="row">
                         <div class="col-4">
-                            <h4 class="text-info">Lista de epicrisis</h4>
+                            <h5 class="text-info">Lista de epicrisis</h5>
                         </div>
                         <div class="col-8 text-right inline">
-                            <plex-button class="d-inline" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">CREAR EPICRISIS</plex-button>
-                            <plex-button class="d-inline" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">VER HUDS</plex-button>
+                            <plex-button size="sm" type="success" (click)="nuevaEpicrisis(pacienteSeleccionado)">CREAR EPICRISIS</plex-button>
+                            <plex-button size="sm" type="info" (click)="ruteo(pacienteSeleccionado.id, 'huds')">VER HUDS</plex-button>
                         </div>
                     </div>
                 </ng-container>
