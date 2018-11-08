@@ -36,7 +36,7 @@ import {
 
 export class ActivarAppComponent implements OnInit, OnChanges {
 
-    @Input('paciente') paciente: IPaciente;
+    @Input() paciente: IPaciente;
 
     public checkPass = false;
     public celular: String = '';

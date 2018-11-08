@@ -73,7 +73,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
             },
                 err => {
                     if (err) {
-                        console.log(err);
+
                     }
                 });
 
@@ -82,7 +82,7 @@ export class AgregarNotaTurnoComponent implements OnInit {
 
     verificarNota() {
         if (this.nota && this.nota.length > this.lenNota) {
-             this.nota = this.nota.substring(0, this.lenNota);
+            this.nota = this.nota.substring(0, this.lenNota);
         }
     }
 

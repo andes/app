@@ -103,14 +103,14 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                 }
             });
 
-            this.odontograma.cuadranteSuperiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
-            this.odontograma.cuadranteSuperiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
-            this.odontograma.cuadranteInferiorDerecho.sort((a, b) => b.concepto.term > a.concepto.term);
-            this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => b.concepto.term < a.concepto.term);
-            this.odontograma.cuadranteSuperiorDerechoTemporal.sort((a, b) => b.concepto.term > a.concepto.term);
-            this.odontograma.cuadranteSuperiorIzquierdoTemporal.sort((a, b) => b.concepto.term < a.concepto.term);
-            this.odontograma.cuadranteInferiorDerechoTemporal.sort((a, b) => b.concepto.term > a.concepto.term);
-            this.odontograma.cuadranteInferiorIzquierdoTemporal.sort((a, b) => b.concepto.term < a.concepto.term);
+            this.odontograma.cuadranteSuperiorDerecho.sort((a, b) => Number(b.concepto.term) - Number(a.concepto.term));
+            this.odontograma.cuadranteSuperiorIzquierdo.sort((a, b) => Number(a.concepto.term) - Number(b.concepto.term));
+            this.odontograma.cuadranteInferiorDerecho.sort((a, b) => Number(b.concepto.term) - Number(a.concepto.term));
+            this.odontograma.cuadranteInferiorIzquierdo.sort((a, b) => Number(a.concepto.term) - Number(b.concepto.term));
+            this.odontograma.cuadranteSuperiorDerechoTemporal.sort((a, b) => Number(b.concepto.term) - Number(a.concepto.term));
+            this.odontograma.cuadranteSuperiorIzquierdoTemporal.sort((a, b) => Number(a.concepto.term) - Number(b.concepto.term));
+            this.odontograma.cuadranteInferiorDerechoTemporal.sort((a, b) => Number(b.concepto.term) - Number(a.concepto.term));
+            this.odontograma.cuadranteInferiorIzquierdoTemporal.sort((a, b) => Number(a.concepto.term) - Number(b.concepto.term));
 
             // Trae los hallazgos, procedimientos, etc...
             if (this.params) {
@@ -177,7 +177,7 @@ export class OdontogramaRefsetComponent extends RUPComponent implements OnInit {
                         return z === diente.concepto.conceptId;
                     }) : {});
                     diente.relacion = diente.relacion.map(y => y.concepto);
-                };
+                }
             }
 
         }

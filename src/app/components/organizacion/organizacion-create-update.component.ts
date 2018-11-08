@@ -31,7 +31,7 @@ import { Router } from '@angular/router';
 export class OrganizacionCreateUpdateComponent implements OnInit {
 
     @HostBinding('class.plex-layout') layout = true;  // Permite el uso de flex-box en el componente
-    @Input('seleccion') seleccion: IOrganizacion;
+    @Input() seleccion: IOrganizacion;
     @Output() data: EventEmitter<IOrganizacion> = new EventEmitter<IOrganizacion>();
 
     // definición de arreglos
@@ -43,9 +43,8 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
     private paisArgentina = null;
     private provinciaNeuquen = null;
     private barrioNulleado = null;
-    public servicios: any;
     // con esta query de snomed trae todos los servicios.
-    private expression = '<<224891009';
+    private expression = '<<284548004';
 
     tipoEstablecimiento: ITipoEstablecimiento = {
         nombre: '',
@@ -114,18 +113,16 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         activo: true,
         fechaAlta: new Date(),
         fechaBaja: new Date(),
-        servicios: [null]
+        unidadesOrganizativas: [null]
     };
-    public serviciosSeleccionados: any;
-
+    public listadoUO = [];
     constructor(
         private organizacionService: OrganizacionService,
         private paisService: PaisService,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
-        private BarrioService: BarrioService,
         private tipoEstablecimientoService: TipoEstablecimientoService,
-        public plex: Plex, private server: Server,
+        public plex: Plex,
         public snomed: SnomedService,
         private router: Router,
     ) { }
@@ -136,15 +133,12 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
             this.tiposEstablecimiento = resultado;
         });
 
+        this.snomed.getQuery({ expression: this.expression }).subscribe(result => {
+            this.listadoUO = result;
+        });
         if (this.seleccion && this.seleccion.id) {
             this.organizacionService.getById(this.seleccion.id).subscribe(resultado => {
-                if (resultado.servicios) {
-                    Object.assign(this.organizacionModel, resultado);
-                    // Lo mapeamos para que los tome el plex-select
-                    this.serviciosSeleccionados = this.organizacionModel.servicios.map(function (obj) {
-                        return { id: obj.conceptId, nombre: obj.term, concepto: obj };
-                    });
-                }
+                Object.assign(this.organizacionModel, resultado);
             });
         }
 
@@ -166,10 +160,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
 
     onSave(valid) {
         let organizacionGuardar = Object.assign({}, this.organizacionModel);
-        // Mapeamos solo los conceptos que es lo que nos interesa guardar
-        organizacionGuardar.servicios = this.serviciosSeleccionados.map(elem => {
-            return elem.concepto;
-        });
         organizacionGuardar.contacto.map(elem => {
             elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
             return elem;
@@ -281,14 +271,6 @@ export class OrganizacionCreateUpdateComponent implements OnInit {
         }
     }
 
-    getServicios($event) {
-        this.snomed.getQuery({ expression: this.expression }).subscribe(result => {
-            this.servicios = result.map(function (obj) {
-                return { id: obj.conceptId, nombre: obj.term, concepto: obj };
-            });
-            $event.callback(this.servicios);
-        });
-    }
     routeCama() {
         this.router.navigate(['/tm/organizacion/' + this.seleccion.id + '/cama']);
     }

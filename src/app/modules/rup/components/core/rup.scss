@@ -80,20 +80,18 @@ $rotate: -90deg;
     $color in $rup_colors {
         &.#{$tag}:not(.mini) {
             &:hover {
-                border-left: 2px solid $color;
-                border-right: 2px solid $color;
-                border-bottom: 2px solid $color;
-                border-top: 2px solid $color;
+                border: 2px solid $color;
                 box-shadow: 1px 1px 20px 1px rgba($color, 0.22);
             }
-            .rup-header,
-            .rup-header .icon-rup,
+            >.rup-header,
+            >.rup-header .icon-rup,
             .rup-body .legend,
             .rup-footer .type {
-                background: $color;
+                background: $color !important;
             }
-            .rup-header .icon-rup {
+            >.rup-header .icon-rup {
                 border-bottom: 1px solid $color;
+                background: $color !important;
                 mix-blend-mode: hard-light;
             }
         }
@@ -165,9 +163,10 @@ $rotate: -90deg;
                 -webkit-transform: rotate($rotate);
                 transform: rotate($rotate);
                 font-size: 0.9rem;
-                margin-bottom: 50px;
+                margin-bottom: 45px;
                 color: white;
                 min-width: 120px;
+                width: 180px;
             }
         }
         .content {
@@ -192,6 +191,62 @@ $rotate: -90deg;
                     -webkit-transition: 200ms all;
                 }
             }
+        }
+    }
+}
+
+// Para resumen de Epicrisis
+.rup-clear {
+    @each $tag,
+    $color in $rup_colors {
+        &.#{$tag}:not(.mini) {
+            border: 0;
+            &:hover {
+                border: 0;
+            }
+            >.rup-header,
+            >.rup-header .icon-rup,
+            .rup-body .legend,
+            .rup-footer .type {
+                background: transparent !important;
+                color: white;
+            }
+            >.rup-header .icon-rup {
+                border-bottom: 1px solid $color;
+                background: transparent !important;
+            }
+        }
+    }
+    .rup-card:not(.mini) {
+        border: 0;
+    }
+    .rup-header {
+        text-transform: capitalize;
+        display: flex;
+        .icon-rup,
+        .title,
+        .actions {
+            padding: 5px;
+        }
+        .btn-icon-rup {
+            line-height: 1.3em;
+        }
+        .icon-rup {
+            font-size: 1.2rem;
+            width: 55px;
+            text-align: center;
+            display: none;
+            i {
+                color: $brand-primary;
+                font-size: 2.5rem;
+                line-height: 30px;
+            }
+        }
+    }
+    .rup-border {
+        &:hover {
+            background: #eee;
+            border: 0;
         }
     }
 }
@@ -351,8 +406,11 @@ $color in $rup_colors {
     }
 }
 
-.form-group>label {
-    margin-bottom: 0 !important;
+.form-group {
+    margin-left: 10px;
+    &>label {
+        margin-bottom: 0 !important;
+    }
 }
 
 .indicacion-default {

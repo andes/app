@@ -272,7 +272,7 @@ export class ClonarAgendaComponent implements OnInit {
                     },
                         err => {
                             if (err) {
-                                console.log(err);
+
                             }
                         });
                 }

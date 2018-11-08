@@ -46,7 +46,7 @@ export class PanelAgendaComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService,
-        public OrganizacionService: OrganizacionService,
+        public organizacionService: OrganizacionService,
         public router: Router,
         public auth: Auth) {
     }
@@ -178,12 +178,12 @@ export class PanelAgendaComponent implements OnInit {
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
             query.nombre = nombre;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
