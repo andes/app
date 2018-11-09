@@ -38,17 +38,17 @@ export class ListadoSolicitudesComponent implements OnInit {
   buscarSolicitudes(value?, tipo?) {
     let params = {
       estado: ['pendiente'],
-      pacienteDocumento: this.paciente.documento;
+      pacienteDocumento: this.paciente.documento
     }
     // params.organizacion = Auth.getOrganizacion();
 
     this.servicioPrestaciones.get(params).subscribe(protocolos => {
       this.protocolos = protocolos;
-    }
-    // , err => {
-    //   if (err) {
-    //     this.plex.info('danger', err);
-    //   }
-    // });
+      // }
+      // , err => {
+      //   if (err) {
+      //     this.plex.info('danger', err);
+      //   }
+    });
   }
 }
