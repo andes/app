@@ -115,7 +115,6 @@
                             </div>
                         </div>
                         <div class="row ml-1">
-
                             <div class="col-5">
                                 <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
                                 <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre" placeholder="Seleccione..."
@@ -192,7 +191,7 @@
     <!--OBSERVACIONES - RECEPCION-->
     <div class="row">
         <div *ngIf="modo === 'recepcion' || modo==='control' || modo==='carga'" class="col-12">
-            <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.observaciones" label="Observaciones" name="observaciones"
+            <plex-text [(ngModel)]="solicitudProtocolo.solicitudPrestacion.observaciones" label="Observaciones internas" name="observaciones"
                 multiline="true">
             </plex-text>
         </div>

@@ -167,11 +167,12 @@ export class ProtocoloDetalleComponent
         this.showProtocoloDetalle = true;
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     loadOrganizacion() {
+        this.modelo.solicitud.organizacion = this.auth.organizacion;
         this.servicioOrganizacion.get(this.modelo.solicitud.organizacion.nombre).subscribe(resultado => {
             let salida = resultado.map(elem => {
                 return {
@@ -197,6 +198,7 @@ export class ProtocoloDetalleComponent
             $event.callback(resultado);
         });
     }
+
     /**
      * 
      * 
@@ -207,6 +209,7 @@ export class ProtocoloDetalleComponent
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
+    
     /**
      * 
      * 
@@ -275,8 +278,8 @@ export class ProtocoloDetalleComponent
         return false;
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     searchStart() {
@@ -284,9 +287,9 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * 
-     * 
-     * @param {*} resultado 
+     *
+     *
+     * @param {*} resultado
      * @memberof ProtocoloDetalleComponent
      */
     searchEnd(resultado: any) {
@@ -303,9 +306,9 @@ export class ProtocoloDetalleComponent
         }
     }
     /**
-     * 
-     * 
-     * @param {*} paciente 
+     *
+     *
+     * @param {*} paciente
      * @memberof ProtocoloDetalleComponent
      */
     hoverPaciente(paciente: any) {
@@ -478,8 +481,8 @@ export class ProtocoloDetalleComponent
         }
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     async cargarListaPracticaCarga() {
@@ -518,8 +521,8 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     async cargarConfiguracionesResultado() {
@@ -550,12 +553,12 @@ export class ProtocoloDetalleComponent
         // });
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     validarResultados() {
@@ -583,9 +586,9 @@ export class ProtocoloDetalleComponent
         });
     }
     /**
-     * 
-     * 
-     * @param {any} modoAVolver 
+     *
+     *
+     * @param {any} modoAVolver
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitudYVolver(modoAVolver) {
