@@ -10,8 +10,7 @@ import { Constantes } from '../controllers/constants';
 
 @Component({
     selector: 'tabla-datalle-protocolo',
-    templateUrl: 'tabla-datalle-protocolo.html',
-    styleUrls: ['tabla-datalle-protocolo.scss']
+    templateUrl: 'tabla-datalle-protocolo.html'
 })
 
 export class TablaDatalleProtocolo implements OnInit {

@@ -14,11 +14,11 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'gestor-protocolos',
-    templateUrl: 'puntoInicioLaboratorio.html',
+    templateUrl: 'gestor-protocolos.html',
     styleUrls: ['../assets/laboratorio.scss']
 })
 
-export class PuntoInicioLaboratorioComponent
+export class GestorProtocolosComponent
 
     implements OnInit {
 

@@ -362,7 +362,7 @@ import { PracticaListadoComponent } from './apps/rup/laboratorio/components/prac
 import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
-import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/puntoInicioLaboratorio.component';
+import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -588,7 +588,7 @@ registerLocaleData(localeEs, 'es');
         AuditarSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
-        PuntoInicioLaboratorioComponent,
+        GestorProtocolosComponent,
         ProtocoloDetalleComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
