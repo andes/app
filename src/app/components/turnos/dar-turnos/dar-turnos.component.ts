@@ -99,13 +99,14 @@ export class DarTurnosComponent implements OnInit {
     @Output() volverValidacion = new EventEmitter<any>();
 
     private _pacienteSeleccionado: any;
-    private _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+
     private paciente: IPaciente;
-    private opciones: any = {};
     public agenda: IAgenda;
     public agendas: IAgenda[];
     public estadosAgenda = EstadosAgenda;
 
+    _solicitudPrestacion: any; // TODO: cambiar por IPrestacion cuando esté
+    opciones: any = {};
     estadoT: EstadosDarTurnos;
     turnoDoble = false;
     telefono: String = '';
@@ -141,6 +142,7 @@ export class DarTurnosComponent implements OnInit {
     carpetaEfector: any;
     obraSocialPaciente: IObraSocial;
     motivoConsulta: string;
+    mostrarCalendario = false;
 
     // Muestra sólo las agendas a las que se puede asignar el turno (oculta las "con/sin alternativa")
     mostrarNoDisponibles = false;
@@ -157,7 +159,6 @@ export class DarTurnosComponent implements OnInit {
     private indiceBloque: number;
     private busquedas: any[] = localStorage.getItem('busquedas') ? JSON.parse(localStorage.getItem('busquedas')) : [];
     private eventoProfesional: any = null;
-    private mostrarCalendario = false;
 
     constructor(
         public serviceProfesional: ProfesionalService,
