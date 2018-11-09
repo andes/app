@@ -58,18 +58,22 @@ export class PuntoInicioTurnosComponent implements OnInit {
         public appMobile: AppMobileService,
         private router: Router,
         private plex: Plex) {
-        this.plex.updateTitle([{
-            route: '/',
-            name: 'PUNTO DE INICIO'
-        }, {
-            name: 'GESTIÓN DE PACIENTES'
-        }]);
     }
 
     ngOnInit() {
         this.autorizado = this.auth.getPermissions('turnos:puntoInicio:?').length > 0;
         this.puedeDarTurno = this.auth.getPermissions('turnos:puntoInicio:darTurnos:?').length > 0;
         this.puedeCrearSolicitud = this.auth.getPermissions('turnos:puntoInicio:solicitud:?').length > 0;
+        this.updateTitle('Gestión de pacientes');
+    }
+
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'Punto de inicio'
+        }, {
+            name: nombre
+        }]);
+
     }
 
     showArancelamientoForm(turno) {
@@ -154,6 +158,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         } else {
             this.showDarTurnos = false;
         }
+        this.updateTitle('Gestión de pacientes');
     }
 
     handleBlanqueo(event) {
@@ -175,6 +180,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
                 this.showMostrarTurnosPaciente = false;
                 this.showIngresarSolicitud = false;
                 this.showDarTurnos = true;
+                this.updateTitle('Dar turno');
                 break;
             case 'ingresarSolicitud':
                 this.showIngresarSolicitud = true;
@@ -218,6 +224,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.showMostrarEstadisticasPacientes = true;
         this.showIngresarSolicitud = false;
         this.showMostrarTurnosPaciente = false;
+        this.updateTitle('Gestión de pacientes');
     }
 
     cancelarSolicitudVentanilla() {

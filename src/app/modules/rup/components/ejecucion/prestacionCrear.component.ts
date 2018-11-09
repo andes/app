@@ -62,7 +62,15 @@ export class PrestacionCrearComponent implements OnInit {
         this.route.params.subscribe(params => {
             this.opcion = params['opcion'];
         });
+        this.updateTitle('Registrar una prestación');
+    }
 
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'RUP'
+        }, {
+            name: nombre
+        }]);
     }
 
     onPacienteSelected(paciente: IPaciente) {

@@ -13,7 +13,9 @@ import { AppComponent } from '../../app.component';
 export class SelectOrganizacionComponent implements OnInit {
     public organizaciones = null;
     public organizacionElegida;
-    constructor(private plex: Plex, private auth: Auth, private router: Router, public appComponent: AppComponent) { }
+    constructor(private plex: Plex, private auth: Auth, private router: Router, public appComponent: AppComponent) {
+        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+    }
 
     ngOnInit() {
         this.auth.organizaciones().subscribe(data => {

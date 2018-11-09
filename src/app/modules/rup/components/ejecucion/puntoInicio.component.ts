@@ -77,6 +77,15 @@ export class PuntoInicioComponent implements OnInit {
                 });
             }
         }
+        this.updateTitle('Punto de inicio | Consultorio');
+    }
+
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'RUP'
+        }, {
+            name: nombre
+        }]);
     }
 
     redirect(pagina: string) {

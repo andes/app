@@ -70,6 +70,7 @@ export class VistaHudsComponent implements OnInit {
                 }
             }).subscribe(() => { return true; });
         }
+        this.plex.updateTitle('');
     }
 
     agregarListadoHuds(elemento) {

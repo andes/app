@@ -20,6 +20,15 @@ export class HudsBusquedaPacienteComponent implements OnInit {
     constructor(public plex: Plex, public auth: Auth, private router: Router) { }
 
     ngOnInit() {
+        this.updateTitle('Huds de un paciente');
+    }
+
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'RUP'
+        }, {
+            name: nombre
+        }]);
     }
 
     onPacienteSelected(event) {

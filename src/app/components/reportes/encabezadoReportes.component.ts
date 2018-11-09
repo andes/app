@@ -83,8 +83,8 @@ export class EncabezadoReportesComponent implements OnInit {
             nombre: 'Consultas por prestación'
         }];
 
-        console.log(this.parametros);
-
+        // console.log(this.parametros);
+        this.plex.updateTitle('Reportes');
 
     }
 
@@ -133,7 +133,7 @@ export class EncabezadoReportesComponent implements OnInit {
             this.showCantidadConsultaXPrestacion = false;
             this.agendaService.findConsultaDiagnosticos(this.parametros).subscribe((diagnosticos) => {
                 this.diagnosticos = diagnosticos;
-                console.log(this.diagnosticos);
+                // console.log(this.diagnosticos);
             });
         }
         if (this.parametros['horaInicio'] && this.parametros['horaFin'] && this.tipoReportes.nombre === 'ReporteC2') {

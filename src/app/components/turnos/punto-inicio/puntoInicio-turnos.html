@@ -25,9 +25,9 @@
 
 <!--Components-->
 <dar-turnos *ngIf="autorizado && showDarTurnos" [pacienteSeleccionado]="paciente" [solicitudPrestacion]="solicitudPrestacion"
-    (afterDarTurno)="afterDarTurno($event)"></dar-turnos>
+    (afterDarTurno)="afterDarTurno($event); updateTitle()"></dar-turnos>
 
 <!-- Paciente Create Update: se utiliza de forma independiente del paciente-search-turnos para una mejor visualizacion de la carga de datos -->
 <paciente-create-update *ngIf="showCreateUpdate" [seleccion]="seleccion" [escaneado]="esEscaneado" (data)='afterCreateUpdate($event)'></paciente-create-update>
 
-<arancelamiento-form *ngIf="showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event)'></arancelamiento-form>
+<arancelamiento-form *ngIf="showArancelamiento" [turno]="turnoArancelamiento" (volverAPuntoInicio)='volverAPuntoInicio($event); updateTitle()'></arancelamiento-form>

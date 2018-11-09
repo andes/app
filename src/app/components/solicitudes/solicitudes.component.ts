@@ -21,7 +21,7 @@ export class SolicitudesComponent implements OnInit {
         private router: Router, public servicioPrestacion: PrestacionesService) { }
 
     ngOnInit() {
-        // this.cargarSolicitudes();
+        this.plex.updateTitle('MÓDULO DE SOLICITUDES');
     }
 
     refreshSelection(value, tipo) {

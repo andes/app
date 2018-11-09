@@ -18,7 +18,9 @@ export class InicioComponent implements AfterViewInit {
     public denied = false;
     public accessList: any = [];
 
-    constructor(public auth: Auth, public appComponent: AppComponent) { }
+    constructor(public auth: Auth, public appComponent: AppComponent, public plex: Plex) {
+        this.plex.updateTitle('ANDES | Apps Neuquinas de Salud');
+    }
 
     ngAfterViewInit() {
         window.setTimeout(() => {

@@ -58,13 +58,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private plex: Plex, private pacienteService: PacienteService, private auth: Auth, private logService: LogService, private router: Router) {
-        this.plex.updateTitle([{
-            route: '/mpi',
-            name: 'MPI'
-        }, {
-            name: 'BÚSQUEDA DE PACIENTES'
-        }]);
-        // this.actualizarContadores();
     }
 
     public ngOnInit() {
@@ -82,10 +75,20 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         //     this.modoCompleto = this.auth.check('mpi:paciente:dashboard');
         // }
         this.autoFocus = this.autoFocus + 1;
+        this.updateTitle('Buscar un paciente');
     }
 
     ngOnDestroy(): void {
         clearInterval(this.intervalHandle);
+    }
+
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'MPI'
+        }, {
+            name: nombre
+        }]);
+
     }
 
     /**
@@ -121,6 +124,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
 
         this.textoLibre = null;
         this.mostrarNuevo = false;
+        this.updateTitle('Registro de pacientes');
     }
 
     /**
@@ -357,5 +361,6 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             // Comentado para evitar mal funcionamiento de turnos
             // this.seleccionarPaciente(paciente);
         }
+        this.updateTitle('Buscar un paciente');
     }
 }

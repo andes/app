@@ -233,12 +233,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
         private financiadorService: FinanciadorService, public plex: Plex) {
-        this.plex.updateTitle([{
-            route: '/',
-            name: 'MPI'
-        }, {
-            name: 'REGISTRO DE PACIENTES'
-        }]);
     }
 
     ngOnInit() {

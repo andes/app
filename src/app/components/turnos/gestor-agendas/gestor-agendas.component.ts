@@ -116,7 +116,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     constructor(public plex: Plex, private formBuilder: FormBuilder, public servicioPrestacion: TipoPrestacionService,
         public serviceProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService,
         public serviceAgenda: AgendaService, private router: Router,
-        public auth: Auth) { }
+        public auth: Auth) {
+    }
 
     /* limpiamos la request que se haya ejecutado */
     ngOnDestroy() {
@@ -158,10 +159,8 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.hoy = true;
         this.loadAgendas();
 
-        this.fechaDesde = new Date();
-        this.fechaHasta = new Date();
-        this.fechaDesde = moment(this.fechaDesde).startOf('day');
-        this.fechaHasta = moment(this.fechaHasta).endOf('day');
+        this.fechaDesde = moment().startOf('month').format();
+        this.fechaHasta = moment().endOf('day').format();
 
         // Iniciamos la búsqueda
         this.parametros = {
@@ -169,10 +168,16 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
             fechaHasta: this.fechaHasta,
             organizacion: this.auth.organizacion._id
         };
-
+        this.updateTitle('Gestor de agendas');
     }
 
-
+    private updateTitle(nombre) {
+        this.plex.updateTitle([{
+            name: 'CITAS'
+        }, {
+            name: nombre
+        }]);
+    }
 
     refreshSelection(value, tipo) {
         if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*' && this.prestaciones.length === 0) {
@@ -296,6 +301,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     agregarSobreturno() {
         this.showGestorAgendas = false;
         this.showAgregarSobreturno = true;
+        this.updateTitle('Agregar sobreturno');
     }
 
     cancelaAgregarNotaAgenda() {
@@ -316,6 +322,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     clonar() {
         this.showGestorAgendas = false;
         this.showClonar = true;
+        this.updateTitle('Clonar una agenda');
     }
 
     // vuelve al gestor luego de alguna operación y refresca la agenda modificada.
@@ -340,6 +347,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         } else {
             this.loadAgendas();
         }
+        this.updateTitle('Gestor de agendas');
     }
 
     reasignaTurno(reasTurno) {
@@ -357,6 +365,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     insertarAgenda() {
         this.showInsertarAgenda = true;
         this.showGestorAgendas = false;
+        this.updateTitle('Crear una nueva agenda');
     }
 
     editarAgenda(agenda) {
@@ -376,6 +385,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.showReasignarTurno = false;
         this.showListadoTurnos = false;
         this.showReasignarTurnoAutomatico = false;
+        this.updateTitle('Editar una agenda');
     }
 
     revisionAgenda(agenda) {
@@ -605,11 +615,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     listarTurnos(agenda) {
         this.showGestorAgendas = false;
         this.showListadoTurnos = true;
+        this.updateTitle('Imprimir una agenda');
     }
 
     listarCarpetas(agenda) {
         this.showGestorAgendas = false;
         this.showCarpetas = true;
+        this.updateTitle('Imprimir carpetas de una agenda');
     }
 
     // Devuelve la duración (HH:mm) de una agenda
