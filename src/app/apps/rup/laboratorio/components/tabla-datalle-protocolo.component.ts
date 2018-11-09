@@ -19,7 +19,6 @@ export class TablaDatalleProtocolo implements OnInit {
 
     }
 
-    // practicasCarga = [];
     practicas;
     practicaSeleccionada = null;
 
@@ -172,13 +171,13 @@ export class TablaDatalleProtocolo implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     esValorCritico(objetoPractica) {
-        console.log('esValorCritico', objetoPractica)
-        let resultado = objetoPractica.practica.valor.resultado;
-        if (resultado && !objetoPractica.esCompuesta) {
-            let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
-            console.log('esValorCritico xxx', (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor))
-            return (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor);
-        }
+        // console.log('esValorCritico', objetoPractica)
+        // let resultado = objetoPractica.practica.valor.resultado;
+        // if (resultado && !objetoPractica.esCompuesta) {
+        //     let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
+        //     console.log('esValorCritico xxx', (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor))
+        //     return (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor);
+        // }
         return false;
     }
 

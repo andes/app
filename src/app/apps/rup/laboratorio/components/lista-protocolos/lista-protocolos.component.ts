@@ -9,11 +9,11 @@ export class ListaProtocolosComponent implements OnInit {
 
   @Input() protocolos;
   @Input() modo;
+  @Input() showProtocoloDetalle;
   @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
   constructor() { }
 
   seleccionarProtocolo(protocolo, index) {
-    console.log('seleccionarProtocolo')
     this.seleccionarProtocoloEmitter.emit({protocolo: protocolo, index: index});
   }
 

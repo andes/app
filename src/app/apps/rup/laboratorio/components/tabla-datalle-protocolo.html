@@ -47,12 +47,12 @@
         </ng-container>
 
         <ng-container *ngIf="modo === 'carga' || modo === 'validacion'">
-            <tr class="hover" *ngFor="let reg of practicasCarga">
+            <tr class="hover" *ngFor="let practicaCarga of practicasCarga">
                 <td>
-                    <ng-container *ngFor="let m of reg.margen">&nbsp;&nbsp;&nbsp;</ng-container>
-                    {{reg.practica.nombre}}
+                    <ng-container *ngFor="let m of practicaCarga.margen">&nbsp;&nbsp;&nbsp;</ng-container>
+                        {{practicaCarga.practica.nombre}}
                 </td>
-                <ng-container *ngIf="reg.esCompuesta">
+                <ng-container *ngIf="practicaCarga.esCompuesta">
                     <td></td>
                     <td></td>
                     <td></td>
@@ -62,16 +62,15 @@
                         <td></td>
                         <td></td>
                     </ng-container>
-
                 </ng-container>
-                <ng-container *ngIf="!reg.esCompuesta">
+                <ng-container *ngIf="!practicaCarga.esCompuesta">
                     <td class="text-left align-middle estado">
                         <p>
-                            <!-- {{reg.formatoResultado | json}} -->
-                            <ng-container *ngIf='reg.practica.valor && !reg.practica.valor.resultado.sinMuestra'>
-                                <plex-float *ngIf="reg.formatoResultado && reg.formatoResultado.tipo === 'Numérico'" [ngClass]="{'text-danger' : esValorCritico(reg)}"
-                                    [(ngModel)]="reg.practica.valor.resultado.valor"></plex-float>
-                                <b *ngIf="reg.practica.valor.resultado.sinMuestra">Sin muestra</b>
+                            <!-- {{practicaCarga.formatoResultado | json}} -->
+                            <ng-container *ngIf='practicaCarga.registro.valor && !practicaCarga.registro.valor.resultado.sinMuestra'>
+                                <plex-float *ngIf="practicaCarga.practica.resultado.formato && practicaCarga.practica.resultado.formato.tipo === 'Numérico'" [ngClass]="{'text-danger' : esValorCritico(practicaCarga.practica)}"
+                                    [(ngModel)]="practicaCarga.registro.valor.resultado.valor"></plex-float>
+                                <b *ngIf="practicaCarga.registro.valor.resultado.sinMuestra">Sin muestra</b>
                             </ng-container>
 
                         </p>
@@ -86,13 +85,13 @@
                         </span>
                     </td>
                     <td>
-                        {{reg.formatoResultado?.unidadMedida.nombre}}
+                        {{practicaCarga.practica.unidadMedida.nombre}}
                         <td>
-                            {{reg.formatoResultado?.valoresReferencia.valorMinimo}} - {{reg.formatoResultado?.valoresReferencia.valorMaximo}}
+                            {{practicaCarga.practica.presentaciones[0].valoresReferencia[0].valorMinimo}} - {{practicaCarga.practica.presentaciones[0].valoresReferencia[0].valorMaximo}}
                         </td>
                         <ng-container *ngIf='modo ==="validacion"'>
                             <td>
-                                <plex-bool type="checkbox" [(ngModel)]="reg.practica.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
+                                <plex-bool type="checkbox" [(ngModel)]="practicaCarga.registro.valor.resultado.validado" name="validado" (change)="clickValidar($event)"
                                     name="clickValidar"></plex-bool>
                             </td>
                         </ng-container>
@@ -104,9 +103,9 @@
                         </ng-container>
                         <ng-container *ngIf='(modo ==="carga" || modo ==="validacion") && !showObservaciones'>
                             <td class="small text-success">
-                                <ng-container *ngIf="reg.practica.valor.resultado.valor !== null && reg.practica.valor.resultado.valor !== '' && !reg.practica.valor.resultado.validado">Carga: Bioq. Lateulade Marcelo.
+                                <ng-container *ngIf="practicaCarga.registro.valor.resultado.valor !== null && practicaCarga.registro.valor.resultado.valor !== '' && !practicaCarga.registro.valor.resultado.validado">Carga: Bioq. Lateulade Marcelo.
                                     <br/>MP 679 05/11/2018 09:38</ng-container>
-                                <ng-container *ngIf="reg.practica.valor.resultado.validado">Val.: Bioq. Lateulade Marcelo.
+                                <ng-container *ngIf="practicaCarga.registro.valor.resultado.validado">Val.: Bioq. Lateulade Marcelo.
                                     <br/>MP 679 05/11/2018 09:38</ng-container>
                             </td>
                             <td>
