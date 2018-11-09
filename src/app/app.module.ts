@@ -284,8 +284,6 @@ import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
-import { ColonoscopiaComponent } from './modules/rup/components/elementos/colonoscopia.component';
-import { ColonoscopiaControlComponent } from './modules/rup/components/elementos/colonoscopiaControl.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
 import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia.component';
 import { EndoscopioComponent } from './modules/rup/components/elementos/endoscopio.component';
@@ -419,8 +417,6 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     'CalculoDeBostonComponent': CalculoDeBostonComponent,
-    'ColonoscopiaComponent': ColonoscopiaComponent,
-    'ColonoscopiaControlComponent': ColonoscopiaControlComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
     'AnestesiaComponent': AnestesiaComponent,
     'EndoscopioComponent': EndoscopioComponent,
@@ -484,8 +480,6 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     CalculoDeBostonComponent,
-    ColonoscopiaComponent,
-    ColonoscopiaControlComponent,
     SeleccionBinariaComponent,
     AnestesiaComponent,
     EndoscopioComponent,
