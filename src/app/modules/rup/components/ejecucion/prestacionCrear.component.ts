@@ -66,12 +66,13 @@ export class PrestacionCrearComponent implements OnInit {
     }
 
     private updateTitle(nombre: string) {
-        this.plex.updateTitle([{
-            route: null,
-            name: 'RUP'
-        }, {
-            name: nombre
-        }]);
+        this.plex.updateTitle('RUP / ' + nombre);
+        // this.plex.updateTitle([{
+        //     route: null,
+        //     name: 'RUP'
+        // }, {
+        //     name: nombre
+        // }]);
     }
 
     onPacienteSelected(paciente: IPaciente) {

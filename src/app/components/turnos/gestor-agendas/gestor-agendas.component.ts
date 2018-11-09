@@ -172,12 +172,13 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
     }
 
     private updateTitle(nombre: string) {
-        this.plex.updateTitle([{
-            route: null,
-            name: 'CITAS'
-        }, {
-            name: nombre
-        }]);
+        this.plex.updateTitle('CITAS / ' + nombre);
+        // this.plex.updateTitle([{
+        //     route: null,
+        //     name: 'CITAS'
+        // }, {
+        //     name: nombre
+        // }]);
     }
 
     refreshSelection(value, tipo) {
