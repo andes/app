@@ -200,8 +200,8 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
@@ -209,10 +209,10 @@ export class ProtocoloDetalleComponent
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     aceptarEdicionCabecera() {
@@ -493,7 +493,7 @@ export class ProtocoloDetalleComponent
                     registos.forEach((reg1) => { ids.push(reg1._id); });
                     this.servicioPractica.findByIds(ids).subscribe(async (practicas) => {
                         for (const reg2 of registos) {
-                            var match: any = practicas.filter((practica: any) => {
+                            let match: any = practicas.filter((practica: any) => {
                                 return practica._id === reg2._id;
                             })[0];
 
@@ -516,7 +516,7 @@ export class ProtocoloDetalleComponent
                     resolve();
                 }
             });
-        }
+        };
         await cargarPracticas(this.practicasEjecucion, 0);
     }
 
