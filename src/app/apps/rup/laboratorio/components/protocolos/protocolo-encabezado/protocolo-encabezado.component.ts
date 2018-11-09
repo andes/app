@@ -11,6 +11,7 @@ export class ProtocoloEncabezadoComponent implements OnInit {
 
     modelo: any;
     solicitudProtocolo: any;
+    mostrarMasOpciones: Boolean;
     @Input() modo: String;
     @Input() edicionDatosCabecera: Boolean;
     @Input('protocolo')

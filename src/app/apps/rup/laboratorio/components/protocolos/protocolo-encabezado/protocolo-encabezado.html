@@ -7,7 +7,7 @@
             <div class="listado-contenedor-secundario">
                 <article *ngIf='!edicionDatosCabecera' class="labs-item-numero">
                     <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success"
-                        style='float: left; margin-right: 20px;; margin-top: 10px;'>
+                        style='float: left; margin-right: 20px;'>
                         <h5>
                             <i *ngIf='modelo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-24px mdi-rotate-45 rosa"></i>
                             <i *ngIf='modelo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-24px azul"></i>
@@ -37,11 +37,7 @@
                             {{ modelo.solicitud.ambitoOrigen}}
                         </div>
                     </div>
-                    <div class="row" *ngIf="mostrarMasHeader">
-                        <div class="col-2">
-                            <strong>F. de solicitud: </strong>
-                            <p>{{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}</p>
-                        </div>
+                    <div class="row" *ngIf="mostrarMasOpciones">
                         <div class="col-2">
                             <strong>Servicio: </strong>
                             <p>{{solicitudProtocolo?.solicitudPrestacion?.servicio.term}}</p>
@@ -49,7 +45,7 @@
                         <div class="col-3">
                             <strong>Usuario:&nbsp;</strong>
                             <p>{{ modelo.createdBy?.nombreCompleto }}</p>
-                        </div>A
+                        </div>
                         <div class="col-3">
                             <strong>Solicitante: </strong>
                             <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
@@ -119,6 +115,9 @@
             <plex-button icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()"
                 title="Editar datos">
             </plex-button>
+        </div>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion" && !edicionDatosCabecera'>
+            <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
         </div>
         <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion" && !edicionDatosCabecera'>
             <plex-button type="info" class='float-right mr-2' icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
