@@ -8,11 +8,14 @@
                 <label class="text-capitalize">{{ registro.concepto.term }}</label>
             </ng-template>
             <ng-container *ngIf="!soloValores; else showSoloValores">
-                <plex-radio [(ngModel)]="registro.valor" [data]="options" name="binario" [type]="params.plexRadioType" [required]="params.required"
-                    [label]="params.titulo" (change)="emitChange($event)"></plex-radio>
+                <plex-radio [(ngModel)]="valor" [data]="options" name="binario" [type]="params.plexRadioType" [required]="params.required"
+                    [label]="params.titulo" (change)="onChange()">
+                </plex-radio>
+                <plex-text *ngIf="valor && valor === 'Otro'" label="Otro" name="otro" [(ngModel)]="registro.valor.otro" [required]="required">
+                </plex-text>
             </ng-container>
             <ng-template #showSoloValores>
-                {{ registro.valor }}
+                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.otro }}
             </ng-template>
         </div>
     </div>
