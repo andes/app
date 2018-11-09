@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ReglaService } from '../../../services/top/reglas.service';
 import { OrganizacionService } from '../../../services/organizacion.service';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
+import { IRegla } from '../../../interfaces/IRegla';
 
 @Component({
     selector: 'visualizacion-reglas',
@@ -22,7 +23,7 @@ export class VisualizacionReglasComponent {
      * @memberof VisualizacionReglasComponent
      */
     renglones: {}[];
-    reglas: any[];
+    reglas: IRegla[];
     constructor(private servicioReglas: ReglaService, private servicioOrganizacion: OrganizacionService, public servicioPrestacion: TipoPrestacionService) { }
 
     loadOrganizaciones(event) {
@@ -50,13 +51,14 @@ export class VisualizacionReglasComponent {
                 prestacionOrigen: this.prestacionOrigen ? this.prestacionOrigen : '',
                 organizacionDestino: this.organizacionDestino ? this.organizacionDestino.id : '',
                 prestacionDestino: this.prestacionDestino ? this.prestacionDestino : ''
-            }
+            };
             console.log('organizacionOrigen', this.organizacionOrigen);
 
             this.servicioReglas.get(parametros).subscribe(res => {
                 this.reglas = res;
                 console.log('reglas', this.reglas);
             });
+            obtenerRenglonesTabla();
         }
     }
 
@@ -67,6 +69,12 @@ export class VisualizacionReglasComponent {
      */
     filtroIngresado(): boolean {
         return this.organizacionOrigen !== '' || this.organizacionDestino !== '' || this.prestacionOrigen !== '' || this.prestacionDestino !== '';
+    }
+
+    obtenerRenglonesTabla() {
+        for (let regla of this.reglas) {
+
+        }
     }
 }
 
