@@ -13,7 +13,7 @@ export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
         { id: 0, label: '0' },
         { id: 1, label: '1' },
         { id: 2, label: '2' },
-        { id: 3, label: 3 }];
+        { id: 3, label: '3' }];
 
     ngOnInit() {
         if (!this.registro.valor) {
@@ -22,6 +22,8 @@ export class CalculoDeBostonComponent extends RUPComponent implements OnInit {
                 ct: null,
                 cd: null
             };
+        } else {
+            this.changeNumber();
         }
     }
 
