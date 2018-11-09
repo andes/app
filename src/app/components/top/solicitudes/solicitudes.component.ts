@@ -1,9 +1,9 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'solicitudes',
@@ -44,13 +44,17 @@ export class SolicitudesComponent implements OnInit {
     public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
+    public mostrarMasOpciones = false;
+    public organizacion;
     prestacionSeleccionada: any;
+
 
     constructor(
         private auth: Auth,
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
-        public servicioTurnos: TurnoService
+        public servicioTurnos: TurnoService,
+        public servicioOrganizacion: OrganizacionService
     ) { }
 
     ngOnInit() {
@@ -95,10 +99,20 @@ export class SolicitudesComponent implements OnInit {
                 );
             });
             this.setearArreglos();
-            // console.log('pe ', PE);
         } else {
             this.prestacionesEntrada = this.entradaCache;
             this.prestacionesSalida = this.salidaCache;
+        }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
         }
     }
 
@@ -201,6 +215,9 @@ export class SolicitudesComponent implements OnInit {
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
+            if (this.organizacion) {
+                params['organizacionOrigen'] = this.organizacion.id;
+            }
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });
