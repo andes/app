@@ -172,7 +172,7 @@ export class TurnosComponent implements OnInit {
             if (this.turnosSeleccionados[x].asistencia !== 'asistio') {
                 return false;
             }
-        };
+        }
         return true;
     }
 
@@ -181,7 +181,7 @@ export class TurnosComponent implements OnInit {
             if (this.turnosSeleccionados[x].asistencia === 'asistio') {
                 return false;
             }
-        };
+        }
         return this.turnosSeleccionados.length > 0;
     }
 
@@ -190,7 +190,7 @@ export class TurnosComponent implements OnInit {
             if (this.turnosSeleccionados[x].estado === estado) {
                 return false;
             }
-        };
+        }
         return this.turnosSeleccionados.length > 0;
     }
 
@@ -199,7 +199,7 @@ export class TurnosComponent implements OnInit {
             if (this.turnosSeleccionados[x].estado !== estado) {
                 return false;
             }
-        };
+        }
         return this.turnosSeleccionados.length > 0;
     }
 
@@ -433,7 +433,7 @@ export class TurnosComponent implements OnInit {
                     },
                     err => {
                         if (err) {
-                            console.log(err);
+
                         }
                     }
                 );

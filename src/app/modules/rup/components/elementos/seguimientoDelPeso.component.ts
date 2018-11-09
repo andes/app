@@ -125,8 +125,8 @@ export class SeguimientoDelPesoComponent extends RUPComponent implements OnInit 
     }
 
     // Chart events (chartHover)
-    public chartClicked(e: any): void { console.log(e); }
+    public chartClicked(e: any): void { }
 
     // Chart events (chartClick)
-    public chartHovered(e: any): void { console.log(e); }
+    public chartHovered(e: any): void { }
 }

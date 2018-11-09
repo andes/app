@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col">
                         <h5>
-                            <span style="color: #00A8E0">{{_paciente | paciente}}</span>
+                            <span class="text-primary">{{_paciente | paciente}}</span>
                         </h5>
                     </div>
                 </div>
@@ -17,11 +17,11 @@
             <div class="row">
                 <div class="col-6">
                     <i class="mdi mdi-account-card-details"></i>
-                    <span style="color: #00A8E0">Documento</span>
+                    <span class="text-primary">Documento</span>
                 </div>
                 <div class="col-6">
                     <i class="mdi mdi-calendar-today"></i>
-                    <span style="color: #00A8E0">Fecha de Nacimiento</span>
+                    <span class="text-primary">Fecha de Nacimiento</span>
                 </div>
             </div>
             <div class="row">
@@ -33,18 +33,16 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
+                <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor && _paciente.direccion.length > 0">
                     <i class="mdi mdi-map-marker"></i>
-                    <span style="color: #00A8E0">Dirección</span>
+                    <span class="text-primary">Dirección</span>
                 </div>
-                <div class="col-6" *ngIf="_paciente && _paciente.contacto && _paciente.contacto.length > 0">
+                <div class="col-6" *ngIf="_paciente?.contacto && _paciente.contacto[0]?.valor && _paciente.contacto.length > 0">
                     <i class="mdi mdi-cellphone-android"></i>
-                    <span style="color: #00A8E0">Teléfono</span>
+                    <span class="text-primary">Teléfono</span>
                 </div>
             </div>
             <div class="row">
-
-
                 <div class="col-6" *ngIf="_paciente?.direccion && _paciente.direccion[0]?.valor !== '' && _paciente.direccion.length > 0">
                     {{_paciente.direccion[0].valor}}
                 </div>
@@ -52,11 +50,23 @@
                     {{_paciente.contacto[0].valor}}
                 </div>
             </div>
+            <div class="row">
+                <div class="col-6">
+                    <i class="mdi mdi-medical-bag"></i>
+                    <span class="text-primary">Obra Social</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <span *ngIf="obraSocial">{{ obraSocial.financiador }}</span>
+                    <span *ngIf="!obraSocial">Sin obra social</span>
+                </div>
+            </div>
             <br>
             <div class="row">
                 <div class="col">
                     <h5>Paciente |
-                        <span style="color: #00A8E0">Estadísticas</span>
+                        <span class="text-primary">Estadísticas</span>
                     </h5>
                 </div>
             </div>
