@@ -5,6 +5,9 @@
 </ng-container>
 <ng-container *ngIf="campania">
     <fieldset>
+        <div class="campania-imagen" [innerHTML]="imagen"></div>
+    </fieldset>
+    <fieldset>
         <legend>{{campania.asunto}}</legend>
         <div class="row">
             <div class="col-md">

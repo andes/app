@@ -35,7 +35,7 @@ export interface ICampaniaSalud {
     /**
      * Estado de la campaña. Solo se publican las campañas que están activas. Con este campo
      * se puede ocultar la publicación por más que se encuentre dentro del periodo de vigencia.
-     * Si se necesita por escrito si está activo o no, utilizar el método en el servicio para 
+     * Si se necesita por escrito si está activo o no, utilizar el método en el servicio para
      * mostrar la misma etiqueta.
      * @type {boolean}
      * @memberof ICampaniaSalud

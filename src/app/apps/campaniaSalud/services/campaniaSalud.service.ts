@@ -31,7 +31,4 @@ export class CampaniaSaludService {
     getEstado(campania: ICampaniaSalud): String {
         return campania.activo ? 'Activada' : 'Desactivada';
     }
-
-
-
 }

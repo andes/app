@@ -1,16 +1,15 @@
-import { environment } from './../../../../environments/environment';
 import { AdjuntosService } from './../../../modules/rup/services/adjuntos.service';
 import { CampaniaSaludService } from './../services/campaniaSalud.service';
 import { ICampaniaSalud } from './../interfaces/ICampaniaSalud';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, Input, EventEmitter, Output, ViewChildren, QueryList } from '@angular/core';
 import * as enumerados from '../../../utils/enumerados';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'campaniaForm',
     templateUrl: 'campania-create-update.html',
-    styleUrls: ['../../../modules/rup/components/elementos/adjuntarDocumento.scss'],
+    styleUrls: ['../../../modules/rup/components/elementos/adjuntarDocumento.scss', 'campaniaVisualizacion.scss']
 })
 export class CampaniaFormComponent implements OnInit {
     /**
@@ -33,7 +32,7 @@ export class CampaniaFormComponent implements OnInit {
         if (!this.campaniaEdit.target.grupoEtario) {
             this.campaniaEdit.target.grupoEtario = {};
         }
-        console.log('campaniaEdit: ', this.campaniaEdit);
+        this.imagen = this.sanitizer.bypassSecurityTrustHtml(value.imagen);
     }
     @Output() cancelar = new EventEmitter<boolean>();
     @Output() guardar = new EventEmitter<ICampaniaSalud>();
@@ -66,17 +65,16 @@ export class CampaniaFormComponent implements OnInit {
     indice;
     documentos = [];
     nombreSvg: string;
-
+    imagen: SafeHtml;
     imagenes = ['svg'];
 
     /*FIN CARGA DE IMAGENES*/
 
-    constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitazer: DomSanitizer) {
+    constructor(private plex: Plex, private campaniaSaludService: CampaniaSaludService, public adjuntosService: AdjuntosService, public sanitizer: DomSanitizer) {
 
     }
     ngOnInit(): void {
         this.sexos = enumerados.getObjSexos();
-        this.imagenSvg = this.campaniaEdit.imagen;
     }
 
     /**
@@ -109,10 +107,8 @@ export class CampaniaFormComponent implements OnInit {
                 (this.campaniaEdit.id ? this.campaniaSaludService.putCampanias(this.campaniaEdit)
                     : this.campaniaSaludService.postCampanias(this.campaniaEdit)).subscribe(res => {
                         this.plex.info('success', 'Los datos están correctos');
-                        console.log('campaña guardada: ', res);
                         this.guardar.emit(res);
                     });
-
             }
 
         } else {
@@ -142,6 +138,7 @@ export class CampaniaFormComponent implements OnInit {
             (this.childsComponents.first as any).nativeElement.value = '';
 
             this.imagenSvg = myReader.result as string;
+            this.imagen = this.sanitizer.bypassSecurityTrustHtml(myReader.result as string);
             this.nombreSvg = file.name;
 
         };
@@ -161,7 +158,7 @@ export class CampaniaFormComponent implements OnInit {
     }
 
     imageRemoved() {
-        this.imagenSvg = null;
+        this.campaniaEdit.imagen = null;
     }
 
     activaLightbox() {
@@ -169,7 +166,7 @@ export class CampaniaFormComponent implements OnInit {
     }
 
     createUrl() {
-        return this.imagenSvg;
+        return this.campaniaEdit.imagen;
     }
     // cancelarAdjunto() {
     //     clearTimeout(this.timeout);

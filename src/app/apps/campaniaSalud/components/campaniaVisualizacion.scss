@@ -1,0 +1,19 @@
+.campania-imagen {
+    display: flex;
+    // justify-content: center;
+    max-width: 15px;
+    max-height: 15px;
+    // svg {
+    //     width: 5px;
+    //     height: 5px;
+    // }
+}
+
+.imagen-vista-previa {
+    display: flex;
+
+    svg {
+        width: 5px;
+        height: 5px;
+    }
+}

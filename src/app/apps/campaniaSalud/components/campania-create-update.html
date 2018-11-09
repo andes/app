@@ -35,13 +35,14 @@
                             <plex-loader class="app-waiting" type="ball-pulse-sync"></plex-loader>
                             <plex-button type="danger" class="btn-sm" label="Cancelar" (click)="cancelarAdjunto()"></plex-button>
                         </span> -->
+                <div class="imagen-vista-previa" [innerHtml]="imagen"></div>
             </div>
             <div class="col-6">
-                <div class="image-container hr-inline-group" *ngIf="imagenSvg && fileToken">
-                    <ng-container *ngIf="imagenSvg">
+                <div class="image-container hr-inline-group" *ngIf="campaniaEdit.imagen && fileToken">
+                    <ng-container *ngIf="campaniaEdit.imagen">
                         <a (click)="activaLightbox()">
                             <div class="image hover">
-                                <div [innerHtml]="imagenSvg"></div>
+                                <div [innerHtml]="imagen"></div>
                                 <div *ngIf="!soloValores" class="x-mark" (click)="imageRemoved()">
                                     <span class="close"></span>
                                 </div>

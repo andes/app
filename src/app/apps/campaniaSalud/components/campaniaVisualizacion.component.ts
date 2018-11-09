@@ -1,25 +1,28 @@
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CampaniaSaludService } from '../services/campaniaSalud.service';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'campaniaSaludVisualizacion',
-    templateUrl: 'campaniaVisualizacion.html'
+    templateUrl: 'campaniaVisualizacion.html',
+    styleUrls: ['campaniaVisualizacion.scss']
 })
-export class CampaniaVisualizacionComponent {
+export class CampaniaVisualizacionComponent implements OnInit {
     @Input() campania: ICampaniaSalud;
     @Output() modificarOutput = new EventEmitter();
+    imagen: SafeHtml;
+    constructor(public campaniaSaludService: CampaniaSaludService, public sanitizer: DomSanitizer) { }
 
-    constructor(public campaniaSaludService: CampaniaSaludService, public sanitazer: DomSanitizer) { }
-
+    ngOnInit() {
+        this.imagen = this.sanitizer.bypassSecurityTrustHtml(this.campania.imagen);
+    }
     /**
      * Notifica al componente padre que se seleccionó la opción de modificar la campaña seleccionada
      *
      * @memberof CampaniaVisualizacionComponent
      */
     modificar() {
-        console.log('campania que llego al visualizar: ', this.campania);
         this.modificarOutput.emit();
     }
 }
