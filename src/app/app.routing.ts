@@ -104,8 +104,8 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
 
   // AUDITORIA
-  { path: 'app/src/app/components/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
-  { path: 'app/src/app/components/auditoria/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/auditoria/auditoria/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent },
