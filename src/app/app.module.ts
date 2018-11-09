@@ -285,8 +285,6 @@ import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/c
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
 import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
-import { AnestesiaComponent } from './modules/rup/components/elementos/anestesia.component';
-import { EndoscopioComponent } from './modules/rup/components/elementos/endoscopio.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
 
@@ -418,8 +416,6 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     'CalculoDeBostonComponent': CalculoDeBostonComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
-    'AnestesiaComponent': AnestesiaComponent,
-    'EndoscopioComponent': EndoscopioComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
     'MoleculaBaseComponent': MoleculaBaseComponent
@@ -481,8 +477,6 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     CalculoDeBostonComponent,
     SeleccionBinariaComponent,
-    AnestesiaComponent,
-    EndoscopioComponent,
     ValorNumericoComponent,
     ProcedimientoDeEnfermeriaComponent,
     MoleculaBaseComponent
@@ -691,9 +685,7 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        SeleccionBinariaComponent,
-        AnestesiaComponent,
-        EndoscopioComponent
+        SeleccionBinariaComponent
     ]
 })
 
