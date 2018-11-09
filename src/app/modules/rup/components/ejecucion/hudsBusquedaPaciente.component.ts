@@ -23,7 +23,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
         this.updateTitle('Huds de un paciente');
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'RUP'
         }, {

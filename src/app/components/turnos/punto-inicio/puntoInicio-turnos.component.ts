@@ -67,7 +67,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
         this.updateTitle('Gestión de pacientes');
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'Punto de inicio'
         }, {

@@ -171,7 +171,7 @@ export class GestorAgendasComponent implements OnInit, OnDestroy {
         this.updateTitle('Gestor de agendas');
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'CITAS'
         }, {

@@ -80,7 +80,7 @@ export class PuntoInicioComponent implements OnInit {
         this.updateTitle('Punto de inicio | Consultorio');
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'RUP'
         }, {

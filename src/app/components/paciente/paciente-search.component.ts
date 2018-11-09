@@ -82,7 +82,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
         clearInterval(this.intervalHandle);
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'MPI'
         }, {

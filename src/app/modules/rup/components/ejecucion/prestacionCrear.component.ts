@@ -65,7 +65,7 @@ export class PrestacionCrearComponent implements OnInit {
         this.updateTitle('Registrar una prestación');
     }
 
-    private updateTitle(nombre) {
+    private updateTitle(nombre: string) {
         this.plex.updateTitle([{
             name: 'RUP'
         }, {
