@@ -85,6 +85,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
@@ -586,6 +587,7 @@ registerLocaleData(localeEs, 'es');
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
+        VisualizacionReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
