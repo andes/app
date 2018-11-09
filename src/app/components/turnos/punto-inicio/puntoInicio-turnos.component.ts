@@ -69,6 +69,7 @@ export class PuntoInicioTurnosComponent implements OnInit {
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle([{
+            route: null,
             name: 'Punto de inicio'
         }, {
             name: nombre

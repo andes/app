@@ -25,6 +25,7 @@ export class HudsBusquedaPacienteComponent implements OnInit {
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle([{
+            route: null,
             name: 'RUP'
         }, {
             name: nombre

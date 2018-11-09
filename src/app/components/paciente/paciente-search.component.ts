@@ -84,11 +84,11 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle([{
+            route: null,
             name: 'MPI'
         }, {
             name: nombre
         }]);
-
     }
 
     /**

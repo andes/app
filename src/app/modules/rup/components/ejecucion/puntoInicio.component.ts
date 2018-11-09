@@ -82,6 +82,7 @@ export class PuntoInicioComponent implements OnInit {
 
     private updateTitle(nombre: string) {
         this.plex.updateTitle([{
+            route: null,
             name: 'RUP'
         }, {
             name: nombre
