@@ -14,11 +14,11 @@ import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'gestor-protocolos',
-    templateUrl: 'puntoInicioLaboratorio.html',
+    templateUrl: 'gestor-protocolos.html',
     styleUrls: ['../assets/laboratorio.scss']
 })
 
-export class PuntoInicioLaboratorioComponent
+export class GestorProtocolosComponent
 
     implements OnInit {
 
@@ -47,7 +47,7 @@ export class PuntoInicioLaboratorioComponent
     public modoCargaLaboratorioEnum;
     public indexProtocolo;
     public turnosRecepcion;
-    public modo = 'recepcion';
+    public modo = 'carga';
     public origen = null;
     public area = null;
     public areas = [];
@@ -101,6 +101,7 @@ export class PuntoInicioLaboratorioComponent
     }
 
     cambio($event) {
+        this.accionIndex = $event;
         if ($event === 0) {
             this.modo = 'recepcion';
         } else if ($event === 1) {
@@ -121,7 +122,6 @@ export class PuntoInicioLaboratorioComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     resetearProtocolo() {
-        console.log('resetearProtocolo');
         this.protocolo = {
             paciente: {},
             solicitud: {
@@ -372,7 +372,6 @@ export class PuntoInicioLaboratorioComponent
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {
-        console.log('mostrarBotonesGuardarProtocoloFooter', $event);
         this.showBotonesGuardar = $event;
     }
 

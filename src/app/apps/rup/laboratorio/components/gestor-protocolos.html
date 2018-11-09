@@ -28,7 +28,7 @@
 
         <ng-container *ngIf="!showProtocoloDetalle">
             <div class="row contenedor-filtros">
-                <div class="col-12" *ngIf='modo === "carga" || modo === "validacion"'>
+                <div class="col-12" *ngIf='modo === "carga" || modo === "validacion"' >
                     <plex-radio [data]="modoCargaLaboratorioEnum" label="nombre" (change)="diagnosticoPrestacion($event, elemento)" [(ngModel)]="modoCargaLaboratorio"
                         type="horizontal"></plex-radio>
                 </div>
@@ -118,7 +118,7 @@
             <i class="mdi mdi-emoticon-sad"></i> No hay protocolos que coincidan con los filtros de búsqueda
         </div>
 
-        <lista-protocolos [protocolos]='protocolos' [modo]='modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'></lista-protocolos>
+        <lista-protocolos [protocolos]='protocolos' [modo]='modo' (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' [showProtocoloDetalle]='showProtocoloDetalle' ></lista-protocolos>
 
     </plex-layout-main>
 
