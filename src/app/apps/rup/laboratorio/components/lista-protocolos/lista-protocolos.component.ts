@@ -2,8 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'lista-protocolos',
-  templateUrl: './lista-protocolos.html',
-  styleUrls: ['./lista-protocolos.component.css']
+  templateUrl: './lista-protocolos.html'
 })
 export class ListaProtocolosComponent implements OnInit {
 

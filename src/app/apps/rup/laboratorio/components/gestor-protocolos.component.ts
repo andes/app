@@ -168,7 +168,6 @@ export class GestorProtocolosComponent
         this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
 
         if (this.modo === 'recepcion') {
-            console.log('this.busqueda.estado', this.busqueda.estado);
             this.busqueda.estado.push('pendiente');
         } else {
             if (this.modo === 'listado' || this.modo === 'validacion') {

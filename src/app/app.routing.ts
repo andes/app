@@ -89,6 +89,8 @@ import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPra
 import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
+import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -173,7 +175,8 @@ const appRoutes: Routes = [
   { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
-
+  { path: 'laboratorio/puntoInicio', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/puntoInicio', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] }, 
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },

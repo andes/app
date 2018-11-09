@@ -363,6 +363,8 @@ import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/pract
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
+import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
+import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -588,8 +590,6 @@ registerLocaleData(localeEs, 'es');
         AuditarSolicitudComponent,
         NuevaSolicitudComponent,
         PrestamosHcComponent,
-        GestorProtocolosComponent,
-        ProtocoloDetalleComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
         PrestarHcComponent,
@@ -606,6 +606,10 @@ registerLocaleData(localeEs, 'es');
         PracticaListadoComponent,
         TablaDatalleProtocolo,
         ListaProtocolosComponent,
+        GestorProtocolosComponent,
+        ProtocoloDetalleComponent,
+        PuntoInicioLaboratorioComponent,
+        ListadoSolicitudesComponent,
 
         // MPI
         PacienteBuscarComponent,
