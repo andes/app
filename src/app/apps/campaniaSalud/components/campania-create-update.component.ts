@@ -138,11 +138,14 @@ export class CampaniaFormComponent implements OnInit {
             (this.childsComponents.first as any).nativeElement.value = '';
 
             this.imagenSvg = myReader.result as string;
-            this.imagen = this.sanitizer.bypassSecurityTrustHtml(myReader.result as string);
-            this.nombreSvg = file.name;
+            if (this.confirmarSvg(this.imagenSvg)) {
+                this.imagen = this.sanitizer.bypassSecurityTrustHtml(this.imagenSvg);
 
+                this.nombreSvg = file.name;
+            }
         };
         myReader.readAsText(file);
+
     }
 
     fileExtension(file) {
@@ -173,7 +176,20 @@ export class CampaniaFormComponent implements OnInit {
     //     this.waiting = false;
     // }
 
-
+    /**
+     * Confirma si es un archivo SVG con ancho y alto 35px
+     *
+     * @param {string} archivo
+     * @memberof CampaniaFormComponent
+     */
+    confirmarSvg(archivo: string): boolean {
+        console.log(archivo);
+        let regex = /^<\?xml .*\?>(.|\n)*<svg (.|\n)*width(.|\n)*35(.|\n)*px(.|\n)*height(.|\n)*35(.|\n)*px(.|\n)*<\/svg>?/;
+        let resultado = archivo.match(regex);
+        console.log(resultado);
+        return regex.test(archivo);
+        // return resultado && resultado.length === archivo.length;
+    }
 
     /*FIN CARGA DE IMAGENES*/
 }

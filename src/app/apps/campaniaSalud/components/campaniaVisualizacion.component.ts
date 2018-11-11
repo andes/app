@@ -1,5 +1,5 @@
 import { ICampaniaSalud } from '../interfaces/ICampaniaSalud';
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CampaniaSaludService } from '../services/campaniaSalud.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -8,15 +8,20 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     templateUrl: 'campaniaVisualizacion.html',
     styleUrls: ['campaniaVisualizacion.scss']
 })
-export class CampaniaVisualizacionComponent implements OnInit {
-    @Input() campania: ICampaniaSalud;
+export class CampaniaVisualizacionComponent {
+    @Input()
+    get campania(): ICampaniaSalud {
+        return this.campaniaVis;
+    }
+    set campania(value: ICampaniaSalud) {
+        this.campaniaVis = value;
+        this.imagen = this.sanitizer.bypassSecurityTrustHtml(this.campaniaVis.imagen);
+    }
     @Output() modificarOutput = new EventEmitter();
     imagen: SafeHtml;
+    campaniaVis: ICampaniaSalud;
     constructor(public campaniaSaludService: CampaniaSaludService, public sanitizer: DomSanitizer) { }
 
-    ngOnInit() {
-        this.imagen = this.sanitizer.bypassSecurityTrustHtml(this.campania.imagen);
-    }
     /**
      * Notifica al componente padre que se seleccionó la opción de modificar la campaña seleccionada
      *
