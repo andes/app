@@ -1,6 +1,7 @@
 import { environment } from '../../../environments/environment';
 import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpRequest, HttpEventType } from '@angular/common/http';
+import { Plex } from '@andes/plex';
 
 
 export interface IProgress {
@@ -23,6 +24,7 @@ export interface ICompleted {
 
 export class UploadFileComponent {
     @Input() label = 'SUBIR';
+    @Input() extensiones: string[] = null;
 
     @Output() onProgress = new EventEmitter<IProgress>();
     @Output() onUpload = new EventEmitter<ICompleted>();
@@ -31,7 +33,10 @@ export class UploadFileComponent {
     private disabled = false;
     private currentFileUpload: File;
     private progress = 0;
-    constructor(private http: HttpClient) {
+    constructor(
+        private http: HttpClient,
+        private plex: Plex
+    ) {
 
     }
 
@@ -43,10 +48,29 @@ export class UploadFileComponent {
         }
     }
 
+    getExtension(file) {
+        if (file.lastIndexOf('.') >= 0) {
+            return file.slice((file.lastIndexOf('.') + 1));
+        } else {
+            return '';
+        }
+    }
+
     public onChange ($event) {
         this.disabled = true;
         const selectedFile = $event.target.files;
         this.currentFileUpload = selectedFile.item(0);
+
+        if (this.extensiones) {
+            const ext = this.getExtension(this.currentFileUpload.name);
+            if (!this.extensiones.find(i => i === ext)) {
+                this.disabled = false;
+                this.uploadElement.nativeElement.value = null;
+                this.plex.toast('danger', 'Tipo de archivo incorrecto');
+                return;
+            }
+
+        }
 
         this.portFile(this.currentFileUpload).subscribe(event => {
             if (event.type === HttpEventType.UploadProgress) {
@@ -56,11 +80,14 @@ export class UploadFileComponent {
             }
             if (event.type === HttpEventType.Response) {
                 this.disabled = false;
-                const { status, body } = event;
-                this.onUpload.emit({ status, body: JSON.parse(body as string) });
                 this.uploadElement.nativeElement.value = null;
-
+                const { status, body } = event;
+                if (status >= 200 && status < 300) {
+                    this.onUpload.emit({ status, body: JSON.parse(body as string) });
+                }
             }
+        }, (error) => {
+            this.disabled = false;
         });
     }
 

@@ -138,7 +138,7 @@
                                         </td>
                                         <!-- Boton para subir HUDS digitalizada -->
                                         <td>
-                                            <upload-file label="Adjuntar HUDS" (onUpload)="onUpload($event, carpeta)" ></upload-file>
+                                            <upload-file label="Adjuntar HUDS" [extensiones]="['pdf']"  (onUpload)="onUpload($event, carpeta)" ></upload-file>
                                             <!-- <input type="file" (change)="changeListener($event, i, carpeta) " style="display:none;" #upload> -->
                                             <!-- TODO: DESCOMENTAR EL BOTON CON LA FUNCION PARA ADJUNTAR HUDS -->
                                             <!-- <plex-button type="primary" class="btn-sm" label="Adjuntar HUDS Digital" (click)="upload.click()"> -->

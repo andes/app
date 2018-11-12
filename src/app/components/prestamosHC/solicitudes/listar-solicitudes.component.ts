@@ -461,22 +461,21 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     onUpload($event, carpeta) {
-        debugger;
         if ($event.status = 200) {
             let _id;
             const id = $event.body.id;
             let profesional = this.auth.usuario;
             if (carpeta.tipo === 'Manual') {
-                _id = carpeta._idSolicitud;
+                _id = carpeta.idSolicitud;
             } else if (carpeta.tipo === 'Automatica') {
-                _id = carpeta.d_idosPrestamo.turno.id;
+                _id = carpeta.datosPrestamo.turno.id;
             }
             let conceptSnomed = {
                 term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
                 conceptId: '2881000013106'
             };
             let metadata = {
-                id: id,
+                id: _id,
                 tipoPrestacion: conceptSnomed.conceptId,
                 fecha: new Date(),
                 paciente: carpeta.paciente,
