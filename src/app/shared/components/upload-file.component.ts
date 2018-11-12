@@ -30,9 +30,9 @@ export class UploadFileComponent {
     @Output() onUpload = new EventEmitter<ICompleted>();
     @ViewChild('upload') uploadElement: ElementRef;
 
-    private disabled = false;
-    private currentFileUpload: File;
-    private progress = 0;
+    public disabled = false;
+    public currentFileUpload: File;
+    public progress = 0;
     constructor(
         private http: HttpClient,
         private plex: Plex
