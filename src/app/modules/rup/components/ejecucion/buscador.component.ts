@@ -460,7 +460,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     public filtrarResultados(busquedaActual = 'busquedaActual') {
-        debugger;
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual]['todos'];
 
