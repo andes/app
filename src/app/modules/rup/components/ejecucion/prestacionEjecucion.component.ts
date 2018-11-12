@@ -592,8 +592,8 @@ export class PrestacionEjecucionComponent implements OnInit {
                 return false;
             }
 
-            // Buscar si es hallazgo o trastorno buscar primero si ya esxiste en Huds
-            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación')) {
+            // Buscar si es hallazgo o trastorno buscar primero si ya existe en Huds
+            if ((snomedConcept.semanticTag === 'hallazgo' || snomedConcept.semanticTag === 'trastorno' || snomedConcept.semanticTag === 'situación') && (!this.elementoRUP.reglas || !this.elementoRUP.reglas.requeridos || !this.elementoRUP.reglas.requeridos.relacionesMultiples)) {
                 this.servicioPrestacion.getUnHallazgoPaciente(this.paciente.id, snomedConcept)
                     .subscribe(dato => {
                         if (dato) {
