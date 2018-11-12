@@ -293,10 +293,8 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     siguiente() {
-        console.log('siguiente');
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
             this.indexProtocolo++;
-            this.modelo = this.protocolos[this.indexProtocolo];
             this.cargarDetalle();
         }
     }
@@ -307,7 +305,6 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     anterior() {
-        console.log('anterior');
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
             this.cargarDetalle();
