@@ -10,8 +10,10 @@ export class SeleccionBinariaComponent extends RUPComponent implements OnInit {
 
     public options;
     public valor;
+    public label;
 
     ngOnInit() {
+        this.label = this.params.title ? this.params.title : this.registro.concepto.term;
         this.options = this.params.defaultOptions;
         if (!this.registro.valor) {
             this.registro.valor = null;

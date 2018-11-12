@@ -9,11 +9,10 @@
             </ng-template>
             <ng-container *ngIf="!soloValores; else showSoloValores">
                 <plex-int name="intValue" *ngIf="params.numericType === 'integer'" [(ngModel)]="registro.valor" suffix="{{ params.unit ? params.unit : '' }}"></plex-int>
-                <plex-float name="floatValue" *ngIf="params.numericType === 'float'" [(ngModel)]="registro.valor"
-                    suffix="{{ params.unit ? params.unit : '' }}"></plex-float>
+                <plex-float name="floatValue" *ngIf="params.numericType === 'float'" [(ngModel)]="registro.valor" suffix="{{ params.unit ? params.unit : '' }}"></plex-float>
             </ng-container>
             <ng-template #showSoloValores>
-                {{registro.valor}} {{params.numericType}}
+                {{registro.valor}} {{params.unit}}
             </ng-template>
         </div>
     </div>
