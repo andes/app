@@ -353,7 +353,7 @@ import { ImprimirSolicitudesComponent } from './components/prestamosHC/solicitud
 import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/solicitud-manual-hc.component';
 
 
-//SIL
+// SIL
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
 import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
@@ -362,6 +362,7 @@ import { PracticaListadoComponent } from './apps/rup/laboratorio/components/prac
 import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
+import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
@@ -599,7 +600,7 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
-        
+
         // SIL
         PracticaBuscarComponent,
         PracticaDemoComponent,
@@ -610,6 +611,7 @@ registerLocaleData(localeEs, 'es');
         ProtocoloDetalleComponent,
         PuntoInicioLaboratorioComponent,
         ListadoSolicitudesComponent,
+        ProtocoloEncabezadoComponent,
 
         // MPI
         PacienteBuscarComponent,
