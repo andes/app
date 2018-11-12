@@ -203,18 +203,16 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
-                                            <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
+                                            <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
                                                 title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal d-flex align-items-end">
-                                                ¿Procedimiento/Diagnóstico principal? &nbsp;
                                                 <plex-radio [data]="opcionDiagnosticoPrincipal" label="¿Procedimiento/Diagnóstico principal?" (change)="diagnosticoPrestacion($event, elemento)"
                                                     [(ngModel)]="elemento.esDiagnosticoPrincipal" type="horizontal"></plex-radio>
 
-                                            </label>&nbsp;&nbsp;&nbsp;
-                                            <label *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
+                                            </ng-container>
+                                            <ng-container *ngIf="codigosCie10 && codigosCie10[elemento.id] && codigosCie10[elemento.id].c2 && prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada'"
                                                 class="diagnostico-principal d-flex align-items-end" title="Indicar si es primera vez">
-                                                ¿Es primera vez? &nbsp;
                                                 <plex-radio [data]="opcionPrimeraVez" label="Es primera Vez?" [(ngModel)]="elemento.esPrimeraVez" type="horizontal"></plex-radio>
-                                            </label>
+                                            </ng-container>
                                         </ng-container>
                                     </div>
                                 </div>
