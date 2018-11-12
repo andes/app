@@ -356,6 +356,7 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 // SIL
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
+import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
 import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
 import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
 import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
@@ -366,7 +367,8 @@ import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
 import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 import { ListaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/lista-hojatrabajo/lista-hojatrabajo.component';
-import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
+import { AnalisisHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/analisis-hojatrabajo/analisis-hojatrabajo.component';
+import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/impresion-hojatrabajo/impresion-hojatrabajo.component';
 
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
@@ -614,6 +616,8 @@ registerLocaleData(localeEs, 'es');
         ProtocoloEncabezadoComponent,
         GestorHojatrabajoComponent,
         ListaHojatrabajoComponent,
+        AnalisisHojatrabajoComponent,
+        ImpresionHojatrabajoComponent,
 
         // MPI
         PacienteBuscarComponent,
