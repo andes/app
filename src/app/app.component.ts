@@ -73,6 +73,7 @@ export class AppComponent {
         // if (this.auth.getPermissions('rup:?').length > 0) {
         if (true) {
             accessList.push({ label: 'SIL: Sistema de Laboratorio', icon: 'contacts', route: '/laboratorio' });
+            accessList.push({ label: 'SIL: Hoja de trabajo', icon: 'contacts', route: '/laboratorio/hojatrabajo' });
         }
 
         // faltan permisos

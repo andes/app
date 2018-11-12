@@ -357,17 +357,20 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
-// import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-// import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
-// import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
-import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
-import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
-import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
+import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
+import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
+import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
+import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
+import { ListaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/lista-hojatrabajo/lista-hojatrabajo.component';
+import { AnalisisHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/analisis-hojatrabajo/analisis-hojatrabajo.component';
+import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/impresion-hojatrabajo/impresion-hojatrabajo.component';
+
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -604,9 +607,6 @@ registerLocaleData(localeEs, 'es');
         OcuparCamaComponent,
 
         // SIL
-        // PracticaBuscarComponent,
-        // PracticaDemoComponent,
-        // PracticaListadoComponent,
         LaboratorioComponent,
         TablaDatalleProtocolo,
         ListaProtocolosComponent,
@@ -616,6 +616,10 @@ registerLocaleData(localeEs, 'es');
         ListadoSolicitudesComponent,
         ProtocoloEncabezadoComponent,
         FiltrosBusquedaProtocoloComponent,
+        GestorHojatrabajoComponent,
+        ListaHojatrabajoComponent,
+        AnalisisHojatrabajoComponent,
+        ImpresionHojatrabajoComponent,
 
         // MPI
         PacienteBuscarComponent,
@@ -665,6 +669,7 @@ registerLocaleData(localeEs, 'es');
         BarrioService,
         PacienteService,
         PracticaService,
+        HojaTrabajoService,
         ProtocoloService,
         FinanciadorService,
         ParentescoService,

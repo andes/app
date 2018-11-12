@@ -1,3 +1,4 @@
+import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 /*
 Siguiendo las guías de estilo de Angular (https://angular.io/styleguide) dejemos ordenados los imports
 de la siguiente manera:
@@ -177,11 +178,12 @@ const appRoutes: Routes = [
   { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
-  // { path: 'laboratorio/', component: PracticaListadoComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: FiltrosBusquedaProtocoloComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
+
+
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },

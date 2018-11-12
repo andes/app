@@ -5,7 +5,6 @@ import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion
 import { getPrioridadesLab , getOrigenFiltroLab} from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 
-
 @Component({
     selector: 'protocolo-encabezado',
     templateUrl: './protocolo-encabezado.html',
@@ -16,6 +15,8 @@ export class ProtocoloEncabezadoComponent implements OnInit {
 
     modelo: any;
     solicitudProtocolo: any;
+    mostrarMasOpciones: Boolean;
+    organizacion: any;
     @Input() modo: String;
     edicionDatosCabecera: Boolean;
     @Input('edicionDatosCabecera')
