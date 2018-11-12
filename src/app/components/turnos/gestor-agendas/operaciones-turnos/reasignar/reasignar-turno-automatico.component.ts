@@ -212,7 +212,7 @@ export class ReasignarTurnoAutomaticoComponent implements OnInit {
                     turnoReasignado.reasignado = {
                         siguiente: siguiente
                     };
-                };
+                }
 
                 let reasignacion = {
                     idAgenda: this.agendaAReasignar.id,

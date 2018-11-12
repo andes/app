@@ -1,11 +1,11 @@
 
 import { Injectable } from '@angular/core';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs/Rx';
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+
 import { Server } from '@andes/shared';
 import { IAudit } from '../../interfaces/auditoria/IAudit';
 // import { AppSettings } from '../utils/appSettings';

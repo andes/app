@@ -17,6 +17,7 @@ export class IPrestacion {
     };
     // Datos de la solicitud
     solicitud: {
+        ambitoOrigen: string,
         // Tipo de prestación de ejecutarse
         tipoPrestacion: ISnomedConcept,
         // Tipo de prestación de ejecutarse
@@ -74,4 +75,4 @@ export class IPrestacion {
     public completarRegistros() {
         throw Error('No implementado');
     }
-};
+}

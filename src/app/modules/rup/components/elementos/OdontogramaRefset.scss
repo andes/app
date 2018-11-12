@@ -1,5 +1,4 @@
 @import '../variables';
-
 @mixin ultimo-odontograma-container {
     background: rgba(133, 133, 133, 0.4);
     border-radius: 5px;
@@ -21,10 +20,8 @@
     height: 285px;
     padding: 15px 0;
     @include ultimo-odontograma-container();
-
     .title {
         height: 35px;
-
         h6 {
             display: flex;
             align-items: center;
@@ -32,18 +29,15 @@
             margin: 0;
         }
     }
-
     .toggle-último {
         display: inline-block;
         position: relative;
         right: 7px;
     }
-
     &.hidden {
         height: 43px;
         transition: height ease 600ms;
     }
-
     &.visible {
         height: 285px;
         transition: height ease 600ms;
@@ -88,7 +82,6 @@ svg#cuadrante-sup-der {
     stroke-width: 3px solid #4776d3;
     stroke-miterlimit: 10;
     cursor: pointer;
-
     &:hover {
         fill: #4776d3;
     }
@@ -102,7 +95,7 @@ svg#cuadrante-sup-der {
 }
 
 .diente-plan {
-    fill: $plan !important;
+    fill: $solicitud !important;
 }
 
 .diente-trastorno {
@@ -127,7 +120,7 @@ svg#cuadrante-sup-der {
 
 .diente-plan-outline {
     fill: none !important;
-    stroke: $plan !important;
+    stroke: $solicitud !important;
     stroke-width: 2;
 }
 
@@ -155,7 +148,6 @@ svg#cuadrante-sup-der {
     stroke: rgb(133, 133, 133);
     stroke-width: 1;
     stroke-miterlimit: 10;
-
     &.seleccionada {
         stroke: #36877f !important;
     }
@@ -181,21 +173,17 @@ svg#cuadrante-sup-der {
 
 .registrada {
     fill: rgb(133, 133, 133);
-
     &.pieza-hallazgo {
         fill: $hallazgo
     }
-
     &.pieza-trastorno {
         fill: $trastorno
     }
-
     &.pieza-procedimiento {
         fill: $procedimiento
     }
-
     &.pieza-plan {
-        fill: $plan
+        fill: $solicitud
     }
 }
 
@@ -205,43 +193,34 @@ circle {
 
 $angles: (13deg: 10px, 26deg: 17px, 39deg: 20px, 51deg: 23px, 56deg: 26px);
 $i: 1;
-
 @each $rotation,
 $translation in $angles {
     .rotate-#{$i} {
         transform: scale(1.025, 1.025) translateX(-#{$i}px) rotateZ($rotation) translateX($translation);
     }
-
     .diente-offset-#{$i} {
         &.vestibular {
             transform: scale(1, 1) translateY(-#{$i * 8}px);
         }
-
         &.mesial {
             transform: scale(1, 1) translate(#{$i * 8}px);
         }
-
         &.distal {
             transform: scale(-1, 1) translate(-#{$i * 45}px);
         }
-
         &.palatina {
             transform: scale(1, 1) translateY(#{$i * 8}px);
         }
-
         &.oclusal {
             transform: scale(1, 1) translateX(#{$i * 6}px) translateY(#{$i * 6}px);
         }
-
         z-index: #{$i * 10};
     }
-
     $i: ($i+1);
 }
 
 .pieza {
     cursor: pointer;
-
     &:hover {
         fill: #4776d3;
     }
@@ -251,7 +230,6 @@ $translation in $angles {
     display: inline-block;
     width: 40px;
     font-size: 12px;
-
     .text-diente {
         font-size: 16px;
     }
@@ -262,7 +240,6 @@ $translation in $angles {
     color: black;
     padding: 10px;
     text-align: center;
-
     .readonly,
     span {
         display: inline-block !important;

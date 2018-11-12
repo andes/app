@@ -1,4 +1,5 @@
 @import '../core/rup';
+
 .text-problemas {
     color: $problema;
 }
@@ -11,11 +12,11 @@
 //     border-color: $problemas;
 // }
 .text-planes {
-    color: $plan;
+    color: $solicitud;
 }
 
 .border-planes {
-    border-color: $plan;
+    border-color: $solicitud;
 }
 
 .borde-prestaciones input,
@@ -35,14 +36,14 @@
 // }
 .borde-planes input,
 .borde-planes input:focus {
-    border-color: $plan;
-    background-color: $plan !important;
-    background-color: $plan;
+    border-color: $solicitud;
+    background-color: $solicitud !important;
+    background-color: $solicitud;
     color: white;
 }
 
 // .planes {
-//     background-color: $planes;
+//     background-color: $solicitudes;
 // }
 .borde-problemas input,
 .borde-problemas input:focus {

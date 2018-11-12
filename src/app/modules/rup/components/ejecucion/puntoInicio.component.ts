@@ -1,9 +1,9 @@
+
+import {forkJoin as observableForkJoin } from 'rxjs';
 import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
@@ -90,7 +90,7 @@ export class PuntoInicioComponent implements OnInit {
 
     // tieneTurnosAsignados: true,
     actualizar() {
-        Observable.forkJoin(
+        observableForkJoin(
             // Agendas
             this.servicioAgenda.get({
                 fechaDesde: moment(this.fecha).isValid() ? moment(this.fecha).startOf('day').toDate() : new Date(),
@@ -104,25 +104,12 @@ export class PuntoInicioComponent implements OnInit {
                 fechaDesde: this.fecha ? this.fecha : new Date(),
                 fechaHasta: new Date(),
                 organizacion: this.auth.organizacion.id,
-                sinEstado: 'modificada'
-                // TODO: filtrar por las prestaciones permitidas, pero la API no tiene ningún opción
-                // tiposPrestaciones: this.auth.getPermissions('rup:tipoPrestacion:?')
-            }),
-            // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
-            this.servicioPrestacion.get({
-                organizacion: this.auth.organizacion.id,
-                estado: 'pendiente',
-                tieneTurno: 'si',
-                // TODO: filtrar por las prestaciones permitidas
-                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
+                sinEstado: 'modificada',
+                ambitoOrigen: 'ambulatorio'
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
-            // Sumamos las prestaciones pendientes si hubiera
-            if (data[2]) {
-                this.prestaciones = [...this.prestaciones, ...data[2]];
-            }
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -413,7 +400,7 @@ export class PuntoInicioComponent implements OnInit {
                     if (p.id && p.estados[p.estados.length - 1].tipo === 'validada' && registropendiente.length > 0
                     ) {
                         return p;
-                    };
+                    }
                 });
                 _prestaciones.forEach(unaPrestacion => {
                     this.comprobarPrestacionesPendientes(unaPrestacion);

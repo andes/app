@@ -69,11 +69,14 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
+                                        <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">
+                                            {{tipoPrestacion.nombre}}
+                                        </div>
                                         <div>
                                             <span *ngIf="agenda.profesionales?.length == 0" class="text-danger">Profesional no asignado</span>
                                             <ng-container *ngIf="agenda.profesionales">
-                                                <div *ngFor="let profesional of agenda.profesionales">{{profesional | profesional}}
+                                                <div *ngFor="let profesional of agenda.profesionales">
+                                                    {{profesional | profesional}}
                                                 </div>
                                             </ng-container>
                                         </div>
@@ -335,7 +338,7 @@
                                                 <plex-button *ngIf="!esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion && tienePermisos(sobreturno.tipoPrestacion)"
                                                     label="INICIAR PRESTACIÓN" type="success btn-sm" (click)="iniciarPrestacion(sobreturno.paciente, sobreturno.tipoPrestacion, sobreturno.id)"></plex-button>
 
-                                                <plex-button *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && turno.estado !== 'suspendido' && turno.paciente && !turno.prestacion"
+                                                <plex-button *ngIf="esFutura(agendaSeleccionada) && agendaSeleccionada.estado !== 'auditada' && sobreturno.estado !== 'suspendido' && sobreturno.paciente && !sobreturno.prestacion"
                                                     label="INICIAR PRESTACIÓN" type="disabled btn-sm" title="Disponible el {{diaAgenda(agendaSeleccionada)}}"
                                                     titlePosition="top"></plex-button>
 

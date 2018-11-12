@@ -1,0 +1,147 @@
+<section *ngIf="organizacion">
+    <plex-box>
+        <header>
+            <div class="page-title">Censo mensual</div>
+        </header>
+        <div class="row">
+            <div class="col-2">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="Fecha Desde">
+                </plex-datetime>
+            </div>
+            <div class="col-2">
+                <plex-datetime (change)="reseteaBusqueda()" type="date" [(ngModel)]="fechaHasta" [required]="true" name="fechaHasta" label="Fecha Hasta">
+                </plex-datetime>
+            </div>
+            <div class="col-4">
+                <plex-select (change)="reseteaBusqueda()" name="servicio" [required]="true" [data]="organizacion.unidadesOrganizativas" idField="term"
+                    labelField="term" [(ngModel)]="organizacionSeleccionada" label="Unidad organizativa">
+                </plex-select>
+            </div>
+            <div class="col-2">
+                <br>
+                <plex-button label="Generar censo" type="primary" (click)="generarCenso()"></plex-button>
+            </div>
+            <div class="col-2">
+                <br>
+                <plex-button type="warning" icon="download mdi-14px" class="ml-1" title="Descargar censo mensual" titlePosition="top" (click)="descargarCensoMensual()"></plex-button>
+            </div>
+        </div>
+        <div class="row">&nbsp;</div>
+
+        <div class="row">&nbsp;</div>
+        <div class="row">
+            <div class="col" id="tabla" *ngIf="resumenCensoTotal?.length">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Fecha</th>
+                            <th rowspan="2">Existencia a las 0 hs</th>
+                            <th rowspan="2">Ingresos</th>
+                            <th rowspan="2">Pases de</th>
+                            <th colspan="2">Egreso</th>
+                            <th rowspan="2">Pases A</th>
+                            <th rowspan="2">Existencia a las 24 hs</th>
+                            <th rowspan="2">Ingresos y egresos del día</th>
+                            <th rowspan="2">Pacientes día</th>
+                            <th rowspan="2">Camas disponibles a las 0hs</th>
+                            <th rowspan="2">Camas disponibles a las 24hs</th>
+                        </tr>
+                        <tr class="clean">
+                            <th>Altas</th>
+                            <th>Defunciones</th>
+                        </tr>
+                        <tr *ngFor="let unResumen of resumenCensoTotal, let indice = index">
+                            <td class="click" (click)="CensoDiario(unResumen.fecha)">{{ unResumen.fecha | fecha }}</td>
+                            <td>{{ unResumen.resumen.existencia0 }}</td>
+                            <td>{{ unResumen.resumen.ingresos }}</td>
+                            <td>{{ unResumen.resumen.pasesDe }}</td>
+                            <td>{{ unResumen.resumen.egresosAlta }}</td>
+                            <td>{{ unResumen.resumen.egresosDefuncion }}</td>
+                            <td>{{ unResumen.resumen.pasesA }}</td>
+                            <td>{{ unResumen.resumen.existencia24 }}</td>
+                            <td>{{ unResumen.resumen.ingresoEgresoDia }}</td>
+                            <td>{{ unResumen.resumen.pacientesDia }}</td>
+                            <td>{{ unResumen.resumen.disponibles0 }}</td>
+                            <td>{{ unResumen.resumen.disponibles24 }}</td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <strong>Totales</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.existencia0}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.ingresos}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pasesDe }}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.egresosAlta}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.egresosDefuncion}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pasesA}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.existencia24}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.ingresoEgresoDia}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.pacientesDia}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.disponibles0}}</strong>
+                            </td>
+                            <td>
+                                <strong>{{totalResumenCenso.disponibles24}}</strong>
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-bordered">
+                    <tr>
+                        <td>Días de funcionamiento del servicio</td>
+                        <td>{{diasFuncionamiento()}}</td>
+                    </tr>
+                    <tr>
+                        <td>Promedio diario de camas disponibles</td>
+                        <td>{{ promedioDisponible() }}</td>
+                    </tr>
+                    <tr>
+                        <td>Promedio diario de paciente día</td>
+                        <td>{{ pacienteDia() }}</td>
+                    </tr>
+                    <tr>
+                        <td>Tasa de mortalidad hospitalaria</td>
+                        <td>{{ mortalidadHospitalaria() }}</td>
+                    </tr>
+                    <tr>
+                        <td>Promedio de permanencia</td>
+                        <td>{{ promedioPermanencia() }}</td>
+                    </tr>
+                    <tr>
+                        <td>Giro Cama</td>
+                        <td>{{ giro() }}</td>
+                    </tr>
+                </table>
+
+            </div>
+        </div>
+    </plex-box>
+</section>
+
+<footer *ngIf="!showCensoDiario">
+    <plex-button class="float-left " type="primary " label="ir al mapa de camas " (click)="mapaDeCamas()">
+    </plex-button>
+</footer>
+
+<ng-container *ngIf="showCensoDiario">
+    <censo-diario (evtData)="showCensoDiario = $event" [params]="paramsCensoDiario"></censo-diario>
+</ng-container>

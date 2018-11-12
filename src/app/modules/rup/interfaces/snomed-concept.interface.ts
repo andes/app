@@ -6,4 +6,4 @@ export interface ISnomedConcept {
     semanticTag: string;
     refsetIds?: string[];
     noNominalizada: boolean;
-};
+}
