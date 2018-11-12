@@ -612,7 +612,7 @@ export class PrestacionEjecucionComponent implements OnInit {
 
                                 // verificamos si no es cronico pero esta activo
                                 if (dato.evoluciones[0].estado === 'activo') {
-                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado', 'Evolucionar', 'Insertar nuevo').then((confirmar) => {
+                                    this.plex.confirm('¿Desea evolucionar el mismo?', 'El problema ya se encuentra registrado').then((confirmar) => {
                                         if (confirmar) {
 
                                             valor = {
