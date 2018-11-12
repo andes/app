@@ -19,7 +19,7 @@ export class PacienteService {
     constructor(private server: Server) { }
 
     getConsultas(filtro: String): Observable<number> {
-        return this.server.get(this.pacienteUrl + '/counts?consulta=' + filtro, null);
+        return this.server.get(`${this.pacienteUrl}/counts?consulta=${filtro}`, null);
     }
 
     /**
@@ -27,7 +27,7 @@ export class PacienteService {
      * @param {String} id Busca por Id
      */
     getById(id: String): Observable<IPaciente> {
-        return this.server.get(this.pacienteUrl + '/' + id, null);
+        return this.server.get(`${this.pacienteUrl}/${id}`, null);
     }
 
     /**
@@ -52,27 +52,27 @@ export class PacienteService {
     }
 
     getAuditoria(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/auditoria/', { params: params, showError: true });
+        return this.server.get(`${this.pacienteUrl}/auditoria/`, { params: params, showError: true });
     }
 
     getAuditoriaVinculados(params: any): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/auditoria/vinculados/', { params: params, showError: true });
+        return this.server.get(`${this.pacienteUrl}/auditoria/vinculados/`, { params: params, showError: true });
     }
 
     getDashboard(): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/dashboard/', null);
+        return this.server.get(`${this.pacienteUrl}/dashboard/`, null);
     }
 
     getTemporales(): Observable<IPaciente[]> {
-        return this.server.get(this.pacienteUrl + '/temporales/', null);
+        return this.server.get(`${this.pacienteUrl}/temporales/`, null);
     }
 
     getNroCarpeta(params: any): Observable<any> {
-        return this.server.get(this.carpetaUrl + '/carpetasPacientes', { params: params, showError: true });
+        return this.server.get(`${this.carpetaUrl}/carpetasPacientes`, { params: params, showError: true });
     }
 
     getByIdNroCarpeta(id: String): Observable<ICarpetaPaciente> {
-        return this.server.get(this.carpetaUrl + '/carpetasPacientes' + id, null);
+        return this.server.get(`${this.carpetaUrl}/carpetasPacientes${id}`, null);
     }
 
     /**
@@ -88,7 +88,7 @@ export class PacienteService {
      * @param {IPaciente} paciente Recibe IPaciente
      */
     put(paciente: IPaciente): Observable<IPaciente> {
-        return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
+        return this.server.put(`${this.pacienteUrl}/${paciente.id}`, paciente);
     }
 
     /**
@@ -96,7 +96,7 @@ export class PacienteService {
      * @param {any} cambios Recibe any
      */
     patch(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
-        return this.server.patch(this.pacienteUrl + '/' + id, cambios);
+        return this.server.patch(`${this.pacienteUrl}/${id}`, cambios);
     }
 
     /**
@@ -104,7 +104,7 @@ export class PacienteService {
     * @param {any} cambios Recibe any
     */
     postIdentificadores(id: String, cambios: any, options: any = {}): Observable<IPaciente> {
-        return this.server.post(this.pacienteUrl + '/' + id + '/identificadores', cambios);
+        return this.server.post(`${this.pacienteUrl}/${id}/identificadores`, cambios);
     }
 
     /**
@@ -127,16 +127,16 @@ export class PacienteService {
 
     save(paciente: IPaciente): Observable<IPaciente> {
         if (paciente.id) {
-            return this.server.put(this.pacienteUrl + '/' + paciente.id, paciente);
+            return this.server.put(`${this.pacienteUrl}/paciente.id`, paciente);
         } else {
             return this.server.post(this.pacienteUrl, paciente);
 
         }
     }
     getSiguienteCarpeta(): Observable<any> {
-        return this.server.get(this.carpetaUrl + '/ultimaCarpeta');
+        return this.server.get(`${this.carpetaUrl}/ultimaCarpeta`);
     }
     incrementarNroCarpeta(): Observable<any> {
-        return this.server.post(this.carpetaUrl + '/incrementarCuenta', {});
+        return this.server.post(`${this.carpetaUrl}/incrementarCuenta`, {});
     }
 }
