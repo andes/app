@@ -166,6 +166,7 @@ export class ProtocoloDetalleComponent
         this.seleccionPaciente = false;
         this.showProtocoloDetalle = true;
     }
+
     /**
      *
      *
@@ -222,36 +223,7 @@ export class ProtocoloDetalleComponent
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
 
-    /**
-     * Busca unidades organizativas de la organización
-     *
-     * @param {any} $event
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    loadServicios($event) {
-        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
-            $event.callback(organizacion.unidadesOrganizativas);
-        });
-    }
 
-    /**
-     * Busca prioridades
-     *
-     * @param {any} $event
-     * @memberof ProtocoloDetalleComponent
-     */
-    loadPrioridad($event) {
-        $event.callback(enumerados.getPrioridadesLab());
-    }
-    /**
-     * Busca ambito de origen
-     *
-     * @param {any} $event
-     * @memberof ProtocoloDetalleComponent
-     */
-    loadOrigen($event) {
-        $event.callback(enumerados.getOrigenFiltroLab());
-    }
     /**
      * Busca areas (laboratorios internos)
      *
@@ -321,11 +293,12 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     siguiente() {
+        console.log('siguiente');
         if ((this.indexProtocolo + 1) < this.protocolos.length) {
             this.indexProtocolo++;
             this.modelo = this.protocolos[this.indexProtocolo];
+            this.cargarDetalle();
         }
-
     }
 
     /**
@@ -334,11 +307,17 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     anterior() {
+        console.log('anterior');
         if (this.indexProtocolo > 0) {
             this.indexProtocolo--;
-            this.modelo = this.protocolos[this.indexProtocolo];
+            this.cargarDetalle();
         }
+    }
 
+    cargarDetalle() {
+        this.modelo = this.protocolos[this.indexProtocolo];
+        this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
+        this.practicasEjecucion = this.modelo.ejecucion.registros;
     }
 
     /**
@@ -388,7 +367,6 @@ export class ProtocoloDetalleComponent
      */
     cerrarObservacion() {
         this.showObservaciones = false;
-
     }
 
     /**
@@ -486,6 +464,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     async cargarListaPracticaCarga() {
+        this.practicasCarga = [];
         let cargarPracticas = (registos, nivelTab) => {
             return new Promise((resolve) => {
                 if (registos.length > 0) {
@@ -498,16 +477,16 @@ export class ProtocoloDetalleComponent
                             })[0];
 
                             // if( (nivelTab > 0) && (this.areas.indexOf(match.area.nombre) >= 0) ) {
-                                let margen = [];
-                                for (let i = 0; i < nivelTab; i++) {
-                                    margen.push({});
-                                }
-                                this.practicasCarga.push({
-                                    registro: reg2,
-                                    practica: match,
-                                    margen: margen
-                                });
-                                await cargarPracticas(reg2.registros, nivelTab + 1);
+                            let margen = [];
+                            for (let i = 0; i < nivelTab; i++) {
+                                margen.push({});
+                            }
+                            this.practicasCarga.push({
+                                registro: reg2,
+                                practica: match,
+                                margen: margen
+                            });
+                            await cargarPracticas(reg2.registros, nivelTab + 1);
                             // }
                         }
                         resolve();

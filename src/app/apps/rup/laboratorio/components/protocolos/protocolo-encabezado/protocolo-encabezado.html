@@ -5,6 +5,7 @@
         </div>
         <div class="col" [ngClass]="{'centradoVerticalBtn': !edicionDatosCabecera}">
             <div class="listado-contenedor-secundario">
+                <!-- Modo visualizacion de datos -->
                 <article *ngIf='!edicionDatosCabecera' class="labs-item-numero">
                     <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success"
                         style='float: left; margin-right: 20px;'>
@@ -60,6 +61,7 @@
                         </div>
                     </div>
                 </article>
+                <!-- Modo edicion de datos -->
                 <article *ngIf='edicionDatosCabecera && !seleccionPaciente' class="labs-item-numero">
                     <div class="row ml-1" style="width: 100% !important;">
                         <div class="col-2">
@@ -78,7 +80,7 @@
                     <div class="row ml-1">
                         <div class="col-5">
                             <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre"
+                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre" (getData)="loadOrganizacion($event)"
                                 placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
                             </plex-select>
                         </div>
@@ -123,5 +125,4 @@
             <plex-button type="info" class='float-right mr-2' icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
         </div>
     </div>
-
 </section>
