@@ -131,7 +131,7 @@ export class SolicitudesComponent implements OnInit {
                 id: this.solicitudSeleccionada.turno
             };
             this.servicioTurnos.getTurnos(params).subscribe(turnos => {
-                this.turnoSeleccionado = turnos[0];
+                this.turnoSeleccionado = turnos[0].bloques[0].turnos[0];
             });
         } else {
             this.turnoSeleccionado = null;

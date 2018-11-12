@@ -75,7 +75,6 @@ export class ListaSolicitudTurnoVentanillaComponent implements OnInit {
             {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
-            ;
         });
 
     }

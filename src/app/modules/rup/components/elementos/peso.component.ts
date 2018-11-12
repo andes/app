@@ -24,7 +24,9 @@ export class PesoComponent extends RUPComponent implements OnInit {
 
         if (this.params) {
             this.esRequerido = this.params.required;
-        } else { this.esRequerido = false; }
+        } else {
+            this.esRequerido = false;
+        }
     }
 
     // getMensajes() {

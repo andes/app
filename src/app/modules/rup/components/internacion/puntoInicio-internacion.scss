@@ -1,0 +1,564 @@
+@import './../../assets/font.css';
+
+/*--------------------------------------------------------------
+# ANDES - Variables cromaticas
+--------------------------------------------------------------*/
+
+$andes-negro:black;
+$andes-azul-oscuro: #062837;
+$andes-azul: #2CA2DA;
+$andes-cyan: #66DFFF;
+
+// Neutros
+$andes-gris: #e3e3e3;
+$andes-blanco: #ffffff;
+
+
+// Extensiones
+$andes-celeste: #d7f1fd;
+$andes-rojo: #cb0053;
+$andes-violeta: #662482;
+$andes-violeta-claro: #982f98;
+$andes-magenta: #e3007e;
+$andes-verde: #8CC63F;
+$andes-verde-claro: #63c7b7;
+
+
+
+table {
+    margin-top: 20px;
+}
+
+.info-sidebar {
+    color: rgb(204, 204, 204);
+
+    h2 {
+        font-size: 5vw;
+        font-weight: bold;
+    }
+
+    .badge {
+        font-size: 1rem;
+        padding: 10px;
+        margin: 10px;
+    }
+}
+
+
+h3 {
+    line-height: 1.2;
+
+}
+
+.strong {
+    font-weight: 700;
+}
+
+[class*="img"] {
+
+    &.rounded {
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &.sm {
+        width: 6rem;
+        height: 6rem;
+    } 
+
+}
+
+hr {
+	border: solid 1px;
+
+    &.separate {
+        margin: 10px 0 10px 0;
+    }
+
+	&.blanco {
+		border-color: white;
+	}
+
+	&.gris {
+		border-color: $andes-gris;
+	}
+
+	&.magenta {
+		border-color: $andes-magenta;
+	}
+
+	&.cyan {
+		border-color: $andes-cyan;
+	}
+
+	&.celeste {
+		border-color: $andes-celeste;
+	}
+
+	// Variantes de tamaño
+	&.xxs {
+		width: 10%;
+	}
+	
+	&.xs {
+		width: 15px;
+	}
+	
+	&.sm {
+		width: 35%;
+	}
+	
+	&.md {
+		width: 50%;
+	}
+	
+	&.lg {
+		width: 75%;
+	}
+	
+	&.xl {
+		width: 100%;
+		
+    }
+}
+
+.badge-internacion {
+    background: transparent;
+    border: 2.5px solid;
+    padding: 5px;
+    // text-transform: uppercase;
+    font-size: 1.4em;
+    font-weight: normal;
+    margin: 18px 2px;
+    &.warning {
+        border-color: #ff8d22;
+        color: #ff8d22;
+    }
+}
+
+plex-layout-sidebar > DIV {
+
+
+    h3,
+    h4,
+    h5,
+    h5,
+    h6,
+    p,
+    strong {
+        color: white;
+        margin-bottom: 0.25rem;
+    }
+
+    b,
+    label {
+        color: $andes-cyan !important;
+    }
+
+    .text-info {
+        color: $andes-cyan;
+        font-weight: 400;
+        text-transform: uppercase;
+    }
+
+    b {
+        text-align: left;
+    }
+
+    .mensaje-resultado {
+        color: #ffffff;
+        text-align: center;
+    }
+
+    &>.plex-box-content {
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+    }
+
+    // Botones
+    plex-button button {
+        line-height: normal !important;
+    }
+
+    // Si hay tabla
+    .contenedor-tabla { 
+
+
+        table {
+
+            th,
+            td {
+                color: white;
+
+                thead th {
+                    vertical-align: middle;
+                }
+
+                &.txt-responsive {
+                    font-size: 0.9vw;
+                }
+            }
+        }
+
+    }
+
+
+    // Listados
+    li {
+        &.list-group-item {
+            padding: 0 !important;
+        }
+    }
+
+    fieldset>[class^="col"] {
+        padding: 0px;
+
+        hr {
+            color: white;
+        }
+    }
+
+    &.plex-box {
+        padding: 1rem !important;
+        height: 100%;
+        background-color: $andes-azul-oscuro;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+
+        // Contenedor tabs 
+        plex-tabs.andes-contenedor-tabs {}
+
+        // tab head
+        %base-tab {
+            display: flex;
+            flex-direction: row;
+            border: solid 2px white;
+            border-radius: 0px !important;
+            padding: 1rem;
+            width: 100%;
+            color: white;
+            text-transform: uppercase;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .nav-tabs .nav-item {
+            display: flex;
+            width: 100%;
+
+            a>span {
+                align-self: center;
+            }
+        }
+
+        .nav-link {
+            @extend %base-tab;
+            background-color: $andes-gris;
+
+            &.active {
+                background-color: $andes-azul !important;
+            }
+        }
+
+        .nav-tabs .nav-link.active,
+        .nav-tabs .nav-item.show .nav-link {
+            @extend %base-tab;
+            background-color: $andes-azul;
+
+
+            &:hover {
+                background-color: $andes-celeste;
+            }
+        }
+
+        // Tab body
+        .andes-tab {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.25rem 0;
+
+            &.center {
+                align-content: center;
+                text-align: center;
+
+            }
+
+            .input-group-addon {
+                background-color: $andes-azul;
+                color: white;
+            }
+        }
+
+        .andes-sidebar-prefix {
+            color: white;
+            font-size: 1rem;
+            padding-top: 10px;
+        }
+
+        .sidebar-imagen-paciente {
+            width: 5rem;
+            height: 5rem;
+            border-radius: 50%;
+            display: flex;
+            align-self: center;
+            background-color: lightblue;
+            margin-right: 1.5rem;
+        }
+
+        .sidebar-contenedor-texto {
+            display: flex;
+            flex-direction: column;
+            height: fit-content;
+            justify-content: space-between;
+            margin-top: 8%;
+
+            // .andes-sidebar-numero {
+            //     // font-size: 5rem;
+            //     text-transform: uppercase;
+
+            //     &.desocupada {
+            //         color: $desocupada!important;
+            //     }
+            //     &.ocupada {
+            //         color: $ocupada!important;
+            //     }
+            //     &.disponible {
+            //         color: $disponible!important;
+            //     }
+            //     &.reparacion {
+            //         color: $reparacion!important;
+            //     }
+            //     &.bloqueada {
+            //         color: $bloqueada!important;
+            //     }
+
+            // }
+
+            .andes-sidebar-prefix {
+                color: white;
+                text-align: left;
+            }
+
+
+            .andes-sidebar-subfix {
+                color: white;
+                text-transform: uppercase;
+                font-weight: 600;
+
+                //     &.desocupada {
+                //         color: $desocupada!important;
+                //     }
+                //     &.ocupada {
+                //         color: $ocupada!important;
+                //     }
+                //     &.disponible {
+                //         color: $disponible!important;
+                //     }
+                //     &.reparacion {
+                //         color: $reparacion!important;
+                //     }
+                //     &.bloqueada {
+                //         color: $bloqueada!important;
+                //     }
+            }
+        }
+
+        // Accordions
+        plex-accordion plex-panel div.card {
+            border: 0px;
+
+            :active {
+                // border: solid 3px $andes-azul;
+            }
+
+            div.card-header {
+                color: $andes-cyan !important;
+                border: solid 2px white;
+                border-radius: 0px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: #3f5467;
+                    border: solid 2px $andes-cyan;
+                    color: white !important;
+
+                }
+
+                &:active {
+                    background-color: #3f5467;
+                    border: solid 2px $andes-cyan;
+                    color: white !important;
+                }
+
+
+                h5 {
+                    font-size: 1.25rem;
+                    font-weight: 500;
+
+                    &:hover {
+                        color: white;
+                    }
+
+                    i {
+                        display: inline-block;
+                        float: right;
+                        transition: all 1s ease;
+
+                        &.flechita {
+                            &.norotada {
+                                transform: rotate(90deg);
+                            }
+
+                            &.rotada {
+                                transform: rotate(0deg);
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            .collapse.show {
+                .card-block {
+                    border: solid 3px $andes-cyan;
+                }
+            }
+
+            .card-block {
+                padding: 1rem 1.2rem;
+            }
+        }
+
+
+        // Iconos
+        .andes-contenedor-iconos {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .andes-contenedor-botones,
+        .andes-contenedor-secundario {
+            display: flex;
+            height: auto;
+            margin-top: 1rem;
+
+
+            &.horizontal {
+                flex-direction: row;
+            }
+
+            &.vertical {
+                flex-direction: column;
+            }
+
+            &.between {
+                justify-content: space-between;
+            }
+
+            &.start {
+                justify-content: flex-start;
+            }
+
+            &.around {
+                justify-content: space-around;
+            }
+
+            &.end {
+                justify-content: flex-end;
+            }
+
+            &.centrado {
+                align-items: center;
+                align-self: center;
+                justify-content: center;
+            }
+
+            &.block {
+                width: 100%;
+            }
+
+            plex-button {
+                margin-top: 1rem;
+            }
+        }
+
+
+        .plex-box-content {}
+
+    }
+
+    b,
+    .form-group>label {
+        color: white;
+    }
+
+
+
+
+    header {
+
+        // background-color: $andes-azul;
+        color: white;
+        font-size: 1rem;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    .plex-layout>footer {
+        background-color: $andes-azul-oscuro;
+        padding: 0 !important
+    }
+
+}
+
+.andes-contenedor-botones,
+.andes-contenedor-secundario {
+    display: flex;
+    height: auto;
+    margin-top: 1rem;
+
+
+    &.horizontal {
+        flex-direction: row;
+    }
+
+    &.vertical {
+        flex-direction: column;
+    }
+
+    &.between {
+        justify-content: space-between;
+    }
+
+    &.start {
+        justify-content: flex-start;
+    }
+
+    &.around {
+        justify-content: space-around;
+    }
+
+    &.end {
+        justify-content: flex-end;
+    }
+
+    &.centrado {
+        align-items: center;
+        align-self: center;
+        justify-content: center;
+    }
+
+    &.block {
+        width: 100%;
+    }
+
+    plex-button {
+        margin-top: 1rem;
+    }
+}

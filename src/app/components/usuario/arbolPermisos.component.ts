@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } 
 import { TipoPrestacionService } from '../../services/tipoPrestacion.service';
 import { PlexAccordionComponent } from '@andes/plex/src/lib/accordion/accordion.component';
 import { PlexPanelComponent } from '@andes/plex/src/lib/accordion/panel.component';
+import { OrganizacionService } from '../../services/organizacion.service';
 let shiroTrie = require('shiro-trie');
 
 @Component({
@@ -32,7 +33,8 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
 
     constructor(
         private plex: Plex,
-        private servicioTipoPrestacion: TipoPrestacionService
+        private servicioTipoPrestacion: TipoPrestacionService,
+        private organizacionService: OrganizacionService
     ) { }
 
     expand($event) {
@@ -74,6 +76,11 @@ export class ArbolPermisosComponent implements OnInit, OnChanges, AfterViewInit 
                         switch (this.item.type) {
                             case 'prestacion':
                                 this.servicioTipoPrestacion.get({ id: items }).subscribe((data) => {
+                                    this.seleccionados = [...data];
+                                });
+                                break;
+                            case 'organizacion':
+                                this.organizacionService.get({ ids: items }).subscribe((data) => {
                                     this.seleccionados = [...data];
                                 });
                                 break;
