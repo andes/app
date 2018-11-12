@@ -157,6 +157,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     inicializarBuscadorBasico() {
+        this.busquedaActual = 'buscadorBasico';
         this.servicioTipoPrestacion.get({}).subscribe(async conceptosTurneables => {
             this.conceptosTurneables = conceptosTurneables;
 
@@ -282,7 +283,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
         let concepto: any = this.servicioPrestacion.getRefSetData();
         this.secciones = (concepto && concepto.conceptos && concepto.conceptos.term) ? concepto.conceptos.term : '';
 
-        this.busquedaActual = 'buscadorBasico';
+
         if (this.busquedaRefSet && this.busquedaRefSet.conceptos) {
             this.ultimoTipoBusqueda = 'porRefset';
             this.autofocus = false;
@@ -413,8 +414,6 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
             }
         }, 100);
 
-
-
         // asignamos el termino de búsqueda para los buscadores de misFrecuentes y sugeridos
         this.search = resultadosSnomed.term;
         if (resultadosSnomed.items.length) {
@@ -461,6 +460,7 @@ export class BuscadorComponent implements OnInit, OnChanges, AfterViewInit {
     }
 
     public filtrarResultados(busquedaActual = 'busquedaActual') {
+        debugger;
         // almacenamos los resultados en una variable auxiliar para poder loopear
         let resultados = this.results[busquedaActual]['todos'];
 
