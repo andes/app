@@ -15,7 +15,7 @@
                         </h5>
                     </span>
 
-                    <div class="row">
+                    <div class="row"> 
                         <div class="col">
                             <strong>Paciente: </strong>
                             {{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}} F.
@@ -64,7 +64,8 @@
                         </div>
                     </div>
                 </article>
-                <article *ngIf='edicionDatosCabecera && !seleccionPaciente' class="labs-item-numero">
+                <!-- <article *ngIf='edicionDatosCabecera && !seleccionPaciente' class="labs-item-numero"> -->
+                        <article *ngIf='edicionDatosCabecera' class="labs-item-numero">
                     <div class="row ml-1" style="width: 100% !important;">
                         <div class="col-2">
                             <plex-datetime type="date" [(ngModel)]="modelo.ejecucion.fecha" name="fecha" label="Fecha"
@@ -75,14 +76,14 @@
                                 name="fechaTomaMuestra" label="F. Muestra" [required]="true"></plex-datetime>
                         </div>
                         <div class="col-2">
-                            <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fecha" name="fecha" label="F. solicitud"
+                            <plex-datetime type="date" [(ngModel)]="modelo.solicitud.fech" name="fecha" label="F. solicitud"
                                 [required]="true"></plex-datetime>
                         </div>
                     </div>
                     <div class="row ml-1">
                         <div class="col-5">
                             <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" [data]="organizacion" labelField="nombre"
+                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)" labelField="nombre"
                                 placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
                             </plex-select>
                         </div>

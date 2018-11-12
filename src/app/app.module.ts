@@ -357,7 +357,7 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protocolos/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
 import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
 // import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
 // import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';

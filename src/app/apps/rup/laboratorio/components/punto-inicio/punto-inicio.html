@@ -16,7 +16,7 @@
                     </div>
                 </div>
 
-                <punto-inicio-listado-solicitudes *ngIf="showListaSolicitudes" [paciente]="paciente" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'></punto-inicio-listado-solicitudes>
+                <punto-inicio-listado-solicitudes *ngIf="showListaSolicitudes" [paciente]="paciente" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)' ></punto-inicio-listado-solicitudes>
             </plex-box>
         </div>
         <!--Panel de Estadisticas y Operaciones-->

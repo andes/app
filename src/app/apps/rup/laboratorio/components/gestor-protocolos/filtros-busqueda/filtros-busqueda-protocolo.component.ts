@@ -16,7 +16,8 @@ export class FiltrosBusquedaProtocoloComponent
 
     @Output() buscarProtocolosEmmiter: EventEmitter<any> = new EventEmitter<any>();
     @Input() modo;
-  
+    @Input() editarListaPracticas;
+
     public origenEnum: any;
     public prioridadesFiltroEnum;
     public estadosFiltroEnum;
@@ -81,7 +82,7 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     buscarProtocolos(value?, tipo?) {
-        console.log('buscarProtocolos')
+        console.log('buscarProtocolos');
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -92,6 +93,7 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     loadServicios($event) {
+        console.log('loadServicios');
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
             $event.callback(servicioEnum);

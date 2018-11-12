@@ -1,9 +1,9 @@
 <table class="table table-striped table-sm">
     <thead>
-        <th *ngIf='modo ==="recepcion"  || modo ==="control"' style='width: 100px;'>Cod.</th>
+        <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
         <th>Descripcion</th>
-        <th *ngIf='modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
-        <ng-container *ngIf='modo !=="control" && modo !=="recepcion"'>
+        <th *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
+        <ng-container *ngIf='modo !=="puntoInicio" && modo !=="control" && modo !=="recepcion"'>
             <th class="float-center">Valor</th>
             <th *ngIf='modo ==="validacion"' class="float-center">R. Anterior</th>
             <th class="float-center">UM</th>
@@ -18,7 +18,7 @@
         <th *ngIf='modo === "carga" || modo === "validacion"'>Observs.</th>
     </thead>
     <tbody>
-        <ng-container *ngIf='modo ==="recepcion" || modo ==="control"'>
+        <ng-container *ngIf='modo ==="puntoInicio" || modo ==="recepcion" || modo ==="control"'>
             <tr class="hover" *ngFor="let practica of practicasEjecucion">
                 <td>{{practica.codigo}}</td>
                 <td>{{practica.nombre}}</td>
@@ -29,7 +29,7 @@
                     <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
                 </td>
             </tr>
-            <tr class="hover">
+            <tr class="hover" *ngIf="editarListaPracticas">
                 <td>
                     <plex-text [(ngModel)]="practicaSeleccionada" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()" (blur)="getPracticaPorCodigo()"
                         placeholder="Escriba el código"></plex-text>

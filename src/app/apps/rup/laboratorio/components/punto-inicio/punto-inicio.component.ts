@@ -17,6 +17,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
     @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
+    @Output() pacienteSinTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -231,19 +232,48 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
         }
     }
 
+    /**
+     *
+     *
+     * @param {*} event
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     darTurnoSolicitud(event) {
         this.solicitudPrestacion = event;
         this.showDarTurnos = true;
         this.showDashboard = false;
     }
 
+    /**
+     *
+     *
+     * @param {string} pagina
+     * @returns
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     redirect(pagina: string) {
         this.router.navigate(['./' + pagina]);
         return false;
     }
 
+    /**
+     *
+     *
+     * @param {*} $event
+     * @memberof PuntoInicioLaboratorioComponent
+     */
     seleccionarProtocolo($event) {
-        console.log('seleccionarProtocolo')
+        console.log('seleccionarProtocolo');
         this.seleccionarProtocoloEmitter.emit($event);
+    }
+
+    /**
+     *
+     *
+     * @memberof PuntoInicioLaboratorioComponent
+     */
+    recepcionarSinTurno($paciente) {
+        console.log('PI recepcionarSinTurno', $paciente);
+        this.pacienteSinTurnoEmitter.emit($paciente);
     }
 }

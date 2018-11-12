@@ -1,5 +1,6 @@
 import { PrestacionesService } from './../../../../../../modules/rup/services/prestaciones.service';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { IPaciente } from '../../../../../../interfaces/IPaciente';
 
 @Component({
   selector: 'punto-inicio-listado-solicitudes',
@@ -7,16 +8,19 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ListadoSolicitudesComponent implements OnInit {
   @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
+  @Output() pacienteSinTurnoEmitter: EventEmitter<any> = new EventEmitter<any>();
+  paciente: IPaciente;
   @Input('paciente')
-  set paciente(value: any) {
-    console.log('set paciente')
+  set setpaciente(value: any) {
+    console.log('set paciente');
+    this.paciente = value;
     if (value) {
       this.buscarSolicitudes(value);
     }
-  };
+  }
 
   public protocolos: any[];
-  public modo = "puntoInicio";
+  public modo = 'puntoInicio';
 
   constructor(
     public servicioPrestaciones: PrestacionesService
@@ -26,8 +30,8 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   /**
-   * 
-   * @param {any} [paciente] 
+   *
+   * @param {any} [paciente]
    * @memberof ListadoSolicitudesComponent
    */
   buscarSolicitudes(paciente) {
@@ -35,14 +39,26 @@ export class ListadoSolicitudesComponent implements OnInit {
       estado: ['pendiente'],
       pacienteDocumento: paciente.documento,
       tipoPrestacionSolicititud: '15220000'
-    }
+    };
 
     this.servicioPrestaciones.get(params).subscribe(protocolos => {
       this.protocolos = protocolos;
     });
   }
 
+  /**
+   *
+   *
+   * @param {*} $event
+   * @memberof ListadoSolicitudesComponent
+   */
   seleccionarProtocolo($event) {
     this.seleccionarProtocoloEmitter.emit($event);
   }
+
+  recepcionSinTurno() {
+    console.log('recepcionSinTurno');
+    this.pacienteSinTurnoEmitter.emit(this.paciente);
+  }
+
 }

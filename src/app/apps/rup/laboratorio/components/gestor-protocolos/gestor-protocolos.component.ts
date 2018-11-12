@@ -17,27 +17,46 @@ import { Constantes } from '../../controllers/constants';
 export class GestorProtocolosComponent
 
     implements OnInit {
-
     public seleccionPaciente: Boolean = false;
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
     public showCargarSolicitud: Boolean = false;
-    public edicionDatosCabecera: Boolean = false;
+    public edicionDatosCabecera: Boolean;
     public showBotonesGuardar: Boolean = false;
     public mostrarListaMpi: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
-    public ocultarPanelLateral = false;
+    public ocultarPanelLateral: Boolean = false;
+    public editarListaPracticas: Boolean = false;
 
     public protocolos: any = [];
     public protocolo: any = {};
     @Input('protocolo')
-    set paciente(value: any) {
-        if (value || value !== {}) {
-            this.seleccionarProtocolo(value);
-        }   
-    };
+    set setProtocolo(value: any) {
+        console.log('setOrotociki');
+        if (value && value !== {}) {
+            this.seleccionarProtocolo({protocolo: value, index: 0 });
+        }
+        this.ocultarPanelLateral = true;
+    }
     @Input() modo;
- 
+
+    @Input('paciente')
+    set paciente(value) {
+        console.log('paciente ' , value);
+        if (value) {
+            this.resetearProtocolo(value);
+            this.seleccionarProtocolo({protocolo: this.protocolo, index: 0 });
+            this.ocultarPanelLateral = true;
+            this.editarListaPracticas = true;
+            this.edicionDatosCabecera = true;
+            this.ocultarPanelLateral = true;
+            this.showProtocoloDetalle = true;
+            this.indexProtocolo = 0;
+            this.seleccionPaciente = false;
+            this.mostrarCuerpoProtocolo = true;
+        }
+    }
+
     public laboratorioInternoEnum: any;
     public pacientes;
     public pacienteActivo;
@@ -60,16 +79,18 @@ export class GestorProtocolosComponent
     @ViewChild(ProtocoloDetalleComponent)
     private protocoloDetalleComponent: ProtocoloDetalleComponent;
 
-    constructor(public plex: Plex, private formBuilder: FormBuilder,
+    constructor(
+        public plex: Plex,
         public servicioPrestaciones: PrestacionesService,
         public auth: Auth,
-        private servicioOrganizacion: OrganizacionService,
-        private turnoService: TurnoService
     ) { }
 
     ngOnInit() {
-        this.resetearProtocolo();
-        this.refreshSelection();
+        if (!this.protocolo) {
+            this.resetearProtocolo({});
+        }
+
+        // this.refreshSelection();
     }
 
     cambio($event) {
@@ -93,9 +114,9 @@ export class GestorProtocolosComponent
      *
      * @memberof PuntoInicioLaboratorioComponent
      */
-    resetearProtocolo() {
+    resetearProtocolo(paciente) {
         this.protocolo = {
-            paciente: {},
+            paciente: paciente,
             solicitud: {
                 esSolicitud: true,
                 tipoPrestacion: null,
@@ -119,6 +140,7 @@ export class GestorProtocolosComponent
                 registros: []
             }
         };
+        console.log('resetearProtocolo', this.protocolo);
     }
 
     /**
@@ -129,17 +151,17 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     refreshSelection($event?) {
-        console.log("refreshSelection")
-        if($event) {
+        console.log('refreshSelection');
+        if ($event) {
             this.busqueda = $event;
         }
-        
+
         this.getProtocolos(this.busqueda);
     }
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
-            console.log(protocolos)
+            console.log(protocolos);
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -159,15 +181,15 @@ export class GestorProtocolosComponent
      * @param {any} index
      * @memberof PuntoInicioLaboratorioComponent
      */
-    seleccionarProtocolo($event) {
-        console.log('seleccionarProtocolo', $event);
+    seleccionarProtocolo(value) {
+        console.log('seleccionarProtocolo', value.index);
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
-        if ($event.protocolo) {
+        if (value.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
-            this.protocolo = $event.protocolo;
+            this.protocolo = value.protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
-            this.indexProtocolo = $event.index;
+            this.indexProtocolo = value.index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
             this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
@@ -275,8 +297,8 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-
-        this.resetearProtocolo();
+console.log('mostrarFomularioPacienteSinTurno');
+        this.resetearProtocolo({});
         this.edicionDatosCabecera = true;
         this.ocultarPanelLateral = true;
         this.showListarProtocolos = false;

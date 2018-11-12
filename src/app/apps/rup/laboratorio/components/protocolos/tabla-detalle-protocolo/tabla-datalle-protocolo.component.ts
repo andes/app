@@ -1,11 +1,11 @@
-import { IPractica } from '../../interfaces/IPractica';
-import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
-import { ProtocoloService } from '../../services/protocolo.service';
-import { PracticaService } from '../../services/practica.service';
+import { IPractica } from '../../../interfaces/IPractica';
+import { PracticaBuscarResultado } from '../../../interfaces/PracticaBuscarResultado.inteface';
+import { ProtocoloService } from '../../../services/protocolo.service';
+import { PracticaService } from '../../../services/practica.service';
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
 
 import { Plex } from '@andes/plex';
-import { Constantes } from '../../controllers/constants';
+import { Constantes } from '../../../controllers/constants';
 
 
 @Component({
@@ -27,6 +27,7 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() practicasCarga: any;
     @Input() practicasEjecucion: any;
     @Input() areas: any;
+    @Input() editarListaPracticas;
     // @Input('practicasCarga')
     // set setPracticasEjecucion(value: any) {
 
@@ -98,25 +99,25 @@ export class TablaDatalleProtocolo implements OnInit {
         }
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof TablaDatalleProtocolo
      */
     busquedaInicial() {
         this.practicas = null;
     }
     /**
-     * 
-     * 
+     *
+     *
      * @memberof TablaDatalleProtocolo
      */
     searchClear() {
         this.practicas = null;
     }
     /**
-     * 
-     * 
-     * @param {PracticaBuscarResultado} resultado 
+     *
+     *
+     * @param {PracticaBuscarResultado} resultado
      * @memberof TablaDatalleProtocolo
      */
     busquedaFinal(resultado: PracticaBuscarResultado) {
@@ -127,9 +128,9 @@ export class TablaDatalleProtocolo implements OnInit {
         }
     }
     /**
-     * 
-     * 
-     * @param {any} $event 
+     *
+     *
+     * @param {any} $event
      * @memberof TablaDatalleProtocolo
      */
     loadPracticasPorNombre($event) {
@@ -147,9 +148,9 @@ export class TablaDatalleProtocolo implements OnInit {
     }
 
     /**
-     * 
-     * 
-     * @param {any} value 
+     *
+     *
+     * @param {any} value
      * @memberof TablaDatalleProtocolo
      */
     getPracticaPorCodigo(value) {
@@ -163,10 +164,10 @@ export class TablaDatalleProtocolo implements OnInit {
     }
 
     /**
-     * 
-     * 
-     * @param {any} objetoPractica 
-     * @returns 
+     *
+     *
+     * @param {any} objetoPractica
+     * @returns
      * @memberof TablaDatalleProtocolo
      */
     esValorCritico(objetoPractica) {

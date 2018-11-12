@@ -1,19 +1,15 @@
-import { forEach } from '@angular/router/src/utils/collection';
-import { IPractica } from './../../interfaces/IPractica';
 import { PracticaService } from './../../services/practica.service';
 import { ProtocoloService } from './../../services/protocolo.service';
-import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, EventEmitter } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { Input, Output, Component, OnInit, HostBinding, EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ProfesionalService } from '../../../../../services/profesional.service';
-// import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
 import * as enumerados from './../../../../../utils/enumerados';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
-import { IPracticaMatch } from '../../interfaces/IPracticaMatch.inteface';
 import { Constantes } from '../../controllers/constants';
 
 @Component({
@@ -68,6 +64,7 @@ export class ProtocoloDetalleComponent
     @Input() modo: String;
     @Input() indexProtocolo: any;
     @Input() areas: any;
+    @Input() editarListaPracticas;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
@@ -82,17 +79,18 @@ export class ProtocoloDetalleComponent
     }
 
     cargarProtocolo(value: any) {
+        console.log('p.detalle  cargarProtocolo', this.modo, value);
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
 
-        if (this.practicasEjecucion.length > 0 && (this.modo === 'recepcion' || this.modo === 'control')) {
+        if (this.practicasEjecucion.length > 0 && (this.modo === 'puntoInicio' || this.modo === 'recepcion' || this.modo === 'control')) {
             this.cargarCodigosPracticas();
         }
 
-        if (this.modo === 'recepcion' && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+        if ( (this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
-            this.seleccionPaciente = true;
+            this.seleccionPaciente = this.modo === 'recepcion';
         } else {
             this.aceptarEdicionCabecera();
             if (this.modo === 'validacion' || this.modo === 'carga') {
@@ -200,8 +198,8 @@ export class ProtocoloDetalleComponent
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
@@ -209,13 +207,14 @@ export class ProtocoloDetalleComponent
         this.mostrarCuerpoProtocolo = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
-    
+
     /**
-     * 
-     * 
+     *
+     *
      * @memberof ProtocoloDetalleComponent
      */
     aceptarEdicionCabecera() {
+        console.log('aceptarEdicionCabecera');
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
@@ -493,7 +492,7 @@ export class ProtocoloDetalleComponent
                     registos.forEach((reg1) => { ids.push(reg1._id); });
                     this.servicioPractica.findByIds(ids).subscribe(async (practicas) => {
                         for (const reg2 of registos) {
-                            var match: any = practicas.filter((practica: any) => {
+                            let match: any = practicas.filter((practica: any) => {
                                 return practica._id === reg2._id;
                             })[0];
 
@@ -516,7 +515,7 @@ export class ProtocoloDetalleComponent
                     resolve();
                 }
             });
-        }
+        };
         await cargarPracticas(this.practicasEjecucion, 0);
     }
 
