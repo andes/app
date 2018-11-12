@@ -84,14 +84,16 @@ import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
 // SIL
+// import { PracticaListadoComponent } from './apps/rup/laboratorio/components/protocolos/buscador-practicas/practica-listado.component';
+import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
-import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
-import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
+// import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
-
+import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
@@ -170,14 +172,17 @@ const appRoutes: Routes = [
   // Solicitudes
   { path: 'solicitudes', component: SolicitudesComponent, canActivate: [RoutingGuard] },
   // Laboratorio
+  { path: 'laboratorio', component: LaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: GestorProtocolosComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ProtocoloDetalleComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: TablaDatalleProtocolo, canActivate: [RoutingGuard] },
   { path: 'laboratorio', component: ListaProtocolosComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio/puntoInicio', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
-  { path: 'laboratorio/puntoInicio', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] }, 
-
+  // { path: 'laboratorio/demo', component: PracticaDemoComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
+  // { path: 'laboratorio/', component: PracticaListadoComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] }, 
+  { path: 'laboratorio/', component: FiltrosBusquedaProtocoloComponent, canActivate: [RoutingGuard] }, 
+  
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
 

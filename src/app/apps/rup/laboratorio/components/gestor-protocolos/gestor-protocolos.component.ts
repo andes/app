@@ -1,21 +1,17 @@
-import { ProtocoloDetalleComponent } from './protocolos/protocolo-detalle.component';
-import { PrestacionesService } from './../../../../modules/rup/services/prestaciones.service';
-import { Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule } from '@angular/forms';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
+import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
+import { FormBuilder} from '@angular/forms';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import * as enumerados from './../../../../utils/enumerados';
-import { OrganizacionService } from '../../../../services/organizacion.service';
-import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { TurnoService } from '../../../../services/turnos/turno.service';
-import { Constantes } from '../controllers/constants';
-import { ObjectID } from 'bson';
-import { forEach } from '@angular/router/src/utils/collection';
+import { OrganizacionService } from '../../../../../services/organizacion.service';
+import { TurnoService } from '../../../../../services/turnos/turno.service';
+import { Constantes } from '../../controllers/constants';
 
 @Component({
     selector: 'gestor-protocolos',
     templateUrl: 'gestor-protocolos.html',
-    styleUrls: ['../assets/laboratorio.scss']
+    styleUrls: ['../../assets/laboratorio.scss']
 })
 
 export class GestorProtocolosComponent
@@ -34,12 +30,14 @@ export class GestorProtocolosComponent
 
     public protocolos: any = [];
     public protocolo: any = {};
-
-    public origenEnum: any;
-    public prioridadesFiltroEnum;
-    public estadosFiltroEnum;
-    public estadosValFiltroEnum;
-
+    @Input('protocolo')
+    set paciente(value: any) {
+        if (value || value !== {}) {
+            this.seleccionarProtocolo(value);
+        }   
+    };
+    @Input() modo;
+ 
     public laboratorioInternoEnum: any;
     public pacientes;
     public pacienteActivo;
@@ -47,7 +45,6 @@ export class GestorProtocolosComponent
     public modoCargaLaboratorioEnum;
     public indexProtocolo;
     public turnosRecepcion;
-    public modo = 'carga';
     public origen = null;
     public area = null;
     public areas = [];
@@ -55,25 +52,7 @@ export class GestorProtocolosComponent
     public servicio = null;
     public estado;
     public organizacion;
-    public numProtocoloDesde;
-    public numProtocoloHasta;
-    public busqueda = {
-        solicitudDesde: new Date(),
-        solicitudHasta: new Date(),
-        pacienteDocumento: null,
-        nombrePaciente: null,
-        apellidoPaciente: null,
-        origen: null,
-        numProtocoloDesde: null,
-        numProtocoloHasta: null,
-        servicio: null,
-        prioridad: null,
-        area: null,
-        laboratorioInterno: null,
-        tipoPrestacionSolicititud: '15220000',
-        organizacion: null,
-        estado: []
-    };
+    public busqueda;
 
     public accionIndex = 1;
     public modoAVolver = '';
@@ -89,13 +68,6 @@ export class GestorProtocolosComponent
     ) { }
 
     ngOnInit() {
-        this.prioridadesFiltroEnum = enumerados.getPrioridadesFiltroLab();
-        this.estadosFiltroEnum = enumerados.getEstadosFiltroLab();
-        this.estadosValFiltroEnum = enumerados.getEstadosFiltroLab().slice(1, 4);
-        this.origenEnum = enumerados.getOrigenLab();
-        this.laboratorioInternoEnum = enumerados.getLaboratorioInterno();
-        this.cargaLaboratorioEnum = enumerados.getCargaLaboratorio();
-        this.modoCargaLaboratorioEnum = enumerados.getModoCargaLaboratorio();
         this.resetearProtocolo();
         this.refreshSelection();
     }
@@ -156,31 +128,18 @@ export class GestorProtocolosComponent
      * @param {any} [tipo]
      * @memberof PuntoInicioLaboratorioComponent
      */
-    refreshSelection(value?, tipo?) {
-        // Pasamos el area a un array, para en el futuro seleccionar varias areas para carga y validacion por analisis.
-        this.areas = this.area ? [this.area.id] : [];
-
-        this.busqueda.origen = (!this.origen || (this.origen && this.origen.id === 'todos')) ? null : this.origen.id;
-        this.busqueda.area = (!this.area || (this.area && this.area.id === 'todos')) ? null : this.area.id;
-        this.busqueda.prioridad = (!this.prioridad || (this.prioridad && this.prioridad.id === 'todos')) ? null : this.prioridad.id;
-        this.busqueda.servicio = (!this.servicio || (this.servicio && this.servicio.conceptId === null)) ? null : this.servicio.conceptId;
-        this.busqueda.pacienteDocumento = (!this.pacienteActivo || (this.pacienteActivo && this.pacienteActivo.documento === null)) ? null : this.pacienteActivo.documento;
-        this.busqueda.organizacion = (!this.organizacion) ? null : this.organizacion.id;
-
-        if (this.modo === 'recepcion') {
-            this.busqueda.estado.push('pendiente');
-        } else {
-            if (this.modo === 'listado' || this.modo === 'validacion') {
-                this.busqueda.estado = (!this.estado || (this.estado && this.estado.id === 'todos')) ? '' : this.estado.id;
-            } else {
-                this.busqueda.estado = ['ejecucion', 'validada'];
-            }
+    refreshSelection($event?) {
+        console.log("refreshSelection")
+        if($event) {
+            this.busqueda = $event;
         }
+        
         this.getProtocolos(this.busqueda);
     }
 
     getProtocolos(params: any) {
         this.servicioPrestaciones.get(params).subscribe(protocolos => {
+            console.log(protocolos)
             this.protocolos = protocolos;
         }, err => {
             if (err) {
@@ -204,14 +163,14 @@ export class GestorProtocolosComponent
         console.log('seleccionarProtocolo', $event);
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if ($event.protocolo) {
-            this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion');
+            this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
             this.protocolo = $event.protocolo;
             this.showListarProtocolos = false;
             this.showProtocoloDetalle = true;
             this.indexProtocolo = $event.index;
             this.seleccionPaciente = false;
             this.showCargarSolicitud = true;
-            this.ocultarPanelLateral = (this.modo === 'recepcion');
+            this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
             this.showBotonesGuardar = (this.modo !== 'recepcion');
         }
     }
@@ -240,47 +199,6 @@ export class GestorProtocolosComponent
     }
 
     /**
-     * Busca unidades organizativas de la organización
-     *
-     * @param {any} $event
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    loadServicios($event) {
-        this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
-            let servicioEnum = organizacion.unidadesOrganizativas;
-            $event.callback(servicioEnum);
-        });
-    }
-
-    /**
-     * Recupera lista de organizaciones
-     *
-     * @param {any} event
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    loadOrganizaciones(event) {
-        if (event.query) {
-            let query = {
-                nombre: event.query
-            };
-            this.servicioOrganizacion.get(query).subscribe(event.callback);
-        } else {
-            event.callback([]);
-        }
-    }
-
-    /**
-     * Devuelve lista de prioridades predefinidas para prestaciones de laboratorio
-     * @param {any} event
-     * @returns
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    loadPrioridad(event) {
-        event.callback(enumerados.getPrioridadesLab());
-        return enumerados.getPrioridadesLab();
-    }
-
-    /**
      * Inicia la busqueda de pacientes
      *
      * @memberof PuntoInicioLaboratorioComponent
@@ -289,7 +207,7 @@ export class GestorProtocolosComponent
     searchStartPaciente() {
         this.pacientes = null;
         this.pacienteActivo = null;
-        this.refreshSelection(null, '');
+        this.refreshSelection();
     }
 
     /**
@@ -301,7 +219,7 @@ export class GestorProtocolosComponent
         this.pacientes = null;
         this.pacienteActivo = null;
 
-        this.refreshSelection(null, '');
+        this.refreshSelection();
     }
 
     /**
@@ -321,7 +239,7 @@ export class GestorProtocolosComponent
                 this.mostrarListaMpi = false;
             }
         }
-        this.refreshSelection(null, '');
+        this.refreshSelection();
     }
 
     /**
@@ -333,9 +251,8 @@ export class GestorProtocolosComponent
     seleccionarPaciente(paciente: any) {
         this.pacienteActivo = paciente;
         if (this.pacienteActivo) {
-            this.refreshSelection(null, this.pacienteActivo.documento);
+            this.refreshSelection();
         }
-
     }
 
     /**

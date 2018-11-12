@@ -5,17 +5,9 @@ import { Component, Input, OnInit, Output, EventEmitter, HostBinding, Pipe, Pipe
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment';
-
-// Interfaces
-
-// Servicios
-// import { AgendaService } from '../../../services/turnos/agenda.service';
-
 
 @Component({
-    selector: 'punto-inicio',
+    selector: 'punto-inicio-laboratorio',
     templateUrl: 'punto-inicio.html'
 })
 
@@ -24,6 +16,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true;
     @Output() selected: EventEmitter<any> = new EventEmitter<any>();
     @Output() escaneado: EventEmitter<any> = new EventEmitter<any>();
+    @Output() seleccionarProtocoloEmitter: EventEmitter<any> = new EventEmitter<any>();
 
     public puedeCrearSolicitud = false;
     public puedeAutocitar = false;
@@ -96,7 +89,7 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
                     pacienteMPI => {
                         this.paciente = pacienteMPI;
 
-                        this.showListaSolicitudes = false;
+                        this.showListaSolicitudes = true;
 
                         // Si el paciente previamente persistido no posee string de scan, y tenemos scan, actualizamos el pac.
                         if (!this.paciente.scan && paciente.scan) {
@@ -249,4 +242,8 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
         return false;
     }
 
+    seleccionarProtocolo($event) {
+        console.log('seleccionarProtocolo')
+        this.seleccionarProtocoloEmitter.emit($event);
+    }
 }

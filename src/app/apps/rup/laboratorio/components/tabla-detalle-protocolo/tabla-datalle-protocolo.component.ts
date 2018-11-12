@@ -1,11 +1,11 @@
-import { IPractica } from './../interfaces/IPractica';
-import { PracticaBuscarResultado } from './../interfaces/PracticaBuscarResultado.inteface';
-import { ProtocoloService } from './../services/protocolo.service';
-import { PracticaService } from './../services/practica.service';
+import { IPractica } from '../../interfaces/IPractica';
+import { PracticaBuscarResultado } from '../../interfaces/PracticaBuscarResultado.inteface';
+import { ProtocoloService } from '../../services/protocolo.service';
+import { PracticaService } from '../../services/practica.service';
 import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
 
 import { Plex } from '@andes/plex';
-import { Constantes } from '../controllers/constants';
+import { Constantes } from '../../controllers/constants';
 
 
 @Component({

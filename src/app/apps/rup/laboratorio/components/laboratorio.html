@@ -1,0 +1,3 @@
+<gestor-protocolos *ngIf="mostrarPuntoInicio" [protocolo]='protocolo'  ></gestor-protocolos>
+<punto-inicio-laboratorio *ngIf="!mostrarPuntoInicio" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' ></punto-inicio-laboratorio>
+

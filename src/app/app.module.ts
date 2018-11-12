@@ -354,16 +354,18 @@ import { SolicitudManualComponent } from './components/prestamosHC/solicitudes/s
 
 
 // SIL
+import { LaboratorioComponent } from './apps/rup/laboratorio/components/laboratorio.component';
 import { ProtocoloService } from './apps/rup/laboratorio/services/protocolo.service';
 import { PracticaService } from './apps/rup/laboratorio/services/practica.service';
-import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-datalle-protocolo.component';
-import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
-import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
-import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
+import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/tabla-detalle-protocolo/tabla-datalle-protocolo.component';
+import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
+// import { PracticaDemoComponent } from './apps/rup/laboratorio/components/demoPractica.component';
+// import { PracticaListadoComponent } from './apps/rup/laboratorio/components/practica-listado.component';
+// import { PracticaBuscarComponent } from './apps/rup/laboratorio/components/practica-buscar.component';
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
-import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
+import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos/gestor-protocolos.component';
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
 
@@ -602,9 +604,10 @@ registerLocaleData(localeEs, 'es');
         OcuparCamaComponent,
 
         // SIL
-        PracticaBuscarComponent,
-        PracticaDemoComponent,
-        PracticaListadoComponent,
+        // PracticaBuscarComponent,
+        // PracticaDemoComponent,
+        // PracticaListadoComponent,
+        LaboratorioComponent,
         TablaDatalleProtocolo,
         ListaProtocolosComponent,
         GestorProtocolosComponent,
@@ -612,6 +615,7 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioLaboratorioComponent,
         ListadoSolicitudesComponent,
         ProtocoloEncabezadoComponent,
+        FiltrosBusquedaProtocoloComponent,
 
         // MPI
         PacienteBuscarComponent,

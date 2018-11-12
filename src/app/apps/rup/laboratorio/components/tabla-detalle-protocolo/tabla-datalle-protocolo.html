@@ -1,6 +1,6 @@
 <table class="table table-striped table-sm">
     <thead>
-        <th *ngIf='modo ==="recepcion" || modo ==="control"' style='width: 100px;'>Cod.</th>
+        <th *ngIf='modo ==="recepcion"  || modo ==="control"' style='width: 100px;'>Cod.</th>
         <th>Descripcion</th>
         <th *ngIf='modo ==="recepcion" || modo ==="control"' class="float-center">S/Muestra</th>
         <ng-container *ngIf='modo !=="control" && modo !=="recepcion"'>
