@@ -41,8 +41,12 @@
                                     name="prestacionDestino" label="Prestación Destino" ngModelOptions="{standalone: true}">
                                 </plex-select>
                             </div>
+                            <div class="col-3">
+                                <plex-select [(ngModel)]="estado" (change)="cargarSolicitudes()" [data]="estados" name="estado"
+                                    label="Estado" ngModelOptions="{standalone: true}" (change)="cargarSolicitudes()">
+                                </plex-select>
+                            </div>
                         </div>
-                        <!-- <br> -->
                     </header>
                     <plex-tabs (change)="cambio($event)" [activeIndex]="panelIndex">
                         <plex-tab label="Solicitudes de Entrada" icon="arrow-down-box" (click)="panelIndex = 0">

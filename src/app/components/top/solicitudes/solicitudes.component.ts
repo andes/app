@@ -50,6 +50,13 @@ export class SolicitudesComponent implements OnInit {
     public prestacionesPermisos = [];
     public permisosReglas;
     public prestacionDestino;
+    public estado;
+    public estados = [
+        { id: 'auditoria', nombre: 'auditoria' },
+        { id: 'pendiente', nombre: 'pendiente' },
+        { id: 'rechazada', nombre: 'rechazada' },
+        { id: 'turnoDado', nombre: 'turno dado' }
+    ];
     prestacionSeleccionada: any;
 
 
@@ -219,15 +226,26 @@ export class SolicitudesComponent implements OnInit {
     cargarSolicitudes() {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
-                estado: [
-                    'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
-                    'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
-                    'rechazada', // solicitudes rechazadas en el proceso de auditoría
-                    'validada'   // solicitudes validadas, si tienen turno asociado veremos la información
-                ],
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
+            if (this.estado) {
+                if (this.estado.nombre !== 'turno dado') {
+                    params['estados'] = [this.estado.nombre];
+                    if (this.estado.nombre === 'pendiente') {
+                        params['tieneTurno'] = 'no';
+                    }
+                } else {
+                    params['tieneTurno'] = 'si';
+                }
+            } else {
+                params['estados'] = [
+                    'auditoria',
+                    'pendiente',
+                    'rechazada',
+                    'validada'
+                ];
+            }
             if (this.organizacion) {
                 params['organizacionOrigen'] = this.organizacion.id;
             }
