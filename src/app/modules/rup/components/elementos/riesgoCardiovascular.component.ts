@@ -781,23 +781,61 @@ export class RiesgoCardiovascularComponent extends RUPComponent implements OnIni
         '111445': 5
     };
 
+    public formula = true;
+    public resultado;
 
     ngOnInit() {
-        console.log(this.paciente.edad, this.paciente.genero);
-        console.log(this.riesgosConColesterol);
-        let resp = this.obtenerRiesgo(80, 300, 120, true, false, false);
-        console.log(resp, 'LA REPOS');
+
     }
 
 
+    emitChange(event) {
+        console.log(this.paciente.edad, this.paciente.genero);
+        console.log(this.registro.registros, 'el registro');
+        // let sexo = (this.paciente.genero === 'masculino') ? 1 : 0;
+        let colesterol = this.registro.registros[0].valor;
+        let sistolica = this.registro.registros[1].valor;
+        let tabaquismo = this.registro.registros[2].valor;
+        let diabetes = this.registro.registros[3].valor;
+        // Prueba
+        this.resultado = this.obtenerRiesgo(this.paciente.edad, colesterol, sistolica, tabaquismo, null, diabetes);
+    }
 
+
+    /**
+     * Calcula el riesgo cardio vascular y retorna un string con el nivel
+     * de riesgo que puede ser Riesgo bajo, Riesgo moderado, Riesgo alto, Riesgo muy alto, Riesgo crítico
+     * @param edad edad que la obtenemos del paciente de la prestacion
+     * @param colesterol Valor numerico que cargan en la molecula
+     * @param tension Valor numerico que cargan en la molecula
+     * @param tabaquismo Bool que lo optenemos de la molecula
+     * @param sexo Lo capturamos del paciente.. --> TRUE corresponde a masculino y FALSE corresponde a sexo femenino
+     * @param diabetes Bool que capturamos de la molecula.
+     */
     obtenerRiesgo(edad, colesterol, tension, tabaquismo, sexo, diabetes) {
+        if (!sexo) {
+            sexo = (this.paciente.genero === 'masculino') ? 1 : 0;
+        }
         let clave = this.generarClaveBusqueda(edad, colesterol, tension, tabaquismo, sexo, diabetes);
         clave = clave.replace(/^0+(?!\.|$)/, '');
+        let valorRiesgoCardio;
         if (colesterol == null) {
-            return this.obtenerRiesgoSinColesterol(clave);
+            valorRiesgoCardio = this.obtenerRiesgoSinColesterol(clave);
         } else {
-            return this.obtenerRiesgoConColesterol(clave);
+            valorRiesgoCardio = this.obtenerRiesgoConColesterol(clave);
+        }
+
+        switch (valorRiesgoCardio) {
+            case 1:
+                return 'Riesgo bajo';
+            case 2:
+                return 'Riesgo moderado';
+            case 3:
+                return 'Riesgo alto';
+            case 4:
+                return 'Riesgo muy alto';
+            case 5:
+                return 'Riesgo crítico';
         }
     }
 
@@ -851,7 +889,7 @@ export class RiesgoCardiovascularComponent extends RUPComponent implements OnIni
     obtenerRiesgoConColesterol(clave) {
         return this.riesgosConColesterol[clave];
     }
-};
+}
 
 
 
