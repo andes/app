@@ -364,6 +364,10 @@ import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/pro
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
 import { GestorProtocolosComponent } from './apps/rup/laboratorio/components/gestor-protocolos.component';
+import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
+import { ListaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/lista-hojatrabajo/lista-hojatrabajo.component';
+import { HojaTrabajoService } from './apps/rup/laboratorio/services/hojatrabajo.service';
+
 
 import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 // Configuracion prestaciones
@@ -608,6 +612,8 @@ registerLocaleData(localeEs, 'es');
         TablaDatalleProtocolo,
         ListaProtocolosComponent,
         ProtocoloEncabezadoComponent,
+        GestorHojatrabajoComponent,
+        ListaHojatrabajoComponent,
 
         // MPI
         PacienteBuscarComponent,
@@ -657,6 +663,7 @@ registerLocaleData(localeEs, 'es');
         BarrioService,
         PacienteService,
         PracticaService,
+        HojaTrabajoService,
         ProtocoloService,
         FinanciadorService,
         ParentescoService,

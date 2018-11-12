@@ -1,0 +1,52 @@
+<plex-layout main="8">
+    <plex-layout-main>
+        <header>
+            <div class="clearfix">
+                <div class="page-title float-left">
+                    <ng-container>
+                        Laboratorio |
+                        <ng-container *ngIf="true || modo === 'listado'">Hojas de Trabajo</ng-container>
+                        <ng-container *ngIf="modo === 'control'">Auditoría de Protocolos</ng-container>
+                    </ng-container>
+                </div>
+                <plex-tabs [activeIndex]="accionIndex" class='float-right' (change)="cambio($event)" *ngIf="!showProtocoloDetalle">
+                    <plex-tab label="Recepción"></plex-tab>
+                    <plex-tab label="Auditoria"></plex-tab>
+                    <plex-tab label="Carga"></plex-tab>
+                    <plex-tab label="Validación"></plex-tab>
+                </plex-tabs>
+            </div>
+        </header>
+    </plex-layout-main>
+
+    <plex-layout-sidebar>
+        <header>
+            Título del sidebar
+        </header>
+        <lista-hojatrabajo></lista-hojatrabajo>
+    </plex-layout-sidebar>
+
+    <ng-container *ngIf="true">
+        <h2>hello</h2>
+    </ng-container>
+
+    <plex-layout-footer *ngIf="true">
+        <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
+        <plex-button position="right" class="float-right mr-1" type="success" label="Guardar Hoja" (click)="guardarHoja()"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
+
+
+<!-- <plex-layout main="8">
+        <plex-layout-main>
+            <header>
+                <h3>Un titulo</h3>
+            </header>
+        </plex-layout-main>
+        <plex-layout-sidebar>
+        </plex-layout-sidebar>
+        <plex-layout-footer>
+                <plex-button label="Cancelar" type="danger" position="left"></plex-button>
+                <plex-button label="Guardar formulario" type="success" position="right"></plex-button>
+        </plex-layout-footer>
+    </plex-layout>  -->
