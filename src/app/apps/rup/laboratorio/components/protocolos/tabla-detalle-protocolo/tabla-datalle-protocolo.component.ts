@@ -1,8 +1,7 @@
-import { IPractica } from '../../../interfaces/IPractica';
-import { PracticaBuscarResultado } from '../../../interfaces/PracticaBuscarResultado.inteface';
-import { ProtocoloService } from '../../../services/protocolo.service';
+import { IPractica } from '../../../interfaces/practica/IPractica';
+import { IPracticaBuscarResultado } from '../../../interfaces/practica/IPracticaBuscarResultado.inteface';
 import { PracticaService } from '../../../services/practica.service';
-import { Input, Output, Component, OnInit, HostBinding, NgModule, ViewContainerRef, ViewChild, EventEmitter } from '@angular/core';
+import { Input, Component, OnInit} from '@angular/core';
 
 import { Plex } from '@andes/plex';
 import { Constantes } from '../../../controllers/constants';
@@ -18,9 +17,6 @@ export class TablaDatalleProtocolo implements OnInit {
 
     }
 
-    practicas;
-    practicaSeleccionada = null;
-
     @Input() modo: any;
     @Input() modelo: any;
     @Input() solicitudProtocolo: any;
@@ -28,6 +24,9 @@ export class TablaDatalleProtocolo implements OnInit {
     @Input() practicasEjecucion: any;
     @Input() areas: any;
     @Input() editarListaPracticas;
+    practicas;
+    practicaSeleccionada = null;
+
     // @Input('practicasCarga')
     // set setPracticasEjecucion(value: any) {
 
@@ -119,7 +118,7 @@ export class TablaDatalleProtocolo implements OnInit {
      * @param {PracticaBuscarResultado} resultado
      * @memberof TablaDatalleProtocolo
      */
-    busquedaFinal(resultado: PracticaBuscarResultado) {
+    busquedaFinal(resultado: IPracticaBuscarResultado) {
         if (resultado.err) {
             this.plex.info('danger', resultado.err);
         } else {

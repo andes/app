@@ -1,6 +1,6 @@
 import { IPracticaMatch } from './IPracticaMatch.inteface';
 
-export interface PracticaBuscarResultado {
+export interface IPracticaBuscarResultado {
     err: any;
     practicas: IPracticaMatch[];
 }

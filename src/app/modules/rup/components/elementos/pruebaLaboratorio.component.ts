@@ -1,9 +1,9 @@
-import { IPracticaMatch } from './../../../../apps/rup/laboratorio/interfaces/IPracticaMatch.inteface';
-import { PracticaBuscarResultado } from './../../../../apps/rup/laboratorio/interfaces/PracticaBuscarResultado.inteface';
+import { IPracticaMatch } from './../../../../apps/rup/laboratorio/interfaces/practica/IPracticaMatch.inteface';
+import { IPracticaBuscarResultado } from '../../../../apps/rup/laboratorio/interfaces/practica/IPracticaBuscarResultado.inteface';
+import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 import { RUPComponent } from './../core/rup.component';
 import { Component, Output, Input, EventEmitter, OnInit } from '@angular/core';
 import * as enumerados from './../../../../utils/enumerados';
-import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 
 @Component({
     selector: 'rup-pruebaLaboratorio',
@@ -16,7 +16,7 @@ export class PruebaLaboratorioComponent extends RUPComponent implements OnInit {
     public practicas: IPracticaMatch[] | IPractica[];
     public practicasActivas = [];
     public darTurnoEmit = new EventEmitter<any>();
-    @Output() busquedaFinal: EventEmitter<PracticaBuscarResultado> = new EventEmitter<PracticaBuscarResultado>();
+    @Output() busquedaFinal: EventEmitter<IPracticaBuscarResultado> = new EventEmitter<IPracticaBuscarResultado>();
 
     ngOnInit() {
         // Buscamos los tipos de prestación que sean turneables para los que el tenga permisos

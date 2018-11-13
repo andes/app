@@ -1,6 +1,6 @@
-import { IPractica } from './../interfaces/IPractica';
-import { PracticaSearch } from './../interfaces/practicaSearch.interface';
-import { IPracticaMatch } from './../interfaces/IPracticaMatch.inteface';
+import { IPractica } from '../interfaces/practica/IPractica';
+import { IPracticaSearch } from '../interfaces/practica/IPracticaSearch.interface';
+import { IPracticaMatch } from './../interfaces/practica/IPracticaMatch.inteface';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
@@ -11,13 +11,12 @@ export class PracticaService {
     private practicaCodigoUrl = '/modules/rup/laboratorio/practicas/codigo/';
     constructor(private server: Server) { }
 
-
     /**
      * @param {PracticaSearch} params
      * @returns {Observable<IPracticaMatch[]>}
      * @memberof PracticaService
      */
-    getMatch(params: PracticaSearch): Observable<IPracticaMatch[]> {
+    getMatch(params: IPracticaSearch): Observable<IPracticaMatch[]> {
         return this.server.get(this.practicaUrl, { params: params, showError: true }).map((value) => {
             return value;
         });
@@ -29,7 +28,7 @@ export class PracticaService {
         });
     }
 
-    getMatchCodigo(codigo: PracticaSearch): Observable<IPracticaMatch[]> {
+    getMatchCodigo(codigo: IPracticaSearch): Observable<IPracticaMatch[]> {
         return this.server.get(this.practicaCodigoUrl + codigo, null).map((value) => {
             return value;
         });
