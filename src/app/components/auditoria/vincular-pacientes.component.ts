@@ -116,7 +116,7 @@ export class VincularPacientesComponent implements OnInit {
                 this.pacienteService.postIdentificadores(this.pacienteBase.id, {
                     'op': 'link',
                     'dto': dataLink
-                }).subscribe(resultado => {
+                }).subscribe(() => {
                     this.listaCandidatos[index].vinculado = true;
                     this.listaCandidatos[index].activo = false;
                     this.plex.toast('success', 'La vinculación ha sido realizada correctamente', 'Información', 3000);
