@@ -1,0 +1,353 @@
+<section class="cama-container manual-flip animate-repeat" [ngClass]="{'hover': cama.$rotar}">
+    <div class="cama">
+        <div class="card-container front {{cama.ultimoEstado.estado}}" (click)="seleccionarCama()">
+            <!-- Botonera lateral -->
+            <div class="card-contenedor-lateral"></div>
+            <div class="card-contenedor-central">
+                <!-- <div class="badge badge-{{cama.ultimoEstado.estado}}" [ngClass]="{ 'badge-success': cama.ultimoEstado.estado === 'desocupada'}">{{cama.ultimoEstado.estado}}</div> -->
+                <div class="contenedor-cama">
+                    <div class="contenedor-texto hover">
+                        <div>{{ getHabitacionName()}}</div>
+                        <!-- <div class="card-subtitulo">{{ cama.ultimoEstado.unidadOrganizativa.term }}</div> -->
+                        <h3 class="card-titulo">{{cama.nombre}}</h3>
+                    </div>
+                    <!-- Icono cama -->
+                    <div *ngIf="cama.ultimoEstado.estado !== 'ocupada'" class="data-icon {{cama.ultimoEstado.estado !== 'ocupada' ? cama.ultimoEstado.estado  : cama.ultimoEstado.paciente.sexo}}">
+                        <!-- reparacion -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama-herramienta {{cama.ultimoEstado.estado}}"></i>
+                        <!-- Bloqueada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'bloqueada'" class="icon icon-andes-cama-candado {{cama.ultimoEstado.estado}}"></i>
+                        <!-- desocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-reloj {{cama.ultimoEstado.estado}}"></i>
+                        <!-- ocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama-check {{cama.ultimoEstado.estado}}"></i>
+                    </div>
+
+                    <div class="icon-content {{cama.ultimoEstado.estado}}">
+                        <!-- disponible -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'disponible'" class="icon icon-andes-cama"></i>
+                        <!-- desocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'desocupada'" class="icon icon-andes-cama-desocupada"></i>
+                        <!-- ocupada -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'ocupada'" class="icon icon-andes-cama-ocupada"></i>
+                        <!-- bloqueo de cama -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'bloqueada'" class="icon icon-andes-cama"></i>
+                        <!-- reparacion de la cama -->
+                        <i *ngIf="cama.ultimoEstado.estado === 'reparacion'" class="icon icon-andes-cama"></i>
+                    </div>
+                </div>
+
+                <!-- Boton clave inferior -->
+                <div class="card-contenedor-inferior">
+                    <!-- Nombre paciente -->
+                    <div class="data-paciente" *ngIf="cama.ultimoEstado?.paciente">
+                        <p>
+                            <b>{{cama.ultimoEstado.paciente.apellido}}</b>
+                            <br>{{cama.ultimoEstado.paciente.nombre}}
+                            <br>{{cama.ultimoEstado.paciente.documento}}
+                        </p>
+                    </div>
+                    <!-- devolver cama -->
+                    <plex-button type="success" label="Devolver cama" title="Devolver cama" (click)="devolverCama(cama);" *ngIf="cama.unidadOrganizativaOriginal.conceptId !== cama.ultimoEstado.unidadOrganizativa.conceptId && !cama.ultimoEstado.paciente && !readOnly">
+                    </plex-button>
+                    <!-- Confirmar reparacion -->
+                    <plex-button type="success" label="Confirmar reparación" title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'; setFecha()"
+                        *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion' && !readOnly">
+                    </plex-button>
+                </div>
+            </div>
+            <!-- Botones laterales -->
+            <div class="card-contenedor-lateral" *ngIf="!readOnly">
+                <!-- Internar paciente -->
+                <plex-button *ngIf="showEstados && !cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'disponible' && !readOnly"
+                    type="success btn-sm" icon="account-plus" title="Internar" (click)="iniciarPrestacion(cama); cama.$action = 'internacion'">
+                </plex-button>
+                <!-- Desocupar cama -->
+                <plex-button *ngIf="showEstados && cama.ultimoEstado?.idInternacion" icon="close-box" type="success btn-sm" title="Desocupar"
+                    (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'desocupar'; setFecha();">
+                </plex-button>
+                <!-- Preparar cama -->
+                <plex-button *ngIf="showEstados && cama.ultimoEstado.estado == 'desocupada' && !readOnly" icon="spray" type="warning btn-sm"
+                    (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'preparar'" title="Preparar">
+                </plex-button>
+                <!-- Bloquear cama -->
+                <plex-button *ngIf="showEstados && !cama.idInternacion && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')"
+                    type="danger btn-sm" icon="lock" title="Bloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
+                </plex-button>
+                <!-- Desbloquear cama -->
+                <plex-button *ngIf="showEstados &&!cama.idInternacion && cama.ultimoEstado.estado == 'bloqueada' && !readOnly" icon="lock-open"
+                    type="success btn-sm" title="Desbloquear" (click)="seleccionarCama(); cama.$rotar = !cama.$rotar; cama.$action = 'bloquear'; setFecha()">
+                </plex-button>
+                <!-- Editar datos de la cama -->
+                <plex-button *ngIf="showEstados" icon="pencil" type="primary btn-sm" title="Editar" (click)="editarCama(cama)">
+                </plex-button>
+            </div>
+        </div>
+
+        <!-- Back -->
+        <div class="back" *ngIf="cama.$rotar">
+            <!-- Header del back de las tarjetas -->
+            <div class="header">
+                <fieldset>
+                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">Desbloquear</legend>
+                    <legend *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'disponible'">Bloquear</legend>
+                    <legend *ngIf="cama.$action && cama.$action !== 'bloquear'">{{cama.$action.toString()}}</legend>
+                </fieldset>
+            </div>
+            <!-- Acción: Evolucionar -->
+            <!-- @jfgabriel | Deshabilitamos algunas funciones hasta que estén más desarrolladas -->
+            <!-- <div *ngIf="cama.$action && cama.$action == 'evolucion'">
+                <div class="contenido" [ngClass]="{'evolucion': cama.$action == 'evolucion' }">
+                    <div class="main ">
+                        <p *ngIf="!cama?.ultimaEvolucion?.createdBy" class="text-center">
+                            Aún no se ha cargado ninguna evolución.
+                            <br />
+                            <br />
+                        </p>
+                    </div>
+                </div>
+                <div class="footer row">
+                    <div class="col-12 text-right">
+                        <button class="btn btn-default tips form-control" (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
+                            <i class="mdi mdi-close"></i>
+                        </button>
+                        <button class="btn btn-default " title="Ver indicaciones" (click)="verInternacion(cama.idInternacion, 5)" *ngIf="cama.idInternacion">
+                            <i class="mdi mdi-book-open"></i>
+                        </button>
+                        <button class="btn btn-default  tips" title="Ver internación" (click)="verInternacion(cama.idInternacion)" *ngIf="cama.idInternacion">
+                            <i class="mdi mdi-eye"></i>
+                        </button>
+                        <button class="btn btn-default " title="Enviar a reparación " (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'disponible' && cama.ultimoEstado.estado != 'reparacion')">
+                            <i class="mdi mdi-wrench"></i>
+                        </button>
+                        <button class="btn btn-default " title="Confirmar reparación" (click)="cama.$rotar = !cama.$rotar; cama.$action = 'reparacion'" *ngIf="!cama.ultimoEstado?.paciente?.id && (cama.ultimoEstado.estado == 'reparacion')">
+                            <i class="mdi mdi-wrench"></i>
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Acción: Ver cama enviada a reparacion -->
+            <div *ngIf="cama.$action == 'enviada_reparacion' && cama.ultimoEstado.estado == 'reparacion'">
+                <div class="contenido">
+                    <div class="main">
+                        <div *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'reparacion'">
+                            <h3 class="name reparacion">
+                                En reparación desde:
+                                <br /> {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
+                                <br />
+                                <br />
+                            </h3>
+                            <div class="motivo-reparacion">
+                                {{cama.ultimoEstado.motivo}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Acción: Enviar a reparar una cama -->
+            <!-- @jfgabriel | TODO: REFACTOR total. Usar plex, validación de Angular, etc. -->
+            <!-- <div *ngIf="cama.$action == 'reparacion' && (cama.ultimoEstado.estado == 'disponible' || cama.ultimoEstado.estado == 'desocupada')">
+                <form #formReparacion="ngForm">
+                    <div class="contenido" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+                        <p>
+                            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                            <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                            </plex-datetime>
+                        </p>
+                        <div class="main">
+                            <div class="form-group">
+                                <textarea rows="6" class="form-control" placeholder="¿Motivo por el cual envía a reparación?" required [(ngModel)]="cama.$motivo" name="motivoReparacion" id="motivoReparacion" #motivoReparacion="ngModel"></textarea>
+                                <div [hidden]="motivoReparacion.valid || (motivoReparacion.pristine && !formReparacion.submitted)" class="alert alert-danger">Indique motivo por el cual envía a reparación la cama</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <plex-button (click)="cama.$rotar = !cama.$rotar" title="No enviar a reparar">
+                                    <i class="mdi mdi-close"></i>
+                                </plex-button>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <plex-button type="success" s title="Enviar a reparar" (click)="cambiarEstado(cama, 'reparacion')" [disabled]="!formReparacion.form.valid">
+                                    <i class="mdi mdi-check"></i>
+                                </plex-button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div> -->
+            <!-- Acción: Desocupar una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'desocupar' && cama.ultimoEstado.estado == 'ocupada'">
+                <form #formReparada="ngForm">
+                    <div class="contenido" [ngClass]="{'reparacion': cama.$action == 'desocupar' }">
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
+                        <br>
+                        <div *ngIf="elegirDesocupar">
+                            <plex-radio [(ngModel)]="opcionDesocupar" [data]="opcionesDesocupar" name="desocupar" (change)="operacionDesocuparCama()">
+                            </plex-radio>
+                        </div>
+                        <div *ngIf="!elegirDesocupar">
+                            <plex-select *ngIf="opcionDesocupar && opcionDesocupar === 'pase'" name="unidadOrganizativa" [data]="listaUnidadesOrganizativas"
+                                idField="term" labelField="term" [(ngModel)]="PaseAunidadOrganizativa" label="Unidad organizativa"
+                                (change)="selectCamasDisponibles(PaseAunidadOrganizativa?.id)">
+                            </plex-select>
+                            <plex-select name="camasDisponibles" [required]="true" [data]="listadoCamas" idField="nombre" labelField="nombre" [(ngModel)]="camaSeleccionPase"
+                                label="Camas">
+                            </plex-select>
+                        </div>
+                    </div>
+                    <div class="footer row">
+                        <div class="col-6">
+                            <plex-button type="danger btn-block" icon="close" (click)="rotarDesocuparCama()">
+                            </plex-button>
+                        </div>
+                        <div class="col-6">
+                            <plex-button type="success btn-block" icon="check" validateForm="true" (click)="desocuparCama($event, cama, 'desocupada')"
+                                [disabled]="elegirDesocupar">
+                            </plex-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Acción: Confirmar reparacion completa de una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'reparacion' && cama.ultimoEstado.estado == 'reparacion'">
+                <form #formReparada="ngForm">
+                    <div class="contenido" [ngClass]="{'reparacion': cama.$action == 'reparacion' }">
+                        <p>
+                            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                            <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                            </plex-datetime>
+                        </p>
+                        <div class="main">
+                            <p class="text-center">
+                                ¿La cama ha sido reparada?
+                            </p>
+                        </div>
+                    </div>
+                    <div class="footer row">
+                        <div class="col-6">
+                            <plex-button type="danger btn-block" icon="close" (click)="cama.$rotar = !cama.$rotar">
+                            </plex-button>
+                        </div>
+                        <div class="col-6">
+                            <plex-button type="success btn-block" icon="check" (click)="cambiarEstado(cama, 'desocupada')">
+                            </plex-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Acción: Enviar a preparar una cama -->
+            <div *ngIf="cama.$action == 'preparar' && cama.ultimoEstado.estado == 'desocupada'">
+                <div class="contenido" [ngClass]="{'preparar': cama.$action == 'preparar' }">
+                    <form #desinfeccionForm="ngForm">
+                        <p>
+                            <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                            </plex-datetime>
+                            <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                            </plex-datetime>
+                        </p>
+                        <div class="main">
+                            ¿Confirmar preparacion de la cama?
+                        </div>
+                    </form>
+                </div>
+                <div class="footer row">
+                    <div class="col-6">
+                        <plex-button type="danger btn-block" icon="close" (click)="cama.$rotar = !cama.$rotar" title="No">
+                        </plex-button>
+                    </div>
+                    <div class="col-6">
+                        <plex-button type="success btn-block" icon="check" (click)="cambiarEstado(cama, 'disponible')">
+                        </plex-button>
+                    </div>
+                </div>
+            </div>
+            <!-- Acción: Bloquear una cama -->
+            <div *ngIf="cama.$action == 'bloquear' && (cama.ultimoEstado.estado == 'desocupada' || cama.ultimoEstado.estado == 'disponible')">
+                <form #formBloqueo="ngForm">
+                    <div class="contenido" [ngClass]="{'bloquear': cama.$action == 'bloquear' }">
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
+                        <div class="main">
+                            <div class="form-group">
+                                <plex-select name="motivoBloqueo" [required]="true" [data]="listaMotivosBloqueo" idField="name" labelField="name" [(ngModel)]="cama.$motivo"
+                                    label="Motivo del bloqueo">
+                                </plex-select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer row">
+                        <div class="col-6">
+                            <plex-button type="danger btn-block" (click)="cama.$rotar = !cama.$rotar" icon="close">
+                            </plex-button>
+                        </div>
+                        <div class="col-6">
+                            <plex-button type="success btn-block" icon="check" (click)="formBloqueo.valid && cambiarEstado(cama, 'bloqueada')" [disabled]="!formBloqueo.form.valid">
+                            </plex-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Acción: Confirmar desbloqueo de una cama -->
+            <div *ngIf="cama.$action && cama.$action == 'bloquear' && cama.ultimoEstado.estado == 'bloqueada'">
+                <form #formDesbloqueo="ngForm">
+                    <div class="contenido" [ngClass]="{'bloqueada': cama.$action == 'bloqueada' }">
+                        <!-- <p> -->
+                        <plex-datetime type="date" [(ngModel)]="fecha" [required]="true" name="fecha" label="">
+                        </plex-datetime>
+                        <!-- <br> -->
+                        <plex-datetime type="time" [(ngModel)]="hora" [required]="true" name="hora" label="">
+                        </plex-datetime>
+                        <!-- </p> -->
+                        <div *ngIf="comprobarWorkflow()">
+                            <!-- <p> -->
+                            Estado luego del desbloqueo:
+                            <!-- </p> -->
+                            <plex-radio [(ngModel)]="estadoDesbloqueo" [data]="opcionesDesbloqueo" name="estados">
+                            </plex-radio>
+                        </div>
+                    </div>
+                    <div class="footer row">
+                        <div class="col-6">
+                            <plex-button type="danger btn-block" icon="close" (click)="cama.$rotar = !cama.$rotar">
+                            </plex-button>
+                        </div>
+                        <div class="col-6">
+                            <plex-button type="success btn-block" icon="check" (click)="cambiarEstado(cama, estadoDesbloqueo)">
+                            </plex-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- Ver cama bloqueadea -->
+            <div *ngIf="cama.$action == 'estado_bloqueada' && cama.ultimoEstado.estado == 'bloqueada'">
+                <div class="contenido">
+                    <div class="main">
+                        <div *ngIf="!cama.ultimoEstado?.paciente?.id && cama.ultimoEstado.estado == 'bloqueada'">
+                            <h3 class="name reparacion">
+                                Bloqueada desde:
+                                <br /> {{cama.ultimoEstado.createdAt | date: "dd/MM/yyyy 'a las' HH:mm "}}hs
+                                <br />enviada por {{cama.ultimoEstado.createdBy.nombreCompleto}}
+                                <br />
+                                <br />
+                            </h3>
+                            <div class="motivo-reparacion">{{cama.ultimoEstado.motivo}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

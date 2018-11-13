@@ -1,8 +1,6 @@
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
-import { Server } from '@andes/shared';
 import { environment } from '../../environments/environment';
 import { Http, Response, ResponseContentType, RequestMethod } from '@angular/http';
 import { Headers, RequestOptions } from '@angular/http';
@@ -15,10 +13,7 @@ export class DocumentosService {
 
     constructor(private http: Http) { }
 
-    /**
-     * @param html HTML que se envía a la API para que genere y devuelva un PDF "institucionalizado"
-     */
-    descargar(html: string): Observable<any> {
+    descargar(html: string, scssFile = null, horizontal = false): Observable<any> {
 
         let htmlPdf = { html: Buffer.from(html).toString('base64') };
         let headers = new Headers({
@@ -27,7 +22,12 @@ export class DocumentosService {
         });
 
         let options = new RequestOptions({ headers: headers, responseType: ResponseContentType.Blob, method: RequestMethod.Post });
-        return this.http.post(this.pdfURL + '/pdf', { html: Buffer.from(html).toString('base64'), options: { format: 'A4' } }, options)
+
+        let opcionesImprimir: any = { html: Buffer.from(html).toString('base64'), options: { format: 'A4' }, horizontal: horizontal };
+        if (scssFile) {
+            opcionesImprimir = { ...opcionesImprimir, scssFile: scssFile };
+        }
+        return this.http.post(this.pdfURL + '/pdf', opcionesImprimir, options)
             .map(this.extractData)
             .catch(this.handleError);
     }
@@ -48,7 +48,6 @@ export class DocumentosService {
     private handleError(error: any) {
         let errMsg = (error.message) ? error.message :
             error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-        console.error(errMsg);
         return Observable.throw(errMsg);
     }
     protected extractData(res: Response) {

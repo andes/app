@@ -82,29 +82,27 @@
 
                                     <!-- Contenedor del registro RUP -->
 
-                                    <div droppable [dropScope]="'vincular-registros-rup'" (onDrop)="vincularRegistros($event, registro)" [dragOverClass]="'drag-target-border'"
-                                        [ngClass]="{'relacionado': registro?.relacionadoCon}">
 
-                                        <div class="rup-card {{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
-                                            <div class="rup-header">
-                                                <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                                    [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
-                                                    (onDragEnd)="draggingRegistro(i, registro, false)">
-                                                    <i class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getIcon(registro.concepto, 'planes') : servicioPrestacion.getIcon(registro.concepto)}}"></i>
-                                                </div>
+                                    <div class="rup-card {{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                        <div class="rup-header">
+                                            <div class="icon-rup drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
+                                                [dragClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                                (onDragEnd)="draggingRegistro(i, registro, false)">
+                                                <i class="icon icon-rup-semantic-{{(registro.esSolicitud) ? servicioPrestacion.getIcon(registro.concepto, 'planes') : servicioPrestacion.getIcon(registro.concepto)}}"></i>
+                                            </div>
 
-                                                <div class="title text-capitalize">
-                                                    <!-- <div class="title"> -->
-                                                    {{ registro.nombre }}
+                                            <div class="title text-capitalize">
+                                                <!-- <div class="title"> -->
+                                                {{ registro.nombre }}
 
-                                                    <!-- vinculacion / desvinculacion -->
-                                                    <div class="" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
+                                                <!-- vinculacion / desvinculacion -->
+                                                <div class="" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && registro.relacionadoCon[0] && !confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i))">
 
-                                                        <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
+                                                    <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0">
 
-                                                            <div class="float-left" *ngIf="registro?.relacionadoCon">
-                                                                <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado con: </b>
-                                                                <!-- <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && (!elementoRUP?.reglas?.requeridos?.relacionesMultiples)">
+                                                        <div class="float-left" *ngIf="registro?.relacionadoCon">
+                                                            <b class="clearfix" *ngIf="registro?.relacionadoCon">Relacionado con: </b>
+                                                            <!-- <ng-container *ngIf="registro?.relacionadoCon && registro?.relacionadoCon.length > 0 && (!elementoRUP?.reglas?.requeridos?.relacionesMultiples)">
                                                                     <small class="badge badge-info text-uppercase">
                                                                         {{ registro.relacionadoCon[0].concepto.term }}
                                                                     </small>
@@ -115,124 +113,123 @@
                                                                     </a>
                                                                 </ng-container> -->
 
-                                                                <ng-container>
-                                                                    <ng-container *ngFor="let relacion of registro.relacionadoCon; let r=index">
-                                                                        <small class="badge badge-info">
-                                                                            {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion.cara + ')' : relacion.concepto.term }}
-                                                                        </small>
-                                                                        <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[r])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
-                                                                            title="Desvincular" class="btn btn-sm btn-primary">
-                                                                            <i class="mdi mdi-link-variant-off"></i>
-                                                                        </a>
-                                                                    </ng-container>
+                                                            <ng-container>
+                                                                <ng-container *ngFor="let relacion of registro.relacionadoCon; let r=index">
+                                                                    <small class="badge badge-info">
+                                                                        {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion.cara + ')' : relacion.concepto.term }}
+                                                                    </small>
+                                                                    <a href="javascript:void(0);" (click)="desvincular(registro, registro.relacionadoCon[r])" class="desvincular" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && !confirmarDesvincular[i] && !confirmarEliminar && !registro.valor?.origen"
+                                                                        title="Desvincular" class="btn btn-sm btn-primary">
+                                                                        <i class="mdi mdi-link-variant-off"></i>
+                                                                    </a>
                                                                 </ng-container>
-                                                            </div>
+                                                            </ng-container>
+                                                        </div>
 
 
-                                                        </ng-container>
-                                                    </div>
+                                                    </ng-container>
                                                 </div>
+                                            </div>
 
-                                                <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
+                                            <div class="actions" *ngIf="!confirmarDesvincular[registro.id] && (!confirmarEliminar || (confirmarEliminar && indexEliminar != i) )">
 
-                                                    <!--span class="badge badge-{{ (registro.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(registro.concepto) }}">
+                                                <!--span class="badge badge-{{ (registro.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(registro.concepto) }}">
                                                         {{registro.concepto.semanticTag}}
                                                     </span-->
 
-                                                    <!--a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
+                                                <!--a href="javascript:void(0);" title="Transformar Hallazgo" (click)="iniciaTransformarProblema(registro)" class="btn btn-sm btn-primary transformar "
                                                         *ngIf="registro.concepto.semanticTag == 'hallazgo' || registro.concepto.semanticTag == 'trastorno'">
                                                         <i class="mdi mdi-vector-difference-ba"></i>
                                                         <i class="mdi mdi-vector-difference-ab"></i>
                                                     </a-->
 
-                                                    <a href="javascript:void(0);" (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
-                                                        <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
-                                                    </a>
+                                                <button (click)="cambiaValorCollapse(registro.id)" class="btn btn-sm btn-primary collapse-card">
+                                                    <i class="mdi mdi-chevron-down" [ngClass]="{'spin-in' : !itemsRegistros[registro.id]?.collapse, 'spin-out' : itemsRegistros[registro.id]?.collapse}"></i>
+                                                </button>
 
-                                                    <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
-                                                        <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (click)="cargaItems(registro, i)"
-                                                            [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
-                                                    </ng-container>
+                                                <ng-container *ngIf="prestacion?.ejecucion?.registros !== null && prestacion?.ejecucion?.registros?.length > 1">
+                                                    <plex-dropdown type="primary" class="dropdown-inline" [right]="true" icon="link-variant" (onOpen)="cargaItems(registro, i)"
+                                                        [items]="itemsRegistros[registro.id]?.items" title="Vincular registro"></plex-dropdown>
+                                                </ng-container>
 
-                                                    <a *ngIf="!existe(registro.concepto);" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')"
-                                                        class="btn btn-sm btn-danger eliminar">
-                                                        <i class="mdi mdi-delete"></i>
-                                                        <i class="mdi mdi-delete-empty"></i>
-                                                    </a>
-                                                </div>
+                                                <a *ngIf="!existe(registro.concepto);" href="javascript:void(0);" title="Quitar de la consulta" (click)="confirmarEliminarRegistro(registro, 'card')"
+                                                    class="btn btn-sm btn-danger eliminar">
+                                                    <i class="mdi mdi-delete"></i>
+                                                    <i class="mdi mdi-delete-empty"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)" [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
+                                            <!-- ... Header -->
+                                            <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
+                                                [dragClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
+                                                (onDragEnd)="draggingRegistro(i, registro, false)">
+                                                <span>
+                                                    {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
+                                                </span>
                                             </div>
 
-                                            <div class="rup-body" (click)="recuperaLosMasFrecuentes(registro.concepto)" [hidden]="itemsRegistros[registro.id]?.collapse || confirmarEliminar || confirmarDesvincular[registro.id]">
-                                                <!-- ... Header -->
-                                                <div class="legend drag-handle" draggable [dragScope]="['orden-registros-rup', 'vincular-registros-rup', 'borrar-registros-rup']"
-                                                    [dragOverClass]="'drag-target-border'" [dragData]="registro" (onDragStart)="draggingRegistro(i ,registro, true)"
-                                                    (onDragEnd)="draggingRegistro(i, registro, false)">
-                                                    <span>
-                                                        {{ (registro.esSolicitud) ? 'solicitud' : registro.concepto.semanticTag}}
+                                            <!-- ... Body -->
+                                            <div class="content" *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
+
+                                                <ng-container *ngIf="matchBusquedaGuiada(registro.concepto)">
+                                                    <div class="row">
+                                                        <div class="col-12">
+                                                            <span *ngFor="let rf of matchBusquedaGuiada(registro.concepto)" class="badge badge-danger">
+                                                                {{ rf.nombre }}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </ng-container>
+
+                                                <div *ngIf="mostrarMensajes && !registro.valido">
+                                                    <span class="badge badge-danger">
+                                                        Debe completar los datos
                                                     </span>
                                                 </div>
 
-                                                <!-- ... Body -->
-                                                <div class="content" *ngIf="paciente || (prestacion.solicitud.tipoPrestacion.noNominalizada)">
-
-                                                    <ng-container *ngIf="matchBusquedaGuiada(registro.concepto)">
-                                                        <div class="row">
-                                                            <div class="col-12">
-                                                                <span *ngFor="let rf of matchBusquedaGuiada(registro.concepto)" class="badge badge-danger">
-                                                                    {{ rf.nombre }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </ng-container>
-
-                                                    <div *ngIf="mostrarMensajes && !registro.valido">
-                                                        <span class="badge badge-danger">
-                                                            Debe completar los datos
-                                                        </span>
-                                                    </div>
-
-                                                    <!-- RUP Loader -->
-                                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
-                                                        [paciente]="paciente" [registro]="registro" [soloValores]="false" (change)="elementosRUPService.selectPorRefsetId(registro.concepto)"
-                                                        (ejecutarConcepto)="ejecutarConcepto($event, registro)" [params]="elementosRUPService.selectPorRefsetId(registro.concepto, registro.esSolicitud)"></rup>
-                                                </div>
+                                                <!-- RUP Loader -->
+                                                <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)" [prestacion]="prestacion"
+                                                    [paciente]="paciente" [registro]="registro" [soloValores]="false" (change)="elementosRUPService.selectPorRefsetId(registro.concepto)"
+                                                    (ejecutarConcepto)="ejecutarConcepto($event, registro)" [params]="elementosRUPService.selectPorRefsetId(registro.concepto, registro.esSolicitud)"></rup>
                                             </div>
+                                        </div>
 
-                                            <!-- Footer del registro -->
-                                            <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
-                                                <div class="type"></div>
+                                        <!-- Footer del registro -->
+                                        <div class="rup-footer" *ngIf="registro.relacionadoCon || confirmarEliminar">
+                                            <div class="type"></div>
 
-                                                <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]">
+                                            <div class="text-center col" *ngIf="registro.relacionadoCon && registro.relacionadoCon.length > 0 && confirmarDesvincular[registro.id]">
 
-                                                    <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
-                                                        <b class="text-capitalize">{{ mostrarVinculacion(registro)?.concepto.term }}
-                                                            <span *ngIf="mostrarVinculacion(registro)?.cara">/ {{ mostrarVinculacion(registro)?.cara }}</span>
-                                                        </b>?
-                                                        <div class="buttons">
-                                                            <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)" class="btn btn-default">
-                                                                Cancelar
-                                                            </a>
-
-                                                            <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)" class="btn btn-success">
-                                                                Desvincular
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="text-center col" *ngIf="confirmarEliminar && scopeEliminar === 'card' && indexEliminar == i">
-                                                    <div class="confirmarDesvincular">
-                                                        <div>¿Quitar de esta consulta?</div>
-                                                        <div class="buttons">
-                                                            <plex-button type=" btn-danger btn-sm" label="Cancelar" (click)="confirmarEliminar = false;" class="hover"></plex-button>
-                                                            <plex-button type=" btn-success btn-sm" label="Confirmar" (click)="eliminarRegistro()" class="confirm hover"></plex-button>
-                                                        </div>
+                                                <div class="confirmarDesvincular"> ¿Confirmar desvinculación con
+                                                    <b class="text-capitalize">{{ mostrarVinculacion(registro)?.concepto.term }}
+                                                        <span *ngIf="mostrarVinculacion(registro)?.cara">/ {{ mostrarVinculacion(registro)?.cara }}</span>
+                                                    </b>?
+                                                    <div class="buttons">
+                                                        <a href="javascript:void(0);" (click)="cancelarDesvincular(registro.id)" class="btn btn-default">
+                                                            Cancelar
+                                                        </a>
+                                                        <a href="javascript:void(0);" (click)="confirmarDesvinculacion(registro.id || registro.concepto.conceptId, i)" class="btn btn-success">
+                                                            Desvincular
+                                                        </a>
                                                     </div>
                                                 </div>
                                             </div>
 
+                                            <div class="text-center col" *ngIf="confirmarEliminar && scopeEliminar === 'card' && indexEliminar == i">
+                                                <div class="confirmarDesvincular">
+                                                    <div>¿Quitar de esta consulta?</div>
+                                                    <div class="buttons">
+                                                        <plex-button type="danger" label="Cancelar" (click)="confirmarEliminar = false;" class="hover"></plex-button>
+                                                        <plex-button type="success" label="Confirmar" (click)="eliminarRegistro()" class="confirm hover"></plex-button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
+
+
                                 </ng-container>
 
                                 <!-- Drop area -->
@@ -300,7 +297,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
                                                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
@@ -311,7 +308,7 @@
                                                             </ng-container>
                                                         </div>
                                                         <div class="actions">
-                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
 
                                                             <ng-container *ngFor="let relacion of elemento.relacionadoCon">
 
@@ -353,7 +350,7 @@
                                                                 {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}
                                                             </span>
                                                         </div>
-                                                        <div class="content">
+                                                        <div class="content m-0 p-0">
                                                             <div class="row">
 
                                                                 <div class="col-12">
@@ -409,13 +406,14 @@
     <!-- Footer -->
     <footer *ngIf="!showCambioPaciente">
         <div class="row">
+
             <div class="col-4" *ngIf="!showCambioPaciente && prestacion && prestacion.solicitud.ambitoOrigen != 'internacion'">
                 <plex-button label="Punto de Inicio" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info"></plex-button>
             </div>
             <div class="col-4" *ngIf="!showCambioPaciente && prestacion && prestacion.solicitud.ambitoOrigen == 'internacion'">
-                <plex-button label="Mapa de camas" (click)="volver(prestacion?.solicitud.ambitoOrigen)" type="info"></plex-button>
+                <plex-button label="{{btnVolver}}" (click)="volver(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info"></plex-button>
             </div>
-            <div class="col-4 text-center">
+            <div class="col-3 text-center">
                 <div droppable [dropScope]="'borrar-registros-rup'" (onDrop)="confirmarEliminarRegistro($event, 'footer')" [dragOverClass]="'drop-posicion-hover'"
                     [hidden]="!isDraggingRegistro" class="p-3">
                     <i class="mdi mdi-delete"></i> Quitar de la consulta
@@ -431,8 +429,13 @@
                 </div>
             </div>
 
-            <div class="col-4" *ngIf="!showCambioPaciente">
+            <div class="col-3">
+                <span *ngIf="!flagValid" class="badge badge-danger float-right">
+                    Hay registros incompletos
+                </span>
+            </div>
 
+            <div class="col-2" *ngIf="!showCambioPaciente">
                 <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success"
                     class="float-right"></plex-button>
             </div>

@@ -11,7 +11,6 @@ export class TurnoService {
     constructor(private server: Server) { }
 
     get(params: any): Observable<any[]> {
-        console.log(params);
         return this.server.get(this.turnoUrl + '/turno/', { params: params, showError: true });
     }
 
@@ -30,6 +29,7 @@ export class TurnoService {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno, options);
         }
     }
+
     saveDinamica(turno: any): Observable<IAgenda> {
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/agenda/' + turno.idAgenda, turno);

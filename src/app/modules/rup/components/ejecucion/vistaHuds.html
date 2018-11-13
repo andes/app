@@ -43,7 +43,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
                                                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
@@ -118,8 +118,9 @@
 
         <div class="row">
             <div class="col">
-                <plex-button *ngIf="mostrarPI" label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
-                <plex-button *ngIf="mostrarCambiaPaciente" label="Cambiar paciente" (click)="evtCambiaPaciente()" type="info"></plex-button>
+                <plex-button label="{{btnVolver}}" (click)="volver(rutaVolver)" type="info"></plex-button>
+                <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
+                <!-- class="float-right"></plex-button> -->
             </div>
         </div>
 

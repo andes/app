@@ -1,3 +1,5 @@
+
+import {finalize} from 'rxjs/operators';
 import { environment } from './../environments/environment';
 import { Component } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -15,8 +17,8 @@ export class AppComponent {
     private initStatusCheck() {
         if (environment.APIStatusCheck) {
             setTimeout(() => {
-                this.server.get('/core/status', { params: null, showError: false, showLoader: false })
-                    .finally(() => this.initStatusCheck())
+                this.server.get('/core/status', { params: null, showError: false, showLoader: false }).pipe(
+                    finalize(() => this.initStatusCheck()))
                     .subscribe(
                         (data) => this.plex.updateAppStatus(data),
                         (err) => this.plex.updateAppStatus({ API: 'Error' })
@@ -73,6 +75,7 @@ export class AppComponent {
             accessList.push({ label: 'Formulario Terapeutico', icon: 'mdi mdi-needle', route: '/formularioTerapeutico' });
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
+        this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
 
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);

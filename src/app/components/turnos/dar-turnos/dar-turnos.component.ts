@@ -95,7 +95,7 @@ export class DarTurnosComponent implements OnInit {
     seleccion = null;
     esEscaneado = false;
     ultimosTurnos: any[];
-    indice: number = -1;
+    indice = -1;
     semana: String[] = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
     permisos = [];
     autorizado = false;
@@ -392,7 +392,7 @@ export class DarTurnosComponent implements OnInit {
                     let inib = b.horaInicio ? new Date(b.horaInicio.setHours(0, 0, 0, 0)) : null;
                     {
                         return (inia ? (inia.getTime() - inib.getTime() || b.turnosDisponibles - a.turnosDisponibles) : b.turnosDisponibles - a.turnosDisponibles);
-                    };
+                    }
                 });
 
             });
@@ -809,7 +809,7 @@ export class DarTurnosComponent implements OnInit {
                     } else {
                         this.guardarTurno(agd);
                     }
-                };
+                }
             });
         } else {
             this.plex.alert('', 'Seleccione un tipo de prestación');

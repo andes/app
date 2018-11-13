@@ -1,14 +1,13 @@
 import { element } from 'protractor';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Rx';
+import { BehaviorSubject ,  Subject } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { Server } from '@andes/shared';
 import { SemanticTag } from '../interfaces/semantic-tag.type';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
-import { Subject } from 'rxjs/Subject';
 
 const url = '/modules/rup/elementosRUP';
 
@@ -177,4 +176,16 @@ export class ElementosRUPService {
         }
         return null;
     }
+
+
+    getConceptosInternacion() {
+        let conceptosInternacion = {
+            epicrisis: this.cache['2341000013106'] ? this.cache['2341000013106'].conceptos[0] : null,
+            ingreso: this.cache['721915006'] ? this.cache['721915006'].conceptos[0] : null,
+            egreso: this.cache['58000006'] ? this.cache['58000006'].conceptos[0] : null
+        };
+        return conceptosInternacion;
+    }
+
+
 }

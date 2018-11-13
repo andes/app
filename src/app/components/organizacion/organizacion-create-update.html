@@ -45,8 +45,7 @@
                             <div>
                                 <div class="row">
                                     <div class="col-4">
-                                        <plex-select name="localidad" [data]="localidadesNeuquen" [(ngModel)]="organizacionModel.direccion.ubicacion.localidad.nombre"
-                                            label="Localidad:">
+                                        <plex-select name="localidad" [data]="localidadesNeuquen" [(ngModel)]="organizacionModel.direccion.ubicacion.localidad" label="Localidad:">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
@@ -164,11 +163,12 @@
                         </div>
                     </fieldset>
                     <fieldset>
-                        <legend>Servicios</legend>
+                        <legend>Unidades Organizativas</legend>
 
                         <div class="row">
                             <div class="col-6">
-                                <plex-select [multiple]="true" name="servicios" (getData)=" getServicios($event)" [(ngModel)]="serviciosSeleccionados" label="Servicios:">
+                                <plex-select [multiple]="true" name="servicios" labelField="term" [data]='listadoUO' idField="conceptId" [(ngModel)]="organizacionModel.unidadesOrganizativas"
+                                    label="Unidades Organizativas:">
                                 </plex-select>
                             </div>
                         </div>
@@ -182,8 +182,6 @@
     <footer>
         <div class="row">
             <div class="col-6 text-left">
-                <plex-button type="primary" label="Ver listado de camas" (click)="routeCama()">
-                </plex-button>
             </div>
             <div class="col-6 text-right">
                 <plex-button label="Cancelar" icon="close-circle-outline" type="danger" (click)="onCancel()">

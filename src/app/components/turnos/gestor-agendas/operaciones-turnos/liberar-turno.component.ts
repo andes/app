@@ -67,7 +67,7 @@ export class LiberarTurnoComponent implements OnInit {
         },
             err => {
                 if (err) {
-                    console.log(err);
+
                 }
             });
     }

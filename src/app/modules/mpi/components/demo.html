@@ -1,0 +1,13 @@
+<plex-layout main="9">
+    <plex-layout-main>
+        <header>
+            <!-- Buscador  -->
+            <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"></paciente-buscar>
+        </header>
+        <!-- Listado de pacientes -->
+        <paciente-listado [pacientes]="pacientes" [autoselect]="false" (selected)="seleccionarPaciente($event)" (hover)="hoverPaciente($event)"></paciente-listado>
+    </plex-layout-main>
+    <plex-layout-sidebar>
+        <paciente-panel [paciente]="pacienteActivo"></paciente-panel>
+    </plex-layout-sidebar>
+</plex-layout>
