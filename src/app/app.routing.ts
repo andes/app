@@ -100,12 +100,9 @@ const appRoutes: Routes = [
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
 
   // MPI
-  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-  { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
-
-  // AUDITORIA
+  { path: 'apps/mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
   { path: 'apps/mpi/auditoria/vincular-pacientes', component: VincularPacientesComponent, canActivate: [RoutingGuard] },
-  { path: 'apps/mpi/auditoria/auditoria/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent },

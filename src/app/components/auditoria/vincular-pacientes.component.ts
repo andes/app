@@ -41,7 +41,7 @@ export class VincularPacientesComponent implements OnInit {
 
 
     public cancelar() {
-        this.router.navigate(['app/src/app/components/auditoria/auditoria']);
+        this.router.navigate(['apps/mpi/auditoria']);
     }
 
     /**
@@ -75,7 +75,7 @@ export class VincularPacientesComponent implements OnInit {
                 pacientes.forEach(elem => {
                     if (elem.paciente.activo !== false) {
                         candidatosVinculacion.push({ paciente: elem.paciente, vinculado: false, activo: elem.activo, match: elem.match });
-                    };
+                    }
                 });
                 this.listaCandidatos = candidatosVinculacion;
                 this.loadPacientesVinculados();

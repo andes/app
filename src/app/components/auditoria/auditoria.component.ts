@@ -26,7 +26,6 @@ export class AuditoriaComponent implements OnInit {
     enableVinculados = false;
     loading = false;
     showAuditoria = true;
-    pacTemporales = [];
     pacVinculados = [];
     public panelIndex = 0;
     private datosFA: any;
@@ -56,15 +55,6 @@ export class AuditoriaComponent implements OnInit {
     onLoadData() {
         this.showDetallePaciente = false;
         this.enableVinculados = false;
-        // Trae todos los pacientes temporales activos y temporales
-        this.pacienteService.getAuditoria({
-            estado: 'temporales',
-            activo: true
-        }).subscribe(resultado => {
-            if (resultado) {
-                this.pacTemporales = resultado;
-            }
-        });
         // Trae solo los pacientes que tienen vinculaciones
         this.getVinculados();
     }
@@ -171,7 +161,7 @@ export class AuditoriaComponent implements OnInit {
         }
         this.showVincular = true;
         this.showAuditoria = false;
-        this.router.navigate(['app/src/app/components/auditoria/vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
+        this.router.navigate(['apps/mpi/auditoria/vincular-pacientes', { idPaciente: this.pacienteSelected.id }]);
 
     }
 
