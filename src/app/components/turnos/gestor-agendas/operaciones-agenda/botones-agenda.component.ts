@@ -135,7 +135,7 @@ export class BotonesAgendaComponent implements OnInit {
 
         this.vistaBotones = {
             // Se puede editar sólo una agenda que esté en estado planificacion o disponible
-            editarAgenda: (this.cantidadSeleccionadas === 1) && !this.agendasSeleccionadas[0].dinamica && this.puedoEditar() && puedeEditar,
+            editarAgenda: (this.cantidadSeleccionadas === 1) && this.puedoEditar() && puedeEditar,
             // Se pueden suspender agendas que estén en estado disponible o publicada...
             suspenderAgenda: (this.cantidadSeleccionadas === 1 && this.puedoSuspender() && puedeSuspender),
             // Se pueden pasar a disponible cualquier agenda en estado planificacion
@@ -207,7 +207,7 @@ export class BotonesAgendaComponent implements OnInit {
 
     puedoDisponer() {
         let disponer = this.agendasSeleccionadas.filter((agenda) => {
-            return (agenda.estado !== 'planificacion' || !agenda.nominalizada);
+            return (agenda.estado !== 'planificacion');
         }).length <= 0;
         return disponer;
     }

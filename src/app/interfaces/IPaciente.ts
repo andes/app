@@ -1,8 +1,7 @@
+import { IPacienteRelacion } from './../modules/mpi/interfaces/IPacienteRelacion.inteface';
 import { IContacto } from './IContacto';
-import { IUbicacion } from './IUbicacion';
 import { IDireccion } from './IDireccion';
-import { Sexo, Genero, EstadoCivil } from './../utils/enumerados';
-
+import { EstadoCivil } from './../utils/enumerados';
 
 export interface IPaciente {
     id: string;
@@ -24,17 +23,7 @@ export interface IPaciente {
     direccion: IDireccion[];
     estadoCivil: EstadoCivil;
     foto: string;
-    relaciones: [{
-        relacion: {
-            id: string,
-            nombre: string,
-            opuesto: string
-        };
-        referencia: string;
-        nombre: string;
-        apellido: string;
-        documento: string
-    }];
+    relaciones: [IPacienteRelacion];
     financiador: [{
         entidad: {
             id: string;

@@ -27,6 +27,7 @@ export class UsuarioCreateComponent {
     public documento: number;
     public permisos: any[] = [];
     public nuevoPermiso: string;
+    public mostrarSave = false;
     public userModel: any = {
         id: null,
         usuario: '',
@@ -41,38 +42,43 @@ export class UsuarioCreateComponent {
         private organizacionService: OrganizacionService) { }
 
 
-    buscarUsuario() {
-        this.usuarioService.getByDni(this.documento).subscribe(user => {
-            if (user.length < 1) {
-                this.usuarioService.getUser(this.documento.toString()).subscribe(res => {
-                    this.userModel.nombre = res.givenName;
-                    this.userModel.apellido = res.sn;
-                    this.userModel.usuario = res.uid;
-                    this.userModel.organizaciones = [];
+    buscarUsuario(event) {
+        if (event.formValid) {
+            this.mostrarSave = false;
+            this.usuarioService.getByDni(this.documento).subscribe(user => {
+                if (user.length < 1) {
+                    this.usuarioService.getUser(this.documento.toString()).subscribe(res => {
+                        this.userModel.nombre = res.givenName;
+                        this.userModel.apellido = res.sn;
+                        this.userModel.usuario = res.uid;
+                        this.userModel.organizaciones = [];
+                        this.showUpdate = true;
+                        this.mostrarSave = true;
+                    }, err => {
+                        this.plex.toast('warning', err, 'Error', 5);
+                    });
+                } else {
+                    this.userModel.id = user[0].id;
+                    this.userModel.nombre = user[0].nombre;
+                    this.userModel.apellido = user[0].apellido;
+                    this.userModel.usuario = user[0].usuario;
+                    this.userModel.organizaciones = user[0].organizaciones;
+                    this.plex.toast('info', 'Usuario existente', 'Información', 5);
                     this.showUpdate = true;
-                }, err => {
-                    this.plex.toast('warning', err, 'Error', 5);
+                    this.mostrarSave = true;
                 }
-                );
-            } else {
-                this.userModel.id = user[0].id;
-                this.userModel.nombre = user[0].nombre;
-                this.userModel.apellido = user[0].apellido;
-                this.userModel.usuario = user[0].usuario;
-                this.userModel.organizaciones = user[0].organizaciones;
-                this.plex.toast('info', 'Usuario existente', 'Información', 5);
-                this.showUpdate = true;
-            }
+            });
         }
-        );
     }
 
-    onSave() {
-        this.userModel.permisos = this.permisos;
-        this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.toast('success', 'Usuario guardado', '', 5);
-            this.data.emit(user);
-        });
+    onSave(event) {
+        if (event.formValid) {
+            this.userModel.permisos = this.permisos;
+            this.usuarioService.save(this.userModel).subscribe(user => {
+                this.plex.toast('success', 'Usuario guardado', '', 5);
+                this.data.emit(user);
+            });
+        }
     }
 
     onCancel() {

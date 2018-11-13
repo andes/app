@@ -1,6 +1,6 @@
 import * as https from 'https';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Server } from '@andes/shared';
 import swal from 'sweetalert2';
 
@@ -36,7 +36,7 @@ export class SugerenciasService {
                                     title: 'Hubo un error y el mensaje no pudo ser enviado.',
                                     html: 'Error: ' + result.mensaje
                                 });
-                            };
+                            }
                         },
                         err => {
                             if (err) {

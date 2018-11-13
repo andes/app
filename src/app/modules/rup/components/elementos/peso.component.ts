@@ -5,12 +5,12 @@ import { RUPComponent } from './../core/rup.component';
     templateUrl: 'peso.html'
 })
 export class PesoComponent extends RUPComponent implements OnInit {
+    public esRequerido: boolean;
+
     ngOnInit() {
         if (!this.soloValores) {
             // Observa cuando cambia la propiedad 'peso' en otro elemento RUP
             this.conceptObserverService.observe(this.registro).subscribe((data) => {
-
-                console.log(this.registro.valor, data.valor);
 
                 if (this.registro.valor !== data.valor) {
                     this.registro.valor = data.valor;
@@ -20,6 +20,12 @@ export class PesoComponent extends RUPComponent implements OnInit {
         }
         if (this.registro.valor) {
             this.mensaje = this.getMensajes();
+        }
+
+        if (this.params) {
+            this.esRequerido = this.params.required;
+        } else {
+            this.esRequerido = false;
         }
     }
 

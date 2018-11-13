@@ -1,7 +1,6 @@
 import { PrestacionesService } from './../../../services/prestaciones.service';
-import { CamasService } from './../../../../../services/camas.service';
 import { IPaciente } from './../../../../../interfaces/IPaciente';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute, Params } from '@angular/router';
@@ -16,6 +15,7 @@ import { SnomedService } from '../../../../../services/term/snomed.service';
 import { OrganizacionService } from '../../../../../services/organizacion.service';
 import { ElementosRUPService } from '../../../services/elementosRUP.service';
 import { PacienteService } from '../../../../../services/paciente.service';
+import { CamasService } from '../../../services/camas.service';
 
 @Component({
     templateUrl: 'ocuparCama.html'
@@ -90,14 +90,14 @@ export class OcuparCamaComponent implements OnInit {
 
         this.camasService.cambiaEstado(this.cama.id, dto).subscribe(camaActualizada => {
             this.cama.ultimoEstado = camaActualizada.ultimoEstado;
-            this.router.navigate(['/mapa-de-camas']);
+            this.router.navigate(['/internacion/camas']);
         }, (err1) => {
             this.plex.info('danger', err1, 'Error al intentar ocupar la cama');
         });
     }
 
     cancelar() {
-        this.router.navigate(['/mapa-de-camas']);
+        this.router.navigate(['/internacion/camas']);
     }
 
 }

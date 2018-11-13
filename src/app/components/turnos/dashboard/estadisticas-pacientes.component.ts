@@ -9,6 +9,8 @@ import { IPaciente } from './../../../interfaces/IPaciente';
 // Servicios
 import { TurnoService } from '../../../services/turnos/turno.service';
 import { LogPacienteService } from '../../../services/logPaciente.service';
+import { ObraSocialService } from '../../../services/obraSocial.service';
+import { IObraSocial } from '../../../interfaces/IObraSocial';
 
 @Component({
     selector: 'estadisticas-pacientes',
@@ -44,6 +46,7 @@ export class EstadisticasPacientesComponent implements OnInit {
     anulaciones = 0;
     idOrganizacion = this.auth.organizacion.id;
     carpetaEfector: any;
+    obraSocial: IObraSocial;
 
     // Inicialización
     constructor(
@@ -51,30 +54,38 @@ export class EstadisticasPacientesComponent implements OnInit {
         public plex: Plex,
         public auth: Auth,
         public serviceLogPaciente: LogPacienteService,
-        public servicePaciente: PacienteService) { }
+        public servicePaciente: PacienteService,
+        private obraSocialService: ObraSocialService) { }
 
     ngOnInit() {
         // Se cargan los datos calculados
         let hoy = {
-            fechaDesde: moment().startOf('month').format(),
-            fechaHasta: moment().endOf('day').format()
+            fechaDesde: moment().startOf('month').toDate(),
+            fechaHasta: moment().endOf('day').toDate()
         };
-        this.fechaDesde = new Date(hoy.fechaDesde);
-        this.fechaHasta = new Date(hoy.fechaHasta);
+        this.fechaDesde = moment().startOf('month').toDate();
+        this.fechaHasta = moment().endOf('day').toDate();
         this.carpetaEfector = {
             organizacion: {
-                _id: this.auth.organizacion.id,
+                id: this.auth.organizacion.id,
                 nombre: this.auth.organizacion.nombre
             },
             nroCarpeta: ''
         };
         this.getPaciente();
+        this.loadObraSocial();
+    }
 
+    loadObraSocial() {
+        this.obraSocialService.get({ dni: this._paciente.documento }).subscribe(resultado => {
+            if (resultado.length) {
+                this.obraSocial = resultado[0];
+            }
+        });
     }
 
     arancelamiento(turno) {
         this.showArancelamientoForm.emit(turno);
-
     }
 
     getPaciente() {
@@ -95,7 +106,7 @@ export class EstadisticasPacientesComponent implements OnInit {
                         this.inasistencias = cantInasistencias;
                         this.sortTurnos(turnos);
                         this.turnosPaciente = turnos.filter(t => {
-                            return moment(t.horaInicio).isSameOrAfter(new Date(), 'day');
+                            return (moment(t.horaInicio).isSameOrAfter(new Date(), 'day') && t.estado !== 'liberado');
                         });
 
                         this.ultimosTurnos = turnos.filter(t => {
@@ -122,7 +133,7 @@ export class EstadisticasPacientesComponent implements OnInit {
             {
                 return ((inia && inib) ? (inib.getTime() - inia.getTime()) : 0);
             }
-            ;
+
         });
     }
 }

@@ -18,16 +18,16 @@
                         <ng-container *ngIf="registrosHuds">
                             <ng-container *ngFor="let registro of registrosHuds; let i = index">
                                 <tab [tabTitle]="registro.data.concepto.term" [class]="registro.data.class" *ngIf="registro.tipo === 'hallazgo' || registro.tipo === 'medicamento'">
-                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)"
-                                        [prestacion]="prestacion" [registro]="registro.data" [soloValores]="true">
+                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(registro.data.concepto, registro.data.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(registro.data.concepto)"
+                                        [prestacion]="prestacion" [paciente]="paciente" [registro]="registro.data" [soloValores]="true">
                                     </rup>
                                 </tab>
 
                                 <tab [tabTitle]="registro.data.solicitud.tipoPrestacion.term" [class]="registro.data.class" *ngIf="registro.tipo === 'prestacion'">
-                                    <h4>{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
+                                    <h4 class="text-capitalize">{{ registro.data.solicitud.tipoPrestacion.term }}</h4>
                                     <div class="row">
                                         <div class="col-12">
-                                            <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
+                                            <b>Fecha: </b> {{ registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyyHH:MM' }}
                                         </div>
                                         <div class="col-12">
                                             <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
@@ -43,7 +43,7 @@
                                             <h4>Registros de la consulta:</h4>
                                             <ng-container *ngFor="let elemento of registro.data.ejecucion.registros; let i = index">
 
-                                                <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">
+                                                <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">
                                                     <div class="rup-header">
                                                         <div class="icon-rup">
                                                             <i class="icon icon-rup-semantic-{{servicioPrestacion.getIcon(elemento.concepto)}}"></i>
@@ -54,28 +54,28 @@
                                                             </ng-container>
                                                         </div>
                                                         <div class="actions">
-                                                            <span class="badge badge-{{ (elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                                             <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
                                                                 <b>Relacionado con:</b> {{ elemento.relacionadoCon[0].concepto.term[0].toUpperCase()
                                                                 + elemento.relacionadoCon[0].concepto.term.slice(1)}}
                                                             </small>
                                                             <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">
-                                                                Procedimiento / diagnostico principal
+                                                                Procedimiento / diagnóstico principal
                                                             </small>
                                                         </div>
                                                     </div>
                                                     <div class="rup-body">
                                                         <div class="legend">
                                                             <span>
-                                                                {{elemento.concepto.semanticTag}}
+                                                                {{ (elemento.esSolicitud) ? 'solicitud' : elemento.concepto.semanticTag}}
                                                             </span>
                                                         </div>
                                                         <div class="content">
                                                             <div class="row">
 
                                                                 <div class="col-12">
-                                                                    <rup [paciente]="paciente" [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [prestacion]="registro.data"
-                                                                        [registro]="elemento" [soloValores]="true"></rup>
+                                                                    <rup [elementoRUP]="elementosRUPService.buscarElemento(elemento.concepto, elemento.esSolicitud)" [params]="elementosRUPService.selectPorRefsetId(elemento.concepto)"
+                                                                        [prestacion]="registro.data" [registro]="elemento" [paciente]="paciente"
+                                                                        [soloValores]="true"></rup>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -118,7 +118,7 @@
 
         <div class="row">
             <div class="col">
-                <plex-button label="Punto de Inicio" (click)="volver()" type="info"></plex-button>
+                <plex-button label="{{btnVolver}}" (click)="volver(rutaVolver)" type="info"></plex-button>
                 <!-- <plex-button label="Guardar {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="guardarPrestacion()" type="success" -->
                 <!-- class="float-right"></plex-button> -->
             </div>

@@ -35,7 +35,7 @@ export class CalendarioComponent {
     }
 
     // Propiedades
-    @Input('fecha') fecha: Date;
+    @Input() fecha: Date;
     @Input() _solicitudPrestacion: any;
     @Input('agenda')
     set agenda(value: IAgenda) {
@@ -64,7 +64,7 @@ export class CalendarioComponent {
     get estado(): String {
         return this._estado;
     }
-    @Output('agendaChanged') agendaChanged = new EventEmitter();
+    @Output() agendaChanged = new EventEmitter();
 
     /** Devuelve la primera agenda que encuentra de un día determinado */
     private agendaPorFecha(fecha: moment.Moment): IAgenda {
@@ -88,6 +88,8 @@ export class CalendarioComponent {
         if (this.fecha && this.agendas) {
 
             let inicio = moment(this.fecha).startOf('month').startOf('week');
+            let ultimoDiaMes = moment(this.fecha).endOf('month');
+            let primerDiaMes = moment(this.fecha).startOf('month');
             let cantidadSemanas = Math.ceil(moment(this.fecha).endOf('month').endOf('week').diff(moment(this.fecha).startOf('month').startOf('week'), 'weeks', true));
             this.diaSeleccionado = null;
             this.calendario = [];
@@ -127,7 +129,12 @@ export class CalendarioComponent {
                         dia.cantidadAgendas = agendasPorFecha.length;
                     }
                     dia.weekend = inicio.isoWeekday() >= 6;
-                    week.push(dia);
+                    let isThisMonth = inicio.isSameOrBefore(ultimoDiaMes) && inicio.isSameOrAfter(primerDiaMes);
+                    if (isThisMonth) {
+                        week.push(dia);
+                    } else {
+                        week.push({ estado: 'vacio' });
+                    }
 
                     // ¿Hay una agenda seleccionada?
                     if (dia.agenda && this.agenda && inicio.isSame(this.agenda.horaInicio, 'day')) {
