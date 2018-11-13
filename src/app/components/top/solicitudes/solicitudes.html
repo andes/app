@@ -57,7 +57,7 @@
                                                 <tr *ngFor="let prestacion of prestacionesEntrada; let i=index" class="hover"
                                                     [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.fecha
-                                                        | date: 'dd/MM/yyyy'}}</td>
+                                                        | fecha}}</td>
                                                     <td (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.paciente
                                                         | paciente}}<br>DNI {{prestacion.paciente.documento}}</td>
                                                     <td *ngIf="prestacion.solicitud.organizacionOrigen" (click)="seleccionar(prestacionesEntrada,i)">{{prestacion.solicitud.organizacionOrigen.nombre}}</td>
@@ -136,7 +136,7 @@
                                                 <tr *ngFor="let prestacion of prestacionesSalida; let i=index" class="hover"
                                                     (click)="seleccionar(prestacionesSalida,i)" [ngClass]="{'bg-inverse text-white': (prestacion.seleccionada===true)}">
 
-                                                    <td>{{prestacion.solicitud.fecha | date: 'dd/MM/yyyy'}}</td>
+                                                    <td>{{prestacion.solicitud.fecha | fecha}}</td>
                                                     <td>{{prestacion.paciente | paciente}}<br>DNI
                                                         {{prestacion.paciente.documento}}</td>
                                                     <!-- <td>{{prestacion.paciente | paciente}}</td> -->

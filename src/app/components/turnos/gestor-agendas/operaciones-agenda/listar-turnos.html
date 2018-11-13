@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col">
                                     <label>Agenda </label> {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio
-                                    | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
+                                    | fecha}}, {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin |
                                     date: 'HH:mm'}} hs
                                 </div>
                                 <div class="col">
@@ -89,7 +89,7 @@
                                     <small [ngClass]="{'text-danger': turno.estado === 'suspendido'}" *ngIf="turno && turno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                    <small *ngIf="turno?.paciente?.id && turno?.paciente?.fechaNacimiento">{{ turno.paciente.fechaNacimiento | fecha }}</small>
                                 </td>
                                 <td>
                                     <small *ngIf="turno?.paciente?.id && turno?.paciente?.sexo">{{ turno.paciente | sexo }}</small>
@@ -152,7 +152,7 @@
                                     <small [ngClass]="{'text-danger': sobreturno.estado === 'suspendido'}" *ngIf="sobreturno && sobreturno.estado === 'suspendido'">Suspendido</small>
                                 </td>
                                 <td>
-                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | date: 'dd/MM/yyyy' }}</small>
+                                    <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.fechaNacimiento">{{ sobreturno.paciente.fechaNacimiento | fecha }}</small>
                                 </td>
                                 <td>
                                     <small *ngIf="sobreturno?.paciente?.id && sobreturno?.paciente?.sexo">{{ sobreturno.paciente | sexo }}</small>

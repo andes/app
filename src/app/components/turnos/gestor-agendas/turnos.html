@@ -18,7 +18,7 @@
                     <!--Header pequeño-->
                     <div *ngIf="!mostrarHeaderCompleto" class="row">
                         <div class="col-12">
-                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}}, {{ agenda.horaInicio | date:
+                            {{ agenda.horaInicio | date: 'EEE' | uppercase }} {{ agenda.horaInicio | fecha}}, {{ agenda.horaInicio | date:
                             'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
                             <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>
                         </div>

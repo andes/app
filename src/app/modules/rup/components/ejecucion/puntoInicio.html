@@ -126,7 +126,7 @@
                         <div class="col-12 ">
                             <ng-container>
                                 {{ agendaSeleccionada.horaInicio | date: 'EEE' }} {{ agendaSeleccionada.horaInicio |
-                                date: 'dd/MM/yyyy'}}, {{ agendaSeleccionada.horaInicio
+                                fecha}}, {{ agendaSeleccionada.horaInicio
                                 | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
                                 <span class="badge-info " *ngIf="agendaSeleccionada.dinamica ">Dinámica</span>
                                 <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones ">{{tipoPrestacion.nombre}}</div>
