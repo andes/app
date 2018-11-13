@@ -3,14 +3,15 @@ import { RUPComponent } from '../core/rup.component';
 
 import * as moment from 'moment';
 import 'moment/locale/es';
+import { isNumber } from 'util';
 
 @Component({
     selector: 'rup-seguimiento-peso',
     templateUrl: 'seguimiento.html'
 })
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
-    // variables para guardar los datosMensurables de las prestaciones
-    public datosMensurables: any[] = [];
+    // variables para guardar los datosLineales de las prestaciones
+    public datosLineales: any[] = [];
 
     // opciones para el grafico
     public barChartOptions: any = {};
@@ -18,6 +19,7 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
     public barChartType = 'line';
     public barChartLegend = false;
     public barChartData: any[] = [];
+    barChartDates: any[] = [];
 
     ngOnInit() {
         moment.locale('es');
@@ -29,35 +31,45 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
         // 307818003
         // buscamos
         // this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<307818003').subscribe(prestaciones => {
-        this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${this.elementoRUP.params.conceptId}`).subscribe(prestaciones => {
 
-            if (prestaciones.length) {
-                this.datosMensurables = prestaciones;
+        let datos = this.elementoRUP.params.map((param, index) => {
 
-                // ordenamos los datosMensurables por fecha
-                this.datosMensurables.sort(function (a, b) {
-                    let dateA = new Date(a.fecha).getTime();
-                    let dateB = new Date(b.fecha).getTime();
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${param.conceptId}`).subscribe(prestaciones => {
 
-                    return dateA > dateB ? 1 : -1;
-                });
+                let pr = JSON.parse(JSON.stringify(prestaciones));
 
-                // asignamos los datosMensurables al data para el chart
-                this.barChartData = [
-                    { data: this.datosMensurables.map(p => p.registro.valor), label: this.elementoRUP.params.label, fill: false }
-                ];
+                if (prestaciones.length) {
 
-                // agregamos las leyendas del eje x
-                this.barChartLabels = this.datosMensurables.map(p => moment(p.fecha));
+                    // ordenamos los datosLineales por fecha
+                    prestaciones.sort(function (a, b) {
+                        let dateA = new Date(a.fecha).getTime();
+                        let dateB = new Date(b.fecha).getTime();
 
-                // set options charts
-                this.setChartOptions(this.datosMensurables);
+                        return dateA > dateB ? 1 : -1;
+                    });
 
-                // nuevo titulo
-                this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0]).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1]).format('DD-MM-YYYY');
+                    this.barChartDates.push(
+                        prestaciones.filter(y => y.registro.valor !== null && isNumber(y.registro.valor)).map(p => ({ fecha: p.fecha })),
+                    );
+                    console.log('barChartDates', this.barChartDates);
 
-            }
+                    // set options charts
+                    this.setChartOptions(this.barChartDates);
+
+                    // asignamos los datosLineales al data para el chart
+                    this.barChartData.push(
+                        { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && isNumber(y)), label: param.label, fill: false },
+                    );
+
+
+                    // agregamos las leyendas del eje x
+                    this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('ll'));
+                    this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0].fecha).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1].fecha).format('DD-MM-YYYY');
+
+                }
+            });
         });
+
 
     }
 
@@ -69,46 +81,55 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
      * @memberof SeguimientoDelPesoComponent
      */
     private setChartOptions(data): void {
+
+
+        console.log({ data }, this.elementoRUP.params.map(x => x.label).join(' y '));
+        // console.log(data[0].fecha);
+
+
+
         this.barChartOptions = {
-            scaleShowVerticalLines: false,
-            responsive: false,
+            scaleShowVerticalLines: true,
+            responsive: true,
             maintainAspectRatio: true,
             title: {
                 display: true,
-                text: `Curva de ${this.elementoRUP.params.label}`
+                text: `Curva de ${this.elementoRUP.params.map(x => x.label).join(' y ')}`
             },
             scales: {
                 yAxes: [{
                     scaleLabel: {
                         display: true,
-                        labelString: `${this.elementoRUP.params.label} (${this.elementoRUP.params.unidad})`
+                        labelString: `${this.elementoRUP.params.map(x => x.label).join(' y ')} (${this.elementoRUP.params.map(x => x.unidad).join(' / ')})`
                     },
                     ticks: {
                         beginAtZero: true
                     }
                 }],
-                xAxes: [{
-                    type: 'time',
-                    time: {
-                        min: moment(data[0].fecha).subtract(0.5, 'days'),
-                        max: moment(data[data.length - 1].fecha).add(0.5, 'days'),
-                        unit: 'day',
-                        tooltipFormat: 'DD/MM/YYYY',
-                        unitStepSize: 0.5,
-                        round: 'hour',
-                        // displayFormats: {
-                        //     'millisecond': 'MMM DD',
-                        //     'second': 'MMM DD',
-                        //     'minute': 'MMM DD',
-                        //     'hour': 'MMM DD',
-                        //     'day': 'MMM DD',
-                        //     'week': 'MMM DD',
-                        //     'month': 'MMM DD',
-                        //     'quarter': 'MMM DD',
-                        //     'year': 'MMM DD',
-                        // }
-                    }
-                }],
+                // xAxes: [{
+                //     type: 'time',
+                //     time: {
+                //         min: moment(data[0].fecha).subtract(0.5, 'days'),
+                //         // min: moment().subtract(6, 'months'),
+                //         max: moment(data[data.length - 1].fecha).add(0.5, 'days'),
+                //         // max: moment().add(1, 'months'),
+                //         unit: 'day',
+                //         tooltipFormat: 'DD/MM/YYYY',
+                //         unitStepSize: 0.5,
+                //         round: 'hour',
+                //         // displayFormats: {
+                //         //     'millisecond': 'MMM DD',
+                //         //     'second': 'MMM DD',
+                //         //     'minute': 'MMM DD',
+                //         //     'hour': 'MMM DD',
+                //         //     'day': 'MMM DD',
+                //         //     'week': 'MMM DD',
+                //         //     'month': 'MMM DD',
+                //         //     'quarter': 'MMM DD',
+                //         //     'year': 'MMM DD',
+                //         // }
+                //     }
+                // }],
             },
             tooltips: {
                 callbacks: {
