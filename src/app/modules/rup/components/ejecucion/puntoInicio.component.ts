@@ -424,56 +424,19 @@ export class PuntoInicioComponent implements OnInit {
         return moment(agenda.horaInicio).fromNow();
     }
 
+
     // buscar paciente para asigar en las agendas dinamicas
     buscarPaciente() {
         this.buscandoPaciente = true;
     }
 
-    // Paciente seleccionado para la carga en agendas dinamicas
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-
-            let pacienteSave = {
-                id: paciente.id,
-                documento: paciente.documento,
-                apellido: paciente.apellido,
-                nombre: paciente.nombre,
-                alias: paciente.alias,
-                fechaNacimiento: paciente.fechaNacimiento,
-                sexo: paciente.sexo
-            };
-            this.darTurno(pacienteSave);
-        } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
-        }
-    }
-
-    darTurno(paciente) {
-        let idAgendaSeleccionada = this.agendaSeleccionada.id;
-        if (this.agendaSeleccionada.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                let datosTurno = {
-                    nota: '',
-                    motivoConsulta: '',
-                    tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
-                    paciente: paciente,
-                    idAgenda: this.agendaSeleccionada.id
-                };
-                this.serviceTurno.saveDinamica(datosTurno).subscribe(
-                    resultado => {
-                        this.buscandoPaciente = false;
-                        this.actualizar();
-                    },
-                    error => {
-
-                    });
-            });
-        }
+    cancelarDinamica() {
+        this.buscandoPaciente = false;
     }
 
     /**
        * Ejecutar una prestacion que esta en estado pendiente
-       */
+    */
     ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
         let params: any = {
             op: 'estadoPush',
@@ -498,4 +461,6 @@ export class PuntoInicioComponent implements OnInit {
             }
         });
     }
+
+
 }
