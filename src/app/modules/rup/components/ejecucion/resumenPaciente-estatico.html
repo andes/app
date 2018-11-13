@@ -44,29 +44,25 @@
                 </div>
             </div>
         </div>
+
     </div>
-</ng-container>
-<ng-container>
-    <div class="row prestacionActual" *ngIf="prestacionSolicitud">
-        <div class="col-6">
-            <h5>
-                <b>{{prestacionSolicitud.tipoPrestacion.term}}</b>
-            </h5>
-            <br>
-            <p>
+    <hr>
+    <!-- <div class="prestacionActual">
+        <div class="row" *ngIf="prestacionSolicitud">
+            <div class="col-6">
+                <label>{{prestacionSolicitud.tipoPrestacion.term}}</label>
+            </div>
+            <div class="col-6 text-right">
+                <label>{{prestacionSolicitud.fecha | fecha }}</label>
+            </div>
+        </div>
+        <div class="row" *ngIf="prestacionSolicitud">
+            <div class="col-6">
                 {{prestacionSolicitud.profesional.apellido}}, {{prestacionSolicitud.profesional.nombre}}
-            </p>
+            </div>
+            <div class="col-6  text-right">
+                <label>{{prestacionSolicitud.fecha | fecha}}</label>
+            </div>
         </div>
-        <div class="col-6 text-right">
-            <p>
-                <b>{{prestacionSolicitud.fecha | date: 'EEE dd/M/yyyy'}}</b>
-            </p>
-            <br>
-            <p>
-                <b>
-                    {{prestacionSolicitud.fecha | date: 'HH:MM'}}
-                </b>
-            </p>
-        </div>
-    </div>
+    </div> -->
 </ng-container>

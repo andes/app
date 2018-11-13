@@ -1,6 +1,6 @@
 <ng-container>
     <div class="row">
-        <div class="col-6">
+        <div class="col-6" *ngIf="registro">
             <h5>Resumen de HUDS</h5>
             <rup-resumenHistoriaClinica *ngIf="registro" [elementoRUP]="elementosRUPService.buscarElemento(registro.concepto, registro.esSolicitud)"
                 [prestacion]="" [paciente]="paciente" [registro]="registro" [soloValores]="true"></rup-resumenHistoriaClinica>

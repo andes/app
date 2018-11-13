@@ -6,7 +6,7 @@
             <!-- Panel Principal -->
             <div class="col-8">
                 <plex-box>
-                    <header>
+                    <!-- <header>
                         <div class="row">
                             <div class="col-9 page-title titulo-consulta">
                                 <span class="consulta">CONSULTA | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
@@ -18,7 +18,7 @@
                                 <plex-button icon="information" type="info" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             </div>
                         </div>
-                    </header>
+                    </header> -->
 
                     <!-- div de la info de la solicitud -->
                     <div [hidden]="!showDatosSolicitud">
@@ -283,12 +283,11 @@
                                             <b>Fecha: </b> {{registro.data.solicitud.fecha | date: 'EEE dd/MM/yyyy HH:MM'}}
                                         </div>
                                         <div class="col-12">
-                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional
-                                            | profesional }}
+                                            <b>Solicitada por el profesional: </b>{{ registro.data.solicitud.profesional | profesional
+                                            }}
                                         </div>
                                         <div class="col-12">
-                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre
-                                            }}
+                                            <b>Desde la Organización: </b> {{ registro.data.solicitud.organizacion.nombre }}
                                         </div>
                                     </div>
                                     <div class="row">
