@@ -1,7 +1,7 @@
 import { Server } from '@andes/shared';
 import { IOrganizacion } from './../interfaces/IOrganizacion';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
 
 @Injectable()
@@ -58,6 +58,67 @@ export class OrganizacionService {
     enable(establecimiento: IOrganizacion): Observable<IOrganizacion> {
         establecimiento.activo = true;
         return this.save(establecimiento);
+    }
+
+
+    /**
+     * Funciones sobre sectores y unidades organizativas de la orgazacion
+     */
+
+    clone(item) {
+        let r = Object.assign({}, item);
+        delete r['hijos'];
+        return r;
+    }
+
+    traverseTree(sector, onlyLeaft) {
+        if (sector.hijos && sector.hijos.length > 0) {
+            let res = onlyLeaft ? [] : [this.clone(sector)];
+            for (let sec of sector.hijos) {
+                res = [...res, ...this.traverseTree(sec, onlyLeaft)];
+            }
+            return res;
+        } else {
+            return [this.clone(sector)];
+        }
+    }
+
+    getFlatTree(organizacion, onlyLeaft = true) {
+        let items = organizacion.mapaSectores.reduce((_items, actual) => {
+            return [..._items, ...this.traverseTree(actual, onlyLeaft)];
+        }, []);
+        return items;
+    }
+
+    getRuta(organizacion, item) {
+        for (let sector of organizacion.mapaSectores) {
+            let res = this.makeTree(sector, item);
+            if (res) {
+                return res;
+            }
+        }
+        return [];
+    }
+
+
+    makeTree(sector, item) {
+        if (sector.hijos && sector.hijos.length > 0) {
+            for (let sec of sector.hijos) {
+                let res = this.makeTree(sec, item);
+                if (res) {
+                    let r = this.clone(sector);
+                    return [r, ...res];
+                }
+            }
+            return null;
+        } else {
+            if (item.id === sector.id) {
+                let r = this.clone(sector);
+                return [r];
+            } else {
+                return null;
+            }
+        }
     }
 
 

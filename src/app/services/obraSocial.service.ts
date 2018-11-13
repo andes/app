@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { IObraSocial } from '../interfaces/IObraSocial';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class ObraSocialService {
      * @memberof ObraSocialService
      */
 
-    get(opciones: any, showError = true ): Observable<IObraSocial[]> {
+    get(opciones: any, showError = true): Observable<IObraSocial[]> {
         return this.server.get(this.url + '/puco/', { params: opciones, showError: showError });
     }
 

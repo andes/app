@@ -31,7 +31,7 @@ import { RoutingGuard } from './app.routings-guard.class';
 import { AgmCoreModule } from '@agm/core';
 import { MapsComponent } from './utils/mapsComponent';
 import { PermisosComponent } from './utils/permisos/permisos.component';
-import { Ng2DragDropModule } from 'ng2-drag-drop';
+import { NgDragDropModule } from 'ng-drag-drop';
 import { HoverClassDirective } from './directives/hover-class.directive';
 import { DocumentosService } from './services/documentos.service';
 
@@ -49,6 +49,7 @@ import { FilterPermisos } from './pipes/filterPermisos.pipe';
 import { EnumerarPipe } from './pipes/enumerar.pipe';
 import { PluralizarPipe } from './pipes/pluralizar.pipe';
 import { IconoCamaPipe } from './pipes/iconoCama.pipe';
+import { Html2TextPipe } from './pipes/html2text.pipe';
 
 // Servicios
 // ... Tablas Maestras
@@ -83,11 +84,14 @@ import { ConfigPrestacionService } from './services/turnos/configPrestacion.serv
 import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
+import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
 import { PeriodoPadronesProfeService } from './services/periodoPadronesProfe.service';
 
 
+// TOP
 // ... Usuarios
 import { UsuarioService } from './services/usuarios/usuario.service';
 
@@ -112,7 +116,9 @@ import { AnsesService } from './services/fuentesAutenticas/servicioAnses.service
 
 // RUP
 import { FrecuentesProfesionalService } from './modules/rup/services/frecuentesProfesional.service';
+import { InternacionService } from './modules/rup/services/internacion.service';
 import { CDAService } from './modules/rup/services/CDA.service';
+
 
 
 // Componentes
@@ -130,11 +136,12 @@ import { EspecialidadComponent } from './components/especialidad/especialidad.co
 import { EspecialidadCreateUpdateComponent } from './components/especialidad/especialidad-create-update.component';
 import { OrganizacionComponent } from './components/organizacion/organizacion.component';
 import { OrganizacionCreateUpdateComponent } from './components/organizacion/organizacion-create-update.component';
-import { CamaCreateUpdateComponent } from './components/mapa-de-camas/cama/cama-create-update.component';
-import { CamasListadoComponent } from './components/mapa-de-camas/cama/camasListado.component';
+import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama-create-update.component';
+import { CamasListadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camasListado.component';
 import { TipoPrestacionComponent } from './components/tipoPrestacion/tipoPrestacion.component';
 import { TipoPrestacionCreateUpdateComponent } from './components/tipoPrestacion/tipoPrestacion-create-update.component';
 import { ProcedimientosQuirurgicosService } from './services/procedimientosQuirurgicos.service';
+import { SectoresItemComponent } from './components/organizacion/sectores-item/sectores-item.component';
 // ... MPI
 import { PacienteSearchComponent } from './components/paciente/paciente-search.component';
 import { PacienteCreateUpdateComponent } from './components/paciente/paciente-create-update.component';
@@ -191,6 +198,8 @@ import { MapaEspacioFisicoComponent } from './components/turnos/configuracion/ma
 import { SuspenderAgendaComponent } from './components/turnos/gestor-agendas/operaciones-agenda/suspender-agenda.component';
 import { ArancelamientoFormComponent } from './components/turnos/punto-inicio/arancelamiento/arancelamiento-form.component';
 import { AutocitarTurnoAgendasComponent } from './components/turnos/autocitar/autocitar.component';
+import { DinamicaFormComponent } from './components/turnos/autocitar/dinamica.component';
+
 import { BuscadorCie10Component } from './components/turnos/gestor-agendas/operaciones-agenda/buscador-cie10.component';
 
 
@@ -201,6 +210,7 @@ import { BuscadorComponent } from './modules/rup/components/ejecucion/buscador.c
 import { HudsBusquedaComponent } from './modules/rup/components/ejecucion/hudsBusqueda.component';
 import { PrestacionesService } from './modules/rup/services/prestaciones.service';
 import { AdjuntosService } from './modules/rup/services/adjuntos.service';
+import { CamasService } from './modules/rup/services/camas.service';
 
 import { ConceptObserverService } from './modules/rup/services/conceptObserver.service';
 import { PrestacionCrearComponent } from './modules/rup/components/ejecucion/prestacionCrear.component';
@@ -243,13 +253,16 @@ import { TabComponent } from './modules/rup/components/ejecucion/huds-tabs/tabs/
 import { IngresoInternacionComponent } from './modules/rup/components/elementos/ingresoInternacion.component';
 import { OtoemisionAcusticaDeOidoDerechoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoDerecho.component';
 import { OtoemisionAcusticaDeOidoIzquierdoComponent } from './modules/rup/components/elementos/otoemisionAcusticaDeOidoIzquierdo.component';
+import { OdontogramaRefsetComponent } from './modules/rup/components/elementos/OdontogramaRefset.component';
 import { LactanciaComponent } from './modules/rup/components/elementos/lactancia.component';
 import { IniciarInternacionComponent } from './modules/rup/components/ejecucion/internacion/iniciarInternacion.component';
-import { EjecucionInternacionComponent } from './modules/rup/components/ejecucion/internacion/ejecucionInternacion.component';
-import { EgresoInternacionComponent } from './modules/rup/components/elementos/egresoInternacion.component';
 import { OcuparCamaComponent } from './modules/rup/components/ejecucion/internacion/ocuparCama.component';
 import { PasesCamaComponent } from './modules/rup/components/elementos/pasesCama.component';
+import { CensoDiarioComponent } from './modules/rup/components/internacion/censo/censoDiario.component';
+import { CensoMensualComponent } from './modules/rup/components/internacion/censo/censoMensual.component';
+import { ElementoDeRegistroComponent } from './modules/rup/components/elementos/elementoDeRegistro.component';
 import { InformeEpicrisisComponent } from './modules/rup/components/elementos/informeEpicrisis.component';
+import { ListaEsperaInternacionComponent } from './modules/rup/components/ejecucion/internacion/ListaEsperaInternacion.component';
 import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/odontologiaDefault.component';
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
@@ -272,7 +285,7 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
-
+import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
 import { EditarLlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/editar-llaves-tipoPrestacion.component';
@@ -309,14 +322,23 @@ import { routing, appRoutingProviders } from './app.routing';
 // import { ChartModule } from 'angular2-chartjs';
 import { ChartsModule } from 'ng2-charts';
 
+// INTERNACION
+import { EgresoInternacionComponent } from './modules/rup/components/ejecucion/internacion/egresoInternacion.component';
+import { ResumenInternacionComponent } from './modules/rup/components/ejecucion/internacion/resumenInternacion.component';
+import { PuntoInicioInternacionComponent } from './modules/rup/components/internacion/puntoInicio-internacion.component';
+
 // Mapa de camas
-import { MapaDeCamasComponent } from './components/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
-import { CamaComponent } from './components/mapa-de-camas/cama/cama.component';
-import { CamaEstadoComponent } from './components/mapa-de-camas/cama/camaEstado.component';
-import { CamasService } from './services/camas.service';
+import { MapaDeCamasComponent } from './modules/rup/components/internacion/mapa-de-camas/mapa-de-camas/mapa-de-camas.component';
+import { CamaComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/cama.component';
+import { CamaEstadoComponent } from './modules/rup/components/internacion/mapa-de-camas/cama/camaEstado.component';
+import { OrganizacionSectoresComponent } from './components/organizacion/organizacion-sectores.component';
+
 
 // Solicitudes
-import { SolicitudesComponent } from './components/solicitudes/solicitudes.component';
+import { SolicitudesComponent } from './components/top/solicitudes/solicitudes.component';
+import { DetalleSolicitudComponent } from './components/top/solicitudes/detalleSolicitud.component';
+import { AuditarSolicitudComponent } from './components/top/solicitudes/auditarSolicitud.component';
+import { NuevaSolicitudComponent } from './components/top/solicitudes/nuevaSolicitud.component';
 
 // Componentes RUP
 // [jgabriel] Por alguna cuestión de Angular's DI no se puede tener esto en otro archivo. WTF?
@@ -362,11 +384,12 @@ export let RUPRegistry = {
     'RegistrarMedicamentoDefaultComponent': RegistrarMedicamentoDefaultComponent,
     'SeguimientoDelPesoComponent': SeguimientoDelPesoComponent,
     'IngresoInternacionComponent': IngresoInternacionComponent,
-    'EgresoInternacionComponent': EgresoInternacionComponent,
     'PasesCamaComponent': PasesCamaComponent,
     'InformeEpicrisisComponent': InformeEpicrisisComponent,
+    'ElementoDeRegistroComponent': ElementoDeRegistroComponent,
     'OtoemisionAcusticaDeOidoDerechoComponent': OtoemisionAcusticaDeOidoDerechoComponent,
     'OtoemisionAcusticaDeOidoIzquierdoComponent': OtoemisionAcusticaDeOidoIzquierdoComponent,
+    'OdontogramaRefsetComponent': OdontogramaRefsetComponent,
     'LactanciaComponent': LactanciaComponent,
     'OdontologiaDefaultComponent': OdontologiaDefaultComponent,
     'CircunferenciaCinturaComponent': CircunferenciaCinturaComponent,
@@ -388,6 +411,7 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
 };
 
 let RUPComponentsArray = [
@@ -421,12 +445,14 @@ let RUPComponentsArray = [
     IngresoInternacionComponent,
     OtoemisionAcusticaDeOidoDerechoComponent,
     OtoemisionAcusticaDeOidoIzquierdoComponent,
+    OdontogramaRefsetComponent,
     LactanciaComponent,
     IniciarInternacionComponent,
-    EjecucionInternacionComponent,
-    EgresoInternacionComponent,
     PasesCamaComponent,
+    CensoDiarioComponent,
+    CensoMensualComponent,
     InformeEpicrisisComponent,
+    ElementoDeRegistroComponent,
     OdontologiaDefaultComponent,
     CircunferenciaCinturaComponent,
     InformeActividadNoNominalizadaComponent,
@@ -441,7 +467,8 @@ let RUPComponentsArray = [
     DesarrolloPsicomotorComponent,
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
-    RegistrarMedidasAntropometricasNinoE3Y6AComponent
+    RegistrarMedidasAntropometricasNinoE3Y6AComponent,
+    ProcedimientoDeEnfermeriaComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -452,6 +479,7 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+
 
 registerLocaleData(localeEs, 'es');
 
@@ -465,7 +493,7 @@ registerLocaleData(localeEs, 'es');
         HttpModule,
         PlexModule,
         AuthModule,
-        Ng2DragDropModule,
+        NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
         AgmCoreModule.forRoot({
@@ -482,6 +510,8 @@ registerLocaleData(localeEs, 'es');
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
         MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
+        PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
+        Html2TextPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         TipoPrestacionComponent, TipoPrestacionCreateUpdateComponent,
         DarTurnosComponent, CalendarioComponent, GestorAgendasComponent,
@@ -522,15 +552,29 @@ registerLocaleData(localeEs, 'es');
         VistaHudsComponent,
         VistaCDAComponent,
         HudsBusquedaPacienteComponent,
+        PacienteBuscarComponent,
+        PacienteListadoComponent,
+        PacientePanelComponent,
+
         // RUP
         ...RUPComponentsArray,
         TabsComponent,
         TabComponent,
         MapaDeCamasComponent,
         CamaComponent,
+        PuntoInicioInternacionComponent,
         LaboratoriosComponent,
+
+        OrganizacionSectoresComponent,
+        EgresoInternacionComponent,
+        ResumenInternacionComponent,
+        ListaEsperaInternacionComponent,
+
         // Solicitudes
         SolicitudesComponent,
+        DetalleSolicitudComponent,
+        AuditarSolicitudComponent,
+        NuevaSolicitudComponent,
         PrestamosHcComponent,
         ListarSolicitudesComponent,
         ListarPrestamosComponent,
@@ -541,7 +585,10 @@ registerLocaleData(localeEs, 'es');
         SolicitudManualComponent,
         CamaEstadoComponent,
         OcuparCamaComponent,
+
+        SectoresItemComponent,
         PucoComponent,
+        ReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -616,10 +663,13 @@ registerLocaleData(localeEs, 'es');
         FrecuentesProfesionalService,
         DocumentosService,
         CamasService,
+        ProcedimientosQuirurgicosService,
+        InternacionService,
         PrestamosService,
         ProcedimientosQuirurgicosService,
         FormTerapeuticoService,
         CDAService,
+        ReglaService,
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,

@@ -21,7 +21,8 @@
                 <!--ESTADO DEL PROBLEMA-->
                 <div class="col-4">
                     <label class="box-title-secundario">Estado actual</label>
-                    <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true" (change)="formatearEstado()">
+                    <plex-select [(ngModel)]="registro.valor.estado" name="estadoActual" [data]="estados" [required]="true"
+                        (change)="formatearEstado()">
                     </plex-select>
                 </div>
 
@@ -31,9 +32,10 @@
                 <div class="col" *ngIf="!hallazgoHudsCompleto">
                     <label class="box-title-secundario">Fecha estimada</label>
                     <div class="row">
-                        <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad" prefix="Hace" (change)="calcularFecha()"></plex-int>
-                        <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo" [data]="unidadTiempo"
-                            (change)="calcularFecha()"></plex-select>
+                        <plex-int class="col-6 d-inline" [(ngModel)]="inicioEstimadoUnidad" name="inicioEstimadoUnidad"
+                            prefix="Hace" (change)="calcularFecha()"></plex-int>
+                        <plex-select class="col-6 d-inline" [(ngModel)]="inicioEstimadoTiempo" name="inicioEstimadoTiempo"
+                            [data]="unidadTiempo" (change)="calcularFecha()"></plex-select>
                     </div>
                 </div>
             </div>
@@ -41,8 +43,8 @@
             <!--EVOLUCION DEL PROBLEMA-->
             <div class="row">
                 <div class="col-12">
-                    <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100" [html]="true" [readonly]="false"
-                        (change)="emitChange()">
+                    <plex-text label="Evolución" [(ngModel)]="registro.valor.evolucion" name="evolucion" [height]="100"
+                        [html]="true" [readonly]="false" (change)="emitChange()">
                     </plex-text>
                 </div>
             </div>
@@ -67,9 +69,10 @@
                     {{ unaEvolucion.fechaCarga | fecha }}
                 </div>
                 <div class="col-5 text-right border border-left-0 border-secondary pr-0">
-                    <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right" class="mdi-18px"
-                        (click)="cambiarEvolucion('+') "></plex-button>
-                    <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default" icon="chevron-right" class="mdi-18px"></plex-button>
+                    <plex-button *ngIf="evoluciones.length > 1 && indice < (evoluciones.length-1)" type="info" icon="chevron-right"
+                        class="mdi-18px" (click)="cambiarEvolucion('+') "></plex-button>
+                    <plex-button *ngIf="evoluciones.length <= 1 || indice === (evoluciones.length-1)" type="default"
+                        icon="chevron-right" class="mdi-18px"></plex-button>
                 </div>
             </div>
 
@@ -125,7 +128,8 @@
                         </small>
                         <small *ngIf="registro.transformado" class="badge badge-info">
                             Transformado en:
-                            <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : '' }}</strong>
+                            <strong>{{ registro.transformado.concepto.term ? registro.transformado.concepto.term : ''
+                                }}</strong>
                         </small>
                     </div>
                 </div>
@@ -139,7 +143,8 @@
             </div>
             <div class="col-4 readonly" *ngIf="registro.concepto.semanticTag === 'trastorno'">
                 <span>Inicio aproximado </span>
-                <ng-container *ngIf="!hallazgoHudsCompleto">{{ registro.valor.fechaInicio | fromNow }}
+                <ng-container *ngIf="!hallazgoHudsCompleto">{{ registro.valor.fechaInicio ? (registro.valor.fechaInicio
+                    | fromNow) : 'sin fecha aproximada' }}
                 </ng-container>
                 <ng-container *ngIf="hallazgoHudsCompleto">
                     {{ hallazgoHudsCompleto.evoluciones[0].fechaInicio | fromNow }}
