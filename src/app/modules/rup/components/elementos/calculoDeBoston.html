@@ -2,27 +2,21 @@
     <ng-container *ngIf="!soloValores; else showSoloValores">
         <div class="row">
             <div class="col-5">
-                <div *ngIf="params?.title; else showTerm">
+                <ng-container *ngIf="params?.title; else showTerm">
                     <label class="text-capitalize">{{ params.title }}</label>
-                </div>
+                </ng-container>
                 <ng-template #showTerm>
                     <label class="text-capitalize">{{ registro.concepto.term }}</label>
                 </ng-template>
-                <div class="form-group row">
-                    <label class="">CI</label>
-                    <plex-radio [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()">
-                    </plex-radio>
-                </div>
-                <div class="form-group row">
-                    <label class="">CT</label>
-                    <plex-radio [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal" (change)="changeNumber()">
-                    </plex-radio>
-                </div>
-                <div class="form-group row">
-                    <label class="">CD</label>
-                    <plex-radio [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal" (change)="changeNumber()">
-                    </plex-radio>
-                </div>
+                <plex-radio label="CI" [(ngModel)]="registro?.valor.ci" [data]="opciones" name="CI" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio> <br>
+                <plex-radio label="CT" [(ngModel)]="registro?.valor.ct" [data]="opciones" name="CT" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio><br>
+                <plex-radio label="CD" [(ngModel)]="registro?.valor.cd" [data]="opciones" name="CD" type="horizontal" (change)="changeNumber()"
+                    required="true">
+                </plex-radio>
             </div>
             <div class="col-3">
                 <plex-text label="Resultado test de Boston" [(ngModel)]="valorBoston" name="boston" [readonly]="true">
@@ -39,19 +33,19 @@
         </div>
     </div>
     <div class="row">
-        <div class="col">
+        <div class="col-3">
             <label>CI</label>
             {{registro.valor.ci}}
         </div>
-        <div class="col">
+        <div class="col-3">
             <label>CT</label>
             {{registro.valor.ct}}
         </div>
-        <div class="col">
+        <div class="col-3">
             <label>CD</label>
             {{registro.valor.cd}}
         </div>
-        <div class="col">
+        <div class="col-3">
             <label>Total</label>
             {{registro.valor.total}}
         </div>
