@@ -348,6 +348,9 @@ import { EstadisticaModule } from './modules/estadisticas/estadistica.module';
 import { ConfiguracionPrestacionVisualizarComponent } from './components/configuracionPrestacion/configuracion-prestacion-visualizar.component';
 import { ConfiguracionPrestacionCrearComponent } from './components/configuracionPrestacion/configuracion-prestacion-crear.component';
 
+import { RiesgoCardiovascularService } from './modules/rup/components/formulas/riesgoCardiovascular.service';
+import { FormulaBaseService } from './modules/rup/components/formulas';
+import { FormulaBaseComponent } from './modules/rup/components/elementos/FormulaBase.component';
 
 export let RUPRegistry = {
     'SelectPorRefsetComponent': SelectPorRefsetComponent,
@@ -402,7 +405,8 @@ export let RUPRegistry = {
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent
+    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
+    'FormulaBaseComponent': FormulaBaseComponent
 };
 
 let RUPComponentsArray = [
@@ -460,7 +464,8 @@ let RUPComponentsArray = [
     ProcedimientoDeEnfermeriaComponent,
     ValorNumericoComponent,
     SeleccionBinariaComponent,
-    RiesgoCardiovascularComponent
+    RiesgoCardiovascularComponent,
+    FormulaBaseComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -471,6 +476,7 @@ import { FormTerapeuticoService } from './services/formTerapeutico/formTerapeuti
 import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem.component';
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
+
 
 
 
@@ -651,7 +657,9 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        RiesgoCardiovascularService,
+        FormulaBaseService
     ]
 })
 
