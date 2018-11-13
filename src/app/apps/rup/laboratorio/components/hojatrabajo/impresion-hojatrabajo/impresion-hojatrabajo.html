@@ -1,3 +1,28 @@
-<p>
-  impresion-hojatrabajo works!
-</p>
+<div class="row">
+    <div class="col">
+        <plex-text [(ngModel)]="nombre" label="Nombre de Hoja de Trabajo" name="nombre" placeholder="Escriba un nombre para la hoja de trabajo"
+            [required]="true"></plex-text>
+    </div>
+    <div class="col">
+        <label> Protocolo: </label>
+        <plex-bool [(ngModel)]="imprimirPrioridad" type="slide" label="Imprimir Prioridad" name="imprimirPrioridad"></plex-bool>
+        <plex-bool [(ngModel)]="imprimirOrigen" type="slide" label="Imprimir Origen" name="imprimirOrigen"></plex-bool>
+        <plex-bool [(ngModel)]="imprimirDiagnostico" type="slide" label="Imprimir Diagnostico" name="imprimirDiagnostico"></plex-bool>
+    </div>
+    <div class="col">
+        <label>Paciente:</label>
+        <plex-bool [(ngModel)]="imprimirApellidoNombre" type="slide" label="Imprimir Diagnostico" name="imprimirDiagnostico"></plex-bool>
+        <plex-bool [(ngModel)]="imprimirEdad" type="slide" label="Imprimir Diagnostico" name="imprimirDiagnostico"></plex-bool>
+        <plex-bool [(ngModel)]="imprimirSexo" type="slide" label="Imprimir Diagnostico" name="imprimirDiagnostico"></plex-bool>
+        <plex-text [(ngModel)]="cantidadLineaAdicional" label="Cantidad de Lineas Adicionales" name="cantidadLineaAdicional"
+            placeholder="Escriba la cantidad de lineas adicionales"></plex-text>
+    </div>
+    <div class="col">
+        <label>Papel:</label>
+        <plex-text [(ngModel)]="formato" label="Formato de Papel" name="formato" placeholder="Escriba el formato de papel A4 | Oficio"></plex-text>
+        <plex-bool [(ngModel)]="orientacion" type="slide" label="Orientacion de la Hoja" name="orientacion"></plex-bool>
+        <plex-text [(ngModel)]="anchoColumnasMilimetros" label="Ancho de Columnas en Milimetros" name="anchoColumnasMilimetros" placeholder="Escriba el ancho de las columnas en milimetros"></plex-text>
+        <plex-text [(ngModel)]="textoInferiorDerecha" label="Texto Inferior Derecha" name="textoInferiorDerecha" placeholder="Escriba el texto que saldra el la parte inferior derecha de la hoja"></plex-text>
+        <plex-text [(ngModel)]="textoInferiorIzquierda" label="Texto Inferior Izquierda" name="textoInferiorIzquierda" placeholder="Escriba el texto que saldra el la parte inferior izquierda de la hoja"></plex-text>
+    </div>
+</div>
