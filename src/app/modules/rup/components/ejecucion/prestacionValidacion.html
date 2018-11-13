@@ -217,7 +217,6 @@
                                         <ng-container *ngIf="(elemento.concepto.semanticTag !== 'elemento de registro')">
                                             <label *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo !== 'validada' && elemento.valor?.estado !== 'transformado' && prestacion.solicitud.ambitoOrigen !== 'internacion'"
                                                 title="Establecer como Procedimiento/Diagnóstico principal" class="diagnostico-principal d-flex align-items-end">
-                                                ¿Procedimiento/Diagnóstico principal? &nbsp;
                                                 <plex-radio [data]="opcionDiagnosticoPrincipal" label="¿Procedimiento/Diagnóstico principal?"
                                                     (change)="diagnosticoPrestacion($event, elemento)" [(ngModel)]="elemento.esDiagnosticoPrincipal"
                                                     type="horizontal"></plex-radio>
