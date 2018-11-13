@@ -30,7 +30,7 @@ export class HistorialCarpetasComponent implements OnInit {
         this.paciente = null;
         this.historial = [];
         this.inicioBusqueda = true;
-        if (this.numeroCarpeta != null) {
+        if (this.numeroCarpeta) {
             this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion.id })
                 .subscribe(resultado => {
                     if (resultado.historial.length > 0) {
@@ -43,6 +43,8 @@ export class HistorialCarpetasComponent implements OnInit {
                         this.paciente = resultado.paciente;
                     }
                 });
+        } else {
+            this.inicioBusqueda = false;
         }
     }
 
