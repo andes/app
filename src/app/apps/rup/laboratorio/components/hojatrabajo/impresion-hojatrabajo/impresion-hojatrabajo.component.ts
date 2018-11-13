@@ -1,14 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: 'impresion-hojatrabajo',
-  templateUrl: './impresion-hojatrabajo.html'
+    selector: 'impresion-hojatrabajo',
+    templateUrl: './impresion-hojatrabajo.html'
 })
 export class ImpresionHojatrabajoComponent implements OnInit {
 
-  constructor() { }
+    opcionesFormato = [{ id: 'A4', label: 'A4' }, { id: 'Oficio', label: 'Oficio' }];
+    opcionesOrientacion = [{ id: 'Horizontal', label: 'Horizontal' }, { id: 'Vertical', label: 'Vertical' }];
+    formato = 'A4';
+    orientacion = 'Horizontal';
 
-  ngOnInit() {
-  }
+    @Input() hojaTrabajo: IHojaTrabajo;
+    constructor() { }
+
+    ngOnInit() {
+    }
 
 }

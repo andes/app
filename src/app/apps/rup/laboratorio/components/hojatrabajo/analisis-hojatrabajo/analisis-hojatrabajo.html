@@ -1,3 +1,43 @@
-<p>
-  analisis-hojatrabajo works!
-</p>
+<div class="row">
+    <div class="col-2">
+        <plex-text [(ngModel)]="practicaSeleccionada" label="Codigo de Practica" name="codigoPractica" (keydown.enter)="getPracticaPorCodigo()"
+            (blur)="getPracticaPorCodigo()" placeholder="Escriba el código"></plex-text>
+    </div>
+    <div class="col-8">
+        <plex-select [(ngModel)]="practicaSeleccionada" label="Nombre de Practica" name="nombrePractica" (getData)="loadPracticasPorNombre($event);"
+            (change)="seleccionarPractica($event.value)" placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre" >
+        </plex-select>
+    </div>
+</div>
+<div class="row">
+    <div class="col-2">
+        <plex-text [(ngModel)]='nombre' label="Nombre a Imprimir" name="nombreImprimir"  placeholder='Escriba el texto a imprimir'></plex-text>
+    </div>
+    <div class="col-8">
+        <plex-button label="Agregar a lista" type="info btn-sm" (click)="agregarPractica(practica)"></plex-button>
+    </div>
+</div>
+<div class="row">
+    <div class="col">
+        <table class="table table-striped table-sm">
+            <thead>
+                <th>codigo</th>
+                <th>analisis</th>
+                <th>texto a imprimir</th>
+                <th>borrar</th>
+            </thead>
+            <tbody>
+                <tr class="hover" *ngFor="let practica of practicas">
+                    <td>{{nombre}}</td>
+                    <td>{{practica.codigo}}</td>
+                    <td>
+
+                    </td>
+                    <td>
+                        <plex-button label="" type="danger btn-sm" icon="delete" (click)="eliminarPractica(practica)"></plex-button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
