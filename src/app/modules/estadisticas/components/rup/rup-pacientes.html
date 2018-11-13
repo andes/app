@@ -41,10 +41,10 @@
         <ng-container *ngIf="showData">
             <div class="row m-3 alert alert-info" >
                 <div class="col-3">
-                    Desde: {{ desde | date: 'dd/MM/yyyy' }}
+                    Desde: {{ desde | fecha }}
                 </div>
                 <div class="col-3">
-                    Hasta: {{ hasta | date: 'dd/MM/yyyy' }}
+                    Hasta: {{ hasta | fecha }}
                 </div>
                 <div class="col-3">
                     Prestación: {{ prestacion.term }}
