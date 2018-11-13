@@ -233,10 +233,10 @@ export class SolicitudesComponent implements OnInit {
                 if (this.estado.nombre !== 'turno dado') {
                     params['estados'] = [this.estado.nombre];
                     if (this.estado.nombre === 'pendiente') {
-                        params['tieneTurno'] = 'no';
+                        params['tieneTurno'] = false;
                     }
                 } else {
-                    params['tieneTurno'] = 'si';
+                    params['tieneTurno'] = true;
                 }
             } else {
                 params['estados'] = [
