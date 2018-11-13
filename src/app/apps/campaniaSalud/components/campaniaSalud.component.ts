@@ -96,7 +96,6 @@ export class CampaniaSaludComponent implements OnInit {
     seleccionCampania(campania: ICampaniaSalud) {
         this.seleccionada = campania;
         this.mostrarVisualizacionCampania = true;
-        console.log(campania);
     }
 
     /**
@@ -122,8 +121,7 @@ export class CampaniaSaludComponent implements OnInit {
                 hasta: null
             },
             fechaPublicacion: null,
-            activo: true
-            ,
+            activo: true,
             textoAccion: null
         };
         this.mostrarVisualizacionCampania = false;

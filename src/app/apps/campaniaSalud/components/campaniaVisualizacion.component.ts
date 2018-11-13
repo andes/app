@@ -5,8 +5,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'campaniaSaludVisualizacion',
-    templateUrl: 'campaniaVisualizacion.html',
-    styleUrls: ['campaniaVisualizacion.scss']
+    templateUrl: 'campaniaVisualizacion.html'
 })
 export class CampaniaVisualizacionComponent {
     @Input()
