@@ -1,4 +1,4 @@
-<section *ngIf="!buscandoPaciente">
+<section>
     <div class="row">
         <div class="col-7">
             <plex-box>
@@ -113,7 +113,9 @@
             </plex-box>
         </div>
         <div class="col">
-            <plex-box>
+            <dinamica *ngIf="buscandoPaciente" [agenda]="agendaSeleccionada" (cancel)="cancelarDinamica()" (save)="guardarDatosTurno($event)"></dinamica>
+
+            <plex-box *ngIf="!buscandoPaciente">
                 <fieldset>
                     <legend>Detalle de la agenda</legend>
                 </fieldset>
@@ -256,7 +258,7 @@
 
                         </tbody>
                     </table>
-                    <ng-container *ngIf="((agendaSeleccionada.dinamica && agendaSeleccionada.cupo && (agendaSeleccionada.cupo > 0)) || agendaSeleccionada.cupo < 0)">
+                    <ng-container *ngIf="agendaSeleccionada.dinamica && !esFutura(agendaSeleccionada) && ((agendaSeleccionada.cupo && agendaSeleccionada.cupo > 0) || agendaSeleccionada.cupo < 0)">
                         <plex-button label="AGREGAR PACIENTE" type="primary" class="float-right mr-1" (click)="buscarPaciente()"></plex-button>
                     </ng-container>
                     <ng-container>
@@ -355,7 +357,7 @@
                         </table>
                     </ng-container>
                 </ng-container>
-
+                <!-- Pacientes Fuera de Agenda -->
                 <ng-container *ngIf="agendaSeleccionada && agendaSeleccionada === 'fueraAgenda'">
 
                     <!--Turnos-->
@@ -419,6 +421,7 @@
                     </table>
 
                 </ng-container>
+
             </plex-box>
         </div>
     </div>
@@ -442,5 +445,6 @@
     </div>
 </footer>
 <!-- Búsqueda de pacientes -->
-<pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()" [mostrarCancelar]="true"
-    [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch>
+<!-- <pacientesSearch *ngIf="buscandoPaciente" (selected)="onPacienteSelected($event)" (cancel)="onPacienteCancel()"
+    [mostrarCancelar]="true" [modoCompleto]="true" [bloquearCreate]="true"></pacientesSearch> -->
+<!-- <dinamica *ngIf="buscandoPaciente" [prestaciones]="agendaSeleccionada.bloques[0].tipoPrestaciones"></dinamica> -->
