@@ -3,7 +3,7 @@
         <header>
             Listado de Hojas de Trabajo
         </header>
-        <lista-hojatrabajo></lista-hojatrabajo>
+        <lista-hojatrabajo (hojaTrabajoSelectedEmmiter)="seleccionarHojaTrabajo($event)"></lista-hojatrabajo>
     </plex-layout-main>
 
     <plex-layout-sidebar>
@@ -31,7 +31,7 @@
 
                 <ng-container *ngIf="modo === 'impresion'">
                     <h2>Opciones de Impresión</h2>
-                    <impresion-hojatrabajo></impresion-hojatrabajo>
+                    <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></impresion-hojatrabajo>
                 </ng-container>
             </div>
         </plex-layout-main>

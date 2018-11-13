@@ -1,6 +1,7 @@
+import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
+import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
 import { Component, OnInit } from '@angular/core';
-import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
-import { EstadoHojaTrabajo } from './../../../../../../utils/enumerados';
+import { Plex } from '@andes/plex';
 
 @Component({
     selector: 'gestor-hojatrabajo',
@@ -11,12 +12,15 @@ export class GestorHojatrabajoComponent implements OnInit {
     // Propiedades
     public accionIndex = 0;
     public modo = '';
-
+    public hojaTrabajo: IHojaTrabajo;
     // Constructor
-    constructor() { }
+    constructor(
+        private plex: Plex,
+        private servicioHojaTrabajo: HojaTrabajoService
+    ) { }
 
     ngOnInit() {
-
+        this.hojaTrabajo = new IHojaTrabajo();
     }
 
     cambio($event) {
@@ -29,9 +33,20 @@ export class GestorHojatrabajoComponent implements OnInit {
         // this.refreshSelection();
     }
 
+    seleccionarHojaTrabajo($event) {
+        this.hojaTrabajo = $event;
+    }
+
 
     guardarHoja() {
-        console.log('guardar hoja', new Date);
+        if (!this.hojaTrabajo.id) {
+            this.servicioHojaTrabajo.post(this.hojaTrabajo).subscribe(respuesta => {
+                this.plex.toast('success', ' ', 'Hoja trabajo guardada', 1000);
+            });
+        } else {
+            // PATCH....
+        }
+
     }
 
     agregarHoja() {

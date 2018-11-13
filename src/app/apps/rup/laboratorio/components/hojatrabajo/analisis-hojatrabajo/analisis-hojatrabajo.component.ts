@@ -1,3 +1,4 @@
+// import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
 import { IPractica } from './../../../interfaces/IPractica';
 import { PracticaService } from './../../../services/practica.service';
 import { Component, OnInit, Input } from '@angular/core';
@@ -14,6 +15,7 @@ export class AnalisisHojatrabajoComponent implements OnInit {
 
     @Input() solicitudProtocolo: any;
     @Input() practicasEjecucion: any;
+    @Input() hojaTrabajo: any;
 
     constructor(public plex: Plex, private servicioPractica: PracticaService) { }
 
