@@ -41,7 +41,6 @@ export class TablaDatalleProtocolo implements OnInit {
     // }
     constructor(
         private servicioPractica: PracticaService,
-        private servicioProtocolo: ProtocoloService,
         public plex: Plex
     ) { }
 
@@ -134,12 +133,10 @@ export class TablaDatalleProtocolo implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     loadPracticasPorNombre($event) {
-        console.log($event.query);
         if ($event.query) {
             this.servicioPractica.getMatch({
                 cadenaInput: $event.query
             }).subscribe((resultado: any) => {
-                console.log(resultado);
                 $event.callback(resultado);
             });
         } else {
@@ -171,11 +168,9 @@ export class TablaDatalleProtocolo implements OnInit {
      * @memberof TablaDatalleProtocolo
      */
     esValorCritico(objetoPractica) {
-        // console.log('esValorCritico', objetoPractica)
         // let resultado = objetoPractica.practica.valor.resultado;
         // if (resultado && !objetoPractica.esCompuesta) {
         //     let valoresReferencia = objetoPractica.formatoResultado.valoresReferencia;
-        //     console.log('esValorCritico xxx', (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor))
         //     return (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor);
         // }
         return false;
@@ -188,7 +183,6 @@ export class TablaDatalleProtocolo implements OnInit {
     * @memberof ProtocoloDetalleComponent
     */
     async seleccionarPractica(practica: IPractica) {
-        console.log('seleccionarPractica');
         if (practica) {
             let existe = this.solicitudProtocolo.solicitudPrestacion.practicas.findIndex(x => x.concepto.conceptId === practica.concepto.conceptId);
 
@@ -215,7 +209,6 @@ export class TablaDatalleProtocolo implements OnInit {
                     }
                 };
                 // }
-                console.log('gonna this.getPracticasRequeridas....');
                 practicaEjecucion.registros = await this.getPracticasRequeridas(practica);
                 this.practicasEjecucion.push(practicaEjecucion);
             } else {
@@ -223,7 +216,6 @@ export class TablaDatalleProtocolo implements OnInit {
             }
         }
         this.practicaSeleccionada = null;
-        console.log('this.practicaSeleccionada', this.practicaSeleccionada);
     }
 
     /**
@@ -253,7 +245,6 @@ export class TablaDatalleProtocolo implements OnInit {
                         //         validado: false
                         //     };
                         // });
-                        // console.log('resultados',resultado.registros)
 
                         // });
 
@@ -269,7 +260,6 @@ export class TablaDatalleProtocolo implements OnInit {
                         // });
                         resultado.registros = await this.getPracticasRequeridas(resultado);
                     });
-                    console.log('getPracticasRequeridas');
                     resolve(resultados);
                 });
             } else {

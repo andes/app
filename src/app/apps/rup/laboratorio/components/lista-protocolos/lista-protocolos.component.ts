@@ -13,7 +13,7 @@ export class ListaProtocolosComponent implements OnInit {
   constructor() { }
 
   seleccionarProtocolo(protocolo, index) {
-    this.seleccionarProtocoloEmitter.emit({protocolo: protocolo, index: index});
+    this.seleccionarProtocoloEmitter.emit({ protocolo: protocolo, index: index });
   }
 
   ngOnInit() {

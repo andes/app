@@ -24,13 +24,13 @@ export class PracticaService {
     }
 
     getCodigosPracticas(ids) {
-        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo' , null).map((value) => {
+        return this.server.get(this.practicaUrl + '?ids=' + ids + '&fields=codigo', null).map((value) => {
             return value;
         });
     }
 
     getMatchCodigo(codigo: PracticaSearch): Observable<IPracticaMatch[]> {
-        return this.server.get(this.practicaCodigoUrl + codigo , null).map((value) => {
+        return this.server.get(this.practicaCodigoUrl + codigo, null).map((value) => {
             return value;
         });
     }

@@ -1,6 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { FormBuilder} from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Plex } from '@andes/plex';
 import * as enumerados from '../../../../../../utils/enumerados';
 import { OrganizacionService } from '../../../../../../services/organizacion.service';
@@ -82,7 +82,6 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     buscarProtocolos(value?, tipo?) {
-        console.log('buscarProtocolos');
         this.buscarProtocolosEmmiter.emit(this.busqueda);
     }
 
@@ -93,7 +92,6 @@ export class FiltrosBusquedaProtocoloComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     loadServicios($event) {
-        console.log('loadServicios');
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
             $event.callback(servicioEnum);
@@ -140,12 +138,10 @@ export class FiltrosBusquedaProtocoloComponent
         };
 
         //     let filtros = JSON.parse(localStorage.getItem('filtros'));
-        //     console.log(filtros);
         //     if (!filtros) {
         //         filtros = [filtrosPorDefecto];
         //     } else {
         //         let existe = filtros.findIndex(x => x.profesional === filtrosPorDefecto.profesional);
-        //         console.log(existe);
         //         if (existe === -1) {
         //             filtros.push(filtrosPorDefecto);
         //         }

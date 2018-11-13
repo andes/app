@@ -1,11 +1,8 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
-import { FormBuilder} from '@angular/forms';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-import { OrganizacionService } from '../../../../../services/organizacion.service';
-import { TurnoService } from '../../../../../services/turnos/turno.service';
 import { Constantes } from '../../controllers/constants';
 
 @Component({
@@ -17,6 +14,8 @@ import { Constantes } from '../../controllers/constants';
 export class GestorProtocolosComponent
 
     implements OnInit {
+
+    @Output()  volverAPuntoInicioEmmiter: EventEmitter<any> = new EventEmitter<any>(); 
     public seleccionPaciente: Boolean = false;
     public showListarProtocolos: Boolean = true;
     public showProtocoloDetalle: Boolean = false;
@@ -32,21 +31,20 @@ export class GestorProtocolosComponent
     public protocolo: any = {};
     @Input('protocolo')
     set setProtocolo(value: any) {
-        console.log('setOrotociki');
+        console.log('setProtocolo')
         if (value && value !== {}) {
-            this.seleccionarProtocolo({protocolo: value, index: 0 });
+            this.seleccionarProtocolo({ protocolo: value, index: 0 });
+            this.ocultarPanelLateral = true;
         }
-        this.ocultarPanelLateral = true;
     }
     @Input() modo;
 
     @Input('paciente')
     set paciente(value) {
-        console.log('paciente ' , value);
+        console.log('setPaciente')
         if (value) {
             this.resetearProtocolo(value);
-            this.seleccionarProtocolo({protocolo: this.protocolo, index: 0 });
-            this.ocultarPanelLateral = true;
+            this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });
             this.editarListaPracticas = true;
             this.edicionDatosCabecera = true;
             this.ocultarPanelLateral = true;
@@ -208,16 +206,22 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     volverLista() {
-        console.log('volverLista');
-        this.refreshSelection();
-        this.showListarProtocolos = true;
-        this.showProtocoloDetalle = false;
-        this.showCargarSolicitud = false;
-        this.ocultarPanelLateral = false;
-        this.seleccionPaciente = false;
-
-        this.showBotonesGuardar = false;
-
+        if (this.modo === 'puntoInicio') {
+            console.log('volverLista', this.modo)
+            // location.reload();
+            this.volverAPuntoInicioEmmiter.emit(true);
+        } else {
+            this.refreshSelection();
+            this.showListarProtocolos = true;
+            this.showProtocoloDetalle = false;
+            this.showCargarSolicitud = false;
+            this.ocultarPanelLateral = false;
+            this.seleccionPaciente = false;
+    
+            this.showBotonesGuardar = false;    
+        
+        }
+        
     }
 
     /**
@@ -297,7 +301,7 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-console.log('mostrarFomularioPacienteSinTurno');
+        console.log('mostrarFomularioPacienteSinTurno');
         this.resetearProtocolo({});
         this.edicionDatosCabecera = true;
         this.ocultarPanelLateral = true;
@@ -306,7 +310,7 @@ console.log('mostrarFomularioPacienteSinTurno');
         this.indexProtocolo = 0;
         this.seleccionPaciente = true;
         this.mostrarCuerpoProtocolo = false;
-
+        this.protocoloDetalleComponent.editarListaPracticas = true;
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {
@@ -353,6 +357,11 @@ console.log('mostrarFomularioPacienteSinTurno');
         this.protocoloDetalleComponent.guardarSolicitudYVolver(this.modoAVolver);
         this.modoAVolver = '';
     }
+
+    guardarSolicitud() {
+        this.protocoloDetalleComponent.guardarSolicitud()
+    }
+    
 
     // getlocalStorage() {
     //     let ls = JSON.parse(localStorage.getItem('filtros'));

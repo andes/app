@@ -10,13 +10,15 @@
                 </header>
                 <div class="row">
                     <div class="col-12" *ngIf="!showCreateUpdate">
-                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud" [puedeDarTurno]="puedeDarTurno"
-                            [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate" (blanqueaInput)="handleBlanqueo($event)"
-                            (sinResultados)="handleBlanqueo($event)" (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
+                        <paciente-search-turnos (selected)="onPacienteSelected($event)" [puedeCrearSolicitud]="puedeCrearSolicitud"
+                            [puedeDarTurno]="puedeDarTurno" [modoCompleto]="false" [resultadoCreateUpdate]="resultadoCreate"
+                            (blanqueaInput)="handleBlanqueo($event)" (sinResultados)="handleBlanqueo($event)"
+                            (createUpdate)="actualizarPaciente($event)" (operacion)="verificarOperacion($event)"></paciente-search-turnos>
                     </div>
                 </div>
 
-                <punto-inicio-listado-solicitudes *ngIf="showListaSolicitudes" [paciente]="paciente" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)' ></punto-inicio-listado-solicitudes>
+                <punto-inicio-listado-solicitudes *ngIf="showListaSolicitudes" [paciente]="paciente"
+                    (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)'></punto-inicio-listado-solicitudes>
             </plex-box>
         </div>
         <!--Panel de Estadisticas y Operaciones-->

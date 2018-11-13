@@ -1,3 +1,4 @@
-<gestor-protocolos *ngIf="!mostrarPuntoInicio" [protocolo]='protocolo' [paciente]='paciente' [modo]='modo' ></gestor-protocolos>
-<punto-inicio-laboratorio *ngIf="mostrarPuntoInicio" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)' (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)'></punto-inicio-laboratorio>
-
+<gestor-protocolos *ngIf="!mostrarPuntoInicio" [protocolo]='protocolo' [paciente]='paciente' [modo]='modo'
+    (volverAPuntoInicioEmmiter)='volverAPuntoInicio($event)'></gestor-protocolos>
+<punto-inicio-laboratorio *ngIf="mostrarPuntoInicio" (seleccionarProtocoloEmitter)='seleccionarProtocolo($event)'
+    (pacienteSinTurnoEmitter)='recepcionarSinTurno($event)'></punto-inicio-laboratorio>

@@ -37,20 +37,20 @@ export class ProtocoloDetalleComponent
     flagMarcarTodas: Boolean = false;
     nombrePractica;
     codigoPractica;
-    public mostrarMasOpciones = false;
+    public mostrarMasOpciones: Boolean = false;
     public pacientes;
     public pacienteActivo;
-    public mostrarListaMpi = false;
+    public mostrarListaMpi: Boolean = false;
     public busqueda = {
         dniPaciente: null,
         nombrePaciente: null,
         apellidoPaciente: null,
     };
     practicasEjecucion;
-    showObservaciones = false;
+    showObservaciones: Boolean = false;
     solicitudProtocolo: any;
     practicasCarga = [];
-    mostrarMasHeader = false;
+    mostrarMasHeader: Boolean = false;
 
     @Output() newSolicitudEmitter: EventEmitter<any> = new EventEmitter<any>();
     @Output() volverAListaControEmit: EventEmitter<Boolean> = new EventEmitter<Boolean>();
@@ -78,8 +78,13 @@ export class ProtocoloDetalleComponent
         this.activo = value;
     }
 
+    /**
+     *
+     *
+     * @param {*} value
+     * @memberof ProtocoloDetalleComponent
+     */
     cargarProtocolo(value: any) {
-        console.log('p.detalle  cargarProtocolo', this.modo, value);
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;
@@ -88,7 +93,7 @@ export class ProtocoloDetalleComponent
             this.cargarCodigosPracticas();
         }
 
-        if ( (this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
+        if ((this.modo === 'puntoInicio' || this.modo === 'recepcion') && !this.solicitudProtocolo.solicitudPrestacion.numeroProtocolo) {
             this.editarDatosCabecera();
             this.seleccionPaciente = this.modo === 'recepcion';
         } else {
@@ -102,6 +107,11 @@ export class ProtocoloDetalleComponent
         }
     }
 
+    /**
+     *
+     *
+     * @memberof ProtocoloDetalleComponent
+     */
     cargarCodigosPracticas() {
         let ids = [];
         this.practicasEjecucion.forEach(practica => ids.push(practica._id));
@@ -127,6 +137,12 @@ export class ProtocoloDetalleComponent
         });
     }
 
+    /**
+     *
+     *
+     * @param {IPrestacion} protocolo
+     * @memberof ProtocoloDetalleComponent
+     */
     setProtocoloSelected(protocolo: IPrestacion) {
         this.modelo = protocolo;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
@@ -215,7 +231,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     aceptarEdicionCabecera() {
-        console.log('aceptarEdicionCabecera');
+        this.editarListaPracticas = true;
         this.edicionDatosCabecera = false;
         this.seleccionPaciente = false;
         this.mostrarCuerpoProtocolo = true;
@@ -413,8 +429,8 @@ export class ProtocoloDetalleComponent
                 if (next) {
                     this.protocolos.splice(this.indexProtocolo, 1);
                     if (this.modo === 'recepcion' || this.protocolos.length === 0) {
-                        this.volverAListaControEmit.emit();
                         this.mostrarCuerpoProtocolo = true;
+                        this.volverAListaControEmit.emit();
                     } else {
                         if (!this.protocolos[this.indexProtocolo]) {
                             this.indexProtocolo = this.protocolos.length - 1;
@@ -427,9 +443,9 @@ export class ProtocoloDetalleComponent
         } else {
             this.modelo.estados = [{ tipo: 'ejecucion' }];
             this.servicioPrestacion.post(this.modelo).subscribe(respuesta => {
-                this.volverAListaControEmit.emit();
                 this.mostrarCuerpoProtocolo = true;
                 this.plex.toast('success', this.modelo.solicitud.tipoPrestacion.term, 'Solicitud guardada', 4000);
+                this.volverAListaControEmit.emit();
             });
         }
     }
@@ -548,14 +564,11 @@ export class ProtocoloDetalleComponent
                         nombre: objetoPractica.practica.nombre,
                         resultado: resultado
                     });
-                    console.log('alerta Critica!', objetoPractica.practica.nombre, resultado);
                 } else if (valoresReferencia.valorMinimo > resultado.valor || valoresReferencia.valorMaximo < resultado.valor) {
                     alertasValCriticos.push({
                         nombre: objetoPractica.practica.nombre,
                         resultado: resultado
                     });
-                    console.log(objetoPractica);
-                    console.log('alerta Referencia!', objetoPractica.practica.nombre, resultado);
                 }
             }
         });
@@ -567,7 +580,6 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     guardarSolicitudYVolver(modoAVolver) {
-        console.log('guardarSolicitudYVolver - detalle', modoAVolver);
         this.modo = modoAVolver;
         this.cargarProtocolo(this.modelo);
         this.guardarProtocolo(false);
@@ -579,9 +591,8 @@ export class ProtocoloDetalleComponent
 
     // getConfiguracionResultado(idPractica) {
     //     return new Promise( async (resolve) => {
-    //         console.log(idPractica)
     //         await this.servicioPractica.findByIds( {id: idPractica} ).subscribe(
-    //             (practicas : any) => {console.log(practicas); resolve(practicas[0] ? practicas[0].resultado : null); });
+    //             (practicas : any) => { resolve(practicas[0] ? practicas[0].resultado : null); });
     //     });
     // }
 }

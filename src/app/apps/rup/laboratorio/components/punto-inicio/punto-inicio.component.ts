@@ -263,7 +263,6 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     seleccionarProtocolo($event) {
-        console.log('seleccionarProtocolo');
         this.seleccionarProtocoloEmitter.emit($event);
     }
 
@@ -273,7 +272,6 @@ export class PuntoInicioLaboratorioComponent implements OnInit {
      * @memberof PuntoInicioLaboratorioComponent
      */
     recepcionarSinTurno($paciente) {
-        console.log('PI recepcionarSinTurno', $paciente);
         this.pacienteSinTurnoEmitter.emit($paciente);
     }
 }

@@ -2,7 +2,7 @@ import { ProfesionalService } from './../../../../../../services/profesional.ser
 import { OrganizacionService } from './../../../../../../services/organizacion.service';
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
-import { getPrioridadesLab , getOrigenFiltroLab} from '../../../../../../utils/enumerados';
+import { getPrioridadesLab, getOrigenFiltroLab } from '../../../../../../utils/enumerados';
 import { Auth } from '@andes/auth';
 
 @Component({
@@ -21,7 +21,6 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     edicionDatosCabecera: Boolean;
     @Input('edicionDatosCabecera')
     set asd(value) {
-        console.log('edicionDatosCabecera', value);
         this.edicionDatosCabecera = value;
     }
 
@@ -48,13 +47,11 @@ export class ProtocoloEncabezadoComponent implements OnInit {
     }
 
     cargarProtocolo(value: any) {
-        console.log('cargarProtocolo', value);
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
     }
 
     setProtocoloSelected(protocolo: IPrestacion) {
-        console.log('setProtocoloSelected');
         this.modelo = protocolo;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
     }
@@ -78,7 +75,6 @@ export class ProtocoloEncabezadoComponent implements OnInit {
   * @memberof PuntoInicioLaboratorioComponent
   */
     loadServicios($event) {
-        console.log('loadServicios');
         this.servicioOrganizacion.getById(this.auth.organizacion.id).subscribe((organizacion: any) => {
             let servicioEnum = organizacion.unidadesOrganizativas;
             $event.callback(servicioEnum);

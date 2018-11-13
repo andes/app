@@ -16,7 +16,7 @@
                         </h5>
                     </span>
 
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col">
                             <strong>Paciente: </strong>
                             {{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}} F.
@@ -80,8 +80,8 @@
                     <div class="row ml-1">
                         <div class="col-5">
                             <!-- TODO: Una vez implementado TOP cambiar modelo.solicitud.organizacion x modelo.solicitud.organizacionOrigen -->
-                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)" labelField="nombre"
-                                placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
+                            <plex-select [(ngModel)]="modelo.solicitud.organizacion" (getData)="loadOrganizaciones($event)"
+                                labelField="nombre" placeholder="Seleccione..." label="Efector Solicitante" [required]="true">
                             </plex-select>
                         </div>
                         <div class="col-6">

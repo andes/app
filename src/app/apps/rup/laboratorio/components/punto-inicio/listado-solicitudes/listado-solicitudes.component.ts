@@ -12,7 +12,6 @@ export class ListadoSolicitudesComponent implements OnInit {
   paciente: IPaciente;
   @Input('paciente')
   set setpaciente(value: any) {
-    console.log('set paciente');
     this.paciente = value;
     if (value) {
       this.buscarSolicitudes(value);
@@ -57,7 +56,6 @@ export class ListadoSolicitudesComponent implements OnInit {
   }
 
   recepcionSinTurno() {
-    console.log('recepcionSinTurno');
     this.pacienteSinTurnoEmitter.emit(this.paciente);
   }
 

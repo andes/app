@@ -12,6 +12,6 @@ export class ProtocoloService {
     }
 
     getResultadosAnteriores(idPaciente, practicaConceptId) {
-        return this.server.get(this.laboratorioUrl + 'practicas/resultadosAnteriores', { params: { idPaciente: idPaciente, practicaConceptId: practicaConceptId}, showError: true });
+        return this.server.get(this.laboratorioUrl + 'practicas/resultadosAnteriores', { params: { idPaciente: idPaciente, practicaConceptId: practicaConceptId }, showError: true });
     }
 }

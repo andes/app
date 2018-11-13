@@ -32,14 +32,16 @@
                     <td *ngIf='modo !== "puntoInicio" && protocolo.paciente.sexo ==="masculino"'>M</td>
                     <td>{{protocolo.solicitud.ambitoOrigen}}</td>
                     <td>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'" type="danger"
-                            class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'" type="success"
-                            class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'"
+                            type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'"
+                            type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
                     </td>
                     <td>
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success" class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'ejecucion'" type="warning"
+                            class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
+                        <plex-badge *ngIf="protocolo.estados[protocolo.estados.length -1].tipo === 'validada'" type="success"
+                            class="ml-2">{{protocolo.estados[protocolo.estados.length -1].tipo}}</plex-badge>
                     </td>
                     <td>
                         <plex-button type="success" size="sm" (click)="seleccionarProtocolo(protocolo, i)" class="ml-2">

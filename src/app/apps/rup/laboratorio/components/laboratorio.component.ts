@@ -5,24 +5,26 @@ import { Component } from '@angular/core';
     templateUrl: 'laboratorio.html'
 })
 export class LaboratorioComponent {
-    public mostrarPuntoInicio = false;
-
+    
     // valor se debe asignar segun permuiso de usuario
-    public modo = 'control';
+    public modo = 'carga';
     // public modo = "puntoInicio";
+    public mostrarPuntoInicio = (this.modo === "puntoInicio");
 
     public protocolo;
     public paciente;
 
     seleccionarProtocolo($event) {
-        console.log('principal seleccionarProtocolo', $event);
         this.mostrarPuntoInicio = false;
         this.protocolo = $event.protocolo;
     }
 
     recepcionarSinTurno($event) {
-        console.log('lab recepcionarSinTurno', $event);
         this.mostrarPuntoInicio = false;
         this.paciente = $event;
+    }
+
+     volverAPuntoInicio($event) {
+        this.mostrarPuntoInicio = true;
     }
 }

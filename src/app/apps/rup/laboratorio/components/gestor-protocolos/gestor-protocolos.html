@@ -1,6 +1,6 @@
 <plex-layout main="{{showProtocoloDetalle ? ( ocultarPanelLateral ? 0 : 2)  : 12}}">
-    <!-- <plex-layout-main *ngIf='!ocultarPanelLateral && modo !== "puntoInicio" '> -->
-            <plex-layout-main>
+    <plex-layout-main *ngIf='!ocultarPanelLateral && modo !== "puntoInicio" '>
+    <!-- <plex-layout-main> -->
         <!-- ENCABEZADO -->
         <header>
             <div class="clearfix">
@@ -72,14 +72,14 @@
     <plex-layout-footer *ngIf="showProtocoloDetalle && modoAVolver === '' ">
         <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
         <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
-            label="Guardar" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+            label="Guardar" (click)="guardarSolicitud()"></plex-button>
         <plex-button *ngIf='modo !=="validacion" && showBotonesGuardar' position="right" class="float-right mr-1" type="success"
-            label="Guardar + CB" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+            label="Guardar + CB" (click)="guardarSolicitud()"></plex-button>
         ​
         <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right" class="float-right mr-1"
-            type="success" label="Validar todos" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+            type="success" label="Validar todos" (click)="guardarSolicitud()"></plex-button>
         <plex-button *ngIf='modo === "validacion" && showBotonesGuardar && !ocultarPanelLateral' position="right" class="float-right mr-1"
-            type="success" label="Validar pendientes" (click)="protocoloDetalleComponent.guardarSolicitud()"></plex-button>
+            type="success" label="Validar pendientes" (click)="guardarSolicitud()"></plex-button>
         ​
         <plex-button *ngIf='protocoloDetalleComponent && !showBotonesGuardar && protocoloDetalleComponent.edicionDatosCabecera'
             position="right" type="success" label="Aceptar" (click)="protocoloDetalleComponent.aceptarEdicionCabecera()"></plex-button>
