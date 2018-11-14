@@ -393,13 +393,14 @@ export class PrestacionValidacionComponent implements OnInit {
                 ruteo = '/internacion/camas';
             }
         }
-        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
-            if (confirmado) {
-                this.router.navigate([ruteo]);
-            } else {
-                return;
-            }
-        });
+        this.router.navigate([ruteo]);
+        // this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
+        //     if (confirmado) {
+        //         this.router.navigate([ruteo]);
+        //     } else {
+        //         return;
+        //     }
+        // });
     }
 
     darTurno(prestacionSolicitud) {
