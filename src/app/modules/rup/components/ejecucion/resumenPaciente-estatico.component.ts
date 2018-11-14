@@ -18,6 +18,8 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
 
     public prestacionSolicitud;
 
+    public obraSocialPaciente;
+
     constructor(private plex: Plex) {
 
     }
