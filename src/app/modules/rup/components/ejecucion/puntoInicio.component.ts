@@ -299,7 +299,7 @@ export class PuntoInicioComponent implements OnInit {
 
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -313,7 +313,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -424,56 +424,19 @@ export class PuntoInicioComponent implements OnInit {
         return moment(agenda.horaInicio).fromNow();
     }
 
+
     // buscar paciente para asigar en las agendas dinamicas
     buscarPaciente() {
         this.buscandoPaciente = true;
     }
 
-    // Paciente seleccionado para la carga en agendas dinamicas
-    onPacienteSelected(paciente: IPaciente) {
-        if (paciente.id) {
-
-            let pacienteSave = {
-                id: paciente.id,
-                documento: paciente.documento,
-                apellido: paciente.apellido,
-                nombre: paciente.nombre,
-                alias: paciente.alias,
-                fechaNacimiento: paciente.fechaNacimiento,
-                sexo: paciente.sexo
-            };
-            this.darTurno(pacienteSave);
-        } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
-        }
-    }
-
-    darTurno(paciente) {
-        let idAgendaSeleccionada = this.agendaSeleccionada.id;
-        if (this.agendaSeleccionada.dinamica) {
-            this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + this.agendaSeleccionada.tipoPrestaciones[0].term + '</b>', '¿Está seguro de que desea agregar el paciente a la agenda?').then(confirmacion => {
-                let datosTurno = {
-                    nota: '',
-                    motivoConsulta: '',
-                    tipoPrestacion: this.agendaSeleccionada.tipoPrestaciones[0],
-                    paciente: paciente,
-                    idAgenda: this.agendaSeleccionada.id
-                };
-                this.serviceTurno.saveDinamica(datosTurno).subscribe(
-                    resultado => {
-                        this.buscandoPaciente = false;
-                        this.actualizar();
-                    },
-                    error => {
-
-                    });
-            });
-        }
+    cancelarDinamica() {
+        this.buscandoPaciente = false;
     }
 
     /**
        * Ejecutar una prestacion que esta en estado pendiente
-       */
+    */
     ejecutarPrestacionPendiente(idPrestacion, paciente, snomedConcept) {
         let params: any = {
             op: 'estadoPush',
@@ -491,11 +454,13 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', idPrestacion]);
                 }, (err) => {
-                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
+                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
                 });
             } else {
                 return false;
             }
         });
     }
+
+
 }

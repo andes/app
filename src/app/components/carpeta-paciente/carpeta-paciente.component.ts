@@ -49,7 +49,7 @@ export class CarpetaPacienteComponent implements OnInit {
                 // entró paciente por parámetro, no hace falta hacer otro get paciente.
                 this.paciente = this.pacienteSeleccionado;
             } else {
-                this.plex.alert('No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
+                this.plex.info('warning', 'No hay ningún paciente seleccinado', 'Error obteniendo carpetas');
             }
         }
         // Obtenemos el paciente completo. (entró por parametro el turno)
@@ -126,7 +126,7 @@ export class CarpetaPacienteComponent implements OnInit {
                 }
             );
         } else {
-            this.plex.alert('', 'Ingrese un número de carpeta válido');
+            this.plex.info('warning', '', 'Ingrese un número de carpeta válido');
             this.carpetaPaciente.nroCarpeta = this.nroCarpetaOriginal;
             this.guardarCarpetaEmit.emit(false);
         }

@@ -61,7 +61,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    get cssLayout () {
+    get cssLayout() {
         return { 'col-9': this.verPrestar || this.verSolicitudManual, 'col': !this.verSolicitudManual && !this.verPrestar };
     }
 
@@ -364,18 +364,12 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     afterSearch(paciente: IPaciente): void {
-        this.paciente = paciente;
         this.pacientesSearch = false;
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    if (this.obtenerCarpetaPaciente()) {
-                        this.verSolicitudManual = true;
-                    } else {
-                        this.verSolicitudManual = false;
-                        this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
-                    }
+                    this.obtenerCarpetaPaciente();
                 });
         } else {
             this.seleccion = paciente;
@@ -387,23 +381,42 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     obtenerCarpetaPaciente() {
+        this.carpetaEfector = undefined;
         let indiceCarpeta = -1;
-        if (this.paciente.carpetaEfectores.length > 0) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
+            if (indiceCarpeta > -1 && this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta.indexOf('PDR') === -1) {
+                this.verSolicitudManual = true;
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
             }
         }
-        if (indiceCarpeta === -1) {
+        if (!this.carpetaEfector) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                if (carpeta.length > 0) {
+                    carpeta.forEach(historial => {
+                        let index = historial.carpetaEfectores.findIndex(x => x.organizacion._id === this.auth.organizacion.id);
+                        if (index > -1) {
+                            let carpetaHistorica = historial.carpetaEfectores[index];
+                            if (carpetaHistorica.nroCarpeta.indexOf('PDR') === -1) {
+                                this.carpetaEfector = carpetaHistorica;
+                                this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: [this.carpetaEfector] }).subscribe(
+                                    resultado => {
+                                        this.verSolicitudManual = true;
+                                    }
+                                );
+                            } else {
+                                this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                            }
+                        }
+                    });
+                } else {
+                    this.verSolicitudManual = false;
+                    this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
                 }
             });
         }
-        return (this.carpetaEfector ? true : false);
     }
 
     changeListener($event, index, _carpeta): void {
