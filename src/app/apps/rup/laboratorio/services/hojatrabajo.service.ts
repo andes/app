@@ -15,4 +15,12 @@ export class HojaTrabajoService {
     post(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
         return this.server.post(this.laboratorioUrl + 'hojatrabajo', hojaTrabajo);
     }
+
+    put(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
+        return this.server.put(this.laboratorioUrl + 'hojatrabajo/' + hojaTrabajo._id, hojaTrabajo);
+    }
+
+    patch(hojaTrabajo: IHojaTrabajo): Observable<IHojaTrabajo> {
+        return this.server.patch(this.laboratorioUrl + 'hojatrabajo/' + hojaTrabajo._id, hojaTrabajo);
+    }
 }

@@ -1,6 +1,7 @@
+import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
 import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
 
 @Component({
@@ -13,6 +14,9 @@ export class GestorHojatrabajoComponent implements OnInit {
     public accionIndex = 0;
     public modo = '';
     public hojaTrabajo: IHojaTrabajo;
+    @ViewChild(ListaHojatrabajoComponent)
+    private listaHojatrabajoComponent: ListaHojatrabajoComponent;
+
     // Constructor
     constructor(
         private plex: Plex,
@@ -41,16 +45,22 @@ export class GestorHojatrabajoComponent implements OnInit {
     guardarHoja() {
         if (!this.hojaTrabajo.id) {
             this.servicioHojaTrabajo.post(this.hojaTrabajo).subscribe(respuesta => {
-                this.plex.toast('success', ' ', 'Hoja trabajo guardada', 1000);
+                this.recargarHojasTrabajo();
             });
         } else {
-            // PATCH....
+            this.servicioHojaTrabajo.put(this.hojaTrabajo).subscribe(respuesta => {
+                this.recargarHojasTrabajo();
+            });
         }
+    }
 
+    recargarHojasTrabajo() {
+        this.plex.toast('success', ' ', 'Hoja trabajo guardada', 1000);
+        this.listaHojatrabajoComponent.cargarListado();
     }
 
     agregarHoja() {
-        console.log('agregar hoja', new Date);
+        this.hojaTrabajo = new IHojaTrabajo();
     }
 
     volverLista() {
