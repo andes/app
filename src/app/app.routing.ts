@@ -86,6 +86,7 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { ProfesionalCreateUpdateComponent } from './components/profesional/profesional-create-update.component';
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
@@ -96,6 +97,8 @@ const appRoutes: Routes = [
   { path: 'tm/organizacion/cama/:idCama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/organizacion/cama', component: CamaCreateUpdateComponent, canActivate: [RoutingGuard] },
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/profesional/create', component: ProfesionalCreateUpdateComponent, canActivate: [RoutingGuard] },
+
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
 

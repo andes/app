@@ -1,69 +1,126 @@
-<div class="row">
-    <div class="col-sm-12" *ngIf="!showcreate && !showupdate">
-        <!--<plex-box type="" title="">-->
-        <plex-scroll (on-scroll)="nextPage()" distancia="3"></plex-scroll>
-        <plex-box type="" title="Profesionales">
-            <form [formGroup]="searchForm">
-                <div class="row">
-                    <div class="col-md-4">
-                        <plex-int formControlName="documento" label="Documento" placeholder="Ingrese numero de Documento..."></plex-int>
+<plex-layout main="8">
+    <plex-layout-main>
+        <ng-container *ngIf='!nuevoProfesional'>
+            <header>
+                <h3>Listado de profesionales</h3>
+                <form [formGroup]="searchForm">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <plex-int formControlName="documento" label="Documento" placeholder="Ingrese numero de Documento..."></plex-int>
+                        </div>
+                        <div class="col-md-4">
+                            <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
+                        </div>
+                        <div class="col-md-4">
+                            <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre..."></plex-text>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        <plex-text formControlName="apellido" label="Apellido" placeholder="Filtrar por apellido..."></plex-text>
-                    </div>
-                    <div class="col-md-4">
-                        <plex-text formControlName="nombre" label="Nombre" placeholder="Filtrar por nombre..."></plex-text>
+                </form>
+                <br>
+            </header>
+
+            <cdk-virtual-scroll-viewport itemSize="5" style="height: 100%;display: flex;">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Apellido</th>
+                                <th>Nombre</th>
+                                <th>Documento</th>
+                                <th>condicion</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *cdkVirtualFor="let profesional of datos" (click)='seleccionarProfesional(profesional)'>
+                                <td>{{profesional.apellido}}</td>
+                                <td>{{profesional.nombre}}</td>
+                                <td>{{profesional.documento}}</td>
+                                <td>
+                                    <span *ngIf='profesional.profesionalMatriculado' class="badge badge-info">Matriculado</span>
+                                    <span *ngIf='!profesional.profesionalMatriculado' class="badge badge-warning"> No
+                                        Matriculado</span>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </cdk-virtual-scroll-viewport>
+        </ng-container>
+        <ng-container *ngIf='nuevoProfesional'>
+            <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
+
+        </ng-container>
+    </plex-layout-main>
+
+    <!-- sidebar listado -->
+    <plex-layout-sidebar *ngIf='profesionalSelected'>
+        <div class="row mb-1">
+            <div class="col text-center">
+                <img [src]="fotoProfesional" class="img-thumbnail" />
+                <!-- <img *ngIf="profesionalSelected.foto" class="img-thumbnail" src="{{ profesionalSelected.foto }}">
+                <img *ngIf="!profesionalSelected.foto" class="img-thumbnail" src='data:image/svg+xml;charset=utf-8,<svg%20version%3D"1.1"%20id%3D"Layer_4"%20xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg"%20xmlns%3Axlink%3D"http%3A%2F%2Fwww.w3.org%2F1999%2Fxlink"%20x%3D"0px"%20y%3D"0px"%0D%0A%09%20width%3D"480px"%20height%3D"535px"%20viewBox%3D"0%200%20480%20535"%20enable-background%3D"new%200%200%20480%20535"%20xml%3Aspace%3D"preserve">%0D%0A<g%20id%3D"Layer_3">%0D%0A%09<linearGradient%20id%3D"SVGID_1_"%20gradientUnits%3D"userSpaceOnUse"%20x1%3D"240"%20y1%3D"535"%20x2%3D"240"%20y2%3D"4.882812e-04">%0D%0A%09%09<stop%20%20offset%3D"0"%20style%3D"stop-color%3A%23C5C5C5"%2F>%0D%0A%09%09<stop%20%20offset%3D"1"%20style%3D"stop-color%3A%239A9A9A"%2F>%0D%0A%09<%2FlinearGradient>%0D%0A%09<rect%20fill%3D"url%28%23SVGID_1_%29"%20width%3D"480"%20height%3D"535"%2F>%0D%0A<%2Fg>%0D%0A<g%20id%3D"Layer_2">%0D%0A%09<path%20fill%3D"%23FFFFFF"%20d%3D"M347.5%2C250c0%2C59.375-48.125%2C107.5-107.5%2C107.5c-59.375%2C0-107.5-48.125-107.5-107.5%0D%0A%09%09c0-59.375%2C48.125-107.5%2C107.5-107.5C299.375%2C142.5%2C347.5%2C190.625%2C347.5%2C250z"%2F>%0D%0A%09<path%20fill%3D"%23FFFFFF"%20d%3D"M421.194%2C535C413.917%2C424.125%2C335.575%2C336.834%2C240%2C336.834c-95.576%2C0-173.917%2C87.291-181.194%2C198.166%0D%0A%09%09H421.194z"%2F>%0D%0A<%2Fg>%0D%0A<%2Fsvg>'> -->
+            </div>
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.apellido">
+            <div class="col">
+                <strong>{{profesionalSelected.apellido | uppercase}},{{profesionalSelected.nombre | uppercase}}</strong>
+            </div>
+        </div>
+        <div class="row mb-1">
+            <div class="col">
+                <span *ngIf="profesionalSelected.documento" class="mr-1">{{ profesionalSelected.documento | number }}</span>
+                <span *ngIf='profesionalSelected.profesionalMatriculado' class="badge badge-info">Matriculado</span>
+                <span *ngIf='!profesionalSelected.profesionalMatriculado' class="badge badge-warning"> No
+                    Matriculado</span>
+            </div>
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.fechaNacimiento">
+            <div class="col">
+                <label>Fecha de nacimiento</label>
+                <span>{{ profesionalSelected.fechaNacimiento | fecha }}</span> | <span>{{ profesionalSelected | edad }}</span>
+            </div>
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.sexo">
+            <div class="col">
+                <label>Sexo / Género</label>
+                <span>{{ profesionalSelected | sexo }}</span>
+            </div>
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.cuit">
+            <div class="col">
+                <label>CUIL</label>
+                <span>{{ profesionalSelected.cuit }}</span>
+            </div>
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.formacionGrado && profesionalSelected.formacionGrado.length > 0">
+            <div class="col">
+                <label>Formaciones de Grado</label>
+                <div *ngFor='let formacionGrado of profesionalSelected.formacionGrado'>
+                    <div *ngIf='formacionGrado.matriculacion'>
+                        {{formacionGrado.profesion.nombre}} - Matricula:
+                        {{formacionGrado.matriculacion[formacionGrado.matriculacion.length - 1].matriculaNumero}}
                     </div>
                 </div>
-            </form>
-            <plex-button type="primary" (click)="showcreate = !showcreate" label="Nuevo Profesional"></plex-button>
-        </plex-box>
-        <plex-box type="" title="">
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Apellido</th>
-                            <th>Nombre</th>
-                            <th>Documento</th>
-                            <th>Activo</th>
-                            <th>Actualizar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let profesional of datos">
-                            <td>{{profesional.apellido}}</td>
-                            <td>{{profesional.nombre}}</td>
-                            <td>{{profesional.documento}}</td>
-                            <td>
-                                <plex-bool type="slide" [(ngModel)]="profesional.activo" label="" name="profesional.activo" (click)="Activo(profesional)"></plex-bool>
-                            </td>
-                            <td>
-                                <plex-button type="primary" label="Actualizar" (click)="onEdit(profesional)">
-                                </plex-button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
             </div>
-            <plex-loader *ngIf="loader"></plex-loader>
-            <div *ngIf="finScroll" class="alert alert-warning">
-                <p style="text-align: center;"> No se encontraron más resultados </p>
-                <!-- pasar a un componente de plex -->
+        </div>
+        <div class="row mb-1" *ngIf="profesionalSelected.formacionPosgrado && profesionalSelected.formacionPosgrado.length > 0 ">
+            <div class="col">
+                <label>Especialidades</label>
+                <div *ngFor='let formacionPosgrado of profesionalSelected.formacionPosgrado'>
+                    <div *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
+                        {{formacionPosgrado.especialidad.nombre}} - Matricula:
+                        {{formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero}}
+                    </div>
+                </div>
             </div>
-        </plex-box>
-        <!--</plex-box>-->
-    </div>
-    <div class="col-sm-12" *ngIf="showcreate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <profesional-create-update (data)='onReturn($event)'></profesional-create-update>
         </div>
-    </div>
-    <div class="col-sm-12" *ngIf="showupdate">
-        <div class="panel panel-default">
-            <div class="clear"></div>
-            <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
-        </div>
-    </div>
-</div>
+    </plex-layout-sidebar>
+
+    <!-- sidebarCreate -->
+
+    <plex-layout-footer>
+        <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
+        <plex-button label="Nuevo Profesional" type="success" position="right" routerLink='/tm/profesional/create' ></plex-button>
+    </plex-layout-footer>
+</plex-layout>

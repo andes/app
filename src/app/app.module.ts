@@ -20,7 +20,7 @@ import { LOCALE_ID } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpModule } from '@angular/http';
-
+import { ScrollingModule } from '@angular/cdk/scrolling';
 // Global
 import { PlexModule } from '@andes/plex';
 import { Plex } from '@andes/plex';
@@ -496,6 +496,7 @@ registerLocaleData(localeEs, 'es');
         NgDragDropModule.forRoot(),
         ChartsModule,
         routing,
+        ScrollingModule,
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyAJuFVuMmVwV8gtP_1m3Ll1VzHagAI_X9I'
         })

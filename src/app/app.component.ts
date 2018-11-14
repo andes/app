@@ -76,6 +76,7 @@ export class AppComponent {
         }
         this.menuList.push({ label: 'Página principal', icon: 'home', route: '/inicio' });
         this.menuList.push({ label: 'Padrones', icon: 'magnify', route: '/puco' });
+        this.menuList.push({ label: 'Profesionales', icon: 'mdi mdi-account-multiple', route: '/tm/profesional' });
 
         accessList.forEach((permiso) => {
             this.menuList.push(permiso);

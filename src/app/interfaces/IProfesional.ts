@@ -46,4 +46,5 @@
         activo: Boolean
 
     }];
+    profesionalMatriculado: Boolean;
  }
