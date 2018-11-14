@@ -69,7 +69,15 @@ export class IHojaTrabajo {
 
 
         // HARDCODEEEE.,...............
-        this.area = { nombre: 'QUIMICA CLINICA', conceptoSnomed: {'fsn': 'servicio de bioquímica clínica (calificador)', 'term': 'servicio de bioquímica clínica', 'conceptId': '310076001', 'semanticTag': 'calificador'} };
+        this.area = {
+            nombre: 'QUIMICA CLINICA',
+            conceptoSnomed: {
+                'fsn': 'servicio de bioquímica clínica (calificador)',
+                'term': 'servicio de bioquímica clínica',
+                'conceptId': '310076001',
+                'semanticTag': 'calificador'
+            }
+        };
         this.laboratorio = new ObjectID();
         this.responsable = new ObjectID();
     }
