@@ -24,13 +24,19 @@
                 </div>
             </header>
             <div>
+<<<<<<< HEAD
                 <ng-container *ngIf="modo === 'practicas'">
                     <h2>Prácticas de la Hoja</h2>
                     <practicas-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></practicas-hojatrabajo>
+=======
+                <ng-container *ngIf="modo === 'analisis'">
+                    <strong>Análisis de la Hoja</strong>
+                    <analisis-hojatrabajo></analisis-hojatrabajo>
+>>>>>>> 44ace0108724450b592e4af933030ae3309a1f07
                 </ng-container>
 
                 <ng-container *ngIf="modo === 'impresion'">
-                    <h2>Opciones de Impresión</h2>
+                    <strong>Opciones de Impresión</strong>
                     <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></impresion-hojatrabajo>
                 </ng-container>
             </div>

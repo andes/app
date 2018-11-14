@@ -4,13 +4,13 @@
             [required]="true"></plex-text>
     </div>
     <div class="col">
-        <label> Protocolo: </label>
+        <label> Protocolo</label>
         <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirPrioridad" type="slide" label="Imprimir Prioridad" name="imprimirPrioridad"></plex-bool>
         <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirOrigen" type="slide" label="Imprimir Origen" name="imprimirOrigen"></plex-bool>
         <plex-bool [(ngModel)]="hojaTrabajo.protocolo.imprimirDiagnostico" type="slide" label="Imprimir Diagnostico" name="imprimirDiagnostico"></plex-bool>
     </div>
     <div class="col">
-        <label>Paciente:</label>
+        <label>Paciente</label>
         <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirApellidoNombre" type="slide" label="Imprimir Apellido y Nombre" name="imprimirApellidoNombre"></plex-bool>
         <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirEdad" type="slide" label="Imprimir Edad" name="imprimirEdad"></plex-bool>
         <plex-bool [(ngModel)]="hojaTrabajo.paciente.imprimirSexo" type="slide" label="Imprimir Sexo" name="imprimirSexo"></plex-bool>
@@ -18,7 +18,7 @@
             placeholder="Escriba la cantidad de lineas adicionales"></plex-text>
     </div>
     <div class="col">
-        <label>Papel:</label>
+        <label>Papel</label>
         <plex-radio [(ngModel)]="hojaTrabajo.papel.formato" [data]="opcionesFormato" name="formato" type="horizontal" [required]="true">
         </plex-radio>
         <plex-radio [(ngModel)]="hojaTrabajo.papel.orientacion" [data]="opcionesOrientacion" name="orientacion" type="horizontal" [required]="true">
