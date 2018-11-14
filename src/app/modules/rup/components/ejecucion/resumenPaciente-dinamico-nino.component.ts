@@ -91,7 +91,10 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
                     valorConcepto = unConcepto.contenido.valor;
 
                     if (Array.isArray(valorConcepto)) { // Si valor es un concepto compuesto (Lactancia por ejemplo)
-                        unValor = valorConcepto[valorConcepto.length - 1].concepto.term;
+                        if (valorConcepto.length > 0) {
+                            unValor = valorConcepto[valorConcepto.length - 1].concepto.term;
+                        }
+
                     } else {
                         unValor = unConcepto.contenido.valor;   // Si valor es un número
                     }
