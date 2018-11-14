@@ -34,12 +34,7 @@ export class SolicitudManualComponent implements OnInit {
     @Input('pacienteSeleccionado')
     set pacienteSeleccionado(value: any) {
         this.paciente = value;
-        this.obtenerCarpetaPaciente();
-        this.solicitud = {};
-        this.solicitud.organizacion = this.auth.organizacion;
-        this.solicitud.paciente = this.paciente;
-        this.solicitud.numero = this.carpetaEfector.nroCarpeta;
-        this.solicitud.fecha = new Date;
+        this.searchPaciente(this.paciente);
     }
 
     constructor(
@@ -103,6 +98,22 @@ export class SolicitudManualComponent implements OnInit {
         }
     }
 
+    searchPaciente(paciente) {
+        if (paciente.id) {
+            this.servicePaciente.getById(paciente.id).subscribe(
+                pacienteMPI => {
+                    this.paciente = pacienteMPI;
+                    this.obtenerCarpetaPaciente();
+                    this.solicitud = {};
+                    this.solicitud.organizacion = this.auth.organizacion;
+                    this.solicitud.paciente = this.paciente;
+                    this.solicitud.numero = this.carpetaEfector.nroCarpeta;
+                    this.solicitud.fecha = new Date;
+                }
+            );
+        }
+    }
+
     save(event) {
         this.solicitud.datosSolicitudManual = {
             espacioFisico: this.espacioFisico,
@@ -126,20 +137,14 @@ export class SolicitudManualComponent implements OnInit {
     // a partir del documento y del efector
     obtenerCarpetaPaciente() {
         let indiceCarpeta = -1;
-        if (this.paciente.carpetaEfectores.length > 0) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
             if (indiceCarpeta > -1) {
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
             }
-        }
-        if (indiceCarpeta === -1) {
-            // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
-            this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
-                }
-            });
+        } else {
+            this.plex.toast('success', 'Ocurrió un error y no encontramos la historia clínica. Intertar nuevamente', 'Información', 1000);
         }
     }
 }
