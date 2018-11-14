@@ -147,7 +147,7 @@ export class RevisionAgendaComponent implements OnInit {
                     window.setTimeout(() => this.pacientesSearch = false, 100);
                 });
         } else {
-            this.plex.alert('Paciente no encontrado', '¡Error!');
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
     }
 
@@ -332,7 +332,7 @@ export class RevisionAgendaComponent implements OnInit {
                 this.cerrarAsistencia();
             });
         } else {
-            this.plex.alert('Debe seleccionar un tipo de Prestacion');
+            this.plex.info('warning', 'Debe seleccionar un tipo de Prestacion');
         }
     }
 

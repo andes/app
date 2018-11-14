@@ -248,7 +248,7 @@ export class PanelEspacioComponent implements OnInit {
             });
         }
         if (band) {
-            this.plex.alert('Los cambios se guardaron correctamente');
+            this.plex.info('warning', 'Los cambios se guardaron correctamente');
         }
     }
 }
