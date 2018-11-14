@@ -1,6 +1,6 @@
 import { OrganizacionService } from './../../../../services/organizacion.service';
 import { Component, EventEmitter, Output, OnInit, Input, HostBinding, AfterViewInit } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import * as moment from 'moment';
@@ -56,7 +56,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: ISubscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -139,7 +139,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
@@ -220,13 +220,6 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             }
         }
     }
-
-    // cambiarNominalizada(cambio) {
-    //     this.modelo.nominalizada = !this.noNominalizada;
-    //     if (this.noNominalizada) {
-    //         this.dinamica = false;
-    //     }
-    // }
 
     seleccionarDinamica() {
         if (this.dinamica) {
@@ -572,6 +565,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         if (this.modelo.horaInicio && this.modelo.horaFin) {
             iniAgenda = this.combinarFechas(this.fecha, this.modelo.horaInicio);
             finAgenda = this.combinarFechas(this.fecha, this.modelo.horaFin);
+            if (this.dinamica) {
+                this.modelo.bloques[0].horaInicio = iniAgenda;
+                this.modelo.bloques[0].horaFin = finAgenda;
+            }
         }
         let bloques = this.modelo.bloques;
         let totalBloques = 0;
@@ -725,12 +722,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
             query.organizacion = efector.id;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
@@ -750,7 +747,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.validarTodo();
         if (this.modelo.id === '0') {
             delete this.modelo.id;
-        };
+        }
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
     }
@@ -844,9 +841,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         }
                     }
                 }
-                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true && delete el.$order;
-                });
+                if (!this.dinamica) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                }
             });
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {

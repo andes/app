@@ -1,5 +1,5 @@
 import { IDireccion } from './../../interfaces/IDireccion';
-import { Observable } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 // import { FORM_DIRECTIVES } from '@angular/common';
@@ -21,7 +21,7 @@ import * as enumerados from './../../utils/enumerados';
     templateUrl: 'profesional-create-update.html'
 })
 export class ProfesionalCreateUpdateComponent implements OnInit {
-    @Input('seleccion') seleccion: IProfesional;
+    @Input() seleccion: IProfesional;
     @Output() data: EventEmitter<IProfesional> = new EventEmitter<IProfesional>();
 
     public fechaNacimiento: Date;
@@ -29,7 +29,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     // Getter que previene el error de AOT
     // https://github.com/angular/angular-cli/issues/6099
-    get formData(): any { return this.createForm; };
+    get formData(): any { return this.createForm; }
 
     createForm: FormGroup;
     // Definición de arreglos

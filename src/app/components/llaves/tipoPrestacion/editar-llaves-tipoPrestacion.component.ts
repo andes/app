@@ -118,7 +118,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 },
                     err => {
                         if (err) {
-                            console.log(err);
+
                         }
                     });
 
@@ -131,7 +131,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
                 },
                     err => {
                         if (err) {
-                            console.log(err);
+
                         }
                     });
             }

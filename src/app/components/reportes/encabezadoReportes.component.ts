@@ -11,7 +11,6 @@ import { AgendaService } from '../../services/turnos/agenda.service';
 @Component({
     selector: 'encabezadoReportes',
     templateUrl: 'encabezadoReportes.html',
-
 })
 export class EncabezadoReportesComponent implements OnInit {
     @HostBinding('class.plex-layout') layout = true; // Permite el uso de flex-box en el componente

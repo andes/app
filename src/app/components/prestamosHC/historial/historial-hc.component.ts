@@ -15,6 +15,7 @@ export class HistorialCarpetasComponent implements OnInit {
     public historial: any[] = [];
     public numeroCarpeta = '';
     public inicioBusqueda = false;
+    public paciente;
 
     constructor(
         public prestamosService: PrestamosService,
@@ -26,14 +27,20 @@ export class HistorialCarpetasComponent implements OnInit {
     }
 
     buscarHistorial() {
+        this.paciente = null;
+        this.historial = [];
+        this.inicioBusqueda = true;
         if (this.numeroCarpeta != null) {
             this.prestamosService.getHistorialCarpetas({ numero: this.numeroCarpeta, organizacion: this.auth.organizacion.id })
-                .subscribe(historial => {
-                    this.inicioBusqueda = true;
-                    if (historial.length > 0) {
-                        this.historial = historial;
+                .subscribe(resultado => {
+                    if (resultado.historial.length > 0) {
+                        this.historial = resultado.historial;
                     } else {
                         this.historial = [];
+                    }
+
+                    if (resultado.paciente) {
+                        this.paciente = resultado.paciente;
                     }
                 });
         }

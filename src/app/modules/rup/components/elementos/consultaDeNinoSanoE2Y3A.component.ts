@@ -96,7 +96,6 @@ export class ConsultaDeNinoSanoE2Y3AComponent extends RUPComponent implements On
         if (registros) {
             for (let i = 0; i < registros.length; i++) {
                 if (registros[i].valor) {
-                    console.log('registros[i].valor', registros[i].valor);
                     return true;
                 } else {
                     this.hayAlgunValor(registros[i].registros);

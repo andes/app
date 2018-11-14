@@ -149,10 +149,6 @@
                                         <plex-text label="Dirección" [(ngModel)]="pacienteModel.direccion[0].valor" name="divValor" placeholder="Ej: Avenida las Flores 1200">
                                         </plex-text>
                                     </div>
-                                    <div class="col">
-                                        <!-- <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre">
-                                            </plex-select> -->
-                                    </div>
                                 </div>
                                 <div class="row" *ngIf="!viveEnNeuquen">
                                     <div class="col">
@@ -163,10 +159,6 @@
                                         <plex-select label="Localidad" [(ngModel)]="pacienteModel.direccion[0].ubicacion.localidad" name="localidad" [data]="localidadesNeuquen"
                                             placeholder="Seleccione..." labelField="nombre" (change)="loadBarrios(pacienteModel.direccion[0].ubicacion.localidad)">
                                         </plex-select>
-                                    </div>
-                                    <div class="col">
-                                        <!-- <plex-select label="Barrio" [(ngModel)]="pacienteModel.direccion[0].ubicacion.barrio" name="barrio" [data]="barriosNeuquen" placeholder="Seleccione..." labelField="nombre">
-                                            </plex-select> -->
                                     </div>
                                 </div>
                             </div>
