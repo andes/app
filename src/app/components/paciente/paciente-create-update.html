@@ -76,7 +76,7 @@
                                         (focusout)="onFocusout('celular', celularAndes)"></plex-phone>
                                 </div>
                                 <div class="col-4">
-                                    <span style="color: red" *ngIf="emailAndes && messageApp.length > 0">
+                                    <span class="text-danger" *ngIf="emailAndes && messageApp.length > 0">
                                         <i class="mdi mdi-alert-circle-outline"></i>
                                         {{messageApp}}
                                     </span>
