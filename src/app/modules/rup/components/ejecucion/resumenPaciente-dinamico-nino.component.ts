@@ -19,6 +19,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     public prestaciones: any = [];
     public vacunas = [];
     public registro = null;
+    public obraSocialPaciente;
 
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
         private servicioVacunas: VacunasService,
