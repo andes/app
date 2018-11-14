@@ -267,7 +267,7 @@ import { OdontologiaDefaultComponent } from './modules/rup/components/elementos/
 import { CircunferenciaCinturaComponent } from './modules/rup/components/elementos/circunferenciaCintura.component';
 import { InformeActividadNoNominalizadaComponent } from './modules/rup/components/elementos/informeActividadNoNominalizada.component';
 
-import { GraficoLinealComponent } from './modules/rup/components/elementos/seguimiento.component';
+import { GraficoLinealComponent } from './modules/rup/components/elementos/graficoLineal.component';
 import { PesoComponent } from './modules/rup/components/elementos/peso.component';
 import { PercentiloPesoComponent } from './modules/rup/components/elementos/percentiloPeso.component';
 import { TallaComponent } from './modules/rup/components/elementos/talla.component';
