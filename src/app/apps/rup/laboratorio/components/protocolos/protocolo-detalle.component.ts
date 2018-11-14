@@ -85,6 +85,7 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     cargarProtocolo(value: any) {
+        console.log('cargarProtocolo', value)
         this.modelo = value;
         this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
         this.practicasEjecucion = this.modelo.ejecucion.registros;

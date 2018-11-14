@@ -1,3 +1,4 @@
+import { Constantes } from './../../controllers/constants';
 import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
@@ -27,10 +28,13 @@ export class GestorProtocolosComponent
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
 
-    public protocolos: IPrestacion[];
-    public protocolo: IPrestacion;
+    // public protocolos: IPrestacion[];
+    // public protocolo: IPrestacion;
+    public protocolos: any[];
+    public protocolo: any;
+
     @Input('protocolo')
-    set setProtocolo(value: IPrestacion) {
+    set setProtocolo(value: any) {
         console.log('setProtocolo')
         if (value) {
             this.seleccionarProtocolo({ protocolo: value, index: 0 });
@@ -113,32 +117,32 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     resetearProtocolo(paciente) {
-        // this.protocolo = {
-        //     paciente: paciente,
-        //     solicitud: {
-        //         esSolicitud: true,
-        //         tipoPrestacion: null,
-        //         organizacion: {},
-        //         profesional: {},
-        //         ambitoOrigen: null,
-        //         fecha: new Date(),
-        //         registros: [{
-        //             nombre: 'Prueba de Laboratorio',
-        //             concepto: Constantes.conceptoPruebaLaboratorio,
-        //             valor: {
-        //                 solicitudPrestacion: {
-        //                     practicas: [],
-        //                     fechaTomaMuestra: new Date()
-        //                 }
-        //             }
-        //         }]
-        //     },
-        //     ejecucion: {
-        //         fecha: new Date(),
-        //         registros: []
-        //     }
-        // };
-        this.protocolo = new IPrestacion();
+        this.protocolo = {
+            paciente: paciente,
+            solicitud: {
+                esSolicitud: true,
+                tipoPrestacion: null,
+                organizacion: {},
+                profesional: {},
+                ambitoOrigen: null,
+                fecha: new Date(),
+                registros: [{
+                    nombre: 'Prueba de Laboratorio',
+                    concepto: Constantes.conceptoPruebaLaboratorio,
+                    valor: {
+                        solicitudPrestacion: {
+                            practicas: [],
+                            fechaTomaMuestra: new Date()
+                        }
+                    }
+                }]
+            },
+            ejecucion: {
+                fecha: new Date(),
+                registros: []
+            }
+        };
+        // this.protocolo = IPrestacion.constructor();
         console.log('resetearProtocolo', this.protocolo);
     }
 
@@ -311,7 +315,6 @@ export class GestorProtocolosComponent
         this.indexProtocolo = 0;
         this.seleccionPaciente = true;
         this.mostrarCuerpoProtocolo = false;
-        this.protocoloDetalleComponent.editarListaPracticas = true;
     }
 
     mostrarBotonesGuardarProtocoloFooter($event) {

@@ -28,8 +28,8 @@ export class PracticaService {
         });
     }
 
-    getMatchCodigo(codigo: IPracticaSearch): Observable<IPracticaMatch[]> {
-        return this.server.get(this.practicaCodigoUrl + codigo, null).map((value) => {
+    getMatchCodigo(codigo: IPracticaSearch, buscarSImples?): Observable<IPracticaMatch[]> {
+        return this.server.get(this.practicaCodigoUrl + codigo + (buscarSImples ? '&buscarSimples=true' : ""), null).map((value) => {
             return value;
         });
     }
