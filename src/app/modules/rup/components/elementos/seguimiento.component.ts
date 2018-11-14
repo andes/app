@@ -53,8 +53,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                     );
                     console.log('barChartDates', this.barChartDates);
 
-                    // set options charts
-                    this.setChartOptions(this.barChartDates);
 
                     // asignamos los datosLineales al data para el chart
                     this.barChartData.push(
@@ -64,6 +62,8 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
 
                     // agregamos las leyendas del eje x
                     this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('ll'));
+                    // set options charts
+                    this.setChartOptions(prestaciones);
                     this.barChartOptions.title.text += ' desde ' + moment(this.barChartLabels[0].fecha).format('DD-MM-YYYY') + ' hasta ' + moment(this.barChartLabels[this.barChartLabels.length - 1].fecha).format('DD-MM-YYYY');
 
                 }
@@ -81,13 +81,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
      * @memberof SeguimientoDelPesoComponent
      */
     private setChartOptions(data): void {
-
-
-        console.log({ data }, this.elementoRUP.params.map(x => x.label).join(' y '));
-        // console.log(data[0].fecha);
-
-
-
         this.barChartOptions = {
             scaleShowVerticalLines: true,
             responsive: true,
@@ -99,6 +92,7 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
             scales: {
                 yAxes: [{
                     scaleLabel: {
+                        fontSize: 9,
                         display: true,
                         labelString: `${this.elementoRUP.params.map(x => x.label).join(' y ')} (${this.elementoRUP.params.map(x => x.unidad).join(' / ')})`
                     },
@@ -106,30 +100,14 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                         beginAtZero: true
                     }
                 }],
-                // xAxes: [{
-                //     type: 'time',
-                //     time: {
-                //         min: moment(data[0].fecha).subtract(0.5, 'days'),
-                //         // min: moment().subtract(6, 'months'),
-                //         max: moment(data[data.length - 1].fecha).add(0.5, 'days'),
-                //         // max: moment().add(1, 'months'),
-                //         unit: 'day',
-                //         tooltipFormat: 'DD/MM/YYYY',
-                //         unitStepSize: 0.5,
-                //         round: 'hour',
-                //         // displayFormats: {
-                //         //     'millisecond': 'MMM DD',
-                //         //     'second': 'MMM DD',
-                //         //     'minute': 'MMM DD',
-                //         //     'hour': 'MMM DD',
-                //         //     'day': 'MMM DD',
-                //         //     'week': 'MMM DD',
-                //         //     'month': 'MMM DD',
-                //         //     'quarter': 'MMM DD',
-                //         //     'year': 'MMM DD',
-                //         // }
-                //     }
-                // }],
+                xAxes: [
+                    {
+                        ticks: {
+                            suggestedMin: 1,
+                            suggestedMax: 31
+                        }
+                    }
+                ]
             },
             tooltips: {
                 callbacks: {
