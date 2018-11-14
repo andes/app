@@ -227,6 +227,8 @@ import { VistaCDAComponent } from './modules/rup/components/ejecucion/vistaCDA.c
 import { HudsBusquedaPacienteComponent } from './modules/rup/components/ejecucion/hudsBusquedaPaciente.component';
 import { ResumenPacienteEstaticoComponent } from './modules/rup/components/ejecucion/resumenPaciente-estatico.component';
 import { ResumenPacienteDinamicoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico.component';
+import { ResumenPacienteDinamicoMujerComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-mujer.component';
+import { ResumenPacienteDinamicoHombreComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-hombre.component';
 import { ResumenPacienteDinamicoNinoComponent } from './modules/rup/components/ejecucion/resumenPaciente-dinamico-nino.component';
 
 
@@ -467,6 +469,8 @@ let RUPComponentsArray = [
     ResumenPacienteEstaticoComponent,
     ResumenPacienteDinamicoComponent,
     ResumenPacienteDinamicoNinoComponent,
+    ResumenPacienteDinamicoMujerComponent,
+    ResumenPacienteDinamicoHombreComponent,
     InformeActividadNoNominalizadaComponent,
     PercentiloPesoComponent,
     PercentiloTallaComponent,
