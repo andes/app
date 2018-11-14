@@ -6,8 +6,8 @@ import 'moment/locale/es';
 import { isNumber } from 'util';
 
 @Component({
-    selector: 'rup-seguimiento-peso',
-    templateUrl: 'seguimiento.html'
+    selector: 'rup-grafico-lineal',
+    templateUrl: 'graficoLineal.html'
 })
 export class GraficoLinealComponent extends RUPComponent implements OnInit {
     // variables para guardar los datosLineales de las prestaciones
