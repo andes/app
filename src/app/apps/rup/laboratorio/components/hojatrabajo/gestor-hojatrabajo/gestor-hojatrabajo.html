@@ -25,12 +25,12 @@
             </header>
             <div>
                 <ng-container *ngIf="modo === 'analisis'">
-                    <h2>Análisis de la Hoja</h2>
+                    <strong>Análisis de la Hoja</strong>
                     <analisis-hojatrabajo></analisis-hojatrabajo>
                 </ng-container>
 
                 <ng-container *ngIf="modo === 'impresion'">
-                    <h2>Opciones de Impresión</h2>
+                    <strong>Opciones de Impresión</strong>
                     <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></impresion-hojatrabajo>
                 </ng-container>
             </div>
