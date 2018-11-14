@@ -1,4 +1,4 @@
-import { IHojaTrabajo } from './../interfaces/IHojaTrabajo';
+import { IHojaTrabajo } from '../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';

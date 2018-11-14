@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
 import { Plex } from '@andes/plex';
-import { IHojaTrabajo } from '../../../interfaces/IHojaTrabajo';
+import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 
 @Component({
     selector: 'lista-hojatrabajo',

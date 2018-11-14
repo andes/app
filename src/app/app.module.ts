@@ -368,7 +368,7 @@ import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/list
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
 import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 import { ListaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/lista-hojatrabajo/lista-hojatrabajo.component';
-import { AnalisisHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/analisis-hojatrabajo/analisis-hojatrabajo.component';
+import { PracticasHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/practicas-hojatrabajo/practicas-hojatrabajo.component';
 import { ImpresionHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/impresion-hojatrabajo/impresion-hojatrabajo.component';
 
 
@@ -618,7 +618,7 @@ registerLocaleData(localeEs, 'es');
         FiltrosBusquedaProtocoloComponent,
         GestorHojatrabajoComponent,
         ListaHojatrabajoComponent,
-        AnalisisHojatrabajoComponent,
+        PracticasHojatrabajoComponent,
         ImpresionHojatrabajoComponent,
 
         // MPI

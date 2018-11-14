@@ -1,5 +1,5 @@
 import { ListaHojatrabajoComponent } from './../lista-hojatrabajo/lista-hojatrabajo.component';
-import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
+import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Plex } from '@andes/plex';
@@ -14,6 +14,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     public accionIndex = 0;
     public modo = '';
     public hojaTrabajo: IHojaTrabajo;
+    
     @ViewChild(ListaHojatrabajoComponent)
     private listaHojatrabajoComponent: ListaHojatrabajoComponent;
 
@@ -24,7 +25,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.hojaTrabajo = new IHojaTrabajo();
+        this.agregarHoja();
     }
 
     cambio($event) {
@@ -32,7 +33,7 @@ export class GestorHojatrabajoComponent implements OnInit {
         if ($event === 0) {
             this.modo = 'impresion';
         } else if ($event === 1) {
-            this.modo = 'analisis';
+            this.modo = 'practicas';
         }
         // this.refreshSelection();
     }

@@ -18,15 +18,15 @@
                     <plex-tabs [activeIndex]="accionIndex" class='float-right' (change)="cambio($event)">
                         <plex-tab label="Opciones de Impresión">
                         </plex-tab>
-                        <plex-tab label="Análisis de la Hoja">
+                        <plex-tab label="Prácticas de la Hoja">
                         </plex-tab>
                     </plex-tabs>
                 </div>
             </header>
             <div>
-                <ng-container *ngIf="modo === 'analisis'">
-                    <h2>Análisis de la Hoja</h2>
-                    <analisis-hojatrabajo></analisis-hojatrabajo>
+                <ng-container *ngIf="modo === 'practicas'">
+                    <h2>Prácticas de la Hoja</h2>
+                    <practicas-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></practicas-hojatrabajo>
                 </ng-container>
 
                 <ng-container *ngIf="modo === 'impresion'">

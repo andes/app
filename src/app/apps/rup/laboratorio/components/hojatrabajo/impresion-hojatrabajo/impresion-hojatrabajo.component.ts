@@ -1,4 +1,4 @@
-import { IHojaTrabajo } from './../../../interfaces/IHojaTrabajo';
+import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({

@@ -1,5 +1,5 @@
+import { IPracticasHojaTrabajo } from './IPracticaHojaTrabajo';
 import { ObjectID } from 'bson';
-import { IPractica } from './../../../../interfaces/laboratorio/IPractica';
 
 export class IHojaTrabajo {
     id: string;
@@ -35,7 +35,8 @@ export class IHojaTrabajo {
         textoInferiorIzquierda: String,
     };
     baja: Boolean;
-    practicas: [{ nombre: String, practica: { type: IPractica } }];
+    // practicas: [];
+    practicas: [IPracticasHojaTrabajo];
 
     constructor() {
         this.area = {
@@ -78,6 +79,7 @@ export class IHojaTrabajo {
                 'semanticTag': 'calificador'
             }
         };
+        
         this.laboratorio = new ObjectID();
         this.responsable = new ObjectID();
     }
