@@ -24,13 +24,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
     ngOnInit() {
         moment.locale('es');
 
-        // this.elementoRUP.params[this.registro.concepto.conceptId].titulo
-
-        // 27113001
-        // 363804004
-        // 307818003
-        // buscamos
-        // this.prestacionesService.getRegistrosHuds(this.paciente.id, '<<307818003').subscribe(prestaciones => {
 
         let datos = this.elementoRUP.params.map((param, index) => {
 
@@ -58,7 +51,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                     this.barChartData.push(
                         { data: prestaciones.map(p => p.registro.valor).filter(y => y !== null && isNumber(y)), label: param.label, fill: false },
                     );
-
 
                     // agregamos las leyendas del eje x
                     this.barChartLabels = prestaciones.map(p => moment(p.fecha).format('ll'));
