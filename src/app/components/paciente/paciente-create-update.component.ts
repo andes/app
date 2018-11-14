@@ -129,7 +129,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
     relacionesBorradas: any[];
     relacionesIniciales: any[] = [];
     posiblesRelaciones: any[] = [];
-    busquedaRelaciones: any[] = [];
 
     provincias: IProvincia[] = [];
     obrasSociales: IFinanciador[] = [];
@@ -607,24 +606,22 @@ export class PacienteCreateUpdateComponent implements OnInit {
 
     // Resultado de la búsqueda de pacientes para relacionar (Tab 'relaciones')
     actualizarPosiblesRelaciones(listaPacientes: any[]) {
-        // Se clona la lista para no modificar la búsqueda original
-        let listaPac = listaPacientes.slice(0, listaPacientes.length);
         // Se elimina el paciente en edición
-        let index = listaPac.findIndex(p => p.id === this.pacienteModel.id);
+        let index = listaPacientes.findIndex(p => p.id === this.pacienteModel.id);
         if (index >= 0) {
-            listaPac.splice(index, 1);
+            listaPacientes.splice(index, 1);
         }
 
         // Se eliminan de los resultados de la búsqueda los pacientes ya relacionados
         if (this.pacienteModel.relaciones && this.pacienteModel.relaciones.length) {
             for (let i = 0; i < this.pacienteModel.relaciones.length; i++) {
-                index = listaPac.findIndex(p => p.documento === this.pacienteModel.relaciones[i].documento);
+                index = listaPacientes.findIndex(p => p.documento === this.pacienteModel.relaciones[i].documento);
                 if (index >= 0) {
-                    listaPac.splice(index, 1);
+                    listaPacientes.splice(index, 1);
                 }
             }
         }
-        this.posiblesRelaciones = listaPac;
+        this.posiblesRelaciones = listaPacientes;
     }
 
     // Borra/agrega relaciones al paciente segun corresponda.
@@ -1103,10 +1100,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 if (index >= 0) {
                     this.relacionesBorradas.splice(index, 1);
                 }
-
-                // Se actualiza el resultado de la búsqueda (Pacientes candidatos a relacionar) eliminando el recientemente relacionado
-                this.actualizarPosiblesRelaciones(this.posiblesRelaciones);
-                this.autoFocus = this.autoFocus + 1;
+                // Se borran los resultados de la búsqueda.
+                this.posiblesRelaciones = null;
             } else {
                 this.plex.toast('info', 'Antes de agregar una nueva relación debe completar las existentes.', 'Informacion');
             }
@@ -1121,7 +1116,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.relacionesBorradas.push(this.pacienteModel.relaciones[i]);
             }
             this.pacienteModel.relaciones.splice(i, 1);
-            this.actualizarPosiblesRelaciones(this.busquedaRelaciones);
         }
     }
 
