@@ -49,15 +49,22 @@ export class FormulaBaseService {
      */
     public calcular(paciente, prestacion, registros) {
         let __CONTEXT_FUNCTION__;
-        const $ = registros.map(r => r.valor);
-        const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
-        // tslint:disable-next-line:no-eval
-        eval(str);
-        const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion);
-        return {
-            value,
-            message: value
-        };
+        if (registros.filter(r => !r.valor).length === 0) {
+            const $ = registros.map(r => r.valor);
+            const str = `__CONTEXT_FUNCTION__ = function ($, paciente, prestacion) { return ${this.formula};  }`;
+            // tslint:disable-next-line:no-eval
+            eval(str);
+            const value = __CONTEXT_FUNCTION__.bind(null)($, paciente, prestacion);
+            return {
+                value,
+                message: value
+            };
+        } else {
+            return {
+                value: 0,
+                message: 0
+            };
+        }
     }
 }
 register('FormulaBaseService', FormulaBaseService);

@@ -18,4 +18,5 @@ export class IPrestacionGetParams {
     ordenFecha?: boolean;
     ordenFechaEjecucion?: boolean;
     limit?: number;
+    ambitoOrigen?: string;
 }

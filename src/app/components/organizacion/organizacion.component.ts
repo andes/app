@@ -1,8 +1,11 @@
+
+import {debounceTime} from 'rxjs/operators';
 import { IOrganizacion } from './../../interfaces/IOrganizacion';
 import { OrganizacionService } from './../../services/organizacion.service';
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Auth } from '@andes/auth';
 
 const limit = 25;
 
@@ -28,6 +31,7 @@ export class OrganizacionComponent implements OnInit {
 
     constructor(private formBuilder: FormBuilder,
         private organizacionService: OrganizacionService,
+        private auth: Auth,
         private router: Router) { }
 
     ngOnInit() {
@@ -36,7 +40,7 @@ export class OrganizacionComponent implements OnInit {
             activo: true
         });
 
-        this.searchForm.valueChanges.debounceTime(200).subscribe((value) => {
+        this.searchForm.valueChanges.pipe(debounceTime(200)).subscribe((value) => {
             this.value = value;
             this.skip = 0;
             this.loadDatos(false);
@@ -44,11 +48,16 @@ export class OrganizacionComponent implements OnInit {
         this.loadDatos();
     }
 
+    checkAuth (permiso, id) {
+        return this.auth.check('tm:organizacion:' + permiso + (id ? ':' + id : '') );
+    }
+
     loadDatos(concatenar: boolean = false) {
         let parametros = {
-            'activo': this.value && this.value.activo, 'nombre':
-                this.value && this.value.nombre
-            , 'skip': this.skip, 'limit': limit
+            activo: this.value && this.value.activo,
+            nombre: this.value && this.value.nombre,
+            skip: this.skip,
+            limit: limit
         };
         this.organizacionService.get(parametros)
             .subscribe(
@@ -107,7 +116,7 @@ export class OrganizacionComponent implements OnInit {
             this.loader = true;
         }
     }
-    routeCama(id) {
-        this.router.navigate(['/tm/organizacion/' + id + '/cama']);
+    routeSectores(id) {
+        this.router.navigate(['/tm/organizacion/' + id + '/sectores']);
     }
 }

@@ -9,8 +9,6 @@ import { Plex } from '@andes/plex';
 })
 export class ProcedimientoDeEnfermeriaComponent extends RUPComponent implements OnInit {
 
-    private plex: Plex;
-
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = {

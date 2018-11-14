@@ -1,0 +1,9 @@
+.card {
+    height: 80px;
+    .card-body {
+        padding: 10px;
+        .card-title {
+            text-transform: capitalize;
+        }
+    }
+}

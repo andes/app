@@ -1,14 +1,16 @@
+
+import {throwError as observableThrowError} from 'rxjs';
 import { Params } from '@angular/router';
 import { IListaMatcheo } from './../../interfaces/auditoria/IListaMatcheo';
 import { IPaciente } from '../../interfaces/IPaciente';
 import { Injectable } from '@angular/core';
 import { Server } from '@andes/shared';
 import { Headers, Http, RequestOptions, RequestMethod, Response } from '@angular/http';
-import 'rxjs/add/operator/toPromise';
-import { Observable } from 'rxjs/Observable';
+
+import { Observable } from 'rxjs/Rx';
 // Import RxJs required methods
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+
 
 @Injectable()
 export class AuditoriaPorBloqueService {
@@ -80,7 +82,7 @@ export class AuditoriaPorBloqueService {
     // }
 
     handleError(error: any) {
-        return Observable.throw(error.json().error || 'Server error');
+        return observableThrowError(error.json().error || 'Server error');
     }
 
 }

@@ -70,7 +70,7 @@ export class DashboardCodificacionComponent implements OnInit {
             },
             err => {
                 if (err) {
-                    console.log(err);
+
                 }
             });
     }

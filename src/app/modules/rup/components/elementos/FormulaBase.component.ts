@@ -21,6 +21,7 @@ export class FormulaBaseComponent extends RUPComponent implements OnInit {
             this.formulaProvider = provider.get(formulaService.service);
             this.formulaProvider.formula = this.params.formula;
         }
+        this.emitChange(null);
 
     }
 
