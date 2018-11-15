@@ -14,7 +14,7 @@ export class GestorHojatrabajoComponent implements OnInit {
     public accionIndex = 0;
     public modo = '';
     public hojaTrabajo: IHojaTrabajo;
-    
+
     @ViewChild(ListaHojatrabajoComponent)
     private listaHojatrabajoComponent: ListaHojatrabajoComponent;
 
@@ -34,6 +34,8 @@ export class GestorHojatrabajoComponent implements OnInit {
             this.modo = 'impresion';
         } else if ($event === 1) {
             this.modo = 'practicas';
+        } else if ($event === 2) {
+            this.modo = 'carga';
         }
         // this.refreshSelection();
     }
@@ -66,5 +68,11 @@ export class GestorHojatrabajoComponent implements OnInit {
 
     volverLista() {
         console.log('guardar hoja', new Date);
+    }
+
+    cargarHoja() {
+        if (this.hojaTrabajo._id) {
+
+        }
     }
 }

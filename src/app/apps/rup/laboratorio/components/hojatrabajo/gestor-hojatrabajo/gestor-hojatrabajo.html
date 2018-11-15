@@ -20,18 +20,24 @@
                         </plex-tab>
                         <plex-tab label="Prácticas de la Hoja">
                         </plex-tab>
+                        <plex-tab label="Carga de la Hoja">
+                        </plex-tab>
                     </plex-tabs>
                 </div>
             </header>
             <div>
                 <ng-container *ngIf="modo === 'practicas'">
-                    <h2>Prácticas de la Hoja</h2>
-                    <practicas-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></practicas-hojatrabajo>
+                    <strong>Prácticas de la Hoja</strong>
+                    <practicas-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo'></practicas-hojatrabajo>
                 </ng-container>
 
                 <ng-container *ngIf="modo === 'impresion'">
                     <strong>Opciones de Impresión</strong>
-                    <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo' ></impresion-hojatrabajo>
+                    <impresion-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo'></impresion-hojatrabajo>
+                </ng-container>
+                <ng-container *ngIf="modo === 'carga'">
+                    <strong>Carga</strong>
+                    <carga-hojatrabajo *ngIf="hojaTrabajo" [hojaTrabajo]='hojaTrabajo'></carga-hojatrabajo>
                 </ng-container>
             </div>
         </plex-layout-main>
@@ -41,5 +47,6 @@
         <plex-button position="left" type="warning" (click)="volverLista()">Volver</plex-button>
         <plex-button position="right" class="float-right mr-1" type="success" label="Agregar Hoja" (click)="agregarHoja()"></plex-button>
         <plex-button position="right" class="float-right mr-1" type="success" label="Guardar Hoja" (click)="guardarHoja()"></plex-button>
+        <plex-button position="right" class="float-right mr-1" type="info" label="Cargar" (click)="cargarHoja()"></plex-button>
     </plex-layout-footer>
 </plex-layout>
