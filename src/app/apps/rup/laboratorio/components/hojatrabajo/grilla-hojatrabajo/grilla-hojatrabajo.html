@@ -1,0 +1,27 @@
+<div class="row">
+    <div class="col-12">
+        <strong>
+            Hoja de Trabajo
+        </strong>
+    </div>
+    <div class="col-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Protocolo</th>
+                    <th *ngFor="let char of characteristics">
+                        {{ char.description }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let beer of beers">
+                    <td>{{ beer.description }}</td>
+                    <td *ngFor="let char of characteristics">
+                        <input type="text" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
