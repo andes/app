@@ -177,6 +177,30 @@
                         (nuevaCarpetaManualEmit)="onCarpeta($event)"></solicitud-manual-hc>
                 </div>
             </div>
+            <div class="col-3" *ngIf="verNuevaCarpeta">
+                <div type="info">
+                    <section>
+                        <plex-box>
+                            <legend>
+                                <div class="clearfix">
+                                    <span class="float-left">Paciente {{paciente.apellido}},
+                                        {{paciente.nombre}}</span>
+                                </div>
+                                <hr>
+                            </legend>
+                            <carpeta-paciente [turnoSeleccionado]="null" [pacienteSeleccionado]="paciente"
+                                (guardarCarpetaEmit)="afterComponenteCarpeta($event)" (cancelarCarpetaEmit)="afterComponenteCarpeta($event) "></carpeta-paciente>
+                            <br>
+                            <footer>
+                                <div class="text-right">
+                                    <plex-button label="Cancelar" type="danger" (click)="afterComponenteCarpeta(false)">
+                                    </plex-button>
+                                </div>
+                            </footer>
+                        </plex-box>
+                    </section>
+                </div>
+            </div>
         </div>
     </section>
     <footer *ngIf="carpetasSeleccionadas.length > 0 && !pacientesSearch">
