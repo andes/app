@@ -23,7 +23,7 @@ export class ResumenPacienteDinamicoNinoComponent implements OnInit {
     constructor(private servicioResumenPaciente: ResumenPacienteDinamicoService,
         private servicioVacunas: VacunasService,
         private prestacionesService: PrestacionesService,
-        private elementosRUPService: ElementosRUPService,
+        public elementosRUPService: ElementosRUPService,
         private plex: Plex) { }
 
     ngOnInit() {

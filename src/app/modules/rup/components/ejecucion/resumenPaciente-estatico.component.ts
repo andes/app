@@ -20,11 +20,15 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
 
     public obraSocialPaciente;
 
-    constructor(private plex: Plex) {
+    public graficoTalla: any[] = [];
+
+    constructor(
+        private plex: Plex,
+        public servicioPrestacion: PrestacionesService) {
 
     }
 
-    ngOnInit() {
+    async ngOnInit() {
         this.prestacionSolicitud = this.prestacion.solicitud;
         this.plex.updateTitle([{
             route: '/rup',
@@ -32,5 +36,9 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
         }, {
             name: this.prestacionSolicitud && this.prestacionSolicitud.tipoPrestacion.term ? this.prestacionSolicitud.tipoPrestacion.term : ''
         }]);
+
+
+        this.graficoTalla = await this.servicioPrestacion.getRegistrosHuds(this.paciente.id, '>>50373000').toPromise();
+
     }
 }

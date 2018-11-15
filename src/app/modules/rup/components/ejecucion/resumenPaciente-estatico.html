@@ -9,7 +9,7 @@
             <!-- Datos del Paciente -->
             <div class="texto">
                 <div>
-                    <h5>{{paciente | paciente}}</h5>
+                    <h5>{{ paciente | paciente }}</h5>
                 </div>
                 <div class="small">
                     <ng-container *ngIf="paciente.genero !== ''">
@@ -17,7 +17,7 @@
                     </ng-container>
                     |
                     <ng-container *ngIf="paciente.documento !== ''">
-                        {{ paciente.documento | number}}
+                        {{ paciente.documento | number }}
                     </ng-container>
                     <ng-container *ngIf="paciente.documento === ''">
                         Sin documento (temporal)
@@ -34,7 +34,7 @@
                         {{ paciente | edad }}
                     </ng-container>
                     <br>
-                    <ng-container>
+                    <ng-container *ngIf="obraSocialPaciente">
                         Cobertura Social: {{obraSocialPaciente}}
                     </ng-container>
                     <br>
@@ -47,6 +47,13 @@
 
     </div>
     <hr>
+    <div class="row">
+        <div class="col-12">
+            <pre>
+                {{ graficoTalla | json }}
+            </pre>
+        </div>
+    </div>
     <!-- <div class="prestacionActual">
         <div class="row" *ngIf="prestacionSolicitud">
             <div class="col-6">
