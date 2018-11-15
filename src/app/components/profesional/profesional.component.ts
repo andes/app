@@ -30,7 +30,6 @@ export class ProfesionalComponent implements OnInit {
     tengoDatos = true;
     value: any;
     limit: any = 200;
-    contador = 0;
     profesionalSelected: any = false;
     fotoProfesional: any;
     nuevoProfesional = false;
@@ -66,28 +65,14 @@ export class ProfesionalComponent implements OnInit {
         this.profesionalService.get(parametros)
             .subscribe(
                 datos => {
-                    console.log(datos);
-                    if (concatenar) {
-                        if (datos.length > 0) {
-                            this.datos = this.datos.concat(datos);
-                        } else {
-                            this.finScroll = true;
-                            this.tengoDatos = false;
-                        }
-                    } else {
                         this.datos = datos;
-                        this.finScroll = false;
-                    }
-                    this.loader = false;
                 });
     }
 
 
     seleccionarProfesional(profesional) {
         this.profesionalSelected = profesional;
-        console.log(this.profesionalSelected.formacionPosgrado);
         this.profesionalService.getFoto({ id: this.profesionalSelected.id }).subscribe(resp => {
-            console.log(this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp));
             this.fotoProfesional = this.sanitizer.bypassSecurityTrustResourceUrl('data:image/jpeg;base64,' + resp);
         });
     }

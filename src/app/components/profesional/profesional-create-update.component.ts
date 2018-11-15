@@ -21,6 +21,7 @@ import {
 import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper.service';
 import { Plex } from '@andes/plex';
 import { Matching } from '@andes/match';
+import { Router } from '@angular/router';
 @Component({
     selector: 'profesional-create-update',
     templateUrl: 'profesional-create-update.html',
@@ -83,6 +84,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
         private profesionalService: ProfesionalService,
         private paisService: PaisService,
         private plex: Plex,
+        private router: Router,
         private provinciaService: ProvinciaService,
         private localidadService: LocalidadService,
         private especialidadService: EspecialidadService,
@@ -124,11 +126,9 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
     limpiarContacto() {
-        console.log(this.noPoseeContacto);
         if (this.noPoseeContacto) {
             this.profesional.contactos = [this.contacto];
             this.profesional.contactos[0].valor = '';
-            console.log(this.profesional);
         }
     }
 
@@ -156,8 +156,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                         this.validado = true;
                         this.profesional.nombre = resultado.datos.nombres;
                         this.profesional.apellido = resultado.datos.apellido;
-                        this.profesional.fechaNacimiento = new Date(resultado.datos.fechaNacimiento);
-                        console.log(resultado);
+                        this.profesional.fechaNacimiento = moment(resultado.datos.fechaNacimiento, 'YYYY-MM-DD');
                     } else {
                         this.plex.info('warning', '', 'El profesional no se encontro en renaper');
                     }
@@ -166,52 +165,58 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
     }
 
 
-    save() {
-        let match100 = false;
-        this.profesional['profesionalMatriculado'] = false;
-        this.profesionalService.get({ documento: this.profesional.documento })
-            .subscribe(
-                datos => {
-                    if (datos.length > 0) {
-                        datos.forEach(profCandidato => {
+    save($event) {
+        if ($event.formValid) {
+            let match100 = false;
+            this.profesional['profesionalMatriculado'] = false;
+            this.profesionalService.get({ documento: this.profesional.documento })
+                .subscribe(
+                    datos => {
+                        if (datos.length > 0) {
+                            datos.forEach(profCandidato => {
 
-                            let porcentajeMatching = this.match.matchPersonas(this.profesional, profCandidato, this.weights, 'Levenshtein');
-                            let profesionalMatch = {
-                                matching: 0,
-                                paciente: null
-                            };
-                            if (porcentajeMatching) {
+                                let porcentajeMatching = this.match.matchPersonas(this.profesional, profCandidato, this.weights, 'Levenshtein');
+                                let profesionalMatch = {
+                                    matching: 0,
+                                    paciente: null
+                                };
+                                if (porcentajeMatching) {
 
-                                profesionalMatch.matching = porcentajeMatching * 100;
-                                profesionalMatch.paciente = profCandidato;
+                                    profesionalMatch.matching = porcentajeMatching * 100;
+                                    profesionalMatch.paciente = profCandidato;
+                                }
+                                if (profesionalMatch.matching === 100) {
+                                    match100 = true;
+                                }
+
+                            });
+
+                            if (match100) {
+                                this.plex.info('warning', '', 'El profesional que esta intentando guardar ya se encuentra cargado');
+                                this.mostrarBtnGuardar = false;
+                            } else {
+                                this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
+
+                                this.profesionalService.saveProfesional({ profesional: this.profesional })
+                                    .subscribe(nuevoProfesional => {
+                                        this.plex.info('success', '', 'El profesional se creo con exito!');
+                                        this.router.navigate(['/tm/profesional']);
+                                    });
                             }
-                            if (profesionalMatch.matching === 100) {
-                                match100 = true;
-                            }
-
-                        });
-
-                        if (match100) {
-                            this.plex.info('warning', '', 'El profesional que esta intentando guardar ya se encuentra cargado');
-                            this.mostrarBtnGuardar = false;
+                            // this.sugeridosEncontrados = true;
+                            // this.sugeridos = datos;
                         } else {
                             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
-
                             this.profesionalService.saveProfesional({ profesional: this.profesional })
                                 .subscribe(nuevoProfesional => {
                                     this.plex.info('success', '', 'El profesional se creo con exito!');
+                                    this.router.navigate(['/tm/profesional']);
+
                                 });
                         }
-                        // this.sugeridosEncontrados = true;
-                        // this.sugeridos = datos;
-                    } else {
-                        this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
-                        this.profesionalService.saveProfesional({ profesional: this.profesional })
-                            .subscribe(nuevoProfesional => {
-                                this.plex.info('success', '', 'El profesional se creo con exito!');
-                            });
-                    }
 
-                });
+                    });
+        }
     }
+
 }

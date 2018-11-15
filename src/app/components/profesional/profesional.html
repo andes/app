@@ -19,7 +19,7 @@
                 <br>
             </header>
 
-            <cdk-virtual-scroll-viewport itemSize="5" style="height: 100%;display: flex;">
+            <!-- <cdk-virtual-scroll-viewport itemSize="5" style="height: 100%;display: flex;"> -->
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *cdkVirtualFor="let profesional of datos" (click)='seleccionarProfesional(profesional)'>
+                            <tr *ngFor="let profesional of datos" (click)='seleccionarProfesional(profesional)'>
                                 <td>{{profesional.apellido}}</td>
                                 <td>{{profesional.nombre}}</td>
                                 <td>{{profesional.documento}}</td>
@@ -45,7 +45,7 @@
                         </tbody>
                     </table>
                 </div>
-            </cdk-virtual-scroll-viewport>
+            <!-- </cdk-virtual-scroll-viewport> -->
         </ng-container>
         <ng-container *ngIf='nuevoProfesional'>
             <profesional-create-update [seleccion]="seleccion" (data)='onReturn($event)'></profesional-create-update>
@@ -117,7 +117,6 @@
         </div>
     </plex-layout-sidebar>
 
-    <!-- sidebarCreate -->
 
     <plex-layout-footer>
         <plex-button label="volver" type="danger" position="left" routerLink='/inicio'></plex-button>
