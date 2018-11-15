@@ -47,13 +47,16 @@
 
     </div>
     <hr>
-    <div class="row">
-        <div class="col-12">
-            <pre>
-                {{ graficoTalla | json }}
-            </pre>
+    <ng-container *ngIf="graficos.length">
+        <div class="row" *ngFor="let grafico of graficos">
+            <div class="col-12">
+                <h4 class="text-capitalize">
+                    {{ grafico.conceptos | enumerar:['term'] }}
+                </h4>
+                <rup [elementoRUP]="grafico" [prestacion]="prestacion" [paciente]="paciente" [soloValores]="false"></rup>
+            </div>
         </div>
-    </div>
+    </ng-container>
     <!-- <div class="prestacionActual">
         <div class="row" *ngIf="prestacionSolicitud">
             <div class="col-6">
