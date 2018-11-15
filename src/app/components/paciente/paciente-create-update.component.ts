@@ -627,7 +627,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     //         }
                     //     });
                     // }
-                    this.plex.info('warning', 'Los datos se actualizaron correctamente');
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile
                     if (this.activarApp && this.emailAndes && this.celularAndes) {
