@@ -160,7 +160,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                             this.plex.info('warning', 'El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
-                        this.plex.info('warning', 'Se ha enviado el código de activación al paciente');
+                        this.plex.info('success', 'Se ha enviado el código de activación al paciente');
                         this.checkPass = true;
                         this.hideButton = true;
                         this.hideButtonResend = false;
