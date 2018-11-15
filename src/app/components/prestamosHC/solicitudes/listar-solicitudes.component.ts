@@ -419,52 +419,6 @@ export class ListarSolicitudesComponent implements OnInit {
         }
     }
 
-    changeListener($event, index, _carpeta): void {
-        this.readThis($event.target, index, _carpeta);
-    }
-
-
-    readThis(inputValue: any, index, _carpeta): void {
-        // ConceptId que se utilizará para la digitalización
-        let conceptSnomed = {
-            term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
-            conceptId: '2881000013106'
-        };
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = -1;
-        if (ext.toLowerCase() !== this.extensionPermitida) {
-            this.plex.toast('danger', 'Archivo inválido. Solo se admite PDF', 'Información', 1000);
-            this.errorExt = index;
-            return;
-        }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            let id;
-            let profesional = this.auth.usuario;
-            if (_carpeta.tipo === 'Manual') {
-                id = _carpeta.idSolicitud;
-            } else if (_carpeta.tipo === 'Automatica') {
-                id = _carpeta.datosPrestamo.turno.id;
-            }
-            let metadata = {
-                id: id,
-                tipoPrestacion: conceptSnomed.conceptId,
-                fecha: new Date(),
-                paciente: _carpeta.paciente,
-                profesional: profesional,
-                file: myReader.result,
-                texto: 'Se adjunta/n historia clínica digitalizada por un administrativo'
-            };
-            this.servicioCDA.post(myReader.result, metadata).subscribe((data) => {
-                this.plex.toast('success', 'Se adjuntó correctamente', 'Información', 1000);
-                this.getCarpetas({}, null);
-            });
-        };
-        myReader.readAsDataURL(file);
-    }
-
     fileExtension(file) {
         if (file.lastIndexOf('.') >= 0) {
             return file.slice((file.lastIndexOf('.') + 1));
