@@ -24,16 +24,16 @@ export class ResumenPacienteEstaticoComponent implements OnInit {
 
     public conceptos: ISnomedConcept[] = [
         {
-            conceptId: '710996002',
-            fsn: 'monitorización de la talla (régimen/tratamiento)',
-            semanticTag: 'régimen/tratamiento',
-            term: 'monitorización de la talla'
-        },
-        {
             conceptId: '307818003',
             fsn: 'seguimiento del peso (régimen/tratamiento)',
             semanticTag: 'régimen/tratamiento',
             term: 'seguimiento del peso'
+        },
+        {
+            conceptId: '710996002',
+            fsn: 'monitorización de la talla (régimen/tratamiento)',
+            semanticTag: 'régimen/tratamiento',
+            term: 'monitorización de la talla'
         },
         {
             fsn: 'control de la tensión sanguínea (régimen/tratamiento)',
