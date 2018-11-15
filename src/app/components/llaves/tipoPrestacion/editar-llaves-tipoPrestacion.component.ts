@@ -114,7 +114,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
                 this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
                     this.saveLlaveTP.emit(resultado);
-                    this.plex.info('warning', 'La configuración de llaves se actualizó correctamente');
+                    this.plex.info('success', 'La configuración de llaves se actualizó correctamente');
                 },
                     err => {
                         if (err) {
