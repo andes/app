@@ -121,7 +121,7 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
 
                 this.prestacionPacienteService.post(this.modelo).subscribe(resultado => {
                     // this.saveAuditoriaPP.emit(resultado);
-                    this.plex.info('warning', 'La Auditoría se guardó correctamente');
+                    this.plex.info('success', 'La Auditoría se guardó correctamente');
                 },
                     err => {
                         if (err) {
