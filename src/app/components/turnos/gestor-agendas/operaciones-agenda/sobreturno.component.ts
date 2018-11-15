@@ -237,7 +237,7 @@ export class AgregarSobreturnoComponent implements OnInit {
                 mpi.subscribe(resultado => {
 
                     if (resultado) {
-                        this.plex.info('warning', 'Se actualizó el numero de telefono');
+                        this.plex.info('success', 'Se actualizó el numero de telefono');
                     }
                 });
             }
