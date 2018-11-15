@@ -114,7 +114,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
                 this.llaveTipoPrestacionService.put(this.modelo).subscribe(resultado => {
                     this.saveLlaveTP.emit(resultado);
-                    this.plex.alert('La configuración de llaves se actualizó correctamente');
+                    this.plex.info('success', 'La configuración de llaves se actualizó correctamente');
                 },
                     err => {
                         if (err) {
@@ -127,7 +127,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
 
                 this.llaveTipoPrestacionService.post(this.modelo).subscribe(resultado => {
                     this.saveLlaveTP.emit(resultado);
-                    this.plex.alert('La configuración de llaves se guardó correctamente');
+                    this.plex.info('success', 'La configuración de llaves se guardó correctamente');
                 },
                     err => {
                         if (err) {
@@ -137,7 +137,7 @@ export class EditarLlavesTipoPrestacionComponent implements OnInit {
             }
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
 
 
