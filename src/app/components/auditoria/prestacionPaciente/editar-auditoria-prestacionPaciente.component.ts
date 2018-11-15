@@ -109,7 +109,7 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
 
                 this.prestacionPacienteService.put(this.modelo).subscribe(resultado => {
                     // this.saveAuditoriaPP.emit(resultado);
-                    this.plex.info('warning', 'La Auditoría se actualizó correctamente');
+                    this.plex.info('success', 'La Auditoría se actualizó correctamente');
                 },
                     err => {
                         if (err) {
