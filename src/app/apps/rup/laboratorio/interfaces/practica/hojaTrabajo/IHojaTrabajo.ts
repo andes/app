@@ -36,7 +36,7 @@ export class IHojaTrabajo {
     };
     baja: Boolean;
     // practicas: [];
-    practicas: [IPracticasHojaTrabajo];
+    practicas: IPracticasHojaTrabajo[];
 
     constructor() {
         this.area = {
@@ -82,5 +82,6 @@ export class IHojaTrabajo {
         
         this.laboratorio = new ObjectID();
         this.responsable = new ObjectID();
+        this.practicas = [];
     }
 }
