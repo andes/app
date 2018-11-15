@@ -9,7 +9,7 @@
                     <div class="row">
                         <div class="col-9">
                             <plex-select [(ngModel)]="organizacionSelect" name="organizacion" [data]="organizacionesUsuario"
-                                [required]="true" (change)="onOrgChange()">
+                                [required]="true" (change)="onOrgChange()" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre">
                             </plex-select>
                         </div>
                         <div class="col" *ngIf="showAgregarEfector">
@@ -27,7 +27,7 @@
                 </span>
                 <div *ngIf="hidePermisos">
                     <plex-select label="Nuevo Efector" [(ngModel)]="newOrg" name="nuevaOrganizacion" [data]="newOrganizaciones"
-                        [required]="true">
+                        [required]="true" labelField="nombre + ', ' + direccion.ubicacion.localidad.nombre">
                     </plex-select>
                     <plex-button type="primary" icon="save" label="Agregar" (click)="agregarOrg()"></plex-button>
                 </div>
