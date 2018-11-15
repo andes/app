@@ -1,0 +1,11 @@
+<div *ngIf="barChartData.length">
+    <canvas class="w-100" baseChart [datasets]="barChartData" [labels]="barChartLabels" [options]="barChartOptions"
+        [legend]="barChartLegend" [chartType]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)"></canvas>
+</div>
+
+<p *ngIf="!barChartData.length">
+    <ng-container *ngFor="let param of elementoRUP.params">
+        No se ha registrado ningún valor de {{ param.label }} para el paciente. No se puede armar la
+        curva de {{ registro.nombre }}.
+    </ng-container>
+</p>
