@@ -138,7 +138,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                 };
                 this.appMobile.reenviar(this.paciente.id, { contacto }).subscribe((resultado) => {
                     if (resultado.status === 'OK') {
-                        this.plex.info('warning', 'El código de activación ha sido reenviado.');
+                        this.plex.info('success', 'El código de activación ha sido reenviado.');
                     }
                 });
             } else {
