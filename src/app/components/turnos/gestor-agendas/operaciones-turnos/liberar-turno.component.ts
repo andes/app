@@ -89,7 +89,7 @@ export class LiberarTurnoComponent implements OnInit {
 
                     this.saveLiberarTurno.emit(resulAgenda);
 
-                    this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+                    this.plex.info('warning', 'Los pacientes seleccionados pasaron a Lista de Espera');
                 });
             });
         }
