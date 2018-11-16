@@ -32,7 +32,6 @@ export class PracticasHojatrabajoComponent implements OnInit {
         if (this.codigo) {
             this.servicioPractica.getMatchCodigo(this.codigo).subscribe((resultado: any) => {
                 if (resultado) {
-                    console.log('getPracticaPorCodigo')
                     this.seleccionarPractica(resultado);
                 }
             });
@@ -50,7 +49,6 @@ export class PracticasHojatrabajoComponent implements OnInit {
             this.servicioPractica.getMatch({
                 cadenaInput: $event.query
             }).subscribe((resultado: any) => {
-                // this.seleccionarPractica(resultado);
                 $event.callback(resultado);
             });
         } else {
@@ -103,7 +101,6 @@ export class PracticasHojatrabajoComponent implements OnInit {
     * @memberof ProtocoloDetalleComponent
     */
     async seleccionarPractica(practica: IPractica) {
-        console.log('seleccionarPractica', practica)
         this.practica = practica;
         this.codigo = practica.codigo;
         this.nombrePractica = practica.nombre;

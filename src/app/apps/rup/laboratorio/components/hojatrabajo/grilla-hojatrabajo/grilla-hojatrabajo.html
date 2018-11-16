@@ -8,17 +8,17 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>Protocolo</th>
-                    <th *ngFor="let char of characteristics">
-                        {{ char.description }}
+                    <th></th>
+                    <th *ngFor="let practicaHT of practicasHT">
+                        {{ practicaHT.nombre }}
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let beer of beers">
-                    <td>{{ beer.description }}</td>
-                    <td *ngFor="let char of characteristics">
-                        <input type="text" />
+                <tr *ngFor="let elem of grilla; let i = index">
+                    <td>{{ elem.numeroProtocolo }} </td>
+                    <td *ngFor="let resultado of elem.resultados">
+                        <plex-float *ngIf="resultado" style='width: 85px;' [(ngModel)]="resultado.valor"></plex-float>
                     </td>
                 </tr>
             </tbody>

@@ -165,7 +165,7 @@ export class TablaDatalleProtocolo implements OnInit {
      * @param {any} objetoPractica
      * @returns
      * @memberof TablaDatalleProtocolo
-     */
+     */ 
     esValorCritico(objetoPractica) {
         // let resultado = objetoPractica.practica.valor.resultado;
         // if (resultado && !objetoPractica.esCompuesta) {
