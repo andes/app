@@ -90,7 +90,7 @@ export class UsuarioUpdateComponent implements OnInit {
 
         // Si el usuario puede agregar efectores, se listan todos los disponibles
         if (this.auth.check('usuarios:agregarEfector')) {
-            this.organizacionService.get({limit: 1000}).subscribe(organizaciones => {
+            this.organizacionService.get({ limit: 1000 }).subscribe(organizaciones => {
                 this.newOrganizaciones = organizaciones;
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
                 this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
@@ -154,7 +154,7 @@ export class UsuarioUpdateComponent implements OnInit {
      */
     loadPermisos() {
         this.temp = this.userModel.organizaciones.find(item =>
-            String(item._id) === String(this.organizacionSelectPrev._id)
+            String(item._id) === this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null
         );
 
         if (this.temp) {
@@ -180,7 +180,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
         });
-        this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
+        this.temp = this.userModel.organizaciones.find(item => String(item._id) === this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null);
         if (this.temp) {
             this.temp.permisos = permisos;
         }
@@ -190,7 +190,7 @@ export class UsuarioUpdateComponent implements OnInit {
     onSave() {
         this.savePermisos();
         this.usuarioService.save(this.userModel).subscribe(user => {
-            this.plex.info('success', '', 'Usuario guardado', );
+            this.plex.info('success', '', 'Usuario guardado');
             this.data.emit(user);
         });
     }
