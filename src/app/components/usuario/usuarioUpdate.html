@@ -17,12 +17,17 @@
                         </div>
                     </div>
                     <div class="row">&nbsp;</div>
-                    <div *ngFor="let permiso of permisos$ | async ">
-                        <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                    <div *ngIf="organizacionesUsuario.length > 0">
+                        <div *ngFor="let permiso of permisos$ | async ">
+                            <arbolPermisos [item]="permiso" [userPermissions]="permisos"></arbolPermisos>
+                        </div>
+                        <div>
+                            <div class="row">&nbsp;</div>
+                            <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                        </div>
                     </div>
-                    <div *ngIf="btnEliminar">
-                        <div class="row">&nbsp;</div>
-                        <plex-button type="danger" icon="delete" label="Quitar Efector" (click)="deleteEfector()"></plex-button>
+                    <div *ngIf="organizacionesUsuario.length <= 0" class="alert alert-default">
+                        <i class="mdi mdi-emoticon-sad"></i> Agregue un efector para modificar sus permisos
                     </div>
                 </span>
                 <div *ngIf="hidePermisos">

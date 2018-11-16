@@ -26,11 +26,9 @@ export class UsuarioUpdateComponent implements OnInit {
     private organizacionSelect = null;
     private organizacionSelectPrev = null;
 
-    private timeoutHandle: number;
     private temp;
     private organizacionesAuth: any[] = [];
 
-    public btnEliminar: boolean;
     public showAgregarEfector: boolean;
     public newOrganizaciones: any;
     public newOrg: any;
@@ -91,7 +89,6 @@ export class UsuarioUpdateComponent implements OnInit {
             this.organizacionService.get({ limit: 1000 }).subscribe(organizaciones => {
                 this.newOrganizaciones = organizaciones.filter(x => !this.organizacionesUsuario.some(y => x.id === y.id));
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
-                this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
             });
         } else {
 
@@ -106,7 +103,6 @@ export class UsuarioUpdateComponent implements OnInit {
                 this.newOrganizaciones = this.organizacionesAuth;
             }
             this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
-            this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
         }
     }
 
@@ -167,8 +163,18 @@ export class UsuarioUpdateComponent implements OnInit {
             if (value) {
                 let index = this.userModel.organizaciones.findIndex(elem => elem._id === this.organizacionSelect._id);
                 this.userModel.organizaciones.splice(index, 1);
-                this.getOrganizaciones();
 
+                if (this.organizacionesUsuario && this.organizacionesUsuario.length > 0) {
+                    let index2 = this.organizacionesUsuario.findIndex(elem => elem.id === this.organizacionSelect.id);
+                    this.organizacionesUsuario.splice(index2, 1);
+                    // es necesario hacer esto para que angular se dé cuenta de que el arreglo organizacionesUsuario se modificó.
+                    // Si simplemente se borra uno de los ítems del arreglo, angular no actualiza la visual. Es necesario modificarlo
+                    // completo, entonces seteo todo el arreglo de nuevo
+                    this.organizacionesUsuario = [...this.organizacionesUsuario];
+                    this.organizacionSelect = this.organizacionesUsuario ? this.organizacionesUsuario[0] : null;
+                }
+
+                this.onOrgChange();
             }
         });
     }
