@@ -22,14 +22,19 @@
                     <div class="col">
                         <label>Obra social </label>{{obraSocial}}
                     </div>
-                    <div class="col">
+                    <div class="col" *ngIf="codigoOs">
                         <label>Código </label>{{codigoOs}}
+                    </div>
+                    <div class="col" *ngIf="numeroAfiliado">
+                        <label>Número de Afiliado </label>{{numeroAfiliado}}
                     </div>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col">
-                        <label>Prestación </label>{{codigoNomenclador}}
+                        <label>Prestación </label>
+                        <span *ngIf="codigoNomenclador">{{codigoNomenclador}}</span><br>
+                        <span>{{turnoSeleccionado.tipoPrestacion.term}}</span>
                     </div>
                     <div class="col">
                         <label>Efector </label>{{efector}}

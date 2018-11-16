@@ -266,7 +266,7 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.info('warning', 'La Agenda se clonó correctamente').then(ok => {
+                        this.plex.info('success', 'La Agenda se clonó correctamente').then(ok => {
                             this.volverAlGestor.emit(true);
                         });
                     },

@@ -138,7 +138,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                 };
                 this.appMobile.reenviar(this.paciente.id, { contacto }).subscribe((resultado) => {
                     if (resultado.status === 'OK') {
-                        this.plex.info('warning', 'El código de activación ha sido reenviado.');
+                        this.plex.info('success', 'El código de activación ha sido reenviado.');
                     }
                 });
             } else {
@@ -160,7 +160,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                             this.plex.info('warning', 'El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
-                        this.plex.info('warning', 'Se ha enviado el código de activación al paciente');
+                        this.plex.info('success', 'Se ha enviado el código de activación al paciente');
                         this.checkPass = true;
                         this.hideButton = true;
                         this.hideButtonResend = false;
