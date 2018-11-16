@@ -39,7 +39,7 @@ export class ArancelamientoFormComponent implements OnInit {
 
     ngOnInit() {
         if (this.turno.paciente.obraSocial && this.turno.paciente.obraSocial.numeroAfiliado) {
-            this.obraSocial = this.turno.paciente.obraSocial.nombre;
+            this.obraSocial = this.turno.paciente.obraSocial.financiador;
             this.codigoOs = null;
             this.numeroAfiliado = this.turno.paciente.obraSocial.numeroAfiliado;
             this.showForm = true;
