@@ -1,5 +1,5 @@
 
-import {forkJoin as observableForkJoin } from 'rxjs';
+import { forkJoin as observableForkJoin } from 'rxjs';
 import { estados } from './../../../../utils/enumerados';
 
 import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
@@ -15,6 +15,8 @@ import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
 import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
+import { SnomedService } from '../../../../services/term/snomed.service';
+
 
 @Component({
     selector: 'rup-puntoInicio',
@@ -41,6 +43,7 @@ export class PuntoInicioComponent implements OnInit {
     public estadosAgenda = EstadosAgenda;
     // habilita la busqueda del paciente
     public buscandoPaciente = false;
+    public asistio = true;
 
     // FILTROS
     private agendasOriginales: any = [];
@@ -48,12 +51,14 @@ export class PuntoInicioComponent implements OnInit {
     public prestacionSeleccion: any;
     public paciente: any;
 
+
     constructor(private router: Router,
         private plex: Plex, public auth: Auth,
         public servicioAgenda: AgendaService,
         public servicioPrestacion: PrestacionesService,
         public servicePaciente: PacienteService,
         public serviceTurno: TurnoService,
+        public snomed: SnomedService,
         public servicioTipoPrestacion: TipoPrestacionService) { }
 
     ngOnInit() {
@@ -296,7 +301,6 @@ export class PuntoInicioComponent implements OnInit {
         this.plex.confirm('Paciente: <b>' + paciente.apellido + ', ' + paciente.nombre + '.</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
             if (confirmacion) {
                 this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
-
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
                     this.plex.alert('No fue posible crear la prestación', 'ERROR');
@@ -306,6 +310,52 @@ export class PuntoInicioComponent implements OnInit {
             }
         });
     }
+
+
+    registrarInasistencia(agenda: IAgenda = null, turno) {
+        let cambios;
+        cambios = {
+            op: 'noAsistio',
+            turnos: [turno]
+        };
+        this.servicioAgenda.patch(agenda.id, cambios).subscribe();
+        this.actualizar();
+        // En caso de crear una prestación
+        //     let planes = [];
+        //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
+        //         if (prestacion) {
+        //             console.log('prestacion', prestacion);
+        //             prestacion.ejecucion.registros.push({
+        //                 esDiagnosticoPrincipal: true,
+        //                 nombre: 'no asistió',
+        //                 concepto: {
+        //                     refsetIds: [
+        //                         '900000000000497000'
+        //                     ],
+        //                     fsn: 'no asistió (hallazgo)',
+        //                     semanticTag: 'hallazgo',
+        //                     conceptId: '281399006',
+        //                     term: 'no asistió',
+        //                 },
+        //                 valor: {
+        //                     estado: 'activo',
+        //                     fechaInicio: new Date(),
+        //                 }
+        //             });
+        //             this.servicioPrestacion.validarPrestacion(prestacion, planes).subscribe(() => {
+        //                 this.plex.toast('success', 'Se registro la inasistencia del paciente', 'Información', 300);
+        //                 this.actualizar();
+
+        //             }, (err) => {
+        //                 this.plex.toast('danger', 'ERROR: No es posible validar la prestación');
+        //             });
+        //         }
+        //     }, (err) => {
+        //         this.plex.alert('No fue posible crear la prestación', 'ERROR');
+        //     });
+
+    }
+
 
     iniciarPrestacionNoNominalizada(snomedConcept, turno) {
         this.plex.confirm('</b><br>Prestación: <b>' + snomedConcept.term + '</b>', '¿Crear Prestación?').then(confirmacion => {
