@@ -1,10 +1,8 @@
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding, Output, EventEmitter, Input, QueryList, ViewChildren } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Server } from '@andes/shared';
 import { Router } from '@angular/router';
 import { Auth } from '@andes/auth';
-import * as enumerados from './../../utils/enumerados';
 // Services
 import { UsuarioService } from '../../services/usuarios/usuario.service';
 import { ProvinciaService } from './../../services/provincia.service';
@@ -37,7 +35,7 @@ export class UsuarioUpdateComponent implements OnInit {
     public newOrganizaciones: any;
     public newOrg: any;
     public hidePermisos = false;
-    public organizacionesUsuario: any[] = [];
+    public organizacionesUsuario: IOrganizacion[] = [];
     public permisos$: any;
     public showCreate = false;
     public showUpdate = false;
@@ -88,10 +86,10 @@ export class UsuarioUpdateComponent implements OnInit {
         this.organizacionSelect = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
         this.organizacionSelectPrev = (this.organizacionesUsuario.length > 0) ? this.organizacionesUsuario[0] : null;
 
-        // Si el usuario puede agregar efectores, se listan todos los disponibles
+        // Si el usuario puede agregar efectores, se listan todos los disponibles (que no tenga todavía)
         if (this.auth.check('usuarios:agregarEfector')) {
             this.organizacionService.get({ limit: 1000 }).subscribe(organizaciones => {
-                this.newOrganizaciones = organizaciones;
+                this.newOrganizaciones = organizaciones.filter(x => !this.organizacionesUsuario.some(y => x.id === y.id));
                 this.showAgregarEfector = (this.newOrganizaciones.length > 0) ? true : false;
                 this.btnEliminar = (this.organizacionesUsuario.length > 0) ? true : false;
             });
@@ -154,7 +152,7 @@ export class UsuarioUpdateComponent implements OnInit {
      */
     loadPermisos() {
         this.temp = this.userModel.organizaciones.find(item =>
-            String(item._id) === this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null
+            String(item._id) === String(this.organizacionSelectPrev._id)
         );
 
         if (this.temp) {
@@ -180,7 +178,7 @@ export class UsuarioUpdateComponent implements OnInit {
         this.childsComponents.forEach(child => {
             permisos = [...permisos, ...child.generateString()];
         });
-        this.temp = this.userModel.organizaciones.find(item => String(item._id) === this.organizacionSelectPrev ? String(this.organizacionSelectPrev._id) : null);
+        this.temp = this.userModel.organizaciones.find(item => String(item._id) === String(this.organizacionSelectPrev._id));
         if (this.temp) {
             this.temp.permisos = permisos;
         }
