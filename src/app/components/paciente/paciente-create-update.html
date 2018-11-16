@@ -216,16 +216,19 @@
                                 <div class="row">&nbsp;</div>
                                 <div class="row">
                                     <div class="col-12 text-right">
-                                        <plex-button label="Agregar Obra Social" type="primary btn-sm" icon="plus" (click)="addFinanciador()"></plex-button>
+                                        <plex-button label="Agregar Obra Social" type="primary btn-sm" icon="plus"
+                                            (click)="addFinanciador()"></plex-button>
                                     </div>
                                 </div>
                                 <div *ngFor="let _unaOS of pacienteModel.financiador; let j = index" class="row">
                                     <div class="col-4">
-                                        <plex-select [required]="true" [(ngModel)]="_unaOS.entidad" name="valorOS-{{j}}" [data]="obrasSociales" label="Obra Social:">
+                                        <plex-select [required]="true" [(ngModel)]="_unaOS.entidad" name="valorOS-{{j}}"
+                                            [data]="obrasSociales" label="Obra Social:">
                                         </plex-select>
                                     </div>
                                     <div class="col-4">
-                                        <plex-datetime [required]="true" label="Fecha Alta" [(ngModel)]="_unaOS.fecha" type="date" name="fechaOS-{{j}}">
+                                        <plex-datetime [required]="true" label="Fecha Alta" [(ngModel)]="_unaOS.fecha"
+                                            type="date" name="fechaOS-{{j}}">
                                         </plex-datetime>
                                     </div>
                                     <div class="col-2">
@@ -319,8 +322,9 @@
                                                 <span *ngIf="!pac.paciente">{{pac.nombre}}</span>
                                             </td>
                                             <td>
-                                                <span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento | fecha}}</span>
-                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha}}</span>
+                                                <span *ngIf="pac.paciente">{{pac.paciente.fechaNacimiento |
+                                                    fecha:'utc'}}</span>
+                                                <span *ngIf="!pac.paciente">{{pac.fechaNacimiento | fecha:'utc'}}</span>
                                             </td>
                                             <td>
                                                 <span *ngIf="pac.paciente">{{pac.paciente.sexo}}</span>
@@ -351,7 +355,7 @@
                                     <li class="list-group-item" *ngFor="let _unaNota of pacienteModel.notas; let l = index">
                                         <div class="row">
                                             <div class="col-8">{{_unaNota.nota}}
-                                                <small class="text-muted">({{_unaNota.fecha | fecha }})</small>
+                                                <small class="text-muted">({{_unaNota.fecha | fecha:'utc' }})</small>
                                             </div>
                                             <div class="col-2 text-right">
                                                 <h2 class="text-warning">
@@ -404,7 +408,7 @@
                                                     <br>
                                                     <small>Documento: {{elem.paciente.documento}}
                                                         <br> fecha de Nacimiento: {{elem.paciente.fechaNacimiento |
-                                                        fecha }}
+                                                        fecha:'utc' }}
                                                         <br> Sexo: {{elem.paciente.sexo}}
                                                     </small>
 

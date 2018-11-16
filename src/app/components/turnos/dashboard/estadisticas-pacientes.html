@@ -147,9 +147,8 @@
                             | {{turno.horaInicio | date:'dd/MM/yyyy HH:mm'}}
                         </div>
 
-                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el
-                            {{turno.updatedAt
-                            | date: 'dd/MM/yyyy'}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
+                        <div *ngIf="turno.estado === 'liberado'">Por {{turno.updatedBy.nombreCompleto}} el {{turno.updatedAt
+                            | fecha}} a las {{turno.updatedAt | date: 'HH:mm'}}</div>
 
                         <div *ngIf="turno.tipoPrestacion?.term">{{turno.tipoPrestacion.term}}</div>
                         <div *ngFor="let profesional of turno.profesionales">
