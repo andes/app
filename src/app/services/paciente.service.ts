@@ -51,6 +51,9 @@ export class PacienteService {
         return this.server.get(this.pacienteUrl, { params: params, showError: true });
     }
 
+    getInactivos(): Observable<IPaciente[]> {
+        return this.server.get(`${this.pacienteUrl}/inactivos/`, { showError: true });
+    }
     getAuditoria(params: any): Observable<IPaciente[]> {
         return this.server.get(`${this.pacienteUrl}/auditoria/`, { params: params, showError: true });
     }
