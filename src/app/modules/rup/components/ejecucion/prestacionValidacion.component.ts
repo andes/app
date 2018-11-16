@@ -303,8 +303,8 @@ export class PrestacionValidacionComponent implements OnInit {
                                 if (this.prestacion.solicitud.turno && !(filtroRegistros && filtroRegistros.length > 0)) {
                                     this.servicioAgenda.patchCodificarTurno({ 'op': 'codificarTurno', 'turnos': [this.prestacion.solicitud.turno] }).subscribe(salida => { });
                                 } else {
-                                    if (!prestacion.solicitud.turno) {
-                                        this.CodificacionService.
+                                    if (!this.prestacion.solicitud.turno) {
+                                        this.codificacionService.addCodificacion(prestacion.id).subscribe();
                                     }
                                 }
                             });
