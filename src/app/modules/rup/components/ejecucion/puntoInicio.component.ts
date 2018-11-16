@@ -43,7 +43,6 @@ export class PuntoInicioComponent implements OnInit {
     public estadosAgenda = EstadosAgenda;
     // habilita la busqueda del paciente
     public buscandoPaciente = false;
-    public asistio = true;
 
     // FILTROS
     private agendasOriginales: any = [];
@@ -312,14 +311,34 @@ export class PuntoInicioComponent implements OnInit {
     }
 
 
-    registrarInasistencia(agenda: IAgenda = null, turno) {
+    registrarInasistencia(paciente, agenda: IAgenda = null, turno, operacion) {
         let cambios;
         cambios = {
-            op: 'noAsistio',
+            op: operacion,
             turnos: [turno]
         };
-        this.servicioAgenda.patch(agenda.id, cambios).subscribe();
-        this.actualizar();
+        if (operacion === 'noAsistio') {
+            this.plex.confirm('¿Está seguro que desea registrar la inasistencia del paciente: <b>' + paciente.apellido + ', ' + paciente.nombre).then(confirmacion => {
+                if (confirmacion) {
+                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
+                        this.actualizar();
+                    });
+                } else {
+                    return false;
+                }
+            });
+        } else {
+            this.plex.confirm('¿Está seguro que desea revertir los cambios?').then(confirmacion => {
+                if (confirmacion) {
+                    this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
+                        this.actualizar();
+                    });
+                } else {
+                    return false;
+                }
+            });
+        }
+
         // En caso de crear una prestación
         //     let planes = [];
         //     this.servicioPrestacion.crearPrestacion(paciente, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
