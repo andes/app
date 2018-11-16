@@ -476,7 +476,6 @@ export class ListarSolicitudesComponent implements OnInit {
     // Se usa tanto para guardar como cancelar
     afterComponenteCarpeta(carpetas) {
         if (carpetas) {
-            debugger;
             let carpetaNueva = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
             let msj = `Nro de Carpeta ${carpetaNueva.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
             this.plex.alert(msj);
