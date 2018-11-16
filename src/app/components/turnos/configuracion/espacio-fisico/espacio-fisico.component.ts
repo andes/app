@@ -5,6 +5,7 @@ import { Auth } from '@andes/auth';
 
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
 import { EspacioFisicoService } from './../../../../services/turnos/espacio-fisico.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'espacio-fisico',
@@ -19,16 +20,21 @@ export class EspacioFisicoComponent implements OnInit {
     public tengoDatos = true;
     public loader = false;
 
-    constructor(private espacioFisicoService: EspacioFisicoService, public auth: Auth, public plex: Plex) {
+    constructor(private espacioFisicoService: EspacioFisicoService, private router: Router, public auth: Auth, public plex: Plex) {
+
+    }
+
+    ngOnInit() {
         this.plex.updateTitle([{
             route: '/inicio',
             name: 'Citas'
         }, {
             name: 'Espacios Físicos'
         }]);
-    }
-
-    ngOnInit() {
+        // Verificamos permisos globales para espacios fisicos, si no posee realiza redirect al home
+        if (!this.auth.check('turnos:editarEspacio') && !this.auth.check('turnos:*')) {
+            this.router.navigate(['./inicio']);
+        }
         this.loadEspaciosFisicos();
     }
 
@@ -40,8 +46,7 @@ export class EspacioFisicoComponent implements OnInit {
             'servicio': this.filtros && this.filtros.servicio,
             'sector': this.filtros && this.filtros.sector,
             'activo': this.filtros && this.filtros.activo,
-            'organizacion': this.auth.organizacion._id,
-            'skip': 0
+            'organizacion': this.auth.organizacion._id
         };
 
         this.espacioFisicoService.get(parametros).subscribe(
@@ -56,23 +61,6 @@ export class EspacioFisicoComponent implements OnInit {
         this.loadEspaciosFisicos();
     }
 
-    onDisable(espacioFisico: IEspacioFisico) {
-        this.espacioFisicoService.disable(espacioFisico)
-            .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-                err => {
-                    if (err) {
-                    }
-                });
-    }
-
-    onEnable(espacioFisico: IEspacioFisico) {
-        this.espacioFisicoService.enable(espacioFisico)
-            .subscribe(dato => this.loadEspaciosFisicos(), // Bind to view
-                err => {
-                    if (err) {
-                    }
-                });
-    }
 
     activate(objEspacioFisico: IEspacioFisico) {
 
