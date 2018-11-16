@@ -1,0 +1,18 @@
+import { ICie10 } from '../../../interfaces/ICie10';
+import { ISnomedConcept } from './snomed-concept.interface';
+
+interface ICodificacion {
+    codificacionProfesional: {
+        cie10: ICie10,
+        snomed: ISnomedConcept
+    };
+    codificacionAuditoria: ICie10;
+    primeraVez: Boolean;
+}
+
+export interface ICodificacionPrestacion {
+    id: String;
+    idPrestacion: String;
+    asistencia: String;
+    diagnostico: { codificaciones: ICodificacion[] };
+}
