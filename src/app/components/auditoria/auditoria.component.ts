@@ -7,6 +7,7 @@ import { RenaperService } from '../../services/fuentesAutenticas/servicioRenaper
 import { PacienteBuscarResultado } from '../../modules/mpi/interfaces/PacienteBuscarResultado.inteface';
 import { Auth } from '@andes/auth';
 import { Router } from '@angular/router';
+import { IPaciente } from '../../interfaces/IPaciente';
 
 @Component({
     selector: 'auditoria',
@@ -19,9 +20,9 @@ export class AuditoriaComponent implements OnInit {
     @Output() patient: any;
 
     enableDuplicados: boolean;
+    enableActivar: boolean;
     enableValidar: boolean;
     pacienteSelected: any;
-    listaCandidatos: any[];
     showDetallePaciente = false;
     enableVinculados = false;
     loading = false;
@@ -30,13 +31,13 @@ export class AuditoriaComponent implements OnInit {
     public panelIndex = 0;
     private datosFA: any;
     pacientes: any;
+    pacientesInactivos: any;
     pacienteActivo: any;
     showVincular = false;
     showCandidatos = false;
     enableVincular = false;
     showBuscador = false;
     showMensaje = false;
-    private permisosRenaper = 'fa:get:renaper';
     constructor(
         public auth: Auth,
         private pacienteService: PacienteService,
@@ -55,8 +56,6 @@ export class AuditoriaComponent implements OnInit {
     onLoadData() {
         this.showDetallePaciente = false;
         this.enableVinculados = false;
-        // Trae solo los pacientes que tienen vinculaciones
-        this.getVinculados();
     }
 
     getVinculados() {
@@ -68,12 +67,20 @@ export class AuditoriaComponent implements OnInit {
                 }
             });
     }
+    getInactivos() {
+        this.pacienteService.getInactivos().subscribe(
+            resultado => {
+                this.pacientesInactivos = resultado;
+            });
+
+    }
 
     onSelect(paciente: any): void {
         this.pacienteActivo = this.patient = paciente;
         this.showCandidatos = false;
-        this.enableVincular = true;
-        this.listaCandidatos = null;
+        // Vinculamos solo pacientes activos.
+        this.enableVincular = paciente.activo;
+        this.enableActivar = !paciente.activo;
         if (paciente && paciente.id) {
             this.pacienteService.getById(paciente.id).subscribe(pac => {
                 this.pacienteSelected = pac;
@@ -96,10 +103,18 @@ export class AuditoriaComponent implements OnInit {
     }
 
     checkPanel(panelIndex) {
+        if (panelIndex === 1) {
+            this.getVinculados();
+        }
+        if (panelIndex === 2) {
+            this.getInactivos();
+        }
         this.showDetallePaciente = false;
+        this.enableActivar = false;
         this.enableVinculados = false;
         this.enableValidar = false;
         this.enableVincular = false;
+        this.searchClear();
     }
     onSelectVinculados(paciente: any): void {
         if (paciente.id) {
@@ -272,5 +287,26 @@ export class AuditoriaComponent implements OnInit {
         this.showAuditoria = true;
         this.searchClear();
 
+    }
+
+    activar(pac: IPaciente, index: number) {
+        this.pacienteService.enable(pac).subscribe(res => {
+            this.plex.toast('success', 'Paciente Activado');
+            this.getInactivos();
+        });
+    }
+    desactivar(pac: IPaciente, index: number) {
+        // si el paciente tiene otros pacientes en su array de identificadores, no lo podemos desactivar
+        if (pac.identificadores && pac.identificadores.filter(identificador => identificador.entidad === 'ANDES').length > 0) {
+            this.plex.info('warning', 'Existen otros pacientes vinculados a este paciente', 'No Permitido').subscribe(
+                () => { return null; }
+            );
+        } else {
+            this.pacienteService.disable(pac).subscribe(res => {
+                this.pacientes.splice(index, 1);
+                this.pacienteSelected = null;
+                this.plex.toast('info', 'Paciente Desactivado');
+            });
+        }
     }
 }

@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-12">
                     <plex-tabs [activeIndex]="panelIndex" (change)="checkPanel($event)">
-                        <plex-tab label="Búsqueda de Pacientes" (click)="panelIndex = 0" icon="account">
+                        <plex-tab label="Búsqueda de Pacientes" (click)="panelIndex = 0" icon="account-search">
                             <div class="row">
                                 <div class="col-12">
                                     <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
@@ -25,7 +25,7 @@
                             </div>
                         </plex-tab>
 
-                        <plex-tab label="Pacientes con vinculaciones" (click)="panelIndex = 1" icon="account">
+                        <plex-tab label="Pacientes con vinculaciones" (click)="panelIndex = 1" icon="account-multiple-plus">
                             <plex-loader *ngIf="loading"></plex-loader>
                             <div class="row">
                                 <div class="col-12">
@@ -65,16 +65,32 @@
                                 </div>
                             </div>
                         </plex-tab>
+                        <plex-tab label="Pacientes Inactivos" (click)="panelIndex = 2" icon="account-off">
+                            <plex-loader *ngIf="loading"></plex-loader>
+                            <div class="row">
+                                <div class="col-12">
+                                    <paciente-listado *ngIf="pacientesInactivos && pacientesInactivos.length"
+                                        [pacientes]="pacientesInactivos" [autoselect]="false" (selected)="onSelect($event)"></paciente-listado>
+
+                                    <div *ngIf="pacientesInactivos && !pacientesInactivos.length" class="alert alert-default">
+                                        ¡No se encontró ningún paciente!
+                                    </div>
+                                </div>
+                            </div>
+                        </plex-tab>
                     </plex-tabs>
                 </div>
             </div>
         </fieldset>
     </plex-layout-main>
     <plex-layout-sidebar>
-        <paciente-panel [paciente]="pacienteSelected"> </paciente-panel>
+        <paciente-panel [paciente]="pacienteSelected" [permitirseleccionarRelacion]="false"> </paciente-panel>
     </plex-layout-sidebar>
-    <plex-layout-footer *ngIf="showCandidatos || (enableVincular && !showCandidatos) || (enableVinculados ) ">
+    <plex-layout-footer *ngIf="showCandidatos || (enableVincular && !showCandidatos) || enableVinculados || enableActivar">
         <plex-button position="left" *ngIf="showCandidatos" label="Cancelar" type="danger" (click)="cancelar()"></plex-button>
+        <plex-button *ngIf="enableVincular && !showCandidatos && pacienteSelected?.activo" class="pr-2" position="right"
+            label="Desactivar" type="danger" (click)="desactivar(pacienteSelected)"></plex-button>
+        <plex-button *ngIf="enableActivar && !showCandidatos" position="right" label="Activar" type="success" (click)="activar(pacienteSelected)"></plex-button>
         <plex-button *ngIf="enableVincular && !showCandidatos" position="right" label="Vincular" type="warning" (click)="vincular(pacienteSelected);pacientes=null"></plex-button>
         <plex-button *ngIf="enableVinculados" position="right" label="Ver Vinculados" type="primary" (click)="vincular(pacienteSelected)"></plex-button>
     </plex-layout-footer>
