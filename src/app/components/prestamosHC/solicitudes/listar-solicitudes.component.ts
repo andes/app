@@ -61,7 +61,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public sortDescending = false;
     public _listarCarpetas;
 
-    get cssLayout () {
+    get cssLayout() {
         return { 'col-9': this.verPrestar || this.verSolicitudManual, 'col': !this.verSolicitudManual && !this.verPrestar };
     }
 
@@ -364,18 +364,12 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     afterSearch(paciente: IPaciente): void {
-        this.paciente = paciente;
         this.pacientesSearch = false;
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    if (this.obtenerCarpetaPaciente()) {
-                        this.verSolicitudManual = true;
-                    } else {
-                        this.verSolicitudManual = false;
-                        this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
-                    }
+                    this.obtenerCarpetaPaciente();
                 });
         } else {
             this.seleccion = paciente;
@@ -387,69 +381,42 @@ export class ListarSolicitudesComponent implements OnInit {
     }
 
     obtenerCarpetaPaciente() {
+        this.carpetaEfector = undefined;
         let indiceCarpeta = -1;
-        if (this.paciente.carpetaEfectores.length > 0) {
+        if (this.paciente.carpetaEfectores && this.paciente.carpetaEfectores.length > 0) {
             // Filtro por organizacion
             indiceCarpeta = this.paciente.carpetaEfectores.findIndex(x => x.organizacion.id === this.auth.organizacion.id);
-            if (indiceCarpeta > -1) {
+            if (indiceCarpeta > -1 && this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta.indexOf('PDR') === -1) {
+                this.verSolicitudManual = true;
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
             }
         }
-        if (indiceCarpeta === -1) {
+        if (!this.carpetaEfector) {
             // Si no hay carpeta en el paciente MPI, buscamos la carpeta en colección carpetaPaciente, usando el nro. de documento
             this.servicePaciente.getNroCarpeta({ documento: this.paciente.documento, organizacion: this.auth.organizacion.id }).subscribe(carpeta => {
-                if (carpeta.nroCarpeta) {
-                    this.carpetaEfector.nroCarpeta = carpeta.nroCarpeta;
+                if (carpeta.length > 0) {
+                    carpeta.forEach(historial => {
+                        let index = historial.carpetaEfectores.findIndex(x => x.organizacion._id === this.auth.organizacion.id);
+                        if (index > -1) {
+                            let carpetaHistorica = historial.carpetaEfectores[index];
+                            if (carpetaHistorica.nroCarpeta.indexOf('PDR') === -1) {
+                                this.carpetaEfector = carpetaHistorica;
+                                this.servicePaciente.patch(this.paciente.id, { op: 'updateCarpetaEfectores', carpetaEfectores: [this.carpetaEfector] }).subscribe(
+                                    resultado => {
+                                        this.verSolicitudManual = true;
+                                    }
+                                );
+                            } else {
+                                this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                            }
+                        }
+                    });
+                } else {
+                    this.verSolicitudManual = false;
+                    this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
                 }
             });
         }
-        return (this.carpetaEfector ? true : false);
-    }
-
-    changeListener($event, index, _carpeta): void {
-        this.readThis($event.target, index, _carpeta);
-    }
-
-
-    readThis(inputValue: any, index, _carpeta): void {
-        // ConceptId que se utilizará para la digitalización
-        let conceptSnomed = {
-            term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
-            conceptId: '2881000013106'
-        };
-        let ext = this.fileExtension(inputValue.value);
-        this.errorExt = -1;
-        if (ext.toLowerCase() !== this.extensionPermitida) {
-            this.plex.toast('danger', 'Archivo inválido. Solo se admite PDF', 'Información', 1000);
-            this.errorExt = index;
-            return;
-        }
-        let file: File = inputValue.files[0];
-        let myReader: FileReader = new FileReader();
-
-        myReader.onloadend = (e) => {
-            let id;
-            let profesional = this.auth.usuario;
-            if (_carpeta.tipo === 'Manual') {
-                id = _carpeta.idSolicitud;
-            } else if (_carpeta.tipo === 'Automatica') {
-                id = _carpeta.datosPrestamo.turno.id;
-            }
-            let metadata = {
-                id: id,
-                tipoPrestacion: conceptSnomed.conceptId,
-                fecha: new Date(),
-                paciente: _carpeta.paciente,
-                profesional: profesional,
-                file: myReader.result,
-                texto: 'Se adjunta/n historia clínica digitalizada por un administrativo'
-            };
-            this.servicioCDA.post(myReader.result, metadata).subscribe((data) => {
-                this.plex.toast('success', 'Se adjuntó correctamente', 'Información', 1000);
-                this.getCarpetas({}, null);
-            });
-        };
-        myReader.readAsDataURL(file);
     }
 
     fileExtension(file) {
@@ -457,6 +424,36 @@ export class ListarSolicitudesComponent implements OnInit {
             return file.slice((file.lastIndexOf('.') + 1));
         } else {
             return '';
+        }
+    }
+
+    onUpload($event, carpeta) {
+        if ($event.status = 200) {
+            let _id;
+            const id = $event.body.id;
+            let profesional = this.auth.usuario;
+            if (carpeta.tipo === 'Manual') {
+                _id = carpeta.idSolicitud;
+            } else if (carpeta.tipo === 'Automatica') {
+                _id = carpeta.datosPrestamo.turno.id;
+            }
+            let conceptSnomed = {
+                term: 'adjuntar archivo de historia clínica digitalizada (procedimiento)',
+                conceptId: '2881000013106'
+            };
+            let metadata = {
+                id: _id,
+                tipoPrestacion: conceptSnomed.conceptId,
+                fecha: new Date(),
+                paciente: carpeta.paciente,
+                profesional: profesional,
+                file: `id:${id}`,
+                texto: 'Se adjunta/n historia clínica digitalizada por un administrativo'
+            };
+            this.servicioCDA.post(null, metadata).subscribe((data) => {
+                this.plex.toast('success', 'Se adjuntó correctamente', 'Información', 1000);
+                this.getCarpetas({}, null);
+            });
         }
     }
 

@@ -149,13 +149,13 @@ export class IniciarInternacionComponent implements OnInit {
                 // Si el paciente ya tiene una internacion en ejecucion
                 if (resultado) {
                     if (resultado.cama) {
-                        this.plex.alert('El paciente registra una internación en ejecución y está ocupando una cama');
+                        this.plex.info('warning', 'El paciente registra una internación en ejecución y está ocupando una cama');
                         // Salimos del iniciar internacion
                         this.data.emit(false);
                         this.router.navigate(['/internacion/camas']);
                     } else {
                         // y no esta ocupando cama lo pasamos directamente a ocupar una cama
-                        this.plex.alert('El paciente tiene una internación en ejecución');
+                        this.plex.info('warning', 'El paciente tiene una internación en ejecución');
                         // Mediante el id de la prestación que viene en los parámetros recuperamos el objeto prestación
                         this.servicioPrestacion.getById(resultado.ultimaInternacion.id).subscribe(prestacion => {
                             this.prestacion = prestacion;
@@ -195,7 +195,7 @@ export class IniciarInternacionComponent implements OnInit {
 
             });
         } else {
-            this.plex.alert('El paciente debe ser registrado en MPI');
+            this.plex.info('warning', 'El paciente debe ser registrado en MPI');
         }
         if (this.camaSelected) {
             let camaId = this.camaSelected.id;

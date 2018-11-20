@@ -358,7 +358,7 @@ export class TurnosComponent implements OnInit {
                     turnosActualizar.push(bloqueTurno.turnos[index + 1]);
                 } else {
                     // en el caso que el turno siguiente no se encuentre disponible
-                    this.plex.alert('No se puede asignar el turno doble');
+                    this.plex.info('warning', 'No se puede asignar el turno doble');
                 }
             }
         }
@@ -395,7 +395,7 @@ export class TurnosComponent implements OnInit {
         // Bag of cats
         this.listaEsperaService.postXIdAgenda(agenda.id, patch).subscribe(resultado => {
             this.agenda = resultado;
-            this.plex.alert('El paciente pasó a Lista de Espera');
+            this.plex.info('warning', 'El paciente pasó a Lista de Espera');
             // this.enviarSMS();
         });
     }
