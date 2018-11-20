@@ -38,6 +38,7 @@ import { ClonarAgendaComponent } from './components/turnos/gestor-agendas/operac
 import { PanelEspacioComponent } from './components/turnos/configuracion/espacio-fisico/panel-espacio.component';
 import { GestorAgendasComponent } from './components/turnos/gestor-agendas/gestor-agendas.component';
 import { PuntoInicioTurnosComponent } from './components/turnos/punto-inicio/puntoInicio-turnos.component';
+import { MapaEspacioFisicoVistaComponent } from './components/turnos/configuracion/mapa-espacio-fisico/mapa-espacio-fisico-vista.component';
 
 // ... MPI
 import { DashboardComponent } from './components/paciente/dashboard.component';
@@ -98,6 +99,7 @@ const appRoutes: Routes = [
   { path: 'tm/profesional', component: ProfesionalComponent, canActivate: [RoutingGuard] },
   { path: 'tm/especialidad', component: EspecialidadComponent, canActivate: [RoutingGuard] },
   { path: 'tm/espacio_fisico', component: EspacioFisicoComponent, canActivate: [RoutingGuard] },
+  { path: 'tm/mapa_espacio_fisico', component: MapaEspacioFisicoVistaComponent, canActivate: [RoutingGuard] },
 
   // MPI
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

@@ -25,12 +25,12 @@ export class EspacioFisicoComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.plex.updateTitle([{
-            route: '/inicio',
-            name: 'Citas'
-        }, {
-            name: 'Espacios Físicos'
-        }]);
+        // this.plex.updateTitle([{
+        //     route: '/inicio',
+        //     name: 'Citas'
+        // }, {
+        //     name: 'Espacios Físicos'
+        // }]);
         // Verificamos permisos globales para espacios fisicos, si no posee realiza redirect al home
         if (!this.auth.check('turnos:editarEspacio') && !this.auth.check('turnos:*')) {
             this.router.navigate(['./inicio']);
