@@ -50,6 +50,9 @@ export class AuditoriaComponent implements OnInit {
 
     // Cargamos todos los pacientes temporales y activos
     ngOnInit() {
+        if (this.auth.getPermissions('auditoriaPacientes:?').length < 1) {
+            this.router.navigate(['./inicio']);
+        }
         this.onLoadData();
     }
 
