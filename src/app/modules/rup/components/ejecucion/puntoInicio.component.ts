@@ -318,7 +318,7 @@ export class PuntoInicioComponent implements OnInit {
             turnos: [turno]
         };
         if (operacion === 'noAsistio') {
-            this.plex.confirm('¿Está seguro que desea registrar la inasistencia del paciente: <b>' + paciente.apellido + ', ' + paciente.nombre).then(confirmacion => {
+            this.plex.confirm(`¿Está seguro que desea registrar la inasistencia del paciente: <b> ${paciente.apellido} ${paciente.nombre} </b> ?`).then(confirmacion => {
                 if (confirmacion) {
                     this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
                         this.actualizar();
@@ -328,7 +328,7 @@ export class PuntoInicioComponent implements OnInit {
                 }
             });
         } else {
-            this.plex.confirm('¿Está seguro que desea revertir los cambios?').then(confirmacion => {
+            this.plex.confirm(`¿Está seguro que desea revertir los cambios?`).then(confirmacion => {
                 if (confirmacion) {
                     this.servicioAgenda.patch(agenda.id, cambios).subscribe(() => {
                         this.actualizar();
