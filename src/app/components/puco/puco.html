@@ -46,7 +46,7 @@
                         {{usuario.financiador}}
                     </td>
                     <td *ngIf="usuario.fechaAlta; else sinDatos">
-                        Fecha de alta: {{usuario.fechaAlta | date: 'dd/MM/yyyy'}}
+                        Fecha de alta: {{usuario.fechaAlta | fecha}}
                     </td>
                     <ng-template #sinDatos>
                         <td>SIN DATOS</td>
