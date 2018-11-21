@@ -34,8 +34,8 @@
 <!-- SECCION PROTOCOLO -->
 <ng-container *ngIf="showProtocoloDetalle && !seleccionPaciente">
     <!-- ENCABEZADO DE PROTOCOLO -->
-    <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera"
-        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()' [seleccionPaciente]="seleccionPaciente"></protocolo-encabezado>
+    <protocolo-encabezado [modo]="modo" [protocolo]="modelo" [edicionDatosCabecera]="edicionDatosCabecera" (edicionDatosCabeceraEmitter)="editarDatosCabecera()"
+        (siguienteEmit)='siguiente()' (anteriorEmit)='anterior()' ></protocolo-encabezado>
     <!-- FIN ENCABEZADO DE PROTOCOLO -->
 </ng-container>
 <ng-container *ngIf='mostrarCuerpoProtocolo'>

@@ -95,6 +95,9 @@ import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/list
 import { PuntoInicioLaboratorioComponent } from './apps/rup/laboratorio/components/punto-inicio/punto-inicio.component';
 import { ListadoSolicitudesComponent } from './apps/rup/laboratorio/components/punto-inicio/listado-solicitudes/listado-solicitudes.component';
 import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/components/gestor-protocolos/filtros-busqueda/filtros-busqueda-protocolo.component';
+import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
+import { ProtocoloEncabezadoVistaComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-vista/protocolo-encabezado-vista.component';
+import { ProtocoloEncabezadoEdicionComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-edicion/protocolo-encabezado-edicion.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
@@ -181,6 +184,9 @@ const appRoutes: Routes = [
   { path: 'laboratorio/', component: PuntoInicioLaboratorioComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: ListadoSolicitudesComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/', component: FiltrosBusquedaProtocoloComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/', component: ProtocoloEncabezadoComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/', component: ProtocoloEncabezadoEdicionComponent, canActivate: [RoutingGuard] },
+  { path: 'laboratorio/', component: ProtocoloEncabezadoVistaComponent, canActivate: [RoutingGuard] },
   { path: 'laboratorio/hojatrabajo', component: GestorHojatrabajoComponent, canActivate: [RoutingGuard] },
 
 

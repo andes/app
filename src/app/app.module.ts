@@ -366,6 +366,8 @@ import { TablaDatalleProtocolo } from './apps/rup/laboratorio/components/protoco
 import { ProtocoloDetalleComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-detalle.component';
 import { ListaProtocolosComponent } from './apps/rup/laboratorio/components/lista-protocolos/lista-protocolos.component';
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
+import { ProtocoloEncabezadoVistaComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-vista/protocolo-encabezado-vista.component';
+import { ProtocoloEncabezadoEdicionComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-edicion/protocolo-encabezado-edicion.component';
 import { GestorHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/gestor-hojatrabajo/gestor-hojatrabajo.component';
 import { ListaHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/lista-hojatrabajo/lista-hojatrabajo.component';
 import { PracticasHojatrabajoComponent } from './apps/rup/laboratorio/components/hojatrabajo/practicas-hojatrabajo/practicas-hojatrabajo.component';
@@ -618,6 +620,8 @@ registerLocaleData(localeEs, 'es');
         PuntoInicioLaboratorioComponent,
         ListadoSolicitudesComponent,
         ProtocoloEncabezadoComponent,
+        ProtocoloEncabezadoEdicionComponent,
+        ProtocoloEncabezadoVistaComponent,
         FiltrosBusquedaProtocoloComponent,
         GestorHojatrabajoComponent,
         ListaHojatrabajoComponent,

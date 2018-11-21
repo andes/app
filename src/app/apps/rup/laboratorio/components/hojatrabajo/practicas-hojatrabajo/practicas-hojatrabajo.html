@@ -5,7 +5,7 @@
     </div>
     <div class="col">
         <plex-select [(ngModel)]="practica" label="Nombre de Practica" name="nombrePractica" (getData)="getPracticasPorNombre($event);"
-            (change)="seleccionarPractica($event.value)" placeholder="Ingrese el nombre de la práctica" required='required' labelField="codigo + ' - ' + nombre" >
+            (change)="seleccionarPractica($event.value)" placeholder="Ingrese el nombre de la práctica" labelField="codigo + ' - ' + nombre" >
         </plex-select>
     </div>
 </div>

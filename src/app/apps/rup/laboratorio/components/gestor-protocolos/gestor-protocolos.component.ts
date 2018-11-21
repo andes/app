@@ -1,5 +1,4 @@
 import { Constantes } from './../../controllers/constants';
-import { IPrestacion } from '../../../../../modules/rup/interfaces/prestacion.interface';
 import { Component, OnInit, Input, ViewChild, EventEmitter, Output } from '@angular/core';
 import { ProtocoloDetalleComponent } from '../protocolos/protocolo-detalle.component';
 import { PrestacionesService } from '../../../../../modules/rup/services/prestaciones.service';
@@ -35,7 +34,6 @@ export class GestorProtocolosComponent
 
     @Input('protocolo')
     set setProtocolo(value: any) {
-        console.log('setProtocolo')
         if (value) {
             this.seleccionarProtocolo({ protocolo: value, index: 0 });
             this.ocultarPanelLateral = true;
@@ -45,7 +43,7 @@ export class GestorProtocolosComponent
 
     @Input('paciente')
     set paciente(value) {
-        console.log('setPaciente')
+        console.log('setPaciente', value)
         if (value) {
             this.resetearProtocolo(value);
             this.seleccionarProtocolo({ protocolo: this.protocolo, index: 0 });

@@ -1,44 +1,36 @@
 import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
-import { IPrestacion } from '../../../../../../modules/rup/interfaces/prestacion.interface';
-import { Auth } from '@andes/auth';
 
 @Component({
-    selector: 'protocolo-encabezado',
-    templateUrl: './protocolo-encabezado.html',
-    styleUrls: ['../../../assets/laboratorio.scss']
+    selector: 'protocolo-encabezado-vista',
+    templateUrl: './protocolo-encabezado-vista.html',
+    styleUrls: ['../../../../assets/laboratorio.scss']
 })
 
-export class ProtocoloEncabezadoComponent implements OnInit {
-
+export class ProtocoloEncabezadoVistaComponent implements OnInit {
     modelo: any;
     solicitudProtocolo: any;
-    @Input() modo: String;
+    mostrarMasOpciones: Boolean;
     @Input() edicionDatosCabecera: Boolean;
-    @Input() seleccionPaciente: Boolean;
-    // seleccionPaciente: Boolean;
+    @Input() modo: String;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
             this.cargarProtocolo(value);
         }
     }
+
     @Output() siguienteEmit = new EventEmitter<any>();
     @Output() anteriorEmit = new EventEmitter<any>();
     @Output() edicionDatosCabeceraEmitter = new EventEmitter<any>();
 
-    constructor(
-    ) { }
+    constructor() { }
 
     ngOnInit() {
     }
 
-    editarDatosCabecera() {
-        this.edicionDatosCabecera = true;
-        this.edicionDatosCabeceraEmitter.emit(true);
-    }
-
     cargarProtocolo(value: any) {
         this.modelo = value;
+        this.solicitudProtocolo = this.modelo.solicitud.registros[0].valor;
     }
 
     siguiente() {
@@ -47,5 +39,9 @@ export class ProtocoloEncabezadoComponent implements OnInit {
 
     anterior() {
         this.anteriorEmit.emit();
+    }
+
+    editarDatosCabecera() {
+        this.edicionDatosCabeceraEmitter.emit(true);
     }
 }

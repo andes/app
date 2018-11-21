@@ -221,8 +221,11 @@ export class ProtocoloDetalleComponent
      * @memberof ProtocoloDetalleComponent
      */
     editarDatosCabecera() {
+        // this.edicionDatosCabecera = (this.modo !== 'puntoInicio'); 
+        // this.mostrarCuerpoProtocolo = (this.modo === 'puntoInicio');
         this.edicionDatosCabecera = true;
         this.mostrarCuerpoProtocolo = false;
+        this.seleccionPaciente = false;
         this.mostrarCuerpoProtocoloEmit.emit(this.mostrarCuerpoProtocolo);
     }
 
@@ -427,7 +430,9 @@ export class ProtocoloDetalleComponent
             }
 
             this.servicioPrestacion.patch(this.modelo.id, params).subscribe(prestacionEjecutada => {
+                // if (next && this.modo !== 'puntoInicio') {
                 if (next) {
+
                     this.protocolos.splice(this.indexProtocolo, 1);
                     if (this.modo === 'recepcion' || this.protocolos.length === 0) {
                         this.mostrarCuerpoProtocolo = true;
@@ -440,6 +445,10 @@ export class ProtocoloDetalleComponent
                     }
                     this.plex.toast('success', this.modelo.ejecucion.registros[0].nombre, 'Solicitud guardada', 4000);
                 }
+                // } else {
+                //     this.mostrarCuerpoProtocolo = true;
+                //     this.volverAListaControEmit.emit()
+                // }
             });
         } else {
             this.modelo.estados = [{ tipo: 'ejecucion' }];

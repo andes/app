@@ -1,0 +1,79 @@
+<section class="labs-listado-item" style="width: 100% !important">
+    <div class="row">
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo !=="recepcion"' >
+            <plex-button class="marginRightBtn" type="info" icon="chevron-left" (click)='anterior()'>
+            </plex-button>
+        </div>
+        <div class="col" class="centradoVerticalBtn">
+            <div class="listado-contenedor-secundario">
+                <!-- Modo visualizacion de datos -->
+                <article class="labs-item-numero">
+                    <span *ngIf='solicitudProtocolo.solicitudPrestacion.numeroProtocolo' class="badge badge-success"
+                        style='float: left; margin-right: 20px;'>
+                        <h5>
+                            <i *ngIf='modelo.paciente.sexo ==="femenino"' class="mdi mdi-gender-female mdi-24px mdi-rotate-45 rosa"></i>
+                            <i *ngIf='modelo.paciente.sexo ==="masculino"' class="mdi mdi-gender-male mdi-24px azul"></i>
+                            {{solicitudProtocolo.solicitudPrestacion.numeroProtocolo.numeroCompleto}}
+                        </h5>
+                    </span>
+
+                    <div class="row">
+                        <div class="col">
+                            <strong>Paciente: </strong>
+                            {{modelo.paciente.documento}} - {{modelo.paciente.apellido}}, {{modelo.paciente.nombre}} F.
+                            Nac.: {{modelo.paciente.fechaNacimiento
+                            | date: 'dd/MM/yyyy' }}, Sexo: {{modelo.paciente.sexo}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4">
+                            <strong>F. de solicitud: </strong>
+                            {{ modelo.solicitud.fecha | date: 'dd/MM/yyyy' }}
+                        </div>
+                        <div class="col-4">
+                            <strong>F. de Ejecucion:&nbsp;</strong>
+                            {{ modelo.ejecucion.fecha | date: 'dd/MM/yyyy' }}
+                        </div>
+                        <div class="col-4">
+                            <strong>Origen: </strong>
+                            {{ modelo.solicitud.ambitoOrigen}}
+                        </div>
+                    </div>
+                    <div class="row" *ngIf="mostrarMasOpciones">
+                        <div class="col-2">
+                            <strong>Servicio: </strong>
+                            <p>{{solicitudProtocolo?.solicitudPrestacion?.servicio.term}}</p>
+                        </div>
+                        <div class="col-3">
+                            <strong>Usuario:&nbsp;</strong>
+                            <p>{{ modelo.createdBy?.nombreCompleto }}</p>
+                        </div>
+                        <div class="col-3">
+                            <strong>Solicitante: </strong>
+                            <p>{{ modelo.solicitud.profesional.nombre }} {{ modelo.solicitud.profesional.apellido }}</p>
+                        </div>
+                        <div class="col-7">
+                            <strong>Efector Solicitante: </strong>
+                            <p>{{ modelo.solicitud.organizacion.nombre }}</p>
+                        </div>
+                        <div class="col-12">
+                            <strong>Diagnostico: </strong>
+                            <p>{{ modelo.solicitud.registros[0]?.valor?.solicitudPrestacion.diagnostico }}</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo === "control"'>
+            <plex-button icon="mdi mdi-pencil" class="float-right mr-2 marginLeftBtn" (click)="editarDatosCabecera()"
+                title="Editar datos">
+            </plex-button>
+        </div>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion"'>
+            <plex-button label="" type="info" [icon]="mostrarMasOpciones ? 'chevron-up' : 'chevron-down'" (click)="mostrarMasOpciones = !mostrarMasOpciones"></plex-button>
+        </div>
+        <div class="col-1 centradoVerticalBtn" *ngIf='modo !== "recepcion"'>
+            <plex-button type="info" class='float-right mr-2' icon='chevron-right' (click)='siguiente()' style='margin-left: 10px;'></plex-button>
+        </div>
+    </div>
+</section>
