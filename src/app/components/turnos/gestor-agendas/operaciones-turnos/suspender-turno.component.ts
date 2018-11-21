@@ -170,7 +170,7 @@ export class SuspenderTurnoComponent implements OnInit {
 
                     this.saveSuspenderTurno.emit(resulAgenda);
 
-                    this.plex.alert('Los pacientes seleccionados pasaron a Lista de Espera');
+                    this.plex.info('warning', 'Los pacientes seleccionados pasaron a Lista de Espera');
 
                     // this.enviarSMS(this.turnos[x], 'Su turno fue cancelado, queda en lista de espera');
 

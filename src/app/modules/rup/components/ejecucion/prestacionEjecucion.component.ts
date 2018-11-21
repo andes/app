@@ -790,7 +790,7 @@ export class PrestacionEjecucionComponent implements OnInit {
         let resultado = true;
 
         if (!this.prestacion.ejecucion.registros.length || (this.prestacion.ejecucion.registros.length === 1 && this.prestacion.ejecucion.registros[0].concepto.conceptId === '721145008')) {
-            this.plex.alert('Debe agregar al menos un registro en la consulta', 'Error');
+            this.plex.info('warning', 'Debe agregar al menos un registro en la consulta', 'Error');
             return false;
         } else {
             this.prestacion.ejecucion.registros.forEach(r => {
