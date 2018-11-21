@@ -2,8 +2,8 @@
     <plex-box>
         <div class="text-center">
             <div class="logo"></div>            
-            <div *ngIf="!denied" class="row">
-                <div *ngIf="mpi" class="col-4">
+            <div *ngIf="!denied" class="andes-inicio row">
+                <div *ngIf="mpi" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-celeste" routerLink="/mpi">
                         <i class="icono mdi mdi-account-multiple-outline"></i>
                         <div class="titulo">MPI</div>
@@ -13,7 +13,7 @@
                             <br>identificación del paciente</div>
                     </div>
                 </div>
-                <div *ngIf="turnos==='gestor'" class="col-4">
+                <div *ngIf="turnos==='gestor'" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-violeta" routerLink="/citas/gestor_agendas">
                         <i class="icono mdi mdi-calendar"></i>
                         <div class="titulo">CITAS</div>
@@ -23,7 +23,7 @@
                             <br>pacientes a las prestaciones</div>
                     </div>
                 </div>
-                <div *ngIf="turnos==='inicioTurnos'" class="col-4">
+                <div *ngIf="turnos==='inicioTurnos'" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-violeta" routerLink="/citas/puntoInicio">
                         <i class="icono mdi mdi-calendar"></i>
                         <div class="titulo">CITAS</div>
@@ -33,7 +33,7 @@
                             <br>pacientes a las prestaciones</div>
                     </div>
                 </div>
-                <div *ngIf="rup" class="col-4">
+                <div *ngIf="rup" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-rosa" routerLink="/rup">
                         <i class="icono mdi mdi-contacts"></i>
                         <div class="titulo">HUDS</div>
@@ -43,7 +43,8 @@
                             <br>de prestaciones de pacientes</div>
                     </div>
                 </div>
-                <div *ngIf="prestamosHC" class="col-4">
+                
+                <div *ngIf="prestamosHC" class="col-xs-12 col-sm-6 col-md-4">
                     <div class="boton color-amarillo" routerLink="/prestamosHC">
                         <i class="icono mdi mdi-folder"></i>
                         <div class="titulo">PRESTAMOS DE CARPETAS</div>
@@ -53,28 +54,27 @@
                             <br>de las carpetas de Historias Clínicas de los pacientes</div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row mt-4">
-                <div *ngIf="internacion" class="col-4">
-                    <div class="boton color-amarillo" routerLink="/internacion/camas">
+                    
+                <!-- <div *ngIf="internacion" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton color-verde" routerLink="/internacion/camas">
                         <i class="icono mdi mdi-hotel"></i>
                         <div class="titulo">Internación</div>
                         <div class="subtitulo">Mapa de camas</div>
                         <div class="detalle">Vea el estado del mapa de camas
                             <br />de los distintos servicios de la organización</div>
                     </div>
-                </div>
-
-                <div *ngIf="internacionEpicrisis" class="col-4">
-                    <div class="boton color-amarillo" routerLink="/internacion/inicio">
+                </div> -->
+    
+                <div *ngIf="internacionEpicrisis" class="col-xs-12 col-sm-6 col-md-4">
+                    <div class="boton color-verde" routerLink="/internacion/inicio">
                         <i class="icono mdi mdi-hotel"></i>
                         <div class="titulo">Internación</div>
                         <div class="subtitulo">Punto de inicio</div>
                         <div class="detalle">Registrar epicrisis de una internación<br>&nbsp;</div>
                     </div>
                 </div>
-            </div> 
+            </div>
+ 
 
             <div *ngIf="denied" class="row">
                 <div class="col">
