@@ -1,7 +1,6 @@
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
-import * as moment from 'moment';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
 
@@ -21,7 +20,7 @@ export class SolicitudesComponent implements OnInit {
     solicitudTurno: any;
     labelVolver = 'Lista de Solicitudes';
     showAuditar = false;
-    public autorizado = false;
+    public permisos;
     public showCargarSolicitud = false;
     public showBotonCargarSolicitud = true;
     public prestaciones = [];
@@ -44,7 +43,10 @@ export class SolicitudesComponent implements OnInit {
     public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
+    public prestacionesPermisos = [];
+    public permisosReglas;
     prestacionSeleccionada: any;
+
 
     constructor(
         private auth: Auth,
@@ -54,14 +56,10 @@ export class SolicitudesComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        this.autorizado = this.auth.getPermissions('turnos:darTurnos:?').length > 0;
+        this.permisosReglas = this.auth.getPermissions('solicitudes:reglas:?').length > 0 ? this.auth.getPermissions('solicitudes:reglas:?')[0] === '*' : false;
+        this.prestacionesPermisos = this.auth.getPermissions('solicitudes:tipoPrestacion:?');
         this.showCargarSolicitud = false;
-
         this.cargarSolicitudes();
-        // Está autorizado para ver esta pantalla?
-        if (!this.autorizado) {
-
-        }
     }
 
     filtrarPaciente() {
@@ -95,7 +93,6 @@ export class SolicitudesComponent implements OnInit {
                 );
             });
             this.setearArreglos();
-            // console.log('pe ', PE);
         } else {
             this.prestacionesEntrada = this.entradaCache;
             this.prestacionesSalida = this.salidaCache;
@@ -201,6 +198,10 @@ export class SolicitudesComponent implements OnInit {
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
+            if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+                params['tipoPrestaciones'] = this.prestacionesPermisos;
+            }
+
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
                 this.prestaciones = resultado;
                 this.prestacionesSalida = resultado.filter((prest: any) => { return (prest.solicitud.organizacionOrigen) ? (this.auth.organizacion.id === prest.solicitud.organizacionOrigen.id) : false; });

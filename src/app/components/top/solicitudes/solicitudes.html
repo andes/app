@@ -186,7 +186,7 @@
     </section>
     <footer *ngIf="!showEditarReglas">
 
-        <plex-button class="mr-1" type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
+        <plex-button *ngIf="permisosReglas" type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
 
         <plex-button type="primary" label="Reglas Global" routerLink="/top/reglasVisualizacion"></plex-button>
 

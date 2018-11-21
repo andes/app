@@ -38,7 +38,7 @@ export class IniciarInternacionComponent implements OnInit {
     btnIniciarGuardar;
     showEditarCarpetaPaciente = false;
     public ocupaciones = [];
-    public obraSocial: IObraSocial[];
+    public obraSocial: any[];
     public origenHospitalizacion = [
         { id: 'consultorio externo', nombre: 'Consultorio externo' },
         { id: 'emergencia', nombre: 'Emergencia' },
