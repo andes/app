@@ -57,6 +57,7 @@ export class ListarSolicitudesComponent implements OnInit {
     public verDevolver: Boolean = false;
     public verSolicitudManual: Boolean = false;
     public verImprimirSolicitudes: Boolean = false;
+    public verNuevaCarpeta: Boolean = false;
     public mostrarMasOpciones = false;
     public sortDescending = false;
     public _listarCarpetas;
@@ -320,6 +321,7 @@ export class ListarSolicitudesComponent implements OnInit {
             this.carpetaSeleccionada = solicitudCarpeta;
             this.verPrestar = true;
             this.verSolicitudManual = false;
+            this.verNuevaCarpeta = false;
         }
     }
 
@@ -365,11 +367,21 @@ export class ListarSolicitudesComponent implements OnInit {
 
     afterSearch(paciente: IPaciente): void {
         this.pacientesSearch = false;
+        this.verNuevaCarpeta = false;
         if (paciente.id) {
             this.servicePaciente.getById(paciente.id).subscribe(
                 pacienteMPI => {
                     this.paciente = pacienteMPI;
-                    this.obtenerCarpetaPaciente();
+                    if (this.obtenerCarpetaPaciente()) {
+                        this.verSolicitudManual = true;
+                    } else {
+                        this.verSolicitudManual = false;
+                        this.plex.confirm('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + '<br> no posee una carpeta en esta Institución. <br> Desea crear una nueva carpeta?').then((confirmar) => {
+                            if (confirmar) {
+                                this.verNuevaCarpeta = true;
+                            }
+                        });
+                    }
                 });
         } else {
             this.seleccion = paciente;
@@ -389,6 +401,7 @@ export class ListarSolicitudesComponent implements OnInit {
             if (indiceCarpeta > -1 && this.paciente.carpetaEfectores[indiceCarpeta].nroCarpeta.indexOf('PDR') === -1) {
                 this.verSolicitudManual = true;
                 this.carpetaEfector = this.paciente.carpetaEfectores[indiceCarpeta];
+                return true;
             }
         }
         if (!this.carpetaEfector) {
@@ -407,13 +420,13 @@ export class ListarSolicitudesComponent implements OnInit {
                                     }
                                 );
                             } else {
-                                this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                                return false;
                             }
                         }
                     });
                 } else {
                     this.verSolicitudManual = false;
-                    this.plex.alert('El paciente ' + this.paciente.apellido + ', ' + this.paciente.nombre + ' no posee una carpeta en esta Institución.');
+                    return false;
                 }
             });
         }
@@ -461,5 +474,16 @@ export class ListarSolicitudesComponent implements OnInit {
         let token = window.sessionStorage.getItem('jwt');
         let url = environment.API + '/modules/cda/' + archivo + '?token=' + token;
         window.open(url);
+    }
+
+    // Se usa tanto para guardar como cancelar
+    afterComponenteCarpeta(carpetas) {
+        if (carpetas) {
+            let carpetaNueva = carpetas.find(x => x.organizacion._id === this.auth.organizacion.id);
+            let msj = `Nro de Carpeta ${carpetaNueva.nroCarpeta} asignada a ${this.paciente.apellido}, ${this.paciente.nombre}`;
+            this.plex.alert(msj);
+        } else {
+            this.verNuevaCarpeta = false;
+        }
     }
 }
