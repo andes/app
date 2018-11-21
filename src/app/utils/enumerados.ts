@@ -101,14 +101,16 @@ export enum OrigenLaboratorioFiltro {
 }
 
 export enum laboratorioInterno {
-    'derivaciones',
-    'guardia',
-    'hematologia',
-    'hemostasia',
-    'inmunofluorescencia',
-    'orinas',
-    'quimica clinica',
-    'serologia'
+    'PROTEINAS E INMUNOLOGIA',
+    'HEMOSTASIA',
+    'FERTILIDAD',
+    'BIOLOGIA MOLECULAR',
+    'TOXICOLOGIA',
+    'QUIMICA CLINICA',
+    'ENDOCRINOLOGIA',
+    'SEROLOGIA',
+    'ORINA & LIQUIDOS CORPORALES',
+    'HEMATOLOGIA'
 }
 
 export enum EstadosEspacios {
