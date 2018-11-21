@@ -185,7 +185,7 @@
         <!-- Configuración de Reglas -->
     </section>
     <footer *ngIf="!showEditarReglas">
-        <plex-button type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
+        <plex-button *ngIf="permisosReglas" type="primary" label="Reglas" (click)="editarReglas()"></plex-button>
         <div class="float-right">
             <plex-button type="success" label="Nueva Solicitud" (click)="formularioSolicitud('activeTab')"></plex-button>
         </div>
