@@ -1,4 +1,4 @@
-<plex-layout main="9">
+<plex-layout main="9" *ngIf="!showPrintForm">
     <plex-layout-main>
         <header>
             <h3>Padrón de cobertura social</h3>
@@ -34,6 +34,7 @@
                     <th>Apellido y nombre</th>
                     <th>Padrón</th>
                     <th>Otra información</th>
+                    <th>Constatación</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,6 +48,9 @@
                     </td>
                     <td *ngIf="usuario.fechaAlta; else sinDatos">
                         Fecha de alta: {{usuario.fechaAlta | date: 'dd/MM/yyyy'}}
+                    </td>
+                    <td>
+                        <plex-button label="Imprimir" type="success" (click)="imprimirConstatacion(usuario)"></plex-button>
                     </td>
                     <ng-template #sinDatos>
                         <td>SIN DATOS</td>
@@ -86,7 +90,5 @@
                 <plex-button label='Reporte de Errores/Sugerencias' type='warning' title="Sugerencias" (click)="sugerencias()"></plex-button>
             </div>
         </div>
-
     </plex-layout-sidebar>
-
 </plex-layout>
