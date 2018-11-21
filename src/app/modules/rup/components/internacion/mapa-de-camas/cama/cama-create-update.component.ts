@@ -114,7 +114,7 @@ export class CamaCreateUpdateComponent implements OnInit {
                     }
 
                 } else {
-                    this.plex.alert('ERROR: Ocurrio un problema al crear la cama');
+                    this.plex.info('warning', 'ERROR: Ocurrio un problema al crear la cama');
                 }
             });
         }
