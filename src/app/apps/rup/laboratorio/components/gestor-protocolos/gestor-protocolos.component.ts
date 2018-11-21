@@ -22,7 +22,6 @@ export class GestorProtocolosComponent
     public showCargarSolicitud: Boolean = false;
     public edicionDatosCabecera: Boolean;
     public showBotonesGuardar: Boolean = false;
-    public mostrarListaMpi: Boolean = false;
     public mostrarCuerpoProtocolo: Boolean = true;
     public ocultarPanelLateral: Boolean = false;
     public editarListaPracticas: Boolean = false;
@@ -57,20 +56,7 @@ export class GestorProtocolosComponent
         }
     }
 
-    public laboratorioInternoEnum: any;
-    public pacientes;
-    public pacienteActivo;
-    public cargaLaboratorioEnum;
-    public modoCargaLaboratorioEnum;
     public indexProtocolo;
-    public turnosRecepcion;
-    public origen = null;
-    public area = null;
-    public areas = [];
-    public prioridad = null;
-    public servicio = null;
-    public estado;
-    public organizacion;
     public busqueda;
 
     public accionIndex = 1;
@@ -141,7 +127,6 @@ export class GestorProtocolosComponent
             }
         };
         // this.protocolo = IPrestacion.constructor();
-        console.log('resetearProtocolo', this.protocolo);
     }
 
     /**
@@ -152,7 +137,6 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     refreshSelection($event?) {
-        console.log('refreshSelection');
         if ($event) {
             this.busqueda = $event;
         }
@@ -171,10 +155,6 @@ export class GestorProtocolosComponent
         });
     }
 
-    // estaSeleccionado(protocolo) {
-    //     return false;
-    // }
-
     /**
      * seleccionarProtocolo oculta lista de protocolos y muestra el panel de detalle de protocolo, al ser cliqueado un protocolo de la lista
      *
@@ -183,7 +163,6 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     seleccionarProtocolo(value) {
-        console.log('seleccionarProtocolo', value.index);
         // Si se presionó el boton suspender, no se muestran otros protocolos hasta que se confirme o cancele la acción.
         if (value.protocolo) {
             this.mostrarCuerpoProtocolo = (this.modo === 'control') || (this.modo === 'carga') || (this.modo === 'validacion') || (this.modo === 'puntoInicio');
@@ -196,11 +175,6 @@ export class GestorProtocolosComponent
             this.ocultarPanelLateral = (this.modo === 'recepcion') || (this.modo === 'puntoInicio');
             this.showBotonesGuardar = (this.modo !== 'recepcion');
         }
-    }
-
-    selectedIndex(i) {
-        console.log('selectedIndex', i);
-        return true;
     }
 
     /**
@@ -220,82 +194,8 @@ export class GestorProtocolosComponent
             this.showCargarSolicitud = false;
             this.ocultarPanelLateral = false;
             this.seleccionPaciente = false;
-    
             this.showBotonesGuardar = false;    
-        
-        }
-        
-    }
-
-    /**
-     * Inicia la busqueda de pacientes
-     *
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-
-    searchStartPaciente() {
-        this.pacientes = null;
-        this.pacienteActivo = null;
-        this.refreshSelection();
-    }
-
-    /**
-     * Limpia búsqueda de pacientes
-     *
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    searchClearPaciente() {
-        this.pacientes = null;
-        this.pacienteActivo = null;
-
-        this.refreshSelection();
-    }
-
-    /**
-     * Finaliza búsqueda de pacientes
-     *
-     * @param {*} resultado
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    searchEndPaciente(resultado: any) {
-        if (resultado.err) {
-            this.plex.info('danger', resultado.err);
-        } else {
-            this.pacientes = resultado.pacientes;
-            if (this.pacientes) {
-                this.mostrarListaMpi = true;
-            } else {
-                this.mostrarListaMpi = false;
-            }
-        }
-        this.refreshSelection();
-    }
-
-    /**
-     * Seleccionar paciente
-     *
-     * @param {*} paciente
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    seleccionarPaciente(paciente: any) {
-        this.pacienteActivo = paciente;
-        if (this.pacienteActivo) {
-            this.refreshSelection();
-        }
-    }
-
-    /**
-     * Asigna paciente activo
-     *
-     * @param {*} paciente
-     * @memberof PuntoInicioLaboratorioComponent
-     */
-    hoverPaciente(paciente: any) {
-        this.pacienteActivo = paciente;
-    }
-
-    changeCarga(tipo) {
-
+        }  
     }
 
     /**
@@ -304,7 +204,6 @@ export class GestorProtocolosComponent
      * @memberof PuntoInicioLaboratorioComponent
      */
     mostrarFomularioPacienteSinTurno() {
-        console.log('mostrarFomularioPacienteSinTurno');
         this.resetearProtocolo({});
         this.edicionDatosCabecera = true;
         this.ocultarPanelLateral = true;
