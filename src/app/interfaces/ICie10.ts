@@ -1,6 +1,6 @@
 export interface ICie10 {
-    capitulo: String;
-    grupo: String;
+    capitulo?: String;
+    grupo?: String;
     causa: String;
     subcausa: String;
     codigo: String;
