@@ -199,5 +199,5 @@
     <listar-turnos *ngIf="showListadoTurnos" [agendas]="agendasSeleccionadas" (volverAlGestor)="volverAlGestor($event)"></listar-turnos>
     <listar-carpetas *ngIf="showCarpetas" [agendasSeleccionadas]="agendasSeleccionadas" (volverAlGestor)="volverAlGestor($event)"></listar-carpetas>
     <!-- Otras operaciones-->
-    <fuera-agenda *ngIf="showRevisionFueraAgenda"></fuera-agenda>
+    <fuera-agenda *ngIf="showRevisionFueraAgenda" (volverAlGestor)="volverAlGestor($event)"></fuera-agenda>
 </form>
