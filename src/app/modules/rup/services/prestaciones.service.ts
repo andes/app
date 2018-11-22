@@ -2,7 +2,7 @@
 import { map } from 'rxjs/operators';
 import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { Injectable, Output, EventEmitter } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs/';
 import { Auth } from '@andes/auth';
 import { Server } from '@andes/shared';
 import { IPrestacion } from '../interfaces/prestacion.interface';

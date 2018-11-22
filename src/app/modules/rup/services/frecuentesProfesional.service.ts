@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { Observable } from 'rxjs/Rx';
-import { Subject } from 'rxjs';
 import { Server } from '@andes/shared';
-import { SemanticTag } from '../interfaces/semantic-tag.type';
-import { ISnomedConcept } from './../interfaces/snomed-concept.interface';
 import { IFrecuentesProfesional } from '../interfaces/frecuentesProfesional.interface';
 
 const url = '/modules/rup/frecuentesProfesional';

@@ -1,10 +1,7 @@
-import { element } from 'protractor';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { BehaviorSubject ,  Subject } from 'rxjs';
-import { environment } from '../../../../environments/environment';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Server } from '@andes/shared';
-import { SemanticTag } from '../interfaces/semantic-tag.type';
 import { IElementoRUP } from './../interfaces/elementoRUP.interface';
 import { IElementosRUPCache } from './../interfaces/elementosRUPCache.interface';
 import { ISnomedConcept } from './../interfaces/snomed-concept.interface';

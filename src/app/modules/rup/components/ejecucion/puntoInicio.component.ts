@@ -1,8 +1,6 @@
 
-import {forkJoin as observableForkJoin } from 'rxjs';
-import { estados } from './../../../../utils/enumerados';
-
-import { Component, OnInit, Output, Input, EventEmitter, HostBinding } from '@angular/core';
+import { forkJoin as observableForkJoin } from 'rxjs/';
+import { Component, OnInit, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { Auth } from '@andes/auth';
@@ -13,7 +11,6 @@ import { TipoPrestacionService } from './../../../../services/tipoPrestacion.ser
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { PacienteService } from './../../../../services/paciente.service';
 import { IAgenda } from './../../../../interfaces/turnos/IAgenda';
-import { IPaciente } from '../../../../interfaces/IPaciente';
 import { TurnoService } from '../../../../services/turnos/turno.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 import { IAgenda } from '../../interfaces/turnos/IAgenda';
 
 Injectable();
