@@ -11,4 +11,12 @@ export class CodificacionService {
     addCodificacion(idPrestacion: String): Observable<ICodificacionPrestacion> {
         return this.server.post(this.codificacionUrl, { idPrestacion: idPrestacion });
     }
+
+    patch(id: String, cambios: any): Observable<ICodificacionPrestacion> {
+        return this.server.patch(this.codificacionUrl + id, cambios);
+    }
+
+    get(params: any): Observable<ICodificacionPrestacion[]> {
+        return this.server.get(this.codificacionUrl, { params: params, showError: true });
+    }
 }
