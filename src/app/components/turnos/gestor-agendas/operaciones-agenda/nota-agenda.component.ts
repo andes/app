@@ -70,7 +70,7 @@ export class AgregarNotaAgendaComponent implements OnInit {
             },
                 err => {
                     if (err) {
-                        console.log(err);
+
                     }
                 });
 

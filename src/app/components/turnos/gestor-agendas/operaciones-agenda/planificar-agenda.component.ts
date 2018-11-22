@@ -56,7 +56,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     // ultima request de profesionales que se almacena con el subscribe
     private lastRequest: ISubscription;
 
-    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public OrganizacionService: OrganizacionService,
+    constructor(public plex: Plex, public servicioProfesional: ProfesionalService, public servicioEspacioFisico: EspacioFisicoService, public organizacionService: OrganizacionService,
         public serviceAgenda: AgendaService, public servicioTipoPrestacion: TipoPrestacionService, public auth: Auth) { }
 
     ngOnInit() {
@@ -139,7 +139,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     }
 
     loadEdificios(event) {
-        this.OrganizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
+        this.organizacionService.getById(this.auth.organizacion._id).subscribe(respuesta => {
             event.callback(respuesta.edificio);
         });
     }
@@ -221,17 +221,10 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         }
     }
 
-    // cambiarNominalizada(cambio) {
-    //     this.modelo.nominalizada = !this.noNominalizada;
-    //     if (this.noNominalizada) {
-    //         this.dinamica = false;
-    //     }
-    // }
-
     seleccionarDinamica() {
         if (this.dinamica) {
             if (this.noNominalizada) {
-                this.plex.alert('No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
+                this.plex.info('warning', 'No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
                     this.dinamica = false;
                 });
             } else {
@@ -729,12 +722,12 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
             let efector = this.auth.organizacion; // Para que realice el filtro por organización donde estoy logueado
             query.nombre = nombre;
             query.organizacion = efector.id;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];
@@ -754,7 +747,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
         this.validarTodo();
         if (this.modelo.id === '0') {
             delete this.modelo.id;
-        };
+        }
         this.showMapaEspacioFisico = false;
         this.showBloque = true;
     }
@@ -848,9 +841,11 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                         }
                     }
                 }
-                bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
-                    return el.activo === true && delete el.$order;
-                });
+                if (!this.dinamica) {
+                    bloque.tipoPrestaciones = bloque.tipoPrestaciones.filter(function (el) {
+                        return el.activo === true;
+                    });
+                }
             });
             espOperation = this.serviceAgenda.save(this.modelo);
             espOperation.subscribe(resultado => {
@@ -869,9 +864,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 (err) => { this.hideGuardar = false; });
         } else {
             if (!this.verificarNoNominalizada()) {
-                this.plex.alert('Solo puede haber una prestación en las agendas no nominalizadas');
+                this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
             } else {
-                this.plex.alert('Debe completar los datos requeridos');
+                this.plex.info('warning', 'Debe completar los datos requeridos');
             }
         }
     }

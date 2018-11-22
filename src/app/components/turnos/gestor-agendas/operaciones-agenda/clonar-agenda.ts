@@ -266,20 +266,20 @@ export class ClonarAgendaComponent implements OnInit {
                         clones: this.seleccionados
                     };
                     this.serviceAgenda.clonar(data).subscribe(resultado => {
-                        this.plex.alert('La Agenda se clonó correctamente').then(ok => {
+                        this.plex.info('success', 'La Agenda se clonó correctamente').then(ok => {
                             this.volverAlGestor.emit(true);
                         });
                     },
                         err => {
                             if (err) {
-                                console.log(err);
+
                             }
                         });
                 }
             }).catch(() => {
             });
         } else {
-            this.plex.alert('', 'Seleccione al menos un día válido del calendario');
+            this.plex.info('warning', '', 'Seleccione al menos un día válido del calendario');
         }
     }
 

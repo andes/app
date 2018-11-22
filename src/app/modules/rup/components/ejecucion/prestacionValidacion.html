@@ -5,35 +5,33 @@
     <plex-box>
         <header>
             <div class="row">
-                <div class="col-9" *ngIf="prestacion?.solicitud">
+                <div [ngClass]="{'col-9': prestacion.solicitud.ambitoOrigen === 'ambulatorio', 'col-12': prestacion.solicitud.ambitoOrigen === 'internacion'}"
+                    *ngIf="prestacion?.solicitud">
                     <div class="page-title titulo-consulta" id="pageHeader">
                         <span class="consulta">Resumen | </span> {{prestacion.solicitud.tipoPrestacion.term}} -
                         <span class="fecha">{{prestacion.solicitud.fecha | date: 'EEE dd/MM/yyyy'}}</span>
 
                         <div class="float-right mr-2 menu-info">
-                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud"
-                                *ngIf="!showDatosSolicitud" (click)="mostrarDatosSolicitud(true)"></plex-button>
-                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud"
-                                *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
+                            <plex-button icon="information-outline" type="info" class="" title="Ver Información de la Solicitud" *ngIf="!showDatosSolicitud"
+                                (click)="mostrarDatosSolicitud(true)"></plex-button>
+                            <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !prestacion.solicitud.tipoPrestacion.noNominalizada">
-                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF"
-                                    titlePosition="top" (click)="descargarResumen()"></plex-button>
+                                <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
+                                    (click)="descargarResumen()"></plex-button>
                             </ng-container>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="row no-gutters menu-ordenamiento">
+            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="row no-gutters menu-ordenamiento">
                 <div class="col-1 mr-0 pr-0">
                     <small>Organizar</small>
                     <br>
                     <div class="btn-group">
-                        <button (click)="ordenarPorFecha('down')" class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1"
-                            [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
+                        <button (click)="ordenarPorFecha('down')" class="btn btn-sm btn-orden bg-info text-white p-1 pt-0 pb-0 mr-1" [ngClass]="{'bg-invert': ordenRegistros === 'down'}">
                             <i class="mdi mdi-24px mdi-menu-down"></i>
                         </button>
-                        <button (click)="ordenarPorFecha('up')" class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0"
-                            [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
+                        <button (click)="ordenarPorFecha('up')" class="btn btn-sm bg-info btn-orden text-white p-1 pt-0 pb-0" [ngClass]="{'bg-invert': ordenRegistros === 'up'}">
                             <i class="mdi mdi-24px mdi-menu-up"></i>
                         </button>
                     </div>
@@ -42,21 +40,19 @@
                     <small>Ordenar por</small>
                     <br>
                     <div class="btn-group" role="group">
-                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-hallazgo text-uppercase mr-1 "
-                            (click)="ordenarPorTipo(['hallazgo', 'situación'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
-                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastorno text-uppercase mr-1"
-                            (click)="ordenarPorTipo(['trastorno'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
-                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
-                            class="btn btn-sm btn-procedimiento text-uppercase mr-1" (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])"
-                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
+                        <button *ngIf="hayRegistros(['hallazgo', 'situación'])" class="btn btn-sm btn-hallazgo text-uppercase mr-1 " (click)="ordenarPorTipo(['hallazgo', 'situación'])"
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['hallazgo', 'situación'], ',')}">Hallazgos</button>
+                        <button *ngIf="hayRegistros(['trastorno'])" class="btn btn-sm btn-trastorno text-uppercase mr-1" (click)="ordenarPorTipo(['trastorno'])"
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['trastorno'], ',')}">Trastornos</button>
+                        <button *ngIf="hayRegistros(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" class="btn btn-sm btn-procedimiento text-uppercase mr-1"
+                            (click)="ordenarPorTipo(['procedimiento', 'entidad observable', 'régimen/tratamiento'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['procedimiento', 'entidad observable', 'régimen/tratamiento'], ',')}">Procedimientos</button>
                         <button *ngIf="hayRegistros(['procedimiento', 'régimen/tratamiento'], 'planes')" class="btn btn-sm btn-plan text-uppercase mr-1"
                             (click)="ordenarPorTipo(['planes'])" [ngClass]="{'active': ordenSeleccionado === 'planes'}">Solicitudes</button>
-                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-producto text-uppercase mr-1"
-                            (click)="ordenarPorTipo(['producto'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Insumos</button>
-                        <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-adjunto text-uppercase mr-1"
-                            (click)="ordenarPorTipo(['elemento de registro'])" [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
-                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white"
-                            (click)="limpiarOrden()">
+                        <button *ngIf="hayRegistros(['producto'])" class="btn btn-sm btn-producto text-uppercase mr-1" (click)="ordenarPorTipo(['producto'])"
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['producto'], ',')}">Insumos</button>
+                        <button *ngIf="hayRegistros(['elemento de registro'])" class="btn btn-sm btn-adjunto text-uppercase mr-1" (click)="ordenarPorTipo(['elemento de registro'])"
+                            [ngClass]="{'active': ordenSeleccionado === reemplazar(['elemento de registro'], ',')}">Adjuntos</button>
+                        <button *ngIf="tipoOrden" class="btn btn-sm btn-default text-uppercase mr-1 bg-info text-white" (click)="limpiarOrden()">
                             <i class="mdi mdi-close"></i>
                         </button>
                     </div>
@@ -64,7 +60,7 @@
             </div>
         </header>
         <div class="row no-gutters" *ngIf="prestacion?.ejecucion?.registros && prestacion.ejecucion.registros.length">
-            <div class="col titulos">
+            <div class="col titulos" [ngClass]="(prestacion.solicitud.ambitoOrigen == 'ambulatorio' ? 'col-9' : '')">
                 <!-- div de la info de la solicitud -->
                 <div [hidden]="!showDatosSolicitud" id="datosSolicitud" class="mb-2 datos-solicitud">
                     <div class="row no-gutters">
@@ -103,7 +99,7 @@
                     </ng-container>
 
                     <ng-container *ngIf="tipoOrden && esTipoOrden(elemento, ['planes'])">
-                        <div class="text-capitalize mt-4 titulo-planes">
+                        <div class="text-capitalize mt-4 titulo-solicitudes">
                             <h5 [ngClass]="{'primero' : i === 0, 'no-primero': i > 0}">Solicitudes</h5>
                             <!-- {{ reemplazar(['procedimiento', 'régimen/tratamiento'], ', ') }} -->
                         </div>
@@ -122,12 +118,12 @@
                         </div>
                     </ng-container>
 
-                    <div class="rup-card {{ elemento.esSolicitud ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
+                    <div class="rup-card {{ elemento.esSolicitud ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }} elementoRup">
                         <a name="{{ elemento.concepto.conceptId }}"></a>
 
                         <div class="rup-header">
                             <div class="icon-rup">
-                                <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'plan' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
+                                <i class="icon icon-rup-semantic-{{(elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getIcon(elemento.concepto)}}"></i>
                             </div>
                             <div class="title">
                                 <ng-container *ngIf="elemento?.nombre">
@@ -149,19 +145,18 @@
                                         <ng-container *ngFor="let relacion of elemento.relacionadoCon">
 
                                             <span class="badge badge-info">
-                                                {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion.cara + ')' : relacion.concepto.term }}
+                                                {{ relacion?.cara ? 'diente ' + relacion?.concepto?.term + ' (cara ' + relacion?.cara + ')' : relacion?.concepto?.term }}
                                             </span>
                                         </ng-container>
                                     </ng-container>
                                 </div>
                             </div>
                             <div class="actions">
-                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'plan' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
+                                <span class="badge badge-{{ (tipoOrden === ['planes'] || elemento.esSolicitud) ? 'solicitud' : servicioPrestacion.getCssClass(elemento.concepto) }}">{{elemento.concepto.semanticTag}}</span>
                                 <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small>
                                 <!-- <small class="badge badge-info" *ngIf="elemento.esDiagnosticoPrincipal">Procedimiento / diagnóstico principal</small> -->
                                 <small *ngIf="elemento?.relacionadoCon && elemento?.relacionadoCon.length > 0" class="badge badge-info">
-                                    <b>Relacionado con:</b> {{
-                                    elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
+                                    <b>Relacionado con:</b> {{ elemento.relacionadoCon[0]?.concepto?.term[0].toUpperCase() +
                                     elemento.relacionadoCon[0]?.concepto?.term.slice(1)}}
                                 </small>
                                 <ng-container *ngIf="elemento.esSolicitud && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && asignarTurno[elemento.id]">
@@ -169,8 +164,7 @@
                                         <b>Ya tiene un turno asignado</b>
                                     </span>
                                     <span *ngIf="asignarTurno[elemento.id]?.solicitud && !asignarTurno[elemento.id].solicitud.turno">
-                                        <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])"
-                                            [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
+                                        <plex-button label="Asignar turno" type="primary btn-sm" (click)="darTurno(asignarTurno[elemento.id])" [disabled]="!asignarTurno[elemento.id].solicitud"></plex-button>
                                         <span class="small text-secondary" *ngIf="!asignarTurno[elemento.id].solicitud">
                                             <b> No hay turnos disponibles </b>
                                         </span>
@@ -230,7 +224,7 @@
                 </ng-container>
             </div>
 
-            <div class="relaciones col-3">
+            <div *ngIf="prestacion.solicitud.ambitoOrigen == 'ambulatorio'" class="relaciones col-3">
                 <!-- ÁRBOL -->
                 <plex-box class="w-25">
                     <header>
@@ -247,10 +241,9 @@
                         <ul class="list-group">
                             <li [ngClass]="{
                                 'ml-0': !rama.esDiagnosticoPrincipal
-                            }"
-                                class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
+                            }" class="list-group-item pl-0 pt-0 pb-0 mb-0 ml-{{ registrosDeep[rama.id] }}">
                                 <div>
-                                    <span class="type {{ rama.esSolicitud ? 'plan' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
+                                    <span class="type {{ rama.esSolicitud ? 'solicitud' : rama.concepto.semanticTag }} pr-2 mr-1"></span>
                                     <small>{{ rama.nombre }}
                                         <small class="badge badge-info" *ngIf="rama.esDiagnosticoPrincipal">
                                             Procedimiento / diagnóstico principal
@@ -270,17 +263,19 @@
         <div class="col">
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'ejecucion'"
                 label="Continuar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="volver()" type="info"></plex-button>
-
-            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'"
-                label="Punto de Inicio" (click)="volverInicio()" type="info"></plex-button>
+            <!-- Inicio de RUP ambulatorio -->
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && prestacion?.solicitud.ambitoOrigen === 'ambulatorio'"
+                label="Punto de Inicio" (click)="volverInicio(prestacion?.solicitud.ambitoOrigen)" type="info"></plex-button>
+            <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo === 'validada' && prestacion?.solicitud.ambitoOrigen === 'internacion'"
+                label="{{ btnVolver }}" (click)="volverInicio(prestacion?.solicitud.ambitoOrigen, rutaVolver)" type="info"></plex-button>
         </div>
         <div class="col text-right ">
 
             <plex-button *ngIf="prestacion && prestacion.estados && prestacion.estados[prestacion.estados.length-1].tipo !== 'validada'"
                 label="Validar {{prestacion.solicitud.tipoPrestacion.term}}" (click)="validar()" type="success"></plex-button>
 
-            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()"
-                type="danger" *ngIf="prestacion && prestacion.estados
+            <plex-button label="Romper Validación de {{prestacion?.solicitud?.tipoPrestacion?.term}}" (click)="romperValidacion()" type="danger"
+                *ngIf="prestacion && prestacion.estados
                 && prestacion.estados[prestacion.estados.length-1].tipo === 'validada'
                 && prestacion.estados[prestacion.estados.length-1].createdBy.username === auth.usuario.username">
             </plex-button>

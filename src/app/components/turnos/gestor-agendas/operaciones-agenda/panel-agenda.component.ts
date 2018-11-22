@@ -46,7 +46,7 @@ export class PanelAgendaComponent implements OnInit {
         public serviceAgenda: AgendaService,
         public servicioProfesional: ProfesionalService,
         public servicioEspacioFisico: EspacioFisicoService,
-        public OrganizacionService: OrganizacionService,
+        public organizacionService: OrganizacionService,
         public router: Router,
         public auth: Auth) {
     }
@@ -72,7 +72,7 @@ export class PanelAgendaComponent implements OnInit {
             // Quitar cuando esté solucionado inconveniente de plex-select
             let profesional = [];
             if (this.agenda.profesionales && this.agenda.profesionales.length > 10) {
-                this.plex.alert('Seleccione un profesional de la lista');
+                this.plex.info('warning', 'Seleccione un profesional de la lista');
             } else {
                 if (this.agenda.profesionales) {
                     profesional = this.agenda.profesionales;
@@ -178,12 +178,12 @@ export class PanelAgendaComponent implements OnInit {
         if (agenda.espacioFisico) {
             let nombre = agenda.espacioFisico;
             query.nombre = nombre;
-        };
+        }
 
         if (agenda.equipamiento && agenda.equipamiento.length > 0) {
             let equipamiento = agenda.equipamiento.map((item) => item.term);
             query.equipamiento = equipamiento;
-        };
+        }
 
         if (!agenda.espacioFisico && !agenda.equipamiento) {
             this.espaciosList = [];

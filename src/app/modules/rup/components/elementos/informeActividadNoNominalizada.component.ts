@@ -34,7 +34,6 @@ export class InformeActividadNoNominalizadaComponent extends RUPComponent implem
         { id: 'Otra', nombre: 'Otra' }];
     public pacientes: IPacienteMatch[] | IPaciente[];
     public pacienteActivo: IPaciente;
-    private plex: Plex;
     private turno;
 
     ngOnInit() {

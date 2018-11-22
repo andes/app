@@ -1,7 +1,7 @@
-import { AgendaService } from './../../../../services/turnos/agenda.service';
-import { TurnoService } from './../../../../services/turnos/turno.service';
-import { ProfesionalService } from './../../../../services/profesional.service';
 import { Auth } from '@andes/auth';
+import { AgendaService } from './../../../../services/turnos/agenda.service';
+import { ProfesionalService } from './../../../../services/profesional.service';
+import { Plex } from '@andes/plex';
 import { TipoPrestacionService } from './../../../../services/tipoPrestacion.service';
 import { PrestacionesService } from './../../services/prestaciones.service';
 import { Component, ViewContainerRef, ComponentFactoryResolver, Output, Input, OnInit, OnDestroy, EventEmitter, ViewEncapsulation, QueryList, ViewChildren, ViewChild, ElementRef, Renderer, AfterViewInit } from '@angular/core';
@@ -106,8 +106,9 @@ export class RUPComponent implements OnInit, AfterViewInit {
         public sanitazer: DomSanitizer,
         public snomedService: SnomedService,
         public procedimientosQuirurgicosService: ProcedimientosQuirurgicosService,
-        public Cie10Service: Cie10Service,
+        public cie10Service: Cie10Service,
         public servicioOrganizacion: OrganizacionService,
+        public plex: Plex,
         public route: ActivatedRoute,
         public agendaService: AgendaService
     ) { }
@@ -200,7 +201,9 @@ export class RUPComponent implements OnInit, AfterViewInit {
     * @memberof RUPComponent
     */
     public validate() {
-        return this.validateChild() && this.validateForm();
+        const validChild = this.validateChild();
+        const validForm = this.validateForm();
+        return validChild && validForm;
     }
 
     /**
@@ -225,10 +228,19 @@ export class RUPComponent implements OnInit, AfterViewInit {
     public validateChild() {
         let flag = true;
         this.rupElements.forEach((item) => {
-            let instance = item.rupInstance;
-            flag = flag && (instance.soloValores || instance.validate());
+            const instance = item.rupInstance;
+            const childValid = instance.validate();
+            flag = flag && (instance.soloValores || childValid);
         });
         return flag;
 
     }
+
+    get isValid() {
+        if (this.rupInstance) {
+            return !this.rupInstance.formulario || !this.rupInstance.formulario.touched || (!this.rupInstance.formulario.invalid);
+        }
+        return true;
+    }
+
 }

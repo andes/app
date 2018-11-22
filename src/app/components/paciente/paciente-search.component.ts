@@ -69,7 +69,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             // Si no está autorizado redirect al home
             this.router.navigate(['./inicio']);
             return false;
-        };
+        }
         // controla el input y bloquea dashboard si no tiene permisos
         // Lo quitamos junto con el html del dashboard
         // if (this.modoCompleto) {
@@ -199,7 +199,7 @@ export class PacienteSearchComponent implements OnInit, OnDestroy {
             let index = this.textoLibre.indexOf('"');
             if (index >= 0 && index < 20 && this.textoLibre.length > 5) {
                 /* Agregamos el control que la longitud sea mayor a 5 para incrementar la tolerancia de comillas en el input */
-                this.plex.alert('El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
+                this.plex.info('warning', 'El lector de código de barras no está configurado. Comuníquese con la Mesa de Ayuda de TICS');
                 this.textoLibre = null;
                 return false;
             }

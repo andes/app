@@ -1,7 +1,5 @@
 <fieldset>
-    <br>
     <div class="col-12" *ngIf="showList">
-
         <h5 *ngIf="carpetaEfectores?.length > 0">Organización | Número de carpeta</h5>
         <ul class="list-group">
             <ng-container *ngFor="let carpeta of carpetaEfectores">
@@ -33,7 +31,6 @@
                 </li>
             </ng-container>
         </ul>
-        <hr>
         <div class="row" *ngIf="showNuevaCarpeta">
             <div class="col-12">
                 <h6>

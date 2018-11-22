@@ -248,7 +248,7 @@ export class NuevaSolicitudComponent implements OnInit {
             });
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
     }
 
@@ -268,13 +268,14 @@ export class NuevaSolicitudComponent implements OnInit {
 
     loadTipoPrestaciones(event) {
         this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data: any) => {
-            let dataF;
-            if (this.permisos[0] === '*') {
-                dataF = data;
-            } else {
-                dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
-            }
-            event.callback(dataF);
+            // let dataF;
+            // if (this.permisos[0] === '*') {
+            //     dataF = data;
+            // } else {
+            //     dataF = data.filter((x) => { return this.permisos.indexOf(x.id) >= 0; });
+            // }
+            // event.callback(dataF);
+            event.callback(data);
         });
     }
 

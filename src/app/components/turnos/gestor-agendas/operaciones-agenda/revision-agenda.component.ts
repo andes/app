@@ -15,8 +15,7 @@ import { IPaciente } from './../../../../interfaces/IPaciente';
 import { PacienteService } from './../../../../services/paciente.service';
 import { TurnoService } from './../../../../services/turnos/turno.service';
 import { AgendaService } from '../../../../services/turnos/agenda.service';
-import { Cie10Service } from './../../../../services/term/cie10.service';
-
+import { Cie10Service } from '../../../../services/term/cie10.service';
 
 @Component({
     selector: 'revision-agenda',
@@ -148,7 +147,7 @@ export class RevisionAgendaComponent implements OnInit {
                     window.setTimeout(() => this.pacientesSearch = false, 100);
                 });
         } else {
-            this.plex.alert('Paciente no encontrado', '¡Error!');
+            this.plex.info('warning', 'Paciente no encontrado', '¡Error!');
         }
     }
 
@@ -305,7 +304,7 @@ export class RevisionAgendaComponent implements OnInit {
         }
         if (this.turnoTipoPrestacion) {
             this.turnoSeleccionado.tipoPrestacion = this.turnoTipoPrestacion;
-        };
+        }
         let datosTurno = {};
         if (this.diagnosticos) {
             this.turnoSeleccionado.diagnostico.codificaciones = this.diagnosticos;
@@ -333,7 +332,7 @@ export class RevisionAgendaComponent implements OnInit {
                 this.cerrarAsistencia();
             });
         } else {
-            this.plex.alert('Debe seleccionar un tipo de Prestacion');
+            this.plex.info('warning', 'Debe seleccionar un tipo de Prestacion');
         }
     }
 
@@ -349,7 +348,7 @@ export class RevisionAgendaComponent implements OnInit {
 
         }, err => {
             if (err) {
-                console.log(err);
+
             }
         });
     }

@@ -109,11 +109,10 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
 
                 this.prestacionPacienteService.put(this.modelo).subscribe(resultado => {
                     // this.saveAuditoriaPP.emit(resultado);
-                    this.plex.alert('La Auditoría se actualizó correctamente');
+                    this.plex.info('success', 'La Auditoría se actualizó correctamente');
                 },
                     err => {
                         if (err) {
-                            console.log(err);
                         }
                     });
 
@@ -122,17 +121,16 @@ export class EditarAuditoriaPrestacionPacienteComponent implements OnInit {
 
                 this.prestacionPacienteService.post(this.modelo).subscribe(resultado => {
                     // this.saveAuditoriaPP.emit(resultado);
-                    this.plex.alert('La Auditoría se guardó correctamente');
+                    this.plex.info('success', 'La Auditoría se guardó correctamente');
                 },
                     err => {
                         if (err) {
-                            console.log(err);
                         }
                     });
             }
 
         } else {
-            this.plex.alert('Debe completar los datos requeridos');
+            this.plex.info('warning', 'Debe completar los datos requeridos');
         }
 
 
