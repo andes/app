@@ -140,7 +140,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
 
     renaperVerification(profesional) {
         if (!profesional.documento || (profesional.sexo.id === 'otro')) {
-            this.plex.info('warning', 'La validación por renaper requiere sexo MASCULINO o FEMENINO.', 'Atención');
+            this.plex.info('warning', 'La validación por RENAPER requiere sexo MASCULINO o FEMENINO.', 'Atención');
         } else {
             // this.loading = true;
             let sexoRena = null;
@@ -158,7 +158,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                         this.profesional.apellido = resultado.datos.apellido;
                         this.profesional.fechaNacimiento = moment(resultado.datos.fechaNacimiento, 'YYYY-MM-DD');
                     } else {
-                        this.plex.info('warning', '', 'El profesional no se encontro en renaper');
+                        this.plex.info('warning', '', 'El profesional no se encontró en RENAPER');
                     }
                 });
         }
@@ -192,14 +192,14 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             });
 
                             if (match100) {
-                                this.plex.info('warning', '', 'El profesional que esta intentando guardar ya se encuentra cargado');
+                                this.plex.info('warning', '', 'El profesional que está intentando guardar ya se encuentra cargado');
                                 this.mostrarBtnGuardar = false;
                             } else {
                                 this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
 
                                 this.profesionalService.saveProfesional({ profesional: this.profesional })
                                     .subscribe(nuevoProfesional => {
-                                        this.plex.info('success', '', 'El profesional se creo con exito!');
+                                        this.plex.info('success', '', '¡El profesional se creó con éxito!');
                                         this.router.navigate(['/tm/profesional']);
                                     });
                             }
@@ -209,7 +209,7 @@ export class ProfesionalCreateUpdateComponent implements OnInit {
                             this.profesional.sexo = ((typeof this.profesional.sexo === 'string')) ? this.profesional.sexo : (Object(this.profesional.sexo).id);
                             this.profesionalService.saveProfesional({ profesional: this.profesional })
                                 .subscribe(nuevoProfesional => {
-                                    this.plex.info('success', '', 'El profesional se creo con exito!');
+                                    this.plex.info('success', '', '¡El profesional se creó con éxito!');
                                     this.router.navigate(['/tm/profesional']);
 
                                 });
