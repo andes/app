@@ -2,7 +2,9 @@ import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Component, OnInit, HostBinding } from '@angular/core';
 import { PrestacionesService } from '../../../modules/rup/services/prestaciones.service';
+import { TipoPrestacionService } from './../../../services/tipoPrestacion.service';
 import { TurnoService } from '../../../services/turnos/turno.service';
+import { OrganizacionService } from '../../../services/organizacion.service';
 
 @Component({
     selector: 'solicitudes',
@@ -43,8 +45,18 @@ export class SolicitudesComponent implements OnInit {
     public pacienteSolicitud: any;
     public activeTab = 0;
     public showSidebar = false;
+    public mostrarMasOpciones = false;
+    public organizacion;
     public prestacionesPermisos = [];
     public permisosReglas;
+    public prestacionDestino;
+    public estado;
+    public estados = [
+        { id: 'auditoria', nombre: 'auditoria' },
+        { id: 'pendiente', nombre: 'pendiente' },
+        { id: 'rechazada', nombre: 'rechazada' },
+        { id: 'turnoDado', nombre: 'turno dado' }
+    ];
     prestacionSeleccionada: any;
 
 
@@ -52,7 +64,9 @@ export class SolicitudesComponent implements OnInit {
         private auth: Auth,
         private plex: Plex,
         private servicioPrestacion: PrestacionesService,
-        public servicioTurnos: TurnoService
+        public servicioTipoPrestacion: TipoPrestacionService,
+        public servicioTurnos: TurnoService,
+        public servicioOrganizacion: OrganizacionService
     ) { }
 
     ngOnInit() {
@@ -97,6 +111,29 @@ export class SolicitudesComponent implements OnInit {
             this.prestacionesEntrada = this.entradaCache;
             this.prestacionesSalida = this.salidaCache;
         }
+    }
+
+    loadOrganizacion(event) {
+        if (event.query) {
+            let query = {
+                nombre: event.query
+            };
+            this.servicioOrganizacion.get(query).subscribe(event.callback);
+        } else {
+            event.callback([]);
+        }
+    }
+
+    loadPrestaciones(event) {
+        this.servicioTipoPrestacion.get({ turneable: 1 }).subscribe((data) => {
+            let dataF;
+            if (this.prestacionesPermisos[0] === '*') {
+                dataF = data;
+            } else {
+                dataF = data.filter((x) => { return this.prestacionesPermisos.indexOf(x.id) >= 0; });
+            }
+            event.callback(dataF);
+        });
     }
 
     cambio(activeTab) {
@@ -189,17 +226,35 @@ export class SolicitudesComponent implements OnInit {
     cargarSolicitudes() {
         if (this.fechaDesde && this.fechaHasta) {
             let params = {
-                estado: [
-                    'auditoria', // solicitudes a ser auditadas, pueden pasar a rechazadas o a pendientes
-                    'pendiente', // solicitudes pendientes pueden tener o no turno asociado, están pendientes de ejecución
-                    'rechazada', // solicitudes rechazadas en el proceso de auditoría
-                    'validada'   // solicitudes validadas, si tienen turno asociado veremos la información
-                ],
                 solicitudDesde: this.fechaDesde,
                 solicitudHasta: this.fechaHasta
             };
-            if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
-                params['tipoPrestaciones'] = this.prestacionesPermisos;
+            if (this.estado) {
+                if (this.estado.nombre !== 'turno dado') {
+                    params['estados'] = [this.estado.nombre];
+                    if (this.estado.nombre === 'pendiente') {
+                        params['tieneTurno'] = false;
+                    }
+                } else {
+                    params['tieneTurno'] = true;
+                }
+            } else {
+                params['estados'] = [
+                    'auditoria',
+                    'pendiente',
+                    'rechazada',
+                    'validada'
+                ];
+            }
+            if (this.organizacion) {
+                params['organizacionOrigen'] = this.organizacion.id;
+            }
+            if (this.prestacionDestino) {
+                params['prestacionDestino'] = this.prestacionDestino.id;
+            } else {
+                if (this.prestacionesPermisos.length > 0 && this.prestacionesPermisos[0] !== '*') {
+                    params['tipoPrestaciones'] = this.prestacionesPermisos;
+                }
             }
 
             this.servicioPrestacion.getSolicitudes(params).subscribe(resultado => {
