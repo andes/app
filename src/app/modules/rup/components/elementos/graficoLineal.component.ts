@@ -25,9 +25,9 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
         moment.locale('es');
 
 
-        let datos = this.elementoRUP.params.map((param, index) => {
+        this.elementoRUP.params.map((param, index) => {
 
-            this.prestacionesService.getRegistrosHuds(this.paciente.id, `<<${param.conceptId}`).subscribe(prestaciones => {
+            this.prestacionesService.getRegistrosHuds(this.paciente.id, `${param.query}`).subscribe(prestaciones => {
 
                 let pr = JSON.parse(JSON.stringify(prestaciones));
 
@@ -44,8 +44,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                     this.barChartDates.push(
                         prestaciones.filter(y => y.registro.valor !== null && isNumber(y.registro.valor)).map(p => ({ fecha: p.fecha })),
                     );
-                    console.log('barChartDates', this.barChartDates);
-
 
                     // asignamos los datosLineales al data para el chart
                     this.barChartData.push(
@@ -61,7 +59,6 @@ export class GraficoLinealComponent extends RUPComponent implements OnInit {
                 }
             });
         });
-
 
     }
 
