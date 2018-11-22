@@ -4,7 +4,7 @@ import {
     ViewEncapsulation, ContentChildren, OnDestroy
 } from '@angular/core';
 import { Observable } from 'rxjs/Rx';
-import { SubscriptionLike as ISubscription } from 'rxjs';
+import { SubscriptionLike as ISubscription } from 'rxjs/';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
 import { Cie10Service } from '../../../../services/term/cie10.service';

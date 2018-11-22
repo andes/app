@@ -1,14 +1,9 @@
 import { Component, OnInit, OnChanges, Output, Input, EventEmitter, ElementRef, SimpleChanges, ViewEncapsulation, ContentChildren, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { SubscriptionLike as ISubscription } from 'rxjs';
-
+import { SubscriptionLike as ISubscription } from 'rxjs/';
 import { Auth } from '@andes/auth';
 import { Plex } from '@andes/plex';
-
 import { SnomedService } from './../../services/term/snomed.service';
-import { SemanticTag } from './../../modules/rup/interfaces/semantic-tag.type';
 import { TipoPrestacionService } from './../../services/tipoPrestacion.service';
-
 import { PrestacionesService } from './../../modules/rup/services/prestaciones.service';
 
 @Component({
