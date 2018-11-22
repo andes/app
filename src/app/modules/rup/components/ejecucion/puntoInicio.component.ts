@@ -106,10 +106,22 @@ export class PuntoInicioComponent implements OnInit {
                 organizacion: this.auth.organizacion.id,
                 sinEstado: 'modificada',
                 ambitoOrigen: 'ambulatorio'
+            }),
+            // buscamos las prestaciones pendientes que este asociadas a un turno para ejecutarlas
+            this.servicioPrestacion.get({
+                organizacion: this.auth.organizacion.id,
+                estado: 'pendiente',
+                tieneTurno: 'si',
+                // TODO: filtrar por las prestaciones permitidas
+                // tipoPrestaciones: this.tiposPrestacion.map(tp => { return tp.conceptId; })
             })
         ).subscribe(data => {
             this.agendas = data[0];
             this.prestaciones = data[1];
+             // Sumamos las prestaciones pendientes si hubiera
+             if (data[2]) {
+                this.prestaciones = [...this.prestaciones, ...data[2]];
+            }
             if (this.agendas.length) {
                 // loopeamos agendas y vinculamos el turno si existe con alguna de las prestaciones
                 this.agendas.forEach(agenda => {
@@ -299,7 +311,7 @@ export class PuntoInicioComponent implements OnInit {
 
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -313,7 +325,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.crearPrestacion(null, snomedConcept, 'ejecucion', new Date(), turno).subscribe(prestacion => {
                     this.routeTo('ejecucion', prestacion.id);
                 }, (err) => {
-                    this.plex.alert('No fue posible crear la prestación', 'ERROR');
+                    this.plex.info('warning', 'No fue posible crear la prestación', 'ERROR');
                 });
             } else {
                 return false;
@@ -454,7 +466,7 @@ export class PuntoInicioComponent implements OnInit {
                 this.servicioPrestacion.patch(idPrestacion, params).subscribe(prestacion => {
                     this.router.navigate(['/rup/ejecucion', idPrestacion]);
                 }, (err) => {
-                    this.plex.alert('No fue posible iniciar la prestación: ' + err, 'ERROR');
+                    this.plex.info('warning', 'No fue posible iniciar la prestación: ' + err, 'ERROR');
                 });
             } else {
                 return false;
