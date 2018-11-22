@@ -261,25 +261,28 @@ export class MapaEspacioFisicoComponent implements OnInit, OnChanges {
     }
 
     seleccionarEspacio(espacio, agendaDisponible) {
-        if (agendaDisponible === true) {
-            let item = this.makeItem(this.agendaSeleccionada, espacio.id);
-            let index = this.espacioOcupado(item, espacio);
-            if (index >= 0 || typeof this.agendaSeleccionada.id === 'undefined') {
-                this.plex.confirm('Asignar espacio físico ' + espacio._value.nombre, '¿Confirmar?').then((respuesta) => {
-                    if (respuesta === true) {
-                        if (this.agendaSeleccionada.espacioFisico) {
-                            this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+        if (this.agendaSeleccionada) {
+            if (agendaDisponible === true) {
+                let item = this.makeItem(this.agendaSeleccionada, espacio.id);
+                let index = this.espacioOcupado(item, espacio);
+                if (index >= 0 || typeof this.agendaSeleccionada.id === 'undefined') {
+                    this.plex.confirm('Asignar espacio físico ' + espacio._value.nombre, '¿Confirmar?').then((respuesta) => {
+                        if (respuesta === true) {
+                            if (this.agendaSeleccionada.espacioFisico) {
+                                this.removeItem({ id: this.agendaSeleccionada.id, espacioID: this.agendaSeleccionada.espacioFisico.id });
+                            }
+                            this.addItem(index || 0, item, espacio);
+                            this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
+                        } else {
+                            return false;
                         }
-                        this.addItem(index || 0, item, espacio);
-                        this.onEspacioClick.emit(this.espacioTable.find(_item => _item.id === espacio.id));
-                    } else {
-                        return false;
-                    }
-                });
-            } else {
-                this.plex.toast('danger', 'El espacio físico esta ocupado.', '');
+                    });
+                } else {
+                    this.plex.toast('danger', 'El espacio físico esta ocupado.', '');
+                }
             }
         }
+
     }
 
     makeItem(agenda, espacioID) {
