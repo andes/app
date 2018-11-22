@@ -66,6 +66,14 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.hojaTrabajo = new IHojaTrabajo();
     }
 
+    vistaPreliminar() {
+        console.log('vista preliminar hoja', new Date);
+    }
+
+    eliminarHoja() {
+        console.log('eliminar hoja', new Date);
+    }
+
     volverLista() {
         console.log('guardar hoja', new Date);
     }
