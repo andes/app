@@ -720,6 +720,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
         this.disableGuardar = false;
         this.enableIgnorarGuardar = false;
         this.sugerenciaAceptada = true;
+
     }
     // Verifica paciente repetido y genera lista de candidatos
     verificaPacienteRepetido() {
@@ -739,13 +740,13 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     sexo: ((typeof this.pacienteModel.sexo === 'string')) ? this.pacienteModel.sexo : (Object(this.pacienteModel.sexo).id),
                     fechaNacimiento: this.pacienteModel.fechaNacimiento
                 };
-                this.pacienteService.get(dto).subscribe(resultado => {
-                    this.pacientesSimilares = resultado;
+                this.pacienteService.get(dto).subscribe((resultado: any) => {
+                    // Filtramos solo por pacientes activos
+                    this.pacientesSimilares = resultado.filter(item => item.paciente.activo === true);
 
                     // agregamos la condición de abajo para filtrar las sugerencias
                     // cuando el paciente fue escaneado o ya estaba validado.
                     if (this.escaneado || this.pacienteModel.estado === 'validado') {
-
                         this.pacientesSimilares = this.pacientesSimilares.filter(item => item.paciente.estado === 'validado');
                     }
                     this.pacientesSimilares = this.pacientesSimilares.filter(item => item.match >= 0.88);
@@ -771,16 +772,18 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                     this.disableGuardar = true;
                                 }
                             } else {
+
                                 if (!this.verificarDNISexo(this.pacientesSimilares)) {
                                     this.logService.post('mpi', 'posibleDuplicado', {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
-                                    }).subscribe(() => { });
+                                    }).subscribe();
                                     this.posibleDuplicado = true;
                                     this.plex.info('warning', 'Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
                                     this.enableIgnorarGuardar = true;
                                     this.disableGuardar = true;
                                 } else {
+                                    this.plex.info('warning', 'Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
                                     resolve(true);
                                 }
                             }
