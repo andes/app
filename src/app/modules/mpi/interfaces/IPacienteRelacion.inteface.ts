@@ -9,4 +9,6 @@ export interface IPacienteRelacion {
     nombre: string;
     apellido: string;
     documento: string;
+    fechaNacimiento?: Date;
+    sexo?: string;
 }

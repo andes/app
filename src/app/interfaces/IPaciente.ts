@@ -39,7 +39,7 @@ export interface IPaciente {
         valor: string
     }];
     claveBlocking: [string];
-    entidadesValidadoras: [string];
+    entidadesValidadoras?: [string];
     scan: string;
     reportarError: Boolean;
     notaError: string;
