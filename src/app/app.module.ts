@@ -287,7 +287,6 @@ import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
 import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
-import { RiesgoCardiovascularComponent } from './modules/rup/components/elementos/riesgoCardiovascular.component';
 
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -419,7 +418,6 @@ export let RUPRegistry = {
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
     'ValorNumericoComponent': ValorNumericoComponent,
     'SeleccionBinariaComponent': SeleccionBinariaComponent,
-    'RiesgoCardiovascularComponent': RiesgoCardiovascularComponent,
     'FormulaBaseComponent': FormulaBaseComponent
 };
 
@@ -479,7 +477,6 @@ let RUPComponentsArray = [
     ProcedimientoDeEnfermeriaComponent,
     ValorNumericoComponent,
     SeleccionBinariaComponent,
-    RiesgoCardiovascularComponent,
     FormulaBaseComponent
 ];
 
@@ -556,7 +553,6 @@ registerLocaleData(localeEs, 'es');
         PrestacionEjecucionComponent,
         PrestacionValidacionComponent,
         SnomedBuscarComponent,
-
         HeaderPacienteComponent,
         PacienteDetalleActualizarComponent,
         HudsBusquedaComponent,
