@@ -35,7 +35,7 @@
     <div class="row mb-1" *ngIf="_paciente.fechaNacimiento !== null">
         <div class="col-6">
             <label>Fecha de Nacimiento</label>
-            <span>{{ _paciente.fechaNacimiento | fecha }}</span>
+            <span>{{ _paciente.fechaNacimiento | fecha:'utc' }}</span>
         </div>
         <div class="col">
             <label>Edad</label>

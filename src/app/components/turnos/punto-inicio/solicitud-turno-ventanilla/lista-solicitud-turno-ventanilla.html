@@ -24,7 +24,7 @@
                     <tbody>
                         <tr *ngFor="let prestacion of solicitudesPrestaciones">
                             <td>
-                                {{ prestacion.solicitud.fecha | date: 'dd/MM/yyyy' }}
+                                {{ prestacion.solicitud.fecha | fecha }}
                             </td>
                             <td>
                                 {{ prestacion.solicitud.tipoPrestacion.term }}

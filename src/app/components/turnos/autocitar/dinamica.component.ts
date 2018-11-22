@@ -84,7 +84,6 @@ export class DinamicaFormComponent implements OnInit {
      * @param {any} $event formulario a validar
      */
     getPrestacionesAgendaDinamicas() {
-
         let listaPrestaciones = [];
         this.agenda.bloques.forEach(unBloque => {
             listaPrestaciones = listaPrestaciones.concat(unBloque.tipoPrestaciones);
@@ -92,6 +91,9 @@ export class DinamicaFormComponent implements OnInit {
         this.prestaciones = listaPrestaciones.filter((elem, pos, arr) => {
             return arr.indexOf(elem) === pos;
         });
+        if (this.prestaciones.length === 1) {
+            this.turnoTipoPrestacion = this.prestaciones[0];
+        }
     }
 
     /**
