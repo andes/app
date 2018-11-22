@@ -104,6 +104,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public nombreArchivo: any;
     public btnVolver;
     public rutaVolver;
+    descargando = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -602,6 +603,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     descargarResumen() {
+
+        this.descargando = true;
+
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -656,6 +660,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
+                    this.descargando = false;
                 } else {
                     // Fallback a impresión normal desde el navegador
                     window.print();
@@ -688,11 +693,11 @@ export class PrestacionValidacionComponent implements OnInit {
      */
 
     showMotivo(elemento) {
-        if (this.elementoRUPprestacion.motivoConsoltaOpcional) {
+        if (this.elementoRUPprestacion.motivoConsultaOpcional) {
             return false;
         }
         let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor.estado !== 'transformado';
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
     }
 
