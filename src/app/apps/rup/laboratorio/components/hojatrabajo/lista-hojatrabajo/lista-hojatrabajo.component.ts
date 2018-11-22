@@ -16,12 +16,13 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     // Eventos
     @Output() hojaTrabajoSelectedEmmiter: EventEmitter<IHojaTrabajo> = new EventEmitter<IHojaTrabajo>();
+    @Output() hojaTrabajoAgregarEmmiter: EventEmitter<IHojaTrabajo> = new EventEmitter<IHojaTrabajo>();
 
     // Constructor
     constructor(
         private plex: Plex,
         private servicioHojaTrabajo: HojaTrabajoService
-    ) {}
+    ) { }
 
     ngOnInit() {
         this.loader = true;
@@ -37,6 +38,10 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     seleccionar(hojaTrabajo: any) {
         this.hojaTrabajoSelectedEmmiter.emit(hojaTrabajo);
+    }
+
+    agregarHoja() {
+        this.hojaTrabajoAgregarEmmiter.emit();
     }
 
 }

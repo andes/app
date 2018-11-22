@@ -44,6 +44,9 @@ export class GestorHojatrabajoComponent implements OnInit {
         this.hojaTrabajo = $event;
     }
 
+    agregarHojaTrabajo() {
+        this.agregarHoja();
+    }
 
     guardarHoja() {
         if (!this.hojaTrabajo.id) {
