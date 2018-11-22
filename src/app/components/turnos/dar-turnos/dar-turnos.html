@@ -212,7 +212,7 @@
                                     <div class="row">
                                         <div class="col col-md-12" *ngIf="alternativa.horaInicio">
                                             <label>Fecha: </label>
-                                            <span>{{alternativa.horaInicio | date: 'dd/MM/yyyy'}} </span>
+                                            <span>{{alternativa.horaInicio | fecha}} </span>
                                             <br>
                                         </div>
                                     </div>
@@ -297,10 +297,21 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                <span *ngIf="obraSocialPaciente">
+                                <span *ngIf="!desplegarOS && obraSocialPaciente">
                                     <label>Obra Social </label>
-                                    <div class="text-ellipsis">{{obraSocialPaciente.financiador}}</div>
+                                    <div>{{obraSocialPaciente.financiador}}</div>
                                 </span>
+                                <plex-select *ngIf="desplegarOS" label="Obra Social" [(ngModel)]="obraSocialPaciente"
+                                    name="obraSocialPaciente" (getData)="loadObrasSociales($event)" labelField="financiador"></plex-select>
+                            </div>
+                        </div>
+                        <div class="row" *ngIf="desplegarOS">
+                            <div class="col">
+                                <plex-text label="Número de Afiliado" name="numeroAfiliado" [(ngModel)]="numeroAfiliado"></plex-text>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" [(ngModel)]="motivoConsulta"></plex-text>
                             </div>
                         </div>

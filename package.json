@@ -1,6 +1,6 @@
 {
     "name": "@andes/app",
-    "version": "4.0.2",
+    "version": "4.0.3",
     "description": "Aplicación web para ANDES",
     "angular-cli": {},
     "scripts": {
