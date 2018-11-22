@@ -371,9 +371,7 @@ export class DarTurnosComponent implements OnInit {
 
                 // Por defecto no se muestran las agendas que no tienen turnos disponibles
                 if (!this.mostrarNoDisponibles) {
-                    debugger;
                     this.agendas = this.agendas.filter(agenda => {
-                        debugger;
                         let delDia = agenda.horaInicio >= moment().startOf('day').toDate() && agenda.horaInicio <= moment().endOf('day').toDate();
                         let cond = (agenda.estado === 'publicada' && !this._solicitudPrestacion && (((agenda.turnosRestantesDelDia + agenda.turnosRestantesProgramados) > 0 && delDia && this.hayTurnosEnHorario(agenda))
                             || (agenda.turnosRestantesProgramados > 0 && !delDia))) ||
