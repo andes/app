@@ -138,7 +138,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                 };
                 this.appMobile.reenviar(this.paciente.id, { contacto }).subscribe((resultado) => {
                     if (resultado.status === 'OK') {
-                        this.plex.alert('El código de activación ha sido reenviado.');
+                        this.plex.info('success', 'El código de activación ha sido reenviado.');
                     }
                 });
             } else {
@@ -154,13 +154,13 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                     });
                     if (datos.error) {
                         if (datos.error === 'email_not_found') {
-                            this.plex.alert('El paciente no tiene asignado un email.');
+                            this.plex.info('warning', 'El paciente no tiene asignado un email.');
                         }
                         if (datos.error === 'email_exists') {
-                            this.plex.alert('El mail ingresado ya existe, ingrese otro email');
+                            this.plex.info('warning', 'El mail ingresado ya existe, ingrese otro email');
                         }
                     } else {
-                        this.plex.alert('Se ha enviado el código de activación al paciente');
+                        this.plex.info('success', 'Se ha enviado el código de activación al paciente');
                         this.checkPass = true;
                         this.hideButton = true;
                         this.hideButtonResend = false;
@@ -170,7 +170,7 @@ export class ActivarAppComponent implements OnInit, OnChanges {
                 });
             }
         } else {
-            this.plex.alert('Debe ingresar un número de celular y un email como datos de contacto para activar la app mobile');
+            this.plex.info('warning', 'Debe ingresar un número de celular y un email como datos de contacto para activar la app mobile');
         }
 
     }

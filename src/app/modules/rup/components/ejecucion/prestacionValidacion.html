@@ -17,13 +17,15 @@
                             <plex-button type="info" icon="information" class="" title="Ver Registros de la Solicitud" *ngIf="showDatosSolicitud" (click)="mostrarDatosSolicitud(false)"></plex-button>
                             <ng-container *ngIf="prestacion.estados[prestacion.estados.length - 1].tipo === 'validada' && !prestacion.solicitud.tipoPrestacion.noNominalizada">
                                 <plex-button type="warning" icon="download mdi-14px" class="float-right ml-1" title="Descargar Resúmen PDF" titlePosition="top"
-                                    (click)="descargarResumen()"></plex-button>
+                                    (click)="descargarResumen()" [disabled]="descargando">
+                                </plex-button>
+                                <plex-loader type="linear" *ngIf="descargando"></plex-loader>
                             </ng-container>
                         </div>
                     </div>
                 </div>
             </div>
-            <div *ngIf="pretacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="row no-gutters menu-ordenamiento">
+            <div *ngIf="prestacion?.solicitud?.ambitoOrigen === 'ambulatorio'" class="row no-gutters menu-ordenamiento">
                 <div class="col-1 mr-0 pr-0">
                     <small>Organizar</small>
                     <br>

@@ -16,7 +16,7 @@
                         <i class="mdi mdi-emoticon"></i> No quedan Turnos para reasignar es esta Agenda
                     </div>
 
-                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio | date: 'dd/MM/yyyy'}}
+                    <b>Agenda:</b> {{agendaAReasignar.horaInicio | date: 'EEEE'}} {{agendaAReasignar.horaInicio | fecha}}
                     de {{agendaAReasignar?.horaInicio|date:'HH:mm'}} a {{agendaAReasignar.horaFin | date: 'HH:mm'}} hs
                     <br>
                     <b>Prestaciones:</b> {{ agendaAReasignar.tipoPrestaciones | enumerar:['term']:'/' }}
