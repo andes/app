@@ -1,0 +1,63 @@
+<plex-layout main="12">
+    <plex-layout-main>
+        <header>
+            <div class="row">
+                <div class="col-md-3">
+                    <plex-select [(ngModel)]="organizacionOrigen" name="orgOrigen" (getData)="loadOrganizaciones($event)"
+                        label="Organización origen" placeholder="Seleccione la organización" (change)="actualizarTabla()">
+                    </plex-select>
+                </div>
+                <div class="col-md-3">
+                    <plex-select [(ngModel)]="prestacionOrigen" (getData)="loadPrestaciones($event)" name="prestOrigen"
+                        label="Prestación origen" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
+                    </plex-select>
+                </div>
+                <div class="col-md-3">
+                    <plex-select [(ngModel)]="organizacionDestino" name="orgDestino" (getData)="loadOrganizaciones($event)"
+                        label="Organización destino" placeholder="Seleccione la organización" (change)="actualizarTabla()">
+                    </plex-select>
+                </div>
+                <div class="col-md-3">
+                    <plex-select [(ngModel)]="prestacionDestino" name="prestDestino" (getData)="loadPrestaciones($event)"
+                        label="Prestación destino" placeholder="Seleccione la prestación" (change)="actualizarTabla()">
+                    </plex-select>
+                </div>
+            </div>
+        </header>
+        <div class="row">
+            <div *ngIf="!filtroIngresado() || !filas?.length" class="alert alert-default">
+                <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <table *ngIf="filtroIngresado() && filas?.length" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Organización origen</th>
+                            <th>Prestación origen</th>
+                            <th>Organización destino</th>
+                            <th>Prestación destino</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fila of filas">
+
+                            <td>{{fila.organizacionOrigen.nombre}}</td>
+                            <td>{{fila.prestacionOrigen.prestacion.term}}</td>
+                            <td>{{fila.organizacionDestino.nombre}}</td>
+                            <td>{{fila.prestacionDestino.term}}</td>
+                            <td *ngIf="!seleccionada">
+                                <plex-badge *ngIf="fila.prestacionOrigen.auditable" type="success">
+                                    auditable </plex-badge>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </plex-layout-main>
+    <plex-layout-footer>
+        <plex-button label="Volver" type="danger" position="left" routerLink="/solicitudes"></plex-button>
+    </plex-layout-footer>
+</plex-layout>
