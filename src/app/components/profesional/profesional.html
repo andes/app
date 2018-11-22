@@ -108,7 +108,7 @@
             <div class="col">
                 <label>Especialidades</label>
                 <div *ngFor='let formacionPosgrado of profesionalSelected.formacionPosgrado'>
-                    <div *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
+                    <div *ngIf='formacionPosgrado && formacionPosgrado.matriculacion && formacionPosgrado.matriculacion.length > 0 &&  formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero'>
                         {{formacionPosgrado.especialidad.nombre}} - Matricula:
                         {{formacionPosgrado.matriculacion[formacionPosgrado.matriculacion.length - 1].matriculaNumero}}
                     </div>
