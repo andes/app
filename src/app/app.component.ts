@@ -49,9 +49,9 @@ export class AppComponent {
         if (this.auth.getPermissions('turnos:puntoInicio:?').length > 0) {
             accessList.push({ label: 'CITAS: Punto de Inicio', icon: 'calendar', route: '/citas/puntoInicio' });
         }
-        if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
-            accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/espacio_fisico' });
-        }
+
+        accessList.push({ label: 'CITAS: Espacios Fisicos', icon: 'cogs', route: 'tm/mapa_espacio_fisico' });
+
         if (this.auth.getPermissions('mpi:?').length > 0) {
             accessList.push({ label: 'MPI: Indice Maestro de Pacientes', icon: 'account-multiple-outline', route: '/mpi' });
         }

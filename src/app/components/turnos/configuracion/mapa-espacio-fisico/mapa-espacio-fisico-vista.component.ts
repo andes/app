@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output, Input, OnInit, OnChanges } from '@angu
 import { Observable } from 'rxjs/Observable';
 import { Plex } from '@andes/plex';
 import { Auth } from '@andes/auth';
+import { Router } from '@angular/router';
 
 import { IEdificio } from './../../../../interfaces/IEdificio';
 import { IEspacioFisico } from './../../../../interfaces/turnos/IEspacioFisico';
@@ -30,6 +31,7 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
     public matrix = [];
     public seleccionada;
     public agendaSeleccionada: IAgenda;
+    public editar: Boolean = false;
 
     public filtros: any = {
         fecha: new Date(),
@@ -42,9 +44,13 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
         public espacioFisicoService: EspacioFisicoService,
         public organizacionService: OrganizacionService,
         public servicioAgenda: AgendaService,
-        public auth: Auth) { }
+        public auth: Auth,
+        private router: Router) { }
 
     ngOnInit() {
+        if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
+            this.editar = true;
+        }
         // buscamos la organizacion para obtener el listado de edificios
         this.organizacionService.getById(this.auth.organizacion._id).subscribe(organizacion => {
             this.organizacion = organizacion;
@@ -88,7 +94,6 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
                     activo: true
                 }).subscribe(listaEspaciosFisicos => {
                     this.listadoEspaciosFisicos = listaEspaciosFisicos;
-                    // this.completarMatriz();
                 });
             });
         }
@@ -100,65 +105,10 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
         this.agendaSeleccionada = agenda;
     }
 
-
-
-    completarMatriz() {
-        this.seleccionada = 12;
-        this.agendaSeleccionada = null;
-        let matrix = [];
-        if (this.listadoEspaciosFisicos) {
-            this.listadoEspaciosFisicos.forEach(espacio => {
-                matrix.push({
-                    id: espacio.id,
-                    _value: espacio,
-                    _items: [],
-                    columnas: []
-                });
-            });
+    routeEspaciosFisicos() {
+        if (this.auth.check('turnos:editarEspacio') || this.auth.check('turnos:*')) {
+            this.router.navigate(['./tm/espacio_fisico']);
         }
-        // ...this.columnas
-        this.listadoAgendas.forEach(agenda => {
-            let start_time = moment(agenda.horaInicio);
-            let end_time = moment(agenda.horaFin);
-            let diferencia = end_time.diff(start_time, 'minutes');
-            let colspan = Math.trunc(diferencia / 15);
-
-            if (agenda.espacioFisico) {
-                let _id = agenda.espacioFisico.id;
-                let temp = matrix.find(item => item.id === _id);
-                if (temp) {
-                    let columnasXEF = [];
-                    if (temp.columnas) {
-                        columnasXEF = [...temp.columnas];
-                    }
-                    let datoAgenda = Object.assign({}, {
-                        id: agenda.id,
-                        espacioID: _id,
-                        horaInicio: agenda.horaInicio,
-                        horaFin: agenda.horaFin,
-                        prestaciones: agenda.tipoPrestaciones,
-                        profesionales: agenda.profesionales || null,
-                        _value: agenda.id,
-                        colspan: colspan
-                    });
-                    let inicio = 0;
-                    for (let i = 0; i < this.columnas.length; i++) {
-                        if (this.columnas[i].date >= start_time && this.columnas[i].date < end_time) {
-                            if (inicio <= 0) {
-                                columnasXEF[i] = datoAgenda;
-                            }
-                            inicio += 1;
-                        } else {
-                            columnasXEF[i] = null;
-                        }
-                    }
-                    temp.columnas = [...columnasXEF];
-                }
-            }
-        });
-
-        this.matrix = [...matrix];
     }
-
 }
 

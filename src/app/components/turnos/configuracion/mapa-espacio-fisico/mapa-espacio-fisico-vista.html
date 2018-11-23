@@ -29,58 +29,8 @@
         </div>
         <div class="row">
             <div class="col">
-
                 <mapa-espacio-fisico *ngIf="listadoEspaciosFisicos && listadoAgendas" [agendaSeleccionada]="null" [agendasTable]="listadoAgendas"
                     [espacioTable]="listadoEspaciosFisicos" (agendaVista)="visualizarDetalleAgenda($event)" [fecha]="filtros.fecha"></mapa-espacio-fisico>
-
-
-                <!-- Resultados
-                <plex-loader *ngIf="loader" type="ball-beat"></plex-loader>
-                <div *ngIf="!listadoEspaciosFisicos?.length && !loader" class="alert alert-default">
-                    <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
-                </div>
-                <table *ngIf="listadoEspaciosFisicos?.length" class="mapa-espacios table table-bordered table-responsive">
-                    <thead>
-                        <tr>
-                            <th>Espacio Físico</th>
-                            <th *ngFor="let header of headers" [colSpan]="4" class="text-center">
-                                <small>{{header.hora}}</small>
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="hover" *ngFor="let espacio of matrix" class="">
-                            <td>
-                                <small title="espacio._value.nombre" titlePosition="right">
-                                    <strong>{{espacio._value.nombre}}</strong>
-                                </small>
-                            </td>
-                            <td *ngFor="let agenda of espacio.columnas" colspan="agenda?.colspan" class="text-white">
-
-                                <ng-container *ngIf="agenda && agenda.id">
-                                    <div class="info-agenda">
-                                        <div class="texto-agenda">
-                                            <b>{{agenda.horaInicio | date: 'HH:mm' }} a {{agenda.horaFin | date: 'HH:mm'}} hs</b>
-                                            <br> {{agenda.prestaciones | enumerar:['term']}}
-                                            <br>
-                                            <small *ngIf="agenda.profesionales?.length > 0">
-                                                <b>Prof:</b> {{agenda.profesionales | enumerar:['apellido', 'nombre']}}</small>
-                                        </div>
-                                        <div class="tip"></div>
-                                    </div>
-                                    <div class="tip-border"></div>
-                                </ng-container>
-                                <div class="ml-0 mr-0 text-center" *ngIf="agenda && agenda.id">
-                                    <div class="mdi mdi-information mdi-24px"></div>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-
-
-                </table> -->
-
-
             </div>
         </div>
     </plex-layout-main>
@@ -88,5 +38,6 @@
         <detalle-agenda *ngIf="agendaSeleccionada" [agenda]="agendaSeleccionada"></detalle-agenda>
     </plex-layout-sidebar>
     <plex-layout-footer>
+        <plex-button type="info" *ngIf="editar" label="Listar espacios físicos" position="right" (click)="routeEspaciosFisicos()"></plex-button>
     </plex-layout-footer>
 </plex-layout>
