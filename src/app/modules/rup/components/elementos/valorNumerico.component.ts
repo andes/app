@@ -7,8 +7,6 @@ import { RUPComponent } from '../core/rup.component';
 })
 
 export class ValorNumericoComponent extends RUPComponent implements OnInit {
-
-
     ngOnInit() {
         if (!this.registro.valor) {
             this.registro.valor = 0;
@@ -22,8 +20,5 @@ export class ValorNumericoComponent extends RUPComponent implements OnInit {
                 }
             });
         }
-
-
     }
-
 }
