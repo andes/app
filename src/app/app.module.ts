@@ -39,7 +39,8 @@ import { DocumentosService } from './services/documentos.service';
 import { EdadPipe } from './pipes/edad.pipe';
 import { ProfesionalPipe } from './pipes/profesional.pipe';
 import { FromNowPipe } from './pipes/fromNow.pipe';
-import { FechaPipe } from './pipes/fecha.pipe';
+import { FechaPipe } from './shared/pipes/fecha.pipe';
+import { HoraPipe } from './shared/pipes/hora.pipe';
 import { PacientePipe } from './pipes/paciente.pipe';
 import { SexoPipe } from './pipes/sexo.pipe';
 import { OrganizacionPipe } from './pipes/organizacion.pipe';
@@ -85,6 +86,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
@@ -287,6 +289,11 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
+import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
+
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -413,7 +420,11 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'CalculoDeBostonComponent': CalculoDeBostonComponent,
+    'SeleccionBinariaComponent': SeleccionBinariaComponent,
+    'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
+    'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
 let RUPComponentsArray = [
@@ -470,7 +481,11 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ProcedimientoDeEnfermeriaComponent
+    CalculoDeBostonComponent,
+    SeleccionBinariaComponent,
+    ValorNumericoComponent,
+    ProcedimientoDeEnfermeriaComponent,
+    MoleculaBaseComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -483,6 +498,7 @@ import { FormTerapeuticoDetallePageComponent } from './components/formularioTera
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
 import { CodificacionService } from './modules/rup/services/codificacion.service';
+
 
 
 registerLocaleData(localeEs, 'es');
@@ -513,7 +529,7 @@ registerLocaleData(localeEs, 'es');
         UploadFileComponent,
         EspecialidadComponent, EspecialidadCreateUpdateComponent,
         PacienteCreateUpdateComponent, PacienteDetalleComponent, PacienteSearchComponent, DashboardComponent,
-        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
+        MapsComponent, EdadPipe, ProfesionalPipe, FromNowPipe, FechaPipe, HoraPipe, PacientePipe, SexoPipe, OrganizacionPipe, SortBloquesPipe, TextFilterPipe,
         FilterPermisos, EnumerarPipe, PluralizarPipe, IconoCamaPipe,
         PlanificarAgendaComponent, AutocitarTurnoAgendasComponent, DinamicaFormComponent, BuscadorCie10Component, PanelEspacioComponent, EspacioFisicoComponent, EditEspacioFisicoComponent, FiltrosMapaEspacioFisicoComponent,
         Html2TextPipe,
@@ -594,6 +610,7 @@ registerLocaleData(localeEs, 'es');
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
+        VisualizacionReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -679,7 +696,8 @@ registerLocaleData(localeEs, 'es');
         SugerenciasService,
         ConfiguracionPrestacionService,
         PrestacionLegacyService,
-        CodificacionService
+        CodificacionService,
+        SeleccionBinariaComponent
     ]
 })
 
