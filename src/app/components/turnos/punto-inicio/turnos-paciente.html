@@ -26,7 +26,7 @@
                         </div>
                         <div class="row">
                             <div class="col" *ngIf="turno && turno.horaInicio">
-                                <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | date: 'dd/MM/yyyy'
+                                <span>{{ turno.horaInicio | date:"EEEE" | uppercase }} {{ turno.horaInicio | fecha
                                     }}
                                 </span>
                                 <span *ngIf="turno.horaInicio">
@@ -36,7 +36,8 @@
 
                         <div class="row" *ngIf="turno && turno.profesionales">
                             <div class="col">
-                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido', 'nombre']
+                                <strong>Profesionales:</strong> {{ turno.profesionales | enumerar:['apellido',
+                                'nombre']
                                 }}
                             </div>
                         </div>
@@ -66,12 +67,21 @@
     </div>
     <div *ngIf="showMotivoConsulta">
         <div class="row">
-            <div class="col-12">
-                <span *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
-                    <label>Obra Social </label>
-                    <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
-                </span>
-                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()" [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
+            <div class="col" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.financiador">
+                <label>Obra Social </label>
+                <div>{{turnoArancelamiento.paciente.obraSocial.financiador}}</div>
+            </div>
+        </div>
+        <div class="row" *ngIf="turnoArancelamiento?.paciente?.obraSocial?.numeroAfiliado">
+            <div class="col">
+                <label>Número de Afiliado </label>
+                <div>{{turnoArancelamiento.paciente.obraSocial.numeroAfiliado}}</div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <plex-text label="Motivo de consulta / Diagnóstico" name="motivoConsulta" multiline="true" (change)="cambiarMotivo()"
+                    [(ngModel)]="turnoArancelamiento.motivoConsulta"></plex-text>
             </div>
         </div>
         <br>

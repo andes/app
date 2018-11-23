@@ -120,15 +120,10 @@ export class PrestacionesService {
      *
      * @memberof PrestacionesService
      */
-    getSolicitudes(params: any, options: any = {}): Observable<IPrestacion[]> {
-        if (typeof options.showError === 'undefined') {
-            options.showError = true;
-        }
-
-        let opt = { params: params, options };
-
-        return this.server.get(this.prestacionesUrl + '/solicitudes', opt);
+    getSolicitudes(params: any): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
     }
+
     /**
      * Método get. Trae lista de objetos prestacion.
      *

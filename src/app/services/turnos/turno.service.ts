@@ -29,6 +29,7 @@ export class TurnoService {
             return this.server.patch(this.turnoUrl + '/turno/' + turno.idTurno + '/bloque/' + turno.idBloque + '/agenda/' + turno.idAgenda, turno, options);
         }
     }
+
     saveDinamica(turno: any): Observable<IAgenda> {
         if (turno.idAgenda) {
             return this.server.patch(this.turnoUrl + '/turno/agenda/' + turno.idAgenda, turno);

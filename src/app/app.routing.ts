@@ -82,6 +82,7 @@ import { CamaCreateUpdateComponent } from './modules/rup/components/internacion/
 // Préstamos HC
 import { PrestamosHcComponent } from './components/prestamosHC/prestamos-hc.component';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
@@ -165,7 +166,7 @@ const appRoutes: Routes = [
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
-
+  { path: 'top/reglasVisualizacion', component: VisualizacionReglasComponent, canActivate: [RoutingGuard] },
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

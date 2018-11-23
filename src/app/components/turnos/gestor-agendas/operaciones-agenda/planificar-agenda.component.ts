@@ -224,7 +224,7 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
     seleccionarDinamica() {
         if (this.dinamica) {
             if (this.noNominalizada) {
-                this.plex.alert('No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
+                this.plex.info('warning', 'No se puede configurar como dinámica ya que la prestación seleccionada es no nominalizada').then(() => {
                     this.dinamica = false;
                 });
             } else {
@@ -864,9 +864,9 @@ export class PlanificarAgendaComponent implements OnInit, AfterViewInit {
                 (err) => { this.hideGuardar = false; });
         } else {
             if (!this.verificarNoNominalizada()) {
-                this.plex.alert('Solo puede haber una prestación en las agendas no nominalizadas');
+                this.plex.info('warning', 'Solo puede haber una prestación en las agendas no nominalizadas');
             } else {
-                this.plex.alert('Debe completar los datos requeridos');
+                this.plex.info('warning', 'Debe completar los datos requeridos');
             }
         }
     }
