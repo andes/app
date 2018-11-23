@@ -6,21 +6,25 @@
             <i class="mdi mdi-emoticon-sad"></i> No hay resultados que coincidan con los filtros de búsqueda
         </div>
         <plex-button position="right" *ngIf="!loader" [size]="sm" class="float-right mr-1" type="success" label="+" (click)="agregarHoja()"></plex-button>
-        <table *ngIf="hojasTrabajo?.length" class="table table-striped table-hover">
+        <!-- <table *ngIf="hojasTrabajo?.length" class="table table-striped table-hover">
             <thead>
                 <tr>
                     <th>Nombre</th>
                     <th>Area</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr class="hover" *ngFor="let item of hojasTrabajo" (click)="seleccionar(item)">
+            <tbody cdkDropList (cdkDropListDropped)="drop($event)">
+                <tr class="hover" *ngFor="let item of hojasTrabajo" (click)="seleccionar(item)" cdkDrag>
                     <td colspan="2">
                         {{ item.nombre }} |
                         {{ item.area.nombre }}
                     </td>
                 </tr>
             </tbody>
-        </table>
+        </table> -->
+        <div cdkDropList (cdkDropListDropped)="drop($event)">
+            <div *ngFor="let item of hojasTrabajo" class="pop" cdkDrag>{{ item.nombre }} |
+                {{ item.area.nombre }}</div>
+          </div>
     </div>
 </div>
