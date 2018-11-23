@@ -86,6 +86,7 @@ import { ReglasComponent } from './components/top/reglas/reglas.component';
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
+import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 
@@ -104,6 +105,7 @@ const appRoutes: Routes = [
   { path: 'mpi/auditoria', component: AuditoriaComponent, canActivate: [RoutingGuard] },
   { path: 'mpi/auditoria2', component: Auditoria2Component, canActivate: [RoutingGuard] },
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
+  { path: 'apps/mpi/bebe', component: BebeCruComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
   { path: 'puco', component: PucoComponent },

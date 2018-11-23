@@ -480,6 +480,7 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
+import { BebeCruComponent } from './core/mpi/components/bebe-cru.component';
 
 
 registerLocaleData(localeEs, 'es');
@@ -596,6 +597,7 @@ registerLocaleData(localeEs, 'es');
         PacienteListadoComponent,
         PacientePanelComponent,
         PacientePanelComponent,
+        BebeCruComponent,
 
         // form Terapeutico
         FormTerapeuticoComponent,
