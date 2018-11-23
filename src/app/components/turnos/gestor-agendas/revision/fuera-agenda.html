@@ -30,7 +30,6 @@
                             <div class="col-12">
                                 <div *ngIf="!showReparo">
                                     <h5>Codificación</h5>
-                                    <hr>
                                     <!-- Listado de codificaciones seleccionadas para agendas no-odontológicas -->
                                     <div *ngIf="!esAgendaOdonto" class="row">
                                         <div class="col">
@@ -223,7 +222,6 @@
                                                 <span *ngIf="diagnosticos[indiceReparo].codificacionProfesional.cie10?.sinonimo">
                                                     {{diagnosticos[indiceReparo].codificacionProfesional.cie10.sinonimo}}</span>
                                             </h5>
-                                            <hr>
                                         </div>
                                     </div>
                                     <!-- Búsqueda de prestaciones cie10 -->
@@ -245,7 +243,25 @@
         <div class="col-4">
             <plex-box>
                 <fieldset>
-                    <legend>Revisión de Prestaciones Fuera de Agenda</legend>
+                    <legend>Revisión Fuera de Agenda</legend>
+                    <div class="row">
+                        <div class="col-6">
+                            <plex-datetime type="date" [(ngModel)]="fechaDesde" (change)="cargarPrestaciones()" name="fechaDesde"
+                                label="Desde" class="fechas">
+                            </plex-datetime>
+                        </div>
+                        <div class="col-6">
+                            <plex-datetime type="date" [(ngModel)]="fechaHasta" (change)="cargarPrestaciones()" name="fechaHasta"
+                                label="Hasta" class="fechas">
+                            </plex-datetime>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <plex-bool [(ngModel)]="auditadas" label="Ver prestaciones ya auditadas" (change)="verAuditadas()"></plex-bool>
+                        </div>
+                    </div>
+                    <br>
                     <table class="table table-striped">
                         <tbody>
                             <tr *ngFor="let prestacion of prestaciones; let i=index" class="hover" [ngClass]="{'bg-inverse text-white': estaSeleccionada(prestaciones[i])}">

@@ -1,5 +1,5 @@
 import { Component, OnInit, HostBinding, Output, EventEmitter } from '@angular/core';
-import { Plex, SelectEvent } from '@andes/plex';
+import { Plex } from '@andes/plex';
 import { ICodificacionPrestacion } from './../../../../modules/rup/interfaces/ICodificacion';
 import { CodificacionService } from './../../../../modules/rup/services/codificacion.service';
 
@@ -19,7 +19,10 @@ export class RevisionFueraAgendaComponent implements OnInit {
     public showReparo = false;
     public indiceReparo: number;
     public esAgendaOdonto = false;
+    public auditadas = false;
     public diagnosticos = [];
+    fechaDesde: Date;
+    fechaHasta: Date;
 
     // Eventos
     @Output() save: EventEmitter<ICodificacionPrestacion[]> = new EventEmitter<ICodificacionPrestacion[]>();
@@ -29,13 +32,22 @@ export class RevisionFueraAgendaComponent implements OnInit {
     constructor(private plex: Plex, private serviceCodificacion: CodificacionService) { }
 
     // Métodos
-    ngOnInit() {
-        this.serviceCodificacion.get({}).subscribe(datos => {
-            this.prestaciones = datos;
-        }, err => {
-            if (err) {
-            }
-        });
+    ngOnInit() { }
+
+    cargarPrestaciones() {
+        if (this.fechaDesde && this.fechaHasta) {
+            const params = {
+                fechaDesde: moment(this.fechaDesde).startOf('day').toDate(),
+                fechaHasta: moment(this.fechaHasta).endOf('day').toDate(),
+                auditadas: this.auditadas
+            };
+            this.serviceCodificacion.get(params).subscribe(datos => {
+                this.prestaciones = datos;
+            }, err => {
+                if (err) {
+                }
+            });
+        }
     }
 
     estaSeleccionada(prestacion: ICodificacionPrestacion) {
@@ -50,7 +62,6 @@ export class RevisionFueraAgendaComponent implements OnInit {
         if (prestacion.diagnostico.codificaciones && prestacion.diagnostico.codificaciones.length) {
             this.diagnosticos = this.diagnosticos.concat(prestacion.diagnostico.codificaciones);
         }
-
     }
 
     mostrarReparo(index) {
@@ -81,6 +92,10 @@ export class RevisionFueraAgendaComponent implements OnInit {
         this.diagnosticos[index].codificacionAuditoria = null;
         this.showReparo = false;
         this.onSave();
+    }
+
+    verAuditadas() {
+        this.cargarPrestaciones();
     }
 
     onSave() {
