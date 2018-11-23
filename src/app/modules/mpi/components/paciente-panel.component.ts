@@ -49,10 +49,12 @@ export class PacientePanelComponent {
     set paciente(value: IPaciente) {
         this._paciente = value;
         if (this._paciente) {
-            // Obtiene relaciones
-            this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
             // Obtiene cobertura social más reciente
             this.actualizarCoberturaSocial();
+            // Obtiene relaciones
+            if (this._paciente.id) {
+                this.pacienteService.getById(this._paciente.id).subscribe((data) => this.relaciones.data = data.relaciones || []);
+            }
         }
     }
     /**
