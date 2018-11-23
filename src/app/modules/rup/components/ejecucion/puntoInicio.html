@@ -16,7 +16,7 @@
 
                     <!-- Filtros -->
                     <div class="row">
-                        <div class="col-3">
+                        <div class="col-4">
                             <plex-datetime type="date" [(ngModel)]="fecha" (change)="actualizar()" name="horaInicio"
                                 label="Fecha" [required]="true" skipBy="day">
                             </plex-datetime>
@@ -24,7 +24,7 @@
                         <div class="col-3">
                             <plex-text [(ngModel)]="paciente" (change)="filtrar()" [required]="true" label="Buscar paciente"></plex-text>
                         </div>
-                        <div class="col-6">
+                        <div class="col">
                             <plex-select [(ngModel)]="prestacionSeleccion" [required]="true" name="nombrePrestacion"
                                 label="Filtrar por prestación" [data]="tiposPrestacion" labelField="term" (change)="filtrar()">
                             </plex-select>
@@ -129,14 +129,19 @@
                     <div class=" row ">
                         <div class="col-12 ">
                             <ng-container>
-                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }} {{ agendaSeleccionada.horaInicio |
-                                fecha}}, {{ agendaSeleccionada.horaInicio
-                                | date: 'HH:mm'}} a {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
-                                <span class="badge-info " *ngIf="agendaSeleccionada.dinamica ">Dinámica</span>
-                                <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones ">{{tipoPrestacion.nombre}}</div>
-
+                                {{ agendaSeleccionada.horaInicio | date: 'EEE' }} 
+                                {{ agendaSeleccionada.horaInicio | fecha}}, 
+                                {{ agendaSeleccionada.horaInicio | date: 'HH:mm'}} a 
+                                {{ agendaSeleccionada.horaFin | date: 'HH:mm'}} hs
+                                <span class="badge-info " *ngIf="agendaSeleccionada.dinamica ">
+                                    Dinámica
+                                </span>
+                                <div *ngFor="let tipoPrestacion of agendaSeleccionada.tipoPrestaciones ">
+                                    {{tipoPrestacion.nombre}}
+                                </div>
                                 <div *ngIf="agendaSeleccionada.nota " class="alert alert-info ">
-                                    <i class="mdi mdi-comment mr-3 "></i>{{ agendaSeleccionada.nota }}
+                                    <i class="mdi mdi-comment mr-3 "></i>
+                                    {{ agendaSeleccionada.nota }}
                                 </div>
                             </ng-container>
                         </div>
@@ -146,11 +151,13 @@
                     <table *ngFor="let bloque of agendaSeleccionada.bloques " class="table table-striped ">
                         <thead *ngIf="bloque.descripcion ">
                             <tr>
-                                <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">{{bloque.descripcion}} de {{
-                                    bloque.horaInicio | date: 'HH:mm'}} a {{ bloque.horaFin | date:
-                                    'HH:mm'}} hs
+                                <th *ngIf="!agendaSeleccionada.nominalizada" colspan="4">
+                                    {{bloque.descripcion}} de 
+                                    {{ bloque.horaInicio | date: 'HH:mm'}} a 
+                                    {{ bloque.horaFin | date: 'HH:mm'}} hs
                                 </th>
-                                <th *ngIf="agendaSeleccionada.nominalizada " colspan="4 ">{{bloque.descripcion}}
+                                <th *ngIf="agendaSeleccionada.nominalizada " colspan="4 ">
+                                    {{bloque.descripcion}}
                                 </th>
                             </tr>
                         </thead>
