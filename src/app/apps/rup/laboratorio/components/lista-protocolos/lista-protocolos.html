@@ -18,7 +18,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let protocolo of protocolos; let i=index">
-                <td *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
+                <td *ngIf='modo !== "puntoInicio" && modo !== "recepcion"'>{{protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.numeroProtocolo?.numeroCompleto}}</td>
                 <td>{{protocolo.solicitud.fecha | fecha}}</td>
                 <!-- <plex-button *ngIf='showProtocoloDetalle' icon="arrow-right-drop-circle-outline" class="float-right mr-2" (click)="editarDatosCabecera()"
                  > -->
@@ -28,13 +28,13 @@
                     <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.documento}}</td>
                     <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.apellido}} {{protocolo.paciente.nombre}}</td>
                     <td *ngIf='modo !== "puntoInicio"'>{{protocolo.paciente.fechaNacimiento | fecha}}</td>
-                    <td *ngIf='modo !== "puntoInicio" && protocolo.paciente.sexo ==="femenino"'>F</td>
-                    <td *ngIf='modo !== "puntoInicio" && protocolo.paciente.sexo ==="masculino"'>M</td>
+                    <td *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="femenino"'>F</td>
+                    <td *ngIf='modo !== "puntoInicio" && protocolo?.paciente?.sexo ==="masculino"'>M</td>
                     <td>{{protocolo.solicitud.ambitoOrigen}}</td>
                     <td>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Urgencia'"
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Urgencia'"
                             type="danger" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
-                        <plex-badge *ngIf="protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre === 'Normal'"
+                        <plex-badge *ngIf="protocolo.solicitud.registros[0]?.valor.solicitudPrestacion.prioridad?.nombre === 'Normal'"
                             type="success" class="ml-2">{{protocolo.solicitud.registros[0].valor.solicitudPrestacion.prioridad.nombre}}</plex-badge>
                     </td>
                     <td>

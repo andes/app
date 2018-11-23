@@ -89,7 +89,7 @@
                                         <ng-container *ngIf="agenda.estado !== 'disponible' && !agenda.tipoPrestaciones[0].noNominalizada">
                                             <span class="badge-info float-right">pacientes
                                                 {{getCantidadPacientes(agenda)}}
-                                                <ng-container *ngIf="!agenda.dinamica">/ {{agenda.cantidadTurnos}}</ng-container>
+                                                <ng-container *ngIf="!agenda.dinamica">/ {{ agenda.cantidadTurnos }}</ng-container>
                                             </span>
                                         </ng-container>
                                         <ng-container *ngIf="agenda.tipoPrestaciones[0].noNominalizada">

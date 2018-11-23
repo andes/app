@@ -9,9 +9,9 @@ import { Input, Output, Component, OnInit, EventEmitter } from '@angular/core';
 export class ProtocoloEncabezadoVistaComponent implements OnInit {
     modelo: any;
     solicitudProtocolo: any;
-    mostrarMasOpciones: Boolean;
-    @Input() edicionDatosCabecera: Boolean;
-    @Input() modo: String;
+    mostrarMasOpciones: boolean;
+    @Input() edicionDatosCabecera: boolean;
+    @Input() modo: string;
     @Input('protocolo')
     set protocolo(value: any) {
         if (value) {
