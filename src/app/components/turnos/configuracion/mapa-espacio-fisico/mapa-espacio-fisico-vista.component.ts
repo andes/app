@@ -57,7 +57,9 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
             this.listadoEdificios = organizacion.edificio;
             // si la organizacion tiene un solo edificio definido lo agregamos como filtro por defecto
             if (this.listadoEdificios && this.listadoEdificios.length === 1) {
+                this.filtros.fecha = new Date();
                 this.filtros.edificio = this.listadoEdificios[0];
+                this.matrizEspaciosFisicos(true);
             }
         });
     }
@@ -78,8 +80,8 @@ export class MapaEspacioFisicoVistaComponent implements OnInit {
         }
     }
 
-    matrizEspaciosFisicos(form) {
-        if (form.formValid) {
+    matrizEspaciosFisicos(valido) {
+        if (valido) {
             this.seleccionada = null;
             this.servicioAgenda.get({
                 fechaDesde: moment(this.filtros.fecha).isValid() ? moment(this.filtros.fecha).startOf('day').toDate() : new Date(),
