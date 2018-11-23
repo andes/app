@@ -22,9 +22,16 @@ export class SelectPorRefsetComponent extends RUPComponent implements OnInit {
         if (this.params) {
 
             // Conceptos de Refset
-            this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
-                this.conceptos = resultado;
-            });
+            if (this.params.refsetId) {
+                this.snomedService.getQuery({ expression: '^' + this.params.refsetId }).subscribe(resultado => {
+                    this.conceptos = resultado;
+                });
+            } else if (this.params.query) {
+                // Soporte para cualquier tipo de query
+                this.snomedService.getQuery({ expression: this.params.query }).subscribe(resultado => {
+                    this.conceptos = resultado;
+                });
+            }
 
             // Si params.ultimoValor es true, se traen los últimos datos validados de la HUDS
             // Sirve por ejemplo para pre-setear antecedentes y trastornos crónicos

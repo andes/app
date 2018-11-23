@@ -86,6 +86,7 @@ import { TipoPrestacionService } from './services/tipoPrestacion.service';
 import { ObraSocialService } from './services/obraSocial.service';
 import { ProfeService } from './services/profe.service';
 import { ReglasComponent } from './components/top/reglas/reglas.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
 import { ReglaService } from './services/top/reglas.service';
 import { FacturacionAutomaticaService } from './services/facturacionAutomatica.service';
 import { PeriodoPadronesPucoService } from './services/periodoPadronesPuco.service';
@@ -286,6 +287,11 @@ import { DesarrolloPsicomotorComponent } from './modules/rup/components/elemento
 import { RegistrarMedidasAntropometricasNinoE3Y6AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE3Y6A.component';
 import { RegistrarMedidasAntropometricasNinoM2AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoM2A.component';
 import { RegistrarMedidasAntropometricasNinoE2Y3AComponent } from './modules/rup/components/elementos/RegistrarMedidasAntropometricasNinoE2Y3A.component';
+import { CalculoDeBostonComponent } from './modules/rup/components/elementos/calculoDeBoston.component';
+import { SeleccionBinariaComponent } from './modules/rup/components/elementos/seleccionBinaria.component';
+import { ValorNumericoComponent } from './modules/rup/components/elementos/valorNumerico.component';
+import { MoleculaBaseComponent } from './modules/rup/components/elementos/moleculaBase.component';
+
 import { ProcedimientoDeEnfermeriaComponent } from './modules/rup/components/elementos/procedimientoDeEnfermeria.component';
 // TODO: Eliminar todo esto de las llaves: deprecated
 import { LlavesTipoPrestacionComponent } from './components/llaves/tipoPrestacion/llaves-tipoPrestacion.component';
@@ -411,10 +417,12 @@ export let RUPRegistry = {
     'RegistrarMedidasAntropometricasNinoE3Y6AComponent': RegistrarMedidasAntropometricasNinoE3Y6AComponent,
     'RegistrarMedidasAntropometricasNinoM2AComponent': RegistrarMedidasAntropometricasNinoM2AComponent,
     'RegistrarMedidasAntropometricasNinoE2Y3AComponent': RegistrarMedidasAntropometricasNinoE2Y3AComponent,
+    'CalculoDeBostonComponent': CalculoDeBostonComponent,
+    'SeleccionBinariaComponent': SeleccionBinariaComponent,
+    'ValorNumericoComponent': ValorNumericoComponent,
     'ProcedimientoDeEnfermeriaComponent': ProcedimientoDeEnfermeriaComponent,
-    // GENÉRICOS
     'GraficoLinealComponent': GraficoLinealComponent,
-
+    'MoleculaBaseComponent': MoleculaBaseComponent
 };
 
 let RUPComponentsArray = [
@@ -471,7 +479,11 @@ let RUPComponentsArray = [
     RegistrarMedidasAntropometricasNinoM2AComponent,
     RegistrarMedidasAntropometricasNinoE2Y3AComponent,
     RegistrarMedidasAntropometricasNinoE3Y6AComponent,
-    ProcedimientoDeEnfermeriaComponent
+    CalculoDeBostonComponent,
+    SeleccionBinariaComponent,
+    ValorNumericoComponent,
+    ProcedimientoDeEnfermeriaComponent,
+    MoleculaBaseComponent
 ];
 
 /** moment pipes  - desde agular 5 hay que importar el locale a demanda */
@@ -483,6 +495,7 @@ import { ArbolItemComponent } from './components/formularioTerapeutico/arbolItem
 import { FormTerapeuticoDetallePageComponent } from './components/formularioTerapeutico/form-terapeutico-detalle.component';
 import { AddformTerapeuticoComponent } from './components/formularioTerapeutico/add-form-terapeutico';
 import { UploadFileComponent } from './shared/components/upload-file.component';
+
 
 
 registerLocaleData(localeEs, 'es');
@@ -594,6 +607,7 @@ registerLocaleData(localeEs, 'es');
         SectoresItemComponent,
         PucoComponent,
         ReglasComponent,
+        VisualizacionReglasComponent,
         // MPI
         PacienteBuscarComponent,
         PacienteListadoComponent,
@@ -678,7 +692,8 @@ registerLocaleData(localeEs, 'es');
         FacturacionAutomaticaService,
         SugerenciasService,
         ConfiguracionPrestacionService,
-        PrestacionLegacyService
+        PrestacionLegacyService,
+        SeleccionBinariaComponent
     ]
 })
 
