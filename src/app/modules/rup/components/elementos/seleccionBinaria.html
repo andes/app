@@ -1,0 +1,17 @@
+<form #form="ngForm">
+    <div class="row">
+        <div class="col">
+            <ng-container *ngIf="!soloValores; else showSoloValores">
+                <plex-radio [(ngModel)]="valor" [data]="options" name="binario" [type]="params.plexRadioType" [required]="params.required"
+                    [label]="label" (change)="onChange()">
+                </plex-radio>
+                <plex-text *ngIf="valor && valor === 'Otro'" label="Otro" name="otro" [(ngModel)]="registro.valor.otro" [required]="true">
+                </plex-text>
+            </ng-container>
+            <ng-template #showSoloValores>
+                <label>{{label}} </label>
+                {{ registro.valor.id !== 'Otro' ? registro.valor.label : registro.valor.otro }}
+            </ng-template>
+        </div>
+    </div>
+</form>
