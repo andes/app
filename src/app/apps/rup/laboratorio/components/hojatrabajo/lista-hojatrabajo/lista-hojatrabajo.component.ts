@@ -2,7 +2,6 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HojaTrabajoService } from '../../../services/hojatrabajo.service';
 import { Plex } from '@andes/plex';
 import { IHojaTrabajo } from '../../../interfaces/practica/hojaTrabajo/IHojaTrabajo';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
     selector: 'lista-hojatrabajo',
@@ -43,10 +42,5 @@ export class ListaHojatrabajoComponent implements OnInit {
 
     agregarHoja() {
         this.hojaTrabajoAgregarEmmiter.emit();
-    }
-
-    drop(event: CdkDragDrop<string[]>) {
-        console.log('movido', event.previousIndex, event.currentIndex, event.item);
-        // moveItemInArray(this.hojasTrabajo, event.previousIndex, event.currentIndex);
     }
 }
