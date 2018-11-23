@@ -120,15 +120,10 @@ export class PrestacionesService {
      *
      * @memberof PrestacionesService
      */
-    getSolicitudes(params: any, options: any = {}): Observable<IPrestacion[]> {
-        if (typeof options.showError === 'undefined') {
-            options.showError = true;
-        }
-
-        let opt = { params: params, options };
-
-        return this.server.get(this.prestacionesUrl + '/solicitudes', opt);
+    getSolicitudes(params: any): Observable<IPrestacion[]> {
+        return this.server.get(this.prestacionesUrl + '/solicitudes', { params: params, showError: true });
     }
+
     /**
      * Método get. Trae lista de objetos prestacion.
      *
@@ -834,7 +829,7 @@ export class PrestacionesService {
                         // Controlemos que se trata de una prestación turneable.
                         // Solo creamos prestaciones pendiente para conceptos turneables
 
-                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId);
+                        let existeConcepto = this.conceptosTurneables.find(c => c.conceptId === conceptoSolicitud.conceptId && c.term === conceptoSolicitud.term);
                         if (existeConcepto) {
                             // creamos objeto de prestacion
                             let nuevaPrestacion = this.inicializarPrestacion(prestacion.paciente, existeConcepto, 'validacion', 'ambulatorio');

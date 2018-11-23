@@ -98,6 +98,8 @@ import { FiltrosBusquedaProtocoloComponent } from './apps/rup/laboratorio/compon
 import { ProtocoloEncabezadoComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado.component';
 import { ProtocoloEncabezadoVistaComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-vista/protocolo-encabezado-vista.component';
 import { ProtocoloEncabezadoEdicionComponent } from './apps/rup/laboratorio/components/protocolos/protocolo-encabezado/protocolo-encabezado-edicion/protocolo-encabezado-edicion.component';
+import { VisualizacionReglasComponent } from './components/top/reglas/visualizacionReglas.component';
+
 // Home de Estadisticas
 // import { HomeComponent } from './modules/estadisticas/components/home.component';
 import { FormTerapeuticoComponent } from './components/formularioTerapeutico/formTerapeutico.component';
@@ -121,7 +123,7 @@ const appRoutes: Routes = [
   { path: 'mpi', component: PacienteSearchComponent, canActivate: [RoutingGuard] },
 
   // Obras sociales
-  { path: 'puco', component: PucoComponent, canActivate: [RoutingGuard] },
+  { path: 'puco', component: PucoComponent },
 
   // Turnos
   { path: 'citas', component: PuntoInicioTurnosComponent, canActivate: [RoutingGuard] },
@@ -193,7 +195,7 @@ const appRoutes: Routes = [
 
   // TOP
   { path: 'top/reglas', component: ReglasComponent, canActivate: [RoutingGuard] },
-
+  { path: 'top/reglasVisualizacion', component: VisualizacionReglasComponent, canActivate: [RoutingGuard] },
 
   // RUTAS LEGACY --- Deshabilitar una vez migradas al nuevo esquema rup/xxx , citas/xxx
   /* ELIMINAR ==> */ { path: 'pacientes', component: PacienteSearchComponent, canActivate: [RoutingGuard] },

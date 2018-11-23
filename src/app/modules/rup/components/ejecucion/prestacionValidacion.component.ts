@@ -104,6 +104,7 @@ export class PrestacionValidacionComponent implements OnInit {
     public nombreArchivo: any;
     public btnVolver;
     public rutaVolver;
+    descargando = false;
 
     constructor(private servicioPrestacion: PrestacionesService,
         public elementosRUPService: ElementosRUPService,
@@ -339,10 +340,14 @@ export class PrestacionValidacionComponent implements OnInit {
                         // Vamos a cambiar el estado de la prestación a ejecucion
                         this.servicioPrestacion.patch(this.prestacion._id || params['id'], cambioEstado).subscribe(prestacion => {
                             this.prestacion = prestacion;
-
-                            // actualizamos las prestaciones de la HUDS
-                            this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
-                            });
+                            // chequeamos si es no nominalizada si
+                            if (!this.prestacion.solicitud.tipoPrestacion.noNominalizada) {
+                                // actualizamos las prestaciones de la HUDS
+                                this.servicioPrestacion.getByPaciente(this.paciente.id, true).subscribe(resultado => {
+                                });
+                            } else {
+                                this.router.navigate(['rup/ejecucion', this.prestacion.id]);
+                            }
 
                             this.router.navigate(['rup/ejecucion', this.prestacion.id]);
                         }, (err) => {
@@ -389,13 +394,14 @@ export class PrestacionValidacionComponent implements OnInit {
                 ruteo = '/internacion/camas';
             }
         }
-        this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
-            if (confirmado) {
-                this.router.navigate([ruteo]);
-            } else {
-                return;
-            }
-        });
+        this.router.navigate([ruteo]);
+        // this.plex.confirm('<i class="mdi mdi-alert"></i> Se van a perder los cambios no guardados', '¿Volver al ' + mensaje + '?').then(confirmado => {
+        //     if (confirmado) {
+        //         this.router.navigate([ruteo]);
+        //     } else {
+        //         return;
+        //     }
+        // });
     }
 
     darTurno(prestacionSolicitud) {
@@ -468,7 +474,7 @@ export class PrestacionValidacionComponent implements OnInit {
 
         let traverse = (_registros, registro, deep) => {
             let orden = [];
-            let hijos = _registros.filter(item => item.relacionadoCon[0] === registro.id || item.relacionadoCon[0] === registro.concepto.conceptId);
+            let hijos = _registros.filter(item => item.relacionadoCon[0] && (item.relacionadoCon[0].id === registro.id || item.relacionadoCon[0].conceptId === registro.concepto.conceptId));
             this.registrosDeep[registro.id] = deep;
             hijos.forEach((hijo) => {
                 orden = [...orden, hijo, ...traverse(_registros, hijo, deep + 1)];
@@ -597,6 +603,9 @@ export class PrestacionValidacionComponent implements OnInit {
     }
 
     descargarResumen() {
+
+        this.descargando = true;
+
         this.prestacion.ejecucion.registros.forEach(x => {
             x.icon = 'down';
         });
@@ -651,6 +660,7 @@ export class PrestacionValidacionComponent implements OnInit {
                 if (data) {
                     // Generar descarga como PDF
                     this.descargarArchivo(data, { type: 'application/pdf' });
+                    this.descargando = false;
                 } else {
                     // Fallback a impresión normal desde el navegador
                     window.print();
@@ -683,11 +693,11 @@ export class PrestacionValidacionComponent implements OnInit {
      */
 
     showMotivo(elemento) {
-        if (this.elementoRUPprestacion.motivoConsoltaOpcional) {
+        if (this.elementoRUPprestacion.motivoConsultaOpcional) {
             return false;
         }
         let last = this.prestacion.estados.length - 1;
-        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor.estado !== 'transformado';
+        return this.prestacion.estados[last].tipo !== 'validada' && elemento.valor && elemento.valor.estado !== 'transformado' && this.prestacion.solicitud.ambitoOrigen !== 'internacion';
 
     }
 

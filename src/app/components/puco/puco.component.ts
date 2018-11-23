@@ -8,6 +8,8 @@ import { ProfeService } from './../../services/profe.service';
 import { SugerenciasService } from '../../services/sendmailsugerencias.service';
 import { IProfe } from '../../interfaces/IProfe';
 
+import {forkJoin as observableForkJoin } from 'rxjs';
+
 @Component({
     selector: 'puco',
     templateUrl: 'puco.html',
@@ -52,7 +54,7 @@ export class PucoComponent implements OnInit, OnDestroy {
     }
     ngOnInit() {
 
-        Observable.forkJoin([
+        observableForkJoin([
             this.obraSocialService.getPadrones({}),
             this.profeService.getPadrones({})]
         ).subscribe(padrones => {
@@ -152,7 +154,7 @@ export class PucoComponent implements OnInit, OnDestroy {
                     let periodoPuco = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionPuco);
                     let periodoProfe = this.verificarPeriodo(this.periodoSelect.version, this.ultimaActualizacionProfe);
 
-                    Observable.forkJoin([
+                    observableForkJoin([
                         this.obraSocialService.get({ dni: search, periodo: periodoPuco }),
                         this.profeService.get({ dni: search, periodo: periodoProfe })]).subscribe(t => {
                             this.loading = false;

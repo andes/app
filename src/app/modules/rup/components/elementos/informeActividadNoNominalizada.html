@@ -11,30 +11,30 @@
     <ng-container *ngIf="!soloValores && registro.valor">
         <div class="row">
             <div class="col-4 ">
-                <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true" [autoFocus]="autoFocus "
-                    name="fecha" label="Fecha" [disabled]="turno">
+                <plex-datetime type="date" [(ngModel)]="registro.valor.informe.fecha" [required]="true" [autoFocus]="autoFocus " name="fecha"
+                    label="Fecha" [readonly]="turno">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
-                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio"
-                    label="Hora inicio " [disabled]="turno">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaIngreso" [required]="true" name="horaInicio" label="Hora inicio "
+                    [readonly]="turno">
                 </plex-datetime>
             </div>
             <div class="col-4 ">
-                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin"
-                    label="Hora fin" [disabled]="turno">
+                <plex-datetime type="time" [(ngModel)]="registro.valor.informe.horaFin" [required]="true" name="horaFin" label="Hora fin"
+                    [readonly]="turno">
                 </plex-datetime>
             </div>
         </div>
         <div class="row">
             <div class="col-6" *ngIf="listaActividades && listaActividades.length">
-                <plex-select [required]="true" label="Tipo actividad " [(ngModel)]="registro.valor.informe.tipoActividad"
-                    name="tipoActividad" [data]="listaActividades" idField="conceptId" labelField="term" placeholder="Seleccione... ">
+                <plex-select label="Tipo actividad " [(ngModel)]="registro.valor.informe.tipoActividad" name="tipoActividad" [data]="listaActividades"
+                    idField="conceptId" labelField="term" placeholder="Seleccione... ">
                 </plex-select>
             </div>
             <div class="col-6 ">
-                <plex-select [required]="true" label="Tématica " [(ngModel)]="registro.valor.informe.tematica" name="tematica"
-                    [data]="tematicas" placeholder="Seleccione... " labelField="nombre" (change)="mostrarOtraTematica()">
+                <plex-select label="Tématica " [(ngModel)]="registro.valor.informe.tematica" name="tematica" [data]="tematicas" placeholder="Seleccione... "
+                    labelField="nombre" (change)="mostrarOtraTematica()">
                 </plex-select>
             </div>
         </div>
@@ -46,9 +46,8 @@
         </div>
         <div class="row">
             <div class="col-12">
-                <plex-select [(ngModel)]="registro.valor.informe.profesionales" (getData)="loadProfesionales($event)"
-                    placeholder="Profesionales" labelField="apellido + ' ' + nombre" name="profesionales" [readonly]="turno" [required]="true"
-                    [multiple]="true" label="Profesional(es) intervinientes">
+                <plex-select [(ngModel)]="registro.valor.informe.profesionales" (getData)="loadProfesionales($event)" placeholder="Equipo de salud"
+                    labelField="apellido + ' ' + nombre" name="profesionales" [readonly]="turno" [multiple]="true" label="Equipo de salud interviniente">
                 </plex-select>
             </div>
         </div>
@@ -78,10 +77,8 @@
                     <tfoot>
                         <tr>
                             <td>
-                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)"
-                                    (searchClear)="searchClear()"></paciente-buscar>
-                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes"
-                                    [autoselect]="false" [type]="'sm'" (selected)="seleccionarPaciente($event)"></paciente-listado>
+                                <paciente-buscar (searchStart)="searchStart()" (searchEnd)="searchEnd($event)" (searchClear)="searchClear()"></paciente-buscar>
+                                <paciente-listado *ngIf="pacientes && pacientes.length" [pacientes]="pacientes" [autoselect]="false" [type]="'sm'" (selected)="seleccionarPaciente($event)"></paciente-listado>
                                 <div *ngIf="pacientes && !pacientes.length" class="alert alert-default">
                                     ¡No se encontró ningún paciente!
                                 </div>
@@ -126,7 +123,7 @@
     </div>
     <div class="row" *ngIf="registro.valor.informe?.profesionales">
         <div class="col-12">
-            <label>Profesional/es</label>
+            <label>Equipo de salud</label>
             <ng-container *ngIf="registro.valor.informe?.profesionales && registro.valor.informe.profesionales.length">
                 <ng-container *ngFor="let profesional of registro.valor.informe?.profesionales">
                     {{ profesional.apellido }}, {{ profesional.nombre }} -

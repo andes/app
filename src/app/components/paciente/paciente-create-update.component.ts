@@ -68,9 +68,6 @@ import {
     IProvincia
 } from './../../interfaces/IProvincia';
 import {
-    FechaPipe
-} from './../../pipes/fecha.pipe';
-import {
     Plex
 } from '@andes/plex';
 import {
@@ -125,7 +122,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     relacionesBorradas: any[];
 
     provincias: IProvincia[] = [];
-    obrasSociales: IFinanciador[] = [];
+    // obrasSociales: IFinanciador[] = [];
     pacientesSimilares = [];
     barriosNeuquen: any[];
     localidadesNeuquen: any[] = [];
@@ -213,6 +210,8 @@ export class PacienteCreateUpdateComponent implements OnInit {
         notaError: ''
     };
 
+    public nombrePattern: string;
+
     // PARA LA APP MOBILE
     public showMobile = false;
     public checkPass = false;
@@ -231,13 +230,15 @@ export class PacienteCreateUpdateComponent implements OnInit {
         private parentescoService: ParentescoService,
         private ansesService: AnsesService,
         public appMobile: AppMobileService,
-        private financiadorService: FinanciadorService, public plex: Plex) { }
+        private financiadorService: FinanciadorService, public plex: Plex) {
+        this.nombrePattern = pacienteService.nombreRegEx.source;
+    }
 
     ngOnInit() {
         // Se cargan los combos
-        this.financiadorService.get().subscribe(resultado => {
-            this.obrasSociales = resultado;
-        });
+        // this.financiadorService.get().subscribe(resultado => {
+        //     this.obrasSociales = resultado;
+        // });
 
         this.relacionesBorradas = [];
 
@@ -473,7 +474,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
     limpiarDocumento() {
         if (this.noPoseeDNI) {
             this.pacienteModel.documento = '';
-            this.plex.alert('Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
+            this.plex.info('warning', 'Recuerde que al guardar un paciente sin el número de documento será imposible realizar validaciones contra fuentes auténticas.');
         }
     }
     limpiarContacto() {
@@ -528,12 +529,6 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 elem.tipo = ((typeof elem.tipo === 'string') ? elem.tipo : (Object(elem.tipo).id));
                 return elem;
             });
-            if (pacienteGuardar.financiador) {
-                pacienteGuardar.financiador.map((elem: any) => {
-                    delete elem.entidad.$order;
-                    return elem;
-                });
-            }
 
             // Luego aquí habría que validar pacientes de otras prov. y paises (Por ahora solo NQN)
             pacienteGuardar.direccion[0].ubicacion.pais = this.paisArgentina;
@@ -623,7 +618,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                     //         }
                     //     });
                     // }
-                    this.plex.alert('Los datos se actualizaron correctamente');
+                    this.plex.info('success', 'Los datos se actualizaron correctamente');
                     this.data.emit(result);
                     // Activa la app mobile
                     if (this.activarApp && this.emailAndes && this.celularAndes) {
@@ -633,23 +628,23 @@ export class PacienteCreateUpdateComponent implements OnInit {
                         }).subscribe((datos) => {
                             if (datos.error) {
                                 if (datos.error === 'email_not_found') {
-                                    this.plex.alert('El paciente no tiene asignado un email.');
+                                    this.plex.info('warning', 'El paciente no tiene asignado un email.');
                                 }
                                 if (datos.error === 'email_exists') {
-                                    this.plex.alert('El mail ingresado ya existe, ingrese otro email');
+                                    this.plex.info('warning', 'El mail ingresado ya existe, ingrese otro email');
                                 }
                             } else {
-                                this.plex.alert('Se ha enviado el código de activación al paciente');
+                                this.plex.info('success', 'Se ha enviado el código de activación al paciente');
                             }
                         });
                     }
 
                 } else {
-                    this.plex.alert('ERROR: Ocurrió un problema al actualizar los datos');
+                    this.plex.info('warning', 'ERROR: Ocurrió un problema al actualizar los datos');
                 }
             });
         } else {
-            this.plex.alert('Debe completar los datos obligatorios. Verificar los contactos');
+            this.plex.info('warning', 'Debe completar los datos obligatorios. Verificar los contactos');
         }
     }
 
@@ -762,7 +757,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteDB: this.pacientesSimilares[0],
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
-                                    this.plex.alert('El paciente que está cargando ya existe, debe buscarlo y seleccionarlo');
+                                    this.plex.info('warning', 'El paciente que está cargando ya existe, debe buscarlo y seleccionarlo');
                                     this.enableIgnorarGuardar = false;
                                     this.disableGuardar = true;
                                 }
@@ -773,7 +768,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                                         pacienteScan: this.pacienteModel
                                     }).subscribe(() => { });
                                     this.posibleDuplicado = true;
-                                    this.plex.alert('Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
+                                    this.plex.info('warning', 'Existen pacientes con un alto porcentaje de coincidencia, verifique la lista');
                                     this.enableIgnorarGuardar = true;
                                     this.disableGuardar = true;
                                 } else {
@@ -820,7 +815,7 @@ export class PacienteCreateUpdateComponent implements OnInit {
                 this.disableGuardar = true;
             }
         } else {
-            this.plex.alert('Debe completar los datos obligatorios');
+            this.plex.info('warning', 'Debe completar los datos obligatorios');
         }
     }
 
@@ -841,27 +836,27 @@ export class PacienteCreateUpdateComponent implements OnInit {
         }
     }
 
-    addFinanciador() {
-        let nuevoFinanciador = {
-            entidad: null,
-            codigo: '',
-            activo: true,
-            fechaAlta: null,
-            fechaBaja: null,
-            ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
-        };
-        if (this.pacienteModel.financiador) {
-            this.pacienteModel.financiador.push(nuevoFinanciador);
-        } else {
-            this.pacienteModel.financiador = [nuevoFinanciador];
-        }
-    }
+    // addFinanciador() {
+    //     let nuevoFinanciador = {
+    //         entidad: null,
+    //         codigo: '',
+    //         activo: true,
+    //         fechaAlta: null,
+    //         fechaBaja: null,
+    //         ranking: this.pacienteModel.financiador ? this.pacienteModel.financiador.length : 0
+    //     };
+    //     if (this.pacienteModel.financiador) {
+    //         this.pacienteModel.financiador.push(nuevoFinanciador);
+    //     } else {
+    //         this.pacienteModel.financiador = [nuevoFinanciador];
+    //     }
+    // }
 
-    removeFinanciador(i) {
-        if (i >= 0) {
-            this.pacienteModel.financiador.splice(i, 1);
-        }
-    }
+    // removeFinanciador(i) {
+    //     if (i >= 0) {
+    //         this.pacienteModel.financiador.splice(i, 1);
+    //     }
+    // }
     private comprobarDocumentoEscaneado(): DocumentoEscaneado {
         for (let key in DocumentoEscaneados) {
             if (DocumentoEscaneados[key].regEx.test(this.buscarPacRel)) {

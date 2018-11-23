@@ -15,7 +15,7 @@
         <ng-container *ngFor="let agenda of agendasSeleccionadas; let i = index">
             <div class="row">
                 <div class="col-4">
-                    {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | date: 'dd/MM/yyyy'}} {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
+                    {{ agenda.horaInicio | date: 'EEE'}} {{ agenda.horaInicio | fecha}} {{ agenda.horaInicio | date: 'HH:mm'}} a {{ agenda.horaFin | date: 'HH:mm'}} hs
                 </div>
                 <div class="col-4">
                     <div *ngFor="let tipoPrestacion of agenda.tipoPrestaciones">{{tipoPrestacion.nombre}}</div>

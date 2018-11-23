@@ -16,6 +16,10 @@ export class SisaService {
         return this.server.get(this.sisaUrl + '/sisa', { params: params, showError: true });
     }
 
+    getPaciente(params: any): Observable<any> {
+        return this.server.get(this.sisaUrl + '/pacienteSisa', { params: params, showError: true });
+    }
+
     getPuco(dni: any): Observable<any> {
         return this.server.get(this.sisaUrl + '/puco/' + dni);
     }
