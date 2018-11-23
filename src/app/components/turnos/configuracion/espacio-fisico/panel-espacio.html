@@ -33,7 +33,7 @@
                     <a (click)="seleccionarAgenda(agendaF)" class="hover">
                         <plex-box type="{{agendaF.seleccionada?'success':'default'}}">
                             <div class="col-md-12">
-                                <label>{{agendaF.horaInicio | date: 'dd/MM/yyyy'}} {{agendaF.horaInicio | date: 'HH:mm'}} a {{agendaF.horaFin | date: 'HH:mm'}} HS.</label>
+                                <label>{{agendaF.horaInicio | fecha}} {{agendaF.horaInicio | date: 'HH:mm'}} a {{agendaF.horaFin | date: 'HH:mm'}} HS.</label>
                             </div>
                             <div class="col-md-10">
                                 <label *ngIf="agendaF.profesionales.length > 0"> {{agendaF.profesionales | enumerar:['apellido','nombre']}} </label>
